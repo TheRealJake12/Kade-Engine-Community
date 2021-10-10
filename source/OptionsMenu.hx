@@ -51,6 +51,16 @@ class OptionsMenu extends MusicBeatState
 			new RainbowFPSOption("Make the FPS Counter flicker through rainbow colors."),
 			new CpuStrums("Toggle the CPU's strumline lighting up when it hits a note."),
 		]),
+		new OptionCategory("Performance", [
+			new FPSOption("Toggle the FPS Counter"),
+			new RainbowFPSOption("Make the FPS Counter flicker through rainbow colors."),
+			new InstantRespawn("Instant Respawn but lags hard on low end systems"),
+			new DistractionsAndEffectsOption("Removes/Minimizes Effects used."),
+			new EditorRes("Performance Using the Chart Editior greatly increased when this is off."),
+			new AntialiasingOption("Anti-Aliasing makes things look smoother but uses a bit of performance."),
+			new Optimization("Nothing but Your Strumline is visible. Best Performance."),
+			new GraphicLoading("Caches every character in assets/shared/characters. Loading times greatly increased. (HIGH MEMORY!!!)"),
+		]),
 		new OptionCategory("Misc", [
 			new FPSOption("Toggle the FPS Counter"), new FlashingLightsOption("Toggle flashing lights that can cause epileptic seizures and strain."),
 			new WatermarkOption("Enable and disable all watermarks from the engine."),
