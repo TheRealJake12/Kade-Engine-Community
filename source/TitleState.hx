@@ -114,8 +114,8 @@ class TitleState extends MusicBeatState
 
 		if (Main.watermarks)
 		{
-			logoBl = new FlxSprite(-150, 1500);
-			logoBl.frames = Paths.getSparrowAtlas('KadeEngineLogoBumpin');
+			logoBl = new FlxSprite(-150, -100);
+			logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
 		}
 		else
 		{
@@ -168,7 +168,7 @@ class TitleState extends MusicBeatState
 
 		credTextShit.visible = false;
 
-		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('newgrounds_logo'));
+		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('me'));
 		add(ngSpr);
 		ngSpr.visible = false;
 		ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));
@@ -373,18 +373,18 @@ class TitleState extends MusicBeatState
 			// credTextShit.screenCenter();
 			case 5:
 				if (Main.watermarks)
-					createCoolText(['Kade Engine', 'by']);
+					createCoolText(['KE Community', 'by']);
 				else
-					createCoolText(['In Partnership', 'with']);
+					createCoolText(['KE Community', 'by']);
 			case 7:
 				if (Main.watermarks)
-					addMoreText('KadeDeveloper');
+					addMoreText('TheRealJake_12');
 				else
 				{
-					addMoreText('Newgrounds');
+					addMoreText('TheRealJake_12');
 					ngSpr.visible = true;
 				}
-			// credTextShit.text += '\nNewgrounds';
+			// credTextShit.text += '\TheRealJake_12';
 			case 8:
 				deleteCoolText();
 				ngSpr.visible = false;

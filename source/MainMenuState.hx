@@ -37,10 +37,10 @@ class MainMenuState extends MusicBeatState
 
 	public static var firstStart:Bool = true;
 
-	public static var nightly:String = "-prerelease";
+	public static var nightly:String = "";
 
-	public static var kadeEngineVer:String = "1.7.1" + nightly;
-	public static var gameVer:String = "0.2.7.1";
+	public static var kadeEngineVer:String = "1.0 Community" + nightly;
+	public static var gameVer:String = "Kade Engine 1.7";
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
