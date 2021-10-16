@@ -23,24 +23,15 @@ class OutdatedSubState extends MusicBeatState
 	override function create()
 	{
 		super.create();
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('week54prototype', 'shared'));
-		bg.scale.x *= 1.55;
-		bg.scale.y *= 1.55;
+		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('credshit/stageback'));
+		bg.scale.x *= 0.75;
+		bg.scale.y *= 0.75;
 		bg.screenCenter();
 		bg.antialiasing = FlxG.save.data.antialiasing;
 		add(bg);
 
-		var kadeLogo:FlxSprite = new FlxSprite(FlxG.width, 0).loadGraphic(Paths.image('KadeEngineLogo'));
-		kadeLogo.scale.y = 0.3;
-		kadeLogo.scale.x = 0.3;
-		kadeLogo.x -= kadeLogo.frameHeight;
-		kadeLogo.y -= 180;
-		kadeLogo.alpha = 0.8;
-		kadeLogo.antialiasing = FlxG.save.data.antialiasing;
-		add(kadeLogo);
-
 		var txt:FlxText = new FlxText(0, 0, FlxG.width,
-			"Your Kade Engine is outdated!\nYou are on "
+			"Your Kade Engine Community is outdated!\nYou are on "
 			+ MainMenuState.kadeEngineVer
 			+ "\nwhile the most recent version is "
 			+ needVer
@@ -64,9 +55,6 @@ class OutdatedSubState extends MusicBeatState
 		txt.screenCenter();
 		add(txt);
 
-		FlxTween.color(bg, 2, bg.color, FlxColor.fromString(bgColors[colorRotation]));
-		FlxTween.angle(kadeLogo, kadeLogo.angle, -10, 2, {ease: FlxEase.quartInOut});
-
 		new FlxTimer().start(2, function(tmr:FlxTimer)
 		{
 			FlxTween.color(bg, 2, bg.color, FlxColor.fromString(bgColors[colorRotation]));
@@ -76,28 +64,13 @@ class OutdatedSubState extends MusicBeatState
 				colorRotation = 0;
 		}, 0);
 
-		new FlxTimer().start(2, function(tmr:FlxTimer)
-		{
-			if (kadeLogo.angle == -10)
-				FlxTween.angle(kadeLogo, kadeLogo.angle, 10, 2, {ease: FlxEase.quartInOut});
-			else
-				FlxTween.angle(kadeLogo, kadeLogo.angle, -10, 2, {ease: FlxEase.quartInOut});
-		}, 0);
-
-		new FlxTimer().start(0.8, function(tmr:FlxTimer)
-		{
-			if (kadeLogo.alpha == 0.8)
-				FlxTween.tween(kadeLogo, {alpha: 1}, 0.8, {ease: FlxEase.quartInOut});
-			else
-				FlxTween.tween(kadeLogo, {alpha: 0.8}, 0.8, {ease: FlxEase.quartInOut});
-		}, 0);
 	}
 
 	override function update(elapsed:Float)
 	{
 		if (controls.ACCEPT && MainMenuState.nightly == "")
 		{
-			fancyOpenURL("https://kadedev.github.io/Kade-Engine/changelogs/changelog-" + needVer);
+			fancyOpenURL("https://github.com/TheRealJake12/Kade-Engine-1.7-Community" + needVer);
 		}
 		else if (controls.ACCEPT)
 		{
