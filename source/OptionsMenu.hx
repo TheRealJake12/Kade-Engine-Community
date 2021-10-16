@@ -36,7 +36,7 @@ class OptionsMenu extends MusicBeatState
 			new AccuracyDOption("Change how accuracy is calculated. (Accurate = Simple, Complex = Milisecond Based)"),
 			new ResetButtonOption("Toggle pressing R to gameover."),
 			// new OffsetMenu("Get a note offset based off of your inputs!"),
-			new CustomizeGameplay("Drag and drop gameplay modules to your prefered positions!")
+			new CustomizeGameplay("Drag and drop gameplay modules to your prefered positions!"),
 		]),
 		new OptionCategory("Appearance", [
 			new StepManiaOption("Sets the colors of the arrows depending on quantization instead of direction."),
@@ -71,7 +71,7 @@ class OptionsMenu extends MusicBeatState
 			new ResetScoreOption("Reset your score on all songs and weeks. This is irreversible!"),
 			new LockWeeksOption("Reset your story mode progress. This is irreversible!"),
 			new ResetSettings("Reset ALL your settings. This is irreversible!")
-		])
+		]),
 	];
 
 	public var acceptInput:Bool = true;
