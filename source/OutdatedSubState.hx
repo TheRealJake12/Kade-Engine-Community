@@ -70,7 +70,7 @@ class OutdatedSubState extends MusicBeatState
 	{
 		if (controls.ACCEPT && MainMenuState.nightly == "")
 		{
-			fancyOpenURL("https://github.com/TheRealJake12/Kade-Engine-1.7-Community" + needVer);
+			fancyOpenURL("https://github.com/TheRealJake12/Kade-Engine-1.7-Community.git" + needVer);
 		}
 		else if (controls.ACCEPT)
 		{
