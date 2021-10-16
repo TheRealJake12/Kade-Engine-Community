@@ -39,7 +39,7 @@ class MainMenuState extends MusicBeatState
 
 	public static var nightly:String = "";
 
-	public static var kadeEngineVer:String = "1.0 Community" + nightly;
+	public static var kadeEngineVer:String = "1.1 Community" + nightly;
 	public static var gameVer:String = "Kade Engine 1.7";
 
 	var magenta:FlxSprite;

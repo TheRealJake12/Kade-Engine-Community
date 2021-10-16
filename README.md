@@ -10,4 +10,10 @@ The goal of this Repo is to make it community focused. If theres a feature (no m
 ![Performance Tab](art/readme/perf.png)
 
 Ultra New Performance Tab includes all the already existing Performance Options but in their own catagory!
-Very cool yes
+
+
+
+![Pause Options](art/readme/optionsbutton.png)
+
+A Options Menu Button to change Keybinds if they arent correct, swap scroll directions, and Turn on Optimization!
+this was easy add
