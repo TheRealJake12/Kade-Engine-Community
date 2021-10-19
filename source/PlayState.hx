@@ -151,6 +151,9 @@ class PlayState extends MusicBeatState
 
 	private static var prevCamFollow:FlxObject;
 
+	public var laneunderlay:FlxSprite;
+	public var laneunderlayOpponent:FlxSprite;
+
 	public static var strumLineNotes:FlxTypedGroup<StaticArrow> = null;
 	public static var playerStrums:FlxTypedGroup<StaticArrow> = null;
 	public static var cpuStrums:FlxTypedGroup<StaticArrow> = null;
@@ -728,6 +731,25 @@ class PlayState extends MusicBeatState
 		if (PlayStateChangeables.useDownscroll)
 			strumLine.y = FlxG.height - 165;
 
+		laneunderlayOpponent = new FlxSprite(0, 0).makeGraphic(110 * 4 + 50, FlxG.height * 2);
+		laneunderlayOpponent.alpha = 1 - FlxG.save.data.laneTransparency;
+		laneunderlayOpponent.color = FlxColor.BLACK;
+		laneunderlayOpponent.scrollFactor.set();
+
+		laneunderlay = new FlxSprite(0, 0).makeGraphic(110 * 4 + 50, FlxG.height * 2);
+		laneunderlay.alpha = 1 - FlxG.save.data.laneTransparency;
+		laneunderlay.color = FlxColor.BLACK;
+		laneunderlay.scrollFactor.set();
+
+		if (FlxG.save.data.laneUnderlay && !PlayStateChangeables.Optimize)
+		{
+			if (!FlxG.save.data.middleScroll)
+			{
+				add(laneunderlayOpponent);
+			}
+			add(laneunderlay);
+		}
+
 		strumLineNotes = new FlxTypedGroup<StaticArrow>();
 		add(strumLineNotes);
 
@@ -736,6 +758,12 @@ class PlayState extends MusicBeatState
 
 		generateStaticArrows(0);
 		generateStaticArrows(1);
+
+		if (FlxG.save.data.middleScroll)
+		{
+			laneunderlayOpponent.alpha = 0;
+			laneunderlay.x = playerStrums.members[0].x - 25;
+		}
 
 		// startCountdown();
 
@@ -933,6 +961,9 @@ class PlayState extends MusicBeatState
 		if (PlayStateChangeables.botPlay && !loadRep)
 			add(botPlayState);
 
+		if (PlayStateChangeables.botPlay && !loadRep)
+			add(botPlayState);
+
 		iconP1 = new HealthIcon(boyfriend.curCharacter, true);
 		iconP1.y = healthBar.y - (iconP1.height / 2);
 		add(iconP1);
@@ -948,6 +979,8 @@ class PlayState extends MusicBeatState
 		iconP1.cameras = [camHUD];
 		iconP2.cameras = [camHUD];
 		scoreTxt.cameras = [camHUD];
+		laneunderlay.cameras = [camHUD];
+		laneunderlayOpponent.cameras = [camHUD];
 		if (isStoryMode)
 			doof.cameras = [camHUD];
 		if (FlxG.save.data.songPosition)
@@ -1676,7 +1709,7 @@ class PlayState extends MusicBeatState
 
 			for (songNotes in section.sectionNotes)
 			{
-				var daStrumTime:Float = songNotes[0] - FlxG.save.data.offset - songOffset;
+				var daStrumTime:Float = songNotes[0] - FlxG.save.data.offset;
 				if (daStrumTime < 0)
 					daStrumTime = 0;
 				var daNoteData:Int = Std.int(songNotes[1] % 4);
@@ -1840,7 +1873,8 @@ class PlayState extends MusicBeatState
 			{
 				babyArrow.y -= 10;
 				// babyArrow.alpha = 0;
-				FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
+				if (!FlxG.save.data.middleScroll || executeModchart || player == 1)
+					FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
 			}
 
 			babyArrow.ID = i;
@@ -1848,17 +1882,18 @@ class PlayState extends MusicBeatState
 			switch (player)
 			{
 				case 0:
+					babyArrow.x += 20;
 					cpuStrums.add(babyArrow);
 				case 1:
 					playerStrums.add(babyArrow);
 			}
 
 			babyArrow.playAnim('static');
-			babyArrow.x += 50;
+			babyArrow.x += 110;
 			babyArrow.x += ((FlxG.width / 2) * player);
 
-			if (PlayStateChangeables.Optimize)
-				babyArrow.x -= 275;
+			if (PlayStateChangeables.Optimize || (FlxG.save.data.middleScroll && !executeModchart))
+				babyArrow.x -= 320;
 
 			cpuStrums.forEach(function(spr:FlxSprite)
 			{
@@ -2881,13 +2916,11 @@ class PlayState extends MusicBeatState
 					if (PlayStateChangeables.useDownscroll)
 					{
 						if (daNote.mustPress)
-						{
 							daNote.y = (playerStrums.members[Math.floor(Math.abs(daNote.noteData))].y
 								+
 								0.45 * ((Conductor.songPosition - daNote.strumTime) / songMultiplier) * (FlxMath.roundDecimal(PlayStateChangeables.scrollSpeed == 1 ? SONG.speed : PlayStateChangeables.scrollSpeed,
 									2)))
 								- daNote.noteYOff;
-						}
 						else
 							daNote.y = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y
 								+
@@ -2900,23 +2933,13 @@ class PlayState extends MusicBeatState
 							daNote.y -= daNote.height - stepHeight;
 
 							// If not in botplay, only clip sustain notes when properly hit, botplay gets to clip it everytime
-							if (!PlayStateChangeables.botPlay)
+							if ((PlayStateChangeables.botPlay
+								|| !daNote.mustPress
+								|| daNote.wasGoodHit
+								|| holdArray[Math.floor(Math.abs(daNote.noteData))])
+								&& daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= (strumLine.y + Note.swagWidth / 2))
 							{
-								if ((!daNote.mustPress || daNote.wasGoodHit || holdArray[Math.floor(Math.abs(daNote.noteData))])
-									&& daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= (strumLine.y + Note.swagWidth / 2))
-								{
-									// Clip to strumline
-									var swagRect = new FlxRect(0, 0, daNote.frameWidth * 2, daNote.frameHeight * 2);
-									swagRect.height = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y
-										+ Note.swagWidth / 2
-										- daNote.y) / daNote.scale.y;
-									swagRect.y = daNote.frameHeight - swagRect.height;
-
-									daNote.clipRect = swagRect;
-								}
-							}
-							else
-							{
+								// Clip to strumline
 								var swagRect = new FlxRect(0, 0, daNote.frameWidth * 2, daNote.frameHeight * 2);
 								swagRect.height = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y
 									+ Note.swagWidth / 2
@@ -2941,23 +2964,13 @@ class PlayState extends MusicBeatState
 								+ daNote.noteYOff;
 						if (daNote.isSustainNote)
 						{
-							if (!PlayStateChangeables.botPlay)
+							if ((PlayStateChangeables.botPlay
+								|| !daNote.mustPress
+								|| daNote.wasGoodHit
+								|| holdArray[Math.floor(Math.abs(daNote.noteData))])
+								&& daNote.y + daNote.offset.y * daNote.scale.y <= (strumLine.y + Note.swagWidth / 2))
 							{
-								if ((!daNote.mustPress || daNote.wasGoodHit || holdArray[Math.floor(Math.abs(daNote.noteData))])
-									&& daNote.y + daNote.offset.y * daNote.scale.y <= (strumLine.y + Note.swagWidth / 2))
-								{
-									// Clip to strumline
-									var swagRect = new FlxRect(0, 0, daNote.width / daNote.scale.x, daNote.height / daNote.scale.y);
-									swagRect.y = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y
-										+ Note.swagWidth / 2
-										- daNote.y) / daNote.scale.y;
-									swagRect.height -= swagRect.y;
-
-									daNote.clipRect = swagRect;
-								}
-							}
-							else
-							{
+								// Clip to strumline
 								var swagRect = new FlxRect(0, 0, daNote.width / daNote.scale.x, daNote.height / daNote.scale.y);
 								swagRect.y = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y
 									+ Note.swagWidth / 2
@@ -3086,6 +3099,8 @@ class PlayState extends MusicBeatState
 					}
 					daNote.modAngle = strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
 				}
+				if (!daNote.mustPress && FlxG.save.data.middleScroll && !executeModchart)
+					daNote.alpha = 0;
 
 				if (daNote.isSustainNote)
 				{

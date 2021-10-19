@@ -486,6 +486,8 @@ class Judgement extends Option
 		return false;
 	}
 
+	
+
 	override function getValue():String
 	{
 		return "Safe Frames: "
@@ -512,6 +514,79 @@ class Judgement extends Option
 		FlxG.save.data.frames = Conductor.safeFrames;
 
 		Conductor.recalculateTimings();
+		return true;
+	}
+}
+
+class MiddleScrollOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.middleScroll = !FlxG.save.data.middleScroll;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return (FlxG.save.data.middleScroll ? "Middle Scroll" : "Right Side Scroll");
+	}
+}
+
+class LaneUnderlayOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+		acceptValues = true;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.laneUnderlay = !FlxG.save.data.laneUnderlay;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return (FlxG.save.data.laneUnderlay ? "Lane underlay" : "No lane underlay");
+	}
+
+	override function right():Bool
+	{
+		FlxG.save.data.laneTransparency += 0.1;
+
+		if (FlxG.save.data.laneTransparency < 0)
+			FlxG.save.data.laneTransparency = 0;
+
+		if (FlxG.save.data.laneTransparency > 1)
+			FlxG.save.data.laneTransparency = 1;
+		return true;
+	}
+
+	override function getValue():String
+	{
+		return "Current Lane Underlay transparency: " + HelperFunctions.truncateFloat(FlxG.save.data.laneTransparency, 1);
+	}
+
+	override function left():Bool
+	{
+		FlxG.save.data.laneTransparency -= 0.1;
+
+		if (FlxG.save.data.laneTransparency < 0)
+			FlxG.save.data.laneTransparency = 0;
+
+		if (FlxG.save.data.laneTransparency > 1)
+			FlxG.save.data.laneTransparency = 1;
+
 		return true;
 	}
 }
