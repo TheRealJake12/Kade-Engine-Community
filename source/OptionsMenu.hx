@@ -32,8 +32,6 @@ class OptionsMenu extends MusicBeatState
 			new LaneUnderlayOption("Toggles lane underlay"),
 			new GhostTapOption("Toggle counting pressing a directional input when no arrow is there as a miss."),
 			new Judgement("Customize your Hit Timings. (LEFT or RIGHT)"),
-			#if desktop new FPSCapOption("Change your FPS Cap."),
-			#end
 			new ScrollSpeedOption("Change your scroll speed. (1 = Chart dependent)"),
 			new AccuracyDOption("Change how accuracy is calculated. (Accurate = Simple, Complex = Milisecond Based)"),
 			new ResetButtonOption("Toggle pressing R to gameover."),
@@ -50,6 +48,8 @@ class OptionsMenu extends MusicBeatState
 		]),
 		new OptionCategory("Performance", [
 			new FPSOption("Toggle the FPS Counter"),
+			#if desktop new FPSCapOption("Change your FPS Cap."),
+			#end
 			new RainbowFPSOption("Make the FPS Counter flicker through rainbow colors."),
 			new InstantRespawn("Instant Respawn but lags hard on low end systems"),
 			new CamZoomOption("Toggle the camera zoom in-game."),
@@ -57,7 +57,7 @@ class OptionsMenu extends MusicBeatState
 			new EditorRes("Performance Using the Chart Editior greatly increased when this is off."),
 			new AntialiasingOption("Anti-Aliasing makes things look smoother but uses a bit of performance."),
 			new Optimization("Nothing but Your Strumline is visible. Best Performance."),
-			new GraphicLoading("Caches every character in assets/shared/characters. Loading times greatly increased. (HIGH MEMORY!!!)"),
+			new GraphicLoading("Caches every character in assets/shared/characters. Loading times greatly decreased. (HIGH MEMORY!!!)"),
 		]),
 		new OptionCategory("Misc", [
 			new FlashingLightsOption("Toggle flashing lights that can cause epileptic seizures and strain."),
