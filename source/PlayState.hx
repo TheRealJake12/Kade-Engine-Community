@@ -1,6 +1,5 @@
 package;
 
-import Options.CpuStrums;
 #if FEATURE_LUAMODCHART
 import LuaClass.LuaCamera;
 import LuaClass.LuaCharacter;
@@ -760,11 +759,11 @@ class PlayState extends MusicBeatState
 		generateStaticArrows(0);
 		generateStaticArrows(1);
 
-		laneunderlay.x = playerStrums.members[0].x - 25;
-		laneunderlayOpponent.x = cpuStrums.members[0].x - 25;
-
-		laneunderlay.screenCenter(Y);
-		laneunderlayOpponent.screenCenter(Y);
+		if (FlxG.save.data.middleScroll)
+		{
+			laneunderlayOpponent.alpha = 0;
+			laneunderlay.x = playerStrums.members[0].x - 25;
+		}
 
 		// startCountdown();
 
@@ -3102,7 +3101,6 @@ class PlayState extends MusicBeatState
 				}
 				if (!daNote.mustPress && FlxG.save.data.middleScroll && !executeModchart)
 					daNote.alpha = 0;
-					
 
 				if (daNote.isSustainNote)
 				{

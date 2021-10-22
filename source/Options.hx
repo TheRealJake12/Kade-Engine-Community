@@ -537,7 +537,6 @@ class MiddleScrollOption extends Option
 	{
 		return (FlxG.save.data.middleScroll ? "Middle Scroll" : "Right Side Scroll");
 	}
-	
 }
 
 class LaneUnderlayOption extends Option
