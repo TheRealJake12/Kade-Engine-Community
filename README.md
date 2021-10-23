@@ -17,3 +17,10 @@ Ultra New Performance Tab includes all the already existing Performance Options 
 
 A Options Menu Button to change Keybinds if they arent correct, swap scroll directions, and Turn on Optimization!
 this was easy add
+
+
+![Middlescroll](art/readme/upmiddle.png)
+
+A easier way added in than Kade 1.8. With Fixed Middlescroll for Both Downscroll and Upscroll
+Little harder to get used to but the options explain it
+![Middlescroll](art/readme/downmiddle.png)
