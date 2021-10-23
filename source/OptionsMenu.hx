@@ -17,6 +17,8 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import lime.utils.Assets;
 
+
+
 class OptionsMenu extends MusicBeatState
 {
 	public static var instance:OptionsMenu;
@@ -24,12 +26,14 @@ class OptionsMenu extends MusicBeatState
 	var selector:FlxText;
 	var curSelected:Int = 0;
 
+	
+
 	var options:Array<OptionCategory> = [
 		new OptionCategory("Gameplay", [
 			new DFJKOption(controls),
 			new DownscrollOption("Toggle making the notes scroll down rather than up."),
-			new MiddleScrollOption("Put your lane in the center or on the right."),
-			new LaneUnderlayOption("Toggles lane underlay"),
+			new MiddleScrollOption("Make Sure Downscroll Middlescroll is disabled with this for Middlescroll."),
+			new DMiddleScrollOption("Make Sure Upscroll Middlescroll is disabled with this for Middlescroll."),
 			new GhostTapOption("Toggle counting pressing a directional input when no arrow is there as a miss."),
 			new Judgement("Customize your Hit Timings. (LEFT or RIGHT)"),
 			new ScrollSpeedOption("Change your scroll speed. (1 = Chart dependent)"),
@@ -92,6 +96,9 @@ class OptionsMenu extends MusicBeatState
 		instance = this;
 		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.image("menuDesat"));
 
+			FlxG.sound.playMusic(Paths.music('optionsmenu'));
+			FlxG.sound.music.time = 7050;
+
 		menuBG.color = 0xFFea71fd;
 		menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));
 		menuBG.updateHitbox();
@@ -148,6 +155,9 @@ class OptionsMenu extends MusicBeatState
 			if (controls.BACK && !isCat)
 			{
 				FlxG.switchState(new MainMenuState());
+				FlxG.sound.playMusic(Paths.music('freakyMenu'));
+				FlxG.sound.music.time = 9400;
+
 			}
 			else if (controls.BACK)
 			{

@@ -8,6 +8,7 @@ import flixel.FlxG;
 import openfl.display.FPS;
 import openfl.Lib;
 
+
 class OptionCategory
 {
 	private var _options:Array<Option> = new Array<Option>();
@@ -535,7 +536,28 @@ class MiddleScrollOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return (FlxG.save.data.middleScroll ? "Middle Scroll" : "Right Side Scroll");
+		return (FlxG.save.data.middleScroll ? "Upscroll Right Side Scroll" : "Upscroll Middle scroll");
+	}
+}
+
+class DMiddleScrollOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.middleDScroll = !FlxG.save.data.middleDScroll;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return (FlxG.save.data.middleDScroll ? "Downscroll Right Side Scroll" : "Downscroll Middlescroll");
 	}
 }
 
@@ -1076,6 +1098,7 @@ class ResetSettings extends Option
 		FlxG.save.data.customStrumLine = null;
 		FlxG.save.data.camzoom = null;
 		FlxG.save.data.scoreScreen = null;
+		FlxG.save.data.middleScroll = null;
 		FlxG.save.data.inputShow = null;
 		FlxG.save.data.optimize = null;
 		FlxG.save.data.cacheImages = null;

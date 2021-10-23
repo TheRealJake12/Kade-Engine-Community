@@ -147,6 +147,8 @@ class PlayState extends MusicBeatState
 
 	private var curSection:Int = 0;
 
+	private var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
+
 	private var camFollow:FlxObject;
 
 	private static var prevCamFollow:FlxObject;
@@ -421,6 +423,8 @@ class PlayState extends MusicBeatState
 		FlxG.cameras.add(camNotes);
 
 		camHUD.zoom = PlayStateChangeables.zoom;
+
+		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
 
 		FlxCamera.defaultCameras = [camGame];
 
@@ -731,25 +735,6 @@ class PlayState extends MusicBeatState
 		if (PlayStateChangeables.useDownscroll)
 			strumLine.y = FlxG.height - 165;
 
-		laneunderlayOpponent = new FlxSprite(0, 0).makeGraphic(110 * 4 + 50, FlxG.height * 2);
-		laneunderlayOpponent.alpha = 1 - FlxG.save.data.laneTransparency;
-		laneunderlayOpponent.color = FlxColor.BLACK;
-		laneunderlayOpponent.scrollFactor.set();
-
-		laneunderlay = new FlxSprite(0, 0).makeGraphic(110 * 4 + 50, FlxG.height * 2);
-		laneunderlay.alpha = 1 - FlxG.save.data.laneTransparency;
-		laneunderlay.color = FlxColor.BLACK;
-		laneunderlay.scrollFactor.set();
-
-		if (FlxG.save.data.laneUnderlay && !PlayStateChangeables.Optimize)
-		{
-			if (!FlxG.save.data.middleScroll)
-			{
-				add(laneunderlayOpponent);
-			}
-			add(laneunderlay);
-		}
-
 		strumLineNotes = new FlxTypedGroup<StaticArrow>();
 		add(strumLineNotes);
 
@@ -758,12 +743,6 @@ class PlayState extends MusicBeatState
 
 		generateStaticArrows(0);
 		generateStaticArrows(1);
-
-		if (FlxG.save.data.middleScroll)
-		{
-			laneunderlayOpponent.alpha = 0;
-			laneunderlay.x = playerStrums.members[0].x - 25;
-		}
 
 		// startCountdown();
 
@@ -972,6 +951,12 @@ class PlayState extends MusicBeatState
 		iconP2.y = healthBar.y - (iconP2.height / 2);
 		add(iconP2);
 
+		var splash:NoteSplash = new NoteSplash(100, 100, 0);
+		grpNoteSplashes.add(splash);
+		splash.alpha = 0.0;
+
+		grpNoteSplashes.cameras = [camHUD];
+
 		strumLineNotes.cameras = [camHUD];
 		notes.cameras = [camHUD];
 		healthBar.cameras = [camHUD];
@@ -979,8 +964,6 @@ class PlayState extends MusicBeatState
 		iconP1.cameras = [camHUD];
 		iconP2.cameras = [camHUD];
 		scoreTxt.cameras = [camHUD];
-		laneunderlay.cameras = [camHUD];
-		laneunderlayOpponent.cameras = [camHUD];
 		if (isStoryMode)
 			doof.cameras = [camHUD];
 		if (FlxG.save.data.songPosition)
@@ -1654,6 +1637,8 @@ class PlayState extends MusicBeatState
 		notes = new FlxTypedGroup<Note>();
 		add(notes);
 
+		add(grpNoteSplashes);
+
 		var noteData:Array<SwagSection>;
 
 		// NEW SHIT
@@ -1796,12 +1781,64 @@ class PlayState extends MusicBeatState
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
 	}
 
+	function spawnNoteSplashOnNote(note:Note)
+	{
+		if (note != null)
+		{
+			var strum = playerStrums.members[note.noteData];
+			if (strum != null)
+			{
+				spawnNoteSplash(strum.x, strum.y, note.noteData);
+			}
+		}
+	}
+
+	function spawnNoteSplashOnNoteDad(note:Note)
+	{
+		if (note != null)
+		{
+			var strum = cpuStrums.members[note.noteData];
+			if (strum != null)
+			{
+				spawnNoteSplash(strum.x, strum.y, note.noteData);
+			}
+		}
+	}
+
+	public function spawnNoteSplash(x:Float, y:Float, data:Int)
+	{
+		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
+		splash.setupNoteSplash(x, y, data);
+		grpNoteSplashes.add(splash);
+	}
+
 	private function generateStaticArrows(player:Int):Void
 	{
 		for (i in 0...4)
 		{
 			// FlxG.log.add(i);
 			var babyArrow:StaticArrow = new StaticArrow(0, strumLine.y);
+
+			if (!FlxG.save.data.middleScroll) // Thank you Upscroll Users this was simple (not really) to add
+			{
+					babyArrow.x = -300;
+					babyArrow.y = 5;
+					for (note in cpuStrums)
+					{
+						note.visible = false;
+					}
+			}
+
+			if (!FlxG.save.data.middleDScroll == true)
+			{
+				babyArrow.x = -300;
+				babyArrow.y = 600;
+				for (note in cpuStrums)
+				{
+					note.visible = false;
+				}
+			}
+			
 
 			// defaults if no noteStyle was found in chart
 			var noteTypeCheck:String = 'normal';
@@ -1821,6 +1858,7 @@ class PlayState extends MusicBeatState
 			{
 				noteTypeCheck = SONG.noteStyle;
 			}
+			
 
 			switch (noteTypeCheck)
 			{
@@ -1873,8 +1911,7 @@ class PlayState extends MusicBeatState
 			{
 				babyArrow.y -= 10;
 				// babyArrow.alpha = 0;
-				if (!FlxG.save.data.middleScroll || executeModchart || player == 1)
-					FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
+				FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
 			}
 
 			babyArrow.ID = i;
@@ -1882,18 +1919,17 @@ class PlayState extends MusicBeatState
 			switch (player)
 			{
 				case 0:
-					babyArrow.x += 20;
 					cpuStrums.add(babyArrow);
 				case 1:
 					playerStrums.add(babyArrow);
 			}
 
 			babyArrow.playAnim('static');
-			babyArrow.x += 110;
+			babyArrow.x += 50;
 			babyArrow.x += ((FlxG.width / 2) * player);
 
-			if (PlayStateChangeables.Optimize || (FlxG.save.data.middleScroll && !executeModchart))
-				babyArrow.x -= 320;
+			if (PlayStateChangeables.Optimize)
+				babyArrow.x -= 275;
 
 			cpuStrums.forEach(function(spr:FlxSprite)
 			{
@@ -3099,8 +3135,7 @@ class PlayState extends MusicBeatState
 					}
 					daNote.modAngle = strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
 				}
-				if (!daNote.mustPress && FlxG.save.data.middleScroll && !executeModchart)
-					daNote.alpha = 0;
+
 
 				if (daNote.isSustainNote)
 				{
@@ -3604,6 +3639,7 @@ class PlayState extends MusicBeatState
 				if (FlxG.save.data.accuracyMod == 0)
 					totalNotesHit += 1;
 				sicks++;
+				spawnNoteSplashOnNote(daNote);
 		}
 
 		if (songMultiplier >= 1.05)
@@ -4267,6 +4303,7 @@ class PlayState extends MusicBeatState
 			if (daNote != null)
 			{
 				if (!daNote.isSustainNote)
+					
 					songScore -= 10;
 			}
 			else

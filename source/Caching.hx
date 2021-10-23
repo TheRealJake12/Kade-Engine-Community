@@ -27,6 +27,7 @@ import flixel.math.FlxRect;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import flixel.text.FlxText;
+import Discord.DiscordClient;
 
 using StringTools;
 
@@ -49,6 +50,11 @@ class Caching extends MusicBeatState
 	override function create()
 	{
 		FlxG.save.bind('funkin', 'ninjamuffin99');
+
+		#if FEATURE_DISCORD
+		// Updating Discord Rich Presence
+		DiscordClient.changePresence("Caching :(", null);
+		#end
 
 		PlayerSettings.init();
 

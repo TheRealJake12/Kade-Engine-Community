@@ -39,7 +39,7 @@ class MainMenuState extends MusicBeatState
 
 	public static var nightly:String = "";
 
-	public static var kadeEngineVer:String = "1.1 Community" + nightly;
+	public static var kadeEngineVer:String = "1.2 Community" + nightly;
 	public static var gameVer:String = "Kade Engine 1.7";
 
 	var magenta:FlxSprite;
@@ -59,6 +59,11 @@ class MainMenuState extends MusicBeatState
 		if (!FlxG.sound.music.playing)
 		{
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
+		}
+		else if
+		(!FlxG.sound.music.playing)
+		{
+			FlxG.sound.playMusic(Paths.music('optionsmenu'));
 		}
 
 		persistentUpdate = persistentDraw = true;

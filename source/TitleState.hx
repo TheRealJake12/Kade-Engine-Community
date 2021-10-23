@@ -40,6 +40,7 @@ class TitleState extends MusicBeatState
 	var credTextShit:Alphabet;
 	var textGroup:FlxGroup;
 	var ngSpr:FlxSprite;
+	var me:FlxSprite;
 
 	var curWacky:Array<String> = [];
 
@@ -344,7 +345,10 @@ class TitleState extends MusicBeatState
 					createCoolText(['KE Community', 'by']);
 			case 7:
 				if (Main.watermarks)
+				{
 					addMoreText('TheRealJake_12');
+					ngSpr.visible = true;
+				}
 				else
 				{
 					addMoreText('TheRealJake_12');
