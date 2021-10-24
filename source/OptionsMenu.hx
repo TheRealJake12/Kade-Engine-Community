@@ -32,8 +32,6 @@ class OptionsMenu extends MusicBeatState
 		new OptionCategory("Gameplay", [
 			new DFJKOption(controls),
 			new DownscrollOption("Toggle making the notes scroll down rather than up."),
-			new MiddleScrollOption("Make Sure Downscroll Middlescroll is disabled with this for Middlescroll."),
-			new DMiddleScrollOption("Make Sure Upscroll Middlescroll is disabled with this for Middlescroll."),
 			new GhostTapOption("Toggle counting pressing a directional input when no arrow is there as a miss."),
 			new Judgement("Customize your Hit Timings. (LEFT or RIGHT)"),
 			new ScrollSpeedOption("Change your scroll speed. (1 = Chart dependent)"),
@@ -43,6 +41,9 @@ class OptionsMenu extends MusicBeatState
 			new CustomizeGameplay("Drag and drop gameplay modules to your prefered positions!"),
 		]),
 		new OptionCategory("Appearance", [
+			new NotesplashesOption("Adds notesplashes when you hit a Sick! note."),
+			new MiddleScrollOption("Make Sure Downscroll Middlescroll is disabled with this for Middlescroll."),
+			new DMiddleScrollOption("Make Sure Upscroll Middlescroll is disabled with this for Middlescroll."),
 			new StepManiaOption("Sets the colors of the arrows depending on quantization instead of direction."),
 			new AccuracyOption("Display accuracy information on the info bar."),
 			new SongPositionOption("Show the song's current position as a scrolling bar."),

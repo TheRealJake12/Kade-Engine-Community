@@ -3639,7 +3639,10 @@ class PlayState extends MusicBeatState
 				if (FlxG.save.data.accuracyMod == 0)
 					totalNotesHit += 1;
 				sicks++;
+				if (FlxG.save.data.notesplashes)
+				{
 				spawnNoteSplashOnNote(daNote);
+				}
 		}
 
 		if (songMultiplier >= 1.05)

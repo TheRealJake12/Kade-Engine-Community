@@ -561,6 +561,27 @@ class DMiddleScrollOption extends Option
 	}
 }
 
+class NotesplashesOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.notesplashes = !FlxG.save.data.notesplashes;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return (FlxG.save.data.notesplashes ? "Notesplashes ON" : "Notesplashes OFF");
+	}
+}
+
 class LaneUnderlayOption extends Option
 {
 	public function new(desc:String)
@@ -634,6 +655,8 @@ class FPSOption extends Option
 		return "FPS Counter " + (!FlxG.save.data.fps ? "off" : "on");
 	}
 }
+
+
 
 class ScoreScreen extends Option
 {
