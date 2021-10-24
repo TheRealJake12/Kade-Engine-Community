@@ -1821,7 +1821,7 @@ class PlayState extends MusicBeatState
 
 			if (!FlxG.save.data.middleScroll) // Thank you Upscroll Users this was simple (not really) to add
 			{
-					babyArrow.x = -300;
+					babyArrow.x = -273;
 					babyArrow.y = 5;
 					for (note in cpuStrums)
 					{
@@ -1831,7 +1831,7 @@ class PlayState extends MusicBeatState
 
 			if (!FlxG.save.data.middleDScroll == true)
 			{
-				babyArrow.x = -300;
+				babyArrow.x = -273;
 				babyArrow.y = 600;
 				for (note in cpuStrums)
 				{
