@@ -42,6 +42,7 @@ class OptionsMenu extends MusicBeatState
 		]),
 		new OptionCategory("Appearance", [
 			new NotesplashesOption("Adds notesplashes when you hit a Sick! note."),
+			new NewNoteskinOption("Uses the FNF NEO Noteskin"),
 			new MiddleScrollOption("Make Sure Downscroll Middlescroll is disabled with this for Middlescroll."),
 			new DMiddleScrollOption("Make Sure Upscroll Middlescroll is disabled with this for Middlescroll."),
 			new StepManiaOption("Sets the colors of the arrows depending on quantization instead of direction."),

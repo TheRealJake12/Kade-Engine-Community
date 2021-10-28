@@ -307,7 +307,7 @@ class PlayState extends MusicBeatState
 		if (previousRate < 1.00)
 			previousRate = 1;
 
-		if (FlxG.save.data.fpsCap > 290)
+		if (FlxG.save.data.fpsCap > 420)
 			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(800);
 
 		if (FlxG.sound.music != null)
@@ -1829,7 +1829,7 @@ class PlayState extends MusicBeatState
 					}
 			}
 
-			if (!FlxG.save.data.middleDScroll == true)
+			if (!FlxG.save.data.middleDScroll == true) // Fuck Downscroll Users for making a seperate thing
 			{
 				babyArrow.x = -273;
 				babyArrow.y = 600;
@@ -1859,32 +1859,9 @@ class PlayState extends MusicBeatState
 				noteTypeCheck = SONG.noteStyle;
 			}
 			
-
-			switch (noteTypeCheck)
+			if (FlxG.save.data.NewNotes)
 			{
-				case 'pixel':
-					babyArrow.loadGraphic(Paths.image('weeb/pixelUI/arrows-pixels', 'week6'), true, 17, 17);
-					babyArrow.animation.add('green', [6]);
-					babyArrow.animation.add('red', [7]);
-					babyArrow.animation.add('blue', [5]);
-					babyArrow.animation.add('purplel', [4]);
-
-					babyArrow.setGraphicSize(Std.int(babyArrow.width * daPixelZoom));
-					babyArrow.updateHitbox();
-					babyArrow.antialiasing = false;
-
-					babyArrow.x += Note.swagWidth * i;
-					babyArrow.animation.add('static', [i]);
-					babyArrow.animation.add('pressed', [4 + i, 8 + i], 12, false);
-					babyArrow.animation.add('confirm', [12 + i, 16 + i], 24, false);
-
-					for (j in 0...4)
-					{
-						babyArrow.animation.add('dirCon' + j, [12 + j, 16 + j], 24, false);
-					}
-
-				default:
-					babyArrow.frames = Paths.getSparrowAtlas('NOTE_assets');
+				babyArrow.frames = Paths.getSparrowAtlas('notes/NOTE_assets');
 					for (j in 0...4)
 					{
 						babyArrow.animation.addByPrefix(dataColor[j], 'arrow' + dataSuffix[j]);
@@ -1902,11 +1879,65 @@ class PlayState extends MusicBeatState
 					babyArrow.antialiasing = FlxG.save.data.antialiasing;
 					babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
 			}
+			else
+			{
+				switch (noteTypeCheck)
+				{
+					case 'pixel':
+						babyArrow.loadGraphic(Paths.image('weeb/pixelUI/arrows-pixels', 'week6'), true, 17, 17);
+						babyArrow.animation.add('green', [6]);
+						babyArrow.animation.add('red', [7]);
+						babyArrow.animation.add('blue', [5]);
+						babyArrow.animation.add('purplel', [4]);
+
+						babyArrow.setGraphicSize(Std.int(babyArrow.width * daPixelZoom));
+						babyArrow.updateHitbox();
+						babyArrow.antialiasing = false;
+
+						babyArrow.x += Note.swagWidth * i;
+						babyArrow.animation.add('static', [i]);
+						babyArrow.animation.add('pressed', [4 + i, 8 + i], 12, false);
+						babyArrow.animation.add('confirm', [12 + i, 16 + i], 24, false);
+
+						for (j in 0...4)
+						{
+							babyArrow.animation.add('dirCon' + j, [12 + j, 16 + j], 24, false);
+						}
+				
+					default:
+						babyArrow.frames = Paths.getSparrowAtlas('NOTE_assets');
+						for (j in 0...4)
+						{
+							babyArrow.animation.addByPrefix(dataColor[j], 'arrow' + dataSuffix[j]);
+							babyArrow.animation.addByPrefix('dirCon' + j, dataSuffix[j].toLowerCase() + ' confirm', 24, false);
+						}
+
+						var lowerDir:String = dataSuffix[i].toLowerCase();
+
+						babyArrow.animation.addByPrefix('static', 'arrow' + dataSuffix[i]);
+						babyArrow.animation.addByPrefix('pressed', lowerDir + ' press', 24, false);
+						babyArrow.animation.addByPrefix('confirm', lowerDir + ' confirm', 24, false);
+
+						babyArrow.x += Note.swagWidth * i;
+
+						babyArrow.antialiasing = FlxG.save.data.antialiasing;
+						babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
+				}
+				
+			}
 
 			babyArrow.updateHitbox();
 			babyArrow.scrollFactor.set();
 
-			babyArrow.alpha = 0;
+			if (FlxG.save.data.NewNotes)
+			{
+				babyArrow.alpha = 10;
+			}
+			else
+			{
+				babyArrow.alpha = 0;
+			}
+
 			if (!isStoryMode)
 			{
 				babyArrow.y -= 10;
@@ -3367,7 +3398,7 @@ class PlayState extends MusicBeatState
 			PlayStateChangeables.useDownscroll = false;
 		}
 
-		if (FlxG.save.data.fpsCap > 290)
+		if (FlxG.save.data.fpsCap > 420)
 			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(290);
 
 		#if FEATURE_LUAMODCHART

@@ -17,6 +17,9 @@ class KadeEngineData
 
 		if (FlxG.save.data.notesplashes == null)
 			FlxG.save.data.notesplashes = false;
+
+		if (FlxG.save.data.NewNotes == null)
+			FlxG.save.data.NewNotes = false;
 	
 		if (FlxG.save.data.antialiasing == null)
 			FlxG.save.data.antialiasing = true;

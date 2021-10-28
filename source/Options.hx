@@ -582,6 +582,27 @@ class NotesplashesOption extends Option
 	}
 }
 
+class NewNoteskinOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.NewNotes = !FlxG.save.data.NewNotes;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return (FlxG.save.data.NewNotes ? "New Noteskin ON" : "New Noteskin OFF");
+	}
+}
+
 class LaneUnderlayOption extends Option
 {
 	public function new(desc:String)
@@ -700,9 +721,9 @@ class FPSCapOption extends Option
 
 	override function right():Bool
 	{
-		if (FlxG.save.data.fpsCap >= 290)
+		if (FlxG.save.data.fpsCap >= 420)
 		{
-			FlxG.save.data.fpsCap = 290;
+			FlxG.save.data.fpsCap = 420;
 			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(290);
 		}
 		else
@@ -714,8 +735,8 @@ class FPSCapOption extends Option
 
 	override function left():Bool
 	{
-		if (FlxG.save.data.fpsCap > 290)
-			FlxG.save.data.fpsCap = 290;
+		if (FlxG.save.data.fpsCap > 420)
+			FlxG.save.data.fpsCap = 420;
 		else if (FlxG.save.data.fpsCap < 60)
 			FlxG.save.data.fpsCap = Application.current.window.displayMode.refreshRate;
 		else
