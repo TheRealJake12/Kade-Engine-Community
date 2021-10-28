@@ -537,7 +537,7 @@ class MiddleScrollOption extends Option
 	private override function updateDisplay():String
 	{
 		return (FlxG.save.data.middleScroll ? "Upscroll Right Side Scroll" : "Upscroll Middle scroll");
-	}
+	} // 
 }
 
 class DMiddleScrollOption extends Option
@@ -557,8 +557,8 @@ class DMiddleScrollOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return (FlxG.save.data.middleDScroll ? "Downscroll Right Side Scroll" : "Downscroll Middlescroll");
-	}
+		return (FlxG.save.data.middleDScroll ? "Downscroll Right Side Scroll" : " Downscroll Middlescroll");
+	} //
 }
 
 class NotesplashesOption extends Option
@@ -1113,6 +1113,7 @@ class ResetSettings extends Option
 			return true;
 		}
 		FlxG.save.data.weekUnlocked = null;
+		FlxG.save.data.notesplashes = null;
 		FlxG.save.data.newInput = null;
 		FlxG.save.data.downscroll = null;
 		FlxG.save.data.antialiasing = null;
@@ -1143,7 +1144,10 @@ class ResetSettings extends Option
 		FlxG.save.data.camzoom = null;
 		FlxG.save.data.scoreScreen = null;
 		FlxG.save.data.middleScroll = null;
+		FlxG.save.data.middleDScroll = null;
 		FlxG.save.data.inputShow = null;
+		FlxG.save.data.NewNotes = null;
+
 		FlxG.save.data.optimize = null;
 		FlxG.save.data.cacheImages = null;
 		FlxG.save.data.editor = null;

@@ -1819,8 +1819,9 @@ class PlayState extends MusicBeatState
 			// FlxG.log.add(i);
 			var babyArrow:StaticArrow = new StaticArrow(0, strumLine.y);
 
-			if (!FlxG.save.data.middleScroll) // Thank you Upscroll Users this was simple (not really) to add
+			if (!FlxG.save.data.middleScroll || PlayStateChangeables.Optimize) // USING OPTIMIZE WITH MIDDLESCROLL IS FUCKY
 			{
+				// Thank you Upscroll Users this was simple (not really) to add
 					babyArrow.x = -273;
 					babyArrow.y = 5;
 					for (note in cpuStrums)
@@ -1958,9 +1959,6 @@ class PlayState extends MusicBeatState
 			babyArrow.playAnim('static');
 			babyArrow.x += 50;
 			babyArrow.x += ((FlxG.width / 2) * player);
-
-			if (PlayStateChangeables.Optimize)
-				babyArrow.x -= 275;
 
 			cpuStrums.forEach(function(spr:FlxSprite)
 			{
