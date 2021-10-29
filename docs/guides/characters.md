@@ -29,6 +29,7 @@ You will find a lot of Case Statements, if you character is a enemy character (d
 
 If your character will only have the idle animations and the note animations, just copy the dads but replace the dad with your character name
 Example:
+```haxe
 case 'characterhere':
 				// your character code here
 				tex = Paths.getSparrowAtlas('characterhere', 'shared', true);
@@ -41,14 +42,16 @@ case 'characterhere':
 
 				loadOffsetFile(curCharacter);
 				barColor = 0xFFaf66ce;
-
+```
 There is Offsets as I mentioned earlier, and make each animation 0 0 for testing and mess with them to your liking
 Example:
+```haxe
 				idle 0 0
 				singUP 0 0
 				singRIGHT 0 0
 				singLEFT 0 0
 				singDOWN 0 0
+```
 
 the barColor is what color the health bar is for your character when you have the option of Character Colored health bars on(default is red)
 it is in hexColor Format so find what color it is in hex code and replace the barColor with that color.
@@ -58,16 +61,21 @@ it is in hexColor Format so find what color it is in hex code and replace the ba
 
 If your character has different animations to be played when singing
 go to the case for your character, and add
+```haxe
+
 				animation.addByPrefix('singUP-alt', 'characterhere Sing Note UP', 24, false);
 				animation.addByPrefix('singRIGHT-alt', 'characterhere Sing Note RIGHT', 24, false);
 				animation.addByPrefix('singLEFT-alt', 'characterhere Sing Note LEFT', 24, false);
 				animation.addByPrefix('singDOWN-alt', 'characterhere Sing Note DOWN', 24, false);
+```
 for any animation that is alternate, remember to replace the characterhere with your own character name in the XML
 the Offsets apply to the alt animations, just add
+```haxe
 				singUP-alt 0 0
 				singRIGHT-alt 0 0
 				singLEFT-alt 0 0
 				singDOWN-alt 0 0
+```
 for each animation to play on a alternate note. You can add the alternate notes in the chart editor.
 
 
