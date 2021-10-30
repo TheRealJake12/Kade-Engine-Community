@@ -71,7 +71,8 @@ class OptionsMenu extends MusicBeatState
 		new OptionCategory("Misc", [
 			new FlashingLightsOption("Toggle flashing lights that can cause epileptic seizures and strain."),
 			new WatermarkOption("Enable and disable all watermarks from the engine."),
-			new MissSoundsOption("Toggle miss sounds playing when you don't hit a note."), new ScoreScreen("Show the score screen after the end of a song"),
+			new MissSoundsOption("Toggle miss sounds playing when you don't hit a note."), 
+			new ScoreScreen("Show the score screen after the end of a song"),
 			new ShowInput("Display every single input on the score screen."),
 			new BotPlay("Showcase your charts and mods with autoplay."),
 		]),

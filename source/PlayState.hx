@@ -184,6 +184,10 @@ class PlayState extends MusicBeatState
 	private var totalPlayed:Int = 0;
 	private var ss:Bool = false;
 
+	var isCutscene:Bool = false;
+
+	var video:MP4Handler = new MP4Handler();
+
 	private var healthBarBG:FlxSprite;
 	private var healthBar:FlxBar;
 	private var songPositionBar:Float = 0;
@@ -3562,16 +3566,29 @@ class PlayState extends MusicBeatState
 
 						FlxG.sound.play(Paths.sound('Lights_Shut_off'));
 					}
+						//FlxTransitionableState.skipNextTransIn = true;
+						//FlxTransitionableState.skipNextTransOut = true;
 
-					FlxTransitionableState.skipNextTransIn = true;
-					FlxTransitionableState.skipNextTransOut = true;
+					if (curSong == 'yoursonghere' && !isCutscene) // remember if you made your song uppercase or lower. its important
+					{
+						var video:MP4Handler = new MP4Handler();
+
+						video.playMP4(Paths.video('yourcutscenehere'));
+						video.finishCallback = function()
+						{
+							LoadingState.loadAndSwitchState(new PlayState());
+						}
+						isCutscene = true;
+					}
+					else
+					{
+						LoadingState.loadAndSwitchState(new PlayState());
+					}
 					prevCamFollow = camFollow;
 
 					PlayState.SONG = Song.loadFromJson(poop, PlayState.storyPlaylist[0]);
 					FlxG.sound.music.stop();
-
-					LoadingState.loadAndSwitchState(new PlayState());
-					clean();
+					
 				}
 			}
 			else
