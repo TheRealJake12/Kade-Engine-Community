@@ -42,7 +42,6 @@ class OptionsMenu extends MusicBeatState
 		]),
 		new OptionCategory("Appearance", [
 			new NotesplashesOption("Adds notesplashes when you hit a Sick! note."),
-			new NewNoteskinOption("Uses a StepMania Noteskin"),
 			new MiddleScrollOption("Make Sure Downscroll Middlescroll is disabled with this for Middlescroll."),
 			new DMiddleScrollOption("Make Sure Upscroll Middlescroll is disabled with this for Middlescroll."),
 			new StepManiaOption("Sets the colors of the arrows depending on quantization instead of direction."),
@@ -52,6 +51,10 @@ class OptionsMenu extends MusicBeatState
 			new NPSDisplayOption("Shows your current Notes Per Second on the info bar."),
 			new CpuStrums("Toggle the CPU's strumline lighting up when it hits a note."),
 		]),
+		new OptionCategory("Noteskins", [
+			new NewNoteskinOption("Uses a StepMania Noteskin"),
+			new HDNotesOption("Uses some HD noteskin"),
+		]),	
 		new OptionCategory("Performance", [
 			new FPSOption("Toggle the FPS Counter"),
 			#if desktop new FPSCapOption("Change your FPS Cap."),

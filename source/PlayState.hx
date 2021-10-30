@@ -1880,6 +1880,26 @@ class PlayState extends MusicBeatState
 					babyArrow.antialiasing = FlxG.save.data.antialiasing;
 					babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
 			}
+			else if (FlxG.save.data.HD)
+			{
+				babyArrow.frames = Paths.getSparrowAtlas('notes/HD');
+				for (j in 0...4)
+				{
+					babyArrow.animation.addByPrefix(dataColor[j], 'arrow' + dataSuffix[j]);
+					babyArrow.animation.addByPrefix('dirCon' + j, dataSuffix[j].toLowerCase() + ' confirm', 24, false);
+				}
+
+				var lowerDir:String = dataSuffix[i].toLowerCase();
+
+				babyArrow.animation.addByPrefix('static', 'arrow' + dataSuffix[i]);
+				babyArrow.animation.addByPrefix('pressed', lowerDir + ' press', 24, false);
+				babyArrow.animation.addByPrefix('confirm', lowerDir + ' confirm', 24, false);
+
+				babyArrow.x += Note.swagWidth * i;
+
+				babyArrow.antialiasing = FlxG.save.data.antialiasing;
+				babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
+			}
 			else
 			{
 				switch (noteTypeCheck)
