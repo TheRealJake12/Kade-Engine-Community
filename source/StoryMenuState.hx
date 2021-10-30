@@ -58,6 +58,8 @@ class StoryMenuState extends MusicBeatState
 
 	var txtTracklist:FlxText;
 
+	var isCutscene:Bool = false;
+
 	var grpWeekText:FlxTypedGroup<MenuItem>;
 	var grpWeekCharacters:FlxTypedGroup<MenuCharacter>;
 
@@ -381,10 +383,30 @@ class StoryMenuState extends MusicBeatState
 			PlayState.SONG = Song.conversionChecks(Song.loadFromJson(poop, PlayState.storyPlaylist[0]));
 			PlayState.storyWeek = curWeek;
 			PlayState.campaignScore = 0;
-			new FlxTimer().start(1, function(tmr:FlxTimer)
+			var video:MP4Handler = new MP4Handler();
+
+			if (curWeek == 14 && !isCutscene) // change the 14 to whatever week you are using
+				new FlxTimer().start(1, function(tmr:FlxTimer)
+				{
+					{
+						video.playMP4(Paths.video('bigChungus')); //change bigChungus to what ever your cutscene is called
+						video.finishCallback = function()
+						{
+							LoadingState.loadAndSwitchState(new PlayState());
+						}
+						isCutscene = true;
+					}
+				});
+			else //remember to add a if then the rest of the code for multi cutscenes for different weeks!
 			{
-				LoadingState.loadAndSwitchState(new PlayState(), true);
-			});
+				new FlxTimer().start(1, function(tmr:FlxTimer)
+				{
+					if (isCutscene)
+						video.onVLCComplete();
+
+					LoadingState.loadAndSwitchState(new PlayState(), true);
+				});
+			}
 		}
 	}
 

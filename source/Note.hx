@@ -143,7 +143,8 @@ class Note extends FlxSprite
 				switch (PlayState.storyWeek)
 				{
 					case 6:
-						noteTypeCheck = 'pixel';
+					noteTypeCheck = 'pixel';
+					
 				}
 			}
 			else

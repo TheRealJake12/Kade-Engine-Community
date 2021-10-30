@@ -31,26 +31,26 @@ If your character will only have the idle animations and the note animations, ju
 Example:
 ```haxe
 case 'characterhere':
-				// your character code here
-				tex = Paths.getSparrowAtlas('characterhere', 'shared', true);
-				frames = tex;
-				animation.addByPrefix('idle', 'characterhere idle dance', 24, false);
-				animation.addByPrefix('singUP', 'characterhere Sing Note UP', 24, false);
-				animation.addByPrefix('singRIGHT', 'characterhere Sing Note RIGHT', 24, false);
-				animation.addByPrefix('singDOWN', 'characterhere Sing Note DOWN', 24, false);
-				animation.addByPrefix('singLEFT', 'characterhere Sing Note LEFT', 24, false);
+// your character code here
+tex = Paths.getSparrowAtlas('characterhere', 'shared', true);
+frames = tex;
+animation.addByPrefix('idle', 'characterhere idle dance', 24, false);
+animation.addByPrefix('singUP', 'characterhere Sing Note UP', 24, false);
+animation.addByPrefix('singRIGHT', 'characterhere Sing Note RIGHT', 24, false);
+animation.addByPrefix('singDOWN', 'characterhere Sing Note DOWN', 24, false);
+animation.addByPrefix('singLEFT', 'characterhere Sing Note LEFT', 24, false);
 
-				loadOffsetFile(curCharacter);
-				barColor = 0xFFaf66ce;
+loadOffsetFile(curCharacter);
+barColor = 0xFFaf66ce;
 ```
 There is Offsets as I mentioned earlier, and make each animation 0 0 for testing and mess with them to your liking
 Example:
 ```haxe
-				idle 0 0
-				singUP 0 0
-				singRIGHT 0 0
-				singLEFT 0 0
-				singDOWN 0 0
+idle 0 0
+singUP 0 0
+singRIGHT 0 0
+singLEFT 0 0
+singDOWN 0 0
 ```
 
 the barColor is what color the health bar is for your character when you have the option of Character Colored health bars on(default is red)
@@ -63,18 +63,18 @@ If your character has different animations to be played when singing
 go to the case for your character, and add
 ```haxe
 
-				animation.addByPrefix('singUP-alt', 'characterhere Sing Note UP', 24, false);
-				animation.addByPrefix('singRIGHT-alt', 'characterhere Sing Note RIGHT', 24, false);
-				animation.addByPrefix('singLEFT-alt', 'characterhere Sing Note LEFT', 24, false);
-				animation.addByPrefix('singDOWN-alt', 'characterhere Sing Note DOWN', 24, false);
+animation.addByPrefix('singUP-alt', 'characterhere Sing Note UP', 24, false);
+animation.addByPrefix('singRIGHT-alt', 'characterhere Sing Note RIGHT', 24, false);
+animation.addByPrefix('singLEFT-alt', 'characterhere Sing Note LEFT', 24, false);
+animation.addByPrefix('singDOWN-alt', 'characterhere Sing Note DOWN', 24, false);
 ```
 for any animation that is alternate, remember to replace the characterhere with your own character name in the XML
 the Offsets apply to the alt animations, just add
 ```haxe
-				singUP-alt 0 0
-				singRIGHT-alt 0 0
-				singLEFT-alt 0 0
-				singDOWN-alt 0 0
+singUP-alt 0 0
+singRIGHT-alt 0 0
+singLEFT-alt 0 0
+singDOWN-alt 0 0
 ```
 for each animation to play on a alternate note. You can add the alternate notes in the chart editor.
 

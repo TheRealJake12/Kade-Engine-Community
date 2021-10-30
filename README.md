@@ -24,3 +24,7 @@ this was easy add
 A easier way added in than Kade 1.8. With Fixed Middlescroll for Both Downscroll and Upscroll
 Little harder to get used to but the options explain it
 ![Middlescroll](art/readme/downmiddle.png)
+
+![Better Documented!](art/readme/deez.png)
+
+A goal I want is this to be well documented so if someone doesn't understand something, they can look in docs!
