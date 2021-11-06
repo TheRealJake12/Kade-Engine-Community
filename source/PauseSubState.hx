@@ -34,13 +34,6 @@ class PauseSubState extends MusicBeatSubstate
 	{
 		super();
 
-		if (PlayState.instance.useVideo)
-		{
-			menuItems.remove("Resume");
-			if (GlobalVideo.get().playing)
-				GlobalVideo.get().pause();
-		}
-
 		pauseMusic = new FlxSound().loadEmbedded(Paths.music('breakfast'), true, true);
 		pauseMusic.volume = 0;
 		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
@@ -110,9 +103,6 @@ class PauseSubState extends MusicBeatSubstate
 			pauseMusic.volume += 0.01 * elapsed;
 
 		super.update(elapsed);
-
-		if (PlayState.instance.useVideo)
-			menuItems.remove('Resume');
 
 		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
 
@@ -230,12 +220,6 @@ class PauseSubState extends MusicBeatSubstate
 					close();
 				case "Restart Song":
 					PlayState.startTime = 0;
-					if (PlayState.instance.useVideo)
-					{
-						GlobalVideo.get().stop();
-						PlayState.instance.remove(PlayState.instance.videoSprite);
-						PlayState.instance.removedVideo = true;
-					}
 					PlayState.instance.clean();
 					FlxG.resetState();
 					PlayState.stageTesting = false;
@@ -243,12 +227,6 @@ class PauseSubState extends MusicBeatSubstate
 					FlxG.switchState(new OptionsMenu());
 				case "Exit to menu":
 					PlayState.startTime = 0;
-					if (PlayState.instance.useVideo)
-					{
-						GlobalVideo.get().stop();
-						PlayState.instance.remove(PlayState.instance.videoSprite);
-						PlayState.instance.removedVideo = true;
-					}
 					if (PlayState.loadRep)
 					{
 						FlxG.save.data.botplay = false;

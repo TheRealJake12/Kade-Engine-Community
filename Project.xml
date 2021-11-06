@@ -122,9 +122,6 @@
 	<haxelib name="flixel-addons" />
 	<haxelib name="hscript" />
 
-	<haxelib name="actuate" />
-	<haxelib name="extension-webm"/> <!-- Make sure to use https://github.com/KadeDev/extension-webm/ -->
-
 	<!--In case you want to use the ui package-->
 	<haxelib name="flixel-ui" />
 	<haxelib name="faxe" if='switch'/>

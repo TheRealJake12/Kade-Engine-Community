@@ -23,9 +23,7 @@ import openfl.ui.Keyboard;
 import openfl.events.KeyboardEvent;
 import Replay.Ana;
 import Replay.Analysis;
-#if FEATURE_WEBM
-import webm.WebmPlayer;
-#end
+
 import flixel.input.keyboard.FlxKey;
 import haxe.Exception;
 import openfl.geom.Matrix;
@@ -230,6 +228,8 @@ class PlayState extends MusicBeatState
 	var wiggleShit:WiggleEffect = new WiggleEffect();
 
 	var talking:Bool = true;
+
+	var trackedAssets:Array<FlxBasic> = [];
 
 	public var songScore:Int = 0;
 
@@ -1466,9 +1466,6 @@ class PlayState extends MusicBeatState
 				allowedToCheer = false;
 		}
 
-		if (useVideo)
-			GlobalVideo.get().resume();
-
 		#if FEATURE_LUAMODCHART
 		if (executeModchart)
 			luaModchart.executeState("songStart", [null]);
@@ -2284,17 +2281,6 @@ class PlayState extends MusicBeatState
 		if (PlayStateChangeables.botPlay && FlxG.keys.justPressed.ONE)
 			camHUD.visible = !camHUD.visible;
 
-		if (useVideo && GlobalVideo.get() != null && !stopUpdate)
-		{
-			if (GlobalVideo.get().ended && !removedVideo)
-			{
-				remove(videoSprite);
-				FlxG.stage.window.onFocusOut.remove(focusOut);
-				FlxG.stage.window.onFocusIn.remove(focusIn);
-				removedVideo = true;
-			}
-		}
-
 		#if FEATURE_LUAMODCHART
 		if (executeModchart && luaModchart != null && songStarted)
 		{
@@ -2409,14 +2395,7 @@ class PlayState extends MusicBeatState
 		if (FlxG.keys.justPressed.FIVE && songStarted)
 		{
 			songMultiplier = 1;
-			if (useVideo)
-			{
-				GlobalVideo.get().stop();
-				remove(videoSprite);
-				FlxG.stage.window.onFocusOut.remove(focusOut);
-				FlxG.stage.window.onFocusIn.remove(focusIn);
-				removedVideo = true;
-			}
+
 			cannotDie = true;
 
 			FlxG.switchState(new WaveformTestState());
@@ -2436,14 +2415,7 @@ class PlayState extends MusicBeatState
 		if (FlxG.keys.justPressed.SEVEN && songStarted)
 		{
 			songMultiplier = 1;
-			if (useVideo)
-			{
-				GlobalVideo.get().stop();
-				remove(videoSprite);
-				FlxG.stage.window.onFocusOut.remove(focusOut);
-				FlxG.stage.window.onFocusIn.remove(focusIn);
-				removedVideo = true;
-			}
+			
 			cannotDie = true;
 
 			FlxG.switchState(new ChartingState());
@@ -2492,14 +2464,7 @@ class PlayState extends MusicBeatState
 		#if debug
 		if (FlxG.keys.justPressed.SIX)
 		{
-			if (useVideo)
-			{
-				GlobalVideo.get().stop();
-				remove(videoSprite);
-				FlxG.stage.window.onFocusOut.remove(focusOut);
-				FlxG.stage.window.onFocusIn.remove(focusIn);
-				removedVideo = true;
-			}
+			
 
 			FlxG.switchState(new AnimationDebug(dad.curCharacter));
 			clean();
@@ -2519,14 +2484,7 @@ class PlayState extends MusicBeatState
 			if (FlxG.keys.justPressed.EIGHT && songStarted)
 			{
 				paused = true;
-				if (useVideo)
-				{
-					GlobalVideo.get().stop();
-					remove(videoSprite);
-					FlxG.stage.window.onFocusOut.remove(focusOut);
-					FlxG.stage.window.onFocusIn.remove(focusIn);
-					removedVideo = true;
-				}
+				
 				new FlxTimer().start(0.3, function(tmr:FlxTimer)
 				{
 					for (bg in Stage.toAdd)
@@ -2924,6 +2882,7 @@ class PlayState extends MusicBeatState
 				}
 				else
 				{
+					unloadAssets();
 					openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 				}
 
@@ -2967,6 +2926,7 @@ class PlayState extends MusicBeatState
 				}
 				else
 				{
+					unloadAssets();
 					openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 				}
 
@@ -3403,13 +3363,7 @@ class PlayState extends MusicBeatState
 		endingSong = true;
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleInput);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, releaseInput);
-		if (useVideo)
-		{
-			GlobalVideo.get().stop();
-			FlxG.stage.window.onFocusOut.remove(focusOut);
-			FlxG.stage.window.onFocusIn.remove(focusIn);
-			PlayState.instance.remove(PlayState.instance.videoSprite);
-		}
+		
 
 		if (!loadRep)
 			rep.SaveReplay(saveNotes, saveJudge, replayAna);
@@ -3516,6 +3470,7 @@ class PlayState extends MusicBeatState
 					}
 					else
 					{
+						unloadAssets();
 						FlxG.sound.playMusic(Paths.music('freakyMenu'));
 						Conductor.changeBPM(102);
 						FlxG.switchState(new StoryMenuState());
@@ -4235,10 +4190,7 @@ class PlayState extends MusicBeatState
 	}
 
 	public var fuckingVolume:Float = 1;
-	public var useVideo = false;
-
-	public static var webmHandler:WebmHandler;
-
+	
 	public var playingDathing = false;
 
 	public var videoSprite:FlxSprite;
@@ -4263,64 +4215,6 @@ class PlayState extends MusicBeatState
 	public function focusIn()
 	{
 		// nada
-	}
-
-	public function backgroundVideo(source:String) // for background videos
-	{
-		#if FEATURE_WEBM
-		useVideo = true;
-
-		FlxG.stage.window.onFocusOut.add(focusOut);
-		FlxG.stage.window.onFocusIn.add(focusIn);
-
-		var ourSource:String = "assets/videos/daWeirdVid/dontDelete.webm";
-		// WebmPlayer.SKIP_STEP_LIMIT = 90;
-		var str1:String = "WEBM SHIT";
-		webmHandler = new WebmHandler();
-		webmHandler.source(ourSource);
-		webmHandler.makePlayer();
-		webmHandler.webm.name = str1;
-
-		GlobalVideo.setWebm(webmHandler);
-
-		GlobalVideo.get().source(source);
-		GlobalVideo.get().clearPause();
-		if (GlobalVideo.isWebm)
-		{
-			GlobalVideo.get().updatePlayer();
-		}
-		GlobalVideo.get().show();
-
-		if (GlobalVideo.isWebm)
-		{
-			GlobalVideo.get().restart();
-		}
-		else
-		{
-			GlobalVideo.get().play();
-		}
-
-		var data = webmHandler.webm.bitmapData;
-
-		videoSprite = new FlxSprite(-470, -30).loadGraphic(data);
-
-		videoSprite.setGraphicSize(Std.int(videoSprite.width * 1.2));
-
-		remove(gf);
-		remove(boyfriend);
-		remove(dad);
-		add(videoSprite);
-		add(gf);
-		add(boyfriend);
-		add(dad);
-
-		trace('poggers');
-
-		if (!songStarted)
-			webmHandler.pause();
-		else
-			webmHandler.resume();
-		#end
 	}
 
 	function noteMiss(direction:Int = 1, daNote:Note):Void
@@ -4817,5 +4711,20 @@ class PlayState extends MusicBeatState
 			SONG = cleanedSong;
 		}
 	}
+
+	override function add(Object:FlxBasic):FlxBasic
+	{
+		trackedAssets.insert(trackedAssets.length, Object);
+		return super.add(Object);
+	}
+
+	function unloadAssets():Void
+	{
+		for (asset in trackedAssets)
+		{
+			remove(asset);
+		}
+	}
+
 }
 // u looked :O -ides

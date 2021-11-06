@@ -26,7 +26,7 @@ class OptionsMenu extends MusicBeatState
 	var selector:FlxText;
 	var curSelected:Int = 0;
 
-	
+	var trackedAssets:Array<Dynamic> = [];
 
 	var options:Array<OptionCategory> = [
 		new OptionCategory("Gameplay", [
@@ -160,6 +160,7 @@ class OptionsMenu extends MusicBeatState
 		{
 			if (controls.BACK && !isCat)
 			{
+				unloadAssets();
 				FlxG.switchState(new MainMenuState());
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));
 				FlxG.sound.music.time = 9400;
@@ -347,6 +348,19 @@ class OptionsMenu extends MusicBeatState
 				item.alpha = 1;
 				// item.setGraphicSize(Std.int(item.width));
 			}
+		}
+	}
+	override function add(Object:flixel.FlxBasic):flixel.FlxBasic
+	{
+		trackedAssets.insert(trackedAssets.length, Object);
+		return super.add(Object);
+	}
+
+	function unloadAssets():Void
+	{
+		for (asset in trackedAssets)
+		{
+			remove(asset);
 		}
 	}
 }
