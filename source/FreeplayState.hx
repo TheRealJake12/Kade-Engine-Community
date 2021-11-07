@@ -52,6 +52,7 @@ class FreeplayState extends MusicBeatState
 	private var curPlaying:Bool = false;
 
 	private var iconArray:Array<HealthIcon> = [];
+	var trackedAssets:Array<Dynamic> = [];
 
 	public static var openedPreview = false;
 
@@ -413,9 +414,15 @@ class FreeplayState extends MusicBeatState
 		}
 
 		if (accepted)
+		{
 			loadSong();
+			unloadAssets();
+		}
 		else if (charting)
+		{
 			loadSong(true);
+			unloadAssets();
+		}
 	}
 
 	function loadSong(isCharting:Bool = false)
@@ -622,6 +629,20 @@ class FreeplayState extends MusicBeatState
 				item.alpha = 1;
 				// item.setGraphicSize(Std.int(item.width));
 			}
+		}
+	}
+
+	override function add(Object:flixel.FlxBasic):flixel.FlxBasic
+	{
+		trackedAssets.insert(trackedAssets.length, Object);
+		return super.add(Object);
+	}
+
+	function unloadAssets():Void
+	{
+		for (asset in trackedAssets)
+		{
+			remove(asset);
 		}
 	}
 }

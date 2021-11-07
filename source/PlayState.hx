@@ -3455,6 +3455,7 @@ class PlayState extends MusicBeatState
 				{
 					transIn = FlxTransitionableState.defaultTransIn;
 					transOut = FlxTransitionableState.defaultTransOut;
+					unloadAssets();
 
 					paused = true;
 
@@ -3532,28 +3533,34 @@ class PlayState extends MusicBeatState
 						video.finishCallback = function()
 						{
 							LoadingState.loadAndSwitchState(new PlayState());
+							unloadAssets();
 						}
 						isCutscene = true;
 					}
 					else
 					{
 						LoadingState.loadAndSwitchState(new PlayState());
+						unloadAssets();
 					}
 					prevCamFollow = camFollow;
 
 					PlayState.SONG = Song.loadFromJson(poop, PlayState.storyPlaylist[0]);
+					unloadAssets();
 					FlxG.sound.music.stop();
+
 					
 				}
 			}
 			else
 			{
 				trace('WENT BACK TO FREEPLAY??');
-
+				
 				paused = true;
+				unloadAssets();
 
 				FlxG.sound.music.stop();
 				vocals.stop();
+				unloadAssets();
 
 				if (FlxG.save.data.scoreScreen)
 				{
@@ -3561,12 +3568,14 @@ class PlayState extends MusicBeatState
 					new FlxTimer().start(1, function(tmr:FlxTimer)
 					{
 						inResults = true;
+						unloadAssets();
 					});
 				}
-				else
+				else // idk why I spammed the unloads. I just want low mem usage
 				{
 					FlxG.switchState(new FreeplayState());
-					clean();
+					unloadAssets();
+					
 				}
 			}
 		}

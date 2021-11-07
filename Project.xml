@@ -196,8 +196,6 @@
   <haxedef name="FEATURE_FILESYSTEM" if="desktop" />
   <!-- Defines whether Lua Modcharts should be enabled. Only works on Windows. -->
   <haxedef name="FEATURE_LUAMODCHART" if="windows" />
-  <!-- Defines whether WebM videos should be enabled. Currently only enabled on Windows. -->
-  <haxedef name="FEATURE_WEBM" if="windows" />
   <!-- Defines whether StepMania files can be loaded. -->
   <haxedef name="FEATURE_STEPMANIA" if="desktop" />
   <!-- Defines whether the Thread class can be used. -->

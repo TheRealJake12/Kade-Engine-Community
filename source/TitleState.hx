@@ -6,6 +6,7 @@ import smTools.SMFile;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.FlxBasic;
 import flixel.addons.display.FlxGridOverlay;
 import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
 import flixel.addons.transition.FlxTransitionableState;
@@ -41,6 +42,8 @@ class TitleState extends MusicBeatState
 	var textGroup:FlxGroup;
 	var ngSpr:FlxSprite;
 	var me:FlxSprite;
+
+	var trackedAssets:Array<flixel.FlxBasic> = [];
 
 	var curWacky:Array<String> = [];
 
@@ -252,6 +255,7 @@ class TitleState extends MusicBeatState
 
 		if (pressedEnter && !transitioning && skippedIntro)
 		{
+
 			if (FlxG.save.data.flashing)
 				titleText.animation.play('press');
 
@@ -263,9 +267,11 @@ class TitleState extends MusicBeatState
 
 			MainMenuState.firstStart = true;
 			MainMenuState.finishedFunnyMove = false;
+			
 
 			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 			FlxG.switchState(new MainMenuState());
+			
 		}
 
 		if (pressedEnter && !skippedIntro && initialized)
@@ -413,6 +419,19 @@ class TitleState extends MusicBeatState
       FlxG.sound.music.time = 9400; // 9.4 seconds
 
 			skippedIntro = true;
+		}
+	}
+	override function add(Object:flixel.FlxBasic):flixel.FlxBasic
+	{
+		trackedAssets.insert(trackedAssets.length, Object);
+		return super.add(Object);
+	}
+
+	function unloadAssets():Void
+	{
+		for (asset in trackedAssets)
+		{
+			remove(asset);
 		}
 	}
 }

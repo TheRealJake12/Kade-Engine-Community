@@ -7,6 +7,7 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxGroup;
+import flixel.FlxBasic;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
@@ -55,6 +56,8 @@ class StoryMenuState extends MusicBeatState
 	var txtWeekTitle:FlxText;
 
 	var curWeek:Int = 0;
+
+	var trackedAssets:Array<flixel.FlxBasic> = [];
 
 	var txtTracklist:FlxText;
 
@@ -349,6 +352,8 @@ class StoryMenuState extends MusicBeatState
 				FlxG.sound.play(Paths.sound('confirmMenu'));
 
 				grpWeekText.members[curWeek].startFlashing();
+				unloadAssets();
+
 				grpWeekCharacters.members[1].animation.play('bfConfirm');
 				stopspamming = true;
 			}
@@ -526,5 +531,19 @@ class StoryMenuState extends MusicBeatState
 
 		if (weekCharacters[curWeek][2] == 'spooky' || weekCharacters[curWeek][2] == 'gf')
 			grpWeekCharacters.members[2].bopHead();
+	}
+
+	override function add(Object:flixel.FlxBasic):flixel.FlxBasic
+	{
+		trackedAssets.insert(trackedAssets.length, Object);
+		return super.add(Object);
+	}
+
+	function unloadAssets():Void
+	{
+		for (asset in trackedAssets)
+		{
+			remove(asset);
+		}
 	}
 }

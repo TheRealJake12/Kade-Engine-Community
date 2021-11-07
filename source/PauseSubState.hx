@@ -9,6 +9,7 @@ import Controls.Control;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
+import flixel.FlxBasic;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
@@ -29,6 +30,8 @@ class PauseSubState extends MusicBeatSubstate
 	var perSongOffset:FlxText;
 
 	var offsetChanged:Bool = false;
+
+	var trackedAssets:Array<FlxBasic> = [];
 
 	public function new(x:Float, y:Float)
 	{
@@ -225,6 +228,7 @@ class PauseSubState extends MusicBeatSubstate
 					PlayState.stageTesting = false;
 				case "Options":
 					FlxG.switchState(new OptionsMenu());
+					unloadAssets();
 				case "Exit to menu":
 					PlayState.startTime = 0;
 					if (PlayState.loadRep)
@@ -233,6 +237,7 @@ class PauseSubState extends MusicBeatSubstate
 						FlxG.save.data.scrollSpeed = 1;
 						FlxG.save.data.downscroll = false;
 					}
+					unloadAssets();
 					PlayState.loadRep = false;
 					PlayState.stageTesting = false;
 					#if FEATURE_LUAMODCHART
@@ -248,9 +253,15 @@ class PauseSubState extends MusicBeatSubstate
 					PlayState.instance.clean();
 
 					if (PlayState.isStoryMode)
+					{
 						FlxG.switchState(new StoryMenuState());
+						unloadAssets();
+					}	
 					else
+					{
 						FlxG.switchState(new FreeplayState());
+						unloadAssets();
+					}
 			}
 		}
 
@@ -294,6 +305,19 @@ class PauseSubState extends MusicBeatSubstate
 				item.alpha = 1;
 				// item.setGraphicSize(Std.int(item.width));
 			}
+		}
+	}
+	override function add(Object:FlxBasic):FlxBasic
+	{
+		trackedAssets.insert(trackedAssets.length, Object);
+		return super.add(Object);
+	}
+
+	function unloadAssets():Void
+	{
+		for (asset in trackedAssets)
+		{
+			remove(asset);
 		}
 	}
 }

@@ -68,6 +68,7 @@ class OptionsMenu extends MusicBeatState
 			new Optimization("Nothing but Your Strumline is visible. Best Performance."),
 			new GraphicLoading("Caches every character in assets/shared/characters. Loading times greatly decreased. (HIGH MEMORY!!!)"),
 		]),
+		
 		new OptionCategory("Misc", [
 			new FlashingLightsOption("Toggle flashing lights that can cause epileptic seizures and strain."),
 			new WatermarkOption("Enable and disable all watermarks from the engine."),
