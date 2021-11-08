@@ -39,7 +39,7 @@ class MainMenuState extends MusicBeatState
 
 	public static var nightly:String = "";
 
-	public static var kadeEngineVer:String = "1.3.1 Community" + nightly;
+	public static var kadeEngineVer:String = "1.3.2 Community" + nightly;
 	public static var gameVer:String = "Kade Engine 1.7";
 
 	var magenta:FlxSprite;
@@ -194,6 +194,10 @@ class MainMenuState extends MusicBeatState
 				if (optionShit[curSelected] == 'donate')
 				{
 					fancyOpenURL("https://ninja-muffin24.itch.io/funkin");
+				}
+				else if (optionShit[curSelected] == 'discord')
+				{
+					fancyOpenURL("https://discord.gg/yHhy7xDpzk");
 				}
 				else
 				{

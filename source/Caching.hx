@@ -11,7 +11,6 @@ import flixel.ui.FlxBar;
 import haxe.Exception;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.FlxBasic;
 #if FEATURE_FILESYSTEM
 import sys.FileSystem;
 import sys.io.File;
@@ -47,8 +46,6 @@ class Caching extends MusicBeatState
 	var images = [];
 	var music = [];
 	var charts = [];
-
-	var trackedAssets:Array<FlxBasic> = [];
 
 	override function create()
 	{
@@ -195,20 +192,6 @@ class Caching extends MusicBeatState
 		trace(Assets.cache.hasBitmapData('GF_assets'));
 		#end
 		FlxG.switchState(new TitleState());
-		unloadAssets();
-	}
-	override function add(Object:FlxBasic):FlxBasic
-	{
-		trackedAssets.insert(trackedAssets.length, Object);
-		return super.add(Object);
-	}
-
-	function unloadAssets():Void
-	{
-		for (asset in trackedAssets)
-		{
-			remove(asset);
-		}
 	}
 }
 #end

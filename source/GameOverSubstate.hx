@@ -6,6 +6,7 @@ import flixel.FlxSubState;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+import flixel.FlxBasic;
 
 class GameOverSubstate extends MusicBeatSubstate
 {
@@ -13,6 +14,8 @@ class GameOverSubstate extends MusicBeatSubstate
 	var camFollow:FlxObject;
 
 	var stageSuffix:String = "";
+
+	var trackedAssets:Array<FlxBasic> = [];
 
 	public function new(x:Float, y:Float)
 	{
@@ -72,10 +75,16 @@ class GameOverSubstate extends MusicBeatSubstate
 			remove(bf);
 
 			if (PlayState.isStoryMode)
-			
+			{
 				FlxG.switchState(new StoryMenuState());
+				unloadAssets();
+			}
 			else
+			{
 				FlxG.switchState(new FreeplayState());
+				unloadAssets();
+			}
+			
 			PlayState.loadRep = false;
 			PlayState.stageTesting = false;
 		}
@@ -130,6 +139,19 @@ class GameOverSubstate extends MusicBeatSubstate
 					PlayState.stageTesting = false;
 				});
 			});
+		}
+	}
+	override function add(Object:FlxBasic):FlxBasic
+	{
+		trackedAssets.insert(trackedAssets.length, Object);
+		return super.add(Object);
+	}
+
+	function unloadAssets():Void
+	{
+		for (asset in trackedAssets)
+		{
+			remove(asset);
 		}
 	}
 }
