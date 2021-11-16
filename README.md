@@ -1,4 +1,4 @@
-
+## Kade Engine Community
 ![Kade Engine logo](assets/preload/images/KadeEngineLogoOld.png)
 
 Hey you!
@@ -28,3 +28,14 @@ Little harder to get used to but the options explain it
 ![Better Documented!](art/readme/deez.png)
 
 A goal I want is this to be well documented so if someone doesn't understand something, they can look in docs!
+
+
+### Shoutouts
+
+- [TheRealJake_12](https://www.youtube.com/channel/UCYy-RfMjVx-1dYnmNQGB2sw) - THE GUY THAT DOES ALL THE WORK
+
+- [KadeDev](https://github.com/KadeDev) - The Original Guy who created Kade Engine
+
+- [Wafles](https://gamebanana.com/mods/330278) The Step Mania Noteskin I used (sorry for stealing lol ._.)
+
+- [HD Note Creators] - I forgor who made them so correct me if you know ( ͡° ͜ʖ ͡°) )
