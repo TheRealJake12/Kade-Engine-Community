@@ -219,7 +219,9 @@ class HitGraph extends Sprite
 			var judge = history[i][1];
 
 			switch (judge)
-			{
+			{	
+				case "ultra":
+					gfx.beginFill(0x00FFFF);
 				case "sick":
 					gfx.beginFill(0x00FFFF);
 				case "good":

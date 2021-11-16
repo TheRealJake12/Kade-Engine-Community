@@ -380,6 +380,7 @@ class StoryMenuState extends MusicBeatState
 			}
 
 			var poop:String = Highscore.formatSong(songFormat, curDifficulty);
+			PlayState.ultras = 0;
 			PlayState.sicks = 0;
 			PlayState.bads = 0;
 			PlayState.shits = 0;

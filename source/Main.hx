@@ -106,8 +106,12 @@ class Main extends Sprite
 		addChild(fpsCounter);
 		toggleFPS(FlxG.save.data.fps);
 
-		var fps_mem:FPS_Mem = new FPS_Mem(10, 15, 0xffffff);
+		fps_mem = new FPS_Mem(10, 15, 0xffffff);
 		addChild(fps_mem);
+		if (FlxG.save.data.mem)
+		{
+		addChild(fps_mem);
+		}
 		#end
 	}
 
@@ -115,9 +119,16 @@ class Main extends Sprite
 
 	var fpsCounter:FPS;
 
+	public var fps_mem:FPS_Mem;
+
 	public function toggleFPS(fpsEnabled:Bool):Void
 	{
 		fpsCounter.visible = fpsEnabled;
+	}
+
+	public function toggleMEM(fps_memEnabled:Bool):Void
+	{
+		fps_mem.visible = fps_memEnabled;
 	}
 
 	public function changeFPSColor(color:FlxColor)
@@ -143,9 +154,9 @@ class Main extends Sprite
 
 class FPS_Mem extends TextField
 {
-	private var times:Array<Float>;
+	public var times:Array<Float>;
 
-	private var memPeak:Float = 0;
+	public var memPeak:Float = 0;
 
 	public function new(inX:Float = 10.0, inY:Float = 10.0, inCol:Int = 0x000000)
 	{
@@ -170,7 +181,7 @@ class FPS_Mem extends TextField
 		height = 70;
 	}
 
-	private function onEnter(_)
+	public function onEnter(_)
 	{
 		var now = Timer.stamp();
 

@@ -8,6 +8,12 @@ import flixel.FlxG;
 import openfl.display.FPS;
 import openfl.Lib;
 
+import haxe.Timer;
+import openfl.events.Event;
+import openfl.system.System;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
+
 
 class OptionCategory
 {
@@ -221,7 +227,7 @@ class GhostTapOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return FlxG.save.data.ghost ? "Ghost Tapping" : "No Ghost Tapping";
+		return FlxG.save.data.ghost ? "New Input" : "Old Input";
 	}
 }
 
@@ -599,7 +605,7 @@ class NewNoteskinOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return (FlxG.save.data.NewNotes?"New Noteskin StepMania" : "Old Noteskin");
+		return (FlxG.save.data.NewNotes?"StepMania Noteskin" : "Default Noteskin");
 	} // Old Noteskin
 }
 
@@ -695,6 +701,27 @@ class FPSOption extends Option
 	private override function updateDisplay():String
 	{
 		return "FPS Counter " + (!FlxG.save.data.fps ? "off" : "on");
+	}
+}
+
+class MemoryOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.mem = !FlxG.save.data.mem;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return (FlxG.save.data.mem ? "Memory Counter ON" : "Memory Counter OFF");
 	}
 }
 

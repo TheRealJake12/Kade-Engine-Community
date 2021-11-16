@@ -97,6 +97,7 @@ class PlayState extends MusicBeatState
 	public static var bads:Int = 0;
 	public static var goods:Int = 0;
 	public static var sicks:Int = 0;
+	public static var ultras:Int = 0;
 
 	public static var songPosBG:FlxSprite;
 
@@ -170,6 +171,7 @@ class PlayState extends MusicBeatState
 	public static var misses:Int = 0;
 	public static var campaignMisses:Int = 0;
 	public static var campaignSicks:Int = 0;
+	public static var campaignUltras:Int = 0;
 	public static var campaignGoods:Int = 0;
 	public static var campaignBads:Int = 0;
 	public static var campaignShits:Int = 0;
@@ -316,7 +318,8 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
-
+		
+		ultras = 0;
 		sicks = 0;
 		bads = 0;
 		shits = 0;
@@ -3444,6 +3447,7 @@ class PlayState extends MusicBeatState
 			{
 				campaignScore += Math.round(songScore);
 				campaignMisses += misses;
+				campaignUltras += ultras;
 				campaignSicks += sicks;
 				campaignGoods += goods;
 				campaignBads += bads;
@@ -3525,11 +3529,13 @@ class PlayState extends MusicBeatState
 						//FlxTransitionableState.skipNextTransIn = true;
 						//FlxTransitionableState.skipNextTransOut = true;
 
-					if (curSong == 'yoursonghere' && !isCutscene) // remember if you made your song uppercase or lower. its important
+					if (curSong == 'Dad-Battle' && !isCutscene) // remember if you made your song uppercase or lower. its important
 					{
 						var video:MP4Handler = new MP4Handler();
 
-						video.playMP4(Paths.video('yourcutscenehere'));
+						FlxG.log.add("MP4 Loaded");
+
+						video.playMP4(Paths.video('bigChungus'));
 						video.finishCallback = function()
 						{
 							LoadingState.loadAndSwitchState(new PlayState());
@@ -3673,6 +3679,16 @@ class PlayState extends MusicBeatState
 				{
 				spawnNoteSplashOnNote(daNote);
 				}
+			case 'ultra':
+				if (health < 2)
+					health += 0.05;
+				if (FlxG.save.data.accuracyMod == 0)
+					totalNotesHit += 1;
+				ultras++;
+				if (FlxG.save.data.notesplashes)
+				{
+					spawnNoteSplashOnNote(daNote);
+				}
 		}
 
 		if (songMultiplier >= 1.05)
@@ -3686,6 +3702,8 @@ class PlayState extends MusicBeatState
 
 			/* if (combo > 60)
 					daRating = 'sick';
+				else if (combo > 70);
+					daRating = 'ultra';
 				else if (combo > 12)
 					daRating = 'good'
 				else if (combo > 4)
@@ -3737,6 +3755,8 @@ class PlayState extends MusicBeatState
 					currentTimingShown.color = FlxColor.GREEN;
 				case 'sick':
 					currentTimingShown.color = FlxColor.CYAN;
+				case 'ultra':
+					currentTimingShown.color = FlxColor.LIME;
 			}
 			currentTimingShown.borderStyle = OUTLINE;
 			currentTimingShown.borderSize = 1;
@@ -4097,7 +4117,7 @@ class PlayState extends MusicBeatState
 				var diff = -(daNote.strumTime - Conductor.songPosition);
 				daNote.rating = Ratings.judgeNote(diff);
 				diff /= songMultiplier;
-				if (daNote.mustPress && daNote.rating == "sick" || (diff > 0 && daNote.mustPress))
+				if (daNote.mustPress && daNote.rating == "sick" || daNote.mustPress && daNote.rating == "ultra" || (diff > 0 && daNote.mustPress))
 				{
 					// Force good note hit regardless if it's too late to hit it or not as a fail safe
 					if (loadRep)

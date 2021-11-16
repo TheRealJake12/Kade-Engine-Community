@@ -113,6 +113,8 @@ class Ratings
 						return "good";
 					case 3: // sick
 						return "sick";
+					case 4: // ultra
+						return "ultra";
 				}
 			}
 		}

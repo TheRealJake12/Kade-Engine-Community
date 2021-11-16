@@ -18,6 +18,9 @@ class KadeEngineData
 		if (FlxG.save.data.notesplashes == null)
 			FlxG.save.data.notesplashes = false;
 
+		if (FlxG.save.data.mem == null)
+			FlxG.save.data.mem = false;
+
 		if (FlxG.save.data.NewNotes == null)
 			FlxG.save.data.NewNotes = false;
 	

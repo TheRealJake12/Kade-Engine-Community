@@ -101,18 +101,19 @@ class MainMenuState extends MusicBeatState
 
 		for (i in 0...optionShit.length)
 		{
-			var menuItem:FlxSprite = new FlxSprite(0, FlxG.height * 1.6);
+			var menuItem:FlxSprite = new FlxSprite((firstStart ? -500 - (200 * i) : 10 + (i * 65)), (firstStart ? -300 - (400 * i) : 70 + (145 * i))); // 60 + (i * 160));
 			menuItem.frames = tex;
 			menuItem.animation.addByPrefix('idle', optionShit[i] + " basic", 24);
 			menuItem.animation.addByPrefix('selected', optionShit[i] + " white", 24);
 			menuItem.animation.play('idle');
 			menuItem.ID = i;
 			menuItem.screenCenter(X);
+			menuItem.screenCenter(Y);
 			menuItems.add(menuItem);
-			menuItem.scrollFactor.set();
-			menuItem.antialiasing = FlxG.save.data.antialiasing;
+			menuItem.scrollFactor.set(0, 0.25);
+			menuItem.antialiasing = true;
 			if (firstStart)
-				FlxTween.tween(menuItem, {y: 60 + (i * 160)}, 1 + (i * 0.25), {
+				FlxTween.tween(menuItem, {x: 10 + (i * 65), y: 70 + (145 * i)}, 1 + (i * 0.25), {
 					ease: FlxEase.expoInOut,
 					onComplete: function(flxTween:FlxTween)
 					{
@@ -197,7 +198,7 @@ class MainMenuState extends MusicBeatState
 				}
 				else if (optionShit[curSelected] == 'discord')
 				{
-					fancyOpenURL("https://discord.gg/yHhy7xDpzk");
+					fancyOpenURL("https://discord.gg/2eUqSUbvjA");
 				}
 				else
 				{

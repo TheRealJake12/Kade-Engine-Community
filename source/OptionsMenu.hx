@@ -32,7 +32,7 @@ class OptionsMenu extends MusicBeatState
 		new OptionCategory("Gameplay", [
 			new DFJKOption(controls),
 			new DownscrollOption("Toggle making the notes scroll down rather than up."),
-			new GhostTapOption("Toggle counting pressing a directional input when no arrow is there as a miss."),
+			new GhostTapOption("New Input == Ghostapping. Old Input == No Ghosttapping."),
 			new Judgement("Customize your Hit Timings. (LEFT or RIGHT)"),
 			new ScrollSpeedOption("Change your scroll speed. (1 = Chart dependent)"),
 			new AccuracyDOption("Change how accuracy is calculated. (Accurate = Simple, Complex = Milisecond Based)"),
@@ -57,6 +57,7 @@ class OptionsMenu extends MusicBeatState
 		]),	
 		new OptionCategory("Performance", [
 			new FPSOption("Toggle the FPS Counter"),
+			new MemoryOption("Toggle the Memory Counter"),
 			#if desktop new FPSCapOption("Change your FPS Cap."),
 			#end
 			new RainbowFPSOption("Make the FPS Counter flicker through rainbow colors."),
