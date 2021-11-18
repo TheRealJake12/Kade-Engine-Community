@@ -18,6 +18,9 @@ class KadeEngineData
 		if (FlxG.save.data.notesplashes == null)
 			FlxG.save.data.notesplashes = false;
 
+		if (FlxG.save.data.laneUnderlay == null)
+			FlxG.save.data.laneUnderlay = false;
+
 		if (FlxG.save.data.mem == null)
 			FlxG.save.data.mem = false;
 
@@ -58,7 +61,7 @@ class KadeEngineData
 		if (FlxG.save.data.fpsCap == null)
 			FlxG.save.data.fpsCap = 120;
 
-		if (FlxG.save.data.fpsCap > 340 || FlxG.save.data.fpsCap < 60)
+		if (FlxG.save.data.fpsCap > 420 || FlxG.save.data.fpsCap < 60)
 			FlxG.save.data.fpsCap = 120; // baby proof so you can't hard lock ur copy of kade engine
 
 		if (FlxG.save.data.scrollSpeed == null)
@@ -125,7 +128,10 @@ class KadeEngineData
 			FlxG.save.data.cacheImages = false;
 
 		if (FlxG.save.data.middleScroll == null)
-			FlxG.save.data.middleScroll = false;
+			FlxG.save.data.middleScroll = true;
+
+		if (FlxG.save.data.middleDScroll == null)
+			FlxG.save.data.middleDScroll = true;
 
 		if (FlxG.save.data.editorBG == null)
 			FlxG.save.data.editor = false;

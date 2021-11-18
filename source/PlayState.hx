@@ -429,6 +429,23 @@ class PlayState extends MusicBeatState
 		FlxG.cameras.add(camSustains);
 		FlxG.cameras.add(camNotes);
 
+		laneunderlayOpponent = new FlxSprite(0, 0).makeGraphic(110 * 4 + 50, FlxG.height * 2);
+		laneunderlayOpponent.alpha = FlxG.save.data.laneTransparency;
+		laneunderlayOpponent.color = FlxColor.BLACK;
+		laneunderlayOpponent.scrollFactor.set();
+
+		laneunderlay = new FlxSprite(0, 0).makeGraphic(110 * 4 + 50, FlxG.height * 2);
+		laneunderlay.alpha = FlxG.save.data.laneTransparency;
+		laneunderlay.color = FlxColor.BLACK;
+		laneunderlay.scrollFactor.set();
+
+		if (FlxG.save.data.laneUnderlay)
+		{
+			add(laneunderlay);
+		}
+
+		// lol its a copy of kades but idk this is based off of Kade Engine so whatever. MIDDLESCROLL WAS MADE WITHOUT KADES HELP AND ADDING STUFF IS EASIER KADE OVER COMPLICATES THINGS DAMN IT
+
 		camHUD.zoom = PlayStateChangeables.zoom;
 
 		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
@@ -751,6 +768,12 @@ class PlayState extends MusicBeatState
 		generateStaticArrows(0);
 		generateStaticArrows(1);
 
+		laneunderlay.x = playerStrums.members[0].x - 25;
+		laneunderlayOpponent.x = cpuStrums.members[0].x - 25;
+
+		laneunderlay.screenCenter(Y);
+		laneunderlayOpponent.screenCenter(Y);
+
 		// startCountdown();
 
 		if (SONG.song == null)
@@ -971,6 +994,7 @@ class PlayState extends MusicBeatState
 		iconP1.cameras = [camHUD];
 		iconP2.cameras = [camHUD];
 		scoreTxt.cameras = [camHUD];
+		
 		if (isStoryMode)
 			doof.cameras = [camHUD];
 		if (FlxG.save.data.songPosition)
@@ -978,6 +1002,9 @@ class PlayState extends MusicBeatState
 			songPosBG.cameras = [camHUD];
 			songPosBar.cameras = [camHUD];
 		}
+		laneunderlay.cameras = [camHUD];
+		laneunderlayOpponent.cameras = [camHUD];
+
 		kadeEngineWatermark.cameras = [camHUD];
 		if (loadRep)
 			replayTxt.cameras = [camHUD];
@@ -1843,7 +1870,6 @@ class PlayState extends MusicBeatState
 					note.visible = false;
 				}
 			}
-			
 
 			// defaults if no noteStyle was found in chart
 			var noteTypeCheck:String = 'normal';

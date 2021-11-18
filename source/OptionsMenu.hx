@@ -42,6 +42,7 @@ class OptionsMenu extends MusicBeatState
 		]),
 		new OptionCategory("Appearance", [
 			new NotesplashesOption("Adds notesplashes when you hit a Sick! note."),
+			new LaneUnderlayOption("Make your Strum Line have a black BG so the notes dont blend in."),
 			new MiddleScrollOption("Make Sure Downscroll Middlescroll is disabled with this for Middlescroll."),
 			new DMiddleScrollOption("Make Sure Upscroll Middlescroll is disabled with this for Middlescroll."),
 			new StepManiaOption("Sets the colors of the arrows depending on quantization instead of direction."),
@@ -57,7 +58,6 @@ class OptionsMenu extends MusicBeatState
 		]),	
 		new OptionCategory("Performance", [
 			new FPSOption("Toggle the FPS Counter"),
-			new MemoryOption("Toggle the Memory Counter"),
 			#if desktop new FPSCapOption("Change your FPS Cap."),
 			#end
 			new RainbowFPSOption("Make the FPS Counter flicker through rainbow colors."),

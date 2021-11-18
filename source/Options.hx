@@ -704,29 +704,6 @@ class FPSOption extends Option
 	}
 }
 
-class MemoryOption extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		description = desc;
-	}
-
-	public override function press():Bool
-	{
-		FlxG.save.data.mem = !FlxG.save.data.mem;
-		display = updateDisplay();
-		return true;
-	}
-
-	private override function updateDisplay():String
-	{
-		return (FlxG.save.data.mem ? "Memory Counter ON" : "Memory Counter OFF");
-	}
-}
-
-
-
 class ScoreScreen extends Option
 {
 	public function new(desc:String)

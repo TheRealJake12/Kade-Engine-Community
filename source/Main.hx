@@ -105,13 +105,12 @@ class Main extends Sprite
 		fpsCounter = new FPS(10, 0, 0xFFFFFF);
 		addChild(fpsCounter);
 		toggleFPS(FlxG.save.data.fps);
+		#end
 
+
+		#if debug
 		fps_mem = new FPS_Mem(10, 15, 0xffffff);
 		addChild(fps_mem);
-		if (FlxG.save.data.mem)
-		{
-		addChild(fps_mem);
-		}
 		#end
 	}
 
