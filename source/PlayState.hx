@@ -3776,13 +3776,13 @@ class PlayState extends MusicBeatState
 			switch (daRating)
 			{
 				case 'shit' | 'bad':
-					currentTimingShown.color = FlxColor.RED;
+					currentTimingShown.color = FlxColor.WHITE;
 				case 'good':
-					currentTimingShown.color = FlxColor.GREEN;
+					currentTimingShown.color = FlxColor.WHITE;
 				case 'sick':
-					currentTimingShown.color = FlxColor.CYAN;
+					currentTimingShown.color = FlxColor.WHITE;
 				case 'ultra':
-					currentTimingShown.color = FlxColor.LIME;
+					currentTimingShown.color = FlxColor.GREEN;
 			}
 			currentTimingShown.borderStyle = OUTLINE;
 			currentTimingShown.borderSize = 1;
