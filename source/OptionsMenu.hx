@@ -42,7 +42,7 @@ class OptionsMenu extends MusicBeatState
 		]),
 		new OptionCategory("Appearance", [
 			new NotesplashesOption("Adds notesplashes when you hit a Sick! note."),
-			new LaneUnderlayOption("Make your Strum Line have a black BG so the notes dont blend in."),
+			new LaneUnderlayOption("Makes the notes not blend in with the background with a black underlay for your strums."),
 			new MiddleScrollOption("Make Sure Downscroll Middlescroll is disabled with this for Middlescroll."),
 			new DMiddleScrollOption("Make Sure Upscroll Middlescroll is disabled with this for Middlescroll."),
 			new StepManiaOption("Sets the colors of the arrows depending on quantization instead of direction."),
@@ -55,13 +55,14 @@ class OptionsMenu extends MusicBeatState
 		new OptionCategory("Noteskins", [
 			new NewNoteskinOption("Uses a StepMania Noteskin"),
 			new HDNotesOption("Uses some HD noteskin"),
-		]),	
+		]),
 		new OptionCategory("Performance", [
 			new FPSOption("Toggle the FPS Counter"),
-			#if desktop new FPSCapOption("Change your FPS Cap."),
+			#if desktop 
+			new FPSCapOption("Change your FPS Cap."), 
 			#end
 			new RainbowFPSOption("Make the FPS Counter flicker through rainbow colors."),
-			new InstantRespawn("Instant Respawn but lags hard on low end systems"),
+			new InstantRespawn("Instant Respawn but lags hard on low end systems"), 
 			new CamZoomOption("Toggle the camera zoom in-game."),
 			new DistractionsAndEffectsOption("Removes/Minimizes Effects used."),
 			new EditorRes("Performance Using the Chart Editior greatly increased when this is off."),
@@ -69,16 +70,14 @@ class OptionsMenu extends MusicBeatState
 			new Optimization("Nothing but Your Strumline is visible. Best Performance."),
 			new GraphicLoading("Caches every character in assets/shared/characters. Loading times greatly decreased. (HIGH MEMORY!!!)"),
 		]),
-		
 		new OptionCategory("Misc", [
 			new FlashingLightsOption("Toggle flashing lights that can cause epileptic seizures and strain."),
 			new WatermarkOption("Enable and disable all watermarks from the engine."),
-			new MissSoundsOption("Toggle miss sounds playing when you don't hit a note."), 
+			new MissSoundsOption("Toggle miss sounds playing when you don't hit a note."),
 			new ScoreScreen("Show the score screen after the end of a song"),
 			new ShowInput("Display every single input on the score screen."),
 			new BotPlay("Showcase your charts and mods with autoplay."),
 		]),
-
 		new OptionCategory("Saves and Data", [
 			#if desktop // new ReplayOption("View saved song replays."),
 			#end

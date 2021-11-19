@@ -153,7 +153,7 @@ class PlayState extends MusicBeatState
 	private static var prevCamFollow:FlxObject;
 
 	public var laneunderlay:FlxSprite;
-	public var laneunderlayOpponent:FlxSprite;
+	
 
 	public static var strumLineNotes:FlxTypedGroup<StaticArrow> = null;
 	public static var playerStrums:FlxTypedGroup<StaticArrow> = null;
@@ -429,20 +429,13 @@ class PlayState extends MusicBeatState
 		FlxG.cameras.add(camSustains);
 		FlxG.cameras.add(camNotes);
 
-		laneunderlayOpponent = new FlxSprite(0, 0).makeGraphic(110 * 4 + 50, FlxG.height * 2);
-		laneunderlayOpponent.alpha = FlxG.save.data.laneTransparency;
-		laneunderlayOpponent.color = FlxColor.BLACK;
-		laneunderlayOpponent.scrollFactor.set();
-
 		laneunderlay = new FlxSprite(0, 0).makeGraphic(110 * 4 + 50, FlxG.height * 2);
 		laneunderlay.alpha = FlxG.save.data.laneTransparency;
 		laneunderlay.color = FlxColor.BLACK;
 		laneunderlay.scrollFactor.set();
 
-		if (FlxG.save.data.laneUnderlay)
-		{
-			add(laneunderlay);
-		}
+		if (FlxG.save.data.laneUnderlay && !PlayStateChangeables.Optimize)
+		add(laneunderlay);
 
 		// lol its a copy of kades but idk this is based off of Kade Engine so whatever. MIDDLESCROLL WAS MADE WITHOUT KADES HELP AND ADDING STUFF IS EASIER KADE OVER COMPLICATES THINGS DAMN IT
 
@@ -769,10 +762,8 @@ class PlayState extends MusicBeatState
 		generateStaticArrows(1);
 
 		laneunderlay.x = playerStrums.members[0].x - 25;
-		laneunderlayOpponent.x = cpuStrums.members[0].x - 25;
 
 		laneunderlay.screenCenter(Y);
-		laneunderlayOpponent.screenCenter(Y);
 
 		// startCountdown();
 
@@ -1003,7 +994,6 @@ class PlayState extends MusicBeatState
 			songPosBar.cameras = [camHUD];
 		}
 		laneunderlay.cameras = [camHUD];
-		laneunderlayOpponent.cameras = [camHUD];
 
 		kadeEngineWatermark.cameras = [camHUD];
 		if (loadRep)
@@ -1850,7 +1840,7 @@ class PlayState extends MusicBeatState
 			// FlxG.log.add(i);
 			var babyArrow:StaticArrow = new StaticArrow(0, strumLine.y);
 
-			if (!FlxG.save.data.middleScroll || PlayStateChangeables.Optimize) // USING OPTIMIZE WITH MIDDLESCROLL IS FUCKY
+			if (!FlxG.save.data.middleScroll || PlayStateChangeables.Optimize && !executeModchart)  // USING OPTIMIZE WITH MIDDLESCROLL IS FUCKY
 			{
 				// Thank you Upscroll Users this was simple (not really) to add
 					babyArrow.x = -273;
@@ -1861,7 +1851,7 @@ class PlayState extends MusicBeatState
 					}
 			}
 
-			if (!FlxG.save.data.middleDScroll == true) // Fuck Downscroll Users for making a seperate thing
+			if (!FlxG.save.data.middleDScroll) // Fuck Downscroll Users for making a seperate thing
 			{
 				babyArrow.x = -273;
 				babyArrow.y = 600;

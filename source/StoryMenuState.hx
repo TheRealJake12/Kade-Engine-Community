@@ -331,6 +331,7 @@ class StoryMenuState extends MusicBeatState
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			movedBack = true;
 			FlxG.switchState(new MainMenuState());
+			unloadAssets();
 		}
 
 		if (FlxG.sound.music != null)
@@ -411,6 +412,7 @@ class StoryMenuState extends MusicBeatState
 						video.onVLCComplete();
 
 					LoadingState.loadAndSwitchState(new PlayState(), true);
+					unloadAssets();
 				});
 			}
 		}
