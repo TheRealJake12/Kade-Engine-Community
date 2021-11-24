@@ -35,6 +35,7 @@ class OptionsMenu extends MusicBeatState
 			new GhostTapOption("New Input == Ghostapping. Old Input == No Ghosttapping."),
 			new Judgement("Customize your Hit Timings. (LEFT or RIGHT)"),
 			new ScrollSpeedOption("Change your scroll speed. (1 = Chart dependent)"),
+			new InstantRespawn("Instant Respawn so it restarts the song without the gameover screen. May Lag a bit."), 
 			new AccuracyDOption("Change how accuracy is calculated. (Accurate = Simple, Complex = Milisecond Based)"),
 			new ResetButtonOption("Toggle pressing R to gameover."),
 			// new OffsetMenu("Get a note offset based off of your inputs!"),
@@ -62,7 +63,6 @@ class OptionsMenu extends MusicBeatState
 			new FPSCapOption("Change your FPS Cap."), 
 			#end
 			new RainbowFPSOption("Make the FPS Counter flicker through rainbow colors."),
-			new InstantRespawn("Instant Respawn but lags hard on low end systems"), 
 			new CamZoomOption("Toggle the camera zoom in-game."),
 			new DistractionsAndEffectsOption("Removes/Minimizes Effects used."),
 			new EditorRes("Performance Using the Chart Editior greatly increased when this is off."),
