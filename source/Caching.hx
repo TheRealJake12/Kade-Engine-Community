@@ -28,6 +28,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import flixel.text.FlxText;
 import Discord.DiscordClient;
+import flixel.ui.FlxBar;
 
 using StringTools;
 
@@ -37,6 +38,9 @@ class Caching extends MusicBeatState
 	var done = 0;
 
 	var loaded = false;
+
+	var loadingBar:FlxBar;
+	var loadingBarBG:FlxSprite;
 
 	var text:FlxText;
 	var kadeLogo:FlxSprite;
@@ -109,10 +113,13 @@ class Caching extends MusicBeatState
 
 		toBeDone = Lambda.count(images) + Lambda.count(music);
 
-		var bar = new FlxBar(10, FlxG.height - 50, FlxBarFillDirection.LEFT_TO_RIGHT, FlxG.width, 40, null, "done", 0, toBeDone);
-		bar.color = FlxColor.PURPLE;
+		loadingBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('loadingBar'));
+		loadingBarBG.screenCenter(X);
+		add(loadingBarBG);
 
-		add(bar);
+		loadingBar = new FlxBar(loadingBarBG.x + 4, loadingBarBG.y + 4, LEFT_TO_RIGHT, Std.int(loadingBarBG.width - 8), Std.int(loadingBarBG.height - 8),this, 'done', 1, toBeDone);
+		loadingBar.createFilledBar(0xFF000000, 0xFFffffff);
+		add(loadingBar);
 
 		add(kadeLogo);
 		add(text);
