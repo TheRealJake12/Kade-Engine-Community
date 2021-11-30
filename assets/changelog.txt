@@ -1,0 +1,5 @@
+1.3.4 pre-release
+
+Discord Button in development
+
+Discord Bot in development

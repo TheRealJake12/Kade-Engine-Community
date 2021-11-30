@@ -605,7 +605,7 @@ class NewNoteskinOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return (FlxG.save.data.NewNotes?"StepMania Noteskin" : "Default Noteskin");
+		return (FlxG.save.data.NewNotes ? "StepMania Noteskin ON" : "StepMania Noteskin OFF");
 	} // Old Noteskin
 }
 
@@ -627,6 +627,27 @@ class HDNotesOption extends Option
 	private override function updateDisplay():String
 	{
 		return (FlxG.save.data.HD ? "HD Notes ON" : "HD Notes OFF");
+	}
+}
+
+class HealthBarOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.HB = !FlxG.save.data.HB;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return (FlxG.save.data.HB ? "Healthbar Visible" : "No Healthbar");
 	}
 }
 

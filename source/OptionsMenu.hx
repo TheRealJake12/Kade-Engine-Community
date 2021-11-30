@@ -43,6 +43,7 @@ class OptionsMenu extends MusicBeatState
 		]),
 		new OptionCategory("Appearance", [
 			new NotesplashesOption("Adds notesplashes when you hit a Sick! note."),
+			new HealthBarOption("Hides the Healthbar."),
 			new LaneUnderlayOption("Makes the notes not blend in with the background with a black underlay for your strums."),
 			new MiddleScrollOption("Make Sure Downscroll Middlescroll is disabled with this for Middlescroll."),
 			new DMiddleScrollOption("Make Sure Upscroll Middlescroll is disabled with this for Middlescroll."),

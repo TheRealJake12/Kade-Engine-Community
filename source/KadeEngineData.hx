@@ -127,6 +127,9 @@ class KadeEngineData
 		if (FlxG.save.data.cacheImages == null)
 			FlxG.save.data.cacheImages = false;
 
+		if (FlxG.save.data.HB == null)
+			FlxG.save.data.HB = true;
+
 		if (FlxG.save.data.middleScroll == null)
 			FlxG.save.data.middleScroll = true;
 

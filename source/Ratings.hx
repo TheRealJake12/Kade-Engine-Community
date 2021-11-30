@@ -9,9 +9,9 @@ class Ratings
 			ranking = "BotPlay";
 
 		if (PlayState.misses == 0 && PlayState.bads == 0 && PlayState.shits == 0 && PlayState.goods == 0) // Marvelous (SICK) Full Combo
-			ranking = "(MFC)";
+			ranking = "(MarvFC)";
 		else if (PlayState.misses == 0 && PlayState.bads == 0 && PlayState.shits == 0 && PlayState.goods >= 1) // Good Full Combo (Nothing but Goods & Sicks)
-			ranking = "(GFC)";
+			ranking = "(GoodFC)";
 		else if (PlayState.misses == 0) // Regular FC
 			ranking = "(FC)";
 		else if (PlayState.misses < 10) // Single Digit Combo Breaks
