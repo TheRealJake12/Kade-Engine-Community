@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "version": "0.2.0",
   "configurations": [
     {
@@ -44,4 +45,17 @@
       "program": "${workspaceFolder}/export/debug/linux/bin/Kade Engine"
     },
   ],
+=======
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Lime",
+            "type": "lime",
+            "request": "launch"
+        }
+    ]
+>>>>>>> parent of a65f75e (Revert "1.3.4")
 }
