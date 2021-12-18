@@ -26,9 +26,8 @@ class MainMenuState extends MusicBeatState
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 
-
 	#if !switch
-	var optionShit:Array<String> = ['story mode', 'freeplay', 'donate', 'options'];
+	var optionShit:Array<String> = ['story mode', 'freeplay', 'donate', 'discord', 'options'];
 	#else
 	var optionShit:Array<String> = ['story mode', 'freeplay'];
 	#end
@@ -40,7 +39,7 @@ class MainMenuState extends MusicBeatState
 
 	public static var nightly:String = "";
 
-	public static var kadeEngineVer:String = "1.3.4 Community" + nightly;
+	public static var kadeEngineVer:String = "1.3.4 pre-release Community" + nightly;
 	public static var gameVer:String = "Kade Engine 1.7";
 
 	var magenta:FlxSprite;
@@ -98,21 +97,18 @@ class MainMenuState extends MusicBeatState
 		menuItems = new FlxTypedGroup<FlxSprite>();
 		add(menuItems);
 
-		var scale:Float = 1;
-
 		var tex = Paths.getSparrowAtlas('FNF_main_menu_assets');
 
 		for (i in 0...optionShit.length)
 		{
-			var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
-			var menuItem:FlxSprite = new FlxSprite(0, (i * 140)  + offset);
-			menuItem.scale.x = scale;
-			menuItem.scale.y = scale;
+			var menuItem:FlxSprite = new FlxSprite((firstStart ? -500 - (200 * i) : 10 + (i * 65)), (firstStart ? -300 - (400 * i) : 70 + (145 * i))); // 60 + (i * 160));
 			menuItem.frames = tex;
 			menuItem.animation.addByPrefix('idle', optionShit[i] + " basic", 24);
 			menuItem.animation.addByPrefix('selected', optionShit[i] + " white", 24);
 			menuItem.animation.play('idle');
 			menuItem.ID = i;
+			menuItem.screenCenter(X);
+			menuItem.screenCenter(Y);
 			menuItems.add(menuItem);
 			menuItem.scrollFactor.set(0, 0.25);
 			menuItem.antialiasing = true;
@@ -194,13 +190,6 @@ class MainMenuState extends MusicBeatState
 				FlxG.switchState(new TitleState());
 			}
 
-			if (FlxG.keys.justPressed.F7)
-			{
-				PlayState.SONG = Song.loadFromJson('salvation-hard', 'salvation');
-				PlayState.isStoryMode = false;
-				LoadingState.loadAndSwitchState(new PlayState());
-			}
-
 			if (controls.ACCEPT)
 			{
 				if (optionShit[curSelected] == 'donate')
@@ -257,18 +246,14 @@ class MainMenuState extends MusicBeatState
 
 		menuItems.forEach(function(spr:FlxSprite)
 		{
-			
+			spr.screenCenter(X);
 		});
-
 	}
 
 	function goToState()
 	{
 		var daChoice:String = optionShit[curSelected];
-		new FlxTimer().start(1, function(tmr:FlxTimer)
-		{
-			unloadAssets();
-		});
+		unloadAssets();
 		switch (daChoice)
 		{
 			case 'story mode':
