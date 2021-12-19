@@ -40,11 +40,7 @@ class MainMenuState extends MusicBeatState
 
 	public static var nightly:String = "";
 
-<<<<<<< HEAD
-	public static var kadeEngineVer:String = "1.3.3 Community" + nightly;
-=======
 	public static var kadeEngineVer:String = "1.3.4 Community" + nightly;
->>>>>>> parent of a65f75e (Revert "1.3.4")
 	public static var gameVer:String = "Kade Engine 1.7";
 
 	var magenta:FlxSprite;
@@ -121,7 +117,7 @@ class MainMenuState extends MusicBeatState
 			menuItem.scrollFactor.set(0, 0.25);
 			menuItem.antialiasing = true;
 			if (firstStart)
-				FlxTween.tween(menuItem, {x: 10 + (i * 65), y: 70 + (145 * i)}, 1 + (i * 0.25), {
+				FlxTween.tween(menuItem, {x: 10, y: 60 + (i * 160)}, 1 + (i * 0.25), {
 					ease: FlxEase.expoInOut,
 					onComplete: function(flxTween:FlxTween)
 					{
