@@ -1391,7 +1391,7 @@ class PlayState extends MusicBeatState
 		}
 		if (keys[data])
 		{
-			if (FlxG.save.data.inputtracing)
+			if (FlxG.save.data.inputtracing) // input tracing basically lags the game when you press a note ingame because it traces it in the ingame terminal and the terminal used to build the game
 			{
 				trace("ur already holding " + key);
 				return;
@@ -3615,8 +3615,6 @@ class PlayState extends MusicBeatState
 				else // idk why I spammed the unloads. I just want low mem usage
 				{
 					FlxG.switchState(new FreeplayState());
-					unloadAssets();
-					
 				}
 			}
 		}

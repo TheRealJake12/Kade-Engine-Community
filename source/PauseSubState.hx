@@ -222,14 +222,16 @@ class PauseSubState extends MusicBeatSubstate
 				case "Resume":
 					close();
 				case "Restart Song":
+					unloadAssets();
 					PlayState.startTime = 0;
 					PlayState.instance.clean();
 					FlxG.resetState();
 					PlayState.stageTesting = false;
 				case "Options":
-					FlxG.switchState(new OptionsMenu());
 					unloadAssets();
+					FlxG.switchState(new OptionsMenu());
 				case "Exit to menu":
+					unloadAssets();
 					PlayState.startTime = 0;
 					if (PlayState.loadRep)
 					{
@@ -237,7 +239,7 @@ class PauseSubState extends MusicBeatSubstate
 						FlxG.save.data.scrollSpeed = 1;
 						FlxG.save.data.downscroll = false;
 					}
-					unloadAssets();
+					
 					PlayState.loadRep = false;
 					PlayState.stageTesting = false;
 					#if FEATURE_LUAMODCHART
@@ -262,6 +264,7 @@ class PauseSubState extends MusicBeatSubstate
 						FlxG.switchState(new FreeplayState());
 						unloadAssets();
 					}
+					unloadAssets();
 			}
 		}
 
