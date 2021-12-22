@@ -191,7 +191,7 @@ class Debug
 		// Start the log file writer.
 		logFileWriter = new DebugLogWriter(FlxG.save.data.debugLogLevel);
 
-		logInfo("Debug logging initialized. Hello, developer.");
+		logInfo("Debug logging initialized. Hello, user.");
 
 		#if debug
 		logInfo("This is a DEBUG build.");
@@ -200,7 +200,7 @@ class Debug
 		#end
 		logInfo('HaxeFlixel version: ${Std.string(FlxG.VERSION)}');
 		logInfo('Friday Night Funkin\' version: ${MainMenuState.gameVer}');
-		logInfo('KadeEngine version: ${MainMenuState.kadeEngineVer}');
+		logInfo('KadeEngineCommunity version: ${MainMenuState.kadeEngineVer}');
 	}
 
 	static function writeToLogFile(data:Array<Dynamic>, logLevel:String = "TRACE")

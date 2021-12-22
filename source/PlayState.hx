@@ -1391,11 +1391,14 @@ class PlayState extends MusicBeatState
 		}
 		if (keys[data])
 		{
-			trace("ur already holding " + key);
-			return;
+			if (FlxG.save.data.inputtracing)
+			{
+				trace("ur already holding " + key);
+				return;
+			}
 		}
 
-		keys[data] = true;
+		keys[data] = true; // NEVER MAKE THIS FALSE IT MAKES THE STRUM LINE DO NOTHING!!
 
 		var ana = new Ana(Conductor.songPosition, null, false, "miss", data);
 
@@ -1413,9 +1416,10 @@ class PlayState extends MusicBeatState
 		for (i in closestNotes)
 			if (i.noteData == data && !i.isSustainNote)
 				dataNotes.push(i);
-
-		trace("notes able to hit for " + key.toString() + " " + dataNotes.length);
-
+		if (FlxG.save.data.inputtracing)
+		{
+			trace("notes able to hit for " + key.toString() + " " + dataNotes.length);
+		}
 		if (dataNotes.length != 0)
 		{
 			var coolNote = null;
@@ -1852,15 +1856,15 @@ class PlayState extends MusicBeatState
 			// FlxG.log.add(i);
 			var babyArrow:StaticArrow = new StaticArrow(0, strumLine.y);
 
-			if (!FlxG.save.data.middleScroll || PlayStateChangeables.Optimize && !executeModchart)  // USING OPTIMIZE WITH MIDDLESCROLL IS FUCKY
+			if (!FlxG.save.data.middleScroll || PlayStateChangeables.Optimize && !executeModchart) // USING OPTIMIZE WITH MIDDLESCROLL IS FUCKY
 			{
 				// Thank you Upscroll Users this was simple (not really) to add
-					babyArrow.x = -273;
-					babyArrow.y = 5;
-					for (note in cpuStrums)
-					{
-						note.visible = false;
-					}
+				babyArrow.x = -273;
+				babyArrow.y = 5;
+				for (note in cpuStrums)
+				{
+					note.visible = false;
+				}
 			}
 
 			if (!FlxG.save.data.middleDScroll) // Fuck Downscroll Users for making a seperate thing
@@ -3557,11 +3561,14 @@ class PlayState extends MusicBeatState
 						//FlxTransitionableState.skipNextTransIn = true;
 						//FlxTransitionableState.skipNextTransOut = true;
 
-					if (curSong == 'Dad-Battle' && !isCutscene) // remember if you made your song uppercase or lower. its important
+					if (curSong == 'yoursong' && !isCutscene) // remember if you made your song uppercase or lower. its important
 					{
 						var video:MP4Handler = new MP4Handler();
 
 						FlxG.log.add("MP4 Loaded");
+						trace("MP4 Loaded");
+						//the trace applys to debug idk about the FlxG.log
+						// update : the log applys to the debuger terminal in debug builds
 
 						video.playMP4(Paths.video('bigChungus'));
 						video.finishCallback = function()

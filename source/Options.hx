@@ -724,6 +724,27 @@ class FPSOption extends Option
 		return "FPS Counter " + (!FlxG.save.data.fps ? "off" : "on");
 	}
 }
+class MemOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.mem = !FlxG.save.data.mem;
+		(cast(Lib.current.getChildAt(0), Main)).toggleMemory(FlxG.save.data.mem);
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Memory Info " + (!FlxG.save.data.mem ? "off" : "on");
+	}
+}
 
 class ScoreScreen extends Option
 {
@@ -1140,6 +1161,9 @@ class ResetScoreOption extends Option
 	}
 }
 
+//DEBUG SPECIFIC OPTIONS
+
+
 class ResetSettings extends Option
 {
 	var confirm:Bool = false;
@@ -1208,5 +1232,29 @@ class ResetSettings extends Option
 	private override function updateDisplay():String
 	{
 		return confirm ? "Confirm Settings Reset" : "Reset Settings";
+	}
+}
+
+
+
+// DEBUG SPECIFIC OPTIONS
+class Noinputtracing extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.inputtracing = !FlxG.save.data.inputtracing;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Input Tracing " + (FlxG.save.data.inputtracing ? "ON" : "OFF");
 	}
 }

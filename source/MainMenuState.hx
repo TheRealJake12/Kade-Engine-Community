@@ -305,7 +305,7 @@ class MainMenuState extends MusicBeatState
 				camFollow.setPosition(spr.getGraphicMidpoint().x, spr.getGraphicMidpoint().y);
 			}
 
-			spr.animation.curAnim.frameRate = 60 * (60 / FlxG.save.data.fpsCap);
+			spr.animation.curAnim.frameRate = 48 * (48 / FlxG.save.data.fpsCap);
 
 			spr.updateHitbox();
 		});

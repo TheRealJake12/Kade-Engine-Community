@@ -29,6 +29,12 @@ class OptionsMenu extends MusicBeatState
 	var trackedAssets:Array<Dynamic> = [];
 
 	var options:Array<OptionCategory> = [
+		#if debug
+		new OptionCategory("Debug Specific", [
+			new Noinputtracing("Input Tracing traces what key is being pressed ingame.")
+		]),
+		#end
+
 		new OptionCategory("Gameplay", [
 			new DFJKOption(controls),
 			new DownscrollOption("Toggle making the notes scroll down rather than up."),
@@ -60,6 +66,7 @@ class OptionsMenu extends MusicBeatState
 		]),
 		new OptionCategory("Performance", [
 			new FPSOption("Toggle the FPS Counter"),
+			new MemOption("Toggle the Ram (Memory) Counter"),
 			#if desktop 
 			new FPSCapOption("Change your FPS Cap."), 
 			#end

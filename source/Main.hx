@@ -99,18 +99,15 @@ class Main extends Sprite
 		});
 		#end
 
-    Debug.onGameStart();
+   		Debug.onGameStart();
 
 		#if !mobile
-		fpsCounter = new FPS(10, 0, 0xFFFFFF);
+		fpsCounter = new FPS(0, 0, 0xFFFFFF);
 		addChild(fpsCounter);
 		toggleFPS(FlxG.save.data.fps);
-		#end
-
-
-		#if debug
-		fps_mem = new FPS_Mem(10, 15, 0xffffff);
-		addChild(fps_mem);
+		mem = new MemoryCounter(0, 0, 0xffffff);
+		addChild(mem);
+		toggleMemory(FlxG.save.data.mem);
 		#end
 	}
 
@@ -118,16 +115,16 @@ class Main extends Sprite
 
 	var fpsCounter:FPS;
 
-	public var fps_mem:FPS_Mem;
+	var mem:MemoryCounter;
 
 	public function toggleFPS(fpsEnabled:Bool):Void
 	{
 		fpsCounter.visible = fpsEnabled;
 	}
 
-	public function toggleMEM(fps_memEnabled:Bool):Void
+	public function toggleMemory(memoryEnabled:Bool):Void
 	{
-		fps_mem.visible = fps_memEnabled;
+		mem.visible = memoryEnabled;
 	}
 
 	public function changeFPSColor(color:FlxColor)
@@ -151,7 +148,7 @@ class Main extends Sprite
 	}
 }
 
-class FPS_Mem extends TextField
+class Memory extends TextField
 {
 	public var times:Array<Float>;
 
