@@ -16,6 +16,9 @@ import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import lime.utils.Assets;
+#if FEATURE_DISCORD
+import Discord.DiscordClient;
+#end
 
 
 
@@ -31,7 +34,7 @@ class OptionsMenu extends MusicBeatState
 	var options:Array<OptionCategory> = [
 		#if debug
 		new OptionCategory("Debug Specific", [
-			new Noinputtracing("Input Tracing traces what key is being pressed ingame.")
+			new Noinputtracing("Input Tracing traces what key is being pressed ingame. turn off to reduce lag")
 		]),
 		#end
 
@@ -113,6 +116,11 @@ class OptionsMenu extends MusicBeatState
 
 			FlxG.sound.playMusic(Paths.music('optionsmenu'));
 			FlxG.sound.music.time = 7050;
+		
+		#if FEATURE_DISCORD
+		// Updating Discord Rich Presence
+		DiscordClient.changePresence("Changing settings in Options", null);
+		#end
 
 		menuBG.color = 0xFFea71fd;
 		menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));

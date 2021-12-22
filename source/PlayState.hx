@@ -3491,7 +3491,6 @@ class PlayState extends MusicBeatState
 				{
 					transIn = FlxTransitionableState.defaultTransIn;
 					transOut = FlxTransitionableState.defaultTransOut;
-					unloadAssets();
 
 					paused = true;
 
@@ -3504,12 +3503,14 @@ class PlayState extends MusicBeatState
 						{
 							inResults = true;
 						});
+						unloadAssets();
 					}
+					
 					else
 					{
-						unloadAssets();
 						FlxG.sound.playMusic(Paths.music('freakyMenu'));
 						Conductor.changeBPM(102);
+						unloadAssets();
 						FlxG.switchState(new StoryMenuState());
 						clean();
 					}
@@ -3561,7 +3562,7 @@ class PlayState extends MusicBeatState
 						//FlxTransitionableState.skipNextTransIn = true;
 						//FlxTransitionableState.skipNextTransOut = true;
 
-					if (curSong == 'yoursong' && !isCutscene) // remember if you made your song uppercase or lower. its important
+					if (SONG.song.toLowerCase() == 'yoursong' && !isCutscene) // this is your song but in all lowercase so Capitalizing isnt important
 					{
 						var video:MP4Handler = new MP4Handler();
 
@@ -3570,7 +3571,24 @@ class PlayState extends MusicBeatState
 						//the trace applys to debug idk about the FlxG.log
 						// update : the log applys to the debuger terminal in debug builds
 
-						video.playMP4(Paths.video('bigChungus'));
+						video.playMP4(Paths.video('ughCutscene'));
+						video.finishCallback = function()
+						{
+							LoadingState.loadAndSwitchState(new MainMenuState());
+							unloadAssets();
+						}
+						isCutscene = true;
+					}
+					else if (curSong == 'yoursong' && !isCutscene) // this is my personal favorite way of doing things but Capitalization is important
+					{
+						var video:MP4Handler = new MP4Handler();
+
+						FlxG.log.add("MP4 Loaded");
+						trace("MP4 Loaded");
+						// the trace applys to debug idk about the FlxG.log
+						// update : the log applys to the debuger terminal in debug builds
+
+						video.playMP4(Paths.video('ughCutscene'));
 						video.finishCallback = function()
 						{
 							LoadingState.loadAndSwitchState(new PlayState());
@@ -3578,11 +3596,13 @@ class PlayState extends MusicBeatState
 						}
 						isCutscene = true;
 					}
+
 					else
 					{
 						LoadingState.loadAndSwitchState(new PlayState());
 						unloadAssets();
 					}
+					
 					prevCamFollow = camFollow;
 
 					PlayState.SONG = Song.loadFromJson(poop, PlayState.storyPlaylist[0]);

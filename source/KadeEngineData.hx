@@ -136,6 +136,9 @@ class KadeEngineData
 		if (FlxG.save.data.inputtracing == null)
 			FlxG.save.data.inputtracing = false;
 
+		if (FlxG.save.data.trace == null)
+			FlxG.save.data.trace = false;
+
 		if (FlxG.save.data.middleScroll == null)
 			FlxG.save.data.middleScroll = true;
 

@@ -52,13 +52,8 @@ else //remember to add a if then the rest of the code for multi cutscenes for di
 
 
 For Having cutscenes play after specific songs, go to PlayState.hx.
-Press CTRL + F and type if (curSong == 'yoursonghere' && !isCutscene)
+Press CTRL + F and type ``` if (curSong == 'yoursonghere' && !isCutscene) ```
 As with the StoryMenuState code, if you want another cutscene, just make an else if statement and copy the already existing playstate code for the else if.
-
-WARNING!!!
-
-Only Play After the Second Song of the week!
-If it hasn't been tested but if you have a cutscene in the storymenu and the playstate for the same week, it breaks stuff from current testing.
 
 
 ### Step 3. If I documented this poorly
