@@ -50,6 +50,7 @@ haxelib install flixel-ui
 haxelib install hscript
 haxelib install flixel-addons
 haxelib install actuate
+haxelib install hxcpp-debug-server
 haxelib run lime setup
 haxelib run lime setup flixel
 haxelib run flixel-tools setup
