@@ -390,31 +390,11 @@ class StoryMenuState extends MusicBeatState
 			PlayState.SONG = Song.conversionChecks(Song.loadFromJson(poop, PlayState.storyPlaylist[0]));
 			PlayState.storyWeek = curWeek;
 			PlayState.campaignScore = 0;
-			var video:MP4Handler = new MP4Handler();
-
-			if (curWeek == 14 && !isCutscene) // change the 14 to whatever week you are using
-				new FlxTimer().start(1, function(tmr:FlxTimer)
-				{
-					{
-						video.playMP4(Paths.video('bigChungus')); //change bigChungus to what ever your cutscene is called
-						video.finishCallback = function()
-						{
-							LoadingState.loadAndSwitchState(new PlayState());
-						}
-						isCutscene = true;
-					}
-				});
-			else //remember to add a if then the rest of the code for multi cutscenes for different weeks!
+			new FlxTimer().start(1, function(tmr:FlxTimer)
 			{
-				new FlxTimer().start(1, function(tmr:FlxTimer)
-				{
-					if (isCutscene)
-						video.onVLCComplete();
-
-					LoadingState.loadAndSwitchState(new PlayState(), true);
-					unloadAssets();
-				});
-			}
+				LoadingState.loadAndSwitchState(new PlayState(), true);
+			});
+		
 		}
 	}
 

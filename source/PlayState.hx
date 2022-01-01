@@ -1065,6 +1065,11 @@ class PlayState extends MusicBeatState
 						startCountdown();
 					});
 			}
+			switch (SONG.song.toLowerCase())
+			{
+				case 'bopeebo':
+				playCutscene('ughCutscene');
+			}
 		}
 		else
 		{
@@ -3566,10 +3571,7 @@ class PlayState extends MusicBeatState
 					{
 						var video:MP4Handler = new MP4Handler();
 
-						FlxG.log.add("MP4 Loaded");
 						trace("MP4 Loaded");
-						//the trace applys to debug idk about the FlxG.log
-						// update : the log applys to the debuger terminal in debug builds
 
 						video.playMP4(Paths.video('ughCutscene'));
 						video.finishCallback = function()
@@ -3583,10 +3585,7 @@ class PlayState extends MusicBeatState
 					{
 						var video:MP4Handler = new MP4Handler();
 
-						FlxG.log.add("MP4 Loaded");
 						trace("MP4 Loaded");
-						// the trace applys to debug idk about the FlxG.log
-						// update : the log applys to the debuger terminal in debug builds
 
 						video.playMP4(Paths.video('ughCutscene'));
 						video.finishCallback = function()
@@ -4808,4 +4807,26 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	function playCutscene(name:String)
+	{
+		inCutscene = true;
+
+		video = new MP4Handler();
+		video.finishCallback = function()
+		video.playMP4(Paths.video(name));
+	}
+
+	function playEndCutscene(name:String)
+	{
+		inCutscene = true;
+
+		video = new MP4Handler();
+		video.finishCallback = function()
+		{
+			SONG = Song.loadFromJson(storyPlaylist[0].toLowerCase());
+			LoadingState.loadAndSwitchState(new PlayState());
+			unloadAssets();
+		}
+		video.playMP4(Paths.video(name));
+	}
 }
