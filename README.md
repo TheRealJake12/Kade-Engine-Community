@@ -1,87 +1,97 @@
+## Kade Engine Community
+![Kade Engine logo](assets/preload/images/KadeEngineLogoOld.png)
 
-![Kade Engine logo](assets/preload/images/KadeEngineLogo.png)
-
-[![AppVeyor](https://img.shields.io/appveyor/build/KadeDev/Kade-Engine-Windows?label=windows%20build)](https://ci.appveyor.com/project/KadeDev/kade-engine-windows/branch/master/artifacts) [![AppVeyor](https://img.shields.io/appveyor/build/KadeDev/Kade-Engine-Macos?label=macOS%20build)](https://ci.appveyor.com/project/KadeDev/kade-engine-macos/branch/master/artifacts)  [![AppVeyor](https://img.shields.io/appveyor/build/KadeDev/Kade-Engine-Linux?label=linux%20build)](https://ci.appveyor.com/project/KadeDev/kade-engine-linux/branch/master/artifacts) [![AppVeyor](https://img.shields.io/appveyor/build/daniel11420/KadeEngineWeb?label=html5&20build)](https://ci.appveyor.com/project/daniel11420/KadeEngineWeb) [![Discord](https://img.shields.io/discord/808039740464300104?label=discord)](https://discord.gg/MG6GQFh52U) [![GitHub issues](https://img.shields.io/github/issues/KadeDev/Kade-Engine)](https://github.com/KadeDev/Kade-Engine/issues) [![GitHub pull requests](https://img.shields.io/github/issues-pr/KadeDev/Kade-Engine)](https://github.com/KadeDev/Kade-Engine/pulls) []() []()
-
-![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/KadeDev/Kade-Engine/latest) ![GitHub repo size](https://img.shields.io/github/repo-size/KadeDev/Kade-Engine) ![Lines of code](https://img.shields.io/tokei/lines/github/KadeDev/Kade-Engine) ![Supported platforms](https://img.shields.io/badge/supported%20platforms-windows%2C%20macOS%2C%20linux%2C%20html5-blue) ![GitHub all releases](https://img.shields.io/github/downloads/KadeDev/Kade-Engine/total) ![GitHub](https://img.shields.io/github/license/KadeDev/Kade-Engine) ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/KadeDev/Kade-Engine?include_prereleases&label=latest%20version) 
-
-# Friday Night Funkin': Kade Engine
-
-### If you want to contribute to Kade Engine, read [this](https://github.com/KadeDev/Kade-Engine/blob/stable/CONTRIBUTING.md) first.
-### If you want to build Kade Engine, read [this](https://github.com/KadeDev/Kade-Engine/blob/stable/docs/building.md).
-
-## Friday Night Funkin'
-**Friday Night Funkin'** is a rhythm game originally made for Ludum Dare 47 "Stuck In a Loop".
-
-Links: **[itch.io page](https://ninja-muffin24.itch.io/funkin) ⋅ [Newgrounds](https://www.newgrounds.com/portal/view/770371) ⋅ [source code on GitHub](https://github.com/ninjamuffin99/Funkin)**
-> Uh oh! Your tryin to kiss ur hot girlfriend, but her MEAN and EVIL dad is trying to KILL you! He's an ex-rockstar, the only way to get to his heart? The power of music... 
-
-## Kade Engine
-**Kade Engine** is a mod for Friday Night Funkin', including a full engine rework, replays, and more.
-
-Links: **[GameBanana mod page](https://gamebanana.com/gamefiles/16761) ⋅ [play in browser](https://funkin.puyo.xyz) ⋅ [latest stable release](https://github.com/KadeDev/Kade-Engine/releases/latest) ⋅ [latest development build (windows)](https://ci.appveyor.com/project/KadeDev/kade-engine-windows/branch/master/artifacts) ⋅ [latest development build (macOS)](https://ci.appveyor.com/project/KadeDev/kade-engine-macos/branch/master/artifacts) ⋅ [latest development build (linux)](https://ci.appveyor.com/project/KadeDev/kade-engine-linux/branch/master/artifacts)**
-
-**REMEMBER**: This is a **mod**. This is not the vanilla game and should be treated as a **modification**. This is not and probably will never be official, so don't get confused.
-
-## Website ([KadeDev.github.io/kade-engine/](https://KadeDev.github.io/Kade-Engine/))
-If you're looking for documentation, changelogs, or guides, you can find those on the Kade Engine website.
-
-# Previews ([skip](#features))
-
-![Title Screen](art/readme/KadeEngineTitleScreen.png)
-
-![Week Select](art/readme/KadeEngineWeekSelect.png)
-
-![Freeplay](art/readme/KadeEngineFreeplay.png)
-
-![Options](art/readme/KadeEngineOptions.png)
-
-![Senpai Gameplay (Hard, Upscroll)](art/readme/KadeEnginePixelGameplay.png)
-
-![Roses Dialogue](art/readme/KadeEngineDialogue.png)
-
-![Pause Screen](art/readme/KadeEnginePauseScreen.png)
-
-![Results Screen](art/readme/KadeEngineResultsScreen.png)
-
-![Replay Loader](art/readme/KadeEngineReplayLoader.png)
-
-# Features
-
- - **New Input System**
-	 - An improved input system, similar to Quaver or Etterna, with less delays, less dropped inputs and other improvements.
- - **More information during gameplay**
-	 - While you're playing, we show you information about how you're doing, such as your accuracy, combo break count, notes per second, and your grade/rating.
- - **Customizable keybinds**
-	 - Instead of being forced to use WASD and the arrow keys, you can set any keybinds you want!
- - **Replays** (in beta)
-	 - Have you ever gotten a crazy score but didn't record? The replay system solves that: it automatically saves a "replay" of your gameplay every time you complete a song, which you can play back inside of the game. 
-	 - Replays just store information about what you're doing, they don't actually record the screen -- so they take up way less space on your disk than videos.
- - **Audio offset**
-	 - If your speakers or headphones are delayed, you can set an offset in the options menu to line the game up with the delay and play with synced audio like intended!
- - **And much, much more!**
-	 - There's so much more in store than just what's listed here! If you can imagine a quality of life feature, it's probably
-	 either already included in Kade Engine or is being worked on!
-
-# Credits
-### Friday Night Funkin'
- - [ninjamuffin99](https://twitter.com/ninja_muffin99) - Programming
- - [PhantomArcade3K](https://twitter.com/phantomarcade3k) and [Evilsk8r](https://twitter.com/evilsk8r) - Art
- - [Kawai Sprite](https://twitter.com/kawaisprite) - Music
-
-This game was made with love to Newgrounds and its community. Extra love to Tom Fulp.
-### Kade Engine
-- [KadeDeveloper](https://twitter.com/KadeDeveloper) - Maintainer and lead programmer
-- [The contributors](https://github.com/KadeDev/Kade-Engine/graphs/contributors)
+Hey you!
+Thanks for visiting this Repo!
+This Version of kade Engine is 1.7.1 Pre-Release without the modsupport
+The goal of this Repo is to make it community focused. If theres a feature (no modsupport oh my god) just submit a pull request and someone will take a look at it.
 
 
+![Performance Tab](art/readme/perf.png)
+
+Ultra New Performance Tab includes all the already existing Performance Options but in their own catagory!
+
+
+
+![Pause Options](art/readme/optionsbutton.png)
+
+A Options Menu Button to change Keybinds if they arent correct, swap scroll directions, and Turn on Optimization!
+this was easy add
+
+
+![Middlescroll](art/readme/upmiddle.png)
+
+A easier way added in than Kade 1.8. With Fixed Middlescroll for Both Downscroll and Upscroll
+Little harder to get used to but the options explain it
+![Middlescroll](art/readme/downmiddle.png)
+
+![Better Documented!](art/readme/deez.png)
+
+A goal I want is this to be well documented so if someone doesn't understand something, they can look in docs!
+
+### How To Build From Source
+
+This is a not to in-depth guide to build the game and get your mod going or to contribute to the engine
+If you have read the normal building guide from the original engine, it most likely won't work here.
+So I will now do a guide to build the game.
+
+
+### Installing the needed things
+1. Install the latest Haxe. Instead of using Haxe 4.1.5, as the original game used, we will update to Haxe 4.2.4 (or the latest version)
+You will first need to go to this link to download [Haxe](https://haxe.org/download/) Choose your platform and just do the normal download proccess.
+2. Install HaxeFlixel. Once Haxe is installed, you can download HaxeFlixel. Open a Command Prompt (Windows is right click windows icon and hit command prompt or windows powershell) Once its open, run ```haxelib install flixel``` and Flixel will install.
+3. Im just gonna quickly add all the librarys you need to download by putting it in a prompt
+```
+haxelib install lime 7.9.0
+haxelib install openfl
+haxelib install flixel
+haxelib install flixel-tools
+haxelib install flixel-ui
+haxelib install hscript
+haxelib install flixel-addons
+haxelib install actuate
+haxelib install hxcpp-debug-server
+haxelib run lime setup
+haxelib run lime setup flixel
+haxelib run flixel-tools setup
+```
+Once you have these installed, you will need [Git](https://git-scm.com/downloads) 
+As you did with Haxe, just install the setup and finish it.
+When its finished, you will need to download these like you did with the Libraries above.
+```
+haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
+haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
+haxelib git faxe https://github.com/uhrobots/faxe
+haxelib git polymod https://github.com/MasterEric/polymod.git
+haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
+```
+For adding WEBM support, you will need this library but I removed it because WEBM is a piece of shit and is broken
+```
+haxelib git extension-webm https://github.com/KadeDev/extension-webm
+lime rebuild extension-webm windows
+```
+replace windows with whatever your device is.
+
+4. [Read the original FNF source code guide for Visual Studio](https://github.com/ninjamuffin99/Funkin.git)
+Once it is installed you should be able to build your game.
+
+5. Run ```Lime test windows``` or ```Lime test windows -debug```. No debug is the release version that doenst have all the debug stuff, As the debug does.
+It will take a while to build for both versions.
+
+6. Play Around with the code and make your mod or consider Contributing to the Engine!
 
 ### Shoutouts
-- [GWebDev](https://github.com/GrowtopiaFli) - Video Code
-- [Rozebud](https://github.com/ThatRozebudDude) - Ideas (that I stole)
-- [Puyo](https://github.com/puyoxyz) - Setting up appveyor and a lot of other help
-- [Smokey](https://github.com/Smokey555) - telling me that I should do the tricky asset loading
-- [Poco](https://github.com/poco0317) - math degree (aka most of the fucking math in this project)
-- [Fox](https://twitter.com/FoxeruKun) - circle noteskins
-- [Orbyy](https://twitter.com/orbyynew) - pixel circle noteskins
-- [Shubs](https://github.com/Yoshubs) - Forever Engine dump cache
+
+- [TheRealJake_12](https://www.youtube.com/channel/UCYy-RfMjVx-1dYnmNQGB2sw) - THE GUY THAT DOES ALL THE WORK
+
+- [KadeDev](https://github.com/KadeDev) - The Original Guy who created Kade Engine
+
+- [Wafles](https://gamebanana.com/mods/330278) The Step Mania Noteskin I used (sorry for stealing lol ._.)
+
+- [HD Note Creators] - I forgor who made them so correct me if you know ( ͡° ͜ʖ ͡°) )
+
+- [TposeJank](https://github.com/tposejank) Epic friend that gave me ideas and helped :epicttrooll:
+
+- [gaminbottomtext](https://github.com/gaminbottomtext) also epic fren that helped with notesplashes :letrollisfefe:
+
+- [discord server for this project](https://discord.gg/G2jJ8RfWtm) thanks for joining if you do.
