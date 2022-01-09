@@ -6,7 +6,6 @@ import flixel.FlxSubState;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
-import flixel.FlxBasic;
 
 class GameOverSubstate extends MusicBeatSubstate
 {
@@ -14,8 +13,6 @@ class GameOverSubstate extends MusicBeatSubstate
 	var camFollow:FlxObject;
 
 	var stageSuffix:String = "";
-
-	var trackedAssets:Array<FlxBasic> = [];
 
 	public function new(x:Float, y:Float)
 	{
@@ -71,22 +68,19 @@ class GameOverSubstate extends MusicBeatSubstate
 		{
 			FlxG.sound.music.stop();
 
-			remove(camFollow);
-			remove(bf);
-
 			if (PlayState.isStoryMode)
 			{
-				unloadAssets();
+				GameplayCustomizeState.freeplayBf = 'bf';
+				GameplayCustomizeState.freeplayDad = 'dad';
+				GameplayCustomizeState.freeplayGf = 'gf';
+				GameplayCustomizeState.freeplayNoteStyle = 'normal';
+				GameplayCustomizeState.freeplayStage = 'stage';
+				GameplayCustomizeState.freeplaySong = 'bopeebo';
+				GameplayCustomizeState.freeplayWeek = 1;
 				FlxG.switchState(new StoryMenuState());
-				unloadAssets();
 			}
 			else
-			{	
-				unloadAssets();
 				FlxG.switchState(new FreeplayState());
-				unloadAssets();
-			}
-			
 			PlayState.loadRep = false;
 			PlayState.stageTesting = false;
 		}
@@ -134,26 +128,10 @@ class GameOverSubstate extends MusicBeatSubstate
 			{
 				FlxG.camera.fade(FlxColor.BLACK, 2, false, function()
 				{
-					remove(camFollow);
-					remove(bf);
-					
 					LoadingState.loadAndSwitchState(new PlayState());
 					PlayState.stageTesting = false;
 				});
 			});
-		}
-	}
-	override function add(Object:FlxBasic):FlxBasic
-	{
-		trackedAssets.insert(trackedAssets.length, Object);
-		return super.add(Object);
-	}
-
-	function unloadAssets():Void
-	{
-		for (asset in trackedAssets)
-		{
-			remove(asset);
 		}
 	}
 }

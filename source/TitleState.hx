@@ -6,7 +6,6 @@ import smTools.SMFile;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.FlxBasic;
 import flixel.addons.display.FlxGridOverlay;
 import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
 import flixel.addons.transition.FlxTransitionableState;
@@ -26,9 +25,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import lime.app.Application;
 import openfl.Assets;
-#if FEATURE_DISCORD
-import Discord.DiscordClient;
-#end
+import flixel.input.keyboard.FlxKey;
 
 using StringTools;
 
@@ -41,9 +38,6 @@ class TitleState extends MusicBeatState
 	var credTextShit:Alphabet;
 	var textGroup:FlxGroup;
 	var ngSpr:FlxSprite;
-	var me:FlxSprite;
-
-	var trackedAssets:Array<flixel.FlxBasic> = [];
 
 	var curWacky:Array<String> = [];
 
@@ -51,6 +45,7 @@ class TitleState extends MusicBeatState
 
 	override public function create():Void
 	{
+		// TODO: Refactor this to use OpenFlAssets.
 		#if FEATURE_FILESYSTEM
 		if (!sys.FileSystem.exists(Sys.getCwd() + "/assets/replays"))
 			sys.FileSystem.createDirectory(Sys.getCwd() + "/assets/replays");
@@ -58,16 +53,40 @@ class TitleState extends MusicBeatState
 
 		@:privateAccess
 		{
-			trace("Loaded " + openfl.Assets.getLibrary("default").assetsLoaded + " assets (DEFAULT)");
+			Debug.logTrace("We loaded " + openfl.Assets.getLibrary("default").assetsLoaded + " assets into the default library");
 		}
 
-		#if !cpp
+		FlxG.autoPause = false;
+
 		FlxG.save.bind('funkin', 'ninjamuffin99');
 
 		PlayerSettings.init();
 
 		KadeEngineData.initSave();
-		#end
+
+		KeyBinds.keyCheck();
+		// It doesn't reupdate the list before u restart rn lmao
+
+		NoteskinHelpers.updateNoteskins();
+
+		if (FlxG.save.data.volDownBind == null)
+			FlxG.save.data.volDownBind = "MINUS";
+		if (FlxG.save.data.volUpBind == null)
+			FlxG.save.data.volUpBind = "PLUS";
+
+		FlxG.sound.muteKeys = [FlxKey.fromString(FlxG.save.data.muteBind)];
+		FlxG.sound.volumeDownKeys = [FlxKey.fromString(FlxG.save.data.volDownBind)];
+		FlxG.sound.volumeUpKeys = [FlxKey.fromString(FlxG.save.data.volUpBind)];
+
+		FlxG.mouse.visible = false;
+
+		FlxG.worldBounds.set(0, 0);
+
+		FlxGraphic.defaultPersist = FlxG.save.data.cacheImages;
+
+		MusicBeatState.initSave = true;
+
+		fullscreenBind = FlxKey.fromString(FlxG.save.data.fullscreenBind);
 
 		Highscore.load();
 
@@ -114,8 +133,8 @@ class TitleState extends MusicBeatState
 
 		if (Main.watermarks)
 		{
-			logoBl = new FlxSprite(-150, -100);
-			logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
+			logoBl = new FlxSprite(-150, 1500);
+			logoBl.frames = Paths.getSparrowAtlas('KadeEngineLogoBumpin');
 		}
 		else
 		{
@@ -146,7 +165,7 @@ class TitleState extends MusicBeatState
 		// titleText.screenCenter(X);
 		add(titleText);
 
-		var logo:FlxSprite = new FlxSprite().loadGraphic(Paths.image('logo'));
+		var logo:FlxSprite = new FlxSprite().loadGraphic(Paths.loadImage('logo'));
 		logo.screenCenter();
 		logo.antialiasing = FlxG.save.data.antialiasing;
 		// add(logo);
@@ -168,7 +187,7 @@ class TitleState extends MusicBeatState
 
 		credTextShit.visible = false;
 
-		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('credshit/meredo'));
+		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.loadImage('newgrounds_logo'));
 		add(ngSpr);
 		ngSpr.visible = false;
 		ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));
@@ -230,13 +249,14 @@ class TitleState extends MusicBeatState
 	}
 
 	var transitioning:Bool = false;
+	var fullscreenBind:FlxKey;
 
 	override function update(elapsed:Float)
 	{
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;
 
-		if (FlxG.keys.justPressed.F)
+		if (FlxG.keys.anyJustPressed([fullscreenBind]))
 		{
 			FlxG.fullscreen = !FlxG.fullscreen;
 		}
@@ -255,7 +275,6 @@ class TitleState extends MusicBeatState
 
 		if (pressedEnter && !transitioning && skippedIntro)
 		{
-
 			if (FlxG.save.data.flashing)
 				titleText.animation.play('press');
 
@@ -267,11 +286,43 @@ class TitleState extends MusicBeatState
 
 			MainMenuState.firstStart = true;
 			MainMenuState.finishedFunnyMove = false;
-			
 
+			new FlxTimer().start(2, function(tmr:FlxTimer)
+			{
+				// Get current version of Kade Engine
+
+				var http = new haxe.Http("https://raw.githubusercontent.com/KadeDev/Kade-Engine/master/version.downloadMe");
+				var returnedData:Array<String> = [];
+
+				http.onData = function(data:String)
+				{
+					returnedData[0] = data.substring(0, data.indexOf(';'));
+					returnedData[1] = data.substring(data.indexOf('-'), data.length);
+					if (!MainMenuState.kadeEngineVer.contains(returnedData[0].trim()) && !OutdatedSubState.leftState)
+					{
+						trace('outdated lmao! ' + returnedData[0] + ' != ' + MainMenuState.kadeEngineVer);
+						OutdatedSubState.needVer = returnedData[0];
+						OutdatedSubState.currChanges = returnedData[1];
+						FlxG.switchState(new MainMenuState());
+						clean();
+					}
+					else
+					{
+						FlxG.switchState(new MainMenuState());
+						clean();
+					}
+				}
+
+				http.onError = function(error)
+				{
+					trace('error: $error');
+					FlxG.switchState(new MainMenuState()); // fail but we go anyway
+					clean();
+				}
+
+				http.request();
+			});
 			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
-			FlxG.switchState(new MainMenuState());
-			
 		}
 
 		if (pressedEnter && !skippedIntro && initialized)
@@ -342,21 +393,18 @@ class TitleState extends MusicBeatState
 			// credTextShit.screenCenter();
 			case 5:
 				if (Main.watermarks)
-					createCoolText(['KE Community', 'by']);
+					createCoolText(['Kade Engine', 'by']);
 				else
-					createCoolText(['KE Community', 'by']);
+					createCoolText(['In Partnership', 'with']);
 			case 7:
 				if (Main.watermarks)
-				{
-					addMoreText('TheRealJake_12');
-					ngSpr.visible = true;
-				}
+					addMoreText('KadeDeveloper');
 				else
 				{
-					addMoreText('TheRealJake_12');
+					addMoreText('Newgrounds');
 					ngSpr.visible = true;
 				}
-			// credTextShit.text += '\TheRealJake_12';
+			// credTextShit.text += '\nNewgrounds';
 			case 8:
 				deleteCoolText();
 				ngSpr.visible = false;
@@ -414,9 +462,9 @@ class TitleState extends MusicBeatState
 					FlxTween.angle(logoBl, logoBl.angle, -4, 4, {ease: FlxEase.quartInOut});
 			}, 0);
 
-      // It always bugged me that it didn't do this before.
-      // Skip ahead in the song to the drop.
-      FlxG.sound.music.time = 9400; // 9.4 seconds
+			// It always bugged me that it didn't do this before.
+			// Skip ahead in the song to the drop.
+			FlxG.sound.music.time = 9400; // 9.4 seconds
 
 			skippedIntro = true;
 		}

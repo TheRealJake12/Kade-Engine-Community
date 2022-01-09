@@ -1,3 +1,2 @@
 normal
-step
 pixel

@@ -21,9 +21,6 @@ class KadeEngineData
 		if (FlxG.save.data.laneUnderlay == null)
 			FlxG.save.data.laneUnderlay = false;
 
-		if (FlxG.save.data.mem == null)
-			FlxG.save.data.mem = false;
-
 		if (FlxG.save.data.NewNotes == null)
 			FlxG.save.data.NewNotes = false;
 	
@@ -136,6 +133,9 @@ class KadeEngineData
 		if (FlxG.save.data.inputtracing == null)
 			FlxG.save.data.inputtracing = false;
 
+		if (FlxG.save.data.gen == null)
+			FlxG.save.data.gen = false;
+
 		if (FlxG.save.data.trace == null)
 			FlxG.save.data.trace = false;
 
@@ -150,10 +150,6 @@ class KadeEngineData
 
 		if (FlxG.save.data.zoom == null)
 			FlxG.save.data.zoom = 1;
-
-		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
-
-		KeyBinds.gamepad = gamepad != null;
 
 		Conductor.recalculateTimings();
 		PlayerSettings.player1.controls.loadKeyBinds();

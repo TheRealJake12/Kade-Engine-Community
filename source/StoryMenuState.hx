@@ -7,7 +7,6 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxGroup;
-import flixel.FlxBasic;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
@@ -27,13 +26,13 @@ class StoryMenuState extends MusicBeatState
 	static function weekData():Array<Dynamic>
 	{
 		return [
-			['Tutorial'],
-			['Bopeebo', 'Fresh', 'Dad Battle'],
-			['Spookeez', 'South', "Monster"],
-			['Pico', 'Philly Nice', "Blammed"],
-			['Satin Panties', "High", "M.I.L.F"],
-			['Cocoa', 'Eggnog', 'Winter Horrorland'],
-			['Senpai', 'Roses', 'Thorns']
+			['tutorial'],
+			['bopeebo', 'fresh', 'dadbattle'],
+			['spookeez', 'south', "monster"],
+			['pico', 'philly', "blammed"],
+			['satin-panties', "high", "milf"],
+			['cocoa', 'eggnog', 'winter-horrorland'],
+			['senpai', 'roses', 'thorns']
 		];
 	}
 
@@ -57,11 +56,7 @@ class StoryMenuState extends MusicBeatState
 
 	var curWeek:Int = 0;
 
-	var trackedAssets:Array<flixel.FlxBasic> = [];
-
 	var txtTracklist:FlxText;
-
-	var isCutscene:Bool = false;
 
 	var grpWeekText:FlxTypedGroup<MenuItem>;
 	var grpWeekCharacters:FlxTypedGroup<MenuCharacter>;
@@ -95,6 +90,8 @@ class StoryMenuState extends MusicBeatState
 	{
 		weekUnlocked = unlockWeeks();
 
+		PlayState.currentSong = "bruh";
+		PlayState.inDaPlay = false;
 		#if FEATURE_DISCORD
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Story Mode Menu", null);
@@ -331,7 +328,6 @@ class StoryMenuState extends MusicBeatState
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			movedBack = true;
 			FlxG.switchState(new MainMenuState());
-			unloadAssets();
 		}
 
 		if (FlxG.sound.music != null)
@@ -353,8 +349,6 @@ class StoryMenuState extends MusicBeatState
 				FlxG.sound.play(Paths.sound('confirmMenu'));
 
 				grpWeekText.members[curWeek].startFlashing();
-				unloadAssets();
-
 				grpWeekCharacters.members[1].animation.play('bfConfirm');
 				stopspamming = true;
 			}
@@ -368,33 +362,19 @@ class StoryMenuState extends MusicBeatState
 
 			PlayState.storyDifficulty = curDifficulty;
 
-			// adjusting the song name to be compatible
-			var songFormat = StringTools.replace(PlayState.storyPlaylist[0], " ", "-");
-			switch (songFormat)
-			{
-				case 'Dad-Battle':
-					songFormat = 'Dadbattle';
-				case 'Philly-Nice':
-					songFormat = 'Philly';
-				case 'M.I.L.F':
-					songFormat = 'Milf';
-			}
-
-			var poop:String = Highscore.formatSong(songFormat, curDifficulty);
-			PlayState.ultras = 0;
+			var diff:String = ["-easy", "", "-hard"][PlayState.storyDifficulty];
 			PlayState.sicks = 0;
 			PlayState.bads = 0;
 			PlayState.shits = 0;
 			PlayState.goods = 0;
 			PlayState.campaignMisses = 0;
-			PlayState.SONG = Song.conversionChecks(Song.loadFromJson(poop, PlayState.storyPlaylist[0]));
+			PlayState.SONG = Song.conversionChecks(Song.loadFromJson(PlayState.storyPlaylist[0], diff));
 			PlayState.storyWeek = curWeek;
 			PlayState.campaignScore = 0;
 			new FlxTimer().start(1, function(tmr:FlxTimer)
 			{
 				LoadingState.loadAndSwitchState(new PlayState(), true);
 			});
-		
 		}
 	}
 
@@ -514,19 +494,5 @@ class StoryMenuState extends MusicBeatState
 
 		if (weekCharacters[curWeek][2] == 'spooky' || weekCharacters[curWeek][2] == 'gf')
 			grpWeekCharacters.members[2].bopHead();
-	}
-
-	override function add(Object:flixel.FlxBasic):flixel.FlxBasic
-	{
-		trackedAssets.insert(trackedAssets.length, Object);
-		return super.add(Object);
-	}
-
-	function unloadAssets():Void
-	{
-		for (asset in trackedAssets)
-		{
-			remove(asset);
-		}
 	}
 }

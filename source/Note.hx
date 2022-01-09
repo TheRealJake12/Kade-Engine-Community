@@ -111,9 +111,6 @@ class Note extends FlxSprite
 		if (this.strumTime < 0)
 			this.strumTime = 0;
 
-		if (!inCharter)
-			y += FlxG.save.data.offset + PlayState.songOffset;
-
 		this.noteData = noteData;
 
 		var daStage:String = ((PlayState.instance != null && !PlayStateChangeables.Optimize) ? PlayState.Stage.curStage : 'stage');
@@ -123,7 +120,7 @@ class Note extends FlxSprite
 
 		if (inCharter)
 		{
-			frames = Paths.getSparrowAtlas('NOTE_assets');
+			frames = PlayState.noteskinSprite;
 
 			for (i in 0...4)
 			{
@@ -143,8 +140,7 @@ class Note extends FlxSprite
 				switch (PlayState.storyWeek)
 				{
 					case 6:
-					noteTypeCheck = 'pixel';
-					
+						noteTypeCheck = 'pixel';
 				}
 			}
 			else
@@ -152,56 +148,36 @@ class Note extends FlxSprite
 				noteTypeCheck = PlayState.SONG.noteStyle;
 			}
 
-			if (FlxG.save.data.NewNotes)
+			switch (noteTypeCheck)
 			{
-				frames = Paths.getSparrowAtlas('notes/NOTE_assets');
+				case 'pixel':
+					loadGraphic(PlayState.noteskinPixelSprite, true, 17, 17);
+					if (isSustainNote)
+						loadGraphic(PlayState.noteskinPixelSpriteEnds, true, 7, 6);
 
-				for (i in 0...4)
-				{
-					animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
-					animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
-					animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
-				}
+					for (i in 0...4)
+					{
+						animation.add(dataColor[i] + 'Scroll', [i + 4]); // Normal notes
+						animation.add(dataColor[i] + 'hold', [i]); // Holds
+						animation.add(dataColor[i] + 'holdend', [i + 4]); // Tails
+					}
 
-				setGraphicSize(Std.int(width * 0.7));
-				updateHitbox();
+					setGraphicSize(Std.int(width * CoolUtil.daPixelZoom));
+					updateHitbox();
+				default:
+					frames = PlayState.noteskinSprite;
 
-				antialiasing = FlxG.save.data.antialiasing;
-			}
-			else
-			{
-				switch (noteTypeCheck)
-				{
-					case 'pixel':
-						loadGraphic(Paths.image('weeb/pixelUI/arrows-pixels', 'week6'), true, 17, 17);
-						if (isSustainNote)
-							loadGraphic(Paths.image('weeb/pixelUI/arrowEnds', 'week6'), true, 7, 6);
+					for (i in 0...4)
+					{
+						animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
+						animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
+						animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
+					}
 
-						for (i in 0...4)
-						{
-							animation.add(dataColor[i] + 'Scroll', [i + 4]); // Normal notes
-							animation.add(dataColor[i] + 'hold', [i]); // Holds
-							animation.add(dataColor[i] + 'holdend', [i + 4]); // Tails
-						}
+					setGraphicSize(Std.int(width * 0.7));
+					updateHitbox();
 
-						setGraphicSize(Std.int(width * PlayState.daPixelZoom));
-						updateHitbox();
-
-					default:
-						frames = Paths.getSparrowAtlas('NOTE_assets');
-
-						for (i in 0...4)
-						{
-							animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
-							animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
-							animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
-						}
-
-						setGraphicSize(Std.int(width * 0.7));
-						updateHitbox();
-
-						antialiasing = FlxG.save.data.antialiasing;
-				}
+					antialiasing = FlxG.save.data.antialiasing;
 			}
 		}
 
@@ -209,7 +185,7 @@ class Note extends FlxSprite
 		animation.play(dataColor[noteData] + 'Scroll');
 		originColor = noteData; // The note's origin color will be checked by its sustain notes
 
-		if (FlxG.save.data.stepMania && !isSustainNote && !PlayState.instance.executeModchart)
+		if (FlxG.save.data.stepMania && !isSustainNote && !(PlayState.instance != null ? PlayState.instance.executeModchart : false))
 		{
 			var col:Int = 0;
 
@@ -231,9 +207,12 @@ class Note extends FlxSprite
 				col = quantityColor[4];
 
 			animation.play(dataColor[col] + 'Scroll');
-			localAngle -= arrowAngles[col];
-			localAngle += arrowAngles[noteData];
-			originAngle = localAngle;
+			if (FlxG.save.data.rotateSprites)
+			{
+				localAngle -= arrowAngles[col];
+				localAngle += arrowAngles[noteData];
+				originAngle = localAngle;
+			}
 			originColor = col;
 		}
 
@@ -245,23 +224,15 @@ class Note extends FlxSprite
 		if (FlxG.save.data.downscroll && sustainNote)
 			flipY = true;
 
-		var stepHeight = (((0.45 * Conductor.stepCrochet) / (PlayState.songMultiplier < 1 ? PlayState.songMultiplier : 1)) * FlxMath.roundDecimal(PlayStateChangeables.scrollSpeed == 1 ? PlayState.SONG.speed : PlayStateChangeables.scrollSpeed,
-			2));
+		var stepHeight = (((0.45 * Conductor.stepCrochet)) * FlxMath.roundDecimal(PlayStateChangeables.scrollSpeed == 1 ? PlayState.SONG.speed : PlayStateChangeables.scrollSpeed,
+			2)) / PlayState.songMultiplier;
 
 		if (isSustainNote && prevNote != null)
 		{
-			noteYOff = Math.round(-stepHeight + swagWidth * 0.5);
+			noteYOff = Math.round(-stepHeight + swagWidth * 0.5) + FlxG.save.data.offset + PlayState.songOffset;
 
 			noteScore * 0.2;
-
-			if (FlxG.save.data.NewNotes)
-			{
-				alpha = 1.0;
-			}
-			else
-			{
-				alpha = 0.6;
-			}
+			alpha = 0.6;
 
 			x += width / 2;
 

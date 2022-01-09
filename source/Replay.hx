@@ -6,7 +6,6 @@ import flixel.FlxG;
 import openfl.events.IOErrorEvent;
 import openfl.events.Event;
 import openfl.net.FileReference;
-import lime.utils.Assets;
 import haxe.Json;
 import flixel.input.keyboard.FlxKey;
 import openfl.utils.Dictionary;
@@ -102,6 +101,7 @@ class Replay
 
 		var json = {
 			"songName": PlayState.SONG.song,
+			"songId": PlayState.SONG.songId,
 			"songDiff": PlayState.storyDifficulty,
 			"chartPath": chartPath,
 			"sm": PlayState.isSM,
@@ -120,9 +120,9 @@ class Replay
 		var time = Date.now().getTime();
 
 		#if FEATURE_FILESYSTEM
-		File.saveContent("assets/replays/replay-" + PlayState.SONG.song + "-time" + time + ".kadeReplay", data);
+		File.saveContent("assets/replays/replay-" + PlayState.SONG.songId + "-time" + time + ".kadeReplay", data);
 
-		path = "replay-" + PlayState.SONG.song + "-time" + time + ".kadeReplay"; // for score screen shit
+		path = "replay-" + PlayState.SONG.songId + "-time" + time + ".kadeReplay"; // for score screen shit
 
 		LoadFromJSON();
 

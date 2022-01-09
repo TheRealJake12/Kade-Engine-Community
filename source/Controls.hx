@@ -576,15 +576,18 @@ class Controls extends FlxActionSet
 
 		var buttons = new Map<Control, Array<FlxGamepadInputID>>();
 
-		buttons.set(Control.UP, [FlxGamepadInputID.fromString(FlxG.save.data.gpupBind)]);
-		buttons.set(Control.LEFT, [FlxGamepadInputID.fromString(FlxG.save.data.gpleftBind)]);
-		buttons.set(Control.DOWN, [FlxGamepadInputID.fromString(FlxG.save.data.gpdownBind)]);
-		buttons.set(Control.RIGHT, [FlxGamepadInputID.fromString(FlxG.save.data.gprightBind)]);
-		buttons.set(Control.ACCEPT, [FlxGamepadInputID.A]);
-		buttons.set(Control.BACK, [FlxGamepadInputID.B]);
-		buttons.set(Control.PAUSE, [FlxGamepadInputID.START]);
+		if (KeyBinds.gamepad)
+		{
+			buttons.set(Control.UP, [FlxGamepadInputID.fromString(FlxG.save.data.upBind)]);
+			buttons.set(Control.LEFT, [FlxGamepadInputID.fromString(FlxG.save.data.leftBind)]);
+			buttons.set(Control.DOWN, [FlxGamepadInputID.fromString(FlxG.save.data.downBind)]);
+			buttons.set(Control.RIGHT, [FlxGamepadInputID.fromString(FlxG.save.data.rightBind)]);
+			buttons.set(Control.ACCEPT, [FlxGamepadInputID.A]);
+			buttons.set(Control.BACK, [FlxGamepadInputID.B]);
+			buttons.set(Control.PAUSE, [FlxGamepadInputID.fromString(FlxG.save.data.pauseBind)]);
 
-		addGamepad(0, buttons);
+			addGamepad(0, buttons);
+		}
 
 		inline bindKeys(Control.UP, [FlxKey.fromString(FlxG.save.data.upBind), FlxKey.UP]);
 		inline bindKeys(Control.DOWN, [FlxKey.fromString(FlxG.save.data.downBind), FlxKey.DOWN]);
@@ -592,8 +595,12 @@ class Controls extends FlxActionSet
 		inline bindKeys(Control.RIGHT, [FlxKey.fromString(FlxG.save.data.rightBind), FlxKey.RIGHT]);
 		inline bindKeys(Control.ACCEPT, [Z, SPACE, ENTER]);
 		inline bindKeys(Control.BACK, [BACKSPACE, ESCAPE]);
-		inline bindKeys(Control.PAUSE, [ENTER, ESCAPE]);
-		inline bindKeys(Control.RESET, [FlxKey.fromString(FlxG.save.data.killBind)]);
+		inline bindKeys(Control.PAUSE, [FlxKey.fromString(FlxG.save.data.pauseBind)]);
+		inline bindKeys(Control.RESET, [FlxKey.fromString(FlxG.save.data.resetBind)]);
+
+		FlxG.sound.muteKeys = [FlxKey.fromString(FlxG.save.data.muteBind)];
+		FlxG.sound.volumeDownKeys = [FlxKey.fromString(FlxG.save.data.volDownBind)];
+		FlxG.sound.volumeUpKeys = [FlxKey.fromString(FlxG.save.data.volUpBind)];
 	}
 
 	function removeKeyboard()

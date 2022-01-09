@@ -46,13 +46,5 @@
         "-release"
       ]
     }
-  ],
-  "Lua.diagnostics.globals": [
-    "start",
-    "update",
-    "beatHit",
-    "playerOneTurn",
-    "playerTwoTurn",
-    "stepHit"
   ]
 }

@@ -27,7 +27,6 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import lime.app.Application;
-import lime.utils.Assets;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.input.FlxKeyManager;
@@ -160,7 +159,7 @@ class ResultsScreen extends FlxSubState
 		mean = HelperFunctions.truncateFloat(mean / PlayState.rep.replay.songNotes.length, 2);
 
 		settingsText = new FlxText(20, FlxG.height + 50, 0,
-			'SF: ${PlayState.rep.replay.sf} | Ratio (SA/GA): ${Math.round(sicks)}:1 ${Math.round(goods)}:1 | Mean: ${mean}ms | Played on ${PlayState.SONG.song} ${CoolUtil.difficultyFromInt(PlayState.storyDifficulty).toUpperCase()}');
+			'Mean: ${mean}ms (SICK:${Ratings.timingWindows[3]}ms,GOOD:${Ratings.timingWindows[2]}ms,BAD:${Ratings.timingWindows[1]}ms,SHIT:${Ratings.timingWindows[0]}ms)');
 		settingsText.size = 16;
 		settingsText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2, 1);
 		settingsText.color = FlxColor.WHITE;
@@ -189,33 +188,24 @@ class ResultsScreen extends FlxSubState
 
 	override function update(elapsed:Float)
 	{
-		if (music != null && music.volume < 0.5)
-			music.volume += 0.01 * elapsed;
+		if (music != null)
+			if (music.volume < 0.5)
+				music.volume += 0.01 * elapsed;
 
 		// keybinds
 
 		if (PlayerSettings.player1.controls.ACCEPT)
 		{
-			music.fadeOut(0.3);
+			if (music != null)
+				music.fadeOut(0.3);
 
 			PlayState.loadRep = false;
 			PlayState.stageTesting = false;
 			PlayState.rep = null;
 
-			var songHighscore = StringTools.replace(PlayState.SONG.song, " ", "-");
-			switch (songHighscore)
-			{
-				case 'Dad-Battle':
-					songHighscore = 'Dadbattle';
-				case 'Philly-Nice':
-					songHighscore = 'Philly';
-				case 'M.I.L.F':
-					songHighscore = 'Milf';
-			}
-
 			#if !switch
-			Highscore.saveScore(songHighscore, Math.round(PlayState.instance.songScore), PlayState.storyDifficulty);
-			Highscore.saveCombo(songHighscore, Ratings.GenerateLetterRank(PlayState.instance.accuracy), PlayState.storyDifficulty);
+			Highscore.saveScore(PlayState.SONG.songId, Math.round(PlayState.instance.songScore), PlayState.storyDifficulty);
+			Highscore.saveCombo(PlayState.SONG.songId, Ratings.GenerateLetterRank(PlayState.instance.accuracy), PlayState.storyDifficulty);
 			#end
 
 			if (PlayState.isStoryMode)
@@ -236,20 +226,9 @@ class ResultsScreen extends FlxSubState
 			PlayState.loadRep = false;
 			PlayState.stageTesting = false;
 
-			var songHighscore = StringTools.replace(PlayState.SONG.song, " ", "-");
-			switch (songHighscore)
-			{
-				case 'Dad-Battle':
-					songHighscore = 'Dadbattle';
-				case 'Philly-Nice':
-					songHighscore = 'Philly';
-				case 'M.I.L.F':
-					songHighscore = 'Milf';
-			}
-
 			#if !switch
-			Highscore.saveScore(songHighscore, Math.round(PlayState.instance.songScore), PlayState.storyDifficulty);
-			Highscore.saveCombo(songHighscore, Ratings.GenerateLetterRank(PlayState.instance.accuracy), PlayState.storyDifficulty);
+			Highscore.saveScore(PlayState.SONG.songId, Math.round(PlayState.instance.songScore), PlayState.storyDifficulty);
+			Highscore.saveCombo(PlayState.SONG.songId, Ratings.GenerateLetterRank(PlayState.instance.accuracy), PlayState.storyDifficulty);
 			#end
 
 			if (music != null)

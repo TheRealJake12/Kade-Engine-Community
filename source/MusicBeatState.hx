@@ -1,5 +1,9 @@
 package;
 
+import flixel.math.FlxMath;
+import flixel.FlxCamera;
+import flixel.text.FlxText;
+import lime.app.Application;
 import flixel.FlxBasic;
 #if FEATURE_DISCORD
 import Discord.DiscordClient;
@@ -23,13 +27,23 @@ class MusicBeatState extends FlxUIState
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;
 
+	public static var initSave:Bool = false;
+
 	private var assets:Array<FlxBasic> = [];
+
+	override function destroy()
+	{
+		Application.current.window.onFocusIn.remove(onWindowFocusOut);
+		Application.current.window.onFocusIn.remove(onWindowFocusIn);
+		super.destroy();
+	}
 
 	override function add(Object:flixel.FlxBasic):flixel.FlxBasic
 	{
 		if (FlxG.save.data.optimize)
 			assets.push(Object);
-		return super.add(Object);
+		var result = super.add(Object);
+		return result;
 	}
 
 	public function clean()
@@ -45,26 +59,26 @@ class MusicBeatState extends FlxUIState
 
 	override function create()
 	{
+		if (initSave)
+		{
+			if (FlxG.save.data.laneTransparency < 0)
+				FlxG.save.data.laneTransparency = 0;
+
+			if (FlxG.save.data.laneTransparency > 1)
+				FlxG.save.data.laneTransparency = 1;
+		}
+
+		Application.current.window.onFocusIn.add(onWindowFocusIn);
+		Application.current.window.onFocusOut.add(onWindowFocusOut);
 		TimingStruct.clearTimings();
-		(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
+
+		KeyBinds.keyCheck();
 
 		if (transIn != null)
 			trace('reg ' + transIn.region);
 
 		super.create();
 	}
-
-	var array:Array<FlxColor> = [
-		FlxColor.fromRGB(148, 0, 211),
-		FlxColor.fromRGB(75, 0, 130),
-		FlxColor.fromRGB(0, 0, 255),
-		FlxColor.fromRGB(0, 255, 0),
-		FlxColor.fromRGB(255, 255, 0),
-		FlxColor.fromRGB(255, 127, 0),
-		FlxColor.fromRGB(255, 0, 0)
-	];
-
-	var skippedFrames = 0;
 
 	override function update(elapsed:Float)
 	{
@@ -157,20 +171,6 @@ class MusicBeatState extends FlxUIState
 			}
 		}
 
-		if (FlxG.save.data.fpsRain && skippedFrames >= 6)
-		{
-			if (currentColor >= array.length)
-				currentColor = 0;
-			(cast(Lib.current.getChildAt(0), Main)).changeFPSColor(array[currentColor]);
-			currentColor++;
-			skippedFrames = 0;
-		}
-		else
-			skippedFrames++;
-
-		if ((cast(Lib.current.getChildAt(0), Main)).getFPSCap != FlxG.save.data.fpsCap && FlxG.save.data.fpsCap <= 340)
-			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
-
 		super.update(elapsed);
 	}
 
@@ -179,8 +179,6 @@ class MusicBeatState extends FlxUIState
 		lastBeat = curBeat;
 		curBeat = Math.floor(curStep / 4);
 	}
-
-	public static var currentColor = 0;
 
 	private function updateCurStep():Int
 	{
@@ -216,5 +214,31 @@ class MusicBeatState extends FlxUIState
 		#else
 		FlxG.openURL(schmancy);
 		#end
+	}
+
+	function onWindowFocusOut():Void
+	{
+		if (PlayState.inDaPlay)
+		{
+			if (!PlayState.instance.paused && !PlayState.instance.endingSong && PlayState.instance.songStarted)
+			{
+				Debug.logTrace("Lost Focus");
+				PlayState.instance.openSubState(new PauseSubState());
+				PlayState.boyfriend.stunned = true;
+
+				PlayState.instance.persistentUpdate = false;
+				PlayState.instance.persistentDraw = true;
+				PlayState.instance.paused = true;
+
+				PlayState.instance.vocals.stop();
+				FlxG.sound.music.stop();
+			}
+		}
+	}
+
+	function onWindowFocusIn():Void
+	{
+		Debug.logTrace("IM BACK!!!");
+		(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
 	}
 }

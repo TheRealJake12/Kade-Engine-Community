@@ -9,9 +9,9 @@ class Ratings
 			ranking = "BotPlay";
 
 		if (PlayState.misses == 0 && PlayState.bads == 0 && PlayState.shits == 0 && PlayState.goods == 0) // Marvelous (SICK) Full Combo
-			ranking = "(MarvFC)";
+			ranking = "(MFC)";
 		else if (PlayState.misses == 0 && PlayState.bads == 0 && PlayState.shits == 0 && PlayState.goods >= 1) // Good Full Combo (Nothing but Goods & Sicks)
-			ranking = "(GoodFC)";
+			ranking = "(GFC)";
 		else if (PlayState.misses == 0) // Regular FC
 			ranking = "(FC)";
 		else if (PlayState.misses < 10) // Single Digit Combo Breaks
@@ -92,16 +92,16 @@ class Ratings
 		return ranking;
 	}
 
-	public static var timingWindows = [166.0, 135.0, 90.0, 45.0, 20.0];
+	public static var timingWindows = [];
 
 	public static function judgeNote(noteDiff:Float)
 	{
-		var diff = Math.abs(noteDiff) / (PlayState.songMultiplier >= 1 ? PlayState.songMultiplier : 1);
+		var diff = Math.abs(noteDiff);
 		for (index in 0...timingWindows.length) // based on 4 timing windows, will break with anything else
 		{
-			var time = timingWindows[index] * Conductor.timeScale;
+			var time = timingWindows[index];
 			var nextTime = index + 1 > timingWindows.length - 1 ? 0 : timingWindows[index + 1];
-			if (diff < time && diff >= nextTime * Conductor.timeScale)
+			if (diff < time && diff >= nextTime)
 			{
 				switch (index)
 				{
@@ -113,8 +113,6 @@ class Ratings
 						return "good";
 					case 3: // sick
 						return "sick";
-					case 4: // ultra
-						return "ultra";
 				}
 			}
 		}

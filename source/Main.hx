@@ -1,5 +1,6 @@
 package;
 
+import openfl.display.Bitmap;
 import lime.app.Application;
 #if FEATURE_DISCORD
 import Discord.DiscordClient;
@@ -15,24 +16,20 @@ import openfl.Lib;
 import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
-//mem shit sucks
-import haxe.Timer;
-import openfl.display.FPS;
-import openfl.events.Event;
-import openfl.system.System;
-import openfl.text.TextField;
-import openfl.text.TextFormat;
-
 
 class Main extends Sprite
 {
 	var gameWidth:Int = 1280; // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
 	var gameHeight:Int = 720; // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
-	var initialState:Class<FlxState> = Caching; // The FlxState the game starts with.
+	var initialState:Class<FlxState> = TitleState; // The FlxState the game starts with.
 	var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions.
 	var framerate:Int = 120; // How many frames per second the game should run at.
 	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
+
+	public static var bitmapFPS:Bitmap;
+
+	public static var instance:Main;
 
 	public static var watermarks = true; // Whether to put Kade Engine literally anywhere
 
@@ -47,6 +44,8 @@ class Main extends Sprite
 
 	public function new()
 	{
+		instance = this;
+
 		super();
 
 		if (stage != null)
@@ -87,19 +86,17 @@ class Main extends Sprite
 		framerate = 60;
 		#end
 
-		game = new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen);
-	
-		addChild(game);
-		#if FEATURE_DISCORD
-		DiscordClient.initialize();
+		// Run this first so we can see logs.
+		Debug.onInitProgram();
 
-		Application.current.onExit.add(function(exitCode)
-		{
-			DiscordClient.shutdown();
-		});
+		// Gotta run this before any assets get loaded.
+
+		#if !mobile
+		fpsCounter = new FPS(10, 3, 0xFFFFFF);
 		#end
 
-   		Debug.onGameStart();
+		game = new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen);
+		addChild(game);
 
 		#if !mobile
 		fpsCounter = new FPS(0, 0, 0xFFFFFF);
@@ -109,6 +106,9 @@ class Main extends Sprite
 		addChild(mem);
 		toggleMemory(FlxG.save.data.mem);
 		#end
+
+		// Finish up loading debug tools.
+		Debug.onGameStart();
 	}
 
 	var game:FlxGame;
@@ -116,6 +116,25 @@ class Main extends Sprite
 	var fpsCounter:FPS;
 
 	var mem:MemoryCounter;
+	// taken from forever engine, cuz optimization very pog.
+	// thank you shubs :)
+	public static function dumpCache()
+	{
+		///* SPECIAL THANKS TO HAYA
+		@:privateAccess
+		for (key in FlxG.bitmap._cache.keys())
+		{
+			var obj = FlxG.bitmap._cache.get(key);
+			if (obj != null)
+			{
+				Assets.cache.removeBitmapData(key);
+				FlxG.bitmap._cache.remove(key);
+				obj.destroy();
+			}
+		}
+		Assets.cache.clear("songs");
+		// */
+	}
 
 	public function toggleFPS(fpsEnabled:Bool):Void
 	{
@@ -130,6 +149,11 @@ class Main extends Sprite
 	public function changeFPSColor(color:FlxColor)
 	{
 		fpsCounter.textColor = color;
+	}
+
+	public function changeMemColor(color:FlxColor)
+	{
+		mem.textColor = color;
 	}
 
 	public function setFPSCap(cap:Float)
@@ -147,54 +171,3 @@ class Main extends Sprite
 		return fpsCounter.currentFPS;
 	}
 }
-
-class Memory extends TextField
-{
-	public var times:Array<Float>;
-
-	public var memPeak:Float = 0;
-
-	public function new(inX:Float = 10.0, inY:Float = 10.0, inCol:Int = 0x000000)
-	{
-		super();
-
-		x = inX;
-
-		y = inY;
-
-		selectable = false;
-
-		defaultTextFormat = new TextFormat("_sans", 12, inCol);
-		
-		text = "FPS: ";
-
-		times = [];
-
-		addEventListener(Event.ENTER_FRAME, onEnter);
-
-		width = 150;
-
-		height = 70;
-	}
-
-	public function onEnter(_)
-	{
-		var now = Timer.stamp();
-
-		times.push(now);
-
-		while (times[0] < now - 1)
-			times.shift();
-
-		var mem:Float = Math.round(System.totalMemory / 1024 / 1024 * 100) / 100;
-
-		if (mem > memPeak)
-			memPeak = mem;
-
-		if (visible)
-		{
-			text = "MEM: " + mem + " MB\nMEM peak: " + memPeak + " MB";
-		}
-	}
-}
-
