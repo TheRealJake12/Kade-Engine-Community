@@ -186,10 +186,6 @@ class OptionsMenu extends FlxSubState
 				new VolUpBind("The keybind used to turn the volume up"), new VolDownBind("The keybind used to turn the volume down"),
 				new FullscreenBind("The keybind used to fullscreen the game")], true),
 			new OptionCata(-1, 125, "Editing Judgements", [
-				new SickMSOption("How many milliseconds are in the SICK hit window"),
-				new GoodMsOption("How many milliseconds are in the GOOD hit window"),
-				new BadMsOption("How many milliseconds are in the BAD hit window"),
-				new ShitMsOption("How many milliseconds are in the SHIT hit window")
 			], true)
 		];
 

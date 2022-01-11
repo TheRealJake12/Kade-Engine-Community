@@ -53,6 +53,7 @@ class GameplayCustomizeState extends MusicBeatState
 	public static var boyfriend:Boyfriend;
 	public static var Stage:Stage;
 	public static var freeplayBf:String = 'bf';
+	public static var bf:Boyfriend;
 	public static var freeplayDad:String = 'dad';
 	public static var freeplayGf:String = 'gf';
 	public static var freeplayNoteStyle:String = 'normal';
@@ -133,33 +134,22 @@ class GameplayCustomizeState extends MusicBeatState
 
 		gf = new Character(400, 130, gfCheck);
 
-		if (gf.frames == null)
-		{
-			#if debug
-			FlxG.log.warn(["Couldn't load gf: " + freeplayGf + ". Loading default gf"]);
-			#end
-			gf = new Character(400, 130, 'gf');
-		}
+		var camFollow = new FlxObject(0, 0, 1, 1);
 
-		boyfriend = new Boyfriend(770, 450, freeplayBf);
+		dad = new Character(100, 100, 'dad');
 
-		if (boyfriend.frames == null)
-		{
-			#if debug
-			FlxG.log.warn(["Couldn't load boyfriend: " + freeplayBf + ". Loading default boyfriend"]);
-			#end
-			boyfriend = new Boyfriend(770, 450, 'bf');
-		}
+		bf = new Boyfriend(770, 450, 'bf');
 
-		dad = new Character(100, 100, freeplayDad);
+		gf = new Character(400, 130, 'gf');
+		gf.scrollFactor.set(0.95, 0.95);
 
-		if (dad.frames == null)
-		{
-			#if debug
-			FlxG.log.warn(["Couldn't load opponent: " + freeplayDad + ". Loading default opponent"]);
-			#end
-			dad = new Character(100, 100, 'dad');
-		}
+		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x + 400, dad.getGraphicMidpoint().y);
+
+		camFollow.setPosition(camPos.x, camPos.y);
+
+		add(gf);
+		add(bf);
+		add(dad);
 
 		Stage = new Stage(stageCheck);
 
@@ -195,33 +185,9 @@ class GameplayCustomizeState extends MusicBeatState
 			}
 		}
 
-		gf.x += gf.charPos[0];
-		gf.y += gf.charPos[1];
-		dad.x += dad.charPos[0];
-		dad.y += dad.charPos[1];
-		boyfriend.x += boyfriend.charPos[0];
-		boyfriend.y += boyfriend.charPos[1];
+		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x + 400, dad.getGraphicMidpoint().y);
 
-		camPos = new FlxPoint(dad.getGraphicMidpoint().x + dad.camPos[0], dad.getGraphicMidpoint().y + dad.camPos[1]);
-
-		if (dad.replacesGF)
-		{
-			dad.setPosition(gf.x, gf.y);
-			gf.visible = false;
-		}
-
-		if (dad.hasTrail)
-		{
-			if (FlxG.save.data.distractions)
-			{
-				// trailArea.scrollFactor.set();
-				var evilTrail = new FlxTrail(dad, null, 4, 24, 0.3, 0.069);
-				// evilTrail.changeValuesEnabled(false, false, false, false);
-				// evilTrail.changeGraphic()
-				add(evilTrail);
-				// evilTrail.scrollFactor.set(1.1, 1.1);
-			}
-		}
+		camFollow.setPosition(camPos.x, camPos.y);
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 
@@ -500,26 +466,16 @@ class GameplayCustomizeState extends MusicBeatState
 
 		if (curBeat % 2 == 0)
 		{
-			boyfriend.dance();
+			bf.dance();
 			dad.dance();
 		}
-		else if (curBeat % 2 != 0)
-		{
-			if (boyfriend.isDancing)
-				boyfriend.dance();
-			if (dad.isDancing)
-				dad.dance();
-		}
+		else if (dad.curCharacter == 'spooky' || dad.curCharacter == 'gf')
+			dad.dance();
 
 		gf.dance();
+		FlxG.camera.zoom += 0.015;
+		camHUD.zoom += 0.010;
 
-		if (!FlxG.keys.pressed.SPACE)
-		{
-			FlxG.camera.zoom += 0.015;
-			camHUD.zoom += 0.010;
-		}
-
-		trace('beat');
 	}
 
 	// ripped from playstate cuz lol

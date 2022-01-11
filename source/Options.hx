@@ -410,154 +410,6 @@ class FullscreenBind extends Option
 	}
 }
 
-class SickMSOption extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		description = desc + " (Press R to reset)";
-		acceptType = true;
-	}
-
-	public override function left():Bool
-	{
-		FlxG.save.data.sickMs--;
-		if (FlxG.save.data.sickMs < 0)
-			FlxG.save.data.sickMs = 0;
-		display = updateDisplay();
-		return true;
-	}
-
-	public override function right():Bool
-	{
-		FlxG.save.data.sickMs++;
-		display = updateDisplay();
-		return true;
-	}
-
-	public override function onType(char:String)
-	{
-		if (char.toLowerCase() == "r")
-			FlxG.save.data.sickMs = 45;
-	}
-
-	private override function updateDisplay():String
-	{
-		return "SICK: < " + FlxG.save.data.sickMs + " ms >";
-	}
-}
-
-class GoodMsOption extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		description = desc + " (Press R to reset)";
-		acceptType = true;
-	}
-
-	public override function left():Bool
-	{
-		FlxG.save.data.goodMs--;
-		if (FlxG.save.data.goodMs < 0)
-			FlxG.save.data.goodMs = 0;
-		display = updateDisplay();
-		return true;
-	}
-
-	public override function right():Bool
-	{
-		FlxG.save.data.goodMs++;
-		display = updateDisplay();
-		return true;
-	}
-
-	public override function onType(char:String)
-	{
-		if (char.toLowerCase() == "r")
-			FlxG.save.data.goodMs = 90;
-	}
-
-	private override function updateDisplay():String
-	{
-		return "GOOD: < " + FlxG.save.data.goodMs + " ms >";
-	}
-}
-
-class BadMsOption extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		description = desc + " (Press R to reset)";
-		acceptType = true;
-	}
-
-	public override function left():Bool
-	{
-		FlxG.save.data.badMs--;
-		if (FlxG.save.data.badMs < 0)
-			FlxG.save.data.badMs = 0;
-		display = updateDisplay();
-		return true;
-	}
-
-	public override function right():Bool
-	{
-		FlxG.save.data.badMs++;
-		display = updateDisplay();
-		return true;
-	}
-
-	public override function onType(char:String)
-	{
-		if (char.toLowerCase() == "r")
-			FlxG.save.data.badMs = 135;
-	}
-
-	private override function updateDisplay():String
-	{
-		return "BAD: < " + FlxG.save.data.badMs + " ms >";
-	}
-}
-
-class ShitMsOption extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		description = desc + " (Press R to reset)";
-		acceptType = true;
-	}
-
-	public override function left():Bool
-	{
-		FlxG.save.data.shitMs--;
-		if (FlxG.save.data.shitMs < 0)
-			FlxG.save.data.shitMs = 0;
-		display = updateDisplay();
-		return true;
-	}
-
-	public override function onType(char:String)
-	{
-		if (char.toLowerCase() == "r")
-			FlxG.save.data.shitMs = 160;
-	}
-
-	public override function right():Bool
-	{
-		FlxG.save.data.shitMs++;
-		display = updateDisplay();
-		return true;
-	}
-
-	private override function updateDisplay():String
-	{
-		return "SHIT: < " + FlxG.save.data.shitMs + " ms >";
-	}
-}
-
 class RoundAccuracy extends Option
 {
 	public function new(desc:String)
@@ -1071,7 +923,48 @@ class Judgement extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Edit Judgements";
+		return "Safe Frames";
+	}
+
+	override function left():Bool
+	{
+		if (Conductor.safeFrames == 1)
+			return false;
+
+		Conductor.safeFrames -= 1;
+		FlxG.save.data.frames = Conductor.safeFrames;
+
+		Conductor.recalculateTimings();
+		return false;
+	}
+
+	override function getValue():String
+	{
+		return "Safe Frames: "
+			+ Conductor.safeFrames
+			+ " - SIK: "
+			+ HelperFunctions.truncateFloat(45 * Conductor.timeScale, 0)
+			+ "ms GD: "
+			+ HelperFunctions.truncateFloat(90 * Conductor.timeScale, 0)
+			+ "ms BD: "
+			+ HelperFunctions.truncateFloat(135 * Conductor.timeScale, 0)
+			+ "ms SHT: "
+			+ HelperFunctions.truncateFloat(166 * Conductor.timeScale, 0)
+			+ "ms TOTAL: "
+			+ HelperFunctions.truncateFloat(Conductor.safeZoneOffset, 0)
+			+ "ms";
+	}
+
+	override function right():Bool
+	{
+		if (Conductor.safeFrames == 20)
+			return false;
+
+		Conductor.safeFrames += 1;
+		FlxG.save.data.frames = Conductor.safeFrames;
+
+		Conductor.recalculateTimings();
+		return true;
 	}
 }
 
@@ -1716,37 +1609,48 @@ class LaneUnderlayOption extends Option
 	public function new(desc:String)
 	{
 		super();
-		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
-		else
-			description = desc;
+		description = desc;
 		acceptValues = true;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.laneUnderlay = !FlxG.save.data.laneUnderlay;
+		display = updateDisplay();
+		return true;
 	}
 
 	private override function updateDisplay():String
 	{
-		return "Lane Transparceny: < " + HelperFunctions.truncateFloat(FlxG.save.data.laneTransparency, 1) + " >";
+		return (FlxG.save.data.laneUnderlay ? "Lane underlay" : "No lane underlay");
 	}
 
 	override function right():Bool
 	{
-		if (OptionsMenu.isInPause)
-			return false;
 		FlxG.save.data.laneTransparency += 0.1;
+
+		if (FlxG.save.data.laneTransparency < 0)
+			FlxG.save.data.laneTransparency = 0;
 
 		if (FlxG.save.data.laneTransparency > 1)
 			FlxG.save.data.laneTransparency = 1;
 		return true;
 	}
 
+	override function getValue():String
+	{
+		return "Current Lane Underlay transparency: " + HelperFunctions.truncateFloat(FlxG.save.data.laneTransparency, 1);
+	}
+
 	override function left():Bool
 	{
-		if (OptionsMenu.isInPause)
-			return false;
 		FlxG.save.data.laneTransparency -= 0.1;
 
 		if (FlxG.save.data.laneTransparency < 0)
 			FlxG.save.data.laneTransparency = 0;
+
+		if (FlxG.save.data.laneTransparency > 1)
+			FlxG.save.data.laneTransparency = 1;
 
 		return true;
 	}
@@ -2103,6 +2007,14 @@ class ResetSettings extends Option
 		FlxG.save.data.cacheImages = null;
 		FlxG.save.data.editor = null;
 		FlxG.save.data.laneTransparency = 0;
+		//custom shit
+		FlxG.save.data.hitsound = null;
+		FlxG.save.data.notesplashes = null;
+		FlxG.save.data.hitsound = null;
+		FlxG.save.data.hitsound = null;
+		FlxG.save.data.hitsound = null;
+		FlxG.save.data.hitsound = null;
+		
 
 		KadeEngineData.initSave();
 		confirm = false;

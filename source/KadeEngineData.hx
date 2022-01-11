@@ -136,14 +136,17 @@ class KadeEngineData
 		if (FlxG.save.data.gen == null)
 			FlxG.save.data.gen = false;
 
+		if (FlxG.save.data.notesplashes == null)
+			FlxG.save.data.notesplashes = true;
+
+		if (FlxG.save.data.hitsound == null)
+			FlxG.save.data.hitsound = false;
+
 		if (FlxG.save.data.trace == null)
 			FlxG.save.data.trace = false;
 
 		if (FlxG.save.data.middleScroll == null)
 			FlxG.save.data.middleScroll = true;
-
-		if (FlxG.save.data.middleDScroll == null)
-			FlxG.save.data.middleDScroll = true;
 
 		if (FlxG.save.data.editorBG == null)
 			FlxG.save.data.editor = false;

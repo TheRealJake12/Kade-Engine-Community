@@ -53,7 +53,8 @@ class TitleState extends MusicBeatState
 
 		@:privateAccess
 		{
-			Debug.logTrace("We loaded " + openfl.Assets.getLibrary("default").assetsLoaded + " assets into the default library");
+			if (FlxG.save.data.gen)
+				Debug.logTrace("We loaded " + openfl.Assets.getLibrary("default").assetsLoaded + " assets into the default library");
 		}
 
 		FlxG.autoPause = false;
@@ -91,8 +92,8 @@ class TitleState extends MusicBeatState
 		Highscore.load();
 
 		curWacky = FlxG.random.getObject(getIntroTextShit());
-
-		trace('hello');
+		if (FlxG.save.data.gen)
+			trace('hello');
 
 		// DEBUG BULLSHIT
 
@@ -133,8 +134,8 @@ class TitleState extends MusicBeatState
 
 		if (Main.watermarks)
 		{
-			logoBl = new FlxSprite(-150, 1500);
-			logoBl.frames = Paths.getSparrowAtlas('KadeEngineLogoBumpin');
+			logoBl = new FlxSprite(-150, -100);
+			logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
 		}
 		else
 		{
@@ -187,7 +188,7 @@ class TitleState extends MusicBeatState
 
 		credTextShit.visible = false;
 
-		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.loadImage('newgrounds_logo'));
+		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('credshit/meredo'));
 		add(ngSpr);
 		ngSpr.visible = false;
 		ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));
@@ -299,8 +300,9 @@ class TitleState extends MusicBeatState
 					returnedData[0] = data.substring(0, data.indexOf(';'));
 					returnedData[1] = data.substring(data.indexOf('-'), data.length);
 					if (!MainMenuState.kadeEngineVer.contains(returnedData[0].trim()) && !OutdatedSubState.leftState)
-					{
-						trace('outdated lmao! ' + returnedData[0] + ' != ' + MainMenuState.kadeEngineVer);
+					{	
+						if (FlxG.save.data.gen)
+							trace('outdated lmao! ' + returnedData[0] + ' != ' + MainMenuState.kadeEngineVer);
 						OutdatedSubState.needVer = returnedData[0];
 						OutdatedSubState.currChanges = returnedData[1];
 						FlxG.switchState(new MainMenuState());
@@ -393,18 +395,21 @@ class TitleState extends MusicBeatState
 			// credTextShit.screenCenter();
 			case 5:
 				if (Main.watermarks)
-					createCoolText(['Kade Engine', 'by']);
+					createCoolText(['KE Community', 'by']);
 				else
-					createCoolText(['In Partnership', 'with']);
+					createCoolText(['KE Community', 'by']);
 			case 7:
 				if (Main.watermarks)
-					addMoreText('KadeDeveloper');
-				else
 				{
-					addMoreText('Newgrounds');
+					addMoreText('TheRealJake_12');
 					ngSpr.visible = true;
 				}
-			// credTextShit.text += '\nNewgrounds';
+				else
+				{
+					addMoreText('TheRealJake_12');
+					ngSpr.visible = true;
+				}
+			// credTextShit.text += '\TheRealJake_12';
 			case 8:
 				deleteCoolText();
 				ngSpr.visible = false;
@@ -443,7 +448,8 @@ class TitleState extends MusicBeatState
 	{
 		if (!skippedIntro)
 		{
-			Debug.logInfo("Skipping intro...");
+			if (FlxG.save.data.gen)
+				Debug.logInfo("Skipping intro...");
 
 			remove(ngSpr);
 
