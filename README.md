@@ -95,3 +95,5 @@ It will take a while to build for both versions.
 - [gaminbottomtext](https://github.com/gaminbottomtext) also epic fren that helped with notesplashes :letrollisfefe:
 
 - [discord server for this project](https://discord.gg/G2jJ8RfWtm) thanks for joining if you do.
+
+IF YOU USE THIS SHITTY PROJECT FOR YOUR MOD PLEASE CREDIT ME ON GAMEBANANA!!!!
