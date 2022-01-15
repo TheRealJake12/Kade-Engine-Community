@@ -43,6 +43,9 @@ class Caching extends MusicBeatState
 
 	public static var bitmapData:Map<String, FlxGraphic>;
 
+	var characters = [];
+
+	var songs = [];
 	var images = [];
 	var music = [];
 	var charts = [];
@@ -89,18 +92,18 @@ class Caching extends MusicBeatState
 		FlxGraphic.defaultPersist = FlxG.save.data.cacheImages;
 
 		#if FEATURE_FILESYSTEM
-		if (FlxG.save.data.cacheImages)
+		if (FlxG.save.data.cacheCharacters)
 		{
-			Debug.logTrace("caching images...");
-
-			// TODO: Refactor this to use OpenFlAssets.
 			for (i in FileSystem.readDirectory(FileSystem.absolutePath("assets/shared/images/characters")))
 			{
 				if (!i.endsWith(".png"))
 					continue;
-				images.push(i);
+				characters.push(i);
 			}
-
+		}
+		else
+		if (FlxG.save.data.cacheImages)
+		{
 			for (i in FileSystem.readDirectory(FileSystem.absolutePath("assets/shared/images/noteskins")))
 			{
 				if (!i.endsWith(".png"))
@@ -109,13 +112,16 @@ class Caching extends MusicBeatState
 			}
 		}
 
+		if (FlxG.save.data.cacheSongs)
+			songs = Paths.listSongsToCache();
+
 		Debug.logTrace("caching music...");
 
 		// TODO: Get the song list from OpenFlAssets.
 		music = Paths.listSongsToCache();
 		#end
 
-		toBeDone = Lambda.count(images) + Lambda.count(music);
+		toBeDone = Lambda.count(images) + Lambda.count(characters) + Lambda.count(songs) + Lambda.count(music);
 
 		var bar = new FlxBar(10, FlxG.height - 50, FlxBarFillDirection.LEFT_TO_RIGHT, FlxG.width, 40, null, "done", 0, toBeDone);
 		bar.color = FlxColor.PURPLE;
@@ -166,34 +172,54 @@ class Caching extends MusicBeatState
 		#if FEATURE_FILESYSTEM
 		trace("LOADING: " + toBeDone + " OBJECTS.");
 
-		for (i in images)
+		for (i in characters)
 		{
 			var replaced = i.replace(".png", "");
-
-			// var data:BitmapData = BitmapData.fromFile("assets/shared/images/characters/" + i);
-			var imagePath = Paths.image('characters/$i', 'shared');
-			Debug.logTrace('Caching character graphic $i ($imagePath)...');
+			var imagePath = Paths.image('characters/' + replaced, 'shared');
+			trace('Caching character graphic $replaced ($imagePath)...');
 			var data = OpenFlAssets.getBitmapData(imagePath);
 			var graph = FlxGraphic.fromBitmapData(data);
 			graph.persist = true;
-			graph.destroyOnNoUse = false;
 			bitmapData.set(replaced, graph);
 			done++;
 		}
 
-		for (i in music)
+		for (i in songs)
 		{
+			trace('Caching song "$i"...');
 			var inst = Paths.inst(i);
 			if (Paths.doesSoundAssetExist(inst))
 			{
 				FlxG.sound.cache(inst);
+				trace('Cached inst for song "$i"');
 			}
+			else
+				trace('Failed to cache inst for song "$i"');
 
 			var voices = Paths.voices(i);
 			if (Paths.doesSoundAssetExist(voices))
 			{
 				FlxG.sound.cache(voices);
+				trace('Cached voices for song "$i"');
 			}
+			else
+				trace('Failed to cache voices for song "$i"');
+
+			done++;
+		}
+
+		for (i in music)
+		{
+			var replaced = i.replace(".ogg", "");
+			trace('Caching music "$replaced"...');
+			var music = Paths.music(replaced, 'shared');
+			if (Paths.doesSoundAssetExist(music))
+			{
+				FlxG.sound.cache(music);
+				trace('Cached music "$replaced"');
+			}
+			else
+				trace('Failed to cache music "$replaced"');
 
 			done++;
 		}
@@ -204,7 +230,7 @@ class Caching extends MusicBeatState
 
 		trace(OpenFlAssets.cache.hasBitmapData('GF_assets'));
 		#end
-		FlxG.switchState(new TitleState());
+		FlxG.switchState(new OptionsDirect());
 	}
 }
 #end

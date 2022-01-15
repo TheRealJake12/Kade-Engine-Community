@@ -172,12 +172,14 @@ class OptionsMenu extends FlxSubState
 				new Memory("Toggle the Memory Counter"),
 				#if debug
 				new General("lag fixer!"),
-				new InputTracing("Lags A Fuckton when holding or pressing a key ingame"),
 				#end
 				new EditorRes("Not showing the editor grid will greatly increase editor performance"),
 				new DistractionsAndEffectsOption("Toggle stage distractions that can hinder your gameplay."),
 				new Optimization("Nothing but Your Strumline is visible. Best Performance."),
 				new AntialiasingOption("Toggle antialiasing, improving graphics quality at a slight performance penalty."),
+				new CharacterCaching("Caches Characters"),
+				new SongCaching("Caches Songs"),
+				new CachingState("Caches all of the options above (HIGH AS FUCK MEMORY!!)"),
 			]),
 			new OptionCata(-1, 125, "Editing Keybinds", [
 				new LeftKeybind("The left note's keybind"), new DownKeybind("The down note's keybind"), new UpKeybind("The up note's keybind"),

@@ -2021,13 +2021,13 @@ class Memory extends Option
 	}
 }
 
-class InputTracing extends Option
+class CharacterCaching extends Option
 {
 	public function new(desc:String)
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "Lags A Fuckton when holding or pressing a key ingame";
+			description = "Characters Cache";
 		else
 			description = desc;
 	}
@@ -2036,7 +2036,7 @@ class InputTracing extends Option
 	{
 		if (OptionsMenu.isInPause)
 			return false;
-		FlxG.save.data.inputtracing = !FlxG.save.data.inputtracing;
+		FlxG.save.data.cacheCharacters = !FlxG.save.data.cacheCharacters;
 		display = updateDisplay();
 		return true;
 	}
@@ -2049,10 +2049,65 @@ class InputTracing extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Input Tracing < " + (FlxG.save.data.inputtracing ? "Enabled" : "Disabled") + " >";
+		return "Caching Characters in Next Cache: < " + (!FlxG.save.data.cacheCharacters ? "off" : "on") + " >";
 	}
 }
 
+class SongCaching extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		if (OptionsMenu.isInPause)
+			description = "Songs Cache";
+		else
+			description = desc;
+	}
+
+	public override function left():Bool
+	{
+		if (OptionsMenu.isInPause)
+			return false;
+		FlxG.save.data.cacheSongs = !FlxG.save.data.cacheSongs;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Caching Songs in Next Cache: < " + (!FlxG.save.data.cacheSongs ? "off" : "on") + " >";
+	}
+}
+
+class CachingState extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		if (OptionsMenu.isInPause)
+			description = "Cache";
+		else
+			description = desc;
+	}
+
+	public override function press():Bool
+	{
+		trace("switch");
+		FlxG.switchState(new Caching());
+		return false;
+	}
+
+	private override function updateDisplay():String
+	{
+		return('Caching');
+	}
+}
 
 class ResetSettings extends Option
 {
@@ -2117,10 +2172,8 @@ class ResetSettings extends Option
 		//custom shit
 		FlxG.save.data.hitsound = null;
 		FlxG.save.data.notesplashes = null;
-		FlxG.save.data.hitsound = null;
-		FlxG.save.data.hitsound = null;
-		FlxG.save.data.hitsound = null;
-		FlxG.save.data.hitsound = null;
+		FlxG.save.data.cacheCharacters = null;
+		FlxG.save.data.cacheSongs = null;
 		
 
 		KadeEngineData.initSave();

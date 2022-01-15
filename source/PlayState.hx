@@ -339,7 +339,7 @@ class PlayState extends MusicBeatState
 		if (currentSong != SONG.songName)
 		{
 			currentSong = SONG.songName;
-			Main.dumpCache();
+
 		}
 
 		sicks = 0;
@@ -773,12 +773,10 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.save.data.laneUnderlay && !PlayStateChangeables.Optimize)
 		{
-			if (!FlxG.save.data.middleScroll || executeModchart)
-			{
-				add(laneunderlayOpponent);
-			}
+			add(laneunderlayOpponent);
 			add(laneunderlay);
 		}
+
 
 		strumLineNotes = new FlxTypedGroup<StaticArrow>();
 		add(strumLineNotes);
@@ -2934,6 +2932,7 @@ class PlayState extends MusicBeatState
 								- daNote.noteYOff;
 						if (daNote.isSustainNote)
 						{
+							// Correct downscroll positioning
 							daNote.y -= daNote.height - stepHeight;
 
 							// If not in botplay, only clip sustain notes when properly hit, botplay gets to clip it everytime
@@ -2951,15 +2950,6 @@ class PlayState extends MusicBeatState
 								swagRect.y = daNote.frameHeight - swagRect.height;
 
 								daNote.clipRect = swagRect;
-							}
-						}
-
-						if (daNote.isParent)
-						{
-							for (i in 0...daNote.children.length)
-							{
-								var slide = daNote.children[i];
-								slide.y = daNote.y - slide.height;
 							}
 						}
 					}
@@ -3475,7 +3465,7 @@ class PlayState extends MusicBeatState
 					PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0], diff);
 					FlxG.sound.music.stop();
 
-					LoadingState.loadAndSwitchState(new PlayState());
+					FlxG.switchState(new PlayState());
 					clean();
 				}
 			}
