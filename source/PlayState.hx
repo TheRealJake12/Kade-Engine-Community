@@ -156,7 +156,6 @@ class PlayState extends MusicBeatState
 	private static var prevCamFollow:FlxObject;
 
 	public var laneunderlay:FlxSprite;
-	public var laneunderlayOpponent:FlxSprite;
 
 	public static var strumLineNotes:FlxTypedGroup<StaticArrow> = null;
 	public static var playerStrums:FlxTypedGroup<StaticArrow> = null;
@@ -313,6 +312,8 @@ class PlayState extends MusicBeatState
 			FlxG.save.data.goodMs,
 			FlxG.save.data.sickMs
 		];
+
+		Application.current.window.title = 'Kade Engine Community: ' + SONG.song + ' ' + CoolUtil.difficultyArray[storyDifficulty];
 
 		// grab variables here too or else its gonna break stuff later on
 		GameplayCustomizeState.freeplayBf = SONG.player1;
@@ -761,11 +762,6 @@ class PlayState extends MusicBeatState
 		if (PlayStateChangeables.useDownscroll)
 			strumLine.y = FlxG.height - 165;
 
-		laneunderlayOpponent = new FlxSprite(0, 0).makeGraphic(110 * 4 + 50, FlxG.height * 2);
-		laneunderlayOpponent.alpha = FlxG.save.data.laneTransparency;
-		laneunderlayOpponent.color = FlxColor.BLACK;
-		laneunderlayOpponent.scrollFactor.set();
-
 		laneunderlay = new FlxSprite(0, 0).makeGraphic(110 * 4 + 50, FlxG.height * 2);
 		laneunderlay.alpha = FlxG.save.data.laneTransparency;
 		laneunderlay.color = FlxColor.BLACK;
@@ -773,7 +769,6 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.save.data.laneUnderlay && !PlayStateChangeables.Optimize)
 		{
-			add(laneunderlayOpponent);
 			add(laneunderlay);
 		}
 
@@ -794,10 +789,8 @@ class PlayState extends MusicBeatState
 		// Update lane underlay positions AFTER static arrows :)
 
 		laneunderlay.x = playerStrums.members[0].x - 25;
-		laneunderlayOpponent.x = cpuStrums.members[0].x - 25;
 
 		laneunderlay.screenCenter(Y);
-		laneunderlayOpponent.screenCenter(Y);
 
 		// startCountdown();
 		if (FlxG.save.data.gen)
@@ -984,7 +977,6 @@ class PlayState extends MusicBeatState
 		iconP2.cameras = [camHUD];
 		scoreTxt.cameras = [camHUD];
 		laneunderlay.cameras = [camHUD];
-		laneunderlayOpponent.cameras = [camHUD];
 
 		if (isStoryMode)
 			doof.cameras = [camHUD];
@@ -1561,6 +1553,9 @@ class PlayState extends MusicBeatState
 	{
 		// FlxG.log.add(ChartParser.parse());
 
+		notes = new FlxTypedGroup<Note>();
+		add(notes);
+
 		var songData = SONG;
 		Conductor.changeBPM(songData.bpm);
 
@@ -1652,9 +1647,6 @@ class PlayState extends MusicBeatState
 			songPosBar.cameras = [camHUD];
 			songName.cameras = [camHUD];
 		}
-
-		notes = new FlxTypedGroup<Note>();
-		add(notes);
 
 		add(grpNoteSplashes);
 
@@ -1868,13 +1860,6 @@ class PlayState extends MusicBeatState
 			babyArrow.scrollFactor.set();
 
 			babyArrow.alpha = 0;
-			if (!isStoryMode)
-			{
-				babyArrow.y -= 10;
-				// babyArrow.alpha = 0;
-				if (!FlxG.save.data.middleScroll || executeModchart || player == 1)
-					FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
-			}
 
 			babyArrow.ID = i;
 
@@ -1960,7 +1945,7 @@ class PlayState extends MusicBeatState
 		{
 		if (FlxG.save.data.gen)
 			{
-			Debug.logTrace("pause thingyt");
+				Debug.logTrace("pause thingyt");
 			}
 			if (PauseSubState.goBack)
 			{
@@ -3022,6 +3007,7 @@ class PlayState extends MusicBeatState
 										else
 											spr.centerOffsets();
 									 */
+									
 								});
 							}
 
@@ -3056,6 +3042,8 @@ class PlayState extends MusicBeatState
 									else
 										spr.centerOffsets();
 								 */
+								 if (FlxG.save.data.notesplashes && (FlxG.save.data.middleScroll))
+									spawnNoteSplashOnNoteDad(daNote);
 							});
 						}
 
@@ -4049,8 +4037,9 @@ class PlayState extends MusicBeatState
 					spr.playAnim('pressed', false);
 				if (!keys[spr.ID])
 					spr.playAnim('static', false);
+
 			}
-			else if (FlxG.save.data.cpuStrums)
+			else if (FlxG.save.data.cpuStrums || (PlayStateChangeables.botPlay))
 			{
 				if (spr.animation.finished)
 					spr.playAnim('static');
@@ -4318,13 +4307,18 @@ class PlayState extends MusicBeatState
 				saveJudge.push(note.rating);
 			}
 
-			if (!PlayStateChangeables.botPlay || FlxG.save.data.cpuStrums)
+			if (!PlayStateChangeables.botPlay)
 			{
 				playerStrums.forEach(function(spr:StaticArrow)
 				{
 					pressArrow(spr, spr.ID, note);
 				});
 			}
+
+			playerStrums.forEach(function(spr:StaticArrow)
+			{
+				pressArrow(spr, spr.ID, note);
+			});
 
 			if (!note.isSustainNote)
 			{

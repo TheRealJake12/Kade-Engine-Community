@@ -2020,7 +2020,7 @@ class Memory extends Option
 		return "Memory Counter: < " + (!FlxG.save.data.mem ? "off" : "on") + " >";
 	}
 }
-
+#if desktop
 class CharacterCaching extends Option
 {
 	public function new(desc:String)
@@ -2053,13 +2053,46 @@ class CharacterCaching extends Option
 	}
 }
 
+class NoteskinCaching extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		if (OptionsMenu.isInPause)
+			description = "Noteskin Cache";
+		else
+			description = desc;
+	}
+
+	public override function left():Bool
+	{
+		if (OptionsMenu.isInPause)
+			return false;
+		FlxG.save.data.cacheNoteskin = !FlxG.save.data.cacheNoteskin;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Caching Noteskins in Next Cache: < " + (!FlxG.save.data.cacheNoteskin ? "off" : "on") + " >";
+	}
+}
+
+
 class SongCaching extends Option
 {
 	public function new(desc:String)
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "Songs Cache";
+			description = "Chart Cache";
 		else
 			description = desc;
 	}
@@ -2081,11 +2114,11 @@ class SongCaching extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Caching Songs in Next Cache: < " + (!FlxG.save.data.cacheSongs ? "off" : "on") + " >";
+		return "Caching Charts in Next Cache: < " + (!FlxG.save.data.cacheSongs ? "off" : "on") + " >";
 	}
 }
 
-class CachingState extends Option
+class CachingOption extends Option
 {
 	public function new(desc:String)
 	{
@@ -2105,9 +2138,10 @@ class CachingState extends Option
 
 	private override function updateDisplay():String
 	{
-		return('Caching');
+		return('Caching all the caches above.');
 	}
 }
+#end
 
 class ResetSettings extends Option
 {

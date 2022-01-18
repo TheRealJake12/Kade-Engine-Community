@@ -125,8 +125,7 @@ class OptionsMenu extends FlxSubState
 				new GhostTapOption("Toggle counting pressing a directional input when no arrow is there as a miss."),
 				new DownscrollOption("Toggle making the notes scroll down rather than up."),
 				new BotPlay("A bot plays for you!"),
-				#if desktop new FPSCapOption("Change your FPS Cap."),
-				#end
+				
 				new ResetButtonOption("Toggle pressing R to gameover."),
 				new InstantRespawn("Toggle if you instantly respawn after dying."),
 				new CamZoomOption("Toggle the camera zoom in-game."),
@@ -169,6 +168,9 @@ class OptionsMenu extends FlxSubState
 			]),
 			new OptionCata(50, 105, "Perf", [
 				new FPSOption("Toggle the FPS Counter"),
+				#if desktop 
+				new FPSCapOption("Change your FPS Cap."),
+				#end
 				new Memory("Toggle the Memory Counter"),
 				#if debug
 				new General("lag fixer!"),
@@ -177,9 +179,12 @@ class OptionsMenu extends FlxSubState
 				new DistractionsAndEffectsOption("Toggle stage distractions that can hinder your gameplay."),
 				new Optimization("Nothing but Your Strumline is visible. Best Performance."),
 				new AntialiasingOption("Toggle antialiasing, improving graphics quality at a slight performance penalty."),
+				#if desktop
 				new CharacterCaching("Caches Characters"),
-				new SongCaching("Caches Songs"),
-				new CachingState("Caches all of the options above (HIGH AS FUCK MEMORY!!)"),
+				new SongCaching("Caches Songs for close to Instant loading"),
+				new NoteskinCaching("Updates Noteskins"),
+				new CachingOption("Caches all of the options above (High Memory Depending On Your Cache Options.)"),
+				#end
 			]),
 			new OptionCata(-1, 125, "Editing Keybinds", [
 				new LeftKeybind("The left note's keybind"), new DownKeybind("The down note's keybind"), new UpKeybind("The up note's keybind"),
@@ -332,8 +337,6 @@ class OptionsMenu extends FlxSubState
 			Debug.logError("oops\n" + e);
 			selectedCatIndex = 0;
 		}
-
-		Debug.logTrace("Changed cat: " + selectedCatIndex);
 	}
 
 	public function selectOption(option:Option)
@@ -574,7 +577,6 @@ class OptionsMenu extends FlxSubState
 						FlxG.save.flush();
 
 						object.text = "> " + selectedOption.getValue();
-						Debug.logTrace("New text: " + object.text);
 					}
 					else if (left)
 					{

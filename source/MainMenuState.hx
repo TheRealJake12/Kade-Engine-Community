@@ -52,6 +52,8 @@ class MainMenuState extends MusicBeatState
 
 	override function create()
 	{
+		Application.current.window.title = 'Kade Engine Community : In the Menus';
+
 		trace(0 / 2);
 		clean();
 		#if FEATURE_DISCORD

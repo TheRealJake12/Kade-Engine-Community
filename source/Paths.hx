@@ -196,6 +196,8 @@ class Paths
 		return 'songs:assets/songs/${songLowercase}/Inst.$SOUND_EXT';
 	}
 
+	
+
 	static public function listSongsToCache()
 	{
 		// We need to query OpenFlAssets, not the file system, because of Polymod.
@@ -224,6 +226,40 @@ class Paths
 		}
 
 		return songNames;
+	}
+
+	static public function listAudioToCache(isSound:Bool)
+	{
+		// We need to query OpenFlAssets, not the file system, because of Polymod.
+		var soundAssets = OpenFlAssets.list(AssetType.MUSIC).concat(OpenFlAssets.list(AssetType.SOUND));
+
+		// TODO: Maybe rework this to pull from a text file rather than scan the list of assets.
+		var fileNames = [];
+
+		var folderName = 'music';
+
+		if (isSound)
+			folderName = 'sounds';
+
+		for (sound in soundAssets)
+		{
+			// Parse end-to-beginning to support mods.
+			var path = sound.split('/');
+			path.reverse();
+
+			var fileName = path[0];
+
+			if (path[1] != folderName)
+				continue;
+
+			// Remove duplicates.
+			if (fileNames.indexOf(fileName) != -1)
+				continue;
+
+			fileNames.push(fileName);
+		}
+
+		return fileNames;
 	}
 
 	static public function doesSoundAssetExist(path:String)

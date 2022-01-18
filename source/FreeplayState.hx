@@ -23,6 +23,7 @@ import flixel.util.FlxColor;
 #if FEATURE_DISCORD
 import Discord.DiscordClient;
 #end
+import lime.app.Application;
 
 using StringTools;
 
@@ -74,6 +75,9 @@ class FreeplayState extends MusicBeatState
 
 	override function create()
 	{
+
+		Application.current.window.title = 'Kade Engine Community : In the Menus';
+
 		clean();
 		list = CoolUtil.coolTextFile(Paths.txt('data/freeplaySonglist'));
 

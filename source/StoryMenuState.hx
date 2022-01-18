@@ -13,6 +13,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import lime.net.curl.CURLCode;
+import lime.app.Application;
 #if FEATURE_DISCORD
 import Discord.DiscordClient;
 #end
@@ -88,6 +89,8 @@ class StoryMenuState extends MusicBeatState
 
 	override function create()
 	{
+		Application.current.window.title = 'Kade Engine Community : In the Menus';
+
 		weekUnlocked = unlockWeeks();
 
 		PlayState.currentSong = "bruh";
