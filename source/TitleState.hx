@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxBasic;
 #if FEATURE_STEPMANIA
 import smTools.SMFile;
 #end
@@ -43,6 +44,8 @@ class TitleState extends MusicBeatState
 
 	var wackyImage:FlxSprite;
 
+	var trackedAssets:Array<FlxBasic> = [];
+
 	override public function create():Void
 	{
 		// TODO: Refactor this to use OpenFlAssets.
@@ -50,12 +53,6 @@ class TitleState extends MusicBeatState
 		if (!sys.FileSystem.exists(Sys.getCwd() + "/assets/replays"))
 			sys.FileSystem.createDirectory(Sys.getCwd() + "/assets/replays");
 		#end
-
-		@:privateAccess
-		{
-			if (FlxG.save.data.gen)
-				Debug.logTrace("We loaded " + openfl.Assets.getLibrary("default").assetsLoaded + " assets into the default library");
-		}
 
 		FlxG.autoPause = false;
 
@@ -67,6 +64,7 @@ class TitleState extends MusicBeatState
 
 		KeyBinds.keyCheck();
 		// It doesn't reupdate the list before u restart rn lmao
+		//Lmao I just made it update on Cache 
 
 		NoteskinHelpers.updateNoteskins();
 
@@ -290,39 +288,10 @@ class TitleState extends MusicBeatState
 
 			new FlxTimer().start(2, function(tmr:FlxTimer)
 			{
-				// Get current version of Kade Engine
-
-				var http = new haxe.Http("https://raw.githubusercontent.com/KadeDev/Kade-Engine/master/version.downloadMe");
-				var returnedData:Array<String> = [];
-
-				http.onData = function(data:String)
 				{
-					returnedData[0] = data.substring(0, data.indexOf(';'));
-					returnedData[1] = data.substring(data.indexOf('-'), data.length);
-					if (!MainMenuState.kadeEngineVer.contains(returnedData[0].trim()) && !OutdatedSubState.leftState)
-					{	
-						if (FlxG.save.data.gen)
-							trace('outdated lmao! ' + returnedData[0] + ' != ' + MainMenuState.kadeEngineVer);
-						OutdatedSubState.needVer = returnedData[0];
-						OutdatedSubState.currChanges = returnedData[1];
-						FlxG.switchState(new MainMenuState());
-						clean();
-					}
-					else
-					{
-						FlxG.switchState(new MainMenuState());
-						clean();
-					}
-				}
-
-				http.onError = function(error)
-				{
-					trace('error: $error');
-					FlxG.switchState(new MainMenuState()); // fail but we go anyway
+					FlxG.switchState(new MainMenuState());
 					clean();
 				}
-
-				http.request();
 			});
 			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 		}
@@ -473,6 +442,20 @@ class TitleState extends MusicBeatState
 			FlxG.sound.music.time = 9400; // 9.4 seconds
 
 			skippedIntro = true;
+		}
+	}
+
+	override function add(Object:FlxBasic):FlxBasic
+	{
+		trackedAssets.insert(trackedAssets.length, Object);
+		return super.add(Object);
+	}
+
+	function unloadAssets():Void
+	{
+		for (asset in trackedAssets)
+		{
+			remove(asset);
 		}
 	}
 }

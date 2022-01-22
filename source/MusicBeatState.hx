@@ -227,7 +227,7 @@ class MusicBeatState extends FlxUIState
 				PlayState.boyfriend.stunned = true;
 
 				PlayState.instance.persistentUpdate = false;
-				PlayState.instance.persistentDraw = true;
+				PlayState.instance.persistentDraw = false;
 				PlayState.instance.paused = true;
 
 				PlayState.instance.vocals.stop();
@@ -238,7 +238,7 @@ class MusicBeatState extends FlxUIState
 
 	function onWindowFocusIn():Void
 	{
-		Debug.logTrace("IM BACK!!!");
+		//Debug.logTrace("IM BACK!!!");
 		(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
 	}
 }
