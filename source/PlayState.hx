@@ -1859,7 +1859,7 @@ class PlayState extends MusicBeatState
 
 			babyArrow.alpha = 0;
 
-			if (!isStoryMode)
+			if (isStoryMode)
 			{
 				babyArrow.y -= 10;
 				// babyArrow.alpha = 0;
@@ -1878,11 +1878,11 @@ class PlayState extends MusicBeatState
 			}
 
 			babyArrow.playAnim('static');
-			babyArrow.x += 90; // Tryna make it not offset because it was pissing me off + Psych Engine has it somewhat like 
+			babyArrow.x += 90; // Tryna make it not offset because it was pissing me off + Psych Engine has it somewhat like this.
 			babyArrow.x += ((FlxG.width / 2) * player);
 
 			if (PlayStateChangeables.Optimize || (FlxG.save.data.middleScroll && !executeModchart))
-				babyArrow.x -= 290;
+				babyArrow.x -= 300;
 
 			strumLineNotes.add(babyArrow);
 		}
@@ -1893,7 +1893,7 @@ class PlayState extends MusicBeatState
 		var index = 0;
 		strumLineNotes.forEach(function(babyArrow:FlxSprite)
 		{
-			if (isStoryMode && !FlxG.save.data.middleScroll || executeModchart)
+			if (isStoryMode && !FlxG.save.data.middleScroll || (PlayStateChangeables.Optimize) || executeModchart)
 				babyArrow.alpha = 1;
 			if (index > 3 && FlxG.save.data.middleScroll)
 				babyArrow.alpha = 1;
@@ -3609,7 +3609,7 @@ class PlayState extends MusicBeatState
 			rating.y -= 50;
 			rating.x = coolText.x - 125;
 
-			if (!FlxG.save.data.middleScroll)
+			if (!FlxG.save.data.middleScroll && (!PlayStateChangeables.Optimize))
 				rating.x = (coolText.x - 125)
 			else
 				rating.x = (coolText.x + 200);
@@ -4055,7 +4055,7 @@ class PlayState extends MusicBeatState
 				if (!keys[spr.ID])
 					spr.playAnim('static', false);
 			}
-			else if (FlxG.save.data.cpuStrums)
+			else if (FlxG.save.data.cpuStrums || (PlayStateChangeables.botPlay))
 			{
 				if (spr.animation.finished)
 					spr.playAnim('static');

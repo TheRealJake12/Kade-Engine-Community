@@ -71,13 +71,13 @@ class Stage extends MusicBeatState
 				}
 			case 'philly':
 				{
-					var bg:FlxSprite = new FlxSprite(-100).loadGraphic(Paths.loadImage('sky', 'week3'));
+					var bg:FlxSprite = new FlxSprite(-100).loadGraphic(Paths.loadImage('philly/sky', 'week3'));
 					bg.scrollFactor.set(0.1, 0.1);
 					bg.antialiasing = FlxG.save.data.antialiasing;
 					swagBacks['bg'] = bg;
 					toAdd.push(bg);
 
-					var city:FlxSprite = new FlxSprite(-10).loadGraphic(Paths.loadImage('city', 'week2'));
+					var city:FlxSprite = new FlxSprite(-10).loadGraphic(Paths.loadImage('philly/city', 'week3'));
 					city.scrollFactor.set(0.3, 0.3);
 					city.setGraphicSize(Std.int(city.width * 0.85));
 					city.updateHitbox();
@@ -94,7 +94,7 @@ class Stage extends MusicBeatState
 
 					for (i in 0...5)
 					{
-						var light:FlxSprite = new FlxSprite(city.x).loadGraphic(Paths.loadImage('win' + i, 'week3'));
+						var light:FlxSprite = new FlxSprite(city.x).loadGraphic(Paths.loadImage('philly/win' + i, 'week3'));
 						light.scrollFactor.set(0.3, 0.3);
 						light.visible = false;
 						light.setGraphicSize(Std.int(light.width * 0.85));
@@ -103,12 +103,12 @@ class Stage extends MusicBeatState
 						phillyCityLights.add(light);
 					}
 
-					var streetBehind:FlxSprite = new FlxSprite(-40, 50).loadGraphic(Paths.loadImage('behindTrain', 'week3'));
+					var streetBehind:FlxSprite = new FlxSprite(-40, 50).loadGraphic(Paths.loadImage('philly/behindTrain', 'week3'));
 					streetBehind.antialiasing = FlxG.save.data.antialiasing;
 					swagBacks['streetBehind'] = streetBehind;
 					toAdd.push(streetBehind);
 
-					var phillyTrain = new FlxSprite(2000, 360).loadGraphic(Paths.loadImage('train', 'week3'));
+					var phillyTrain = new FlxSprite(2000, 360).loadGraphic(Paths.loadImage('philly/train', 'week3'));
 					phillyTrain.antialiasing = FlxG.save.data.antialiasing;
 					if (FlxG.save.data.distractions)
 					{
@@ -121,7 +121,7 @@ class Stage extends MusicBeatState
 
 					// var cityLights:FlxSprite = new FlxSprite().loadGraphic(AssetPaths.win0.png);
 
-					var street:FlxSprite = new FlxSprite(-40, streetBehind.y).loadGraphic(Paths.loadImage('street', 'week3'));
+					var street:FlxSprite = new FlxSprite(-40, streetBehind.y).loadGraphic(Paths.loadImage('philly/street', 'week3'));
 					street.antialiasing = FlxG.save.data.antialiasing;
 					swagBacks['street'] = street;
 					toAdd.push(street);

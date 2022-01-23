@@ -239,14 +239,14 @@ class OptionsMenu extends FlxSubState
 
 		for (i in 0...options.length - 1)
 		{
-			if (i >= 5)// how many categorys are visible (not including offsets)
+			if (i >= 5)
 				continue;
 			var cat = options[i];
 			add(cat);
 			add(cat.titleObject);
 		}
 
-		descText = new FlxText(62, 648); //the bottom text
+		descText = new FlxText(62, 648);
 		descText.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		descText.borderSize = 2;
 
@@ -351,9 +351,9 @@ class OptionsMenu extends FlxSubState
 
 			descText.text = option.getDescription();
 		}
-		//Debug.logTrace("Changed opt: " + selectedOptionIndex);
+		Debug.logTrace("Changed opt: " + selectedOptionIndex);
 
-		//Debug.logTrace("Bounds: " + visibleRange[0] + "," + visibleRange[1]);
+		Debug.logTrace("Bounds: " + visibleRange[0] + "," + visibleRange[1]);
 	}
 
 	override function update(elapsed:Float)
@@ -508,7 +508,7 @@ class OptionsMenu extends FlxSubState
 							for (i in 0...selectedCat.options.length)
 							{
 								var opt = selectedCat.optionObjects.members[i];
-								opt.y = selectedCat.titleObject.y + 800 + (46 * i);
+								opt.y = selectedCat.titleObject.y + 54 + (46 * i);
 							}
 							selectedOptionIndex = 0;
 						}
@@ -587,7 +587,6 @@ class OptionsMenu extends FlxSubState
 						FlxG.save.flush();
 
 						object.text = "> " + selectedOption.getValue();
-						Debug.logTrace("New text: " + object.text);
 					}
 
 					if (escape)
@@ -598,13 +597,6 @@ class OptionsMenu extends FlxSubState
 							selectedCatIndex = 0;
 
 						PlayerSettings.player1.controls.loadKeyBinds();
-
-						Ratings.timingWindows = [
-							FlxG.save.data.shitMs,
-							FlxG.save.data.badMs,
-							FlxG.save.data.goodMs,
-							FlxG.save.data.sickMs
-						];
 
 						for (i in 0...selectedCat.options.length)
 						{
