@@ -136,12 +136,6 @@ class KeyBindMenu extends FlxSubState
 					changeItem(1);
 				}
 
-				if (FlxG.keys.justPressed.TAB)
-				{
-					KeyBinds.gamepad = !KeyBinds.gamepad;
-					textUpdate();
-				}
-
 				if (FlxG.keys.justPressed.ENTER)
 				{
 					FlxG.sound.play(Paths.sound('scrollMenu'));
@@ -155,36 +149,7 @@ class KeyBindMenu extends FlxSubState
 				{
 					reset();
 				}
-				if (gamepad != null) // GP Logic
-				{
-					if (gamepad.justPressed.DPAD_UP)
-					{
-						FlxG.sound.play(Paths.sound('scrollMenu'));
-						changeItem(-1);
-						textUpdate();
-					}
-					if (gamepad.justPressed.DPAD_DOWN)
-					{
-						FlxG.sound.play(Paths.sound('scrollMenu'));
-						changeItem(1);
-						textUpdate();
-					}
-
-					if (gamepad.justPressed.START && frames > 10)
-					{
-						FlxG.sound.play(Paths.sound('scrollMenu'));
-						state = "input";
-					}
-					else if (gamepad.justPressed.LEFT_TRIGGER)
-					{
-						quit();
-					}
-					else if (gamepad.justPressed.RIGHT_TRIGGER)
-					{
-						reset();
-					}
-				}
-
+				KeyBinds.gamepad = false;
 			case "input":
 				if (KeyBinds.gamepad)
 				{

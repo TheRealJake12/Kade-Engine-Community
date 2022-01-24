@@ -1,6 +1,5 @@
 package;
 
-import flixel.input.gamepad.FlxGamepad;
 import openfl.Lib;
 #if FEATURE_LUAMODCHART
 import llua.Lua;
@@ -142,21 +141,12 @@ class PauseSubState extends MusicBeatSubstate
 		if (bg.alpha > 0.6)
 			bg.alpha = 0.6;
 
-		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
 
 		var upPcontroller:Bool = false;
 		var downPcontroller:Bool = false;
 		var leftPcontroller:Bool = false;
 		var rightPcontroller:Bool = false;
 		var oldOffset:Float = 0;
-
-		if (gamepad != null && KeyBinds.gamepad)
-		{
-			upPcontroller = gamepad.justPressed.DPAD_UP;
-			downPcontroller = gamepad.justPressed.DPAD_DOWN;
-			leftPcontroller = gamepad.justPressed.DPAD_LEFT;
-			rightPcontroller = gamepad.justPressed.DPAD_RIGHT;
-		}
 
 		var songPath = 'assets/data/songs/${PlayState.SONG.songId}/';
 

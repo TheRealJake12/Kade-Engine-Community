@@ -2307,7 +2307,7 @@ class PlayState extends MusicBeatState
 		var pauseBind = FlxKey.fromString(FlxG.save.data.pauseBind);
 		var gppauseBind = FlxKey.fromString(FlxG.save.data.gppauseBind);
 
-		if ((FlxG.keys.anyJustPressed([pauseBind]) || KeyBinds.gamepad && FlxG.keys.anyJustPressed([gppauseBind]))
+		if ((FlxG.keys.anyJustPressed([pauseBind]))
 			&& startedCountdown
 			&& canPause
 			&& !cannotDie)
@@ -2851,7 +2851,7 @@ class PlayState extends MusicBeatState
 		{
 			var resetBind = FlxKey.fromString(FlxG.save.data.resetBind);
 			var gpresetBind = FlxKey.fromString(FlxG.save.data.gpresetBind);
-			if ((FlxG.keys.anyJustPressed([resetBind]) || KeyBinds.gamepad && FlxG.keys.anyJustPressed([gpresetBind])))
+			if ((FlxG.keys.anyJustPressed([resetBind])))
 			{
 				boyfriend.stunned = true;
 
@@ -3867,7 +3867,7 @@ class PlayState extends MusicBeatState
 	var rightHold:Bool = false;
 	var leftHold:Bool = false;
 
-	// THIS FUNCTION JUST FUCKS WIT HELD NOTES AND BOTPLAY/REPLAY (also gamepad shit)
+	// THIS FUNCTION JUST FUCKS WIT HELD NOTES AND BOTPLAY/REPLAY
 
 	private function keyShit():Void // I've invested in emma stocks
 	{
@@ -3923,7 +3923,7 @@ class PlayState extends MusicBeatState
 			});
 		}
 
-		if ((KeyBinds.gamepad && !FlxG.keys.justPressed.ANY))
+		if ((!FlxG.keys.justPressed.ANY))
 		{
 			// PRESSES, check for note hits
 			if (pressArray.contains(true) && generatedMusic)

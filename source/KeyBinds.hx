@@ -123,7 +123,6 @@ class KeyBinds
 			trace("No FULLSCREEN");
 		}
 
-		if (FlxG.save.data.gen)
-			trace('${FlxG.save.data.leftBind}-${FlxG.save.data.downBind}-${FlxG.save.data.upBind}-${FlxG.save.data.rightBind}');
+		trace('${FlxG.save.data.leftBind}-${FlxG.save.data.downBind}-${FlxG.save.data.upBind}-${FlxG.save.data.rightBind}');
 	}
 }

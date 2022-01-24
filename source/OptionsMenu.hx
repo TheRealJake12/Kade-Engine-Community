@@ -2,7 +2,6 @@ package;
 
 import flixel.FlxCamera;
 import flixel.FlxSubState;
-import flixel.input.gamepad.FlxGamepad;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import openfl.Lib;
@@ -361,8 +360,6 @@ class OptionsMenu extends FlxSubState
 	{
 		super.update(elapsed);
 
-		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
-
 		var accept = false;
 		var right = false;
 		var left = false;
@@ -371,14 +368,14 @@ class OptionsMenu extends FlxSubState
 		var any = false;
 		var escape = false;
 
-		accept = FlxG.keys.justPressed.ENTER || (gamepad != null ? gamepad.justPressed.A : false);
-		right = FlxG.keys.justPressed.RIGHT || (gamepad != null ? gamepad.justPressed.DPAD_RIGHT : false);
-		left = FlxG.keys.justPressed.LEFT || (gamepad != null ? gamepad.justPressed.DPAD_LEFT : false);
-		up = FlxG.keys.justPressed.UP || (gamepad != null ? gamepad.justPressed.DPAD_UP : false);
-		down = FlxG.keys.justPressed.DOWN || (gamepad != null ? gamepad.justPressed.DPAD_DOWN : false);
+		accept = FlxG.keys.justPressed.ENTER;
+		right = FlxG.keys.justPressed.RIGHT;
+		left = FlxG.keys.justPressed.LEFT;
+		up = FlxG.keys.justPressed.UP;
+		down = FlxG.keys.justPressed.DOWN;
 
-		any = FlxG.keys.justPressed.ANY || (gamepad != null ? gamepad.justPressed.ANY : false);
-		escape = FlxG.keys.justPressed.ESCAPE || (gamepad != null ? gamepad.justPressed.B : false);
+		any = FlxG.keys.justPressed.ANY;
+		escape = FlxG.keys.justPressed.ESCAPE;
 
 		if (selectedCat != null && !isInCat)
 		{
@@ -473,7 +470,6 @@ class OptionsMenu extends FlxSubState
 						else if (any)
 						{
 							var object = selectedCat.optionObjects.members[selectedOptionIndex];
-							selectedOption.onType(gamepad == null ? FlxG.keys.getIsDown()[0].ID.toString() : gamepad.firstJustPressedID());
 							object.text = "> " + selectedOption.getValue();
 							Debug.logTrace("New text: " + object.text);
 						}
