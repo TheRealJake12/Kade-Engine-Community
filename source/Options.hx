@@ -927,6 +927,43 @@ class Judgement extends Option
 	}
 }
 
+class MarvMSOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc + " (Press R to reset)";
+		acceptType = true;
+	}
+
+	public override function left():Bool
+	{
+		FlxG.save.data.marvMs--;
+		if (FlxG.save.data.marvMs < 0)
+			FlxG.save.data.marvs = 0;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		FlxG.save.data.marvMs++;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function onType(char:String)
+	{
+		if (char.toLowerCase() == "r")
+			FlxG.save.data.marvMs = 20;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "MARVELOUS: < " + FlxG.save.data.marvMs + " ms >";
+	}
+}
+
 class SickMSOption extends Option
 {
 	public function new(desc:String)

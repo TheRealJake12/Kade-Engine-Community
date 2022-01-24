@@ -95,6 +95,7 @@ class PlayState extends MusicBeatState
 	public static var bads:Int = 0;
 	public static var goods:Int = 0;
 	public static var sicks:Int = 0;
+	public static var marvs:Int = 0;
 
 	public static var songPosBG:FlxSprite;
 
@@ -172,6 +173,7 @@ class PlayState extends MusicBeatState
 
 	public static var misses:Int = 0;
 	public static var campaignMisses:Int = 0;
+	public static var campaignMarvs:Int = 0;
 	public static var campaignSicks:Int = 0;
 	public static var campaignGoods:Int = 0;
 	public static var campaignBads:Int = 0;
@@ -312,7 +314,8 @@ class PlayState extends MusicBeatState
 			FlxG.save.data.shitMs,
 			FlxG.save.data.badMs,
 			FlxG.save.data.goodMs,
-			FlxG.save.data.sickMs
+			FlxG.save.data.sickMs,
+			FlxG.save.data.marvMs
 		];
 
 		Application.current.window.title = 'Kade Engine Community: ' + SONG.song + ' ' + CoolUtil.difficultyArray[storyDifficulty];
@@ -345,6 +348,7 @@ class PlayState extends MusicBeatState
 
 		}
 
+		marvs = 0;
 		sicks = 0;
 		bads = 0;
 		shits = 0;
@@ -377,8 +381,6 @@ class PlayState extends MusicBeatState
 		#if !cpp
 		executeModchart = false; // FORCE disable for non cpp targets
 		#end
-
-		Debug.logInfo('Searching for mod chart? ($executeModchart) at ${Paths.lua('songs/${PlayState.SONG.songId}/modchart')}');
 
 		if (executeModchart)
 			songMultiplier = 1;
@@ -912,7 +914,7 @@ class PlayState extends MusicBeatState
 		judgementCounter.scrollFactor.set();
 		judgementCounter.cameras = [camHUD];
 		judgementCounter.screenCenter(Y);
-		judgementCounter.text = 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\nMisses: ${misses}';
+		judgementCounter.text = 'Marvelous: ${marvs}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\nMisses: ${misses}';
 		if (FlxG.save.data.judgementCounter)
 		{
 			add(judgementCounter);
@@ -1601,6 +1603,9 @@ class PlayState extends MusicBeatState
 		if (!PlayState.isSM)
 			FlxG.sound.cache(Paths.inst(PlayState.SONG.songId));
 
+		FlxG.sound.music.onComplete = endSong;
+		FlxG.sound.music.pause();
+
 		// Song duration in a float, useful for the time left feature
 		songLength = ((FlxG.sound.music.length / songMultiplier) / 1000);
 
@@ -2127,10 +2132,6 @@ class PlayState extends MusicBeatState
 					//Debug.logTrace("we're fuckin ending the song ");
 
 					endingSong = true;
-					new FlxTimer().start(2, function(timer)
-					{
-						endSong();
-					});
 				}
 			}
 		}
@@ -3365,6 +3366,7 @@ class PlayState extends MusicBeatState
 			{
 				campaignScore += Math.round(songScore);
 				campaignMisses += misses;
+				campaignMarvs += marvs;
 				campaignSicks += sicks;
 				campaignGoods += goods;
 				campaignBads += bads;
@@ -3565,11 +3567,23 @@ class PlayState extends MusicBeatState
 				if (FlxG.save.data.accuracyMod == 0)
 					totalNotesHit += 0.75;
 			case 'sick':
+				daRating = 'sick';
 				if (health < 2)
 					health += 0.04;
 				if (FlxG.save.data.accuracyMod == 0)
 					totalNotesHit += 1;
 				sicks++;
+				if (FlxG.save.data.notesplashes)
+				{
+					spawnNoteSplashOnNote(daNote);
+				}
+			case 'marv':
+				daRating ='marv';
+				if (health < 2)
+					health += 0.06;
+				if (FlxG.save.data.accuracyMod == 0)
+					totalNotesHit += 1;
+				marvs++;
 				if (FlxG.save.data.notesplashes)
 				{
 					spawnNoteSplashOnNote(daNote);
@@ -3640,8 +3654,10 @@ class PlayState extends MusicBeatState
 				case 'shit' | 'bad':
 					currentTimingShown.color = FlxColor.RED;
 				case 'good':
-					currentTimingShown.color = FlxColor.GREEN;
+					currentTimingShown.color = FlxColor.WHITE;
 				case 'sick':
+					currentTimingShown.color = FlxColor.WHITE;
+				case 'marv':
 					currentTimingShown.color = FlxColor.CYAN;
 			}
 			currentTimingShown.borderStyle = OUTLINE;
@@ -4192,7 +4208,7 @@ class PlayState extends MusicBeatState
 		accuracyDefault = Math.max(0, totalNotesHitDefault / totalPlayed * 100);
 
 		scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS, accuracy);
-		judgementCounter.text = 'Sicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\nMisses: ${misses}';
+		judgementCounter.text = 'Marvelous: ${marvs} \nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\nMisses: ${misses}';
 	}
 
 	function getKeyPresses(note:Note):Int

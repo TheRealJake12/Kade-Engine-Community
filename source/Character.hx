@@ -97,10 +97,9 @@ class Character extends FlxSprite
 
 				playAnim('danceRight');
 
-				setGraphicSize(Std.int(width * PlayStateChangeables.zoom));
+				setGraphicSize(Std.int(width *CoolUtil.daPixelZoom));
 				updateHitbox();
 				antialiasing = false;
-
 			case 'dad':
 				// DAD ANIMATION LOADING CODE
 				tex = Paths.getSparrowAtlas('DADDY_DEAREST', 'shared', true);
