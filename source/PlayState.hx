@@ -1871,6 +1871,13 @@ class PlayState extends MusicBeatState
 				if (!FlxG.save.data.middleScroll || executeModchart || player == 1)
 					FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
 			}
+			if (!isStoryMode)
+			{
+				babyArrow.y -= 10;
+				// babyArrow.alpha = 0;
+				if (FlxG.save.data.middleScroll || executeModchart || player == 1)
+					FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
+			}
 
 			babyArrow.ID = i;
 
