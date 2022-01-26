@@ -335,8 +335,6 @@ class OptionsMenu extends FlxSubState
 			Debug.logError("oops\n" + e);
 			selectedCatIndex = 0;
 		}
-
-		Debug.logTrace("Changed cat: " + selectedCatIndex);
 	}
 
 	public function selectOption(option:Option)
@@ -351,9 +349,6 @@ class OptionsMenu extends FlxSubState
 
 			descText.text = option.getDescription();
 		}
-		Debug.logTrace("Changed opt: " + selectedOptionIndex);
-
-		Debug.logTrace("Bounds: " + visibleRange[0] + "," + visibleRange[1]);
 	}
 
 	override function update(elapsed:Float)
@@ -466,7 +461,6 @@ class OptionsMenu extends FlxSubState
 							selectedOption.waitingType = false;
 							var object = selectedCat.optionObjects.members[selectedOptionIndex];
 							object.text = "> " + selectedOption.getValue();
-							Debug.logTrace("New text: " + object.text);
 							return;
 						}
 						else if (any)
@@ -474,7 +468,6 @@ class OptionsMenu extends FlxSubState
 							var object = selectedCat.optionObjects.members[selectedOptionIndex];
 							selectedOption.onType(gamepad == null ? FlxG.keys.getIsDown()[0].ID.toString() : gamepad.firstJustPressedID());
 							object.text = "> " + selectedOption.getValue();
-							Debug.logTrace("New text: " + object.text);
 						}
 					}
 				if (selectedOption.acceptType || !selectedOption.acceptType)
@@ -577,7 +570,6 @@ class OptionsMenu extends FlxSubState
 						FlxG.save.flush();
 
 						object.text = "> " + selectedOption.getValue();
-						Debug.logTrace("New text: " + object.text);
 					}
 					else if (left)
 					{
@@ -588,7 +580,6 @@ class OptionsMenu extends FlxSubState
 						FlxG.save.flush();
 
 						object.text = "> " + selectedOption.getValue();
-						Debug.logTrace("New text: " + object.text);
 					}
 
 					if (escape)

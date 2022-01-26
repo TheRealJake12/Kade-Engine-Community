@@ -1864,6 +1864,7 @@ class PlayState extends MusicBeatState
 
 			babyArrow.alpha = 0;
 
+			
 			if (isStoryMode)
 			{
 				babyArrow.y -= 10;
@@ -1875,9 +1876,10 @@ class PlayState extends MusicBeatState
 			{
 				babyArrow.y -= 10;
 				// babyArrow.alpha = 0;
-				if (FlxG.save.data.middleScroll || executeModchart || player == 1)
+				if (!FlxG.save.data.middleScroll || executeModchart || player == 1)
 					FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
 			}
+
 
 			babyArrow.ID = i;
 
