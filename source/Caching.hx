@@ -131,8 +131,6 @@ class Caching extends MusicBeatState
 		add(kadeLogo);
 		add(text);
 
-		trace('starting caching..');
-
 		#if FEATURE_MULTITHREADING
 		// update thread
 
@@ -168,14 +166,11 @@ class Caching extends MusicBeatState
 	function cache()
 	{
 		#if FEATURE_FILESYSTEM
-		trace("LOADING: " + toBeDone + " OBJECTS.");
 
 		for (i in characters)
 		{
 			var replaced = i.replace(".png", "");
 			var imagePath = Paths.image('characters/' + replaced, 'shared');
-			if (FlxG.save.data.gen)
-				trace('Caching character graphic $replaced ($imagePath)...');
 			var data = OpenFlAssets.getBitmapData(imagePath);
 			var graph = FlxGraphic.fromBitmapData(data);
 			graph.persist = true;
@@ -184,27 +179,18 @@ class Caching extends MusicBeatState
 		}
 
 		for (i in songs)
-		{	if (FlxG.save.data.gen)
-				trace('Caching song "$i"...');
+		{
 			var inst = Paths.inst(i);
 			if (Paths.doesSoundAssetExist(inst))
 			{
 				FlxG.sound.cache(inst);
-				if (FlxG.save.data.gen)
-					trace('Cached inst for song "$i"');
 			}
-			else
-				trace('Failed to cache inst for song "$i"');
 
 			var voices = Paths.voices(i);
 			if (Paths.doesSoundAssetExist(voices))
 			{
 				FlxG.sound.cache(voices);
-				if (FlxG.save.data.gen)
-					trace('Cached voices for song "$i"');
 			}
-			else
-				trace('Failed to cache voices for song "$i"');
 
 			done++;
 		}
@@ -212,26 +198,15 @@ class Caching extends MusicBeatState
 		for (i in music)
 		{
 			var replaced = i.replace(".ogg", "");
-			if (FlxG.save.data.gen)
-				trace('Caching music "$replaced"...');
 			var music = Paths.music(replaced, 'shared');
 			if (Paths.doesSoundAssetExist(music))
 			{
 				FlxG.sound.cache(music);
-				if (FlxG.save.data.gen)
-					trace('Cached music "$replaced"');
 			}
-			else
-				trace('Failed to cache music "$replaced"');
 
 			done++;
 		}
-
-		Debug.logTrace("Finished caching...");
-
 		loaded = true;
-
-		trace(OpenFlAssets.cache.hasBitmapData('GF_assets'));
 		#end
 		FlxG.switchState(new OptionsDirect());
 	}

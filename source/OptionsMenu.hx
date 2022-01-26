@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxCamera;
 import flixel.FlxSubState;
+import flixel.input.gamepad.FlxGamepad;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import openfl.Lib;
@@ -118,13 +119,13 @@ class OptionsMenu extends FlxSubState
 		options = [
 			new OptionCata(50, 40, "Gameplay", [
 				new ScrollSpeedOption("Change your scroll speed. (1 = Chart dependent)"),
-				new HitSound("Plays a tick hitsound when a note is pressed. Useful for charters."),
 				new OffsetThing("Change the note visual offset (how many milliseconds a note looks like it is offset in a chart)"),
 				new AccuracyDOption("Change how accuracy is calculated. (Accurate = Simple, Complex = Milisecond Based)"),
 				new GhostTapOption("Toggle counting pressing a directional input when no arrow is there as a miss."),
 				new DownscrollOption("Toggle making the notes scroll down rather than up."),
 				new BotPlay("A bot plays for you!"),
-				
+				#if desktop new FPSCapOption("Change your FPS Cap."),
+				#end
 				new ResetButtonOption("Toggle pressing R to gameover."),
 				new InstantRespawn("Toggle if you instantly respawn after dying."),
 				new CamZoomOption("Toggle the camera zoom in-game."),
@@ -135,10 +136,8 @@ class OptionsMenu extends FlxSubState
 			]),
 			new OptionCata(345, 40, "Appearance", [
 				new NoteskinOption("Change your current noteskin"),
-				new NotesplashesOption("Enables the Week7 notesplashes, they aren't the ones used in week7 though."),
 				new RotateSpritesOption("Should the game rotate the sprites to do color quantization (turn off for bar skins)"),
-				new MiddleScrollOption("Put your lane in the center or on the right."), 
-				new HealthBarOption("Toggles health bar visibility"),
+				new MiddleScrollOption("Put your lane in the center or on the right."), new HealthBarOption("Toggles health bar visibility"),
 				new JudgementCounter("Show your judgements that you've gotten in the song"),
 				new LaneUnderlayOption("How transparent your lane is, higher = more visible."),
 				new StepManiaOption("Sets the colors of the arrows depending on quantization instead of direction."),
@@ -148,7 +147,6 @@ class OptionsMenu extends FlxSubState
 				new Colour("The color behind icons now fit with their theme. (e.g. Pico = green)"),
 				new NPSDisplayOption("Shows your current Notes Per Second on the info bar."),
 				new RainbowFPSOption("Make the FPS Counter flicker through rainbow colors."),
-				new BorderFps("Draw a border around the FPS Text (Consumes a lot of CPU Resources)"),
 				new CpuStrums("Toggle the CPU's strumline lighting up when it hits a note."),
 			]),
 			new OptionCata(640, 40, "Misc", [
@@ -158,32 +156,33 @@ class OptionsMenu extends FlxSubState
 				new ScoreScreen("Show the score screen after the end of a song"),
 				new ShowInput("Display every single input on the score screen."),
 			]),
-			new OptionCata(935, 40, "Saves", [
-				#if desktop // new ReplayOption("View saved song replays."),
-				#end
-				new ResetScoreOption("Reset your score on all songs and weeks. This is irreversible!"),
-				new LockWeeksOption("Reset your story mode progress. This is irreversible!"),
-				new ResetSettings("Reset ALL your settings. This is irreversible!"),
-			]),
 			new OptionCata(50, 105, "Perf", [
 				new FPSOption("Toggle the FPS Counter"),
 				#if desktop 
 				new FPSCapOption("Change your FPS Cap."),
-				#end
 				new Memory("Toggle the Memory Counter"),
-				#if debug
+				#end
+				#if debug 
 				new General("lag fixer!"),
 				#end
 				new EditorRes("Not showing the editor grid will greatly increase editor performance"),
 				new DistractionsAndEffectsOption("Toggle stage distractions that can hinder your gameplay."),
 				new Optimization("Nothing but Your Strumline is visible. Best Performance."),
 				new AntialiasingOption("Toggle antialiasing, improving graphics quality at a slight performance penalty."),
-				#if desktop
-				new CharacterCaching("Caches Characters"),
+				#if desktop 
+				new CharacterCaching("Caches Characters"), 
 				new SongCaching("Caches Songs for close to Instant loading"),
-				new NoteskinCaching("Updates Noteskins"),
+				new NoteskinCaching("Updates Noteskins"), 
 				new CachingOption("Caches all of the options above (High Memory Depending On Your Cache Options.)"),
 				#end
+			]),
+			new OptionCata(935, 40, "Saves", [
+				#if desktop
+				new ReplayOption("View saved song replays."),
+				#end
+				new ResetScoreOption("Reset your score on all songs and weeks. This is irreversible!"),
+				new LockWeeksOption("Reset your story mode progress. This is irreversible!"),
+				new ResetSettings("Reset ALL your settings. This is irreversible!")
 			]),
 			new OptionCata(-1, 125, "Editing Keybinds", [
 				new LeftKeybind("The left note's keybind"), new DownKeybind("The down note's keybind"), new UpKeybind("The up note's keybind"),
@@ -192,7 +191,6 @@ class OptionsMenu extends FlxSubState
 				new VolUpBind("The keybind used to turn the volume up"), new VolDownBind("The keybind used to turn the volume down"),
 				new FullscreenBind("The keybind used to fullscreen the game")], true),
 			new OptionCata(-1, 125, "Editing Judgements", [
-				new MarvMSOption("How many milliseconds are in the MARV hit window"),
 				new SickMSOption("How many milliseconds are in the SICK hit window"),
 				new GoodMsOption("How many milliseconds are in the GOOD hit window"),
 				new BadMsOption("How many milliseconds are in the BAD hit window"),
@@ -337,6 +335,8 @@ class OptionsMenu extends FlxSubState
 			Debug.logError("oops\n" + e);
 			selectedCatIndex = 0;
 		}
+
+		Debug.logTrace("Changed cat: " + selectedCatIndex);
 	}
 
 	public function selectOption(option:Option)
@@ -360,6 +360,8 @@ class OptionsMenu extends FlxSubState
 	{
 		super.update(elapsed);
 
+		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
+
 		var accept = false;
 		var right = false;
 		var left = false;
@@ -368,14 +370,14 @@ class OptionsMenu extends FlxSubState
 		var any = false;
 		var escape = false;
 
-		accept = FlxG.keys.justPressed.ENTER;
-		right = FlxG.keys.justPressed.RIGHT;
-		left = FlxG.keys.justPressed.LEFT;
-		up = FlxG.keys.justPressed.UP;
-		down = FlxG.keys.justPressed.DOWN;
+		accept = FlxG.keys.justPressed.ENTER || (gamepad != null ? gamepad.justPressed.A : false);
+		right = FlxG.keys.justPressed.RIGHT || (gamepad != null ? gamepad.justPressed.DPAD_RIGHT : false);
+		left = FlxG.keys.justPressed.LEFT || (gamepad != null ? gamepad.justPressed.DPAD_LEFT : false);
+		up = FlxG.keys.justPressed.UP || (gamepad != null ? gamepad.justPressed.DPAD_UP : false);
+		down = FlxG.keys.justPressed.DOWN || (gamepad != null ? gamepad.justPressed.DPAD_DOWN : false);
 
-		any = FlxG.keys.justPressed.ANY;
-		escape = FlxG.keys.justPressed.ESCAPE;
+		any = FlxG.keys.justPressed.ANY || (gamepad != null ? gamepad.justPressed.ANY : false);
+		escape = FlxG.keys.justPressed.ESCAPE || (gamepad != null ? gamepad.justPressed.B : false);
 
 		if (selectedCat != null && !isInCat)
 		{
@@ -470,6 +472,7 @@ class OptionsMenu extends FlxSubState
 						else if (any)
 						{
 							var object = selectedCat.optionObjects.members[selectedOptionIndex];
+							selectedOption.onType(gamepad == null ? FlxG.keys.getIsDown()[0].ID.toString() : gamepad.firstJustPressedID());
 							object.text = "> " + selectedOption.getValue();
 							Debug.logTrace("New text: " + object.text);
 						}
@@ -574,6 +577,7 @@ class OptionsMenu extends FlxSubState
 						FlxG.save.flush();
 
 						object.text = "> " + selectedOption.getValue();
+						Debug.logTrace("New text: " + object.text);
 					}
 					else if (left)
 					{
@@ -584,6 +588,7 @@ class OptionsMenu extends FlxSubState
 						FlxG.save.flush();
 
 						object.text = "> " + selectedOption.getValue();
+						Debug.logTrace("New text: " + object.text);
 					}
 
 					if (escape)
@@ -594,6 +599,15 @@ class OptionsMenu extends FlxSubState
 							selectedCatIndex = 0;
 
 						PlayerSettings.player1.controls.loadKeyBinds();
+
+						Ratings.timingWindows = [
+							FlxG.save.data.shitMs,
+							FlxG.save.data.badMs,
+							FlxG.save.data.goodMs,
+							FlxG.save.data.sickMs,
+							FlxG.save.data.marvMs
+							
+						];
 
 						for (i in 0...selectedCat.options.length)
 						{
