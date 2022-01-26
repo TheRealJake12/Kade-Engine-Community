@@ -177,9 +177,6 @@ class OptionsMenu extends FlxSubState
 				#end
 			]),
 			new OptionCata(935, 40, "Saves", [
-				#if desktop
-				new ReplayOption("View saved song replays."),
-				#end
 				new ResetScoreOption("Reset your score on all songs and weeks. This is irreversible!"),
 				new LockWeeksOption("Reset your story mode progress. This is irreversible!"),
 				new ResetSettings("Reset ALL your settings. This is irreversible!")
@@ -191,6 +188,7 @@ class OptionsMenu extends FlxSubState
 				new VolUpBind("The keybind used to turn the volume up"), new VolDownBind("The keybind used to turn the volume down"),
 				new FullscreenBind("The keybind used to fullscreen the game")], true),
 			new OptionCata(-1, 125, "Editing Judgements", [
+				new MarvMSOption("How many milliseconds are in the MARV hit window"),
 				new SickMSOption("How many milliseconds are in the SICK hit window"),
 				new GoodMsOption("How many milliseconds are in the GOOD hit window"),
 				new BadMsOption("How many milliseconds are in the BAD hit window"),
