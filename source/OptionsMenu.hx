@@ -156,6 +156,11 @@ class OptionsMenu extends FlxSubState
 				new ScoreScreen("Show the score screen after the end of a song"),
 				new ShowInput("Display every single input on the score screen."),
 			]),
+			new OptionCata(935, 40, "Saves", [
+				new ResetScoreOption("Reset your score on all songs and weeks. This is irreversible!"),
+				new LockWeeksOption("Reset your story mode progress. This is irreversible!"),
+				new ResetSettings("Reset ALL your settings. This is irreversible!")
+			]),
 			new OptionCata(50, 105, "Perf", [
 				new FPSOption("Toggle the FPS Counter"),
 				#if desktop 
@@ -175,11 +180,6 @@ class OptionsMenu extends FlxSubState
 				new NoteskinCaching("Updates Noteskins"), 
 				new CachingOption("Caches all of the options above (High Memory Depending On Your Cache Options.)"),
 				#end
-			]),
-			new OptionCata(935, 40, "Saves", [
-				new ResetScoreOption("Reset your score on all songs and weeks. This is irreversible!"),
-				new LockWeeksOption("Reset your story mode progress. This is irreversible!"),
-				new ResetSettings("Reset ALL your settings. This is irreversible!")
 			]),
 			new OptionCata(-1, 125, "Editing Keybinds", [
 				new LeftKeybind("The left note's keybind"), new DownKeybind("The down note's keybind"), new UpKeybind("The up note's keybind"),
