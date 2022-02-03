@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxG;
 import openfl.utils.Assets as OpenFlAssets;
 
 using StringTools;
@@ -13,6 +14,16 @@ class CoolUtil
 	public static function difficultyFromInt(difficulty:Int):String
 	{
 		return difficultyArray[difficulty];
+	}
+
+	public static function camLerpShit(daLerp:Float)
+	{
+		return (FlxG.elapsed / 0.016666666666666666) * daLerp;
+	}
+
+	public static function coolLerp(first:Float, second:Float, third:Float)
+	{
+		return first + camLerpShit(third) * (second - first);
 	}
 
 	public static function coolTextFile(path:String):Array<String>

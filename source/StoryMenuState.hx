@@ -90,7 +90,7 @@ class StoryMenuState extends MusicBeatState
 
 	override function create()
 	{
-		Application.current.window.title = 'Kade Engine Community : In the Menus';
+		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
 
 		weekUnlocked = unlockWeeks();
 

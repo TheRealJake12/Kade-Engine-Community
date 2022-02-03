@@ -122,6 +122,25 @@ class Main extends Sprite
 		fpsCounter.visible = fpsEnabled;
 	}
 
+	public static function dumpCache()
+	{
+		///* SPECIAL THANKS TO HAYA
+		@:privateAccess
+		for (key in FlxG.bitmap._cache.keys())
+		{
+			var obj = FlxG.bitmap._cache.get(key);
+			if (obj != null)
+			{
+				Assets.cache.removeBitmapData(key);
+				FlxG.bitmap._cache.remove(key);
+				obj.destroy();
+			}
+		}
+		Assets.cache.clear("songs");
+		Assets.cache.clear("characters");
+		// */
+	}
+
 	public function toggleMemory(memoryEnabled:Bool):Void
 	{
 		mem.visible = memoryEnabled;
@@ -130,11 +149,6 @@ class Main extends Sprite
 	public function changeFPSColor(color:FlxColor)
 	{
 		fpsCounter.textColor = color;
-	}
-
-	public function changeMemColor(color:FlxColor)
-	{
-		mem.textColor = color;
 	}
 
 	public function setFPSCap(cap:Float)

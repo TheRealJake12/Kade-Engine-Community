@@ -318,7 +318,7 @@ class PlayState extends MusicBeatState
 			FlxG.save.data.marvMs
 		];
 
-		Application.current.window.title = 'Kade Engine Community: ' + SONG.song + ' ' + CoolUtil.difficultyArray[storyDifficulty];
+		Application.current.window.title = '${MainMenuState.kecVer}: ' + SONG.song + ' ' + CoolUtil.difficultyArray[storyDifficulty];
 
 		// grab variables here too or else its gonna break stuff later on
 		GameplayCustomizeState.freeplayBf = SONG.player1;
@@ -341,11 +341,20 @@ class PlayState extends MusicBeatState
 			FlxG.sound.music.stop();
 
 		inDaPlay = true;
-
-		if (currentSong != SONG.songName)
+		if (FlxG.save.data.unload)
 		{
-			currentSong = SONG.songName;
-
+			if (currentSong != SONG.songName)
+			{
+				currentSong = SONG.songName;
+				Main.dumpCache();
+			}
+		}
+		else
+		{
+			if (currentSong != SONG.songName)
+			{
+				currentSong = SONG.songName;
+			}
 		}
 
 		marvs = 0;
@@ -1419,14 +1428,17 @@ class PlayState extends MusicBeatState
 			ana.hitJudge = Ratings.judgeNote(noteDiff);
 			ana.nearestNote = [coolNote.strumTime, coolNote.noteData, coolNote.sustainLength];
 		}
-		else if (!FlxG.save.data.ghost && songStarted)
+		else if (FlxG.save.data.hardmode)
 		{
-			noteMiss(data, null);
-			ana.hit = false;
-			ana.hitJudge = "shit";
-			ana.nearestNote = [];
-			health -= 0.20;
-		}
+			(!FlxG.save.data.ghost && songStarted);
+			{
+				noteMiss(data, null);
+				ana.hit = false;
+				ana.hitJudge = "shit";
+				ana.nearestNote = [];
+				health -= 0.20;
+			}
+		}	
 	}
 
 	public var songStarted = false;
@@ -2832,6 +2844,8 @@ class PlayState extends MusicBeatState
 				else
 				{
 					openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+					vocals.stop();
+					FlxG.sound.music.stop();
 					unloadAssets();
 				}
 
@@ -2997,14 +3011,14 @@ class PlayState extends MusicBeatState
 					}
 
 					// Accessing the animation name directly to play it
-					if (!daNote.isParent && daNote.parent != null) //Hold Notes
+					if (!daNote.isParent && daNote.parent != null)
 					{
 						if (daNote.spotInLine != daNote.parent.children.length - 1)
 						{
 							var singData:Int = Std.int(Math.abs(daNote.noteData));
 							dad.playAnim('sing' + dataSuffix[singData] + altAnim, true);
 
-							if (FlxG.save.data.cpuStrums && (FlxG.save.data.notesplashes))
+							if (FlxG.save.data.cpuStrums) // Hold Notes
 							{
 								cpuStrums.forEach(function(spr:StaticArrow)
 								{
@@ -3992,14 +4006,17 @@ class PlayState extends MusicBeatState
 					goodNoteHit(possibleNotes[0]);
 				else if (possibleNotes.length > 0)
 				{
-					if (!FlxG.save.data.ghost)
+					if (FlxG.save.data.hardmode)
 					{
-						for (shit in 0...pressArray.length)
-						{ // if a direction is hit that shouldn't be
-							if (pressArray[shit] && !directionList.contains(shit))
-								noteMiss(shit, null);
+						if (!FlxG.save.data.ghost)
+						{
+							for (shit in 0...pressArray.length)
+							{ // if a direction is hit that shouldn't be
+								if (pressArray[shit] && !directionList.contains(shit))
+									noteMiss(shit, null);
+							}
 						}
-					}
+					}	
 					for (coolNote in possibleNotes)
 					{
 						if (pressArray[coolNote.noteData] && !hit[coolNote.noteData])
@@ -4022,12 +4039,15 @@ class PlayState extends MusicBeatState
 					if (boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss'))
 						boyfriend.dance();
 				}
-				else if (!FlxG.save.data.ghost)
+				else if (FlxG.save.data.hardmode)
 				{
-					for (shit in 0...pressArray.length)
-						if (pressArray[shit])
-							noteMiss(shit, null);
-				}
+					if (!FlxG.save.data.ghost)
+					{
+						for (shit in 0...pressArray.length)
+							if (pressArray[shit])
+								noteMiss(shit, null);
+					}
+				}	
 			}
 
 			if (!loadRep)
@@ -4418,6 +4438,14 @@ class PlayState extends MusicBeatState
 		if (generatedMusic)
 		{
 			notes.sort(FlxSort.byY, (PlayStateChangeables.useDownscroll ? FlxSort.ASCENDING : FlxSort.DESCENDING));
+		}
+
+		if (FlxG.save.data.hardmode)
+		{
+			if (health > 0.05)
+			{
+				health -= 0.04;
+			}
 		}
 
 		#if FEATURE_LUAMODCHART

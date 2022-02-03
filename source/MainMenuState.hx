@@ -39,8 +39,8 @@ class MainMenuState extends MusicBeatState
 
 	public static var nightly:String = "";
 
-	public static var kadeEngineVer:String = "Kade Engine Community 1.4" + nightly;
-	public static var gameVer:String = "Kade Engine 1.8";
+	public static var kecVer:String = "Kade Engine Community 1.4.1" + nightly;
+	public static var keVer:String = "Kade Engine 1.8";
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
@@ -51,7 +51,7 @@ class MainMenuState extends MusicBeatState
 
 	override function create()
 	{
-		Application.current.window.title = 'Kade Engine Community : In the Menus';
+		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
 
 		trace(0 / 2);
 		clean();
@@ -134,7 +134,7 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.camera.follow(camFollow, null, 0.60 * (60 / FlxG.save.data.fpsCap));
 
-		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, gameVer + (Main.watermarks ? " FNF - " + kadeEngineVer + "" : ""), 12);
+		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, keVer + (Main.watermarks ? " " + kecVer + "" : ""), 12);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);

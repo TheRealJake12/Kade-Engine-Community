@@ -703,6 +703,38 @@ class Colour extends Option
 	}
 }
 
+class HardMode extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		if (OptionsMenu.isInPause)
+			description = "This option cannot be toggled in the pause menu.";
+		else
+			description = desc;
+	}
+
+	public override function left():Bool
+	{
+		if (OptionsMenu.isInPause)
+			return false;
+		FlxG.save.data.hardmode = !FlxG.save.data.hardmode;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "HARD MODE: < " + (FlxG.save.data.hardmode ? "Enabled" : "Disabled") + " >";
+	}
+}
+
 class StepManiaOption extends Option
 {
 	public function new(desc:String)
@@ -1274,6 +1306,7 @@ class RainbowFPSOption extends Option
 	{
 		FlxG.save.data.fpsRain = !FlxG.save.data.fpsRain;
 		(cast(Lib.current.getChildAt(0), Main)).changeFPSColor(FlxColor.WHITE);
+		display = updateDisplay();
 		return true;
 	}
 
@@ -1966,38 +1999,6 @@ class NotesplashesOption extends Option
 	}
 }
 
-class HitSound extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
-		else
-			description = desc;
-	}
-
-	public override function left():Bool
-	{
-		if (OptionsMenu.isInPause)
-			return false;
-		FlxG.save.data.hitsound = !FlxG.save.data.hitsound;
-		display = updateDisplay();
-		return true;
-	}
-
-	public override function right():Bool
-	{
-		left();
-		return true;
-	}
-
-	private override function updateDisplay():String
-	{
-		return "Note Hitsound < " + (FlxG.save.data.hitsound ? "Enabled" : "Disabled") + " >";
-	}
-}
-
 class General extends Option
 {
 	public function new(desc:String)
@@ -2129,7 +2130,7 @@ class SongCaching extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "Chart Cache";
+			description = "Song Cache";
 		else
 			description = desc;
 	}
@@ -2151,7 +2152,7 @@ class SongCaching extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Caching Charts in Next Cache: < " + (!FlxG.save.data.cacheSongs ? "off" : "on") + " >";
+		return "Caching Songs in Next Cache: < " + (!FlxG.save.data.cacheSongs ? "off" : "on") + " >";
 	}
 }
 
@@ -2179,6 +2180,38 @@ class CachingOption extends Option
 	}
 }
 #end
+
+class UnloadSongs extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		if (OptionsMenu.isInPause)
+			description = "Unload Songs And Characters";
+		else
+			description = desc;
+	}
+
+	public override function left():Bool
+	{
+		if (OptionsMenu.isInPause)
+			return false;
+		FlxG.save.data.unload = !FlxG.save.data.unload;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Unload Songs And Characters: < " + (!FlxG.save.data.unload ? "off" : "on") + " >";
+	}
+}
 
 class ResetSettings extends Option
 {
@@ -2213,7 +2246,6 @@ class ResetSettings extends Option
 		FlxG.save.data.offset = null;
 		FlxG.save.data.songPosition = null;
 		FlxG.save.data.fps = null;
-		FlxG.save.data.mem = null;
 		FlxG.save.data.changedHit = null;
 		FlxG.save.data.fpsRain = null;
 		FlxG.save.data.fpsCap = null;
@@ -2245,6 +2277,9 @@ class ResetSettings extends Option
 		FlxG.save.data.notesplashes = null;
 		FlxG.save.data.cacheCharacters = null;
 		FlxG.save.data.cacheSongs = null;
+		FlxG.save.data.mem = null;
+		FlxG.save.data.unload = null;
+		FlxG.save.data.gen = null;
 		
 
 		KadeEngineData.initSave();

@@ -47,6 +47,10 @@ class FreeplayState extends MusicBeatState
 	var intendedScore:Int = 0;
 	var combo:String = '';
 
+	var bg:FlxSprite;
+
+	private var coolColors:Array<FlxColor> = [-7072173, -7179779, -14535868, -7072173, -223529, -6237697, -34625];
+
 	private var grpSongs:FlxTypedGroup<Alphabet>;
 	private var curPlaying:Bool = false;
 
@@ -76,7 +80,7 @@ class FreeplayState extends MusicBeatState
 	override function create()
 	{
 
-		Application.current.window.title = 'Kade Engine Community : In the Menus';
+		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
 
 		clean();
 		list = CoolUtil.coolTextFile(Paths.txt('data/freeplaySonglist'));
@@ -112,8 +116,7 @@ class FreeplayState extends MusicBeatState
 
 		// LOAD CHARACTERS
 
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.loadImage('menuBGBlue'));
-		bg.antialiasing = FlxG.save.data.antialiasing;
+		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		add(bg);
 
 		grpSongs = new FlxTypedGroup<Alphabet>();
@@ -177,6 +180,18 @@ class FreeplayState extends MusicBeatState
 		// add(selector);
 
 		var swag:Alphabet = new Alphabet(1, 0, "swag");
+
+		var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
+		textBG.alpha = 0.6;
+		add(textBG);
+
+		var text:String = "Press SPACE to preview the Song.";
+		var size:Int = 16;
+
+		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, text, size);
+		text.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, RIGHT);
+		text.scrollFactor.set();
+		add(text);
 
 		super.create();
 	}
@@ -278,6 +293,13 @@ class FreeplayState extends MusicBeatState
 
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, 0.4));
 
+		bg.color = FlxColor.interpolate(bg.color, coolColors[songs[curSelected].week % coolColors.length], CoolUtil.camLerpShit(0.045));
+
+		// var coolerColor = coolColors[coolColors.length % songs[curSelected].week];
+		var lerpColor = CoolUtil.camLerpShit(0.045);
+
+		bg.color = FlxColor.interpolate(bg.color, coolColors[songs[curSelected].week % coolColors.length], CoolUtil.camLerpShit(0.045));
+
 		if (Math.abs(lerpScore - intendedScore) <= 10)
 			lerpScore = intendedScore;
 
@@ -292,6 +314,7 @@ class FreeplayState extends MusicBeatState
 		var upP = FlxG.keys.justPressed.UP;
 		var downP = FlxG.keys.justPressed.DOWN;
 		var accepted = FlxG.keys.justPressed.ENTER;
+		var space = FlxG.keys.justPressed.SPACE;
 		var dadDebug = FlxG.keys.justPressed.SIX;
 		var charting = FlxG.keys.justPressed.SEVEN;
 		var bfDebug = FlxG.keys.justPressed.ZERO;
@@ -384,6 +407,14 @@ class FreeplayState extends MusicBeatState
 		if (controls.BACK)
 		{
 			FlxG.switchState(new MainMenuState());
+			if(FlxG.save.data.unload)
+			{
+				Main.dumpCache();
+			}
+		}
+		if (space)
+		{
+			FlxG.sound.playMusic(Paths.inst(songs[curSelected].songName), 0);
 		}
 
 		if (accepted)
@@ -576,8 +607,6 @@ class FreeplayState extends MusicBeatState
 			sound.loadCompressedDataFromByteArray(bytes.getData(), bytes.length);
 			FlxG.sound.playMusic(sound);
 		}
-		else
-			FlxG.sound.playMusic(Paths.inst(songs[curSelected].songName), 0);
 		#end
 
 		var hmm;

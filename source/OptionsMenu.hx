@@ -124,8 +124,6 @@ class OptionsMenu extends FlxSubState
 				new GhostTapOption("Toggle counting pressing a directional input when no arrow is there as a miss."),
 				new DownscrollOption("Toggle making the notes scroll down rather than up."),
 				new BotPlay("A bot plays for you!"),
-				#if desktop new FPSCapOption("Change your FPS Cap."),
-				#end
 				new ResetButtonOption("Toggle pressing R to gameover."),
 				new InstantRespawn("Toggle if you instantly respawn after dying."),
 				new CamZoomOption("Toggle the camera zoom in-game."),
@@ -136,8 +134,10 @@ class OptionsMenu extends FlxSubState
 			]),
 			new OptionCata(345, 40, "Appearance", [
 				new NoteskinOption("Change your current noteskin"),
+				new NotesplashesOption("Uses Notesplashes(Can cause lag on older PC's turn it off for max FPS)."),
 				new RotateSpritesOption("Should the game rotate the sprites to do color quantization (turn off for bar skins)"),
-				new MiddleScrollOption("Put your lane in the center or on the right."), new HealthBarOption("Toggles health bar visibility"),
+				new MiddleScrollOption("Put your lane in the center or on the right."), 
+				new HealthBarOption("Toggles health bar visibility"),
 				new JudgementCounter("Show your judgements that you've gotten in the song"),
 				new LaneUnderlayOption("How transparent your lane is, higher = more visible."),
 				new StepManiaOption("Sets the colors of the arrows depending on quantization instead of direction."),
@@ -155,6 +155,7 @@ class OptionsMenu extends FlxSubState
 				new MissSoundsOption("Toggle miss sounds playing when you don't hit a note."),
 				new ScoreScreen("Show the score screen after the end of a song"),
 				new ShowInput("Display every single input on the score screen."),
+				new HardMode("ERROR!"),
 			]),
 			new OptionCata(935, 40, "Saves", [
 				new ResetScoreOption("Reset your score on all songs and weeks. This is irreversible!"),
@@ -174,12 +175,14 @@ class OptionsMenu extends FlxSubState
 				new DistractionsAndEffectsOption("Toggle stage distractions that can hinder your gameplay."),
 				new Optimization("Nothing but Your Strumline is visible. Best Performance."),
 				new AntialiasingOption("Toggle antialiasing, improving graphics quality at a slight performance penalty."),
+				new UnloadSongs("Unload Songs And Characters"),
 				#if desktop 
 				new CharacterCaching("Caches Characters"), 
 				new SongCaching("Caches Songs for close to Instant loading"),
 				new NoteskinCaching("Updates Noteskins"), 
 				new CachingOption("Caches all of the options above (High Memory Depending On Your Cache Options.)"),
 				#end
+				
 			]),
 			new OptionCata(-1, 125, "Editing Keybinds", [
 				new LeftKeybind("The left note's keybind"), new DownKeybind("The down note's keybind"), new UpKeybind("The up note's keybind"),
