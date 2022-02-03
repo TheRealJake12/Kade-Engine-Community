@@ -15,14 +15,8 @@ class KadeEngineData
 		if (FlxG.save.data.downscroll == null)
 			FlxG.save.data.downscroll = false;
 
-		if (FlxG.save.data.notesplashes == null)
-			FlxG.save.data.notesplashes = false;
-
 		if (FlxG.save.data.laneUnderlay == null)
 			FlxG.save.data.laneUnderlay = false;
-
-		if (FlxG.save.data.NewNotes == null)
-			FlxG.save.data.NewNotes = false;
 	
 		if (FlxG.save.data.antialiasing == null)
 			FlxG.save.data.antialiasing = true;
@@ -126,24 +120,6 @@ class KadeEngineData
 
 		if (FlxG.save.data.HB == null)
 			FlxG.save.data.HB = true;
-		
-		if (FlxG.save.data.mem == null)
-			FlxG.save.data.mem = true;
-
-		if (FlxG.save.data.inputtracing == null)
-			FlxG.save.data.inputtracing = false;
-
-		if (FlxG.save.data.gen == null)
-			FlxG.save.data.gen = false;
-
-		if (FlxG.save.data.notesplashes == null)
-			FlxG.save.data.notesplashes = true;
-
-		if (FlxG.save.data.hitsound == null)
-			FlxG.save.data.hitsound = false;
-
-		if (FlxG.save.data.trace == null)
-			FlxG.save.data.trace = false;
 
 		if (FlxG.save.data.middleScroll == null)
 			FlxG.save.data.middleScroll = true;
@@ -153,10 +129,35 @@ class KadeEngineData
 
 		if (FlxG.save.data.zoom == null)
 			FlxG.save.data.zoom = 1;
+			
+		//custom shit	
+
+		if (FlxG.save.data.mem == null)
+			FlxG.save.data.mem = true;
+
+		if (FlxG.save.data.gen == null)
+			FlxG.save.data.gen = false;
+
+		if (FlxG.save.data.notesplashes == null)
+			FlxG.save.data.notesplashes = true;
+			
+		if (FlxG.save.data.cacheCharacters == null)
+			FlxG.save.data.cacheCharacters = false;
+
+		if (FlxG.save.data.cacheNoteskin == null)
+			FlxG.save.data.cacheNoteskin = false;
+
+		if (FlxG.save.data.cacheSongs == null)
+			FlxG.save.data.cacheSongs = false;
+
+		if (FlxG.save.data.unload == null)
+			FlxG.save.data.unload = false;
+
+		if (FlxG.save.data.hardmode == null)
+			FlxG.save.data.hardmode = false;					
 
 		Conductor.recalculateTimings();
 		PlayerSettings.player1.controls.loadKeyBinds();
-		KeyBinds.keyCheck();
 
 		Main.watermarks = FlxG.save.data.watermark;
 

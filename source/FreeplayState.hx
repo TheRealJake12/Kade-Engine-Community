@@ -49,7 +49,16 @@ class FreeplayState extends MusicBeatState
 
 	var bg:FlxSprite;
 
-	private var coolColors:Array<FlxColor> = [-7072173, -7179779, -14535868, -7072173, -223529, -6237697, -34625];
+	private var coolColors:Array<FlxColor> = [-7072173, -7179779, -14535868, -7072173, -223529, -6237697, -34625]; //thanks people at Ralsei Engine
+	private var rgb:Array<FlxColor> = [
+		FlxColor.fromRGB(165, 0, 77), //Tutorial
+		FlxColor.fromRGB(146, 113, 253), //Week 1
+		FlxColor.fromRGB(34, 51, 68), //Week 2
+		FlxColor.fromRGB(148, 22, 83), //Week 3
+		FlxColor.fromRGB(255, 102, 169), //Week 4
+		FlxColor.fromRGB(103, 255, 255), //Week 5
+		FlxColor.fromRGB(255, 0, 72), //Week 6
+	];
 
 	private var grpSongs:FlxTypedGroup<Alphabet>;
 	private var curPlaying:Bool = false;
@@ -293,12 +302,12 @@ class FreeplayState extends MusicBeatState
 
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, 0.4));
 
-		bg.color = FlxColor.interpolate(bg.color, coolColors[songs[curSelected].week % coolColors.length], CoolUtil.camLerpShit(0.045));
+		bg.color = FlxColor.interpolate(bg.color, rgb[songs[curSelected].week % rgb.length], CoolUtil.camLerpShit(0.045));
 
-		// var coolerColor = coolColors[coolColors.length % songs[curSelected].week];
+		// var coolerColor = rgb[rgb.length % songs[curSelected].week];
 		var lerpColor = CoolUtil.camLerpShit(0.045);
 
-		bg.color = FlxColor.interpolate(bg.color, coolColors[songs[curSelected].week % coolColors.length], CoolUtil.camLerpShit(0.045));
+		bg.color = FlxColor.interpolate(bg.color, rgb[songs[curSelected].week % rgb.length], CoolUtil.camLerpShit(0.045));
 
 		if (Math.abs(lerpScore - intendedScore) <= 10)
 			lerpScore = intendedScore;
