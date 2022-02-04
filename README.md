@@ -44,7 +44,7 @@ You will first need to go to this link to download [Haxe](https://haxe.org/downl
 ```
 haxelib install lime 7.9.0
 haxelib install openfl
-haxelib install flixel
+haxelib install flixel 4.10.0
 haxelib install flixel-tools
 haxelib install flixel-ui
 haxelib install hscript
@@ -57,6 +57,7 @@ haxelib run flixel-tools setup
 ```
 Once you have these installed, you will need [Git](https://git-scm.com/downloads) 
 As you did with Haxe, just install the setup and finish it.
+HaxeFlixel 4.11.0 Breaks some camera shit or something so lets just use 4.10.0 for now.
 When its finished, you will need to download these like you did with the Libraries above.
 ```
 haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
