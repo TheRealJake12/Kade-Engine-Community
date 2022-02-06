@@ -334,7 +334,7 @@ class PlayState extends MusicBeatState
 		if (previousRate < 1.00)
 			previousRate = 1;
 
-		if (FlxG.save.data.fpsCap > 290)
+		if (FlxG.save.data.fpsCap > 420)
 			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(800);
 
 		if (FlxG.sound.music != null)
@@ -3332,7 +3332,7 @@ class PlayState extends MusicBeatState
 			PlayStateChangeables.useDownscroll = false;
 		}
 
-		if (FlxG.save.data.fpsCap > 290)
+		if (FlxG.save.data.fpsCap > 420)
 			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(290);
 
 		#if FEATURE_LUAMODCHART

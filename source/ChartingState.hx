@@ -198,7 +198,7 @@ class ChartingState extends MusicBeatState
 			}
 			else
 			{
-				var diff:String = ["-easy", "", "-hard"][PlayState.storyDifficulty];
+				var diff:String = ["-easy", "", "-hard", "-oc"][PlayState.storyDifficulty];
 				_song = Song.conversionChecks(Song.loadFromJson(PlayState.SONG.songId, diff));
 			}
 		}
@@ -1535,7 +1535,7 @@ class ChartingState extends MusicBeatState
 			}
 			else
 			{
-				var diff:String = ["-easy", "", "-hard"][PlayState.storyDifficulty];
+				var diff:String = ["-easy", "", "-hard", "-oc"][PlayState.storyDifficulty];
 				_song = Song.conversionChecks(Song.loadFromJson(PlayState.SONG.songId, diff));
 			}
 		}
@@ -3475,7 +3475,7 @@ class ChartingState extends MusicBeatState
 
 	function loadJson(songId:String):Void
 	{
-		var difficultyArray:Array<String> = ["-easy", "", "-hard"];
+		var difficultyArray:Array<String> = ["-easy", "", "-hard", "-oc"];
 
 		PlayState.SONG = Song.loadFromJson(songId, difficultyArray[PlayState.storyDifficulty]);
 
@@ -3580,7 +3580,7 @@ class ChartingState extends MusicBeatState
 
 	private function saveLevel()
 	{
-		var difficultyArray:Array<String> = ["-easy", "", "-hard"];
+		var difficultyArray:Array<String> = ["-easy", "", "-hard", "-oc"];
 
 		var toRemove = [];
 

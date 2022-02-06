@@ -49,15 +49,15 @@ class FreeplayState extends MusicBeatState
 
 	var bg:FlxSprite;
 
-	private var coolColors:Array<FlxColor> = [-7072173, -7179779, -14535868, -7072173, -223529, -6237697, -34625]; //thanks people at Ralsei Engine
+	private var coolColors:Array<FlxColor> = [-7072173, -7179779, -14535868, -7072173, -223529, -6237697, -34625]; // thanks people at Ralsei Engine
 	private var rgb:Array<FlxColor> = [
-		FlxColor.fromRGB(165, 0, 77), //Tutorial
-		FlxColor.fromRGB(146, 113, 253), //Week 1
-		FlxColor.fromRGB(34, 51, 68), //Week 2
-		FlxColor.fromRGB(148, 22, 83), //Week 3
-		FlxColor.fromRGB(255, 102, 169), //Week 4
-		FlxColor.fromRGB(103, 255, 255), //Week 5
-		FlxColor.fromRGB(255, 0, 72), //Week 6
+		FlxColor.fromRGB(165, 0, 77), // Tutorial
+		FlxColor.fromRGB(146, 113, 253), // Week 1
+		FlxColor.fromRGB(34, 51, 68), // Week 2
+		FlxColor.fromRGB(148, 22, 83), // Week 3
+		FlxColor.fromRGB(255, 102, 169), // Week 4
+		FlxColor.fromRGB(103, 255, 255), // Week 5
+		FlxColor.fromRGB(255, 0, 72), // Week 6
 	];
 
 	private var grpSongs:FlxTypedGroup<Alphabet>;
@@ -80,6 +80,18 @@ class FreeplayState extends MusicBeatState
 			case 2:
 				diffName = "-hard";
 		}
+		if (FlxG.save.data.hardmode)
+		{
+			switch (diff)
+			{
+				case 0:
+					diffName = "-easy";
+				case 2:
+					diffName = "-hard";
+				case 3:
+					diffName = "-oc";
+			}
+		}
 
 		array.push(Song.conversionChecks(Song.loadFromJson(songId, diffName)));
 	}
@@ -88,7 +100,6 @@ class FreeplayState extends MusicBeatState
 
 	override function create()
 	{
-
 		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
 
 		clean();
@@ -227,6 +238,8 @@ class FreeplayState extends MusicBeatState
 			var diffs = [];
 			var diffsThatExist = [];
 			#if FEATURE_FILESYSTEM
+			if (Paths.doesTextAssetExist(Paths.json('songs/$songId/$songId-oc')))
+				diffsThatExist.push("Oc");
 			if (Paths.doesTextAssetExist(Paths.json('songs/$songId/$songId-hard')))
 				diffsThatExist.push("Hard");
 			if (Paths.doesTextAssetExist(Paths.json('songs/$songId/$songId-easy')))
@@ -248,12 +261,14 @@ class FreeplayState extends MusicBeatState
 				FreeplayState.loadDiff(1, songId, diffs);
 			if (diffsThatExist.contains("Hard"))
 				FreeplayState.loadDiff(2, songId, diffs);
+			if (diffsThatExist.contains("Oc"))
+				FreeplayState.loadDiff(3, songId, diffs);
 
 			meta.diffs = diffsThatExist;
 
 			if (diffsThatExist.length != 3)
-			if (FlxG.save.data.gen)
-				trace("I ONLY FOUND " + diffsThatExist);
+				if (FlxG.save.data.gen)
+					trace("I ONLY FOUND " + diffsThatExist);
 
 			FreeplayState.songData.set(songId, diffs);
 			if (FlxG.save.data.gen)
@@ -330,29 +345,6 @@ class FreeplayState extends MusicBeatState
 
 		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
 
-		if (gamepad != null)
-		{
-			if (gamepad.justPressed.DPAD_UP)
-			{
-				changeSelection(-1);
-			}
-			if (gamepad.justPressed.DPAD_DOWN)
-			{
-				changeSelection(1);
-			}
-			if (gamepad.justPressed.DPAD_LEFT)
-			{
-				changeDiff(-1);
-			}
-			if (gamepad.justPressed.DPAD_RIGHT)
-			{
-				changeDiff(1);
-			}
-
-			// if (gamepad.justPressed.X && !openedPreview)
-			// openSubState(new DiffOverview());
-		}
-
 		if (upP)
 		{
 			changeSelection(-1);
@@ -395,6 +387,9 @@ class FreeplayState extends MusicBeatState
 				diffCalcText.text = 'RATING: ${DiffCalc.CalculateDiff(songData.get(songs[curSelected].songName)[curDifficulty])}';
 			}
 
+			if (FlxG.save.data.hardmode)
+				diffText.text = "Oc";
+
 			previewtext.text = "Rate: " + FlxMath.roundDecimal(rate, 2) + "x";
 		}
 		else
@@ -415,8 +410,8 @@ class FreeplayState extends MusicBeatState
 
 		if (controls.BACK)
 		{
-			FlxG.switchState(new MainMenuState());
-			if(FlxG.save.data.unload)
+			LoadingState.loadAndSwitchState(new MainMenuState());
+			if (FlxG.save.data.unload)
 			{
 				Main.dumpCache();
 			}
@@ -531,11 +526,21 @@ class FreeplayState extends MusicBeatState
 			return;
 
 		curDifficulty += change;
-
-		if (curDifficulty < 0)
-			curDifficulty = 2;
-		if (curDifficulty > 2)
-			curDifficulty = 0;
+		
+		if (!FlxG.save.data.hardmode)
+		{
+			if (curDifficulty < 0)
+				curDifficulty = 2;
+			if (curDifficulty > 2)
+				curDifficulty = 0;
+		}
+		else
+		{
+			if (curDifficulty < 0)
+				curDifficulty = 3;
+			if (curDifficulty > 3)
+				curDifficulty = 0;
+		}
 
 		// adjusting the highscore song name to be compatible (changeDiff)
 		var songHighscore = StringTools.replace(songs[curSelected].songName, " ", "-");
@@ -578,6 +583,8 @@ class FreeplayState extends MusicBeatState
 					curDifficulty = 1;
 				case "Hard":
 					curDifficulty = 2;
+				case "Oc":
+					curDifficulty = 3;
 			}
 		}
 

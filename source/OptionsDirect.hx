@@ -11,7 +11,7 @@ class OptionsDirect extends MusicBeatState
 
 		FlxG.sound.playMusic(Paths.music('optionsmenu'));
 
-		persistentUpdate = true;
+		persistentUpdate = false;
 
 		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.loadImage("menuDesat"));
 		menuBG.color = 0xFFea71fd;
