@@ -1,29 +1,21 @@
-## Kade Engine Community
+## **Kade Engine Community**
 ![Kade Engine logo](assets/preload/images/KadeEngineLogoOld.png)
 
 Hey you!
 Thanks for visiting this Repo!
-This Version of kade Engine is 1.7.1 Pre-Release without the modsupport
+Versions Below 1.4 Were Made With Kade Engine 1.7.1 Pre-Release With 0 Modsupport.
+Versions 1.4 And Above Are Made With The Latest (As Of 11/5/21 or 5/11/21) Kade Engine 1.8.
 The goal of this Repo is to make it community focused. If theres a feature (no modsupport oh my god) just submit a pull request and someone will take a look at it.
 
+![Options](art/readme/optionsredo.png)
 
-![Performance Tab](art/readme/perf.png)
+Options Menu With A Performance Tab For All You People With Shitty PC's Like Myself.
 
-Ultra New Performance Tab includes all the already existing Performance Options but in their own catagory!
+![Colors1](art/readme/colors1.png)
 
+![Colors2](art/readme/colors2.png)
 
-
-![Pause Options](art/readme/optionsbutton.png)
-
-A Options Menu Button to change Keybinds if they arent correct, swap scroll directions, and Turn on Optimization!
-this was easy add
-
-
-![Middlescroll](art/readme/upmiddle.png)
-
-A easier way added in than Kade 1.8. With Fixed Middlescroll for Both Downscroll and Upscroll
-Little harder to get used to but the options explain it
-![Middlescroll](art/readme/downmiddle.png)
+Freeplay Colors So It Looks Like Week 7. And Just A QoL Improvements.
 
 ![Better Documented!](art/readme/deez.png)
 
@@ -75,6 +67,8 @@ replace windows with whatever your device is.
 
 4. [Read the original FNF source code guide for Visual Studio](https://github.com/ninjamuffin99/Funkin.git)
 Once it is installed you should be able to build your game.
+
+**IF YOU ARE LAZY JUST USE THE SETUP.BAT IN THE CODE!**
 
 5. Run ```Lime test windows``` or ```Lime test windows -debug```. No debug is the release version that doenst have all the debug stuff, As the debug does.
 It will take a while to build for both versions.
