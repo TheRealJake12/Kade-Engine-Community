@@ -2091,7 +2091,7 @@ class CharacterCaching extends Option
 		return "Caching Characters in Next Cache: < " + (!FlxG.save.data.cacheCharacters ? "off" : "on") + " >";
 	}
 }
-
+/*
 class NoteskinCaching extends Option
 {
 	public function new(desc:String)
@@ -2122,8 +2122,8 @@ class NoteskinCaching extends Option
 	{
 		return "Caching Noteskins in Next Cache: < " + (!FlxG.save.data.cacheNoteskin ? "off" : "on") + " >";
 	}
-}
-
+} This shits useless as when you cache something even if you dont have anything to load itll update the noteskin list anyway
+*/ 
 
 class SongCaching extends Option
 {

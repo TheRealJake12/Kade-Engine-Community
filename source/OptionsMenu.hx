@@ -178,7 +178,6 @@ class OptionsMenu extends FlxSubState
 				#if desktop 
 				new CharacterCaching("Caches Characters"), 
 				new SongCaching("Caches Songs for close to Instant loading"),
-				new NoteskinCaching("Updates Noteskins"), 
 				new CachingOption("Caches all of the options above (High Memory Depending On Your Cache Options.)"),
 				#end
 				
