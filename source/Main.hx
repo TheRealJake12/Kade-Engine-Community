@@ -133,7 +133,6 @@ class Main extends Sprite
 
 	public static function dumpCache()
 	{
-		///* SPECIAL THANKS TO HAYA
 		@:privateAccess
 		for (key in FlxG.bitmap._cache.keys())
 		{

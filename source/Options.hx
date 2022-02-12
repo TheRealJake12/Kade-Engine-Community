@@ -1293,7 +1293,7 @@ class ScrollSpeedOption extends Option
 		return true;
 	}
 }
-
+/*
 class RainbowFPSOption extends Option
 {
 	public function new(desc:String)
@@ -1320,7 +1320,8 @@ class RainbowFPSOption extends Option
 	{
 		return "FPS Rainbow: < " + (!FlxG.save.data.fpsRain ? "off" : "on") + " >";
 	}
-}
+}doesnt work so im just removing it
+*/ 
 
 class NPSDisplayOption extends Option
 {
