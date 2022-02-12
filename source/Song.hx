@@ -81,11 +81,6 @@ class Song
 	{
 		var songFile = '$songId/$songId$difficulty';
 
-		if (FlxG.save.data.gen)
-		{
-			Debug.logInfo('Loading song JSON: $songFile');
-		}
-
 		var rawJson = Paths.loadJSON('songs/$songFile');
 		var rawMetaJson = Paths.loadJSON('songs/$songId/_meta');
 
@@ -97,11 +92,7 @@ class Song
 		var ba = song.bpm;
 
 		var index = 0;
-
-		if (FlxG.save.data.gen)
-		{
-		trace("conversion stuff " + song.songId + " " + song.notes.length);
-		}
+		
 		var convertedStuff:Array<Song.Event> = [];
 
 		if (song.eventObjects == null)
@@ -168,10 +159,6 @@ class Song
 
 			if (i.changeBPM && i.bpm != ba)
 			{
-				if (FlxG.save.data.gen)
-				{
-					trace("converting changebpm for section " + index);
-				}
 				ba = i.bpm;
 				song.eventObjects.push(new Song.Event("FNF BPM Change " + index, beat, i.bpm, "BPM Change"));
 			}

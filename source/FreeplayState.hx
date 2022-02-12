@@ -60,6 +60,8 @@ class FreeplayState extends MusicBeatState
 		FlxColor.fromRGB(255, 0, 72), // Week 6
 	];
 
+	private static var vocals:FlxSound = null;
+
 	private var grpSongs:FlxTypedGroup<Alphabet>;
 	private var curPlaying:Bool = false;
 
@@ -267,12 +269,9 @@ class FreeplayState extends MusicBeatState
 			meta.diffs = diffsThatExist;
 
 			if (diffsThatExist.length != 3)
-				if (FlxG.save.data.gen)
-					trace("I ONLY FOUND " + diffsThatExist);
 
 			FreeplayState.songData.set(songId, diffs);
-			if (FlxG.save.data.gen)
-				trace('loaded diffs for ' + songId);
+			
 			FreeplayState.songs.push(meta);
 
 			#if FFEATURE_FILESYSTEM
@@ -386,9 +385,6 @@ class FreeplayState extends MusicBeatState
 				rate = 0.5;
 				diffCalcText.text = 'RATING: ${DiffCalc.CalculateDiff(songData.get(songs[curSelected].songName)[curDifficulty])}';
 			}
-
-			if (FlxG.save.data.hardmode)
-				diffText.text = "Oc";
 
 			previewtext.text = "Rate: " + FlxMath.roundDecimal(rate, 2) + "x";
 		}
@@ -530,7 +526,7 @@ class FreeplayState extends MusicBeatState
 		if (!FlxG.save.data.hardmode)
 		{
 			if (curDifficulty < 0)
-				curDifficulty = 2;
+				curDifficulty = 0;
 			if (curDifficulty > 2)
 				curDifficulty = 0;
 		}
@@ -572,22 +568,39 @@ class FreeplayState extends MusicBeatState
 			curSelected = songs.length - 1;
 		if (curSelected >= songs.length)
 			curSelected = 0;
-
-		if (songs[curSelected].diffs.length != 3)
+			
+		if (FlxG.save.data.hardmode)
 		{
-			switch (songs[curSelected].diffs[0])
+			if (songs[curSelected].diffs.length != 3)
 			{
-				case "Easy":
-					curDifficulty = 0;
-				case "Normal":
-					curDifficulty = 1;
-				case "Hard":
-					curDifficulty = 2;
-				case "Oc":
-					curDifficulty = 3;
+				switch (songs[curSelected].diffs[0])
+				{
+					case "Easy":
+						curDifficulty = 0;
+					case "Normal":
+						curDifficulty = 1;
+					case "Hard":
+						curDifficulty = 2;
+					case "Oc":
+						curDifficulty = 3;
+				}
 			}
 		}
-
+		else
+		{
+			if (songs[curSelected].diffs.length != 2)
+			{
+				switch (songs[curSelected].diffs[0])
+				{
+					case "Easy":
+						curDifficulty = 0;
+					case "Normal":
+						curDifficulty = 1;
+					case "Hard":
+						curDifficulty = 2;
+				}
+			}
+		}
 		// selector.y = (70 * curSelected) + 30;
 
 		// adjusting the highscore song name to be compatible (changeSelection)

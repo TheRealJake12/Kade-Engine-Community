@@ -1402,6 +1402,7 @@ class AccuracyDOption extends Option
 	}
 }
 
+
 class CustomizeGameplay extends Option
 {
 	public function new(desc:String)
@@ -2213,6 +2214,38 @@ class UnloadSongs extends Option
 	}
 }
 
+class OldCharter extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		if (OptionsMenu.isInPause)
+			description = "Uses Kade Engine 1.5.4 Charter";
+		else
+			description = desc;
+	}
+
+	public override function left():Bool
+	{
+		if (OptionsMenu.isInPause)
+			return false;
+		FlxG.save.data.oldcharter = !FlxG.save.data.oldcharter;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Old Charter: < " + (!FlxG.save.data.oldcharter ? "off" : "on") + " >";
+	}
+}
+
 class ResetSettings extends Option
 {
 	var confirm:Bool = false;
@@ -2280,6 +2313,7 @@ class ResetSettings extends Option
 		FlxG.save.data.mem = null;
 		FlxG.save.data.unload = null;
 		FlxG.save.data.gen = null;
+		FlxG.save.data.oldcharter = null;
 		
 
 		KadeEngineData.initSave();

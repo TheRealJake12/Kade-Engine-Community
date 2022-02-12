@@ -155,6 +155,7 @@ class OptionsMenu extends FlxSubState
 				new MissSoundsOption("Toggle miss sounds playing when you don't hit a note."),
 				new ScoreScreen("Show the score screen after the end of a song"),
 				new ShowInput("Display every single input on the score screen."),
+				new OldCharter("Uses Kade Engine 1.5.4 Chart System.(HIGH CHANCES OF CRASHING!)"),
 				new HardMode("ERROR!"),
 			]),
 			new OptionCata(935, 40, "Saves", [
@@ -168,9 +169,7 @@ class OptionsMenu extends FlxSubState
 				new FPSCapOption("Change your FPS Cap."),
 				new Memory("Toggle the Memory Counter"),
 				#end
-				#if debug 
-				new General("lag fixer!"),
-				#end
+				new General("Traces things in the debug console or logs. Affects performance in debug builds."),
 				new EditorRes("Not showing the editor grid will greatly increase editor performance"),
 				new DistractionsAndEffectsOption("Toggle stage distractions that can hinder your gameplay."),
 				new Optimization("Nothing but Your Strumline is visible. Best Performance."),

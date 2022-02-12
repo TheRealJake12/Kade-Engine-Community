@@ -154,7 +154,10 @@ class KadeEngineData
 			FlxG.save.data.unload = false;
 
 		if (FlxG.save.data.hardmode == null)
-			FlxG.save.data.hardmode = false;					
+			FlxG.save.data.hardmode = false;
+
+		if (FlxG.save.data.oldcharter == null)
+			FlxG.save.data.oldcharter = false;						
 
 		Conductor.recalculateTimings();
 		PlayerSettings.player1.controls.loadKeyBinds();

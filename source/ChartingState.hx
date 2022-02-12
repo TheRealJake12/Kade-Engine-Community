@@ -1193,8 +1193,6 @@ class ChartingState extends MusicBeatState
 		{
 			var sect = lastUpdatedSection;
 
-			Debug.logTrace(sect);
-
 			if (sect == null)
 				return;
 

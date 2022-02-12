@@ -38,7 +38,6 @@ class Paths
 
 		return getPreloadPath(file);
 	}
-
 	/**
 	 * For a given key and library for an image, returns the corresponding BitmapData.
 	 		* We can probably move the cache handling here.

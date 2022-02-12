@@ -39,7 +39,7 @@ class MainMenuState extends MusicBeatState
 
 	public static var nightly:String = "";
 
-	public static var kecVer:String = "Kade Engine Community 1.4.1" + nightly;
+	public static var kecVer:String = "Kade Engine Community 1.4.2" + nightly;
 	public static var keVer:String = "Kade Engine 1.8";
 
 	var magenta:FlxSprite;
