@@ -79,8 +79,8 @@ class DFJKOption extends Option
 
 	public override function press():Bool
 	{
-		OptionsMenu.instance.selectedCatIndex = 5;
-		OptionsMenu.instance.switchCat(OptionsMenu.instance.options[5], false);
+		OptionsMenu.instance.selectedCatIndex = 6;
+		OptionsMenu.instance.switchCat(OptionsMenu.instance.options[6], false);
 		return false;
 	}
 
@@ -948,8 +948,8 @@ class Judgement extends Option
 	{
 		if (OptionsMenu.isInPause)
 			return false;
-		OptionsMenu.instance.selectedCatIndex = 6;
-		OptionsMenu.instance.switchCat(OptionsMenu.instance.options[6], false);
+		OptionsMenu.instance.selectedCatIndex = 7;
+		OptionsMenu.instance.switchCat(OptionsMenu.instance.options[7], false);
 		return true;
 	}
 

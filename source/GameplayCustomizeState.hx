@@ -67,18 +67,10 @@ class GameplayCustomizeState extends MusicBeatState
 		DiscordClient.changePresence("Customizing Gameplay Modules", null);
 		#end
 
-		sick = new FlxSprite().loadGraphic(Paths.image('sick', 'shared'));
-		sick.antialiasing = FlxG.save.data.antialiasing;
-		sick.scrollFactor.set();
-		background = new FlxSprite(-1000, -200).loadGraphic(Paths.image('stageback', 'shared'));
-		curt = new FlxSprite(-500, -300).loadGraphic(Paths.image('stagecurtains', 'shared'));
-		front = new FlxSprite(-650, 600).loadGraphic(Paths.image('stagefront', 'shared'));
-		background.antialiasing = FlxG.save.data.antialiasing;
-		curt.antialiasing = FlxG.save.data.antialiasing;
-		front.antialiasing = FlxG.save.data.antialiasing;
-
 		// Conductor.changeBPM(102);
 		persistentUpdate = true;
+
+		var stageCheck:String = 'stage';
 
 		super.create();
 
@@ -88,24 +80,114 @@ class GameplayCustomizeState extends MusicBeatState
 
 		camHUD.zoom = FlxG.save.data.zoom;
 
-		
-
-		background.scrollFactor.set(0.9, 0.9);
-		curt.scrollFactor.set(0.9, 0.9);
-		front.scrollFactor.set(0.9, 0.9);
-
-		add(background);
-		add(front);
-		add(curt);
+		if (freeplayStage == null)
+		{
+			switch (freeplayWeek)
+			{
+				case 2:
+					stageCheck = 'halloween';
+				case 3:
+					stageCheck = 'philly';
+				case 4:
+					stageCheck = 'limo';
+				case 5:
+					if (freeplaySong == 'winter-horrorland')
+						stageCheck = 'mallEvil';
+					else
+						stageCheck = 'mall';
+				case 6:
+					if (freeplaySong == 'thorns')
+						stageCheck = 'schoolEvil';
+					else
+						stageCheck = 'school';
+			}
+		}
+		else
+			stageCheck = freeplayStage;
 
 		var camFollow = new FlxObject(0, 0, 1, 1);
 
-		dad = new Character(100, 100, 'dad');
+		dad = new Character(100, 100, freeplayDad);
 
-		boyfriend = new Boyfriend(770, 450, 'bf');
+		if (dad.frames == null)
+		{
+			#if debug
+			FlxG.log.warn(["Couldn't load opponent: " + freeplayDad + ". Loading default opponent"]);
+			#end
+			dad = new Character(100, 100, 'dad');
+		}
 
-		gf = new Character(400, 130, 'gf');
-		gf.scrollFactor.set(0.95, 0.95);
+		boyfriend = new Boyfriend(770, 450, freeplayBf);
+
+		if (boyfriend.frames == null)
+		{
+			#if debug
+			FlxG.log.warn(["Couldn't load boyfriend: " + freeplayBf + ". Loading default boyfriend"]);
+			#end
+			boyfriend = new Boyfriend(770, 450, 'bf');
+		}
+
+		var gfCheck:String = 'gf';
+
+		if (freeplayGf == null)
+		{
+			switch (freeplayWeek)
+			{
+				case 4:
+					gfCheck = 'gf-car';
+				case 5:
+					gfCheck = 'gf-christmas';
+				case 6:
+					gfCheck = 'gf-pixel';
+			}
+		}
+		else
+			gfCheck = freeplayGf;
+
+		gf = new Character(400, 130, gfCheck);
+
+		if (gf.frames == null)
+		{
+			#if debug
+			FlxG.log.warn(["Couldn't load gf: " + freeplayGf + ". Loading default gf"]);
+			#end
+			gf = new Character(400, 130, 'gf');
+		}
+
+		Stage = new Stage(stageCheck);
+
+		var positions = Stage.positions[Stage.curStage];
+		if (positions != null)
+		{
+			for (char => pos in positions)
+				for (person in [boyfriend, gf, dad])
+					if (person.curCharacter == char)
+						person.setPosition(pos[0], pos[1]);
+		}
+		for (i in Stage.toAdd)
+		{
+			add(i);
+		}
+
+		for (index => array in Stage.layInFront)
+		{
+			switch (index)
+			{
+				case 0:
+					add(gf);
+					gf.scrollFactor.set(0.95, 0.95);
+					for (bg in array)
+						add(bg);
+				case 1:
+					add(dad);
+					for (bg in array)
+						add(bg);
+				case 2:
+					add(boyfriend);
+					for (bg in array)
+						add(bg);
+			}
+		}
 
 		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x + 400, dad.getGraphicMidpoint().y);
 

@@ -154,8 +154,6 @@ class OptionsMenu extends FlxSubState
 				new MissSoundsOption("Toggle miss sounds playing when you don't hit a note."),
 				new ScoreScreen("Show the score screen after the end of a song"),
 				new ShowInput("Display every single input on the score screen."),
-				new OldCharter("Uses Kade Engine 1.5.4 Chart System.(HIGH CHANCES OF CRASHING!)"),
-				new HardMode("ERROR!"),
 			]),
 			new OptionCata(935, 40, "Saves", [
 				new ResetScoreOption("Reset your score on all songs and weeks. This is irreversible!"),
@@ -180,6 +178,10 @@ class OptionsMenu extends FlxSubState
 				new CachingOption("Caches all of the options above (High Memory Depending On Your Cache Options.)"),
 				#end
 				
+			]),
+			new OptionCata(345, 105, "Experamental", [
+				new OldCharter("Uses Kade Engine 1.5.4 Chart System.(HIGH CHANCES OF CRASHING!)"),
+				new HardMode("ERROR!"),
 			]),
 			new OptionCata(-1, 125, "Editing Keybinds", [
 				new LeftKeybind("The left note's keybind"), new DownKeybind("The down note's keybind"), new UpKeybind("The up note's keybind"),
@@ -218,8 +220,7 @@ class OptionsMenu extends FlxSubState
 			bg.alpha = 0;
 			bg.scrollFactor.set();
 			menu.add(bg);
-
-			background.alpha = 0.5;
+			
 			bg.alpha = 0.6;
 
 			cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
@@ -235,7 +236,7 @@ class OptionsMenu extends FlxSubState
 
 		for (i in 0...options.length - 1)
 		{
-			if (i >= 5)
+			if (i >= 6)
 				continue;
 			var cat = options[i];
 			add(cat);
@@ -543,7 +544,7 @@ class OptionsMenu extends FlxSubState
 							if (selectedOptionIndex >= (options[selectedCatIndex].options.length - 1) / 2)
 								for (i in selectedCat.optionObjects.members)
 								{
-									i.y += 46;
+									i.y += 50;
 								}
 						}
 

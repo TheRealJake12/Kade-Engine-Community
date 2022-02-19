@@ -223,7 +223,6 @@ class OldChartingState extends MusicBeatState
 		check_voices.callback = function()
 		{
 			_song.needsVoices = check_voices.checked;
-			trace('CHECKED!');
 		};
 
 		var check_mute_inst = new FlxUICheckBox(10, 200, null, null, "Mute Instrumental (in editor)", 100);
@@ -451,6 +450,7 @@ class OldChartingState extends MusicBeatState
 		check_mustHitSection = new FlxUICheckBox(10, 30, null, null, "Camera Points to P1?", 100);
 		check_mustHitSection.name = 'check_mustHit';
 		check_mustHitSection.checked = true;
+		
 		// _song.needsVoices = check_mustHit.checked;
 
 		check_altAnim = new FlxUICheckBox(10, 400, null, null, "Alternate Animation", 100);
@@ -748,7 +748,6 @@ class OldChartingState extends MusicBeatState
 				{
 					deleteNote(note);
 					delete = true;
-					trace('deelte note');
 				}
 			});
 		for (p in 0...pressArray.length)
@@ -853,9 +852,6 @@ class OldChartingState extends MusicBeatState
 
 		if (curBeat % 4 == 0 && curStep >= 16 * (curSection + 1))
 		{
-			trace(curStep);
-			trace((_song.notes[curSection].lengthInSteps) * (curSection + 1));
-			trace('DUMBSHIT');
 
 			if (_song.notes[curSection + 1] == null)
 			{
@@ -959,7 +955,6 @@ class OldChartingState extends MusicBeatState
 			{
 				if (FlxG.keys.justPressed.Z && lastNote != null)
 				{
-					trace(curRenderedNotes.members.contains(lastNote) ? "delete note" : "add note");
 					if (curRenderedNotes.members.contains(lastNote))
 						deleteNote(lastNote);
 					else 
@@ -1012,14 +1007,12 @@ class OldChartingState extends MusicBeatState
 
 				var stepMs = curStep * Conductor.stepCrochet;
 
-
-				trace(Conductor.stepCrochet / snap);
+				
 
 				if (doSnapShit)
 					FlxG.sound.music.time = stepMs - (FlxG.mouse.wheel * Conductor.stepCrochet / snap);
 				else
 					FlxG.sound.music.time -= (FlxG.mouse.wheel * Conductor.stepCrochet * 0.4);
-				trace(stepMs + " + " + Conductor.stepCrochet / snap + " -> " + FlxG.sound.music.time);
 
 				vocals.time = FlxG.sound.music.time;
 			}
@@ -1099,8 +1092,6 @@ class OldChartingState extends MusicBeatState
 
 	override function beatHit() 
 	{
-		trace('beat');
-
 		super.beatHit();
 		if (!player2.animation.curAnim.name.startsWith("sing"))
 		{
@@ -1153,11 +1144,9 @@ class OldChartingState extends MusicBeatState
 
 	function changeSection(sec:Int = 0, ?updateMusic:Bool = true):Void
 	{
-		trace('changing section' + sec);
 
 		if (_song.notes[sec] != null)
 		{
-			trace('naw im not null');
 			curSection = sec;
 
 			updateGrid();
@@ -1183,8 +1172,6 @@ class OldChartingState extends MusicBeatState
 			updateGrid();
 			updateSectionUI();
 		}
-		else
-			trace('bro wtf I AM NULL');
 	}
 
 	function copySection(?sectionNum:Int = 1)

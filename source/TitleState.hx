@@ -1,8 +1,13 @@
 package;
 
+import openfl.utils.AssetCache;
 import flixel.FlxBasic;
 #if FEATURE_STEPMANIA
 import smTools.SMFile;
+#end
+#if FEATURE_FILESYSTEM
+import sys.FileSystem;
+import sys.io.File;
 #end
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -51,8 +56,9 @@ class TitleState extends MusicBeatState
 		#if FEATURE_FILESYSTEM
 		if (!sys.FileSystem.exists(Sys.getCwd() + "/assets/replays"))
 			sys.FileSystem.createDirectory(Sys.getCwd() + "/assets/replays");
+		
 		#end
-
+		
 		FlxG.autoPause = false;
 
 		FlxG.save.bind('funkin', 'ninjamuffin99');

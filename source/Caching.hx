@@ -57,6 +57,11 @@ class Caching extends MusicBeatState
 
 		PlayerSettings.init();
 
+		#if FEATURE_DISCORD
+		// Updating Discord Rich Presence
+		DiscordClient.changePresence("I Have A Chad PC (Caching)", null);
+		#end
+
 		KadeEngineData.initSave();
 
 		// It doesn't reupdate the list before u restart rn lmao
@@ -107,21 +112,8 @@ class Caching extends MusicBeatState
 		if (FlxG.save.data.cacheSongs)
 			songs = Paths.listSongsToCache();
 
-		if (FlxG.save.data.cacheMusic)
-			music = Paths.listAudioToCache(false);
-
 		if (FlxG.save.data.cacheSounds)
 			sounds = Paths.listAudioToCache(true);
-
-		if (FlxG.save.data.cacheNoteskin)
-			{
-				for (i in FileSystem.readDirectory(FileSystem.absolutePath("assets/shared/images/noteskins")))
-				{
-					if (!i.endsWith(".png"))
-						continue;
-					noteskins.push(i);
-				}
-			}
 		
 		// TODO: Get the song list from OpenFlAssets.
 		#end

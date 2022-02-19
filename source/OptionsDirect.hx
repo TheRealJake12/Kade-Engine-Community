@@ -9,7 +9,14 @@ class OptionsDirect extends MusicBeatState
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
 
-		FlxG.sound.playMusic(Paths.music('optionsmenu'));
+		if (FlxG.sound.music.playing)
+		{
+			FlxG.sound.playMusic(Paths.music('optionsmenu'));
+		}
+		else if (!FlxG.sound.music.playing)
+		{
+			FlxG.sound.playMusic(Paths.music('optionsmenu'));
+		}
 
 		persistentUpdate = false;
 

@@ -37,9 +37,7 @@ class MainMenuState extends MusicBeatState
 
 	public static var firstStart:Bool = true;
 
-	public static var nightly:String = "";
-
-	public static var kecVer:String = "Kade Engine Community 1.4.2" + nightly;
+	public static var kecVer:String = "Kade Engine Community 1.4.2";
 	public static var keVer:String = "Kade Engine 1.8";
 
 	var magenta:FlxSprite;
@@ -64,8 +62,7 @@ class MainMenuState extends MusicBeatState
 		{
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 		}
-		else if
-		(!FlxG.sound.music.playing)
+		else if (!FlxG.sound.music.playing)
 		{
 			FlxG.sound.playMusic(Paths.music('optionsmenu'));
 		}
@@ -117,17 +114,9 @@ class MainMenuState extends MusicBeatState
 			menuItems.add(menuItem);
 			menuItem.scrollFactor.set(0, 0.25);
 			menuItem.antialiasing = true;
-			if (firstStart)
-				FlxTween.tween(menuItem, {x: 10, y: 60 + (i * 160)}, 1 + (i * 0.25), {
-					ease: FlxEase.expoInOut,
-					onComplete: function(flxTween:FlxTween)
-					{
-						finishedFunnyMove = true;
-						changeItem();
-					}
-				});
-			else
-				menuItem.y = 60 + (i * 160);
+			finishedFunnyMove = true;
+			changeItem();
+			menuItem.y = 60 + (i * 160);
 		}
 
 		firstStart = false;

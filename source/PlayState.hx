@@ -4072,7 +4072,8 @@ class PlayState extends MusicBeatState
 					if (boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss'))
 						boyfriend.dance();
 				}
-				else if (FlxG.save.data.hardmode)
+				
+				if (FlxG.save.data.hardmode)
 				{
 					if (!FlxG.save.data.ghost)
 					{
