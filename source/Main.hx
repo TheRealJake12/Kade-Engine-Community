@@ -17,8 +17,6 @@ import openfl.Lib;
 import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
-import test.Trans;
-import test.Init;
 
 class Main extends Sprite
 {
@@ -29,8 +27,6 @@ class Main extends Sprite
 	var framerate:Int = 120; // How many frames per second the game should run at.
 	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
-	
-	public static var mainClassState:Class<FlxState> = Init; // Determine the main class state of the game
 
 	public static var bitmapFPS:Bitmap;
 
