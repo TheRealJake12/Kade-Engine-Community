@@ -31,15 +31,16 @@ class KeyBindMenu extends FlxSubState
 	var keyWarning:FlxText;
 	var warningTween:FlxTween;
 	var keyText:Array<String> = [
-		"LEFT", "DOWN", "UP", "RIGHT", "PAUSE", "RESET", "MUTE", "VOLUME UP", "VOLUME DOWN", "FULLSCREEN"
+		"LEFT", "DOWN", "UP", "RIGHT", "PAUSE", "RESET", "MUTE", "VOLUME UP", "VOLUME DOWN", "FULLSCREEN", "CHANGE NOTETYPE 1", "CHANGE NOTETYPE 2"
 	];
-	var defaultKeys:Array<String> = ["A", "S", "W", "D", "ENTER", "R", "NUMPADZERO", "NUMPADMINUS", "NUMPADPLUS", "F"];
+	var defaultKeys:Array<String> = ["A", "S", "W", "D", "ENTER", "R", "NUMPADZERO", "NUMPADMINUS", "NUMPADPLUS", "F", "Z", "X"];
 	var defaultGpKeys:Array<String> = ["DPAD_LEFT", "DPAD_DOWN", "DPAD_UP", "DPAD_RIGHT", "START", "SELECT"];
 	var curSelected:Int = 0;
 
 	var keys:Array<String> = [
 		FlxG.save.data.leftBind, FlxG.save.data.downBind, FlxG.save.data.upBind, FlxG.save.data.rightBind, FlxG.save.data.pauseBind, FlxG.save.data.resetBind,
-		FlxG.save.data.muteBind, FlxG.save.data.volUpBind, FlxG.save.data.volDownBind, FlxG.save.data.fullscreenBind
+		FlxG.save.data.muteBind, FlxG.save.data.volUpBind, FlxG.save.data.volDownBind, FlxG.save.data.fullscreenBind,  FlxG.save.data.CNT1Bind,
+		 FlxG.save.data.CNT2Bind
 	];
 
 	var gpKeys:Array<String> = [
@@ -281,10 +282,13 @@ class KeyBindMenu extends FlxSubState
 		FlxG.save.data.volUpBind = keys[7];
 		FlxG.save.data.volDownBind = keys[8];
 		FlxG.save.data.fullscreenBind = keys[9];
+		FlxG.save.data.CNT1Bind = keys[10];
+		FlxG.save.data.CNT2Bind = keys[11];
 
 		FlxG.sound.muteKeys = [FlxKey.fromString(keys[6])];
 		FlxG.sound.volumeDownKeys = [FlxKey.fromString(keys[8])];
 		FlxG.sound.volumeUpKeys = [FlxKey.fromString(keys[7])];
+
 
 		FlxG.save.flush();
 

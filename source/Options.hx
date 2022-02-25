@@ -1420,7 +1420,7 @@ class CustomizeGameplay extends Option
 		if (OptionsMenu.isInPause)
 			return false;
 		trace("switch");
-		FlxG.switchState(new GameplayCustomizeState());
+		LoadingState.loadAndSwitchState(new GameplayCustomizeState());
 		return false;
 	}
 
@@ -2212,6 +2212,45 @@ class UnloadSongs extends Option
 	private override function updateDisplay():String
 	{
 		return "Unload Songs And Characters: < " + (!FlxG.save.data.unload ? "off" : "on") + " >";
+	}
+}
+
+class NotesplashOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		if (OptionsMenu.isInPause)
+			description = "This option cannot be toggled in the pause menu.";
+		else
+			description = desc;
+	}
+
+	public override function left():Bool
+	{
+		if (OptionsMenu.isInPause)
+			return false;
+		FlxG.save.data.notesplash--;
+		if (FlxG.save.data.notesplash < 0)
+			FlxG.save.data.notesplash = NotesplashHelpers.getNotesplash().length - 1;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		if (OptionsMenu.isInPause)
+			return false;
+		FlxG.save.data.notesplash++;
+		if (FlxG.save.data.notesplash > NotesplashHelpers.getNotesplash().length - 1)
+			FlxG.save.data.notesplash = 0;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function getValue():String
+	{
+		return "Current Notesplashes: < " + NotesplashHelpers.getNotesplashByID(FlxG.save.data.notesplash) + " >";
 	}
 }
 

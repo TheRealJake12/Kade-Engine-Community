@@ -10,7 +10,7 @@ class NoteSplash extends FlxSprite
 	public static var swidths:Array<Float> = [160, 120, 110, 90];
 	public static var posRest:Array<Int> = [0, 35, 50, 70];
 
-	public static var anims:Array<String> = ['purple', 'blue', 'green', 'red'];
+	public static var anims:Array<String> = ['purple','blue','green','red'];
 
 	public function new(x:Float = 0, y:Float = 0, noteData:Int)
 	{
@@ -21,13 +21,13 @@ class NoteSplash extends FlxSprite
 
 	public function setupNoteSplash(x:Float, y:Float, noteData:Int)
 	{
-		frames = Paths.getSparrowAtlas('NOTE_splashes');
-		antialiasing = true;
+		frames = PlayState.notesplashSprite;
+		antialiasing = FlxG.save.data.antialiasing;
 
 		switch (noteData)
 		{
 			case 0: // Purple
-				setPosition(x - Note.swagWidth * 0.95 + 45, y - Note.swagWidth + 32);
+				setPosition(x - Note.swagWidth * 0.95, y - Note.swagWidth);
 			case 1: // Blue
 				setPosition(x - Note.swagWidth * 0.95 + 55, y - Note.swagWidth + 32);
 			case 2: // Green
@@ -51,8 +51,9 @@ class NoteSplash extends FlxSprite
 
 	override function update(elapsed:Float)
 	{
-		if (animation.curAnim.finished)
-			kill();
+		if (animation.curAnim != null)
+			if (animation.curAnim.finished)
+				kill();
 
 		super.update(elapsed);
 	}

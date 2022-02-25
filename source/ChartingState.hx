@@ -1578,13 +1578,6 @@ class ChartingState extends MusicBeatState
 		// general shit
 		var title:FlxText = new FlxText(UI_box.x + 20, UI_box.y + 20, 0);
 		bullshitUI.add(title);
-		/* 
-			var loopCheck = new FlxUICheckBox(UI_box.x + 10, UI_box.y + 50, null, null, "Loops", 100, ['loop check']);
-			loopCheck.checked = curNoteSelected.doesLoop;
-			tooltips.add(loopCheck, {title: 'Section looping', body: "Whether or not it's a simon says style section", style: tooltipType});
-			bullshitUI.add(loopCheck);
-
-		 */
 	}
 
 	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>)
@@ -3009,7 +3002,7 @@ class ChartingState extends MusicBeatState
 				var daStrumTime = i[0];
 				var daSus = i[2];
 
-				var note:Note = new Note(daStrumTime, daNoteInfo % 4, null, false, true, i[3], i[4]);
+				var note:Note = new Note(daStrumTime, daNoteInfo % 4, null, false, true,i[3], i[4]);
 				note.rawNoteData = daNoteInfo;
 				note.sustainLength = daSus;
 				note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));
@@ -3344,7 +3337,12 @@ class ChartingState extends MusicBeatState
 				TimingStruct.getBeatFromTime(n.strumTime)
 			]);
 		else
-			section.sectionNotes.push([noteStrum, noteData, noteSus, false, TimingStruct.getBeatFromTime(noteStrum)]);
+			section.sectionNotes.push([
+				noteStrum,
+				noteData,
+				noteSus,
+				false,
+				TimingStruct.getBeatFromTime(noteStrum)]);
 
 		var thingy = section.sectionNotes[section.sectionNotes.length - 1];
 

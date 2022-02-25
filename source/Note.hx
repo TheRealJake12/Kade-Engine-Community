@@ -121,7 +121,6 @@ class Note extends FlxSprite
 		if (inCharter)
 		{
 			frames = PlayState.noteskinSprite;
-
 			for (i in 0...4)
 			{
 				animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
@@ -172,12 +171,27 @@ class Note extends FlxSprite
 						animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
 						animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
 						animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
-					}
+								
+						animation.addByPrefix('greenScroll', 'green0');
+						animation.addByPrefix('redScroll', 'red0');
+						animation.addByPrefix('blueScroll', 'blue0');
+						animation.addByPrefix('purpleScroll', 'purple0');
 
-					setGraphicSize(Std.int(width * 0.7));
-					updateHitbox();
+						animation.addByPrefix('purpleholdend', 'pruple end hold');
+						animation.addByPrefix('greenholdend', 'green hold end');
+						animation.addByPrefix('redholdend', 'red hold end');
+						animation.addByPrefix('blueholdend', 'blue hold end');
 
-					antialiasing = FlxG.save.data.antialiasing;
+						animation.addByPrefix('purplehold', 'purple hold piece');
+						animation.addByPrefix('greenhold', 'green hold piece');
+						animation.addByPrefix('redhold', 'red hold piece');
+						animation.addByPrefix('bluehold', 'blue hold piece');
+						}
+
+						setGraphicSize(Std.int(width * 0.7));
+						updateHitbox();
+
+						antialiasing = FlxG.save.data.antialiasing;
 			}
 		}
 

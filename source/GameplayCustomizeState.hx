@@ -67,6 +67,16 @@ class GameplayCustomizeState extends MusicBeatState
 		DiscordClient.changePresence("Customizing Gameplay Modules", null);
 		#end
 
+		sick = new FlxSprite().loadGraphic(Paths.image('sick', 'shared'));
+		sick.antialiasing = FlxG.save.data.antialiasing;
+		sick.scrollFactor.set();
+		background = new FlxSprite(-1000, -200).loadGraphic(Paths.image('stageback', 'shared'));
+		curt = new FlxSprite(-500, -300).loadGraphic(Paths.image('stagecurtains', 'shared'));
+		front = new FlxSprite(-650, 600).loadGraphic(Paths.image('stagefront', 'shared'));
+		background.antialiasing = FlxG.save.data.antialiasing;
+		curt.antialiasing = FlxG.save.data.antialiasing;
+		front.antialiasing = FlxG.save.data.antialiasing;
+
 		// Conductor.changeBPM(102);
 		persistentUpdate = true;
 
@@ -350,49 +360,79 @@ class GameplayCustomizeState extends MusicBeatState
 	{
 		for (i in 0...4)
 		{
-			// FlxG.log.add(i);
-			var babyArrow:FlxSprite = new FlxSprite(0, strumLine.y);
-			babyArrow.frames = Paths.getSparrowAtlas('NOTE_assets', 'shared');
-			babyArrow.animation.addByPrefix('green', 'arrowUP');
-			babyArrow.animation.addByPrefix('blue', 'arrowDOWN');
-			babyArrow.animation.addByPrefix('purple', 'arrowLEFT');
-			babyArrow.animation.addByPrefix('red', 'arrowRIGHT');
-			babyArrow.antialiasing = FlxG.save.data.antialiasing;
-			babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
-			switch (Math.abs(i))
+			var babyArrow:StaticArrow = new StaticArrow(-10, strumLine.y);
+
+			// defaults if no noteStyle was found in chart
+			var noteTypeCheck:String = 'normal';
+
+			if (freeplayNoteStyle == null && FlxG.save.data.overrideNoteskins)
 			{
-				case 0:
-					babyArrow.x += Note.swagWidth * 0;
-					babyArrow.animation.addByPrefix('static', 'arrowLEFT');
-					babyArrow.animation.addByPrefix('pressed', 'left press', 24, false);
-					babyArrow.animation.addByPrefix('confirm', 'left confirm', 24, false);
-				case 1:
-					babyArrow.x += Note.swagWidth * 1;
-					babyArrow.animation.addByPrefix('static', 'arrowDOWN');
-					babyArrow.animation.addByPrefix('pressed', 'down press', 24, false);
-					babyArrow.animation.addByPrefix('confirm', 'down confirm', 24, false);
-				case 2:
-					babyArrow.x += Note.swagWidth * 2;
-					babyArrow.animation.addByPrefix('static', 'arrowUP');
-					babyArrow.animation.addByPrefix('pressed', 'up press', 24, false);
-					babyArrow.animation.addByPrefix('confirm', 'up confirm', 24, false);
-				case 3:
-					babyArrow.x += Note.swagWidth * 3;
-					babyArrow.animation.addByPrefix('static', 'arrowRIGHT');
-					babyArrow.animation.addByPrefix('pressed', 'right press', 24, false);
-					babyArrow.animation.addByPrefix('confirm', 'right confirm', 24, false);
+				switch (freeplayWeek)
+				{
+					case 6:
+						noteTypeCheck = 'pixel';
+				}
 			}
+			else
+				noteTypeCheck = freeplayNoteStyle;
+
+			switch (noteTypeCheck)
+			{
+				case 'pixel':
+					babyArrow.loadGraphic(Paths.loadImage('weeb/pixelUI/arrows-pixels', 'week6'), true, 17, 17);
+					babyArrow.animation.add('green', [6]);
+					babyArrow.animation.add('red', [7]);
+					babyArrow.animation.add('blue', [5]);
+					babyArrow.animation.add('purplel', [4]);
+
+					babyArrow.setGraphicSize(Std.int(babyArrow.width * CoolUtil.daPixelZoom));
+					babyArrow.updateHitbox();
+					babyArrow.antialiasing = false;
+
+					babyArrow.x += Note.swagWidth * i;
+					babyArrow.animation.add('static', [i]);
+					babyArrow.animation.add('pressed', [4 + i, 8 + i], 12, false);
+					babyArrow.animation.add('confirm', [12 + i, 16 + i], 24, false);
+
+					for (j in 0...4)
+					{
+						babyArrow.animation.add('dirCon' + j, [12 + j, 16 + j], 24, false);
+					}
+
+				default:
+					babyArrow.frames = NoteskinHelpers.generateNoteskinSprite(FlxG.save.data.noteskin);
+					for (j in 0...4)
+					{
+						babyArrow.animation.addByPrefix(dataColor[j], 'arrow' + dataSuffix[j]);
+						babyArrow.animation.addByPrefix('dirCon' + j, dataSuffix[j].toLowerCase() + ' confirm', 24, false);
+					}
+
+					var lowerDir:String = dataSuffix[i].toLowerCase();
+
+					babyArrow.animation.addByPrefix('static', 'arrow' + dataSuffix[i]);
+					babyArrow.animation.addByPrefix('pressed', lowerDir + ' press', 24, false);
+					babyArrow.animation.addByPrefix('confirm', lowerDir + ' confirm', 24, false);
+
+					babyArrow.x += Note.swagWidth * i;
+
+					babyArrow.antialiasing = FlxG.save.data.antialiasing;
+					babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
+			}
+
 			babyArrow.updateHitbox();
 			babyArrow.scrollFactor.set();
 
 			babyArrow.ID = i;
+			
+			playerStrums.add(babyArrow);
 
-			if (player == 1)
-				playerStrums.add(babyArrow);
-
-			babyArrow.animation.play('static');
-			babyArrow.x += 50;
+			babyArrow.playAnim('static');
+			babyArrow.x += 110;
 			babyArrow.x += ((FlxG.width / 2) * player);
+
+			if (FlxG.save.data.middleScroll)
+				babyArrow.x -= 300;
+			
 
 			strumLineNotes.add(babyArrow);
 		}

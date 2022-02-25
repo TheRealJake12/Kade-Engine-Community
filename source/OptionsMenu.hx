@@ -134,6 +134,7 @@ class OptionsMenu extends FlxSubState
 			]),
 			new OptionCata(345, 40, "Appearance", [
 				new NoteskinOption("Change your current noteskin"),
+				new NotesplashOption("Change your current noteskin"),
 				new NotesplashesOption("Uses Notesplashes(Can cause lag on older PC's turn it off for max FPS)."),
 				new RotateSpritesOption("Should the game rotate the sprites to do color quantization (turn off for bar skins)"),
 				new MiddleScrollOption("Put your lane in the center or on the right."), 
@@ -197,6 +198,14 @@ class OptionsMenu extends FlxSubState
 				new ShitMsOption("How many milliseconds are in the SHIT hit window")
 			], true)
 		];
+
+		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.loadImage("menuDesat"));
+		menuBG.color = 0xFFea71fd;
+		menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));
+		menuBG.updateHitbox();
+		menuBG.screenCenter();
+		menuBG.antialiasing = FlxG.save.data.antialiasing;
+		add(menuBG);
 
 		instance = this;
 

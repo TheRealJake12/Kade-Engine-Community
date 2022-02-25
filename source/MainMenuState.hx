@@ -1,5 +1,6 @@
 package;
 
+import flixel.addons.transition.FlxTransitionableState;
 import Controls.KeyboardScheme;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -51,7 +52,9 @@ class MainMenuState extends MusicBeatState
 	{
 		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
 
-		trace(0 / 2);
+		transIn = FlxTransitionableState.defaultTransIn;
+		transOut = FlxTransitionableState.defaultTransOut;
+		
 		clean();
 		#if FEATURE_DISCORD
 		// Updating Discord Rich Presence
@@ -247,13 +250,9 @@ class MainMenuState extends MusicBeatState
 		switch (daChoice)
 		{
 			case 'story mode':
-				FlxG.switchState(new StoryMenuState());
-				trace("Story Menu Selected");
+				LoadingState.loadAndSwitchState(new StoryMenuState());
 			case 'freeplay':
-				FlxG.switchState(new FreeplayState());
-
-				trace("Freeplay Menu Selected");
-
+				LoadingState.loadAndSwitchState(new FreeplayState());
 			case 'options':
 				FlxG.switchState(new OptionsDirect());
 		}

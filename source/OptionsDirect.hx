@@ -28,6 +28,9 @@ class OptionsDirect extends MusicBeatState
 		menuBG.antialiasing = FlxG.save.data.antialiasing;
 		add(menuBG);
 
+		NoteskinHelpers.updateNoteskins();
+		NotesplashHelpers.updateNotesplashes();
+
 		openSubState(new OptionsMenu());
 	}
 }

@@ -72,6 +72,7 @@ class TitleState extends MusicBeatState
 		//Lmao I just made it update on Cache 
 
 		NoteskinHelpers.updateNoteskins();
+		NotesplashHelpers.updateNotesplashes();
 
 		if (FlxG.save.data.volDownBind == null)
 			FlxG.save.data.volDownBind = "MINUS";
@@ -215,9 +216,6 @@ class TitleState extends MusicBeatState
 				new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
 			FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, 0.7, new FlxPoint(0, 1),
 				{asset: diamond, width: 32, height: 32}, new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
-
-			transIn = FlxTransitionableState.defaultTransIn;
-			transOut = FlxTransitionableState.defaultTransOut;
 
 			// HAD TO MODIFY SOME BACKEND SHIT
 			// IF THIS PR IS HERE IF ITS ACCEPTED UR GOOD TO GO

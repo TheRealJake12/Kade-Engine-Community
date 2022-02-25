@@ -109,6 +109,7 @@ class PlayState extends MusicBeatState
 	public static var songPosBar:FlxBar;
 
 	public static var noteskinSprite:FlxAtlasFrames;
+	public static var notesplashSprite:FlxAtlasFrames;
 	public static var noteskinPixelSprite:BitmapData;
 	public static var noteskinPixelSpriteEnds:BitmapData;
 
@@ -794,6 +795,8 @@ class PlayState extends MusicBeatState
 		noteskinPixelSprite = NoteskinHelpers.generatePixelSprite(FlxG.save.data.noteskin);
 		noteskinSprite = NoteskinHelpers.generateNoteskinSprite(FlxG.save.data.noteskin);
 		noteskinPixelSpriteEnds = NoteskinHelpers.generatePixelSprite(FlxG.save.data.noteskin, true);
+
+		notesplashSprite = NotesplashHelpers.generateNotesplashSprite(FlxG.save.data.notesplash);
 
 		generateStaticArrows(0);
 		generateStaticArrows(1);
@@ -1615,10 +1618,7 @@ class PlayState extends MusicBeatState
 			FlxG.sound.cache(Paths.voices(PlayState.SONG.songId));
 		if (!PlayState.isSM)
 			FlxG.sound.cache(Paths.inst(PlayState.SONG.songId));
-
-		FlxG.sound.music.onComplete = endSong;
-		FlxG.sound.music.pause();
-
+		
 		// Song duration in a float, useful for the time left feature
 		songLength = ((FlxG.sound.music.length / songMultiplier) / 1000);
 
@@ -1865,6 +1865,27 @@ class PlayState extends MusicBeatState
 					babyArrow.animation.addByPrefix('static', 'arrow' + dataSuffix[i]);
 					babyArrow.animation.addByPrefix('pressed', lowerDir + ' press', 24, false);
 					babyArrow.animation.addByPrefix('confirm', lowerDir + ' confirm', 24, false);
+					
+					babyArrow.animation.addByPrefix('green', 'arrow static instance 1');
+					babyArrow.animation.addByPrefix('blue', 'arrow static instance 2');
+					babyArrow.animation.addByPrefix('purple', 'arrow static instance 3');
+					babyArrow.animation.addByPrefix('red', 'arrow static instance 4');
+
+					babyArrow.animation.addByPrefix('static', 'arrow static instance 1');
+					babyArrow.animation.addByPrefix('pressed', 'left press instance 1', 24, false);
+					babyArrow.animation.addByPrefix('confirm', 'left confirm instance 1', 24, false);
+
+					babyArrow.animation.addByPrefix('static', 'arrow static instance 2');
+					babyArrow.animation.addByPrefix('pressed', 'down press instance 1', 24, false);
+					babyArrow.animation.addByPrefix('confirm', 'down confirm instance 1', 24, false);
+
+					babyArrow.animation.addByPrefix('static', 'arrow static instance 4');
+					babyArrow.animation.addByPrefix('pressed', 'up press instance 1', 24, false);
+					babyArrow.animation.addByPrefix('confirm', 'up confirm instance 1', 24, false);
+
+					babyArrow.animation.addByPrefix('static', 'arrow static instance 3');
+					babyArrow.animation.addByPrefix('pressed', 'right press instance 1', 24, false);
+					babyArrow.animation.addByPrefix('confirm', 'right confirm instance 1', 24, false);
 
 					babyArrow.x += Note.swagWidth * i;
 
@@ -2149,14 +2170,22 @@ class PlayState extends MusicBeatState
 				// Song ends abruptly on slow rate even with second condition being deleted,
 				// and if it's deleted on songs like cocoa then it would end without finishing instrumental fully,
 				// so no reason to delete it at all
-				if (unspawnNotes.length == 0 && notes.length == 0 && FlxG.sound.music.time / songMultiplier > (songLength - 100))
+				// We are actually men and fixed this shit B)
+				if ((FlxG.sound.music.length / songMultiplier) - Conductor.songPosition <= 0)
 				{
-					//Debug.logTrace("we're fuckin ending the song ");
+					Debug.logTrace("we're fuckin ending the song ");
 
 					endingSong = true;
+					new FlxTimer().start(2, function(timer)
+					{
+						endSong();
+					});
+					endSong();
 				}
 			}
 		}
+
+
 
 		if (updateFrame == 4)
 		{
@@ -3365,7 +3394,7 @@ class PlayState extends MusicBeatState
 			PlayStateChangeables.useDownscroll = false;
 		}
 
-		if (FlxG.save.data.fpsCap > 420)
+		if (FlxG.save.data.fpsCap > 290)
 			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(290);
 
 		#if FEATURE_LUAMODCHART
@@ -3422,7 +3451,6 @@ class PlayState extends MusicBeatState
 			{
 				campaignScore += Math.round(songScore);
 				campaignMisses += misses;
-				campaignMarvs += marvs;
 				campaignSicks += sicks;
 				campaignGoods += goods;
 				campaignBads += bads;
@@ -3485,7 +3513,7 @@ class PlayState extends MusicBeatState
 				}
 				else
 				{
-					var diff:String = ["-easy", "", "-hard"][storyDifficulty];
+					var diff:String = ["-easy", "", "-hard", "-oc"][storyDifficulty];
 
 					Debug.logInfo('PlayState: Loading next story song ${PlayState.storyPlaylist[0]}-${diff}');
 
@@ -3507,8 +3535,7 @@ class PlayState extends MusicBeatState
 					PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0], diff);
 					FlxG.sound.music.stop();
 
-					FlxG.switchState(new PlayState());
-					unloadAssets();
+					LoadingState.loadAndSwitchState(new PlayState());
 					clean();
 				}
 			}
@@ -3528,12 +3555,10 @@ class PlayState extends MusicBeatState
 					{
 						inResults = true;
 					});
-					unloadAssets();
 				}
 				else
 				{
 					FlxG.switchState(new FreeplayState());
-					unloadAssets();
 					clean();
 				}
 			}
@@ -4172,7 +4197,7 @@ class PlayState extends MusicBeatState
 
 	public var videoSprite:FlxSprite;
 
-	function noteMiss(direction:Int = 1, daNote:Note):Void
+	function noteMiss(direction:Int = 1, daNote:Note, note:Note = null):Void
 	{
 		if (!boyfriend.stunned)
 		{
@@ -4387,6 +4412,7 @@ class PlayState extends MusicBeatState
 			}
 
 			boyfriend.playAnim('sing' + dataSuffix[note.noteData] + altAnim, true);
+			
 
 			#if FEATURE_LUAMODCHART
 			if (luaModchart != null)
@@ -4688,5 +4714,19 @@ class PlayState extends MusicBeatState
 		{
 			remove(asset);
 		}
+	}
+
+	function HealthDrain():Void
+	{
+		boyfriend.playAnim("hit", true);
+		FlxG.camera.zoom -= 0.02;
+		new FlxTimer().start(0.3, function(tmr:FlxTimer)
+		{
+			boyfriend.playAnim("idle", true);
+		});
+		new FlxTimer().start(0.01, function(tmr:FlxTimer)
+		{
+			health -= 0.005;
+		}, 300);
 	}
 }
