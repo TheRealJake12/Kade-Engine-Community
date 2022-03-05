@@ -235,9 +235,7 @@ class MainMenuState extends MusicBeatState
 
 		menuItems.forEach(function(spr:FlxSprite)
 		{
-			
 		});
-
 	}
 
 	function goToState()
@@ -245,14 +243,14 @@ class MainMenuState extends MusicBeatState
 		var daChoice:String = optionShit[curSelected];
 		new FlxTimer().start(1, function(tmr:FlxTimer)
 		{
-			unloadAssets();
+
 		});
 		switch (daChoice)
 		{
 			case 'story mode':
-				LoadingState.loadAndSwitchState(new StoryMenuState());
+				FlxG.switchState(new StoryMenuState());
 			case 'freeplay':
-				LoadingState.loadAndSwitchState(new FreeplayState());
+				FlxG.switchState(new FreeplayState());
 			case 'options':
 				FlxG.switchState(new OptionsDirect());
 		}

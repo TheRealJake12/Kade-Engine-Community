@@ -2,7 +2,6 @@ package;
 
 import openfl.display.Bitmap;
 import lime.app.Application;
-import flixel.addons.transition.FlxTransitionableState;
 #if FEATURE_DISCORD
 import Discord.DiscordClient;
 #end

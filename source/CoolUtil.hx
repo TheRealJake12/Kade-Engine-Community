@@ -16,6 +16,11 @@ class CoolUtil
 		return difficultyArray[difficulty];
 	}
 
+	inline public static function boundTo(value:Float, min:Float, max:Float):Float
+	{
+		return Math.max(min, Math.min(max, value));
+	}
+
 	public static function camLerpShit(daLerp:Float)
 	{
 		return (FlxG.elapsed / 0.016666666666666666) * daLerp;

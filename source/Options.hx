@@ -1708,7 +1708,7 @@ class RotateSpritesOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Rotate Sprites: < " + (FlxG.save.data.rotateSprites ? "Enabled" : "Disabled") + " >";
+		return "Rotate Sprites: < " + (FlxG.save.data.rotateSprites ? "Disabled" : "Enabled") + " >";
 	}
 }
 

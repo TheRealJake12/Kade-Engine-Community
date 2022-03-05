@@ -1991,7 +1991,7 @@ class PlayState extends MusicBeatState
 	{
 		if (PauseSubState.goToOptions)
 		{
-		if (FlxG.save.data.gen)
+			if (FlxG.save.data.gen)
 			{
 				Debug.logTrace("pause thingyt");
 			}
@@ -1999,7 +1999,7 @@ class PlayState extends MusicBeatState
 			{
 				if (FlxG.save.data.gen)
 				{
-				Debug.logTrace("pause thingyt");
+					Debug.logTrace("pause thingyt");
 				}
 				PauseSubState.goToOptions = false;
 				PauseSubState.goBack = false;
@@ -2953,7 +2953,8 @@ class PlayState extends MusicBeatState
 		if (generatedMusic)
 		{
 			var holdArray:Array<Bool> = [controls.LEFT, controls.DOWN, controls.UP, controls.RIGHT];
-			var stepHeight = (0.45 * Conductor.stepCrochet * FlxMath.roundDecimal(PlayState.SONG.speed, 2));
+			var stepHeight = (0.45 * Conductor.stepCrochet * FlxMath.roundDecimal((PlayState.SONG.speed * PlayState.songMultiplier) * PlayState.songMultiplier,
+				2));
 
 			notes.forEachAlive(function(daNote:Note)
 			{
@@ -3534,8 +3535,9 @@ class PlayState extends MusicBeatState
 
 					PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0], diff);
 					FlxG.sound.music.stop();
-
-					LoadingState.loadAndSwitchState(new PlayState());
+					
+					FlxG.switchState(new PlayState());
+					unloadAssets();
 					clean();
 				}
 			}
@@ -4728,5 +4730,14 @@ class PlayState extends MusicBeatState
 		{
 			health -= 0.005;
 		}, 300);
+	}
+
+	public static function cancelMusicFadeTween()
+	{
+		if (FlxG.sound.music.fadeTween != null)
+		{
+			FlxG.sound.music.fadeTween.cancel();
+		}
+		FlxG.sound.music.fadeTween = null;
 	}
 }

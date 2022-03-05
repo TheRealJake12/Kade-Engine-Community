@@ -139,6 +139,8 @@ class FreeplayState extends MusicBeatState
 		// LOAD CHARACTERS
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		bg.antialiasing = (FlxG.save.data.antialiasing);
+		bg.screenCenter();
 		add(bg);
 
 		grpSongs = new FlxTypedGroup<Alphabet>();
@@ -395,7 +397,7 @@ class FreeplayState extends MusicBeatState
 
 		if (controls.BACK)
 		{
-			LoadingState.loadAndSwitchState(new MainMenuState());
+			FlxG.switchState(new MainMenuState());
 			if (FlxG.save.data.unload)
 			{
 				Main.dumpCache();
@@ -502,7 +504,7 @@ class FreeplayState extends MusicBeatState
 		if (isCharting)
 			LoadingState.loadAndSwitchState(new ChartingState(reloadSong));
 		else
-			LoadingState.loadAndSwitchState(new PlayState());
+			FlxG.switchState(new PlayState());
 	}
 
 	function changeDiff(change:Int = 0)

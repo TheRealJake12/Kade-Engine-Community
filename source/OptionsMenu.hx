@@ -133,12 +133,10 @@ class OptionsMenu extends FlxSubState
 				new CustomizeGameplay("Drag and drop gameplay modules to your prefered positions!")
 			]),
 			new OptionCata(345, 40, "Appearance", [
-				new NoteskinOption("Change your current noteskin"),
-				new NotesplashOption("Change your current noteskin"),
+				new NoteskinOption("Change your current noteskin"), new NotesplashOption("Change your current noteskin"),
 				new NotesplashesOption("Uses Notesplashes(Can cause lag on older PC's turn it off for max FPS)."),
 				new RotateSpritesOption("Should the game rotate the sprites to do color quantization (turn off for bar skins)"),
-				new MiddleScrollOption("Put your lane in the center or on the right."), 
-				new HealthBarOption("Toggles health bar visibility"),
+				new MiddleScrollOption("Put your lane in the center or on the right."), new HealthBarOption("Toggles health bar visibility"),
 				new JudgementCounter("Show your judgements that you've gotten in the song"),
 				new LaneUnderlayOption("How transparent your lane is, higher = more visible."),
 				new StepManiaOption("Sets the colors of the arrows depending on quantization instead of direction."),
@@ -163,9 +161,7 @@ class OptionsMenu extends FlxSubState
 			]),
 			new OptionCata(50, 105, "Perf", [
 				new FPSOption("Toggle the FPS Counter"),
-				#if desktop 
-				new FPSCapOption("Change your FPS Cap."),
-				new Memory("Toggle the Memory Counter"),
+				#if desktop new FPSCapOption("Change your FPS Cap."), new Memory("Toggle the Memory Counter"),
 				#end
 				new General("Traces things in the debug console or logs. Affects performance in debug builds."),
 				new EditorRes("Not showing the editor grid will greatly increase editor performance"),
@@ -173,12 +169,10 @@ class OptionsMenu extends FlxSubState
 				new Optimization("Nothing but Your Strumline is visible. Best Performance."),
 				new AntialiasingOption("Toggle antialiasing, improving graphics quality at a slight performance penalty."),
 				new UnloadSongs("Unload Songs And Characters"),
-				#if desktop 
-				new CharacterCaching("Caches Characters"), 
-				new SongCaching("Caches Songs for close to Instant loading"),
+				#if desktop new CharacterCaching("Caches Characters"), new SongCaching("Caches Songs for close to Instant loading"),
 				new CachingOption("Caches all of the options above (High Memory Depending On Your Cache Options.)"),
 				#end
-				
+
 			]),
 			new OptionCata(345, 105, "Experamental", [
 				new OldCharter("Uses Kade Engine 1.5.4 Chart System.(HIGH CHANCES OF CRASHING!)"),
@@ -198,14 +192,6 @@ class OptionsMenu extends FlxSubState
 				new ShitMsOption("How many milliseconds are in the SHIT hit window")
 			], true)
 		];
-
-		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.loadImage("menuDesat"));
-		menuBG.color = 0xFFea71fd;
-		menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));
-		menuBG.updateHitbox();
-		menuBG.screenCenter();
-		menuBG.antialiasing = FlxG.save.data.antialiasing;
-		add(menuBG);
 
 		instance = this;
 
@@ -229,7 +215,7 @@ class OptionsMenu extends FlxSubState
 			bg.alpha = 0;
 			bg.scrollFactor.set();
 			menu.add(bg);
-			
+
 			bg.alpha = 0.6;
 
 			cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
@@ -605,7 +591,7 @@ class OptionsMenu extends FlxSubState
 							FlxG.save.data.goodMs,
 							FlxG.save.data.sickMs,
 							FlxG.save.data.marvMs
-							
+
 						];
 
 						for (i in 0...selectedCat.options.length)
