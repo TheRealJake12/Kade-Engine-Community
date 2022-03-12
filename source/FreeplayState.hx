@@ -1,5 +1,6 @@
 package;
 
+import flixel.tweens.FlxTween;
 import openfl.utils.Future;
 import openfl.media.Sound;
 import flixel.system.FlxSound;
@@ -20,6 +21,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import flixel.addons.transition.FlxTransitionableState;
 #if FEATURE_DISCORD
 import Discord.DiscordClient;
 #end
@@ -269,9 +271,8 @@ class FreeplayState extends MusicBeatState
 			meta.diffs = diffsThatExist;
 
 			if (diffsThatExist.length != 3)
+				FreeplayState.songData.set(songId, diffs);
 
-			FreeplayState.songData.set(songId, diffs);
-			
 			FreeplayState.songs.push(meta);
 		}
 	}
@@ -397,7 +398,7 @@ class FreeplayState extends MusicBeatState
 
 		if (controls.BACK)
 		{
-			FlxG.switchState(new MainMenuState());
+			MusicBeatState.switchState(new MainMenuState());
 			if (FlxG.save.data.unload)
 			{
 				Main.dumpCache();
@@ -409,7 +410,10 @@ class FreeplayState extends MusicBeatState
 		}
 
 		if (accepted)
+		{
+			persistentUpdate = false;
 			loadSong();
+		}
 		else if (charting)
 			loadSong(true);
 
@@ -449,8 +453,17 @@ class FreeplayState extends MusicBeatState
 
 	function loadSong(isCharting:Bool = false)
 	{
-		loadSongInFreePlay(songs[curSelected].songName, curDifficulty, isCharting);
+		var black:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		black.alpha = 0;
+		black.scrollFactor.set();
+		add(black);
 
+		FlxTween.tween(black, {alpha: 1}, 0.4, {
+			onComplete: function(twn:FlxTween)
+			{
+				loadSongInFreePlay(songs[curSelected].songName, curDifficulty, isCharting);
+			}
+		});
 		clean();
 	}
 
@@ -500,11 +513,10 @@ class FreeplayState extends MusicBeatState
 		#end
 
 		PlayState.songMultiplier = rate;
-
 		if (isCharting)
 			LoadingState.loadAndSwitchState(new ChartingState(reloadSong));
 		else
-			FlxG.switchState(new PlayState());
+			LoadingState.loadAndSwitchState(new PlayState());
 	}
 
 	function changeDiff(change:Int = 0)
@@ -513,7 +525,7 @@ class FreeplayState extends MusicBeatState
 			return;
 
 		curDifficulty += change;
-		
+
 		if (!FlxG.save.data.hardmode)
 		{
 			if (curDifficulty < 0)
@@ -559,7 +571,7 @@ class FreeplayState extends MusicBeatState
 			curSelected = songs.length - 1;
 		if (curSelected >= songs.length)
 			curSelected = 0;
-			
+
 		if (FlxG.save.data.hardmode)
 		{
 			if (songs[curSelected].diffs.length != 3)

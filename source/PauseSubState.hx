@@ -29,14 +29,14 @@ class PauseSubState extends MusicBeatSubstate
 
 	public static var playingPause:Bool = false;
 
+	public var black:FlxSprite;
+
 	var pauseMusic:FlxSound;
 
 	var perSongOffset:FlxText;
 
 	var offsetChanged:Bool = false;
 	var startOffset:Float = PlayState.songOffset;
-
-	var bg:FlxSprite;
 
 	public function new()
 	{
@@ -70,7 +70,7 @@ class PauseSubState extends MusicBeatSubstate
 			}
 		}
 
-		bg = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		bg.alpha = 0;
 		bg.scrollFactor.set();
 		add(bg);
@@ -95,13 +95,22 @@ class PauseSubState extends MusicBeatSubstate
 		levelInfo.x = FlxG.width - (levelInfo.width + 20);
 		levelDifficulty.x = FlxG.width - (levelDifficulty.width + 20);
 
+		black = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		black.alpha = 0;
+		black.scrollFactor.set();
+
 		FlxTween.tween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
 		FlxTween.tween(levelInfo, {alpha: 1, y: 20}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.3});
 		FlxTween.tween(levelDifficulty, {alpha: 1, y: levelDifficulty.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.5});
 
 		grpMenuShit = new FlxTypedGroup<Alphabet>();
 		add(grpMenuShit);
-		perSongOffset = new FlxText(5, FlxG.height - 18, 0, "Hello chat", 12);
+		perSongOffset = new FlxText(5, FlxG.height
+			- 18, 0,
+			"Additive Offset (Left, Right): "
+			+ PlayState.songOffset
+			+ " - Description - "
+			+ 'Adds value to global offset, per song.', 12);
 		perSongOffset.scrollFactor.set();
 		perSongOffset.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 
@@ -138,14 +147,6 @@ class PauseSubState extends MusicBeatSubstate
 				i.pause();
 		}
 
-		if (bg.alpha > 0.6)
-			bg.alpha = 0.6;
-
-
-		var upPcontroller:Bool = false;
-		var downPcontroller:Bool = false;
-		var leftPcontroller:Bool = false;
-		var rightPcontroller:Bool = false;
 		var oldOffset:Float = 0;
 
 		var songPath = 'assets/data/songs/${PlayState.SONG.songId}/';
@@ -155,11 +156,11 @@ class PauseSubState extends MusicBeatSubstate
 			songPath = PlayState.pathToSm;
 		#end
 
-		if (controls.UP_P || upPcontroller)
+		if (controls.UP_P)
 		{
 			changeSelection(-1);
 		}
-		else if (controls.DOWN_P || downPcontroller)
+		else if (controls.DOWN_P)
 		{
 			changeSelection(1);
 		}
@@ -211,10 +212,27 @@ class PauseSubState extends MusicBeatSubstate
 						GameplayCustomizeState.freeplayStage = 'stage';
 						GameplayCustomizeState.freeplaySong = 'bopeebo';
 						GameplayCustomizeState.freeplayWeek = 1;
-						FlxG.switchState(new StoryMenuState());
+
+						add(black);
+
+						FlxTween.tween(black, {alpha: 1}, 0.4, {
+							onComplete: function(twn:FlxTween)
+							{
+								FlxTransitionableState.skipNextTransIn = true;
+								FlxTransitionableState.skipNextTransOut = true;
+
+								MusicBeatState.switchState(new StoryMenuState());
+							}
+						});
 					}
 					else
-						FlxG.switchState(new FreeplayState());
+
+					FlxTween.tween(black, {alpha: 1}, 0.4, {
+						onComplete: function(twn:FlxTween)
+						{
+							MusicBeatState.switchState(new FreeplayState());
+						}
+					});
 			}
 		}
 

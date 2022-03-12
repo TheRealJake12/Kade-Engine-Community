@@ -1,18 +1,18 @@
 package;
 
-import flixel.math.FlxMath;
-import flixel.FlxCamera;
-import flixel.text.FlxText;
-import lime.app.Application;
-import flixel.FlxBasic;
-#if FEATURE_DISCORD
-import Discord.DiscordClient;
-#end
-import flixel.util.FlxColor;
-import openfl.Lib;
 import Conductor.BPMChangeEvent;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
+import flixel.math.FlxRect;
+import flixel.util.FlxTimer;
+import flixel.addons.transition.FlxTransitionableState;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.FlxSprite;
+import flixel.util.FlxColor;
+import flixel.util.FlxGradient;
+import flixel.FlxState;
+import flixel.FlxBasic;
 
 class MusicBeatState extends FlxUIState
 {
@@ -22,28 +22,23 @@ class MusicBeatState extends FlxUIState
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
 	private var curDecimalBeat:Float = 0;
+
+	private var assets:Array<FlxBasic> = [];
+	public static var initSave:Bool = false;
+
 	private var controls(get, never):Controls;
 
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;
 
-	public static var initSave:Bool = false;
+	override function create() {
+		var skip:Bool = FlxTransitionableState.skipNextTransOut;
+		super.create();
 
-	private var assets:Array<FlxBasic> = [];
-
-	override function destroy()
-	{
-		Application.current.window.onFocusIn.remove(onWindowFocusOut);
-		Application.current.window.onFocusIn.remove(onWindowFocusIn);
-		super.destroy();
-	}
-
-	override function add(Object:flixel.FlxBasic):flixel.FlxBasic
-	{
-		if (FlxG.save.data.optimize)
-			assets.push(Object);
-		var result = super.add(Object);
-		return result;
+		if(!skip) {
+			openSubState(new CustomFadeTransition(0.7, true));
+		}
+		FlxTransitionableState.skipNextTransOut = false;
 	}
 
 	public function clean()
@@ -57,27 +52,21 @@ class MusicBeatState extends FlxUIState
 		}
 	}
 
-	override function create()
+	public function fancyOpenURL(schmancy:String)
 	{
-		if (initSave)
-		{
-			if (FlxG.save.data.laneTransparency < 0)
-				FlxG.save.data.laneTransparency = 0;
+		#if linux
+		Sys.command('/usr/bin/xdg-open', [schmancy, "&"]);
+		#else
+		FlxG.openURL(schmancy);
+		#end
+	}
 
-			if (FlxG.save.data.laneTransparency > 1)
-				FlxG.save.data.laneTransparency = 1;
-		}
-
-		Application.current.window.onFocusIn.add(onWindowFocusIn);
-		Application.current.window.onFocusOut.add(onWindowFocusOut);
-		TimingStruct.clearTimings();
-
-		KeyBinds.keyCheck();
-
-		if (transIn != null)
-			trace('reg ' + transIn.region);
-
-		super.create();
+	override function add(Object:flixel.FlxBasic):flixel.FlxBasic
+	{
+		if (FlxG.save.data.optimize)
+			assets.push(Object);
+		var result = super.add(Object);
+		return result;
 	}
 
 	override function update(elapsed:Float)
@@ -176,7 +165,6 @@ class MusicBeatState extends FlxUIState
 
 	private function updateBeat():Void
 	{
-		lastBeat = curBeat;
 		curBeat = Math.floor(curStep / 4);
 	}
 
@@ -196,6 +184,39 @@ class MusicBeatState extends FlxUIState
 		return lastChange.stepTime + Math.floor((Conductor.songPosition - lastChange.songTime) / Conductor.stepCrochet);
 	}
 
+	public static function switchState(nextState:FlxState) {
+		// Custom made Trans in
+		var curState:Dynamic = FlxG.state;
+		var leState:MusicBeatState = curState;
+		if(!FlxTransitionableState.skipNextTransIn) {
+			leState.openSubState(new CustomFadeTransition(0.6, false));
+			if(nextState == FlxG.state) {
+				CustomFadeTransition.finishCallback = function() {
+					FlxG.resetState();
+				};
+				//trace('resetted');
+			} else {
+				CustomFadeTransition.finishCallback = function() {
+					FlxG.switchState(nextState);
+				};
+				//trace('changed state');
+			}
+			return;
+		}
+		FlxTransitionableState.skipNextTransIn = false;
+		FlxG.switchState(nextState);
+	}
+
+	public static function resetState() {
+		MusicBeatState.switchState(FlxG.state);
+	}
+
+	public static function getState():MusicBeatState {
+		var curState:Dynamic = FlxG.state;
+		var leState:MusicBeatState = curState;
+		return leState;
+	}
+
 	public function stepHit():Void
 	{
 		if (curStep % 4 == 0)
@@ -204,41 +225,6 @@ class MusicBeatState extends FlxUIState
 
 	public function beatHit():Void
 	{
-		// do literally nothing dumbass
-	}
-
-	public function fancyOpenURL(schmancy:String)
-	{
-		#if linux
-		Sys.command('/usr/bin/xdg-open', [schmancy, "&"]);
-		#else
-		FlxG.openURL(schmancy);
-		#end
-	}
-
-	function onWindowFocusOut():Void
-	{
-		if (PlayState.inDaPlay)
-		{
-			if (!PlayState.instance.paused && !PlayState.instance.endingSong && PlayState.instance.songStarted)
-			{
-				Debug.logTrace("Lost Focus");
-				PlayState.instance.openSubState(new PauseSubState());
-				PlayState.boyfriend.stunned = true;
-
-				PlayState.instance.persistentUpdate = false;
-				PlayState.instance.persistentDraw = false;
-				PlayState.instance.paused = true;
-
-				PlayState.instance.vocals.stop();
-				FlxG.sound.music.stop();
-			}
-		}
-	}
-
-	function onWindowFocusIn():Void
-	{
-		//Debug.logTrace("IM BACK!!!");
-		(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
+		//do literally nothing dumbass
 	}
 }

@@ -1,5 +1,7 @@
 package;
 
+import flixel.addons.transition.TransitionData;
+import flixel.addons.transition.FlxTransitionSprite;
 import openfl.utils.AssetCache;
 import flixel.FlxBasic;
 #if FEATURE_STEPMANIA
@@ -13,9 +15,6 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.addons.display.FlxGridOverlay;
-import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.addons.transition.TransitionData;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxGroup;
@@ -29,6 +28,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import lime.app.Application;
+import flixel.addons.transition.FlxTransitionableState;
 import openfl.Assets;
 import flixel.input.keyboard.FlxKey;
 
@@ -118,6 +118,7 @@ class TitleState extends MusicBeatState
 		#else
 		startIntro();
 		#end
+		
 		#end
 	}
 
@@ -128,10 +129,10 @@ class TitleState extends MusicBeatState
 
 	function startIntro()
 	{
-		persistentUpdate = true;
+		persistentUpdate = false;
 
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		// bg.antialiasing = FlxG.save.data.antialiasing;
+		bg.antialiasing = FlxG.save.data.antialiasing;
 		// bg.setGraphicSize(Std.int(bg.width * 0.6));
 		// bg.updateHitbox();
 		add(bg);
@@ -205,21 +206,12 @@ class TitleState extends MusicBeatState
 		FlxG.mouse.visible = false;
 
 		if (initialized)
+		new FlxTimer().start(0.01, function(tmr:FlxTimer)
+		{
 			skipIntro();
+		});	
 		else
 		{
-			var diamond:FlxGraphic = FlxGraphic.fromClass(GraphicTransTileDiamond);
-			diamond.persist = true;
-			diamond.destroyOnNoUse = false;
-
-			FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, 1, new FlxPoint(0, -1), {asset: diamond, width: 32, height: 32},
-				new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
-			FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, 0.7, new FlxPoint(0, 1),
-				{asset: diamond, width: 32, height: 32}, new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
-
-			transIn = FlxTransitionableState.defaultTransIn;
-			transOut = FlxTransitionableState.defaultTransOut;
-			
 			FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
 
 			FlxG.sound.music.fadeIn(4, 0, 0.7);
@@ -281,11 +273,16 @@ class TitleState extends MusicBeatState
 			transitioning = true;
 			// FlxG.sound.music.stop();
 
-			MainMenuState.firstStart = true;
-			MainMenuState.finishedFunnyMove = false;
-			
-			LoadingState.loadAndSwitchState(new MainMenuState());
-			clean();
+			var black:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+			black.alpha = 0;
+			add(black);
+
+			FlxTween.tween(black, {alpha: 1}, 0.5, {
+				onComplete: function(twn:FlxTween)
+				{
+					MusicBeatState.switchState(new MainMenuState());
+				}
+			});
 			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 		}
 

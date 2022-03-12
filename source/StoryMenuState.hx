@@ -101,9 +101,6 @@ class StoryMenuState extends MusicBeatState
 		DiscordClient.changePresence("In the Story Mode Menu", null);
 		#end
 
-		transIn = FlxTransitionableState.defaultTransIn;
-		transOut = FlxTransitionableState.defaultTransOut;
-
 		if (FlxG.sound.music != null)
 		{
 			if (!FlxG.sound.music.playing)
@@ -370,9 +367,17 @@ class StoryMenuState extends MusicBeatState
 			{
 				new FlxTimer().start(1, function(tmr:FlxTimer)
 				{
-					if (isCutscene)
-						video.onVLCComplete();
-					LoadingState.loadAndSwitchState(new PlayState(), true);
+					var black:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+					black.alpha = 0;
+					black.scrollFactor.set();
+					add(black);
+
+					FlxTween.tween(black, {alpha: 1}, 0.4, {
+						onComplete: function(twn:FlxTween)
+						{
+							LoadingState.loadAndSwitchState(new PlayState(), true);
+						}
+					});
 				});
 			}	
 		}
