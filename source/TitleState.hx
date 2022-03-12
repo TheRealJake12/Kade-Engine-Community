@@ -281,6 +281,7 @@ class TitleState extends MusicBeatState
 				onComplete: function(twn:FlxTween)
 				{
 					MusicBeatState.switchState(new MainMenuState());
+					unloadAssets();
 				}
 			});
 			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);

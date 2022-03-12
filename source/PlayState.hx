@@ -3388,8 +3388,8 @@ class PlayState extends MusicBeatState
 			PlayStateChangeables.useDownscroll = false;
 		}
 
-		if (FlxG.save.data.fpsCap > 290)
-			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(290);
+		if (FlxG.save.data.fpsCap > 420)
+			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(420);
 
 		#if FEATURE_LUAMODCHART
 		if (luaModchart != null)
@@ -3486,8 +3486,7 @@ class PlayState extends MusicBeatState
 						GameplayCustomizeState.freeplayWeek = 1;
 						FlxG.sound.playMusic(Paths.music('freakyMenu'));
 						Conductor.changeBPM(102);
-
-						LoadingState.loadAndSwitchState(new StoryMenuState());
+						MusicBeatState.switchState(new StoryMenuState());
 						clean();
 					}
 
@@ -3525,13 +3524,12 @@ class PlayState extends MusicBeatState
 
 					FlxTransitionableState.skipNextTransIn = true;
 					FlxTransitionableState.skipNextTransOut = true;
-
 					prevCamFollow = camFollow;
 
-					PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0], PlayState.storyPlaylist[0]);
+					PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0], diff);
 					FlxG.sound.music.stop();
 
-					FlxG.switchState(new PlayState());
+					LoadingState.loadAndSwitchState(new PlayState());
 					clean();
 				}
 			}
@@ -3555,6 +3553,7 @@ class PlayState extends MusicBeatState
 				else
 				{
 					LoadingState.loadAndSwitchState(new FreeplayState());
+					unloadAssets();
 					clean();
 				}
 			}
@@ -4713,7 +4712,6 @@ class PlayState extends MusicBeatState
 	function HealthDrain():Void
 	{
 		boyfriend.playAnim("hit", true);
-		FlxG.camera.zoom -= 0.02;
 		new FlxTimer().start(0.3, function(tmr:FlxTimer)
 		{
 			boyfriend.playAnim("idle", true);

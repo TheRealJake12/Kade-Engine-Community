@@ -49,6 +49,8 @@ class FreeplayState extends MusicBeatState
 	var intendedScore:Int = 0;
 	var combo:String = '';
 
+	var trackedAssets:Array<Dynamic> = [];
+
 	var bg:FlxSprite;
 
 	private var coolColors:Array<FlxColor> = [-7072173, -7179779, -14535868, -7072173, -223529, -6237697, -34625]; // thanks people at Ralsei Engine
@@ -462,6 +464,7 @@ class FreeplayState extends MusicBeatState
 			onComplete: function(twn:FlxTween)
 			{
 				loadSongInFreePlay(songs[curSelected].songName, curDifficulty, isCharting);
+				unloadAssets();
 			}
 		});
 		clean();
@@ -689,6 +692,20 @@ class FreeplayState extends MusicBeatState
 				item.alpha = 1;
 				// item.setGraphicSize(Std.int(item.width));
 			}
+		}
+	}
+
+	override function add(Object:flixel.FlxBasic):flixel.FlxBasic
+	{
+		trackedAssets.insert(trackedAssets.length, Object);
+		return super.add(Object);
+	}
+
+	function unloadAssets():Void
+	{
+		for (asset in trackedAssets)
+		{
+			remove(asset);
 		}
 	}
 }

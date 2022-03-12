@@ -70,6 +70,8 @@ class StoryMenuState extends MusicBeatState
 	var leftArrow:FlxSprite;
 	var rightArrow:FlxSprite;
 
+	var trackedAssets:Array<flixel.FlxBasic> = [];
+
 	function unlockWeeks():Array<Bool>
 	{
 		var weeks:Array<Bool> = [];
@@ -139,8 +141,6 @@ class StoryMenuState extends MusicBeatState
 
 		grpWeekCharacters = new FlxTypedGroup<MenuCharacter>();
 
-		trace("Line 70");
-
 		for (i in 0...weekData().length)
 		{
 			var weekThing:MenuItem = new MenuItem(0, yellowBG.y + yellowBG.height + 10, i);
@@ -155,7 +155,6 @@ class StoryMenuState extends MusicBeatState
 			// Needs an offset thingie
 			if (!weekUnlocked[i])
 			{
-				trace('locking week ' + i);
 				var lock:FlxSprite = new FlxSprite(weekThing.width + 10 + weekThing.x);
 				lock.frames = ui_tex;
 				lock.animation.addByPrefix('lock', 'lock');
@@ -165,8 +164,7 @@ class StoryMenuState extends MusicBeatState
 				grpLocks.add(lock);
 			}
 		}
-
-		trace("Line 96");
+	
 
 		grpWeekCharacters.add(new MenuCharacter(0, 100, 0.5, false));
 		grpWeekCharacters.add(new MenuCharacter(450, 25, 0.9, true));
@@ -175,7 +173,6 @@ class StoryMenuState extends MusicBeatState
 		difficultySelectors = new FlxGroup();
 		add(difficultySelectors);
 
-		trace("Line 124");
 
 		leftArrow = new FlxSprite(grpWeekText.members[0].x + grpWeekText.members[0].width + 10, grpWeekText.members[0].y + 10);
 		leftArrow.frames = ui_tex;
@@ -205,7 +202,6 @@ class StoryMenuState extends MusicBeatState
 		rightArrow.antialiasing = FlxG.save.data.antialiasing;
 		difficultySelectors.add(rightArrow);
 
-		trace("Line 150");
 
 		add(yellowBG);
 		add(grpWeekCharacters);
@@ -232,8 +228,6 @@ class StoryMenuState extends MusicBeatState
 				item.alpha = 0.6;
 			bullShit++;
 		}
-
-		trace("Line 165");
 
 		super.create();
 	}
@@ -320,6 +314,7 @@ class StoryMenuState extends MusicBeatState
 				FlxG.sound.play(Paths.sound('confirmMenu'));
 
 				grpWeekText.members[curWeek].startFlashing();
+				unloadAssets();
 				grpWeekCharacters.members[1].animation.play('bfConfirm');
 				stopspamming = true;
 			}
@@ -376,10 +371,15 @@ class StoryMenuState extends MusicBeatState
 						onComplete: function(twn:FlxTween)
 						{
 							LoadingState.loadAndSwitchState(new PlayState(), true);
+							new FlxTimer().start(3, function(tmr:FlxTimer)
+							{
+								unloadAssets();
+							});
 						}
 					});
 				});
-			}	
+			}
+			
 		}
 	}
 
@@ -491,7 +491,6 @@ class StoryMenuState extends MusicBeatState
 		if (week <= weekData().length - 1 /*&& FlxG.save.data.weekUnlocked == week*/) // fuck you, unlocks all weeks
 		{
 			weekUnlocked.push(true);
-			trace('Week ' + week + ' beat (Week ' + (week + 1) + ' unlocked)');
 		}
 
 		FlxG.save.data.weekUnlocked = weekUnlocked.length - 1;
@@ -512,5 +511,19 @@ class StoryMenuState extends MusicBeatState
 
 		if (weekCharacters[curWeek][2] == 'spooky' || weekCharacters[curWeek][2] == 'gf')
 			grpWeekCharacters.members[2].bopHead();
+	}
+
+	override function add(Object:flixel.FlxBasic):flixel.FlxBasic
+	{
+		trackedAssets.insert(trackedAssets.length, Object);
+		return super.add(Object);
+	}
+
+	function unloadAssets():Void
+	{
+		for (asset in trackedAssets)
+		{
+			remove(asset);
+		}
 	}
 }
