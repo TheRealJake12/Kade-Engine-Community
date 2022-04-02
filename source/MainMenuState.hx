@@ -161,9 +161,20 @@ class MainMenuState extends MusicBeatState
 				MusicBeatState.switchState(new TitleState());
 			}
 
+			if (FlxG.keys.justPressed.F7)
+			{
+				PlayState.SONG = Song.loadFromJson('salvation', '-hard');
+				PlayState.isStoryMode = false;
+				LoadingState.loadAndSwitchState(new PlayState());
+			}
+
 			if (controls.ACCEPT)
 			{
 				if (optionShit[curSelected] == 'donate')
+				{
+					fancyOpenURL("https://ninja-muffin24.itch.io/funkin");
+				}
+				else if (optionShit[curSelected] == 'discord')
 				{
 					fancyOpenURL("https://ninja-muffin24.itch.io/funkin");
 				}

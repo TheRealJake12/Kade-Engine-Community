@@ -19,8 +19,8 @@ class Character extends FlxSprite
 	public var isDancing:Bool;
 
 	public var holdTimer:Float = 0;
-
-	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
+	
+	public function new(x:Float, y:Float, ?character:String = 'bf', ?isPlayer:Bool = false)
 	{
 		super(x, y);
 

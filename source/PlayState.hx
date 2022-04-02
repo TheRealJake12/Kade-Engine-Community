@@ -380,8 +380,6 @@ class PlayState extends MusicBeatState
 		PlayStateChangeables.Optimize = FlxG.save.data.optimize;
 		PlayStateChangeables.zoom = FlxG.save.data.zoom;
 
-		removedVideo = false;
-
 		#if FEATURE_LUAMODCHART
 		// TODO: Refactor this to use OpenFlAssets.
 		executeModchart = FileSystem.exists(Paths.lua('songs/${PlayState.SONG.songId}/modchart'));
@@ -1159,6 +1157,8 @@ class PlayState extends MusicBeatState
 	public static var luaModchart:ModchartState = null;
 	#end
 
+	var keys = [false, false, false, false];
+
 	function startCountdown():Void
 	{
 		inCutscene = false;
@@ -1286,8 +1286,6 @@ class PlayState extends MusicBeatState
 		}
 		return null;
 	}
-
-	var keys = [false, false, false, false];
 
 	private function releaseInput(evt:KeyboardEvent):Void // handles releases
 	{
@@ -2093,7 +2091,6 @@ class PlayState extends MusicBeatState
 	var maxNPS:Int = 0;
 
 	public var stopUpdate = false;
-	public var removedVideo = false;
 
 	public var currentBPM = 0;
 
@@ -3948,6 +3945,7 @@ class PlayState extends MusicBeatState
 	private function keyShit():Void // I've invested in emma stocks
 	{
 		// control arrays, order L D R U
+
 		var holdArray:Array<Bool> = [controls.LEFT, controls.DOWN, controls.UP, controls.RIGHT];
 		var pressArray:Array<Bool> = [controls.LEFT_P, controls.DOWN_P, controls.UP_P, controls.RIGHT_P];
 		var releaseArray:Array<Bool> = [controls.LEFT_R, controls.DOWN_R, controls.UP_R, controls.RIGHT_R];
@@ -4010,6 +4008,7 @@ class PlayState extends MusicBeatState
 				var directionList:Array<Int> = []; // directions that can be hit
 				var dumbNotes:Array<Note> = []; // notes to kill later
 				var directionsAccounted:Array<Bool> = [false, false, false, false]; // we don't want to do judgments for more than one presses
+				
 
 				notes.forEachAlive(function(daNote:Note)
 				{
@@ -4052,7 +4051,6 @@ class PlayState extends MusicBeatState
 				}
 
 				possibleNotes.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
-
 				var hit = [false, false, false, false];
 
 				if (perfectMode)
@@ -4101,7 +4099,7 @@ class PlayState extends MusicBeatState
 							if (pressArray[shit])
 								noteMiss(shit, null);
 					}
-				}
+				}	
 			}
 
 			if (!loadRep)

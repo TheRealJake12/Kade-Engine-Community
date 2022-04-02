@@ -219,6 +219,7 @@ class ChartingState extends MusicBeatState
 				stage: 'stage',
 				speed: 1,
 				validScore: false
+
 			};
 		}
 
@@ -2652,6 +2653,10 @@ class ChartingState extends MusicBeatState
 				if (FlxG.keys.justPressed.Q)
 				{
 					changeNoteSustain(-(((60 / (timingSeg != null ? timingSeg.bpm : _song.bpm)) * 1000) / 4));
+				}
+				if (FlxG.keys.justPressed.ESCAPE)
+				{
+					LoadingState.loadAndSwitchState(new FreeplayState());
 				}
 
 				if (FlxG.keys.justPressed.C && !FlxG.keys.pressed.CONTROL)

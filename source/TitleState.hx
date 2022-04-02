@@ -277,14 +277,16 @@ class TitleState extends MusicBeatState
 			black.alpha = 0;
 			add(black);
 
-			FlxTween.tween(black, {alpha: 1}, 0.5, {
-				onComplete: function(twn:FlxTween)
-				{
-					MusicBeatState.switchState(new MainMenuState());
-					unloadAssets();
-				}
+			new FlxTimer().start(2, function(tmr:FlxTimer)
+			{	
+				FlxTween.tween(black, {alpha: 1}, 0.5, {
+					onComplete: function(twn:FlxTween)
+					{
+						MusicBeatState.switchState(new MainMenuState());
+						unloadAssets();
+					}
+				});
 			});
-			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 		}
 
 		if (pressedEnter && !skippedIntro && initialized)

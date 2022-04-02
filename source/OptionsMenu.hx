@@ -17,6 +17,10 @@ import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import lime.utils.Assets;
+import flash.text.TextField;
+import flixel.FlxG;
+import flixel.FlxSprite;
 
 class OptionCata extends FlxSprite
 {
@@ -134,9 +138,10 @@ class OptionsMenu extends FlxSubState
 			]),
 			new OptionCata(345, 40, "Appearance", [
 				new NoteskinOption("Change your current noteskin"), new NotesplashOption("Change your current noteskin"),
-				new NotesplashesOption("Uses Notesplashes(Can cause lag on older PC's turn it off for max FPS)."),
+				new NotesplashesOption("Uses Notesplashes (Only use it on Arrow skins or else theres gonna be some visual bugs(wrong offsets))."),
 				new RotateSpritesOption("Should the game rotate the sprites to do color quantization (turn off for bar skins)"),
-				new MiddleScrollOption("Put your lane in the center or on the right."), new HealthBarOption("Toggles health bar visibility"),
+				new MiddleScrollOption("Put your lane in the center or on the right."), 
+				new HealthBarOption("Toggles health bar visibility"),
 				new JudgementCounter("Show your judgements that you've gotten in the song"),
 				new LaneUnderlayOption("How transparent your lane is, higher = more visible."),
 				new StepManiaOption("Sets the colors of the arrows depending on quantization instead of direction."),
@@ -435,7 +440,7 @@ class OptionsMenu extends FlxSubState
 				if (escape)
 				{
 					if (!isInPause)
-						FlxG.switchState(new MainMenuState());
+						MusicBeatState.switchState(new MainMenuState());
 					else
 					{
 						PauseSubState.goBack = true;

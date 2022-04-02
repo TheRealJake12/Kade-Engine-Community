@@ -53,6 +53,7 @@ typedef SongData =
 	var stage:String;
 	var ?validScore:Bool;
 	var ?offset:Int;
+	
 }
 
 typedef SongMeta =
@@ -63,7 +64,7 @@ typedef SongMeta =
 
 class Song
 {
-	public static var latestChart:String = "KE1";
+	public static var latestChart:String = "KEC 1.4.3";
 
 	public static function loadFromJsonRAW(rawJson:String)
 	{

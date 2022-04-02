@@ -344,6 +344,8 @@ class StoryMenuState extends MusicBeatState
 			PlayState.storyWeek = curWeek;
 			PlayState.campaignScore = 0;
 
+			#if desktop
+
 			var video:MP4Handler = new MP4Handler();
 
 			if (curWeek == 14 && !isCutscene) // Checks if the current week is Your Week.
@@ -379,6 +381,27 @@ class StoryMenuState extends MusicBeatState
 					});
 				});
 			}
+			#else
+			new FlxTimer().start(1, function(tmr:FlxTimer)
+			{
+				var black:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+				black.alpha = 0;
+				black.scrollFactor.set();
+				add(black);
+
+				FlxTween.tween(black, {alpha: 1}, 0.4, {
+					onComplete: function(twn:FlxTween)
+					{
+						LoadingState.loadAndSwitchState(new PlayState(), true);
+						new FlxTimer().start(3, function(tmr:FlxTimer)
+						{
+							unloadAssets();
+						});
+					}
+				});
+			});
+			#end
+
 			
 		}
 	}
