@@ -159,6 +159,7 @@ class PlayState extends MusicBeatState
 	private static var prevCamFollow:FlxObject;
 
 	public var laneunderlay:FlxSprite;
+	public var laneunderlayOpponent:FlxSprite;
 
 	public static var strumLineNotes:FlxTypedGroup<StaticArrow> = null;
 	public static var playerStrums:FlxTypedGroup<StaticArrow> = null;
@@ -453,13 +454,23 @@ class PlayState extends MusicBeatState
 		FlxG.cameras.add(camSustains);
 		FlxG.cameras.add(camNotes);
 
+		laneunderlayOpponent = new FlxSprite(0, 0).makeGraphic(110 * 4 + 50, FlxG.height * 2);
+		laneunderlayOpponent.alpha = FlxG.save.data.laneTransparency;
+		laneunderlayOpponent.color = FlxColor.BLACK;
+		laneunderlayOpponent.scrollFactor.set();
+
 		laneunderlay = new FlxSprite(0, 0).makeGraphic(110 * 4 + 50, FlxG.height * 2);
 		laneunderlay.alpha = FlxG.save.data.laneTransparency;
 		laneunderlay.color = FlxColor.BLACK;
 		laneunderlay.scrollFactor.set();
-
 		if (FlxG.save.data.laneUnderlay && !PlayStateChangeables.Optimize)
+		{
+			if (!FlxG.save.data.middleScroll || executeModchart)
+			{
+				add(laneunderlayOpponent);
+			}
 			add(laneunderlay);
+		}
 
 		camHUD.zoom = PlayStateChangeables.zoom;
 
@@ -798,8 +809,10 @@ class PlayState extends MusicBeatState
 		generateStaticArrows(1);
 
 		laneunderlay.x = playerStrums.members[0].x - 25;
+		laneunderlayOpponent.x = cpuStrums.members[0].x - 25;
 
 		laneunderlay.screenCenter(Y);
+		laneunderlayOpponent.screenCenter(Y);
 
 		// startCountdown();
 		if (FlxG.save.data.gen)
@@ -986,6 +999,7 @@ class PlayState extends MusicBeatState
 		iconP2.cameras = [camHUD];
 		scoreTxt.cameras = [camHUD];
 		laneunderlay.cameras = [camHUD];
+		laneunderlayOpponent.cameras = [camHUD];
 
 		if (isStoryMode)
 			doof.cameras = [camHUD];
