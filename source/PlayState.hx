@@ -465,7 +465,7 @@ class PlayState extends MusicBeatState
 		laneunderlay.scrollFactor.set();
 		if (FlxG.save.data.laneUnderlay && !PlayStateChangeables.Optimize)
 		{
-			if (!FlxG.save.data.middleScroll || executeModchart)
+			if (!FlxG.save.data.middleScroll || PlayStateChangeables.Optimize)
 			{
 				add(laneunderlayOpponent);
 			}
