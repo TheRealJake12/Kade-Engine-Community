@@ -809,10 +809,17 @@ class PlayState extends MusicBeatState
 		generateStaticArrows(1);
 
 		laneunderlay.x = playerStrums.members[0].x - 25;
-		laneunderlayOpponent.x = cpuStrums.members[0].x - 25;
+		if (!PlayStateChangeables.Optimize)
+		{
+			laneunderlayOpponent.x = cpuStrums.members[0].x - 25;
+		}
+		
 
 		laneunderlay.screenCenter(Y);
-		laneunderlayOpponent.screenCenter(Y);
+		if (!PlayStateChangeables.Optimize)
+		{
+			laneunderlayOpponent.screenCenter(Y);
+		}
 
 		// startCountdown();
 		if (FlxG.save.data.gen)
