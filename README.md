@@ -81,10 +81,6 @@ It will take a while to build for both versions.
 
 - [KadeDev](https://github.com/KadeDev) - The Original Guy who created Kade Engine
 
-- [Wafles](https://gamebanana.com/mods/330278) The Step Mania Noteskin I used (sorry for stealing lol ._.)
-
-- [HD Note Creators] - I forgor who made them so correct me if you know ( ͡° ͜ʖ ͡°) )
-
 - [TposeJank](https://github.com/tposejank) Epic friend that gave me ideas and helped :epicttrooll:
 
 - [gaminbottomtext](https://github.com/gaminbottomtext) also epic fren that helped with notesplashes :letrollisfefe:
