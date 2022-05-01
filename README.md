@@ -46,16 +46,17 @@ haxelib install hxcpp-debug-server
 haxelib run lime setup
 haxelib run lime setup flixel
 haxelib run flixel-tools setup
+haxelib install hxCodec 2.5.1 
 ```
 Once you have these installed, you will need [Git](https://git-scm.com/downloads) 
 As you did with Haxe, just install the setup and finish it.
 HaxeFlixel 4.11.0 Breaks some camera shit or something so lets just use 4.10.0 for now.
+[hxCodec](https://github.com/polybiusproxy/hxCodec.git) is for the MP4 Video Support. Instead of having the code. It is a library now. I will update the guide for playing the videos soon.
 When its finished, you will need to download these like you did with the Libraries above.
 ```
 haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
 haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
 haxelib git faxe https://github.com/uhrobots/faxe
-haxelib git polymod https://github.com/MasterEric/polymod.git
 haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
 ```
 For adding WEBM support, you will need this library but I removed it because WEBM is a piece of shit and is broken
@@ -77,9 +78,11 @@ It will take a while to build for both versions.
 
 ### Shoutouts
 
-- [TheRealJake_12](https://www.youtube.com/channel/UCYy-RfMjVx-1dYnmNQGB2sw) - THE GUY THAT DOES ALL THE WORK
+- [TheRealJake_12](https://www.youtube.com/channel/UCYy-RfMjVx-1dYnmNQGB2sw) - *everything.*
 
 - [KadeDev](https://github.com/KadeDev) - The Original Guy who created Kade Engine
+
+- [PolybiusProxy](https://github.com/polybiusproxy) - The MP4 Video Support
 
 - [TposeJank](https://github.com/tposejank) Epic friend that gave me ideas and helped :epicttrooll:
 
@@ -87,4 +90,4 @@ It will take a while to build for both versions.
 
 - [discord server for this project](https://discord.gg/G2jJ8RfWtm) thanks for joining if you do.
 
-IF YOU USE THIS SHITTY PROJECT FOR YOUR MOD PLEASE CREDIT ME ON GAMEBANANA!!!!
+- Please Credit This Project For Your Mods On GameBanana. Thanks In Advance!
