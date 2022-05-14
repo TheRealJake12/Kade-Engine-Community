@@ -1,7 +1,4 @@
-## Welcome to the Kade Engine Community
-quick lil test to fix the outdated state lol
-this is really a test for smth
+## KEC
 
-### Changelog
-
-
+Kade Engine Community is a fork of [Kade Engine](https://github.com/KadeDev/Kade-Engine.git) that aims to fix most of its issues.
+Includes Notesplashes, Tons of Optimizations, Options, as well as a generally smooth experience.
