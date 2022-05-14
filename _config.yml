@@ -3,5 +3,5 @@ title: "Kade Engine Community"
 description: "Kade Engine Community is a fork of Kade Engine that aims to fix most of its issues. Includes Notesplashes, Tons of Optimizations, Options, as well as a generally smooth experience."
 show_downloads: true
 replace_index_with: "https://cors-thing.puyo.workers.dev/master/"
-logo: "https://github.com/TheRealJake12/Kade-Engine-Community/blob/master/assets/preload/images/KadeEngineLogoOld.png"
+logo: "https://raw.githubusercontent.com/TheRealJake12/Kade-Engine-Community/master/assets/preload/images/KadeEngineLogoOld.png"
 url: "https://therealjake12.github.io/Kade-Engine-Community/"
