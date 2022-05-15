@@ -33,7 +33,7 @@ So I will now do a guide to build the game.
 You will first need to go to this link to download [Haxe](https://haxe.org/download/) Choose your platform and just do the normal download proccess.
 2. Install HaxeFlixel. Once Haxe is installed, you can download HaxeFlixel. Open a Command Prompt (Windows is right click windows icon and hit command prompt or windows powershell) Once its open, run ```haxelib install flixel``` and Flixel will install.
 3. Im just gonna quickly add all the librarys you need to download by putting it in a prompt
-```
+```cmd
 haxelib install lime 7.9.0
 haxelib install openfl
 haxelib install flixel 4.10.0
@@ -46,26 +46,19 @@ haxelib install hxcpp-debug-server
 haxelib run lime setup
 haxelib run lime setup flixel
 haxelib run flixel-tools setup
-haxelib install hxCodec 2.5.1 
 ```
 Once you have these installed, you will need [Git](https://git-scm.com/downloads) 
 As you did with Haxe, just install the setup and finish it.
 HaxeFlixel 4.11.0 Breaks some camera shit or something so lets just use 4.10.0 for now.
 [hxCodec](https://github.com/polybiusproxy/hxCodec.git) is for the MP4 Video Support. Instead of having the code. It is a library now. I will update the guide for playing the videos soon.
 When its finished, you will need to download these like you did with the Libraries above.
-```
+```cmd
 haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
 haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
 haxelib git faxe https://github.com/uhrobots/faxe
 haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
+haxelib git hxCodec https://github.com/polybiusproxy/hxCodec.git
 ```
-For adding WEBM support, you will need this library but I removed it because WEBM is a piece of shit and is broken
-```
-haxelib git extension-webm https://github.com/KadeDev/extension-webm
-lime rebuild extension-webm windows
-```
-replace windows with whatever your device is.
-
 4. [Read the original FNF source code guide for Visual Studio](https://github.com/ninjamuffin99/Funkin.git)
 Once it is installed you should be able to build your game.
 
