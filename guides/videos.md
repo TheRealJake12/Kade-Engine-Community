@@ -1,7 +1,7 @@
-# MP4 Cutscenes
+# Video Cutscenes
 
 ## Requirements
-1. The ability to compile Kade Engine Community from the source code. All information related to building Kade Engine Communiuty is listed [here.](https://github.com/TheRealJake12/Kade-Engine-1.7-Community/blob/master/docs/building.md)
+1. The ability to compile Kade Engine Community from the source code. All information related to building Kade Engine Communiuty is listed [here.](https://therealjake12.github.io/Kade-Engine-Community/building)
 2. A text editor. Some form of IDE that can support Haxe is recommended, such as Visual Studio Code.
 
 ### Step 1. Navigation
