@@ -1,6 +1,6 @@
 # Guides
 - [Creating A Custom Week]({{site.url}}guides/weeks)
-- [Implementing Video Cutscenes]({{site.url}}guides/mp4cutscenes)
+- [Implementing Video Cutscenes]({{site.url}}guides/videos)
 - [Optimizing Your Mod]({{site.url}}guides/optimization)
 - [Creating Custom Characters]({{site.url}}guides/characters)  
 ### Contributing
