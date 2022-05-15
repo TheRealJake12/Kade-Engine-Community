@@ -17,7 +17,7 @@ The Ones Tested And Working Are The Following:
 ### Step 2. Installing [hxCodec](https://lib.haxe.org/p/hxCodec/)
 
 Open A Windows Powershell (Or Command Prompt Either Work).
-Once Loaded, Paste ``haxelib git hxCodec https://github.com/polybiusproxy/hxCodec `` Into The Prompt And Let It Install. For MacOS And Linux, I Have No Idea Look [Here](https://github.com/polybiusproxy/hxCodec) For Building Process And Installation. You Have To Install hxCodec For The Engine To Build Regardless But Just In Case.
+Once Loaded, Paste ```haxelib git hxCodec https://github.com/polybiusproxy/hxCodec``` Into The Prompt And Let It Install. For MacOS And Linux, I Have No Idea Look [Here](https://github.com/polybiusproxy/hxCodec) For Building Process And Installation. You Have To Install hxCodec For The Engine To Build Regardless But Just In Case.
 
 ### Step 3. Playing Cutscenes At The Start Of Your Song.
 
