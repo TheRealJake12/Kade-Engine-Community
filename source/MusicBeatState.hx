@@ -31,11 +31,13 @@ class MusicBeatState extends FlxUIState
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;
 
-	override function create() {
+	override function create()
+	{
 		var skip:Bool = FlxTransitionableState.skipNextTransOut;
 		super.create();
 
-		if(!skip) {
+		if (!skip)
+		{
 			openSubState(new CustomFadeTransition(0.7, true));
 		}
 		FlxTransitionableState.skipNextTransOut = false;
@@ -124,7 +126,6 @@ class MusicBeatState extends FlxUIState
 					}
 					else if (ste < curStep)
 					{
-						trace("reset steps for some reason?? at " + Conductor.songPosition);
 						// Song reset?
 						curStep = ste;
 						updateBeat();
@@ -150,7 +151,6 @@ class MusicBeatState extends FlxUIState
 					else if (nextStep < curStep)
 					{
 						// Song reset?
-						trace("(no bpm change) reset steps for some reason?? at " + Conductor.songPosition);
 						curStep = nextStep;
 						updateBeat();
 						stepHit();
@@ -184,22 +184,29 @@ class MusicBeatState extends FlxUIState
 		return lastChange.stepTime + Math.floor((Conductor.songPosition - lastChange.songTime) / Conductor.stepCrochet);
 	}
 
-	public static function switchState(nextState:FlxState) {
+	public static function switchState(nextState:FlxState)
+	{
 		// Custom made Trans in
 		var curState:Dynamic = FlxG.state;
 		var leState:MusicBeatState = curState;
-		if(!FlxTransitionableState.skipNextTransIn) {
-			leState.openSubState(new CustomFadeTransition(0.6, false));
-			if(nextState == FlxG.state) {
-				CustomFadeTransition.finishCallback = function() {
+		if (!FlxTransitionableState.skipNextTransIn)
+		{
+			leState.openSubState(new CustomFadeTransition(0.4, false));
+			if (nextState == FlxG.state)
+			{
+				CustomFadeTransition.finishCallback = function()
+				{
 					FlxG.resetState();
 				};
-				//trace('resetted');
-			} else {
-				CustomFadeTransition.finishCallback = function() {
+				// trace('resetted');
+			}
+			else
+			{
+				CustomFadeTransition.finishCallback = function()
+				{
 					FlxG.switchState(nextState);
 				};
-				//trace('changed state');
+				// trace('changed state');
 			}
 			return;
 		}
@@ -207,11 +214,13 @@ class MusicBeatState extends FlxUIState
 		FlxG.switchState(nextState);
 	}
 
-	public static function resetState() {
+	public static function resetState()
+	{
 		MusicBeatState.switchState(FlxG.state);
 	}
 
-	public static function getState():MusicBeatState {
+	public static function getState():MusicBeatState
+	{
 		var curState:Dynamic = FlxG.state;
 		var leState:MusicBeatState = curState;
 		return leState;

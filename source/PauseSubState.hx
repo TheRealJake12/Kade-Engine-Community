@@ -174,23 +174,11 @@ class PauseSubState extends MusicBeatSubstate
 				case "Resume":
 					close();
 				case "Restart Song":
-					PlayState.startTime = 0;
-					PlayState.instance.clean();
-					FlxG.resetState();
-					PlayState.stageTesting = false;
+					restartSong();
 				case "Options":
 					goToOptions = true;
 					close();
 				case "Exit to menu":
-					PlayState.startTime = 0;
-					if (PlayState.loadRep)
-					{
-						FlxG.save.data.botplay = false;
-						FlxG.save.data.scrollSpeed = 1;
-						FlxG.save.data.downscroll = false;
-					}
-					PlayState.loadRep = false;
-					PlayState.stageTesting = false;
 					#if FEATURE_LUAMODCHART
 					if (PlayState.luaModchart != null)
 					{
@@ -204,35 +192,9 @@ class PauseSubState extends MusicBeatSubstate
 					PlayState.instance.clean();
 
 					if (PlayState.isStoryMode)
-					{
-						GameplayCustomizeState.freeplayBf = 'bf';
-						GameplayCustomizeState.freeplayDad = 'dad';
-						GameplayCustomizeState.freeplayGf = 'gf';
-						GameplayCustomizeState.freeplayNoteStyle = 'normal';
-						GameplayCustomizeState.freeplayStage = 'stage';
-						GameplayCustomizeState.freeplaySong = 'bopeebo';
-						GameplayCustomizeState.freeplayWeek = 1;
-
-						add(black);
-
-						FlxTween.tween(black, {alpha: 1}, 0.4, {
-							onComplete: function(twn:FlxTween)
-							{
-								FlxTransitionableState.skipNextTransIn = true;
-								FlxTransitionableState.skipNextTransOut = true;
-
-								MusicBeatState.switchState(new StoryMenuState());
-							}
-						});
-					}
+						MusicBeatState.switchState(new StoryMenuState());
 					else
-
-					FlxTween.tween(black, {alpha: 1}, 0.4, {
-						onComplete: function(twn:FlxTween)
-						{
-							MusicBeatState.switchState(new FreeplayState());
-						}
-					});
+						MusicBeatState.switchState(new FreeplayState());
 			}
 		}
 
@@ -240,6 +202,23 @@ class PauseSubState extends MusicBeatSubstate
 		{
 			// for reference later!
 			// PlayerSettings.player1.controls.replaceBinding(Control.LEFT, Keys, FlxKey.J, null);
+		}
+	}
+
+	public static function restartSong(noTrans:Bool = false)
+	{
+		PlayState.instance.paused = true;
+		FlxG.sound.music.volume = 0;
+		PlayState.instance.vocals.volume = 0;
+
+		if (noTrans)
+		{
+			FlxTransitionableState.skipNextTransOut = true;
+			FlxG.resetState();
+		}
+		else
+		{
+			MusicBeatState.resetState();
 		}
 	}
 

@@ -7,7 +7,7 @@ title FNF Setup - Installing libraries
 echo Installing haxelib libraries...
 haxelib install lime 7.9.0
 haxelib install openfl
-haxelib install flixel 4.10.0
+haxelib git flixel https://github.com/TheRealJake12/flixel.git
 haxelib install flixel-tools
 haxelib install flixel-ui
 haxelib install hscript
@@ -28,17 +28,9 @@ title FNF Setup - Installing libraries
 haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
 haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
 haxelib git faxe https://github.com/uhrobots/faxe
-haxelib git polymod https://github.com/MasterEric/polymod.git
 haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
+haxelib git hxCodec https://github.com/polybiusproxy/hxCodec.git
 cls
-
-title FNF Setup - User action required
-set /p menu="Would you like to install Extension-Webm? (Its not needed) [Y/N]"
-       if %menu%==Y goto WEBM
-       if %menu%==y goto WEBM
-       if %menu%==N goto SkipWEBM
-       if %menu%==n goto SkipWEBM
-       cls
 
 title FNF Setup - User action required
 set /p menu="Would you like to install Visual Studio Community and components? (Necessary to compile/ 5.5GB) [Y/N]"
@@ -56,15 +48,7 @@ echo Setup successful. Press any key to exit.
 pause >nul
 exit
 
-:Skip WEBM
 cls
-gotoInstallVSCommunity
-
-:WEBM
-cls
-title FNF Setup - Installing WEBM
-haxelib git extension-webm https://github.com/KadeDev/extension-webm
-lime rebuild extension-webm windows
 gotoInstallVSCommunity
 
 :InstallVSCommunity

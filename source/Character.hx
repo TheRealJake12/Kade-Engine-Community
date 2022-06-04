@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.animation.FlxBaseAnimation;
@@ -19,7 +20,7 @@ class Character extends FlxSprite
 	public var isDancing:Bool;
 
 	public var holdTimer:Float = 0;
-	
+
 	public function new(x:Float, y:Float, ?character:String = 'bf', ?isPlayer:Bool = false)
 	{
 		super(x, y);
@@ -55,6 +56,19 @@ class Character extends FlxSprite
 
 				playAnim('danceRight');
 
+			case 'gftank':
+				
+				tex = Paths.getSparrowAtlas('gfTankmen', 'shared', true);
+				frames = tex;
+				animation.addByIndices('sad', 'GF Crying at Gunpoint', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], "", 24, false);
+				animation.addByIndices('danceLeft', 'GF Dancing at Gunpoint', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
+				animation.addByIndices('danceRight', 'GF Dancing at Gunpoint', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
+
+				loadOffsetFile(curCharacter);
+				barColor = FlxColor.fromRGB(165, 0, 77);
+
+				playAnim('danceRight');
+	
 			case 'gf-christmas':
 				tex = Paths.getSparrowAtlas('gfChristmas', 'shared', true);
 				frames = tex;
@@ -97,7 +111,7 @@ class Character extends FlxSprite
 
 				playAnim('danceRight');
 
-				setGraphicSize(Std.int(width *CoolUtil.daPixelZoom));
+				setGraphicSize(Std.int(width * CoolUtil.daPixelZoom));
 				updateHitbox();
 				antialiasing = false;
 			case 'dad':
@@ -218,11 +232,29 @@ class Character extends FlxSprite
 
 				flipX = true;
 
+			case 'picoSpeaker':
+				tex = Paths.getSparrowAtlas('picoSpeaker', 'shared', true);
+				frames = tex;
+				animation.addByPrefix('shoot1', 'Pico shoot 1', 24, false);
+				animation.addByPrefix('shoot2', 'Pico shoot 2', 24, false);
+				animation.addByPrefix('shoot3', 'Pico shoot 3', 24, false);
+				animation.addByPrefix('shoot4', 'Pico shoot 4', 24, false);
+
+				animation.addByPrefix('shoot1L', 'Pico shoot 1', 24, true);
+				animation.addByPrefix('shoot2L', 'Pico shoot 2', 24, true);
+				animation.addByPrefix('shoot3L', 'Pico shoot 3', 24, true);
+				animation.addByPrefix('shoot4L', 'Pico shoot 4', 24, true);
+
+				loadOffsetFile(curCharacter);
+				barColor = 0xFFb7d855;
+
+				playAnim('shoot1');
+
+				flipX = true;	
+
 			case 'bf':
 				var tex = Paths.getSparrowAtlas('BOYFRIEND', 'shared', true);
 				frames = tex;
-
-				trace(tex.frames.length);
 
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
 				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
@@ -395,6 +427,24 @@ class Character extends FlxSprite
 				barColor = 0xFF9a00f8;
 
 				playAnim('idle');
+
+			case 'tankman':
+				tex = Paths.getSparrowAtlas('characters/Tank', 'shared');
+				frames = tex;
+				animation.addByPrefix('idle', 'Tankman Idle Dance instance', 24);
+				animation.addByPrefix('singUP', 'Tankman UP note instance', 24);
+				animation.addByPrefix('singLEFT', 'Tankman Right Note instance', 24);
+				animation.addByPrefix('singDOWN', 'Tankman DOWN note instance', 24);
+				animation.addByPrefix('singRIGHT', 'Tankman Note Left instance', 24);
+				animation.addByPrefix('good', 'PRETTY GOOD tankman instance', 24);
+				animation.addByPrefix('ugh', 'TANKMAN UGH instance', 24);
+
+				loadOffsetFile(curCharacter);
+				barColor = FlxColor.fromRGB(255, 255, 255);
+
+				flipX = true;
+
+				playAnim('idle');
 		}
 
 		if (curCharacter.startsWith('bf'))
@@ -474,6 +524,12 @@ class Character extends FlxSprite
 					danced = true;
 					playAnim('danceRight');
 				}
+			case 'gftank':
+				if (animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
+				{
+					danced = true;
+					playAnim('danceRight');
+				}	
 		}
 
 		super.update(elapsed);
@@ -490,7 +546,7 @@ class Character extends FlxSprite
 		{
 			switch (curCharacter)
 			{
-				case 'gf' | 'gf-christmas' | 'gf-car' | 'gf-pixel':
+				case 'gf' | 'gf-christmas' | 'gf-car' | 'gf-pixel' | 'gftank':
 					if (!animation.curAnim.name.startsWith('hair') && !animation.curAnim.name.startsWith('sing'))
 					{
 						danced = !danced;
@@ -517,6 +573,15 @@ class Character extends FlxSprite
 						if (!animation.curAnim.name.endsWith('custom animation'))
 							playAnim('idle', forced);
 				 */
+				case 'tankman':
+					if (animation.curAnim.name.startsWith('good'))
+					{
+						return;
+					}
+					else
+					{
+						playAnim('idle', forced);
+					}
 				default:
 					if (altAnim && animation.getByName('idle-alt') != null)
 						playAnim('idle-alt', forced);

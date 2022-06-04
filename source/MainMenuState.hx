@@ -25,7 +25,7 @@ using StringTools;
 
 class MainMenuState extends MusicBeatState
 {
-	public static var kecVer:String = 'Kade Engine Community 1.4.3';
+	public static var kecVer:String = 'Kade Engine Community 1.5';
 	public static var keVer:String = "Kade Engine 1.8";
 	public static var curSelected:Int = 0;
 
@@ -51,7 +51,7 @@ class MainMenuState extends MusicBeatState
 		#end
 
 		camGame = new FlxCamera();
-
+		
 		FlxG.cameras.reset(camGame);
 		FlxCamera.defaultCameras = [camGame];
 
@@ -106,7 +106,7 @@ class MainMenuState extends MusicBeatState
 			menuItem.ID = i;
 			menuItems.add(menuItem);
 			menuItem.scrollFactor.set(0, 0.25);
-			menuItem.antialiasing = true;
+			menuItem.antialiasing = FlxG.save.data.antialiasing;
 						
 			changeItem();
 			menuItem.x = 120 + (i * 160);
@@ -223,26 +223,19 @@ class MainMenuState extends MusicBeatState
 	function goToState()
 	{
 		var daChoice:String = optionShit[curSelected];
-
-		var black:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		black.alpha = 0;
-		black.scrollFactor.set();
-		add(black);
-
-		FlxTween.tween(black, {alpha: 1}, 0.35, {
-			onComplete: function(twn:FlxTween)
+		{
+			switch (daChoice)
 			{
-				switch (daChoice)
-				{
-					case 'story mode':
-						MusicBeatState.switchState(new StoryMenuState());
-					case 'freeplay':
-						MusicBeatState.switchState(new FreeplayState());
-					case 'options':
-						MusicBeatState.switchState(new OptionsDirect());
-				}
+				case 'story mode':
+					MusicBeatState.switchState(new StoryMenuState());
+				case 'freeplay':
+					MusicBeatState.switchState(new FreeplayState());
+				case 'options':
+					transIn = FlxTransitionableState.defaultTransIn;
+					transOut = FlxTransitionableState.defaultTransOut;
+					MusicBeatState.switchState(new OptionsDirect());
 			}
-		});
+		}
 	}
 
 	function changeItem(huh:Int = 0)

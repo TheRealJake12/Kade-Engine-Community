@@ -1,17 +1,14 @@
 package;
 
-import openfl.display.Bitmap;
 import lime.app.Application;
-#if FEATURE_DISCORD
-import Discord.DiscordClient;
-#end
-import openfl.display.BlendMode;
-import openfl.text.TextFormat;
-import flixel.util.FlxColor;
+import flixel.graphics.FlxGraphic;
 import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.FlxState;
 import openfl.Assets;
+#if FEATURE_DISCORD
+import Discord.DiscordClient;
+#end
 import openfl.Lib;
 import openfl.display.FPS;
 import openfl.display.Sprite;
@@ -23,11 +20,9 @@ class Main extends Sprite
 	var gameHeight:Int = 720; // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
 	var initialState:Class<FlxState> = TitleState; // The FlxState the game starts with.
 	var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions.
-	var framerate:Int = 120; // How many frames per second the game should run at.
+	var framerate:Int = 60; // How many frames per second the game should run at.
 	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
-
-	public static var bitmapFPS:Bitmap;
 
 	public static var instance:Main;
 
@@ -88,13 +83,15 @@ class Main extends Sprite
 		#end
 
 		// Run this first so we can see logs.
-		Debug.onInitProgram();
+		Debug.onInitProgram();		
 
 		// Gotta run this before any assets get loaded.
 
 		#if !mobile
 		fpsCounter = new FPS(10, 3, 0xFFFFFF);
 		#end
+
+		FlxGraphic.defaultPersist = false;
 
 		game = new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen);
 		addChild(game);
@@ -117,6 +114,11 @@ class Main extends Sprite
 		toggleMemory(FlxG.save.data.mem);
 		#end
 
+		#if html5
+		FlxG.autoPause = false;
+		FlxG.mouse.visible = false;
+		#end
+
 		// Finish up loading debug tools.
 		Debug.onGameStart();
 	}
@@ -124,40 +126,16 @@ class Main extends Sprite
 	var game:FlxGame;
 
 	var fpsCounter:FPS;
-
 	var mem:MemoryCounter;
-
-	public function toggleFPS(fpsEnabled:Bool):Void
-	{
-		fpsCounter.visible = fpsEnabled;
-	}
-
-	public static function dumpCache()
-	{
-		@:privateAccess
-		for (key in FlxG.bitmap._cache.keys())
-		{
-			var obj = FlxG.bitmap._cache.get(key);
-			if (obj != null)
-			{
-				Assets.cache.removeBitmapData(key);
-				FlxG.bitmap._cache.remove(key);
-				obj.destroy();
-			}
-		}
-		Assets.cache.clear("songs");
-		Assets.cache.clear("characters");
-		// */
-	}
 
 	public function toggleMemory(memoryEnabled:Bool):Void
 	{
 		mem.visible = memoryEnabled;
 	}
-
-	public function changeFPSColor(color:FlxColor)
+	
+	public function toggleFPS(fpsEnabled:Bool):Void
 	{
-		fpsCounter.textColor = color;
+		fpsCounter.visible = fpsEnabled;
 	}
 
 	public function setFPSCap(cap:Float)

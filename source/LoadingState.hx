@@ -7,7 +7,7 @@ import flixel.FlxState;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.util.FlxTimer;
-import openfl.utils.Assets as OpenFlAssets;
+import openfl.utils.Assets;
 import lime.utils.Assets as LimeAssets;
 import lime.utils.AssetLibrary;
 import lime.utils.AssetManifest;
@@ -21,9 +21,8 @@ class LoadingState extends MusicBeatState
 	var stopMusic = false;
 	var callbacks:MultiCallback;
 
-	var logo:FlxSprite;
-	var gfDance:FlxSprite;
-	var danceLeft = false;
+	var funkay:FlxSprite;
+	var loadBar:FlxSprite;
 
 	function new(target:FlxState, stopMusic:Bool)
 	{
@@ -32,24 +31,21 @@ class LoadingState extends MusicBeatState
 		this.stopMusic = stopMusic;
 	}
 
+
+
 	override function create()
 	{
-		logo = new FlxSprite(-150, -100);
-		logo.frames = Paths.getSparrowAtlas('logoBumpin');
-		logo.antialiasing = FlxG.save.data.antialiasing;
-		logo.animation.addByPrefix('bump', 'logo bumpin', 24);
-		logo.animation.play('bump');
-		logo.updateHitbox();
+		funkay = new FlxSprite(0, 0).loadGraphic(Paths.getPath('images/funkay.png', IMAGE, 'images'));
+		funkay.setGraphicSize(0, FlxG.height);
+		funkay.updateHitbox();
+		funkay.antialiasing = FlxG.save.data.antialiasing;
 		// logoBl.screenCenter();
 		// logoBl.color = FlxColor.BLACK;
 
-		gfDance = new FlxSprite(FlxG.width * 0.4, FlxG.height * 0.07);
-		gfDance.frames = Paths.getSparrowAtlas('gfDanceTitle');
-		gfDance.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
-		gfDance.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
-		gfDance.antialiasing = FlxG.save.data.antialiasing;
-		add(gfDance);
-		add(logo);
+		loadBar = new FlxSprite(0, FlxG.height - 20).makeGraphic(FlxG.width, 10, 0xffff16d2);
+		loadBar.screenCenter(X);
+		loadBar.antialiasing = FlxG.save.data.antialiasing;
+		add(loadBar);
 
 		initSongsManifest().onComplete(function(lib)
 		{
@@ -72,16 +68,16 @@ class LoadingState extends MusicBeatState
 
 	function checkLoadSong(path:String)
 	{
-		if (!OpenFlAssets.cache.hasSound(path))
+		if (!Assets.cache.hasSound(path))
 		{
-			var library = OpenFlAssets.getLibrary("songs");
+			var library = Assets.getLibrary("songs");
 			final symbolPath = path.split(":").pop();
 			// @:privateAccess
 			// library.types.set(symbolPath, SOUND);
 			// @:privateAccess
 			// library.pathGroups.set(symbolPath, [library.__cacheBreak(symbolPath)]);
 			var callback = callbacks.add("song:" + path);
-			OpenFlAssets.loadSound(path).onComplete(function(_)
+			Assets.loadSound(path).onComplete(function(_)
 			{
 				callback();
 			});
@@ -90,15 +86,15 @@ class LoadingState extends MusicBeatState
 
 	function checkLibrary(library:String)
 	{
-		trace(OpenFlAssets.hasLibrary(library));
-		if (OpenFlAssets.getLibrary(library) == null)
+		trace(Assets.hasLibrary(library));
+		if (Assets.getLibrary(library) == null)
 		{
 			@:privateAccess
 			if (!LimeAssets.libraryPaths.exists(library))
 				throw "Missing library: " + library;
 
 			var callback = callbacks.add("library:" + library);
-			OpenFlAssets.loadLibrary(library).onComplete(function(_)
+			Assets.loadLibrary(library).onComplete(function(_)
 			{
 				callback();
 			});
@@ -108,19 +104,18 @@ class LoadingState extends MusicBeatState
 	override function beatHit()
 	{
 		super.beatHit();
-
-		logo.animation.play('bump');
-		danceLeft = !danceLeft;
-
-		if (danceLeft)
-			gfDance.animation.play('danceRight');
-		else
-			gfDance.animation.play('danceLeft');
 	}
 
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
+		funkay.setGraphicSize(Std.int(0.88 * FlxG.width + 0.9 * (funkay.width - 0.88 * FlxG.width)));
+		funkay.updateHitbox();
+		if (controls.ACCEPT)
+		{
+			funkay.setGraphicSize(Std.int(funkay.width + 60));
+			funkay.updateHitbox();
+		}
 		#if debug
 		if (FlxG.keys.justPressed.SPACE)
 			trace('fired: ' + callbacks.getFired() + " unfired:" + callbacks.getUnfired());
@@ -132,22 +127,22 @@ class LoadingState extends MusicBeatState
 		if (stopMusic && FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 
-		FlxG.switchState(target);
+		MusicBeatState.switchState(target);
 	}
 
 	static function getSongPath()
 	{
-		return Paths.inst(PlayState.SONG.songId);
+		return Paths.inst(PlayState.SONG.song);
 	}
 
 	static function getVocalPath()
 	{
-		return Paths.voices(PlayState.SONG.songId);
+		return Paths.voices(PlayState.SONG.song);
 	}
 
 	inline static public function loadAndSwitchState(target:FlxState, stopMusic = false)
 	{
-		FlxG.switchState(getNextState(target, stopMusic));
+		MusicBeatState.switchState(getNextState(target, stopMusic));
 	}
 
 	static function getNextState(target:FlxState, stopMusic = false):FlxState
@@ -170,12 +165,12 @@ class LoadingState extends MusicBeatState
 	#if NO_PRELOAD_ALL
 	static function isSoundLoaded(path:String):Bool
 	{
-		return OpenFlAssets.cache.hasSound(path);
+		return Assets.cache.hasSound(path);
 	}
 
 	static function isLibraryLoaded(library:String):Bool
 	{
-		return OpenFlAssets.getLibrary(library) != null;
+		return Assets.getLibrary(library) != null;
 	}
 	#end
 
@@ -188,12 +183,10 @@ class LoadingState extends MusicBeatState
 
 	static function initSongsManifest()
 	{
-		// TODO: Hey, wait, does this break ModCore?
-
 		var id = "songs";
 		var promise = new Promise<AssetLibrary>();
 
-		var library = OpenFlAssets.getLibrary(id);
+		var library = LimeAssets.getLibrary(id);
 
 		if (library != null)
 		{

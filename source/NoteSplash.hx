@@ -21,7 +21,7 @@ class NoteSplash extends FlxSprite
 
 	public function setupNoteSplash(x:Float, y:Float, noteData:Int)
 	{
-		frames = PlayState.notesplashSprite;
+		frames = PlayState.notesplashSprite;	
 		antialiasing = FlxG.save.data.antialiasing;
 
 		switch (noteData)

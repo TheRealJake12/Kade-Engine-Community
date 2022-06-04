@@ -51,6 +51,8 @@ class Caching extends MusicBeatState
 	var music = [];
 	var sounds = [];
 
+	var shitz:FlxText;
+
 	override function create()
 	{
 		FlxG.save.bind('funkin', 'ninjamuffin99');
@@ -77,25 +79,18 @@ class Caching extends MusicBeatState
 
 		bitmapData = new Map<String, FlxGraphic>();
 
-		text = new FlxText(FlxG.width / 2, FlxG.height / 2 + 300, 0, "Loading...");
-		text.size = 34;
-		text.alignment = FlxTextAlign.CENTER;
-		text.alpha = 1;
+		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.image('funkay'));
+		menuBG.screenCenter();
+		menuBG.antialiasing = FlxG.save.data.antialiasing;
+		menuBG.scale.set(0.78, 0.78);
+		add(menuBG);
 
-		kadeLogo = new FlxSprite(FlxG.width / 2, FlxG.height / 2).loadGraphic(Paths.loadImage('KadeEngineLogoOld'));
-		kadeLogo.x -= kadeLogo.width / 2;
-		kadeLogo.y -= kadeLogo.height / 2 + 100;
-		text.y -= kadeLogo.height / 2 - 125;
-		text.x -= 170;
-		kadeLogo.setGraphicSize(Std.int(kadeLogo.width * 0.6));
-		if (FlxG.save.data.antialiasing != null)
-			kadeLogo.antialiasing = FlxG.save.data.antialiasing;
-		else
-			kadeLogo.antialiasing = true;
+		shitz = new FlxText(12, 12, 0, "Loading...", 12);
+		shitz.scrollFactor.set();
+		shitz.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		add(shitz);
 
-		kadeLogo.alpha = 1;
-
-		FlxGraphic.defaultPersist = FlxG.save.data.cacheImages;
+		FlxGraphic.defaultPersist = false;
 
 		#if FEATURE_FILESYSTEM
 		if (FlxG.save.data.cacheCharacters)
@@ -132,8 +127,8 @@ class Caching extends MusicBeatState
 			{
 				if (toBeDone != 0 && done != toBeDone)
 				{
-					text.alpha = 1;
-					text.text = "Loading... (" + done + "/" + toBeDone + ")";
+					shitz.alpha = 1;
+					shitz.text = "Loading... (" + done + "/" + toBeDone + ")";
 				}
 			}
 		});
@@ -165,6 +160,10 @@ class Caching extends MusicBeatState
 			var imagePath = Paths.image('characters/' + replaced, 'shared');
 			var data = OpenFlAssets.getBitmapData(imagePath);
 			var graph = FlxGraphic.fromBitmapData(data);
+			if (FlxG.save.data.general)
+			{
+				Debug.logTrace('Caching character graphic $i ($imagePath)...');
+			}
 			graph.persist = true;
 			bitmapData.set(replaced, graph);
 			done++;

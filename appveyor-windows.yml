@@ -11,7 +11,7 @@ install:
   # Install the neko chocolatey package (https://chocolatey.org/packages/neko)
   - cinst neko --version 2.3.0 -y
   # Install the haxe chocolatey package (https://chocolatey.org/packages/haxe)
-  - cinst haxe --version 4.2.3 -y
+  - cinst haxe --version 4.2.5 -y
   - RefreshEnv
   # Setup haxelib
   - mkdir "%HAXELIB_ROOT%"
@@ -20,25 +20,24 @@ install:
   - haxelib install lime 7.9.0
   - RefreshEnv
   - haxelib install openfl
-  - haxelib install flixel
-  - haxelib run lime setup flixel
-  - haxelib run lime setup
+  - haxelib install lime 7.9.0
+  - haxelib install openfl
+  - haxelib git flixel https://github.com/TheRealJake12/flixel.git
   - haxelib install flixel-tools
-  # haxelib run flixel-tools setup -y # Can't do this since it asks [y/n] even with -y argument! Stupid
-  - haxelib install flixel-addons
   - haxelib install flixel-ui
   - haxelib install hscript
   - haxelib install flixel-addons
-  - haxelib git faxe https://github.com/uhrobots/faxe
-  - haxelib git polymod https://github.com/larsiusprime/polymod.git
-  - haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
-  - haxelib git extension-webm https://github.com/KadeDev/extension-webm
+  - haxelib install actuate
+  - haxelib install hxcpp-debug-server
+  - haxelib run lime setup
+  - haxelib run lime setup flixel
+  - haxelib run flixel-tools setup
+  - haxelib git hxCodec https://github.com/polybiusproxy/hxCodec.git
+  - haxelib install actuate 
   - haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
   - haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
-  - haxelib run lime rebuild extension-webm windows
-  - haxelib install actuate 
-  #- haxelib git extension-webm https://github.com/KadeDev/extension-webm
-  #- haxelib run lime rebuild extension-webm windows
+  - haxelib git faxe https://github.com/uhrobots/faxe
+  - haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
   #why here's dublicate lmao
   - haxelib list
 
@@ -49,5 +48,5 @@ build_script:
 
 artifacts:
   - path: export/release/windows/bin
-    name: KadeEngine-Windows
+    name: KadeEngineCommunity-Windows
     type: zip

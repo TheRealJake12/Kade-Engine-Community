@@ -20,7 +20,12 @@ class Paths
 		currentLevel = name.toLowerCase();
 	}
 
-	static function getPath(file:String, type:AssetType, library:Null<String>)
+	inline static public function formatToSongPath(path:String)
+	{
+		return path.toLowerCase().replace(' ', '-');
+	}
+
+	public static function getPath(file:String, type:AssetType, library:Null<String>)
 	{
 		if (library != null)
 			return getLibraryPath(file, library);
@@ -153,10 +158,14 @@ class Paths
 		return sound(key + FlxG.random.int(min, max), library);
 	}
 
-	inline static public function video(key:String, ?library:String)
+	#if VIDEOS
+
+	inline static public function video(key:String)
 	{
-		return getPath('videos/$key.mp4', BINARY, library);
+		return 'assets/videos/$key';
 	}
+
+	#end
 
 	inline static public function music(key:String, ?library:String)
 	{

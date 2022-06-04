@@ -64,7 +64,7 @@ class OptionCata extends FlxSprite
 		for (i in 0...options.length)
 		{
 			var opt = options[i];
-			var text:FlxText = new FlxText((middleType ? 1180 / 2 : 72), titleObject.y + 54 + (46 * i), 0, opt.getValue());
+			var text:FlxText = new FlxText((middleType ? 1180 / 2 : 72), titleObject.y + 120 + (40 * i), 0, opt.getValue());
 			if (middleType)
 			{
 				text.screenCenter(X);
@@ -137,10 +137,16 @@ class OptionsMenu extends FlxSubState
 				new CustomizeGameplay("Drag and drop gameplay modules to your prefered positions!")
 			]),
 			new OptionCata(345, 40, "Appearance", [
-				new NoteskinOption("Change your current noteskin"), new NotesplashOption("Change your current noteskin"),
+				#if desktop
+				new NoteskinOption("Change your Noteskin"),
+				new CPUNoteskinOption("Change the CPU Noteskin"),
+				new NotesplashOption("Change your Notesplash"),
+				#end
 				new NotesplashesOption("Uses Notesplashes (Only use it on Arrow skins or else theres gonna be some visual bugs(wrong offsets))."),
 				new RotateSpritesOption("Should the game rotate the sprites to do color quantization (turn off for bar skins)"),
-				new MiddleScrollOption("Put your lane in the center or on the right."), 
+				new LowMotion("Reduces the motion on screen for people who get motion sickness or for a smoother experiance."),
+				new ScrollAlpha("Changes the Transparancy of the Hold Notes."),
+				new MiddleScrollOption("Put your lane in the center or on the right."),
 				new HealthBarOption("Toggles health bar visibility"),
 				new JudgementCounter("Show your judgements that you've gotten in the song"),
 				new LaneUnderlayOption("How transparent your lane is, higher = more visible."),
@@ -164,32 +170,37 @@ class OptionsMenu extends FlxSubState
 				new LockWeeksOption("Reset your story mode progress. This is irreversible!"),
 				new ResetSettings("Reset ALL your settings. This is irreversible!")
 			]),
-			new OptionCata(50, 105, "Perf", [
+			new OptionCata(50, 104, "Perf", [
 				new FPSOption("Toggle the FPS Counter"),
-				#if desktop new FPSCapOption("Change your FPS Cap."), new Memory("Toggle the Memory Counter"),
+				#if desktop
+				new FPSCapOption("Change your FPS Cap."), 
 				#end
+				new Memory("Toggle the Memory Counter"),
 				new General("Traces things in the debug console or logs. Affects performance in debug builds."),
 				new EditorRes("Not showing the editor grid will greatly increase editor performance"),
-				new DistractionsAndEffectsOption("Toggle stage distractions that can hinder your gameplay."),
+				new DistractionsAndEffectsOption("Turns On Extra Images That Reduce Your FPS Significantly(Week 5 and 7 esp)"),
 				new Optimization("Nothing but Your Strumline is visible. Best Performance."),
 				new AntialiasingOption("Toggle antialiasing, improving graphics quality at a slight performance penalty."),
 				new UnloadSongs("Unload Songs And Characters"),
-				#if desktop new CharacterCaching("Caches Characters"), new SongCaching("Caches Songs for close to Instant loading"),
+				#if desktop 
+				new CharacterCaching("Caches Characters"), 
+				new SongCaching("Caches Songs for close to Instant loading"),
 				new CachingOption("Caches all of the options above (High Memory Depending On Your Cache Options.)"),
 				#end
 
 			]),
-			new OptionCata(345, 105, "Experamental", [
+			new OptionCata(345, 104, "Experamental", [
 				new OldCharter("Uses Kade Engine 1.5.4 Chart System.(HIGH CHANCES OF CRASHING!)"),
-				new HardMode("ERROR!"),
 			]),
-			new OptionCata(-1, 125, "Editing Keybinds", [
-				new LeftKeybind("The left note's keybind"), new DownKeybind("The down note's keybind"), new UpKeybind("The up note's keybind"),
-				new RightKeybind("The right note's keybind"), new PauseKeybind("The keybind used to pause the game"),
-				new ResetBind("The keybind used to die instantly"), new MuteBind("The keybind used to mute game audio"),
-				new VolUpBind("The keybind used to turn the volume up"), new VolDownBind("The keybind used to turn the volume down"),
-				new FullscreenBind("The keybind used to fullscreen the game")], true),
-			new OptionCata(-1, 125, "Editing Judgements", [
+			new OptionCata(-1, 150, "Editing Keybinds", [
+				new LeftKeybind("The left note's keybind"),
+				new DownKeybind("The down note's keybind"),
+				new UpKeybind("The up note's keybind"),
+				new RightKeybind("The right note's keybind"),
+				new PauseKeybind("The keybind used to pause the game"),
+				new ResetBind("The keybind used to die instantly"),
+			], true),
+			new OptionCata(-1, 150, "Editing Judgements", [
 				new MarvMSOption("How many milliseconds are in the MARV hit window"),
 				new SickMSOption("How many milliseconds are in the SICK hit window"),
 				new GoodMsOption("How many milliseconds are in the GOOD hit window"),
@@ -209,8 +220,8 @@ class OptionsMenu extends FlxSubState
 		background.scrollFactor.set();
 		menu.add(background);
 
-		descBack = new FlxSprite(50, 640).makeGraphic(1180, 38, FlxColor.BLACK);
-		descBack.alpha = 0.3;
+		descBack = new FlxSprite(50, 680).makeGraphic(1180, 38, FlxColor.BLACK);
+		descBack.alpha = 0.6;
 		descBack.scrollFactor.set();
 		menu.add(descBack);
 
@@ -243,7 +254,7 @@ class OptionsMenu extends FlxSubState
 			add(cat.titleObject);
 		}
 
-		descText = new FlxText(62, 648);
+		descText = new FlxText(62, 685);
 		descText.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		descText.borderSize = 2;
 
@@ -284,7 +295,7 @@ class OptionsMenu extends FlxSubState
 			for (i in 0...selectedCat.options.length)
 			{
 				var opt = selectedCat.optionObjects.members[i];
-				opt.y = selectedCat.titleObject.y + 54 + (46 * i);
+				opt.y = 175 + (40 * i);
 			}
 
 			while (shownStuff.members.length != 0)
@@ -308,7 +319,7 @@ class OptionsMenu extends FlxSubState
 				for (i in 0...selectedCat.options.length)
 				{
 					var opt = selectedCat.optionObjects.members[i];
-					opt.y = selectedCat.titleObject.y + 54 + (46 * i);
+					opt.y = 175 + (40 * i);
 				}
 			}
 
@@ -440,7 +451,10 @@ class OptionsMenu extends FlxSubState
 				if (escape)
 				{
 					if (!isInPause)
+					{
 						MusicBeatState.switchState(new MainMenuState());
+						FlxG.sound.music.stop();
+					}
 					else
 					{
 						PauseSubState.goBack = true;
@@ -500,7 +514,7 @@ class OptionsMenu extends FlxSubState
 							for (i in 0...selectedCat.options.length)
 							{
 								var opt = selectedCat.optionObjects.members[i];
-								opt.y = selectedCat.titleObject.y + 54 + (46 * i);
+								opt.y = 175 + (40 * i);
 							}
 							selectedOptionIndex = 0;
 						}
@@ -512,7 +526,7 @@ class OptionsMenu extends FlxSubState
 							if (selectedOptionIndex >= (options[selectedCatIndex].options.length - 1) / 2)
 								for (i in selectedCat.optionObjects.members)
 								{
-									i.y -= 46;
+									i.y -= 40;
 								}
 						}
 
@@ -535,7 +549,7 @@ class OptionsMenu extends FlxSubState
 							if (options[selectedCatIndex].options.length > 6)
 								for (i in selectedCat.optionObjects.members)
 								{
-									i.y -= (46 * ((options[selectedCatIndex].options.length - 1) / 2));
+									i.y -= (40 * ((options[selectedCatIndex].options.length - 1) / 2));
 								}
 						}
 
@@ -544,7 +558,7 @@ class OptionsMenu extends FlxSubState
 							if (selectedOptionIndex >= (options[selectedCatIndex].options.length - 1) / 2)
 								for (i in selectedCat.optionObjects.members)
 								{
-									i.y += 50;
+									i.y += 40;
 								}
 						}
 
@@ -553,7 +567,7 @@ class OptionsMenu extends FlxSubState
 							for (i in 0...selectedCat.options.length)
 							{
 								var opt = selectedCat.optionObjects.members[i];
-								opt.y = selectedCat.titleObject.y + 54 + (46 * i);
+								opt.y = 175 + (40 * i);
 							}
 						}
 
@@ -602,7 +616,7 @@ class OptionsMenu extends FlxSubState
 						for (i in 0...selectedCat.options.length)
 						{
 							var opt = selectedCat.optionObjects.members[i];
-							opt.y = selectedCat.titleObject.y + 54 + (46 * i);
+							opt.y = 175 + (40 * i);
 						}
 						selectedCat.optionObjects.members[selectedOptionIndex].text = selectedOption.getValue();
 						isInCat = true;
@@ -638,7 +652,7 @@ class OptionsMenu extends FlxSubState
 				for (i in 0...selectedCat.options.length)
 				{
 					var opt = selectedCat.optionObjects.members[i];
-					opt.y = selectedCat.titleObject.y + 54 + (46 * i);
+					opt.y = 175 + (40 * i);
 				}
 				selectedCat.optionObjects.members[selectedOptionIndex].text = selectedOption.getValue();
 				isInCat = true;

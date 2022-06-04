@@ -2,7 +2,6 @@ package;
 
 /// Code created by Rozebud for FPS Plus (thanks rozebud)
 // modified by KadeDev for use in Kade Engine/Tricky
-import flixel.input.gamepad.FlxGamepad;
 import flixel.util.FlxAxes;
 import flixel.FlxSubState;
 import Options.Option;
@@ -38,18 +37,7 @@ class KeyBindMenu extends FlxSubState
 	var curSelected:Int = 0;
 
 	var keys:Array<String> = [
-		FlxG.save.data.leftBind, FlxG.save.data.downBind, FlxG.save.data.upBind, FlxG.save.data.rightBind, FlxG.save.data.pauseBind, FlxG.save.data.resetBind,
-		FlxG.save.data.muteBind, FlxG.save.data.volUpBind, FlxG.save.data.volDownBind, FlxG.save.data.fullscreenBind,  FlxG.save.data.CNT1Bind,
-		 FlxG.save.data.CNT2Bind
-	];
-
-	var gpKeys:Array<String> = [
-		FlxG.save.data.gpleftBind,
-		FlxG.save.data.gpdownBind,
-		FlxG.save.data.gpupBind,
-		FlxG.save.data.gprightBind,
-		FlxG.save.data.gppauseBind,
-		FlxG.save.data.gpresetBind
+		FlxG.save.data.leftBind, FlxG.save.data.downBind, FlxG.save.data.upBind, FlxG.save.data.rightBind, FlxG.save.data.pauseBind, FlxG.save.data.resetBind, FlxG.save.data.CNT1Bind,FlxG.save.data.CNT2Bind
 	];
 
 	var tempKey:String = "";
@@ -67,13 +55,6 @@ class KeyBindMenu extends FlxSubState
 			var k = keys[i];
 			if (k == null)
 				keys[i] = defaultKeys[i];
-		}
-
-		for (i in 0...gpKeys.length)
-		{
-			var k = gpKeys[i];
-			if (k == null)
-				gpKeys[i] = defaultGpKeys[i];
 		}
 
 		persistentUpdate = true;
@@ -115,7 +96,6 @@ class KeyBindMenu extends FlxSubState
 
 	override function update(elapsed:Float)
 	{
-		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
 
 		if (frames <= 10)
 			frames++;
@@ -152,12 +132,6 @@ class KeyBindMenu extends FlxSubState
 				}
 				KeyBinds.gamepad = false;
 			case "input":
-				if (KeyBinds.gamepad)
-				{
-					tempKey = gpKeys[curSelected];
-					gpKeys[curSelected] = "?";
-				}
-				else
 				{
 					tempKey = keys[curSelected];
 					keys[curSelected] = "?";
@@ -166,32 +140,6 @@ class KeyBindMenu extends FlxSubState
 				state = "waiting";
 
 			case "waiting":
-				if (gamepad != null && KeyBinds.gamepad) // GP Logic
-				{
-					if (FlxG.keys.justPressed.ESCAPE)
-					{ // just in case you get stuck
-						gpKeys[curSelected] = tempKey;
-						state = "select";
-						FlxG.sound.play(Paths.sound('confirmMenu'));
-					}
-
-					if (gamepad.justPressed.START)
-					{
-						addKeyGamepad(defaultKeys[curSelected]);
-						save();
-						state = "select";
-					}
-
-					if (gamepad.justPressed.ANY)
-					{
-						trace(gamepad.firstJustPressedID());
-						addKeyGamepad(gamepad.firstJustPressedID());
-						save();
-						state = "select";
-						textUpdate();
-					}
-				}
-				else
 				{
 					if (FlxG.keys.justPressed.ESCAPE)
 					{
@@ -228,16 +176,7 @@ class KeyBindMenu extends FlxSubState
 	function textUpdate()
 	{
 		keyTextDisplay.text = "\n\n";
-
-		if (KeyBinds.gamepad)
-		{
-			for (i in 0...6)
-			{
-				var textStart = (i == curSelected) ? "> " : "  ";
-				keyTextDisplay.text += textStart + keyText[i] + ": " + gpKeys[i] + "\n";
-			}
-		}
-		else
+		
 		{
 			for (i in 0...4)
 			{
@@ -270,25 +209,9 @@ class KeyBindMenu extends FlxSubState
 		FlxG.save.data.rightBind = keys[3];
 		FlxG.save.data.pauseBind = keys[4];
 		FlxG.save.data.resetBind = keys[5];
-
-		FlxG.save.data.gpupBind = gpKeys[2];
-		FlxG.save.data.gpdownBind = gpKeys[1];
-		FlxG.save.data.gpleftBind = gpKeys[0];
-		FlxG.save.data.gprightBind = gpKeys[3];
-		FlxG.save.data.gppauseBind = gpKeys[4];
-		FlxG.save.data.gpresetBind = gpKeys[5];
-
-		FlxG.save.data.muteBind = keys[6];
-		FlxG.save.data.volUpBind = keys[7];
-		FlxG.save.data.volDownBind = keys[8];
-		FlxG.save.data.fullscreenBind = keys[9];
+		
 		FlxG.save.data.CNT1Bind = keys[10];
 		FlxG.save.data.CNT2Bind = keys[11];
-
-		FlxG.sound.muteKeys = [FlxKey.fromString(keys[6])];
-		FlxG.sound.volumeDownKeys = [FlxKey.fromString(keys[8])];
-		FlxG.sound.volumeUpKeys = [FlxKey.fromString(keys[7])];
-
 
 		FlxG.save.flush();
 
@@ -319,52 +242,6 @@ class KeyBindMenu extends FlxSubState
 			}
 		});
 		FlxTween.tween(infoText, {alpha: 0}, 1, {ease: FlxEase.expoInOut});
-	}
-
-	function addKeyGamepad(r:String)
-	{
-		var shouldReturn:Bool = true;
-
-		var notAllowed:Array<String> = ["START"];
-		var swapKey:Int = -1;
-
-		for (x in 0...gpKeys.length)
-		{
-			var oK = gpKeys[x];
-			if (oK == r)
-			{
-				swapKey = x;
-				gpKeys[x] = null;
-			}
-			if (notAllowed.contains(oK))
-			{
-				gpKeys[x] = null;
-				lastKey = r;
-				return;
-			}
-		}
-
-		if (notAllowed.contains(r))
-		{
-			gpKeys[curSelected] = tempKey;
-			lastKey = r;
-			return;
-		}
-
-		if (shouldReturn)
-		{
-			if (swapKey != -1)
-			{
-				gpKeys[swapKey] = tempKey;
-			}
-			gpKeys[curSelected] = r;
-			FlxG.sound.play(Paths.sound('scrollMenu'));
-		}
-		else
-		{
-			gpKeys[curSelected] = tempKey;
-			lastKey = r;
-		}
 	}
 
 	public var lastKey:String = "";

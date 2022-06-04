@@ -4,7 +4,6 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.input.gamepad.FlxGamepad;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 
@@ -59,8 +58,6 @@ class GameOverState extends FlxTransitionableState
 	{
 		var pressed:Bool = FlxG.keys.justPressed.ANY;
 
-		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
-
 		if (FlxG.save.data.InstantRespawn)
 		{
 			fading = true;
@@ -71,10 +68,14 @@ class GameOverState extends FlxTransitionableState
 			});
 		}
 
-		if (gamepad != null)
+		if (PlayState.SONG.stage == 'tank')
 		{
-			if (gamepad.justPressed.ANY)
-				pressed = true;
+			FlxG.sound.music.fadeOut(0.5, 0, function(twn:FlxTween)
+			{
+				FlxG.sound.music.stop();
+			});
+
+			FlxG.sound.play(Paths.sound('jeffGameover/jeffGameover-' + FlxG.random.int(1, 25)), 1, false, null, true);
 		}
 
 		pressed = false;

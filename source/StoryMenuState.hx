@@ -1,5 +1,9 @@
 package;
 
+import test.Destroyer;
+#if VIDEOS
+import vlc.VideoHandler;
+#end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionableState;
@@ -12,7 +16,9 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import lime.net.curl.CURLCode;
+#if desktop
 import lime.app.Application;
+#end
 #if FEATURE_DISCORD
 import Discord.DiscordClient;
 #end
@@ -32,7 +38,8 @@ class StoryMenuState extends MusicBeatState
 			['pico', 'philly', "blammed"],
 			['satin-panties', "high", "milf"],
 			['cocoa', 'eggnog', 'winter-horrorland'],
-			['senpai', 'roses', 'thorns']
+			['senpai', 'roses', 'thorns'],
+			['ugh', 'guns', 'stress']
 		];
 	}
 
@@ -47,7 +54,8 @@ class StoryMenuState extends MusicBeatState
 		['pico', 'bf', 'gf'],
 		['mom', 'bf', 'gf'],
 		['parents-christmas', 'bf', 'gf'],
-		['senpai', 'bf', 'gf']
+		['senpai', 'bf', 'gf'],
+		['tankman', 'bf', 'gf']
 	];
 
 	var weekNames:Array<String> = CoolUtil.coolTextFile(Paths.txt('data/weekNames'));
@@ -92,7 +100,11 @@ class StoryMenuState extends MusicBeatState
 
 	override function create()
 	{
+		#if desktop
 		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
+		#end
+		
+		Destroyer.clearUnusedMemory();
 
 		weekUnlocked = unlockWeeks();
 
@@ -187,7 +199,6 @@ class StoryMenuState extends MusicBeatState
 		sprDifficulty.animation.addByPrefix('easy', 'EASY');
 		sprDifficulty.animation.addByPrefix('normal', 'NORMAL');
 		sprDifficulty.animation.addByPrefix('hard', 'HARD');
-		sprDifficulty.animation.addByPrefix('oc', 'OC');
 		sprDifficulty.animation.play('easy');
 		sprDifficulty.antialiasing = FlxG.save.data.antialiasing;
 		changeDifficulty();
@@ -292,7 +303,7 @@ class StoryMenuState extends MusicBeatState
 		{
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			movedBack = true;
-			FlxG.switchState(new MainMenuState());
+			MusicBeatState.switchState(new MainMenuState());
 		}
 
 		if (FlxG.sound.music != null)
@@ -314,9 +325,13 @@ class StoryMenuState extends MusicBeatState
 				FlxG.sound.play(Paths.sound('confirmMenu'));
 
 				grpWeekText.members[curWeek].startFlashing();
-				unloadAssets();
 				grpWeekCharacters.members[1].animation.play('bfConfirm');
 				stopspamming = true;
+				new FlxTimer().start(4, function(tmr:FlxTimer)
+				{
+					unloadAssets();
+				});
+				
 			}
 
 			PlayState.storyPlaylist = weekData()[curWeek];
@@ -330,10 +345,6 @@ class StoryMenuState extends MusicBeatState
 			
 			var diff:String = ["-easy", "", "-hard"][PlayState.storyDifficulty];
 			
-			if (FlxG.save.data.hardmode)
-			{
-				diff = "-oc";
-			}
 			PlayState.marvs = 0;
 			PlayState.sicks = 0;
 			PlayState.bads = 0;
@@ -343,19 +354,19 @@ class StoryMenuState extends MusicBeatState
 			PlayState.SONG = Song.conversionChecks(Song.loadFromJson(PlayState.storyPlaylist[0], diff));
 			PlayState.storyWeek = curWeek;
 			PlayState.campaignScore = 0;
+			
+			var video:VideoHandler = new VideoHandler();
 
-			#if desktop
-
-			var video:MP4Handler = new MP4Handler();
-
-			if (curWeek == 14 && !isCutscene) // Checks if the current week is Your Week.
+			if (curWeek == 7 && !isCutscene)
 				new FlxTimer().start(1, function(tmr:FlxTimer)
 				{
 					{
-						video.playMP4(Paths.video('Yourcutscene'));
+						FlxG.sound.music.stop();
+						video.playVideo(Paths.video('ughCutscene.mp4'));
 						video.finishCallback = function()
 						{
 							LoadingState.loadAndSwitchState(new PlayState());
+							clean();
 						}
 						isCutscene = true;
 					}
@@ -364,66 +375,21 @@ class StoryMenuState extends MusicBeatState
 			{
 				new FlxTimer().start(1, function(tmr:FlxTimer)
 				{
-					var black:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-					black.alpha = 0;
-					black.scrollFactor.set();
-					add(black);
-
-					FlxTween.tween(black, {alpha: 1}, 0.4, {
-						onComplete: function(twn:FlxTween)
-						{
-							LoadingState.loadAndSwitchState(new PlayState(), true);
-							new FlxTimer().start(3, function(tmr:FlxTimer)
-							{
-								unloadAssets();
-							});
-						}
-					});
+					LoadingState.loadAndSwitchState(new PlayState(), true);
+					clean();
 				});
 			}
-			#else
-			new FlxTimer().start(1, function(tmr:FlxTimer)
-			{
-				var black:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-				black.alpha = 0;
-				black.scrollFactor.set();
-				add(black);
-
-				FlxTween.tween(black, {alpha: 1}, 0.4, {
-					onComplete: function(twn:FlxTween)
-					{
-						LoadingState.loadAndSwitchState(new PlayState(), true);
-						new FlxTimer().start(3, function(tmr:FlxTimer)
-						{
-							unloadAssets();
-						});
-					}
-				});
-			});
-			#end
-
-			
 		}
 	}
 
 	function changeDifficulty(change:Int = 0):Void
 	{
 		curDifficulty += change;
-
-		if (FlxG.save.data.hardmode)
-		{
-			if (curDifficulty < 0)
-				curDifficulty = 3;
-			if (curDifficulty > 3)
-				curDifficulty = 0;
-		}
-		else
-		{
+		
 			if (curDifficulty < 0)
 				curDifficulty = 2;
 			if (curDifficulty > 2)
 				curDifficulty = 0;
-		}
 
 		sprDifficulty.offset.x = 0;
 
@@ -438,9 +404,6 @@ class StoryMenuState extends MusicBeatState
 			case 2:
 				sprDifficulty.animation.play('hard');
 				sprDifficulty.offset.x = 20;
-			case 3:
-				sprDifficulty.animation.play('oc');
-				sprDifficulty.offset.x = -30;	
 		}
 
 		sprDifficulty.alpha = 0;

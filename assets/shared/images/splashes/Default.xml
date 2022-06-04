@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TextureAtlas imagePath="NOTE_splashes.png">
+<TextureAtlas imagePath="Default.png">
 	<!-- Created with Adobe Animate version 21.0.7.42652 -->
 	<!-- http://www.adobe.com/products/animate.html -->
 	<SubTexture name="notesplash blue0000" x="100" y="100" width="171" height="244" frameX="-24" frameY="-9" frameWidth="229" frameHeight="264"/>

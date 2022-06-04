@@ -466,28 +466,6 @@ class CpuStrums extends Option
 	}
 }
 
-class GraphicLoading extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		description = desc;
-	}
-
-	public override function press():Bool
-	{
-		FlxG.save.data.cacheImages = !FlxG.save.data.cacheImages;
-
-		display = updateDisplay();
-		return true;
-	}
-
-	private override function updateDisplay():String
-	{
-		return "";
-	}
-}
-
 class EditorRes extends Option
 {
 	public function new(desc:String)
@@ -700,38 +678,6 @@ class Colour extends Option
 	private override function updateDisplay():String
 	{
 		return "Colored HP Bars: < " + (FlxG.save.data.colour ? "Enabled" : "Disabled") + " >";
-	}
-}
-
-class HardMode extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
-		else
-			description = desc;
-	}
-
-	public override function left():Bool
-	{
-		if (OptionsMenu.isInPause)
-			return false;
-		FlxG.save.data.hardmode = !FlxG.save.data.hardmode;
-		display = updateDisplay();
-		return true;
-	}
-
-	public override function right():Bool
-	{
-		left();
-		return true;
-	}
-
-	private override function updateDisplay():String
-	{
-		return "HARD MODE: < " + (FlxG.save.data.hardmode ? "Enabled" : "Disabled") + " >";
 	}
 }
 
@@ -1751,6 +1697,45 @@ class NoteskinOption extends Option
 	}
 }
 
+class CPUNoteskinOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		if (OptionsMenu.isInPause)
+			description = "This option cannot be toggled in the pause menu.";
+		else
+			description = desc;
+	}
+
+	public override function left():Bool
+	{
+		if (OptionsMenu.isInPause)
+			return false;
+		FlxG.save.data.cpuNoteskin--;
+		if (FlxG.save.data.cpuNoteskin < 0)
+			FlxG.save.data.cpuNoteskin = NoteskinHelpers.getNoteskins().length - 1;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		if (OptionsMenu.isInPause)
+			return false;
+		FlxG.save.data.cpuNoteskin++;
+		if (FlxG.save.data.cpuNoteskin > NoteskinHelpers.getNoteskins().length - 1)
+			FlxG.save.data.cpuNoteskin = 0;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function getValue():String
+	{
+		return "Current CPU Noteskin: < " + NoteskinHelpers.getNoteskinByID(FlxG.save.data.cpuNoteskin) + " >";
+	}
+}
+
 class HealthBarOption extends Option
 {
 	public function new(desc:String)
@@ -2033,7 +2018,7 @@ class General extends Option
 	}
 }
 
-class Memory extends Option
+class LowMotion extends Option
 {
 	public function new(desc:String)
 	{
@@ -2043,8 +2028,8 @@ class Memory extends Option
 
 	public override function left():Bool
 	{
-		FlxG.save.data.mem = !FlxG.save.data.mem;
-		(cast(Lib.current.getChildAt(0), Main)).toggleMemory(FlxG.save.data.mem);
+		FlxG.save.data.motion = !FlxG.save.data.motion;
+		trace('Low Motion Mode : ' + FlxG.save.data.motion);
 		display = updateDisplay();
 		return true;
 	}
@@ -2057,10 +2042,60 @@ class Memory extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Memory Counter: < " + (!FlxG.save.data.mem ? "off" : "on") + " >";
+		return "Low Motion Mode: < " + (!FlxG.save.data.motion ? "off" : "on") + " >";
 	}
 }
-#if desktop
+
+class ScrollAlpha extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+		acceptValues = true;
+	}
+
+	public override function press():Bool
+	{
+		return false;
+	}
+
+	private override function updateDisplay():String
+	{
+		return (FlxG.save.data.alpha ? "Scroll Alpha" : "Scroll Alpha");
+	}
+
+	override function right():Bool
+	{
+		FlxG.save.data.alpha += 0.1;
+
+		if (FlxG.save.data.alpha < 0)
+			FlxG.save.data.alpha = 0;
+
+		if (FlxG.save.data.alpha > 1)
+			FlxG.save.data.alpha = 1;
+		return true;
+	}
+
+	override function getValue():String
+	{
+		return "Current Scroll transparency: " + HelperFunctions.truncateFloat(FlxG.save.data.alpha, 1);
+	}
+
+	override function left():Bool
+	{
+		FlxG.save.data.alpha -= 0.1;
+
+		if (FlxG.save.data.alpha < 0)
+			FlxG.save.data.alpha = 0;
+
+		if (FlxG.save.data.alpha > 1)
+			FlxG.save.data.alpha = 1;
+
+		return true;
+	}
+}
+#if FEATURE_FILESYSTEM
 class CharacterCaching extends Option
 {
 	public function new(desc:String)
@@ -2092,6 +2127,7 @@ class CharacterCaching extends Option
 		return "Caching Characters in Next Cache: < " + (!FlxG.save.data.cacheCharacters ? "off" : "on") + " >";
 	}
 }
+
 /*
 class NoteskinCaching extends Option
 {
@@ -2158,13 +2194,35 @@ class SongCaching extends Option
 	}
 }
 
+class GraphicLoading extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.cacheImages = !FlxG.save.data.cacheImages;
+
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "";
+	}
+}
+
 class CachingOption extends Option
 {
 	public function new(desc:String)
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "Cache";
+			description = "You Cannot Cache While In Game!";
 		else
 			description = desc;
 	}
@@ -2172,7 +2230,10 @@ class CachingOption extends Option
 	public override function press():Bool
 	{
 		trace("switch");
-		FlxG.switchState(new Caching());
+		if (!OptionsMenu.isInPause)
+		{
+			MusicBeatState.switchState(new Caching());
+		}
 		return false;
 	}
 
@@ -2212,6 +2273,34 @@ class UnloadSongs extends Option
 	private override function updateDisplay():String
 	{
 		return "Unload Songs And Characters: < " + (!FlxG.save.data.unload ? "off" : "on") + " >";
+	}
+}
+
+class Memory extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function left():Bool
+	{
+		FlxG.save.data.mem = !FlxG.save.data.mem;
+		(cast(Lib.current.getChildAt(0), Main)).toggleMemory(FlxG.save.data.mem);
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Memory Counter: < " + (!FlxG.save.data.mem ? "off" : "on") + " >";
 	}
 }
 
@@ -2354,6 +2443,7 @@ class ResetSettings extends Option
 		FlxG.save.data.unload = null;
 		FlxG.save.data.gen = null;
 		FlxG.save.data.oldcharter = null;
+		FlxG.save.data.motion = null;
 		
 
 		KadeEngineData.initSave();

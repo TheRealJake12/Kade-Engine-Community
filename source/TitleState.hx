@@ -1,8 +1,7 @@
 package;
-
+import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
+import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.transition.TransitionData;
-import flixel.addons.transition.FlxTransitionSprite;
-import openfl.utils.AssetCache;
 import flixel.FlxBasic;
 #if FEATURE_STEPMANIA
 import smTools.SMFile;
@@ -14,6 +13,8 @@ import sys.io.File;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import openfl.Assets;
+import openfl.utils.AssetCache;
 import flixel.addons.display.FlxGridOverlay;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -27,9 +28,6 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
-import lime.app.Application;
-import flixel.addons.transition.FlxTransitionableState;
-import openfl.Assets;
 import flixel.input.keyboard.FlxKey;
 
 using StringTools;
@@ -73,31 +71,21 @@ class TitleState extends MusicBeatState
 
 		NoteskinHelpers.updateNoteskins();
 		NotesplashHelpers.updateNotesplashes();
-
-		if (FlxG.save.data.volDownBind == null)
-			FlxG.save.data.volDownBind = "MINUS";
-		if (FlxG.save.data.volUpBind == null)
-			FlxG.save.data.volUpBind = "PLUS";
-
-		FlxG.sound.muteKeys = [FlxKey.fromString(FlxG.save.data.muteBind)];
-		FlxG.sound.volumeDownKeys = [FlxKey.fromString(FlxG.save.data.volDownBind)];
-		FlxG.sound.volumeUpKeys = [FlxKey.fromString(FlxG.save.data.volUpBind)];
+		
 
 		FlxG.mouse.visible = false;
 
 		FlxG.worldBounds.set(0, 0);
 
-		FlxGraphic.defaultPersist = FlxG.save.data.cacheImages;
+		FlxGraphic.defaultPersist = true;
 
 		MusicBeatState.initSave = true;
-
-		fullscreenBind = FlxKey.fromString(FlxG.save.data.fullscreenBind);
 
 		Highscore.load();
 
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 		if (FlxG.save.data.gen)
-			trace('hello');
+			Debug.logInfo('hello');
 
 		// DEBUG BULLSHIT
 
@@ -238,17 +226,11 @@ class TitleState extends MusicBeatState
 	}
 
 	var transitioning:Bool = false;
-	var fullscreenBind:FlxKey;
 
 	override function update(elapsed:Float)
 	{
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;
-
-		if (FlxG.keys.anyJustPressed([fullscreenBind]))
-		{
-			FlxG.fullscreen = !FlxG.fullscreen;
-		}
 
 		var pressedEnter:Bool = controls.ACCEPT;
 
@@ -272,21 +254,62 @@ class TitleState extends MusicBeatState
 
 			transitioning = true;
 			// FlxG.sound.music.stop();
-
-			var black:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-			black.alpha = 0;
-			add(black);
-
+			#if !debug
 			new FlxTimer().start(2, function(tmr:FlxTimer)
-			{	
-				FlxTween.tween(black, {alpha: 1}, 0.5, {
-					onComplete: function(twn:FlxTween)
+			{
+				var http = new haxe.Http("https://raw.githubusercontent.com/TheRealJake12/Kade-Engine-Community/master/version.downloadMe");
+				var returnedData:Array<String> = [];
+
+				http.onData = function(data:String)
+				{
+					returnedData[0] = data.substring(0, data.indexOf(';'));
+					returnedData[1] = data.substring(data.indexOf('-'), data.length);
+					if (!MainMenuState.kecVer.contains(returnedData[0].trim()) && !OutdatedSubState.leftState)
+					{
+						trace('outdated lmao! ' + returnedData[0] + ' != ' + MainMenuState.kecVer);
+						OutdatedSubState.needVer = returnedData[0];
+						OutdatedSubState.currChanges = returnedData[1];
+						MusicBeatState.switchState(new OutdatedSubState());
+						clean();
+					}
+					else
 					{
 						MusicBeatState.switchState(new MainMenuState());
-						unloadAssets();
+						clean();
 					}
-				});
+				}
+
+				http.onError = function(error)
+				{
+					trace('error: $error');
+					new FlxTimer().start(2, function(tmr:FlxTimer)
+					{
+						{
+							MusicBeatState.switchState(new MainMenuState());
+							clean();
+						}
+					});
+				}
+
+				http.request();
 			});
+			#else
+			new FlxTimer().start(2, function(tmr:FlxTimer)
+			{
+				{
+					MusicBeatState.switchState(new MainMenuState());
+					clean();
+				}
+			});
+			#end
+
+			Ratings.timingWindows = [
+				FlxG.save.data.shitMs,
+				FlxG.save.data.badMs,
+				FlxG.save.data.goodMs,
+				FlxG.save.data.sickMs,
+				FlxG.save.data.marvMs
+			];
 		}
 
 		if (pressedEnter && !skippedIntro && initialized)

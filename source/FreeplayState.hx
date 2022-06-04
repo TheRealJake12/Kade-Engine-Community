@@ -12,7 +12,6 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 import Song.SongData;
-import flixel.input.gamepad.FlxGamepad;
 import flash.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -55,13 +54,8 @@ class FreeplayState extends MusicBeatState
 
 	private var coolColors:Array<FlxColor> = [-7072173, -7179779, -14535868, -7072173, -223529, -6237697, -34625]; // thanks people at Ralsei Engine
 	private var rgb:Array<FlxColor> = [
-		FlxColor.fromRGB(165, 0, 77), // Tutorial
-		FlxColor.fromRGB(146, 113, 253), // Week 1
-		FlxColor.fromRGB(34, 51, 68), // Week 2
-		FlxColor.fromRGB(148, 22, 83), // Week 3
-		FlxColor.fromRGB(255, 102, 169), // Week 4
-		FlxColor.fromRGB(103, 255, 255), // Week 5
-		FlxColor.fromRGB(255, 0, 72), // Week 6
+		FlxColor.fromRGB(0, 255, 144), // SEOS Non Remaster
+		FlxColor.fromRGB(146, 113, 253) // Week 1
 	];
 
 	private static var vocals:FlxSound = null;
@@ -336,8 +330,6 @@ class FreeplayState extends MusicBeatState
 		var charting = FlxG.keys.justPressed.SEVEN;
 		var bfDebug = FlxG.keys.justPressed.ZERO;
 
-		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
-
 		if (upP)
 		{
 			changeSelection(-1);
@@ -403,7 +395,7 @@ class FreeplayState extends MusicBeatState
 			MusicBeatState.switchState(new MainMenuState());
 			if (FlxG.save.data.unload)
 			{
-				Main.dumpCache();
+				test.Destroyer.dumpCache();
 			}
 		}
 		if (space)
@@ -455,18 +447,7 @@ class FreeplayState extends MusicBeatState
 
 	function loadSong(isCharting:Bool = false)
 	{
-		var black:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		black.alpha = 0;
-		black.scrollFactor.set();
-		add(black);
-
-		FlxTween.tween(black, {alpha: 1}, 0.4, {
-			onComplete: function(twn:FlxTween)
-			{
-				loadSongInFreePlay(songs[curSelected].songName, curDifficulty, isCharting);
-				unloadAssets();
-			}
-		});
+		loadSongInFreePlay(songs[curSelected].songName, curDifficulty, isCharting);
 		clean();
 	}
 

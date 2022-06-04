@@ -36,7 +36,7 @@ class NoteskinHelpers
 			noteskinArray.push(i.replace(".png", ""));
 		}
 		#else
-		noteskinArray = ["Arrows", "Circles"];
+		noteskinArray = ["Arrows.png", "Circles.png"];
 		#end
 
 		return noteskinArray;
@@ -76,6 +76,7 @@ class NoteskinHelpers
 		var path = FileSystem.absolutePath("assets/shared/images/noteskins") + "/" + getNoteskinByID(id) + "-pixel" + (ends ? "-ends" : "");
 		if (!FileSystem.exists(path + ".png"))
 		{
+			Debug.logTrace("getting default pixel skin");
 			return BitmapData.fromFile(FileSystem.absolutePath("assets/shared/images/noteskins") + "/Arrows-pixel" + (ends ? "-ends" : "") + ".png");
 		}
 		return BitmapData.fromFile(path + ".png");

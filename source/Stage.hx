@@ -13,6 +13,12 @@ import flixel.tweens.FlxTween;
 class Stage extends MusicBeatState
 {
 	public var curStage:String = '';
+	public var ground:FlxSprite;
+
+	public var tankWatchtower:FlxSprite;
+	public var tankGround:FlxSprite;
+	public var tankmanRun:FlxTypedGroup<TankDead>;
+
 	public var camZoom:Float; // The zoom of the camera to have at the start of the game
 	public var hideLastBG:Bool = false; // True = hide last BGs and show ones from slowBacks on certain step, False = Toggle visibility of BGs from SlowBacks on certain step
 	// Use visible property to manage if BG would be visible or not at the start of the game
@@ -43,7 +49,8 @@ class Stage extends MusicBeatState
 			'senpai' => [250, 460],
 			'senpai-angry' => [250, 460]
 		],
-		'schoolEvil' => ['gf-pixel' => [580, 430], 'bf-pixel' => [970, 670], 'spirit' => [-50, 200]]
+		'schoolEvil' => ['gf-pixel' => [580, 430], 'bf-pixel' => [970, 670], 'spirit' => [-50, 200]],
+		'tank' => ['tankman' => [-140, 325], 'bf' => [725, 425], 'gftank' => [50, 25]]
 	];
 
 	public function new(daStage:String)
@@ -222,14 +229,22 @@ class Stage extends MusicBeatState
 					bgEscalator.active = false;
 					bgEscalator.setGraphicSize(Std.int(bgEscalator.width * 0.9));
 					bgEscalator.updateHitbox();
-					swagBacks['bgEscalator'] = bgEscalator;
-					toAdd.push(bgEscalator);
+					if (FlxG.save.data.distractions)
+					{
+						swagBacks['bgEscalator'] = bgEscalator;
+						toAdd.push(bgEscalator);
+						animatedBacks.push(bgEscalator);
+					}
 
 					var tree:FlxSprite = new FlxSprite(370, -250).loadGraphic(Paths.loadImage('christmas/christmasTree', 'week5'));
 					tree.antialiasing = FlxG.save.data.antialiasing;
 					tree.scrollFactor.set(0.40, 0.40);
-					swagBacks['tree'] = tree;
-					toAdd.push(tree);
+					if (FlxG.save.data.distractions)
+					{
+						swagBacks['tree'] = tree;
+						toAdd.push(tree);
+						animatedBacks.push(tree);
+					}
 
 					var bottomBoppers = new FlxSprite(-300, 140);
 					bottomBoppers.frames = Paths.getSparrowAtlas('christmas/bottomBop', 'week5');
@@ -416,9 +431,81 @@ class Stage extends MusicBeatState
 						add(waveSpriteFG);
 					 */
 				}
+			case 'tank':
+				{
+					camZoom = 0.9;
+
+					var sky:FlxSprite = new FlxSprite(-100, -200).loadGraphic(Paths.loadImage('tankSky', 'week7'));
+					swagBacks['sky'] = sky;
+					sky.scale.set(2.0, 2.0);
+					toAdd.push(sky);
+
+					if (FlxG.save.data.distractions)
+					{
+						var clouds:FlxSprite = new FlxSprite(FlxG.random.int(-700, -100),
+							FlxG.random.int(-20, 20)).loadGraphic(Paths.loadImage('tankClouds', 'week7'));
+						clouds.active = true;
+						clouds.scrollFactor.set(0.2, 0.2);
+						swagBacks['clouds'] = clouds;
+						toAdd.push(clouds);
+
+						var mountains:FlxSprite = new FlxSprite(-300, -20).loadGraphic(Paths.loadImage('tankMountains', 'week7'));
+						mountains.scrollFactor.set(0.2, 0.2);
+						mountains.setGraphicSize(Std.int(1.2 * mountains.width));
+						mountains.updateHitbox();
+						swagBacks['mountains'] = mountains;
+						toAdd.push(mountains);
+
+						var buildings:FlxSprite = new FlxSprite(-200, 0).loadGraphic(Paths.loadImage('tankBuildings', 'week7'));
+						buildings.scrollFactor.set(0.3, 0.3);
+						buildings.setGraphicSize(Std.int(1.1 * buildings.width));
+						buildings.updateHitbox();
+						swagBacks['buildings'] = buildings;
+						toAdd.push(buildings);
+					}
+
+					var ruins:FlxSprite = new FlxSprite(-250, 0).loadGraphic(Paths.loadImage('tankRuins', 'week7'));
+					ruins.scrollFactor.set(0.35, 0.35);
+					ruins.setGraphicSize(Std.int(1.1 * ruins.width));
+					ruins.updateHitbox();
+					swagBacks['ruins'] = ruins;
+					toAdd.push(ruins);
+					
+					if (FlxG.save.data.distractions)
+					{
+						var tankWatchtowerTex = Paths.getSparrowAtlas('tankWatchtower', 'week7');
+						tankWatchtower = new FlxSprite(100, 50);
+						tankWatchtower.frames = tankWatchtowerTex;
+						tankWatchtower.animation.addByPrefix('idle', 'watchtower gradient color', 24);
+						tankWatchtower.animation.play('idle');
+						swagBacks['tankWatchtower'] = tankWatchtower;
+						tankWatchtower.scrollFactor.set(0.5, 0.5);
+						toAdd.push(tankWatchtower);
+
+						tankGround = new FlxSprite(300, 300).loadGraphic(Paths.loadImage('tankRolling', 'week7'), true);
+						tankGround.scrollFactor.set(0.5, 0.5);
+						tankGround.animation.addByPrefix('idle', 'BG tank w lighting', 24);
+						swagBacks['tankGround'] = tankGround;
+						toAdd.push(tankGround);
+
+						moveTank();
+
+						tankmanRun = new FlxTypedGroup<TankDead>();
+						swagBacks['tankmanRun'] = tankmanRun;
+						toAdd.push(tankmanRun);
+					}
+
+					var ground:FlxSprite = new FlxSprite(-700, -275).loadGraphic(Paths.loadImage('tankGround', 'week7'));
+					ground.setGraphicSize(Std.int(1.15 * ground.width));
+					ground.scale.set(2.0, 2.0);
+					ground.updateHitbox();
+					swagBacks['ground'] = ground;
+					toAdd.push(ground);
+					
+				}
 			default:
 				{
-					camZoom = 0.7;
+					camZoom = 0.9;
 					curStage = 'stage';
 					var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.loadImage('stageback', 'shared'));
 					bg.antialiasing = FlxG.save.data.antialiasing;
@@ -442,7 +529,6 @@ class Stage extends MusicBeatState
 					stageCurtains.antialiasing = FlxG.save.data.antialiasing;
 					stageCurtains.scrollFactor.set(1.3, 1.3);
 					stageCurtains.active = false;
-
 					swagBacks['stageCurtains'] = stageCurtains;
 					toAdd.push(stageCurtains);
 				}
@@ -458,16 +544,21 @@ class Stage extends MusicBeatState
 			switch (curStage)
 			{
 				case 'philly':
-					if (trainMoving)
-					{
-						trainFrameTiming += elapsed;
-
-						if (trainFrameTiming >= 1 / 24)
+						if (trainMoving)
 						{
-							updateTrainPos();
-							trainFrameTiming = 0;
+							trainFrameTiming += elapsed;
+
+							if (trainFrameTiming >= 1 / 24)
+							{
+								updateTrainPos();
+								trainFrameTiming = 0;
+							}
 						}
-					}
+				case 'tank':
+					if (FlxG.save.data.distractions)
+					{
+						moveTank(elapsed);
+					}		
 					// phillyCityLights.members[curLight].alpha -= (Conductor.crochet / 1000) * FlxG.elapsed;
 			}
 		}
@@ -710,5 +801,17 @@ class Stage extends MusicBeatState
 				resetFastCar();
 			});
 		}
+	}
+
+	var tankX:Float = 400;
+	var tankSpeed:Float = FlxG.random.float(5, 7);
+	var tankAngle:Float = FlxG.random.int(-90, 45);
+
+	function moveTank(?elapsed:Float = 0):Void
+	{
+		tankAngle += elapsed * tankSpeed;
+		tankGround.angle = tankAngle - 90 + 15;
+		tankGround.x = tankX + 1500 * Math.cos(Math.PI / 180 * (1 * tankAngle + 180));
+		tankGround.y = 1300 + 1100 * Math.sin(Math.PI / 180 * (1 * tankAngle + 180));
 	}
 }

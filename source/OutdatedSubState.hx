@@ -23,37 +23,25 @@ class OutdatedSubState extends MusicBeatState
 	override function create()
 	{
 		super.create();
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.loadImage('week54prototype', 'shared'));
-		bg.scale.x *= 1.55;
-		bg.scale.y *= 1.55;
+		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.loadImage('stageback', 'shared'));
 		bg.screenCenter();
 		bg.antialiasing = FlxG.save.data.antialiasing;
 		add(bg);
 
-		var kadeLogo:FlxSprite = new FlxSprite(FlxG.width, 0).loadGraphic(Paths.loadImage('KadeEngineLogo'));
-		kadeLogo.scale.y = 0.3;
-		kadeLogo.scale.x = 0.3;
-		kadeLogo.x -= kadeLogo.frameHeight;
-		kadeLogo.y -= 180;
-		kadeLogo.alpha = 0.8;
-		kadeLogo.antialiasing = FlxG.save.data.antialiasing;
-		add(kadeLogo);
-
 		var txt:FlxText = new FlxText(0, 0, FlxG.width,
-			"Your Kade Engine is outdated!\nYou are on "
-			+ MainMenuState.kadeEngineVer
+			"Your KEC is outdated!\nYou are on "
+			+ MainMenuState.kecVer
 			+ "\nwhile the most recent version is "
 			+ needVer
 			+ "."
 			+ "\n\nWhat's new:\n\n"
 			+ currChanges
-			+ "\n& more changes and bugfixes in the full changelog"
-			+ "\n\nPress Space to view the full changelog and update\nor ESCAPE to ignore this",
+			+ "\n\nPress Space to view the full changelog and update\nor ENTER to ignore this",
 			32);
 
 		if (MainMenuState.nightly != "")
 			txt.text = "You are on\n"
-				+ MainMenuState.kadeEngineVer
+				+ MainMenuState.kecVer
 				+ "\nWhich is a PRE-RELEASE BUILD!"
 				+ "\n\nReport all bugs to the author of the pre-release.\nSpace/Escape ignores this.";
 
@@ -64,8 +52,39 @@ class OutdatedSubState extends MusicBeatState
 		txt.screenCenter();
 		add(txt);
 
+		var mom:FlxText = new FlxText(0, 0, FlxG.width,
+			"Your MOM is outdated!\nYou are on "
+			+ MainMenuState.kecVer
+			+ "\nwhile the most recent version is "
+			+ needVer
+			+ "."
+			+ "\n\nWhat's new:\n\n"
+			+ currChanges
+			+ "\n\nPress Space to view the full changelog and update\nor ENTER to ignore this",
+			32);
+
+		if (MainMenuState.nightly != "")
+			txt.text = "You are on\n"
+				+ MainMenuState.kecVer
+				+ "\nWhich is a PRE-RELEASE BUILD!"
+				+ "\n\nReport all bugs to the author of the pre-release.\nSpace/Escape ignores this.";
+
+		mom.setFormat("VCR OSD Mono", 32, FlxColor.fromRGB(200, 200, 200), CENTER);
+		mom.borderColor = FlxColor.BLACK;
+		mom.borderSize = 3;
+		mom.borderStyle = FlxTextBorderStyle.OUTLINE;
+		mom.screenCenter();
+
+		//6% chance of MOM appearing instead of KEC
+		if (FlxG.random.bool(6))
+		//YOU KNOW WHO ELSE IS OUTDATED? MY MOM!
+		{
+			remove(txt);
+
+			add(mom);
+		}
+
 		FlxTween.color(bg, 2, bg.color, FlxColor.fromString(bgColors[colorRotation]));
-		FlxTween.angle(kadeLogo, kadeLogo.angle, -10, 2, {ease: FlxEase.quartInOut});
 
 		new FlxTimer().start(2, function(tmr:FlxTimer)
 		{
@@ -75,39 +94,23 @@ class OutdatedSubState extends MusicBeatState
 			else
 				colorRotation = 0;
 		}, 0);
-
-		new FlxTimer().start(2, function(tmr:FlxTimer)
-		{
-			if (kadeLogo.angle == -10)
-				FlxTween.angle(kadeLogo, kadeLogo.angle, 10, 2, {ease: FlxEase.quartInOut});
-			else
-				FlxTween.angle(kadeLogo, kadeLogo.angle, -10, 2, {ease: FlxEase.quartInOut});
-		}, 0);
-
-		new FlxTimer().start(0.8, function(tmr:FlxTimer)
-		{
-			if (kadeLogo.alpha == 0.8)
-				FlxTween.tween(kadeLogo, {alpha: 1}, 0.8, {ease: FlxEase.quartInOut});
-			else
-				FlxTween.tween(kadeLogo, {alpha: 0.8}, 0.8, {ease: FlxEase.quartInOut});
-		}, 0);
 	}
 
 	override function update(elapsed:Float)
 	{
-		if (controls.ACCEPT && MainMenuState.nightly == "")
+		if (FlxG.keys.justPressed.SPACE && MainMenuState.nightly == "")
 		{
-			fancyOpenURL("https://kadedev.github.io/Kade-Engine/changelogs/changelog-" + needVer);
+			fancyOpenURL("https://therealjake12.github.io/Kade-Engine-Community/changelogs/" + needVer);
 		}
 		else if (controls.ACCEPT)
 		{
 			leftState = true;
-			FlxG.switchState(new MainMenuState());
+			MusicBeatState.switchState(new MainMenuState());
 		}
 		if (controls.BACK)
 		{
 			leftState = true;
-			FlxG.switchState(new MainMenuState());
+			MusicBeatState.switchState(new MainMenuState());
 		}
 		super.update(elapsed);
 	}
