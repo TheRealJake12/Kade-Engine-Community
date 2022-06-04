@@ -25,7 +25,9 @@ using StringTools;
 
 class MainMenuState extends MusicBeatState
 {
-	public static var kecVer:String = 'Kade Engine Community 1.5';
+	public static var nightly:String = "";
+	
+	public static var kecVer:String = 'Kade Engine Community 1.5' + nightly;
 	public static var keVer:String = "Kade Engine 1.8";
 	public static var curSelected:Int = 0;
 
