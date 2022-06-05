@@ -18,8 +18,6 @@ install:
    - haxelib install lime 7.9.0
   - RefreshEnv
   - haxelib install openfl
-  - haxelib install lime 7.9.0
-  - haxelib install openfl
   - haxelib git flixel https://github.com/TheRealJake12/flixel.git
   - haxelib install flixel-tools
   - haxelib install flixel-ui

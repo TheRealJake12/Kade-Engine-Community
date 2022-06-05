@@ -354,6 +354,8 @@ class StoryMenuState extends MusicBeatState
 			PlayState.SONG = Song.conversionChecks(Song.loadFromJson(PlayState.storyPlaylist[0], diff));
 			PlayState.storyWeek = curWeek;
 			PlayState.campaignScore = 0;
+
+			#if VIDEOS	
 			
 			var video:VideoHandler = new VideoHandler();
 
@@ -379,6 +381,13 @@ class StoryMenuState extends MusicBeatState
 					clean();
 				});
 			}
+			#else
+			new FlxTimer().start(1, function(tmr:FlxTimer)
+				{
+					LoadingState.loadAndSwitchState(new PlayState(), true);
+					clean();
+				});
+			#end	
 		}
 	}
 
