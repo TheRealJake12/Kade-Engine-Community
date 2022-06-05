@@ -15,12 +15,12 @@ install:
   - tar -xf haxe-4.2.3-linux64.tar.gz -C $HAXE_INSTALLDIR
   - export PATH=$PATH:$HAXE_INSTALLDIR/haxe_20201231082044_5e33a78aa
   - mkdir $HAXELIB_ROOT && haxelib setup $HAXELIB_ROOT
-    - haxelib install lime 7.9.0
+   - haxelib install lime 7.9.0
   - RefreshEnv
   - haxelib install openfl
   - haxelib install lime 7.9.0
   - haxelib install openfl
-  - haxelib install flixel 4.10.0
+  - haxelib git flixel https://github.com/TheRealJake12/flixel.git
   - haxelib install flixel-tools
   - haxelib install flixel-ui
   - haxelib install hscript
@@ -32,15 +32,19 @@ install:
   - haxelib run flixel-tools setup
   - haxelib git hxCodec https://github.com/polybiusproxy/hxCodec.git
   - haxelib install actuate 
+  - haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
+  - haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
+  - haxelib git faxe https://github.com/uhrobots/faxe
+  - haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
   - haxelib list
-  - cd /home/appveyor/projects/kade-engine-linux
+  - cd /home/appveyor/projects/kade-engine-community-linux
 
 build_script:
   - haxelib run lime build linux
 
 after_build:
-  - tar -cvf KadeEngine-Linux.tar -C /home/appveyor/projects/kade-engine-linux/export/release/linux/bin .
+  - tar -cvf KadeEngine-Linux.tar -C /home/appveyor/projects/kade-engine-community-linux/export/release/linux/bin .
 
 artifacts:
 - path: KadeEngine-Linux.tar
-  name: Kade Engine for Linux
+  name: KEC for Linux
