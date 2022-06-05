@@ -66,7 +66,7 @@
 	</section>
 	
 	<section if="NO_PRELOAD_ALL">
-		<library name="songs"    preload="true" />
+		<library name="songs"    preload="false" />
 		<library name="shared"   preload="false" />
 		<library name="tutorial" preload="false" />
 		<library name="week1"    preload="false" />
@@ -128,7 +128,7 @@
 	<haxelib name="linc_luajit" if="desktop"/>
 	<haxelib name="hxvm-luajit" if="desktop"/>
 	<haxelib name="hxcpp-debug-server" if="desktop"/>
-	<haxelib name="hxCodec"/>	
+	<haxelib name="hxCodec" if="desktop"/>	
 
 	<!-- <haxelib name="markdown" /> -->
 	<!-- <haxelib name="HtmlParser" /> -->
