@@ -18,9 +18,9 @@ jobs:
       - uses: actions/checkout@v2
       - uses: krdlab/setup-haxe@v1
         with:
-          haxe-version: 4.2.3
+          haxe-version: 4.2.5
       # Runs a set of commands using the runners shell
-      - name: script run line haha
+      - name: download the librarys
         run: |
           sudo add-apt-repository ppa:haxe/releases -y
           sudo apt-get update
@@ -29,7 +29,7 @@ jobs:
           haxelib setup "%HAXELIB_ROOT%"
           haxelib install lime 7.9.0
           haxelib install openfl
-          haxelib install flixel
+          haxelib git flixel https://github.com/TheRealJake12/flixel.git
           haxelib run lime setup flixel
           haxelib run lime setup
           haxelib install flixel-tools
@@ -37,18 +37,17 @@ jobs:
           haxelib install flixel-ui
           haxelib install hscript
           haxelib install flixel-addons
+          haxelib install hxcpp-debug-server
           haxelib git faxe https://github.com/uhrobots/faxe
-          haxelib git polymod https://github.com/MasterEric/polymod.git
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
-          haxelib git extension-webm https://github.com/KadeDev/extension-webm
-          haxelib run lime rebuild extension-webm linux
-          haxelib git linc_luajit https://github.com/MasterEric/linc_luajit.git
-          haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit.git
+          haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
+          haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
+          haxelib git hxCodec https://github.com/polybiusproxy/hxCodec.git
           haxelib install actuate 
           haxelib list
           haxelib run lime build html5
           
       - uses: actions/upload-artifact@v2
         with:
-          name: HTML5 Build
+          name: Web Browser (HTML5)
           path: export/release/html5/bin

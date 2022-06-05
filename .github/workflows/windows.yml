@@ -20,9 +20,9 @@ jobs:
         with:
           haxe-version: 4.2.5
       # Runs a set of commands using the runners shell
-      - name: script run line haha
+      - name: download the librarys
         run: |
-          cinst haxe --version 4.2.3 -y
+          cinst haxe --version 4.2.5 -y
           RefreshEnv
           mkdir "%HAXELIB_ROOT%"
           haxelib setup "%HAXELIB_ROOT%"
@@ -49,5 +49,5 @@ jobs:
           
       - uses: actions/upload-artifact@v2
         with:
-          name: Windows Build
+          name: KEC Test Build
           path: export/release/windows/bin
