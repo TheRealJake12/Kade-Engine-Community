@@ -3961,31 +3961,26 @@ class PlayState extends MusicBeatState
 		switch (daRating)
 		{
 			case 'shit':
-				score = -300;
-				combo = 0;
+				score = 50;
 				shits++;
-				health -= 0.1;
 				ss = false;
-				shits++;
-				if (FlxG.save.data.accuracyMod == 0)
-					totalNotesHit -= 1;
+				/*if (FlxG.save.data.accuracyMod == 0)
+					totalNotesHit -= 1;*/
 			case 'bad':
-				daRating = 'bad';
-				score = 0;
-				health -= 0.06;
+				score = 100;
+				health += 0.005;
 				ss = false;
 				bads++;
 				if (FlxG.save.data.accuracyMod == 0)
 					totalNotesHit += 0.50;
 			case 'good':
-				daRating = 'good';
+				health += 0.02;
 				score = 200;
 				ss = false;
 				goods++;
 				if (FlxG.save.data.accuracyMod == 0)
 					totalNotesHit += 0.75;
 			case 'sick':
-				daRating = 'sick';
 				if (health < 2)
 					health += 0.04;
 				if (FlxG.save.data.accuracyMod == 0)
@@ -3996,7 +3991,6 @@ class PlayState extends MusicBeatState
 					spawnNoteSplashOnNote(daNote);
 				}
 			case 'marv':
-				daRating = 'marv';
 				if (health < 2)
 					health += 0.06;
 				if (FlxG.save.data.accuracyMod == 0)
@@ -4013,8 +4007,8 @@ class PlayState extends MusicBeatState
 
 		// trace('Wife accuracy loss: ' + wife + ' | Rating: ' + daRating + ' | Score: ' + score + ' | Weight: ' + (1 - wife));
 
-		if (daRating != 'shit' || daRating != 'bad')
-		{
+		/*if (daRating != 'shit' || daRating != 'bad')
+		{*/
 			songScore += Math.round(score);
 
 			/* if (combo > 60)
@@ -4272,7 +4266,7 @@ class PlayState extends MusicBeatState
 			});
 
 			curSection += 1;
-		}
+		//}
 	}
 
 	public function NearlyEquals(value1:Float, value2:Float, unimportantDifference:Float = 10):Bool
