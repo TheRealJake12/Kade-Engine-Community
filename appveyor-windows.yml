@@ -1,4 +1,3 @@
-# Taken from https://github.com/andyli/HaxeCI/blob/master/appveyor.yml
 version: "{build}"
 
 environment:
@@ -16,7 +15,6 @@ install:
   # Setup haxelib
   - mkdir "%HAXELIB_ROOT%"
   - haxelib setup "%HAXELIB_ROOT%"
-  # Install project dependencies
   - haxelib install lime 7.9.0
   - RefreshEnv
   - haxelib install openfl
@@ -35,15 +33,11 @@ install:
   - haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
   - haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
   - haxelib install actuate 
-  #why here's dublicate lmao
   - haxelib list
 
-# No tests idk lol
-build_script:
-  - haxelib run lime build windows
-  # haxelib run lime build linux
-
-artifacts:
-  - path: export/release/windows/bin
-    name: KadeEngineCommunity-Windows
-    type: zip
+# We don't use the build section, but do both build and 
+# test in `test_script:`.
+# It is just because it is more similar to the TravisCI config,
+# thus it would be easier to update both of them.
+build: on
+  
