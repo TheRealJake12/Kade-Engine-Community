@@ -1,6 +1,5 @@
 package;
 
-import flixel.tweens.FlxTween;
 import openfl.utils.Future;
 import openfl.media.Sound;
 import flixel.system.FlxSound;
@@ -12,6 +11,7 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 import Song.SongData;
+import flixel.input.gamepad.FlxGamepad;
 import flash.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -20,11 +20,9 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import flixel.addons.transition.FlxTransitionableState;
 #if FEATURE_DISCORD
 import Discord.DiscordClient;
 #end
-import lime.app.Application;
 
 using StringTools;
 
@@ -48,18 +46,6 @@ class FreeplayState extends MusicBeatState
 	var intendedScore:Int = 0;
 	var combo:String = '';
 
-	var trackedAssets:Array<Dynamic> = [];
-
-	var bg:FlxSprite;
-
-	private var coolColors:Array<FlxColor> = [-7072173, -7179779, -14535868, -7072173, -223529, -6237697, -34625]; // thanks people at Ralsei Engine
-	private var rgb:Array<FlxColor> = [
-		FlxColor.fromRGB(0, 255, 144), // SEOS Non Remaster
-		FlxColor.fromRGB(146, 113, 253) // Week 1
-	];
-
-	private static var vocals:FlxSound = null;
-
 	private var grpSongs:FlxTypedGroup<Alphabet>;
 	private var curPlaying:Bool = false;
 
@@ -80,18 +66,6 @@ class FreeplayState extends MusicBeatState
 			case 2:
 				diffName = "-hard";
 		}
-		if (FlxG.save.data.hardmode)
-		{
-			switch (diff)
-			{
-				case 0:
-					diffName = "-easy";
-				case 2:
-					diffName = "-hard";
-				case 3:
-					diffName = "-oc";
-			}
-		}
 
 		array.push(Song.conversionChecks(Song.loadFromJson(songId, diffName)));
 	}
@@ -100,8 +74,6 @@ class FreeplayState extends MusicBeatState
 
 	override function create()
 	{
-		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
-
 		clean();
 		list = CoolUtil.coolTextFile(Paths.txt('data/freeplaySonglist'));
 
@@ -115,8 +87,43 @@ class FreeplayState extends MusicBeatState
 		trace("FEATURE_STEPMANIA was not specified during build, sm file loading is disabled.");
 		#elseif FEATURE_STEPMANIA
 		// TODO: Refactor this to use OpenFlAssets.
-		if (FlxG.save.data.gen)
-			trace("tryin to load sm files");
+		trace("tryin to load sm files");
+		for (i in FileSystem.readDirectory("assets/sm/"))
+		{
+			trace(i);
+			if (FileSystem.isDirectory("assets/sm/" + i))
+			{
+				trace("Reading SM file dir " + i);
+				for (file in FileSystem.readDirectory("assets/sm/" + i))
+				{
+					if (file.contains(" "))
+						FileSystem.rename("assets/sm/" + i + "/" + file, "assets/sm/" + i + "/" + file.replace(" ", "_"));
+					if (file.endsWith(".sm") && !FileSystem.exists("assets/sm/" + i + "/converted.json"))
+					{
+						trace("reading " + file);
+						var file:SMFile = SMFile.loadFile("assets/sm/" + i + "/" + file.replace(" ", "_"));
+						trace("Converting " + file.header.TITLE);
+						var data = file.convertToFNF("assets/sm/" + i + "/converted.json");
+						var meta = new FreeplaySongMetadata(file.header.TITLE, 0, "sm", file, "assets/sm/" + i);
+						songs.push(meta);
+						var song = Song.loadFromJsonRAW(data);
+						songData.set(file.header.TITLE, [song, song, song]);
+					}
+					else if (FileSystem.exists("assets/sm/" + i + "/converted.json") && file.endsWith(".sm"))
+					{
+						trace("reading " + file);
+						var file:SMFile = SMFile.loadFile("assets/sm/" + i + "/" + file.replace(" ", "_"));
+						trace("Converting " + file.header.TITLE);
+						var data = file.convertToFNF("assets/sm/" + i + "/converted.json");
+						var meta = new FreeplaySongMetadata(file.header.TITLE, 0, "sm", file, "assets/sm/" + i);
+						songs.push(meta);
+						var song = Song.loadFromJsonRAW(File.getContent("assets/sm/" + i + "/converted.json"));
+						trace("got content lol");
+						songData.set(file.header.TITLE, [song, song, song]);
+					}
+				}
+			}
+		}
 		#end
 
 		#if FEATURE_DISCORD
@@ -136,9 +143,8 @@ class FreeplayState extends MusicBeatState
 
 		// LOAD CHARACTERS
 
-		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg.antialiasing = (FlxG.save.data.antialiasing);
-		bg.screenCenter();
+		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.loadImage('menuBGBlue'));
+		bg.antialiasing = FlxG.save.data.antialiasing;
 		add(bg);
 
 		grpSongs = new FlxTypedGroup<Alphabet>();
@@ -201,17 +207,7 @@ class FreeplayState extends MusicBeatState
 		selector.text = ">";
 		// add(selector);
 
-		var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
-		textBG.alpha = 0.6;
-		add(textBG);
-
-		var text:String = "Press SPACE to preview the Song.";
-		var size:Int = 16;
-
-		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, text, size);
-		text.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, RIGHT);
-		text.scrollFactor.set();
-		add(text);
+		var swag:Alphabet = new Alphabet(1, 0, "swag");
 
 		super.create();
 	}
@@ -238,8 +234,6 @@ class FreeplayState extends MusicBeatState
 			var diffs = [];
 			var diffsThatExist = [];
 			#if FEATURE_FILESYSTEM
-			if (Paths.doesTextAssetExist(Paths.json('songs/$songId/$songId-oc')))
-				diffsThatExist.push("Oc");
 			if (Paths.doesTextAssetExist(Paths.json('songs/$songId/$songId-hard')))
 				diffsThatExist.push("Hard");
 			if (Paths.doesTextAssetExist(Paths.json('songs/$songId/$songId-easy')))
@@ -261,14 +255,14 @@ class FreeplayState extends MusicBeatState
 				FreeplayState.loadDiff(1, songId, diffs);
 			if (diffsThatExist.contains("Hard"))
 				FreeplayState.loadDiff(2, songId, diffs);
-			if (diffsThatExist.contains("Oc"))
-				FreeplayState.loadDiff(3, songId, diffs);
 
 			meta.diffs = diffsThatExist;
 
 			if (diffsThatExist.length != 3)
-				FreeplayState.songData.set(songId, diffs);
+				trace("I ONLY FOUND " + diffsThatExist);
 
+			FreeplayState.songData.set(songId, diffs);
+			trace('loaded diffs for ' + songId);
 			FreeplayState.songs.push(meta);
 		}
 	}
@@ -304,13 +298,6 @@ class FreeplayState extends MusicBeatState
 
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, 0.4));
 
-		bg.color = FlxColor.interpolate(bg.color, rgb[songs[curSelected].week % rgb.length], CoolUtil.camLerpShit(0.045));
-
-		// var coolerColor = rgb[rgb.length % songs[curSelected].week];
-		var lerpColor = CoolUtil.camLerpShit(0.045);
-
-		bg.color = FlxColor.interpolate(bg.color, rgb[songs[curSelected].week % rgb.length], CoolUtil.camLerpShit(0.045));
-
 		if (Math.abs(lerpScore - intendedScore) <= 10)
 			lerpScore = intendedScore;
 
@@ -325,10 +312,34 @@ class FreeplayState extends MusicBeatState
 		var upP = FlxG.keys.justPressed.UP;
 		var downP = FlxG.keys.justPressed.DOWN;
 		var accepted = FlxG.keys.justPressed.ENTER;
-		var space = FlxG.keys.justPressed.SPACE;
 		var dadDebug = FlxG.keys.justPressed.SIX;
 		var charting = FlxG.keys.justPressed.SEVEN;
 		var bfDebug = FlxG.keys.justPressed.ZERO;
+
+		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
+
+		if (gamepad != null)
+		{
+			if (gamepad.justPressed.DPAD_UP)
+			{
+				changeSelection(-1);
+			}
+			if (gamepad.justPressed.DPAD_DOWN)
+			{
+				changeSelection(1);
+			}
+			if (gamepad.justPressed.DPAD_LEFT)
+			{
+				changeDiff(-1);
+			}
+			if (gamepad.justPressed.DPAD_RIGHT)
+			{
+				changeDiff(1);
+			}
+
+			// if (gamepad.justPressed.X && !openedPreview)
+			// openSubState(new DiffOverview());
+		}
 
 		if (upP)
 		{
@@ -392,22 +403,11 @@ class FreeplayState extends MusicBeatState
 
 		if (controls.BACK)
 		{
-			MusicBeatState.switchState(new MainMenuState());
-			if (FlxG.save.data.unload)
-			{
-				test.Destroyer.dumpCache();
-			}
-		}
-		if (space)
-		{
-			FlxG.sound.playMusic(Paths.inst(songs[curSelected].songName), 0);
+			FlxG.switchState(new MainMenuState());
 		}
 
 		if (accepted)
-		{
-			persistentUpdate = false;
 			loadSong();
-		}
 		else if (charting)
 			loadSong(true);
 
@@ -448,6 +448,7 @@ class FreeplayState extends MusicBeatState
 	function loadSong(isCharting:Bool = false)
 	{
 		loadSongInFreePlay(songs[curSelected].songName, curDifficulty, isCharting);
+
 		clean();
 	}
 
@@ -497,6 +498,7 @@ class FreeplayState extends MusicBeatState
 		#end
 
 		PlayState.songMultiplier = rate;
+
 		if (isCharting)
 			LoadingState.loadAndSwitchState(new ChartingState(reloadSong));
 		else
@@ -510,20 +512,10 @@ class FreeplayState extends MusicBeatState
 
 		curDifficulty += change;
 
-		if (!FlxG.save.data.hardmode)
-		{
-			if (curDifficulty < 0)
-				curDifficulty = 0;
-			if (curDifficulty > 2)
-				curDifficulty = 0;
-		}
-		else
-		{
-			if (curDifficulty < 0)
-				curDifficulty = 3;
-			if (curDifficulty > 3)
-				curDifficulty = 0;
-		}
+		if (curDifficulty < 0)
+			curDifficulty = 2;
+		if (curDifficulty > 2)
+			curDifficulty = 0;
 
 		// adjusting the highscore song name to be compatible (changeDiff)
 		var songHighscore = StringTools.replace(songs[curSelected].songName, " ", "-");
@@ -556,38 +548,19 @@ class FreeplayState extends MusicBeatState
 		if (curSelected >= songs.length)
 			curSelected = 0;
 
-		if (FlxG.save.data.hardmode)
+		if (songs[curSelected].diffs.length != 3)
 		{
-			if (songs[curSelected].diffs.length != 3)
+			switch (songs[curSelected].diffs[0])
 			{
-				switch (songs[curSelected].diffs[0])
-				{
-					case "Easy":
-						curDifficulty = 0;
-					case "Normal":
-						curDifficulty = 1;
-					case "Hard":
-						curDifficulty = 2;
-					case "Oc":
-						curDifficulty = 3;
-				}
+				case "Easy":
+					curDifficulty = 0;
+				case "Normal":
+					curDifficulty = 1;
+				case "Hard":
+					curDifficulty = 2;
 			}
 		}
-		else
-		{
-			if (songs[curSelected].diffs.length != 2)
-			{
-				switch (songs[curSelected].diffs[0])
-				{
-					case "Easy":
-						curDifficulty = 0;
-					case "Normal":
-						curDifficulty = 1;
-					case "Hard":
-						curDifficulty = 2;
-				}
-			}
-		}
+
 		// selector.y = (70 * curSelected) + 30;
 
 		// adjusting the highscore song name to be compatible (changeSelection)
@@ -616,13 +589,14 @@ class FreeplayState extends MusicBeatState
 		if (songs[curSelected].songCharacter == "sm")
 		{
 			var data = songs[curSelected];
-			if (FlxG.save.data.gen)
-				trace("Loading " + data.path + "/" + data.sm.header.MUSIC);
+			trace("Loading " + data.path + "/" + data.sm.header.MUSIC);
 			var bytes = File.getBytes(data.path + "/" + data.sm.header.MUSIC);
 			var sound = new Sound();
 			sound.loadCompressedDataFromByteArray(bytes.getData(), bytes.length);
 			FlxG.sound.playMusic(sound);
 		}
+		else
+			FlxG.sound.playMusic(Paths.inst(songs[curSelected].songName), 0);
 		#end
 
 		var hmm;
@@ -673,20 +647,6 @@ class FreeplayState extends MusicBeatState
 				item.alpha = 1;
 				// item.setGraphicSize(Std.int(item.width));
 			}
-		}
-	}
-
-	override function add(Object:flixel.FlxBasic):flixel.FlxBasic
-	{
-		trackedAssets.insert(trackedAssets.length, Object);
-		return super.add(Object);
-	}
-
-	function unloadAssets():Void
-	{
-		for (asset in trackedAssets)
-		{
-			remove(asset);
 		}
 	}
 }
