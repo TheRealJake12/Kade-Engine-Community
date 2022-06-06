@@ -35,9 +35,13 @@ install:
   - haxelib install actuate 
   - haxelib list
 
-# We don't use the build section, but do both build and 
-# test in `test_script:`.
-# It is just because it is more similar to the TravisCI config,
-# thus it would be easier to update both of them.
-build: on
+# No tests idk lol
+build_script:
+  - haxelib run lime build windows
+  # haxelib run lime build linux
+
+artifacts:
+  - path: export/release/windows/bin
+    name: Windows release
+    type: zip
   
