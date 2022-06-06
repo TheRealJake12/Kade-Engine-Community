@@ -126,6 +126,7 @@ class MusicBeatState extends FlxUIState
 					}
 					else if (ste < curStep)
 					{
+						//trace("reset steps for some reason?? at " + Conductor.songPosition);
 						// Song reset?
 						curStep = ste;
 						updateBeat();
@@ -151,6 +152,7 @@ class MusicBeatState extends FlxUIState
 					else if (nextStep < curStep)
 					{
 						// Song reset?
+						//trace("(no bpm change) reset steps for some reason?? at " + Conductor.songPosition);
 						curStep = nextStep;
 						updateBeat();
 						stepHit();
