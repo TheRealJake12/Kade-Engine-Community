@@ -26,14 +26,12 @@ using StringTools;
 class MainMenuState extends MusicBeatState
 {
 	public static var nightly:String = "";
-	
 	public static var kecVer:String = 'Kade Engine Community 1.5' + nightly;
 	public static var keVer:String = "Kade Engine 1.8";
 	public static var curSelected:Int = 0;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	private var camGame:FlxCamera;
-	private var camAchievement:FlxCamera;
 
 	#if !switch
 	var optionShit:Array<String> = ['story mode', 'freeplay', 'donate', 'options'];
@@ -53,7 +51,7 @@ class MainMenuState extends MusicBeatState
 		#end
 
 		camGame = new FlxCamera();
-		
+
 		FlxG.cameras.reset(camGame);
 		FlxCamera.defaultCameras = [camGame];
 
@@ -238,7 +236,7 @@ class MainMenuState extends MusicBeatState
 					MusicBeatState.switchState(new OptionsDirect());
 			}
 		}
-	}
+	}	
 
 	function changeItem(huh:Int = 0)
 	{

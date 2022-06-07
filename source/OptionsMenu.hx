@@ -143,7 +143,7 @@ class OptionsMenu extends FlxSubState
 				new NotesplashOption("Change your Notesplash"),
 				#end
 				new NotesplashesOption("Uses Notesplashes (Only use it on Arrow skins or else theres gonna be some visual bugs(wrong offsets))."),
-				new RotateSpritesOption("Should the game rotate the sprites to do color quantization (turn off for bar skins)"),
+				//new RotateSpritesOption("Should the game rotate the sprites to do color quantization (turn off for bar skins)"),
 				new LowMotion("Reduces the motion on screen for people who get motion sickness or for a smoother experiance."),
 				new ScrollAlpha("Changes the Transparancy of the Hold Notes."),
 				new MiddleScrollOption("Put your lane in the center or on the right."),
@@ -154,7 +154,7 @@ class OptionsMenu extends FlxSubState
 				new AccuracyOption("Display accuracy information on the info bar."),
 				new RoundAccuracy("Round your accuracy to the nearest whole number for the score text (cosmetic only)."),
 				new SongPositionOption("Show the song's current position as a scrolling bar."),
-				new Colour("The color behind icons now fit with their theme. (e.g. Pico = green)"),
+				new Colour("The Healthbar Color For Each Character."),
 				new NPSDisplayOption("Shows your current Notes Per Second on the info bar."),
 				new CpuStrums("Toggle the CPU's strumline lighting up when it hits a note."),
 			]),
@@ -181,6 +181,7 @@ class OptionsMenu extends FlxSubState
 				new DistractionsAndEffectsOption("Turns On Extra Images That Reduce Your FPS Significantly(Week 5 and 7 esp)"),
 				new Optimization("Nothing but Your Strumline is visible. Best Performance."),
 				new AntialiasingOption("Toggle antialiasing, improving graphics quality at a slight performance penalty."),
+				new FXAAOption("Enable FXAA Antialiasing. (EXTREME PERFORMANCE IMPACT! ONLY ENABLE IF YOUR PC HAS LIKE AN RTX CARD!)"),
 				new UnloadSongs("Unload Songs And Characters"),
 				#if desktop 
 				new CharacterCaching("Caches Characters"), 

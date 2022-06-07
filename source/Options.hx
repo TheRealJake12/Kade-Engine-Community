@@ -1118,7 +1118,7 @@ class FPSOption extends Option
 	}
 }
 
-class ScoreScreen extends Option
+class ScoreScreen extends Option //sfjl
 {
 	public function new(desc:String)
 	{
@@ -1126,10 +1126,16 @@ class ScoreScreen extends Option
 		description = desc;
 	}
 
-	public override function press():Bool
+	public override function left():Bool
 	{
 		FlxG.save.data.scoreScreen = !FlxG.save.data.scoreScreen;
 		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
 		return true;
 	}
 
@@ -1625,7 +1631,7 @@ class MiddleScrollOption extends Option
 		return "Middle Scroll: < " + (FlxG.save.data.middleScroll ? "Enabled" : "Disabled") + " >";
 	}
 }
-
+/*
 class RotateSpritesOption extends Option
 {
 	public function new(desc:String)
@@ -1657,6 +1663,7 @@ class RotateSpritesOption extends Option
 		return "Rotate Sprites: < " + (FlxG.save.data.rotateSprites ? "Disabled" : "Enabled") + " >";
 	}
 }
+*/
 
 class NoteskinOption extends Option
 {
@@ -2093,6 +2100,38 @@ class ScrollAlpha extends Option
 			FlxG.save.data.alpha = 1;
 
 		return true;
+	}
+}
+
+class FXAAOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		if (OptionsMenu.isInPause)
+			description = "This option cannot be toggled in the pause menu.";
+		else
+			description = desc;
+	}
+
+	public override function left():Bool
+	{
+		if (OptionsMenu.isInPause)
+			return false;
+		FlxG.save.data.fxaa = !FlxG.save.data.fxaa;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "FXAA Antialiasing: < " + (!FlxG.save.data.fxaa ? "off" : "on") + " >";
 	}
 }
 #if FEATURE_FILESYSTEM

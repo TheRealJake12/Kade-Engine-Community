@@ -13,6 +13,8 @@ import openfl.Lib;
 import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
+import flixel.addons.transition.FlxTransitionableState;
+
 
 class Main extends Sprite
 {
@@ -92,6 +94,8 @@ class Main extends Sprite
 		#end
 
 		FlxGraphic.defaultPersist = false;
+
+		//FlxTransitionableState.skipNextTransIn = true;
 
 		game = new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen);
 		addChild(game);

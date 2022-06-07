@@ -42,7 +42,7 @@
 
 	<classpath name="source" />
 
-	<assets path="assets/preload/videos" rename="assets/videos" include="*mp4" embed='false' if="VIDEOS"/>
+	<assets path="assets/preload/videos" rename="assets/videos" include="*mp4" embed='false' />
 
 	<assets path="assets/preload" rename="assets" exclude="*.ogg" if="web"/>
 	<assets path="assets/preload" rename="assets" exclude="*.mp3" unless="web"/>
@@ -128,7 +128,7 @@
 	<haxelib name="linc_luajit" if="desktop"/>
 	<haxelib name="hxvm-luajit" if="desktop"/>
 	<haxelib name="hxcpp-debug-server" if="desktop"/>
-	<haxelib name="hxCodec" if="desktop"/>	
+	<haxelib name="hxCodec" if="desktop"/>
 
 	<!-- <haxelib name="markdown" /> -->
 	<!-- <haxelib name="HtmlParser" /> -->
@@ -201,6 +201,5 @@
   <haxedef name="FEATURE_MULTITHREADING" if="cpp" />
   <!-- Videos -->
   <haxedef name="VIDEOS" if="desktop" />
-
 
 </project>

@@ -45,4 +45,8 @@ artifacts:
   - path: export/release/windows/bin
     name: Windows release
     type: zip
+<<<<<<< Updated upstream
   
+=======
+  
+>>>>>>> Stashed changes

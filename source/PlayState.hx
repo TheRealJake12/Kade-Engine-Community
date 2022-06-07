@@ -80,6 +80,7 @@ import haxe.Json;
 import openfl.display.BlendMode;
 import openfl.display.StageQuality;
 import openfl.filters.ShaderFilter;
+import openfl.display.Shader;
 #if FEATURE_DISCORD
 import Discord.DiscordClient;
 #end
@@ -470,6 +471,12 @@ class PlayState extends MusicBeatState
 		FlxG.cameras.add(camHUD);
 		FlxG.cameras.add(camSustains);
 		FlxG.cameras.add(camNotes);
+
+		if (FlxG.save.data.fxaa)
+		{
+			FlxG.camera.setFilters([FXAAShader]);
+			camHUD.setFilters([FXAAShader]);
+		}
 
 		laneunderlayOpponent = new FlxSprite(0, 0).makeGraphic(110 * 4 + 50, FlxG.height * 2);
 		laneunderlayOpponent.alpha = FlxG.save.data.laneTransparency;
@@ -3361,14 +3368,6 @@ class PlayState extends MusicBeatState
 								});
 							}
 
-							if (SONG.song.toLowerCase() == 'yoursong')
-							{
-								if (SONG.player2 == 'yourcharacter')
-								{
-									health -= 0.06; // 0.07 is overkill 0.05 is perfect
-								}
-							}
-
 							#if FEATURE_LUAMODCHART
 							if (luaModchart != null)
 								luaModchart.executeState('playerTwoSing', [Math.abs(daNote.noteData), Conductor.songPosition]);
@@ -3393,14 +3392,6 @@ class PlayState extends MusicBeatState
 								if (FlxG.save.data.notesplashes && (!FlxG.save.data.middleScroll))
 									spawnNoteSplashOnNoteDad(daNote);
 							});
-						}
-
-						if (SONG.song.toLowerCase() == 'yoursong')
-						{
-							if (SONG.player2 == 'yourcharacter')
-							{
-								health -= 0.06; // 0.07 is overkill 0.05
-							}
 						}
 
 						#if FEATURE_LUAMODCHART
@@ -3479,9 +3470,9 @@ class PlayState extends MusicBeatState
 
 				if (daNote.isSustainNote) //sfjl
 				{
-					daNote.x += daNote.width / 2 + 20;
+					daNote.x += daNote.width / 2 + 16.3;
 					if (SONG.noteStyle == 'pixel')
-						daNote.x -= 11;
+						daNote.x -= 13.7;
 				}
 
 				// trace(daNote.y);
@@ -4851,11 +4842,6 @@ class PlayState extends MusicBeatState
 		if (generatedMusic)
 		{
 			notes.sort(FlxSort.byY, (PlayStateChangeables.useDownscroll ? FlxSort.ASCENDING : FlxSort.DESCENDING));
-		}
-		
-		if (health > 0.05)
-		{
-			health -= 0.04;
 		}
 
 		#if FEATURE_LUAMODCHART
