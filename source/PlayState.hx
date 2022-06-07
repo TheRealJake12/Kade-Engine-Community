@@ -472,11 +472,13 @@ class PlayState extends MusicBeatState
 		FlxG.cameras.add(camSustains);
 		FlxG.cameras.add(camNotes);
 
+		/*
 		if (FlxG.save.data.fxaa)
 		{
 			FlxG.camera.setFilters([FXAAShader]);
 			camHUD.setFilters([FXAAShader]);
 		}
+		*/
 
 		laneunderlayOpponent = new FlxSprite(0, 0).makeGraphic(110 * 4 + 50, FlxG.height * 2);
 		laneunderlayOpponent.alpha = FlxG.save.data.laneTransparency;
