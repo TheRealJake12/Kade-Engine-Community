@@ -354,40 +354,12 @@ class StoryMenuState extends MusicBeatState
 			PlayState.SONG = Song.conversionChecks(Song.loadFromJson(PlayState.storyPlaylist[0], diff));
 			PlayState.storyWeek = curWeek;
 			PlayState.campaignScore = 0;
-
-			#if VIDEOS	
 			
-			var video:VideoHandler = new VideoHandler();
-
-			if (curWeek == 7 && !isCutscene)
-				new FlxTimer().start(1, function(tmr:FlxTimer)
-				{
-					{
-						FlxG.sound.music.stop();
-						video.playVideo(Paths.video('ughCutscene.mp4'));
-						video.finishCallback = function()
-						{
-							LoadingState.loadAndSwitchState(new PlayState());
-							clean();
-						}
-						isCutscene = true;
-					}
-				});
-			else
-			{
-				new FlxTimer().start(1, function(tmr:FlxTimer)
-				{
-					LoadingState.loadAndSwitchState(new PlayState(), true);
-					clean();
-				});
-			}
-			#else
 			new FlxTimer().start(1, function(tmr:FlxTimer)
-				{
-					LoadingState.loadAndSwitchState(new PlayState(), true);
-					clean();
-				});
-			#end	
+			{
+				LoadingState.loadAndSwitchState(new PlayState(), true);
+				clean();
+			});
 		}
 	}
 
