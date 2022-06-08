@@ -74,7 +74,7 @@ class KadeEngineData
 			FlxG.save.data.distractions = true;
 
 		if (FlxG.save.data.colour == null)
-			FlxG.save.data.colour = true;
+			FlxG.save.data.colour = false;
 
 		if (FlxG.save.data.stepMania == null)
 			FlxG.save.data.stepMania = false;
@@ -115,8 +115,8 @@ class KadeEngineData
 		if (FlxG.save.data.cacheImages == null)
 			FlxG.save.data.cacheImages = false;
 
-		if (FlxG.save.data.HB == null)
-			FlxG.save.data.HB = true;
+		if (FlxG.save.data.healthBar == null)
+			FlxG.save.data.healthBar = true;
 
 		if (FlxG.save.data.middleScroll == null)
 			FlxG.save.data.middleScroll = false;
@@ -185,7 +185,7 @@ class KadeEngineData
 			FlxG.save.data.alpha = 0.6;
 			
 		if (FlxG.save.data.laneUnderlay == null)
-			FlxG.save.data.laneUnderlay = 0;	
+			FlxG.save.data.laneUnderlay = 0.1;	
 
 		Conductor.recalculateTimings();
 		PlayerSettings.player1.controls.loadKeyBinds();

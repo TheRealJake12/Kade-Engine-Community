@@ -153,9 +153,16 @@ class Note extends FlxSprite
 			switch (noteTypeCheck)
 			{
 				case 'pixel':
+					#if html5
+					loadGraphic(Paths.image('noteskins/Arrows-pixel', 'shared'), true, 17, 17);
+					if (isSustainNote)
+						loadGraphic(Paths.image('noteskins/Arrows-pixel-ends', 'shared'), true, 7, 6);
+					#else
 					loadGraphic(PlayState.noteskinPixelSprite, true, 17, 17);
 					if (isSustainNote)
 						loadGraphic(PlayState.noteskinPixelSpriteEnds, true, 7, 6);
+					#end
+					
 
 					for (i in 0...4)
 					{

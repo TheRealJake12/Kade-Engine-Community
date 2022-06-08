@@ -68,16 +68,6 @@ class GameOverState extends FlxTransitionableState
 			});
 		}
 
-		if (PlayState.SONG.stage == 'tank')
-		{
-			FlxG.sound.music.fadeOut(0.5, 0, function(twn:FlxTween)
-			{
-				FlxG.sound.music.stop();
-			});
-
-			FlxG.sound.play(Paths.sound('jeffGameover/jeffGameover-' + FlxG.random.int(1, 25)), 1, false, null, true);
-		}
-
 		pressed = false;
 
 		if (pressed && !fading)

@@ -1092,7 +1092,7 @@ class PlayState extends MusicBeatState
 				default:
 					startCountdown();
 			}
-		}
+		}	
 		else
 		{
 			new FlxTimer().start(1, function(timer)
@@ -2142,7 +2142,7 @@ class PlayState extends MusicBeatState
 			if (PlayStateChangeables.Optimize && player == 0)
 				continue;
 
-			if (SONG.noteStyle == null && FlxG.save.data.overrideNoteskins)
+			if (SONG.noteStyle == null)
 			{
 				switch (storyWeek)
 				{
@@ -2158,7 +2158,12 @@ class PlayState extends MusicBeatState
 			switch (noteTypeCheck)
 			{
 				case 'pixel':
+				#if html5
+					babyArrow.loadGraphic(Paths.image('noteskins/Arrows-pixel', 'shared'), true, 17, 17);
+				#else
 					babyArrow.loadGraphic(noteskinPixelSprite, true, 17, 17);
+				#end	
+				
 					babyArrow.animation.add('green', [6]);
 					babyArrow.animation.add('red', [7]);
 					babyArrow.animation.add('blue', [5]);
@@ -2179,10 +2184,14 @@ class PlayState extends MusicBeatState
 					}
 
 				default:
+				#if html5
+					babyArrow.frames = Paths.getSparrowAtlas('noteskins/Arrows', 'shared');
+				#else	
 					if (player == 0)
 						babyArrow.frames = cpuNoteskinSprite;
 					else
 						babyArrow.frames = noteskinSprite;
+				#end		
 					for (j in 0...4)
 					{
 						babyArrow.animation.addByPrefix(dataColor[j], 'arrow' + dataSuffix[j]);
@@ -2756,8 +2765,8 @@ class PlayState extends MusicBeatState
 		
 		if (FlxG.keys.justPressed.SIX) //dfjk
 		{
-				vocals.stop();
-				FlxG.sound.music.stop();
+			vocals.stop();
+			FlxG.sound.music.stop();
 				
 			LoadingState.loadAndSwitchState(new AnimationDebug(dad.curCharacter));
 			clean();
@@ -2806,6 +2815,7 @@ class PlayState extends MusicBeatState
 					luaModchart.die();
 					luaModchart = null;
 				}
+				#end
 			}
 
 		if (FlxG.keys.justPressed.NUMPADSEVEN)
@@ -2856,7 +2866,6 @@ class PlayState extends MusicBeatState
 				});
 			}
 		}
-		#end
 
 		if (skipActive && Conductor.songPosition >= skipTo)
 		{
@@ -3216,6 +3225,8 @@ class PlayState extends MusicBeatState
 						unloadAssets();
 					}
 					openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+					vocals.stop();
+					FlxG.sound.music.stop();
 				}
 
 				#if FEATURE_DISCORD
@@ -3454,7 +3465,7 @@ class PlayState extends MusicBeatState
 				{
 					daNote.x += daNote.width / 2 + 17;
 					if (SONG.noteStyle == 'pixel')
-						daNote.x -= 13.7;
+						daNote.x -= 9;
 				}
 
 				// trace(daNote.y);
@@ -4827,7 +4838,7 @@ class PlayState extends MusicBeatState
 				camHUD.zoom += 0.03 / songMultiplier;
 			}
 		}
-		if (!FlxG.save.data.motion || PlayStateChangeables.Optimize)
+		if (!FlxG.save.data.motion || !PlayStateChangeables.Optimize)
 		{
 			if (songMultiplier == 1)
 			{
