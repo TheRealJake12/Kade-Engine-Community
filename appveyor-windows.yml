@@ -43,6 +43,6 @@ build_script:
 
 artifacts:
   - path: export/release/windows/bin
-    name: Windows release
+    name: Windows Build
     type: zip
   
