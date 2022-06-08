@@ -255,6 +255,7 @@ class TitleState extends MusicBeatState
 				http.onData = function(data:String)
 				{
 					returnedData[0] = data.substring(0, data.indexOf(';'));
+					Debug.logTrace(returnedData[0]);
 					returnedData[1] = data.substring(data.indexOf('-'), data.length);
 					if (!MainMenuState.kecVer.contains(returnedData[0].trim()) && !OutdatedSubState.leftState)
 					{

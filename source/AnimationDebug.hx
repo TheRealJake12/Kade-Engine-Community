@@ -1,5 +1,6 @@
 package;
 
+import test.Destroyer;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -60,6 +61,7 @@ class AnimationDebug extends MusicBeatState
 
 	override function create()
 	{
+		Destroyer.clearUnusedMemory();
 		// FlxG.sound.music.stop();
 
 		// var gridBG:FlxSprite = FlxGridOverlay.create(10, 10);
@@ -339,7 +341,8 @@ class AnimationDebug extends MusicBeatState
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
 			FlxG.mouse.visible = false;
-			FlxG.switchState(new PlayState());
+			LoadingState.loadAndSwitchState(new PlayState());
+			Destroyer.dumpCache();
 		}
 
 		if (FlxG.keys.justPressed.E)

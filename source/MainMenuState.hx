@@ -26,7 +26,7 @@ using StringTools;
 class MainMenuState extends MusicBeatState
 {
 	public static var nightly:String = "";
-	public static var kecVer:String = 'Kade Engine Community 1.5' + nightly;
+	public static var kecVer:String = 'Kade Engine Community 1.5.1' + nightly;
 	public static var keVer:String = "Kade Engine 1.8";
 	public static var curSelected:Int = 0;
 
@@ -49,6 +49,11 @@ class MainMenuState extends MusicBeatState
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
+
+		if (!FlxG.sound.music.playing)
+		{
+			FlxG.sound.playMusic(Paths.music('freakyMenu'));
+		}
 
 		camGame = new FlxCamera();
 
@@ -231,8 +236,8 @@ class MainMenuState extends MusicBeatState
 				case 'freeplay':
 					MusicBeatState.switchState(new FreeplayState());
 				case 'options':
-					transIn = FlxTransitionableState.defaultTransIn;
-					transOut = FlxTransitionableState.defaultTransOut;
+					//transIn = FlxTransitionableState.defaultTransIn;
+					//transOut = FlxTransitionableState.defaultTransOut;
 					MusicBeatState.switchState(new OptionsDirect());
 			}
 		}

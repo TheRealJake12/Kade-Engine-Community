@@ -20,7 +20,7 @@ class TankDead extends FlxSprite
 		goingRight = facingRight;
 		super(x, y);
 
-		frames = Paths.getSparrowAtlas('tankmanKilled1');
+		frames = Paths.getSparrowAtlas('tankmanKilled1', 'week7');
 		animation.addByPrefix('run', 'tankman running', 24, true);
 		animation.addByPrefix('shot', 'John Shot ' + FlxG.random.int(1, 2), 24, false);
 		animation.play('run');

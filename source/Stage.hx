@@ -501,6 +501,28 @@ class Stage extends MusicBeatState
 					ground.updateHitbox();
 					swagBacks['ground'] = ground;
 					toAdd.push(ground);
+
+					if (FlxG.save.data.distractions)
+					{
+						if (PlayState.SONG.gfVersion == 'picoSpeaker')
+						{
+							var firstTank:TankDead = new TankDead(0, 0, true);
+								firstTank.resetShit(20, 600, true);
+								firstTank.strumTime = 10;
+								tankmanRun.add(firstTank);
+
+								for (i in 0...TankDead.animationNotes.length)
+								{
+									if (FlxG.random.bool(16))
+									{
+										var tankBih = tankmanRun.recycle(TankDead);
+									tankBih.strumTime = TankDead.animationNotes[i][0];
+									tankBih.resetShit(500, 200 + FlxG.random.int(50, 100), TankDead.animationNotes[i][1] < 2);
+										tankmanRun.add(tankBih);
+									}
+								}
+						}
+					}
 					
 				}
 			default:

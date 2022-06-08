@@ -57,7 +57,6 @@ class Character extends FlxSprite
 				playAnim('danceRight');
 
 			case 'gftank':
-				
 				tex = Paths.getSparrowAtlas('gfTankmen', 'shared', true);
 				frames = tex;
 				animation.addByIndices('sad', 'GF Crying at Gunpoint', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], "", 24, false);
@@ -68,7 +67,7 @@ class Character extends FlxSprite
 				barColor = FlxColor.fromRGB(165, 0, 77);
 
 				playAnim('danceRight');
-	
+
 			case 'gf-christmas':
 				tex = Paths.getSparrowAtlas('gfChristmas', 'shared', true);
 				frames = tex;
@@ -250,7 +249,7 @@ class Character extends FlxSprite
 
 				playAnim('shoot1');
 
-				flipX = true;	
+				flipX = true;
 
 			case 'bf':
 				var tex = Paths.getSparrowAtlas('BOYFRIEND', 'shared', true);
@@ -277,6 +276,42 @@ class Character extends FlxSprite
 
 				playAnim('idle');
 
+				flipX = true;
+			case 'bf-holding-gf':
+				var tex = Paths.getSparrowAtlas('bfAndGF', 'shared', true);
+				frames = tex;
+
+				animation.addByPrefix('idle', 'BF idle dance', 24, false);
+				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
+				animation.addByPrefix('singLEFT', 'BF NOTE LEFT0', 24, false);
+				animation.addByPrefix('singRIGHT', 'BF NOTE RIGHT0', 24, false);
+				animation.addByPrefix('singDOWN', 'BF NOTE DOWN0', 24, false);
+				animation.addByPrefix('singUPmiss', 'BF NOTE UP MISS', 24, false);
+				animation.addByPrefix('singLEFTmiss', 'BF NOTE LEFT MISS', 24, false);
+				animation.addByPrefix('singRIGHTmiss', 'BF NOTE RIGHT MISS', 24, false);
+				animation.addByPrefix('singDOWNmiss', 'BF NOTE DOWN MISS', 24, false);
+				animation.addByPrefix('bfCatch', 'BF catches GF', 24, false);
+
+				loadOffsetFile(curCharacter);
+
+				playAnim('idle');
+
+				flipX = true;
+
+			case 'bfAndGFDead':
+				frames = Paths.getSparrowAtlas('bfPixelsDEAD', 'shared', true);
+				animation.addByPrefix('singUP', "BF Dies pixel", 24, false);
+				animation.addByPrefix('firstDeath', "BF Dies pixel", 24, false);
+				animation.addByPrefix('deathLoop', "Retry Loop", 24, false);
+				animation.addByPrefix('deathConfirm', "RETRY CONFIRM", 24, false);
+				animation.play('firstDeath');
+
+				loadOffsetFile(curCharacter);
+				playAnim('firstDeath');
+				// pixel bullshit
+				setGraphicSize(Std.int(width * 6));
+				updateHitbox();
+				antialiasing = false;
 				flipX = true;
 
 			case 'bf-christmas':
@@ -448,8 +483,13 @@ class Character extends FlxSprite
 		}
 
 		if (curCharacter.startsWith('bf'))
+		{
 			barColor = 0xFF31b0d1;
-
+		}
+		else if (curCharacter == 'bf-holding-gf')
+		{
+			barColor = FlxColor.fromRGB(49, 176, 209);
+		}
 		dance();
 
 		if (isPlayer && frames != null)
@@ -529,7 +569,7 @@ class Character extends FlxSprite
 				{
 					danced = true;
 					playAnim('danceRight');
-				}	
+				}
 		}
 
 		super.update(elapsed);

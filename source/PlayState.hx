@@ -617,28 +617,6 @@ class PlayState extends MusicBeatState
 			gfCheck = SONG.gfVersion;
 		}
 
-		if (SONG.gfVersion == 'picoSpeaker')
-		{
-			if (FlxG.save.data.distractions)
-			{
-				var firstTank:TankDead = new TankDead(20, 500, true);
-				firstTank.resetShit(20, 600, true);
-				firstTank.strumTime = 10;
-				tankmanRun.add(firstTank);
-
-				for (i in 0...TankDead.animationNotes.length)
-				{
-					if (FlxG.random.bool(16))
-					{
-						var tankBih = tankmanRun.recycle(TankDead);
-						tankBih.strumTime = TankDead.animationNotes[i][0];
-						tankBih.resetShit(500, 200 + FlxG.random.int(50, 100), TankDead.animationNotes[i][1] < 2);
-						tankmanRun.add(tankBih);
-					}
-				}
-			}
-		}
-
 		if (!stageTesting)
 		{
 			gf = new Character(400, 130, gfCheck);
@@ -1103,6 +1081,12 @@ class PlayState extends MusicBeatState
 					schoolIntro(doof);
 				case 'thorns':
 					schoolIntro(doof);
+				case 'ugh':
+					playCutscene('ughCutscene.mp4');
+				case 'guns':
+					playCutscene('gunsCutscene.mp4');
+				case 'stress':
+					playCutscene('stressCutscene.mp4');
 				default:
 					startCountdown();
 			}
@@ -2767,11 +2751,13 @@ class PlayState extends MusicBeatState
 
 		/* if (FlxG.keys.justPressed.NINE)
 			FlxG.switchState(new Charting()); */
-
-		#if debug
-		if (FlxG.keys.justPressed.SIX)
+		
+		if (FlxG.keys.justPressed.SIX) //dfjk
 		{
-			FlxG.switchState(new AnimationDebug(dad.curCharacter));
+				vocals.stop();
+				FlxG.sound.music.stop();
+				
+			LoadingState.loadAndSwitchState(new AnimationDebug(dad.curCharacter));
 			clean();
 			PlayState.stageTesting = false;
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleInput);
@@ -2818,7 +2804,6 @@ class PlayState extends MusicBeatState
 					luaModchart.die();
 					luaModchart = null;
 				}
-				#end
 			}
 
 		if (FlxG.keys.justPressed.NUMPADSEVEN)
@@ -3818,50 +3803,14 @@ class PlayState extends MusicBeatState
 
 					FlxTransitionableState.skipNextTransIn = true;
 					FlxTransitionableState.skipNextTransOut = true;
+
 					prevCamFollow = camFollow;
 
 					PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0], diff);
 					FlxG.sound.music.stop();
 
-					#if VIDEOS
-					switch (curSong.toLowerCase())
-					{
-						case 'ugh':
-							{
-								new FlxTimer().start(1, function(tmr:FlxTimer)
-								{
-									{
-										video.playVideo(Paths.video('gunsCutscene.mp4'));
-										video.finishCallback = function()
-										{
-											LoadingState.loadAndSwitchState(new PlayState());
-										}
-										inCutscene = true;
-									}
-								});
-							}
-						case 'guns':
-							{
-								new FlxTimer().start(1, function(tmr:FlxTimer)
-								{
-									{
-										video.playVideo(Paths.video('stressCutscene.mp4'));
-										video.finishCallback = function()
-										{
-											LoadingState.loadAndSwitchState(new PlayState());
-										}
-										inCutscene = true;
-									}
-								});
-							}
-						default:
-							LoadingState.loadAndSwitchState(new PlayState());
-							clean();
-					}
-					#else
 					LoadingState.loadAndSwitchState(new PlayState());
 					clean();
-					#end
 				}
 			}
 			else
@@ -5101,7 +5050,7 @@ class PlayState extends MusicBeatState
 			if (atend == true)
 			{
 				if (storyPlaylist.length <= 0)
-					FlxG.switchState(new StoryMenuState());
+					MusicBeatState.switchState(new StoryMenuState());
 				else
 				{
 					SONG = Song.loadFromJson(storyPlaylist[0].toLowerCase(), diff);
