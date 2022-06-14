@@ -1784,18 +1784,6 @@ class LaneUnderlayOption extends Option
 		acceptValues = true;
 	}
 
-	public override function press():Bool
-	{
-		FlxG.save.data.laneUnderlay = !FlxG.save.data.laneUnderlay;
-		display = updateDisplay();
-		return true;
-	}
-
-	private override function updateDisplay():String
-	{
-		return (FlxG.save.data.laneUnderlay ? "Lane underlay" : "No lane underlay");
-	}
-
 	override function right():Bool
 	{
 		FlxG.save.data.laneTransparency += 0.1;

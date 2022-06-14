@@ -90,13 +90,11 @@ class FreeplayState extends MusicBeatState
 		array.push(Song.conversionChecks(Song.loadFromJson(songId, diffName)));
 	}
 
-
 	public static var list:Array<String> = [];
 
 	override function create()
 	{
 		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
-
 
 		if (FlxG.save.data.unload)
 			Destroyer.clearStoredMemory();
@@ -253,16 +251,10 @@ class FreeplayState extends MusicBeatState
 
 			meta.diffs = diffsThatExist;
 
-			if (diffsThatExist.length != 3)
-			{
-				if (FlxG.save.data.gen)
-					Debug.logTrace("I ONLY FOUND " + diffsThatExist);
-			}
-
 			FreeplayState.songData.set(songId, diffs);
 			if (FlxG.save.data.gen)
 			{
-				Debug.logTrace('loaded diffs for ' + songId);
+				// Debug.logTrace('loaded diffs for ' + songId);
 			}
 
 			FreeplayState.songs.push(meta);
@@ -407,7 +399,6 @@ class FreeplayState extends MusicBeatState
 		else if (charting)
 			loadSong(true);
 
-		// AnimationDebug and StageDebug are only enabled in debug builds.
 		#if debug
 		if (dadDebug)
 		{
@@ -477,7 +468,6 @@ class FreeplayState extends MusicBeatState
 		PlayState.isStoryMode = false;
 		PlayState.storyDifficulty = difficulty;
 		PlayState.storyWeek = songs[curSelected].week;
-		Debug.logInfo('Loading song ${PlayState.SONG.songName} from week ${PlayState.storyWeek} into Free Play...');
 		#if FEATURE_STEPMANIA
 		if (songs[curSelected].songCharacter == "sm")
 		{

@@ -190,6 +190,13 @@ class ChartingState extends MusicBeatState
 
 		if (PlayState.SONG != null)
 		{
+			if (PlayState.isSM)
+			{
+				#if FEATURE_STEPMANIA
+				_song = Song.conversionChecks(Song.loadFromJsonRAW(File.getContent(PlayState.pathToSm + "/converted.json")));
+				#end
+			}
+			else
 			{
 				var diff:String = ["-easy", "", "-hard"][PlayState.storyDifficulty];
 				_song = Song.conversionChecks(Song.loadFromJson(PlayState.SONG.songId, diff));
@@ -212,7 +219,6 @@ class ChartingState extends MusicBeatState
 				stage: 'stage',
 				speed: 1,
 				validScore: false
-
 			};
 		}
 
@@ -1187,6 +1193,8 @@ class ChartingState extends MusicBeatState
 		{
 			var sect = lastUpdatedSection;
 
+			Debug.logTrace(sect);
+
 			if (sect == null)
 				return;
 
@@ -1450,7 +1458,7 @@ class ChartingState extends MusicBeatState
 
 					var thing = ii.sectionNotes[ii.sectionNotes.length - 1];
 
-					var note:Note = new Note(strum, originalNote.noteData, originalNote.prevNote, originalNote.isSustainNote, true, false, originalNote.isAlt,
+					var note:Note = new Note(strum, originalNote.noteData, originalNote.prevNote, originalNote.isSustainNote, true, originalNote.isAlt,
 						originalNote.beat);
 					note.rawNoteData = originalNote.rawNoteData;
 					note.sustainLength = originalNote.sustainLength;
@@ -1572,6 +1580,13 @@ class ChartingState extends MusicBeatState
 		// general shit
 		var title:FlxText = new FlxText(UI_box.x + 20, UI_box.y + 20, 0);
 		bullshitUI.add(title);
+		/* 
+			var loopCheck = new FlxUICheckBox(UI_box.x + 10, UI_box.y + 50, null, null, "Loops", 100, ['loop check']);
+			loopCheck.checked = curNoteSelected.doesLoop;
+			tooltips.add(loopCheck, {title: 'Section looping', body: "Whether or not it's a simon says style section", style: tooltipType});
+			bullshitUI.add(loopCheck);
+
+		 */
 	}
 
 	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>)
@@ -2647,10 +2662,6 @@ class ChartingState extends MusicBeatState
 				{
 					changeNoteSustain(-(((60 / (timingSeg != null ? timingSeg.bpm : _song.bpm)) * 1000) / 4));
 				}
-				if (FlxG.keys.justPressed.ESCAPE)
-				{
-					LoadingState.loadAndSwitchState(new FreeplayState());
-				}
 
 				if (FlxG.keys.justPressed.C && !FlxG.keys.pressed.CONTROL)
 				{
@@ -3000,7 +3011,7 @@ class ChartingState extends MusicBeatState
 				var daStrumTime = i[0];
 				var daSus = i[2];
 
-				var note:Note = new Note(daStrumTime, daNoteInfo % 4, null, false, true, false, false, 0);
+				var note:Note = new Note(daStrumTime, daNoteInfo % 4, null, false, true, i[3], i[4]);
 				note.rawNoteData = daNoteInfo;
 				note.sustainLength = daSus;
 				note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));
@@ -3335,12 +3346,7 @@ class ChartingState extends MusicBeatState
 				TimingStruct.getBeatFromTime(n.strumTime)
 			]);
 		else
-			section.sectionNotes.push([
-				noteStrum,
-				noteData,
-				noteSus,
-				false,
-				TimingStruct.getBeatFromTime(noteStrum)]);
+			section.sectionNotes.push([noteStrum, noteData, noteSus, false, TimingStruct.getBeatFromTime(noteStrum)]);
 
 		var thingy = section.sectionNotes[section.sectionNotes.length - 1];
 
@@ -3350,7 +3356,7 @@ class ChartingState extends MusicBeatState
 
 		if (n == null)
 		{
-			var note:Note = new Note(noteStrum, noteData % 4, null, false, true, false, TimingStruct.getBeatFromTime(noteStrum));
+			var note:Note = new Note(noteStrum, noteData % 4, null, false, true, TimingStruct.getBeatFromTime(noteStrum));
 			note.rawNoteData = noteData;
 			note.sustainLength = noteSus;
 			note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));

@@ -7058,7 +7058,7 @@
   "validScore": true,
   "speed": 2.6,
   "events": [],
-  "gfVersion": "gftank",
+  "gfVersion": "picoSpeaker",
   "chartVersion": "KEC 1.4.3",
   "eventObjects": [
    {

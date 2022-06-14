@@ -149,7 +149,7 @@ class PauseSubState extends MusicBeatSubstate
 
 		var oldOffset:Float = 0;
 
-		var songPath = 'assets/data/songs/${PlayState.SONG.songId}/';
+		var songPath = 'assets/data/songs/${PlayState.SONG.song}/';
 
 		#if FEATURE_STEPMANIA
 		if (PlayState.isSM && !PlayState.isStoryMode)

@@ -5,6 +5,7 @@ import flixel.FlxG;
 import haxe.Json;
 import haxe.format.JsonParser;
 import openfl.utils.Assets as OpenFlAssets;
+import lime.utils.Assets;
 
 using StringTools;
 
@@ -208,5 +209,36 @@ class Song
 		songData.offset = songMetaData.offset != null ? songMetaData.offset : 0;
 
 		return Song.conversionChecks(songData);
+	}
+
+	public static function loadJson(jsonInput:String, ?folder:String):SongData
+	{
+		trace(jsonInput);
+
+		// pre lowercasing the song name (update)
+		var folderLowercase = StringTools.replace(folder, " ", "-").toLowerCase();
+		switch (folderLowercase)
+		{
+			case 'dad-battle':
+				folderLowercase = 'dadbattle';
+			case 'philly-nice':
+				folderLowercase = 'philly';
+		}
+
+		var rawJson = Assets.getText(Paths.json('songs' + '/' + folderLowercase + '/' + jsonInput.toLowerCase())).trim();
+
+		while (!rawJson.endsWith("}"))
+		{
+			rawJson = rawJson.substr(0, rawJson.length - 1);
+		}
+
+		return parseJSON(rawJson);
+	}
+
+	public static function parseJSON(rawJson:String):SongData
+	{
+		var swagShit:SongData = cast Json.parse(rawJson).song;
+		swagShit.validScore = true;
+		return swagShit;
 	}
 }

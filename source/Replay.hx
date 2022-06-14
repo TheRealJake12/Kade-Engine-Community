@@ -100,8 +100,7 @@ class Replay
 		#end
 
 		var json = {
-			"songName": PlayState.SONG.song,
-			"songId": PlayState.SONG.songId,
+			"song": PlayState.SONG.song,
 			"songDiff": PlayState.storyDifficulty,
 			"chartPath": chartPath,
 			"sm": PlayState.isSM,
@@ -120,9 +119,9 @@ class Replay
 		var time = Date.now().getTime();
 
 		#if FEATURE_FILESYSTEM
-		File.saveContent("assets/replays/replay-" + PlayState.SONG.songId + "-time" + time + ".kadeReplay", data);
+		File.saveContent("assets/replays/replay-" + PlayState.SONG.song + "-time" + time + ".kadeReplay", data);
 
-		path = "replay-" + PlayState.SONG.songId + "-time" + time + ".kadeReplay"; // for score screen shit
+		path = "replay-" + PlayState.SONG.song + "-time" + time + ".kadeReplay"; // for score screen shit
 
 		LoadFromJSON();
 

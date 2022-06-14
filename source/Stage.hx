@@ -19,6 +19,8 @@ class Stage extends MusicBeatState
 	public var tankGround:FlxSprite;
 	public var tankmanRun:FlxTypedGroup<TankDead>;
 
+	var foregroundSprites:FlxTypedGroup<TankBGSprite>;
+
 	public var camZoom:Float; // The zoom of the camera to have at the start of the game
 	public var hideLastBG:Bool = false; // True = hide last BGs and show ones from slowBacks on certain step, False = Toggle visibility of BGs from SlowBacks on certain step
 	// Use visible property to manage if BG would be visible or not at the start of the game
@@ -50,7 +52,13 @@ class Stage extends MusicBeatState
 			'senpai-angry' => [250, 460]
 		],
 		'schoolEvil' => ['gf-pixel' => [580, 430], 'bf-pixel' => [970, 670], 'spirit' => [-50, 200]],
-		'tank' => ['tankman' => [-140, 325], 'bf' => [725, 425], 'gftank' => [50, 25]]
+		'tank' => [
+			'tankman' => [50, 200],
+			'bf' => [850, 430],
+			'bf-holding-gf' => [850, 300],
+			'gftank' => [200, 65],
+			'picoSpeaker' => [240, -160]
+		]
 	];
 
 	public function new(daStage:String)
@@ -392,138 +400,89 @@ class Stage extends MusicBeatState
 					bg.scale.set(6, 6);
 					swagBacks['bg'] = bg;
 					toAdd.push(bg);
-
-					/* 
-						var bg:FlxSprite = new FlxSprite(posX, posY).loadGraphic(Paths.loadImage('weeb/evilSchoolBG'));
-						bg.scale.set(6, 6);
-						// bg.setGraphicSize(Std.int(bg.width * 6));
-						// bg.updateHitbox();
-						add(bg);
-						var fg:FlxSprite = new FlxSprite(posX, posY).loadGraphic(Paths.loadImage('weeb/evilSchoolFG'));
-						fg.scale.set(6, 6);
-						// fg.setGraphicSize(Std.int(fg.width * 6));
-						// fg.updateHitbox();
-						add(fg);
-						wiggleShit.effectType = WiggleEffectType.DREAMY;
-						wiggleShit.waveAmplitude = 0.01;
-						wiggleShit.waveFrequency = 60;
-						wiggleShit.waveSpeed = 0.8;
-					 */
-
-					// bg.shader = wiggleShit.shader;
-					// fg.shader = wiggleShit.shader;
-
-					/* 
-						var waveSprite = new FlxEffectSprite(bg, [waveEffectBG]);
-						var waveSpriteFG = new FlxEffectSprite(fg, [waveEffectFG]);
-						// Using scale since setGraphicSize() doesnt work???
-						waveSprite.scale.set(6, 6);
-						waveSpriteFG.scale.set(6, 6);
-						waveSprite.setPosition(posX, posY);
-						waveSpriteFG.setPosition(posX, posY);
-						waveSprite.scrollFactor.set(0.7, 0.8);
-						waveSpriteFG.scrollFactor.set(0.9, 0.8);
-						// waveSprite.setGraphicSize(Std.int(waveSprite.width * 6));
-						// waveSprite.updateHitbox();
-						// waveSpriteFG.setGraphicSize(Std.int(fg.width * 6));
-						// waveSpriteFG.updateHitbox();
-						add(waveSprite);
-						add(waveSpriteFG);
-					 */
 				}
 			case 'tank':
 				{
 					camZoom = 0.9;
 
-					var sky:FlxSprite = new FlxSprite(-100, -200).loadGraphic(Paths.loadImage('tankSky', 'week7'));
-					swagBacks['sky'] = sky;
-					sky.scale.set(2.0, 2.0);
+					var sky:TankBGSprite = new TankBGSprite('tankSky', -400, -400, 0, 0);
 					toAdd.push(sky);
 
 					if (FlxG.save.data.distractions)
 					{
-						var clouds:FlxSprite = new FlxSprite(FlxG.random.int(-700, -100),
-							FlxG.random.int(-20, 20)).loadGraphic(Paths.loadImage('tankClouds', 'week7'));
+						var clouds:TankBGSprite = new TankBGSprite('tankClouds', FlxG.random.int(-700, -100), FlxG.random.int(-20, 20), 0.1, 0.1);
 						clouds.active = true;
-						clouds.scrollFactor.set(0.2, 0.2);
-						swagBacks['clouds'] = clouds;
+						clouds.velocity.x = FlxG.random.float(5, 15);
 						toAdd.push(clouds);
 
-						var mountains:FlxSprite = new FlxSprite(-300, -20).loadGraphic(Paths.loadImage('tankMountains', 'week7'));
-						mountains.scrollFactor.set(0.2, 0.2);
+						var mountains:TankBGSprite = new TankBGSprite('tankMountains', -300, -20, 0.2, 0.2);
 						mountains.setGraphicSize(Std.int(1.2 * mountains.width));
 						mountains.updateHitbox();
-						swagBacks['mountains'] = mountains;
 						toAdd.push(mountains);
 
-						var buildings:FlxSprite = new FlxSprite(-200, 0).loadGraphic(Paths.loadImage('tankBuildings', 'week7'));
-						buildings.scrollFactor.set(0.3, 0.3);
+						var buildings:TankBGSprite = new TankBGSprite('tankBuildings', -200, 0, 0.3, 0.3);
 						buildings.setGraphicSize(Std.int(1.1 * buildings.width));
 						buildings.updateHitbox();
-						swagBacks['buildings'] = buildings;
 						toAdd.push(buildings);
 					}
 
-					var ruins:FlxSprite = new FlxSprite(-250, 0).loadGraphic(Paths.loadImage('tankRuins', 'week7'));
-					ruins.scrollFactor.set(0.35, 0.35);
+					var ruins:TankBGSprite = new TankBGSprite('tankRuins', -200, 0, .35, .35);
 					ruins.setGraphicSize(Std.int(1.1 * ruins.width));
 					ruins.updateHitbox();
-					swagBacks['ruins'] = ruins;
 					toAdd.push(ruins);
-					
+
 					if (FlxG.save.data.distractions)
 					{
-						var tankWatchtowerTex = Paths.getSparrowAtlas('tankWatchtower', 'week7');
-						tankWatchtower = new FlxSprite(100, 50);
-						tankWatchtower.frames = tankWatchtowerTex;
-						tankWatchtower.animation.addByPrefix('idle', 'watchtower gradient color', 24);
-						tankWatchtower.animation.play('idle');
-						swagBacks['tankWatchtower'] = tankWatchtower;
-						tankWatchtower.scrollFactor.set(0.5, 0.5);
+						var smokeLeft:TankBGSprite = new TankBGSprite('smokeLeft', -200, -100, 0.4, 0.4, ['SmokeBlurLeft'], true);
+						toAdd.push(smokeLeft);
+						var smokeRight:TankBGSprite = new TankBGSprite('smokeRight', 1100, -100, 0.4, 0.4, ['SmokeRight'], true);
+						toAdd.push(smokeRight);
+
+						tankWatchtower = new TankBGSprite('tankWatchtower', 100, 50, 0.5, 0.5, ['watchtower gradient color']);
 						toAdd.push(tankWatchtower);
-
-						tankGround = new FlxSprite(300, 300).loadGraphic(Paths.loadImage('tankRolling', 'week7'), true);
-						tankGround.scrollFactor.set(0.5, 0.5);
-						tankGround.animation.addByPrefix('idle', 'BG tank w lighting', 24);
-						swagBacks['tankGround'] = tankGround;
-						toAdd.push(tankGround);
-
-						moveTank();
-
-						tankmanRun = new FlxTypedGroup<TankDead>();
-						swagBacks['tankmanRun'] = tankmanRun;
-						toAdd.push(tankmanRun);
 					}
 
-					var ground:FlxSprite = new FlxSprite(-700, -275).loadGraphic(Paths.loadImage('tankGround', 'week7'));
+					tankGround = new TankBGSprite('tankRolling', 300, 300, 0.5, 0.5, ['BG tank w lighting'], true);
+					toAdd.push(tankGround);
+
+					tankmanRun = new FlxTypedGroup<TankDead>();
+					toAdd.push(tankmanRun);
+
+					var ground:TankBGSprite = new TankBGSprite('tankGround', -420, -150);
 					ground.setGraphicSize(Std.int(1.15 * ground.width));
-					ground.scale.set(2.0, 2.0);
 					ground.updateHitbox();
-					swagBacks['ground'] = ground;
 					toAdd.push(ground);
+					moveTank();
 
+					foregroundSprites = new FlxTypedGroup<TankBGSprite>();
+					foregroundSprites.add(new TankBGSprite('tank0', -500, 650, 1.7, 1.5, ['fg']));
 					if (FlxG.save.data.distractions)
-					{
-						if (PlayState.SONG.gfVersion == 'picoSpeaker')
-						{
-							var firstTank:TankDead = new TankDead(0, 0, true);
-								firstTank.resetShit(20, 600, true);
-								firstTank.strumTime = 10;
-								tankmanRun.add(firstTank);
+						foregroundSprites.add(new TankBGSprite('tank1', -300, 750, 2, 0.2, ['fg']));
+					foregroundSprites.add(new TankBGSprite('tank2', 450, 940, 1.5, 1.5, ['foreground']));
+					if (FlxG.save.data.distractions)
+						foregroundSprites.add(new TankBGSprite('tank4', 1300, 900, 1.5, 1.5, ['fg']));
+					foregroundSprites.add(new TankBGSprite('tank5', 1620, 700, 1.5, 1.5, ['fg']));
+					if (FlxG.save.data.distractions)
+						foregroundSprites.add(new TankBGSprite('tank3', 1300, 1200, 3.5, 2.5, ['fg']));
+					toAdd.push(foregroundSprites);	
 
-								for (i in 0...TankDead.animationNotes.length)
-								{
-									if (FlxG.random.bool(16))
-									{
-										var tankBih = tankmanRun.recycle(TankDead);
-									tankBih.strumTime = TankDead.animationNotes[i][0];
-									tankBih.resetShit(500, 200 + FlxG.random.int(50, 100), TankDead.animationNotes[i][1] < 2);
-										tankmanRun.add(tankBih);
-									}
-								}
+					if (PlayState.SONG.gfVersion == 'picoSpeaker')
+					{
+						var tankmen:TankDead = new TankDead(20, 500, true);
+						tankmen.strumTime = 10;
+						tankmen.resetShit(20, 600, true);
+						tankmanRun.add(tankmen);
+						for (i in 0...TankDead.animationNotes.length)
+						{
+							if (FlxG.random.bool(16))
+							{
+								var man:TankDead = tankmanRun.recycle(TankDead);
+								man.strumTime = TankDead.animationNotes[i][0];
+								man.resetShit(500, 200 + FlxG.random.int(50, 100), TankDead.animationNotes[i][1] < 2);
+								tankmanRun.add(man);
+							}
 						}
 					}
-					
 				}
 			default:
 				{
@@ -566,21 +525,25 @@ class Stage extends MusicBeatState
 			switch (curStage)
 			{
 				case 'philly':
-						if (trainMoving)
-						{
-							trainFrameTiming += elapsed;
+					if (trainMoving)
+					{
+						trainFrameTiming += elapsed;
 
-							if (trainFrameTiming >= 1 / 24)
-							{
-								updateTrainPos();
-								trainFrameTiming = 0;
-							}
+						if (trainFrameTiming >= 1 / 24)
+						{
+							updateTrainPos();
+							trainFrameTiming = 0;
 						}
+					}
 				case 'tank':
 					if (FlxG.save.data.distractions)
 					{
 						moveTank(elapsed);
-					}		
+						foregroundSprites.forEach(function(spr:TankBGSprite)
+						{
+							spr.dance();
+						});
+					}
 					// phillyCityLights.members[curLight].alpha -= (Conductor.crochet / 1000) * FlxG.elapsed;
 			}
 		}

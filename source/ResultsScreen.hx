@@ -205,15 +205,15 @@ class ResultsScreen extends FlxSubState
 			PlayState.rep = null;
 
 			#if !switch
-			Highscore.saveScore(PlayState.SONG.songId, Math.round(PlayState.instance.songScore), PlayState.storyDifficulty);
-			Highscore.saveCombo(PlayState.SONG.songId, Ratings.GenerateLetterRank(PlayState.instance.accuracy), PlayState.storyDifficulty);
+			Highscore.saveScore(PlayState.SONG.song, Math.round(PlayState.instance.songScore), PlayState.storyDifficulty);
+			Highscore.saveCombo(PlayState.SONG.song, Ratings.GenerateLetterRank(PlayState.instance.accuracy), PlayState.storyDifficulty);
 			#end
 
 			if (PlayState.isStoryMode)
 			{
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));
 				Conductor.changeBPM(102);
-				FlxG.switchState(new MainMenuState());
+				FlxG.switchState(new StoryMenuState());
 			}
 			else
 				FlxG.switchState(new FreeplayState());
@@ -228,8 +228,8 @@ class ResultsScreen extends FlxSubState
 			PlayState.stageTesting = false;
 
 			#if !switch
-			Highscore.saveScore(PlayState.SONG.songId, Math.round(PlayState.instance.songScore), PlayState.storyDifficulty);
-			Highscore.saveCombo(PlayState.SONG.songId, Ratings.GenerateLetterRank(PlayState.instance.accuracy), PlayState.storyDifficulty);
+			Highscore.saveScore(PlayState.SONG.song, Math.round(PlayState.instance.songScore), PlayState.storyDifficulty);
+			Highscore.saveCombo(PlayState.SONG.song, Ratings.GenerateLetterRank(PlayState.instance.accuracy), PlayState.storyDifficulty);
 			#end
 
 			if (music != null)

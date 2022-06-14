@@ -1,10 +1,12 @@
 package;
 
+import Section.SwagSection;
 import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.animation.FlxBaseAnimation;
 import flixel.graphics.frames.FlxAtlasFrames;
+
 
 using StringTools;
 
@@ -20,6 +22,8 @@ class Character extends FlxSprite
 	public var isDancing:Bool;
 
 	public var holdTimer:Float = 0;
+
+	public var animationNotes:Array<Dynamic> = [];
 
 	public function new(x:Float, y:Float, ?character:String = 'bf', ?isPlayer:Bool = false)
 	{
@@ -239,18 +243,17 @@ class Character extends FlxSprite
 				animation.addByPrefix('shoot3', 'Pico shoot 3', 24, false);
 				animation.addByPrefix('shoot4', 'Pico shoot 4', 24, false);
 
-				animation.addByPrefix('shoot1L', 'Pico shoot 1', 24, true);
-				animation.addByPrefix('shoot2L', 'Pico shoot 2', 24, true);
-				animation.addByPrefix('shoot3L', 'Pico shoot 3', 24, true);
-				animation.addByPrefix('shoot4L', 'Pico shoot 4', 24, true);
+				animation.addByIndices("shoot1-idle", "Pico shoot 1", [for (i in 4...25) i], "", 24, true);
+				animation.addByIndices("shoot2-idle", "Pico shoot 2", [for (i in 4...25) i], "", 24, true);
+				animation.addByIndices("shoot3-idle", "Pico shoot 3", [for (i in 4...25) i], "", 24, true);
+				animation.addByIndices("shoot4-idle", "Pico shoot 4", [for (i in 4...25) i], "", 24, true);
 
 				loadOffsetFile(curCharacter);
 				barColor = 0xFFb7d855;
 
 				playAnim('shoot1');
-
-				flipX = true;
-
+				
+				loadMappedAnims();
 			case 'bf':
 				var tex = Paths.getSparrowAtlas('BOYFRIEND', 'shared', true);
 				frames = tex;
@@ -526,6 +529,26 @@ class Character extends FlxSprite
 		}
 	}
 
+	function loadMappedAnims()
+	{
+		var sections:Array<SwagSection> = Song.loadJson('picospeaker', 'stress').notes;
+		for (section in sections)
+		{
+			for (note in section.sectionNotes)
+			{
+				animationNotes.push(note);
+			}
+		}
+		TankDead.animationNotes = animationNotes;
+		trace(animationNotes);
+		animationNotes.sort(sortAnims);
+	}
+
+	function sortAnims(x, y)
+	{
+		return x[0] < y[0] ? -1 : x[0] > y[0] ? 1 : 0;
+	}
+
 	override function update(elapsed:Float)
 	{
 		if (!isPlayer)
@@ -555,6 +578,17 @@ class Character extends FlxSprite
 				holdTimer = 0;
 			}
 		}
+
+		if (curCharacter == 'picoSpeaker')
+		{
+			if (StringTools.startsWith(animation.curAnim.name, "shoot")
+				&& !StringTools.endsWith(animation.curAnim.name, "-idle")
+				&& animation.curAnim.finished)
+			{
+				playAnim(animation.curAnim.name + "-idle");
+			}
+		}
+
 
 		switch (curCharacter)
 		{
@@ -596,6 +630,20 @@ class Character extends FlxSprite
 						else
 							playAnim('danceLeft');
 					}
+				case 'picoSpeaker':
+					if (animationNotes.length > 0 && Conductor.songPosition > animationNotes[0][0])
+					{
+						var shotDirection:Int = 1;
+						if (animationNotes[0][1] >= 2)
+						{
+							shotDirection = 3;
+						}
+						shotDirection += FlxG.random.int(0, 1);
+
+						playAnim('shoot' + shotDirection, true);
+						animationNotes.shift();
+					}
+						
 				case 'spooky':
 					if (!animation.curAnim.name.startsWith('sing'))
 					{

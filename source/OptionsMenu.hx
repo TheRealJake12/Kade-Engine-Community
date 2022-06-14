@@ -181,9 +181,9 @@ class OptionsMenu extends FlxSubState
 				new DistractionsAndEffectsOption("Turns On Extra Images That Reduce Your FPS Significantly(Week 5 and 7 esp)"),
 				new Optimization("Nothing but Your Strumline is visible. Best Performance."),
 				new AntialiasingOption("Toggle antialiasing, improving graphics quality at a slight performance penalty."),
-				new FXAAOption("Enable FXAA Antialiasing. (EXTREME PERFORMANCE IMPACT! ONLY ENABLE IF YOUR PC HAS LIKE AN RTX CARD!)"),
-				new UnloadSongs("Unload Songs And Characters"),
+				//new FXAAOption("Enable FXAA Antialiasing. (EXTREME PERFORMANCE IMPACT! ONLY ENABLE IF YOUR PC HAS LIKE AN RTX CARD!)"),
 				#if desktop 
+				new UnloadSongs("Unload Songs And Characters"),
 				new CharacterCaching("Caches Characters"), 
 				new SongCaching("Caches Songs for close to Instant loading"),
 				new CachingOption("Caches all of the options above (High Memory Depending On Your Cache Options.)"),

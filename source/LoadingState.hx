@@ -39,6 +39,7 @@ class LoadingState extends MusicBeatState
 		funkay.setGraphicSize(0, FlxG.height);
 		funkay.updateHitbox();
 		funkay.antialiasing = FlxG.save.data.antialiasing;
+		add(funkay);
 		// logoBl.screenCenter();
 		// logoBl.color = FlxColor.BLACK;
 
