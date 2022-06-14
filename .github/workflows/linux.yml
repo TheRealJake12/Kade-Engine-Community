@@ -22,8 +22,8 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Install the shit
         run: |
-          sudo apt-get libvlc-dev
-          sudo apt-get libvlccore-dev
+          sudo apt-get -y install libvlc-dev
+          sudo apt-get -y install libvlccore-dev
           sudo add-apt-repository ppa:haxe/releases -y
           sudo apt-get update
           sudo apt-get install gcc-multilib g++-multilib haxe -y
