@@ -163,7 +163,7 @@ class ChartingState extends MusicBeatState
 
 		Debug.logTrace(PlayState.noteskinSprite);
 
-		PlayState.noteskinSprite = NoteskinHelpers.generateNoteskinSprite(FlxG.save.data.noteskin);
+		PlayState.noteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.noteskin);
 
 		FlxG.mouse.visible = true;
 

@@ -1682,7 +1682,7 @@ class NoteskinOption extends Option
 			return false;
 		FlxG.save.data.noteskin--;
 		if (FlxG.save.data.noteskin < 0)
-			FlxG.save.data.noteskin = NoteskinHelpers.getNoteskins().length - 1;
+			FlxG.save.data.noteskin = CustomNoteHelpers.Skin.getNoteskins().length - 1;
 		display = updateDisplay();
 		return true;
 	}
@@ -1692,7 +1692,7 @@ class NoteskinOption extends Option
 		if (OptionsMenu.isInPause)
 			return false;
 		FlxG.save.data.noteskin++;
-		if (FlxG.save.data.noteskin > NoteskinHelpers.getNoteskins().length - 1)
+		if (FlxG.save.data.noteskin > CustomNoteHelpers.Skin.getNoteskins().length - 1)
 			FlxG.save.data.noteskin = 0;
 		display = updateDisplay();
 		return true;
@@ -1700,7 +1700,7 @@ class NoteskinOption extends Option
 
 	public override function getValue():String
 	{
-		return "Current Noteskin: < " + NoteskinHelpers.getNoteskinByID(FlxG.save.data.noteskin) + " >";
+		return "Current Noteskin: < " + CustomNoteHelpers.Skin.getNoteskinByID(FlxG.save.data.noteskin) + " >";
 	}
 }
 
@@ -1721,7 +1721,7 @@ class CPUNoteskinOption extends Option
 			return false;
 		FlxG.save.data.cpuNoteskin--;
 		if (FlxG.save.data.cpuNoteskin < 0)
-			FlxG.save.data.cpuNoteskin = NoteskinHelpers.getNoteskins().length - 1;
+			FlxG.save.data.cpuNoteskin = CustomNoteHelpers.Skin.getNoteskins().length - 1;
 		display = updateDisplay();
 		return true;
 	}
@@ -1731,7 +1731,7 @@ class CPUNoteskinOption extends Option
 		if (OptionsMenu.isInPause)
 			return false;
 		FlxG.save.data.cpuNoteskin++;
-		if (FlxG.save.data.cpuNoteskin > NoteskinHelpers.getNoteskins().length - 1)
+		if (FlxG.save.data.cpuNoteskin > CustomNoteHelpers.Skin.getNoteskins().length - 1)
 			FlxG.save.data.cpuNoteskin = 0;
 		display = updateDisplay();
 		return true;
@@ -1739,7 +1739,7 @@ class CPUNoteskinOption extends Option
 
 	public override function getValue():String
 	{
-		return "Current CPU Noteskin: < " + NoteskinHelpers.getNoteskinByID(FlxG.save.data.cpuNoteskin) + " >";
+		return "Current CPU Noteskin: < " + CustomNoteHelpers.Skin.getNoteskinByID(FlxG.save.data.cpuNoteskin) + " >";
 	}
 }
 
@@ -2348,7 +2348,7 @@ class NotesplashOption extends Option
 			return false;
 		FlxG.save.data.notesplash--;
 		if (FlxG.save.data.notesplash < 0)
-			FlxG.save.data.notesplash = NotesplashHelpers.getNotesplash().length - 1;
+			FlxG.save.data.notesplash = CustomNoteHelpers.Splash.getNotesplash().length - 1;
 		display = updateDisplay();
 		return true;
 	}
@@ -2358,7 +2358,7 @@ class NotesplashOption extends Option
 		if (OptionsMenu.isInPause)
 			return false;
 		FlxG.save.data.notesplash++;
-		if (FlxG.save.data.notesplash > NotesplashHelpers.getNotesplash().length - 1)
+		if (FlxG.save.data.notesplash > CustomNoteHelpers.Splash.getNotesplash().length - 1)
 			FlxG.save.data.notesplash = 0;
 		display = updateDisplay();
 		return true;
@@ -2366,7 +2366,36 @@ class NotesplashOption extends Option
 
 	public override function getValue():String
 	{
-		return "Current Notesplashes: < " + NotesplashHelpers.getNotesplashByID(FlxG.save.data.notesplash) + " >";
+		return "Current Notesplashes: < " + CustomNoteHelpers.Splash.getNotesplashByID(FlxG.save.data.notesplash) + " >";
+	}
+}
+
+class RatingPopup extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function left():Bool
+	{
+		if (OptionsMenu.isInPause)
+			return false;
+		FlxG.save.data.popup = !FlxG.save.data.popup;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Rating Popup : < " + (!FlxG.save.data.popup ? "off" : "on") + " >";
 	}
 }
 

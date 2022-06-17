@@ -19,7 +19,7 @@ class Stage extends MusicBeatState
 	public var tankGround:FlxSprite;
 	public var tankmanRun:FlxTypedGroup<TankDead>;
 
-	var foregroundSprites:FlxTypedGroup<TankBGSprite>;
+	public var foregroundSprites:FlxTypedGroup<TankBGSprite>;
 
 	public var camZoom:Float; // The zoom of the camera to have at the start of the game
 	public var hideLastBG:Bool = false; // True = hide last BGs and show ones from slowBacks on certain step, False = Toggle visibility of BGs from SlowBacks on certain step
@@ -53,10 +53,10 @@ class Stage extends MusicBeatState
 		],
 		'schoolEvil' => ['gf-pixel' => [580, 430], 'bf-pixel' => [970, 670], 'spirit' => [-50, 200]],
 		'tank' => [
-			'tankman' => [50, 200],
-			'bf' => [850, 430],
+			'tankman' => [50, 225],
+			'bf' => [850, 400],
 			'bf-holding-gf' => [850, 300],
-			'gftank' => [200, 65],
+			'gftank' => [200, 0],
 			'picoSpeaker' => [240, -160]
 		]
 	];
@@ -464,7 +464,8 @@ class Stage extends MusicBeatState
 					foregroundSprites.add(new TankBGSprite('tank5', 1620, 700, 1.5, 1.5, ['fg']));
 					if (FlxG.save.data.distractions)
 						foregroundSprites.add(new TankBGSprite('tank3', 1300, 1200, 3.5, 2.5, ['fg']));
-					toAdd.push(foregroundSprites);	
+					toAdd.push(foregroundSprites);
+					swagBacks['foregroundSprites'] = foregroundSprites;
 
 					if (PlayState.SONG.gfVersion == 'picoSpeaker')
 					{

@@ -400,7 +400,7 @@ class GameplayCustomizeState extends MusicBeatState
 					}
 
 				default:
-					babyArrow.frames = NoteskinHelpers.generateNoteskinSprite(FlxG.save.data.noteskin);
+					babyArrow.frames = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.noteskin);
 					for (j in 0...4)
 					{
 						babyArrow.animation.addByPrefix(dataColor[j], 'arrow' + dataSuffix[j]);

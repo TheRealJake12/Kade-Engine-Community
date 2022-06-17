@@ -156,6 +156,7 @@ class OptionsMenu extends FlxSubState
 				new SongPositionOption("Show the song's current position as a scrolling bar."),
 				new Colour("The Healthbar Color For Each Character."),
 				new NPSDisplayOption("Shows your current Notes Per Second on the info bar."),
+				new RatingPopup("Toggle Ratings (SICK!, MARV!) From Showing Up Ingame."),
 				new CpuStrums("Toggle the CPU's strumline lighting up when it hits a note."),
 			]),
 			new OptionCata(640, 40, "Misc", [

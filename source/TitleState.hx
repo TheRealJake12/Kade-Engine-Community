@@ -69,8 +69,8 @@ class TitleState extends MusicBeatState
 		// It doesn't reupdate the list before u restart rn lmao
 		//Lmao I just made it update on Cache 
 
-		NoteskinHelpers.updateNoteskins();
-		NotesplashHelpers.updateNotesplashes();
+		CustomNoteHelpers.Skin.updateNoteskins();
+		CustomNoteHelpers.Splash.updateNotesplashes();
 		
 
 		FlxG.mouse.visible = false;
@@ -246,7 +246,6 @@ class TitleState extends MusicBeatState
 
 			transitioning = true;
 			// FlxG.sound.music.stop();
-			#if !debug
 			new FlxTimer().start(2, function(tmr:FlxTimer)
 			{
 				var http = new haxe.Http("https://raw.githubusercontent.com/TheRealJake12/Kade-Engine-Community/master/version.downloadMe");
@@ -286,15 +285,6 @@ class TitleState extends MusicBeatState
 
 				http.request();
 			});
-			#else
-			new FlxTimer().start(2, function(tmr:FlxTimer)
-			{
-				{
-					MusicBeatState.switchState(new MainMenuState());
-					clean();
-				}
-			});
-			#end
 
 			Ratings.timingWindows = [
 				FlxG.save.data.shitMs,

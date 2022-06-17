@@ -118,6 +118,9 @@ class KadeEngineData
 		if (FlxG.save.data.healthBar == null)
 			FlxG.save.data.healthBar = true;
 
+		if (FlxG.save.data.popup == null)
+			FlxG.save.data.popup = true;	
+
 		if (FlxG.save.data.middleScroll == null)
 			FlxG.save.data.middleScroll = false;
 

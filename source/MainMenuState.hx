@@ -26,7 +26,7 @@ using StringTools;
 class MainMenuState extends MusicBeatState
 {
 	public static var nightly:String = "";
-	public static var kecVer:String = 'Kade Engine Community 1.5.1' + nightly;
+	public static var kecVer:String = 'Kade Engine Community 1.5.1';
 	public static var keVer:String = "Kade Engine 1.8";
 	public static var curSelected:Int = 0;
 
@@ -112,7 +112,7 @@ class MainMenuState extends MusicBeatState
 			menuItems.add(menuItem);
 			menuItem.scrollFactor.set(0, 0.25);
 			menuItem.antialiasing = FlxG.save.data.antialiasing;
-						
+
 			changeItem();
 			menuItem.x = 120 + (i * 160);
 		}
@@ -237,12 +237,12 @@ class MainMenuState extends MusicBeatState
 				case 'freeplay':
 					MusicBeatState.switchState(new FreeplayState());
 				case 'options':
-					//transIn = FlxTransitionableState.defaultTransIn;
-					//transOut = FlxTransitionableState.defaultTransOut;
+					// transIn = FlxTransitionableState.defaultTransIn;
+					// transOut = FlxTransitionableState.defaultTransOut;
 					MusicBeatState.switchState(new OptionsDirect());
 			}
 		}
-	}	
+	}
 
 	function changeItem(huh:Int = 0)
 	{

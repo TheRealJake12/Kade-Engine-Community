@@ -110,6 +110,8 @@ class PlayState extends MusicBeatState
 	public var dadGroup:FlxSpriteGroup;
 	public var gfGroup:FlxSpriteGroup;
 
+	public var cameraSpeed:Float = 1;
+
 	public static var songPosBG:FlxSprite;
 
 	public var visibleCombos:Array<FlxSprite> = [];
@@ -464,14 +466,14 @@ class PlayState extends MusicBeatState
 		FlxG.cameras.add(camNotes);
 
 		/*
-		FlxG.camera.setFilters([
-		ShadersHandler.fxaa
-		]);
+			FlxG.camera.setFilters([
+			ShadersHandler.fxaa
+			]);
 
-		camHUD.setFilters([
-		ShadersHandler.fxaa
-		]);
-		*/
+			camHUD.setFilters([
+			ShadersHandler.fxaa
+			]);
+		 */
 
 		laneunderlayOpponent = new FlxSprite(0, 0).makeGraphic(110 * 4 + 50, FlxG.height * 2);
 		laneunderlayOpponent.alpha = FlxG.save.data.laneTransparency;
@@ -482,7 +484,7 @@ class PlayState extends MusicBeatState
 		laneunderlay.alpha = FlxG.save.data.laneTransparency;
 		laneunderlay.color = FlxColor.BLACK;
 		laneunderlay.scrollFactor.set();
-		if (FlxG.save.data.laneUnderlay && !PlayStateChangeables.Optimize)
+		if (!FlxG.save.data.laneUnderlay && !PlayStateChangeables.Optimize)
 		{
 			if (!FlxG.save.data.middleScroll || PlayStateChangeables.Optimize)
 			{
@@ -820,13 +822,13 @@ class PlayState extends MusicBeatState
 		playerStrums = new FlxTypedGroup<StaticArrow>();
 		cpuStrums = new FlxTypedGroup<StaticArrow>();
 
-		noteskinPixelSprite = NoteskinHelpers.generatePixelSprite(FlxG.save.data.noteskin);
-		noteskinSprite = NoteskinHelpers.generateNoteskinSprite(FlxG.save.data.noteskin);
-		noteskinPixelSpriteEnds = NoteskinHelpers.generatePixelSprite(FlxG.save.data.noteskin, true);
+		noteskinPixelSprite = CustomNoteHelpers.Skin.generatePixelSprite(FlxG.save.data.noteskin);
+		noteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.noteskin);
+		noteskinPixelSpriteEnds = CustomNoteHelpers.Skin.generatePixelSprite(FlxG.save.data.noteskin, true);
 
-		cpuNoteskinSprite = NoteskinHelpers.generateNoteskinSprite(FlxG.save.data.cpuNoteskin);
+		cpuNoteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.cpuNoteskin);
 
-		notesplashSprite = NotesplashHelpers.generateNotesplashSprite(FlxG.save.data.notesplash);
+		notesplashSprite = CustomNoteHelpers.Splash.generateNotesplashSprite(FlxG.save.data.notesplash);
 
 		generateStaticArrows(0);
 		generateStaticArrows(1);
@@ -1083,11 +1085,11 @@ class PlayState extends MusicBeatState
 				case 'thorns':
 					schoolIntro(doof);
 				case 'ugh':
-					tankIntro();
+					playCutscene("ughCutscene.mp4");
 				case 'guns':
-					tankIntro();
+					playCutscene("gunsCutscene.mp4");
 				case 'stress':
-					tankIntro();
+					playCutscene("stressCutscene.mp4");
 				default:
 					startCountdown();
 			}
@@ -1115,48 +1117,28 @@ class PlayState extends MusicBeatState
 
 	function tankIntro()
 	{
-		var tankmanTalk1:FlxSprite;
-		var tankmanTalk2:FlxSprite;
-		var gfTurn1:FlxSprite;
-		var gfTurn2:FlxSprite;
-		var gfTurn3:FlxSprite;
-		var gfTurn4:FlxSprite;
-		var gfTurn5:FlxSprite;
-		var audio:FlxSound;
-		var oldZoom:Float;
-		var bf:FlxSprite;
-
-		gf.visible = false;
-		dad.visible = false;
-
-		oldZoom = Stage.camZoom;
-		Stage.camZoom = 1;
-		switch (curSong.toLowerCase())
+		switch(SONG.song.toLowerCase())
 		{
-			case 'stress':
+			case'ugh':
+			FlxG.sound.cache(Paths.sound("wellWellWell", "week7"));
+			dad.visible = false;
+			var tank1:FlxSprite = new FlxSprite(-20, 320);
+			tank1.frames = Paths.getSparrowAtlas("cutscenes/ugh", "week7");
+			tank1.antialiasing = FlxG.save.data.antialiasing;
+			tank1.animation.addByPrefix("well", "TANK TALK 1 P1", 24, false);
+			tank1.animation.addByPrefix("kill", "TANK TALK 1 P2", 24, false);
+			tank1.animation.play('well', true);
+
+			insert(members.indexOf(dadGroup) + 1, tank1);
+			FlxG.camera.zoom *= 1.2;
+
+			if (tank1.animation.curAnim.name == 'well' && tank1.animation.curAnim.finished)
 			{
-					tankmanTalk1 = new FlxSprite(PlayState.dad.x, PlayState.dad.y);
-					tankmanTalk1.frames = Paths.getSparrowAtlas('tank/cutscene/stress-talk-1');
-					tankmanTalk1.antialiasing = true;
-					tankmanTalk1.animation.addByPrefix("talk", "TANK TALK 3 P1 UNCUT", 24, false);
-					tankmanTalk1.animation.play("talk");
-					tankmanTalk1.offset.set(93, 33);
-
-					tankmanTalk2 = new FlxSprite(PlayState.dad.x, PlayState.dad.y);
-					tankmanTalk2.frames = Paths.getSparrowAtlas('tank/cutscene/stress-talk-2');
-					tankmanTalk2.antialiasing = true;
-					tankmanTalk2.animation.addByPrefix("talk", "TANK TALK 3 P2 UNCUT", 24, false);
-					tankmanTalk2.animation.play("talk");
-					tankmanTalk2.offset.set(4, 28);
-
-					gf = new Character(gf.x, gf.y);
-					gf.frames = Paths.getSparrowAtlas('characters/gfTankmen', 'shared');
-					gf.offset.set(99 * 1.1, -129 * 1.1);
-					gf.scrollFactor.set(gf.scrollFactor.x, gf.scrollFactor.y);
-					gf.animation.addByPrefix('dance', "GF Dancing at Gunpoint", 24, true);
-					gf.antialiasing = FlxG.save.data.antialiasing;
-					gf.animation.play('dance', true);
+				startCountdown();
 			}
+
+			FlxG.sound.playMusic(Paths.music('DISTORTO'), 0, false);
+
 		}
 	}
 
@@ -3749,25 +3731,27 @@ class PlayState extends MusicBeatState
 			pixelShitPart2 = '-pixel';
 			pixelShitPart3 = 'week6';
 		}
-
-		rating.loadGraphic(Paths.loadImage(pixelShitPart1 + daRating + pixelShitPart2, pixelShitPart3));
-		rating.screenCenter();
-		rating.y -= 50;
-		rating.x = coolText.x - 125;
-
-		if (!FlxG.save.data.middleScroll && (!PlayStateChangeables.Optimize))
-			rating.x = (coolText.x - 125)
-		else
-			rating.x = (coolText.x + 200);
-
-		if (FlxG.save.data.changedHit)
+		if (FlxG.save.data.popup)
 		{
-			rating.x = FlxG.save.data.changedHitX;
-			rating.y = FlxG.save.data.changedHitY;
+			rating.loadGraphic(Paths.loadImage(pixelShitPart1 + daRating + pixelShitPart2, pixelShitPart3));
+			rating.screenCenter();
+			rating.y -= 50;
+			rating.x = coolText.x - 125;
+
+			if (!FlxG.save.data.middleScroll && (!PlayStateChangeables.Optimize))
+				rating.x = (coolText.x - 125)
+			else
+				rating.x = (coolText.x + 200);
+
+			if (FlxG.save.data.changedHit)
+			{
+				rating.x = FlxG.save.data.changedHitX;
+				rating.y = FlxG.save.data.changedHitY;
+			}
+			rating.acceleration.y = 550;
+			rating.velocity.y -= FlxG.random.int(140, 175);
+			rating.velocity.x -= FlxG.random.int(0, 10);
 		}
-		rating.acceleration.y = 550;
-		rating.velocity.y -= FlxG.random.int(140, 175);
-		rating.velocity.x -= FlxG.random.int(0, 10);
 
 		var msTiming = HelperFunctions.truncateFloat(noteDiff / songMultiplier, 3);
 		if (PlayStateChangeables.botPlay && !loadRep)
@@ -3838,14 +3822,30 @@ class PlayState extends MusicBeatState
 			currentTimingShown.x = rating.x + 30;
 			currentTimingShown.alignment = FlxTextAlign.RIGHT; // is this even doing anything
 		}
-		currentTimingShown.x = comboSpr.x + 100;
-		currentTimingShown.y = rating.y + 100;
+		if (FlxG.save.data.popup)
+		{
+			if (!PlayStateChangeables.useDownscroll)
+			{
+				currentTimingShown.y = 100;
+			}
+			else
+			{
+				currentTimingShown.y = 300;
+			}
+			
+		}
+		else
+		{
+			currentTimingShown.x = comboSpr.x + 100;
+			currentTimingShown.y = rating.y + 100;
+		}
+		
 		currentTimingShown.acceleration.y = 600;
 		currentTimingShown.velocity.y -= 150;
 
 		comboSpr.velocity.x += FlxG.random.int(1, 10);
 		currentTimingShown.velocity.x += comboSpr.velocity.x;
-		if (!PlayStateChangeables.botPlay || loadRep)
+		if (!PlayStateChangeables.botPlay || loadRep || FlxG.save.data.popup)
 			add(rating);
 
 		if (SONG.noteStyle != 'pixel')
@@ -3921,7 +3921,8 @@ class PlayState extends MusicBeatState
 			numScore.velocity.y -= FlxG.random.int(140, 160);
 			numScore.velocity.x = FlxG.random.float(-5, 5);
 
-			add(numScore);
+			if (FlxG.save.data.popup)
+				add(numScore);
 
 			visibleCombos.push(numScore);
 
@@ -4839,7 +4840,7 @@ class PlayState extends MusicBeatState
 				else
 				{
 					SONG = Song.loadFromJson(storyPlaylist[0].toLowerCase(), diff);
-					LoadingState.loadAndSwitchState(new PlayState());
+					LoadingState.loadAndSwitchState(new PlayState(), true);
 				}
 			}
 			else

@@ -50,6 +50,7 @@ class Caching extends MusicBeatState
 	var noteskins = [];
 	var music = [];
 	var sounds = [];
+	var funkay:FlxSprite;
 
 	var shitz:FlxText;
 
@@ -67,7 +68,7 @@ class Caching extends MusicBeatState
 		KadeEngineData.initSave();
 
 		// It doesn't reupdate the list before u restart rn lmao
-		NoteskinHelpers.updateNoteskins();
+		CustomNoteHelpers.Skin.updateNoteskins();
 
 		FlxG.sound.muteKeys = [FlxKey.fromString(FlxG.save.data.muteBind)];
 		FlxG.sound.volumeDownKeys = [FlxKey.fromString(FlxG.save.data.volDownBind)];
@@ -79,11 +80,13 @@ class Caching extends MusicBeatState
 
 		bitmapData = new Map<String, FlxGraphic>();
 
-		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.image('funkay'));
-		menuBG.screenCenter();
-		menuBG.antialiasing = FlxG.save.data.antialiasing;
-		menuBG.scale.set(0.78, 0.78);
-		add(menuBG);
+		funkay = new FlxSprite(0, 0).loadGraphic(Paths.image('funkay'));
+		funkay.setGraphicSize(0, FlxG.height);
+		funkay.updateHitbox();
+		funkay.antialiasing = FlxG.save.data.antialiasing;
+		add(funkay);
+		funkay.scrollFactor.set();
+		funkay.screenCenter();
 
 		shitz = new FlxText(12, 12, 0, "Loading...", 12);
 		shitz.scrollFactor.set();
