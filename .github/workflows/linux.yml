@@ -18,10 +18,12 @@ jobs:
       - uses: actions/checkout@v2
       - uses: krdlab/setup-haxe@v1
         with:
-          haxe-version: 4.2.3
+          haxe-version: 4.2.5
       # Runs a set of commands using the runners shell
       - name: Install the shit
         run: |
+          sudo apt-get install libvlc-dev
+          sudo apt-get install libvlccore-dev
           sudo add-apt-repository ppa:haxe/releases -y
           sudo apt-get update
           sudo apt-get install gcc-multilib g++-multilib haxe -y
@@ -42,6 +44,7 @@ jobs:
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
           haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
+          haxelib git hxCodec https://github.com/polybiusproxy/hxCodec.git
           haxelib install actuate 
           haxelib list
           haxelib run lime build linux
