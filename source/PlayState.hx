@@ -1084,12 +1084,14 @@ class PlayState extends MusicBeatState
 					schoolIntro(doof);
 				case 'thorns':
 					schoolIntro(doof);
+				#if VIDEOS	
 				case 'ugh':
 					playCutscene("ughCutscene.mp4");
 				case 'guns':
 					playCutscene("gunsCutscene.mp4");
 				case 'stress':
 					playCutscene("stressCutscene.mp4");
+				#end	
 				default:
 					startCountdown();
 			}
@@ -1117,28 +1119,27 @@ class PlayState extends MusicBeatState
 
 	function tankIntro()
 	{
-		switch(SONG.song.toLowerCase())
+		switch (SONG.song.toLowerCase())
 		{
-			case'ugh':
-			FlxG.sound.cache(Paths.sound("wellWellWell", "week7"));
-			dad.visible = false;
-			var tank1:FlxSprite = new FlxSprite(-20, 320);
-			tank1.frames = Paths.getSparrowAtlas("cutscenes/ugh", "week7");
-			tank1.antialiasing = FlxG.save.data.antialiasing;
-			tank1.animation.addByPrefix("well", "TANK TALK 1 P1", 24, false);
-			tank1.animation.addByPrefix("kill", "TANK TALK 1 P2", 24, false);
-			tank1.animation.play('well', true);
+			case 'ugh':
+				FlxG.sound.cache(Paths.sound("wellWellWell", "week7"));
+				dad.visible = false;
+				var tank1:FlxSprite = new FlxSprite(-20, 320);
+				tank1.frames = Paths.getSparrowAtlas("cutscenes/ugh", "week7");
+				tank1.antialiasing = FlxG.save.data.antialiasing;
+				tank1.animation.addByPrefix("well", "TANK TALK 1 P1", 24, false);
+				tank1.animation.addByPrefix("kill", "TANK TALK 1 P2", 24, false);
+				tank1.animation.play('well', true);
 
-			insert(members.indexOf(dadGroup) + 1, tank1);
-			FlxG.camera.zoom *= 1.2;
+				insert(members.indexOf(dadGroup) + 1, tank1);
+				FlxG.camera.zoom *= 1.2;
 
-			if (tank1.animation.curAnim.name == 'well' && tank1.animation.curAnim.finished)
-			{
-				startCountdown();
-			}
+				if (tank1.animation.curAnim.name == 'well' && tank1.animation.curAnim.finished)
+				{
+					startCountdown();
+				}
 
-			FlxG.sound.playMusic(Paths.music('DISTORTO'), 0, false);
-
+				FlxG.sound.playMusic(Paths.music('DISTORTO'), 0, false);
 		}
 	}
 
@@ -1726,7 +1727,7 @@ class PlayState extends MusicBeatState
 			songName.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			songName.scrollFactor.set();
 
-			songName.text = SONG.songName + ' (' + FlxStringUtil.formatTime(songLength, false) + ')';
+			songName.text = SONG.song + ' (' + FlxStringUtil.formatTime(songLength, false) + ')';
 			songName.y = songPosBG.y + (songPosBG.height / 3);
 
 			add(songName);
@@ -2698,7 +2699,7 @@ class PlayState extends MusicBeatState
 					secondsTotal = 0;
 
 				if (FlxG.save.data.songPosition)
-					songName.text = SONG.songName + ' (' + FlxStringUtil.formatTime((songLength - secondsTotal), false) + ')';
+					songName.text = SONG.song + ' (' + FlxStringUtil.formatTime((songLength - secondsTotal), false) + ')';
 			}
 
 			// Conductor.lastSongPos = FlxG.sound.music.time;
@@ -3832,14 +3833,13 @@ class PlayState extends MusicBeatState
 			{
 				currentTimingShown.y = 300;
 			}
-			
 		}
 		else
 		{
 			currentTimingShown.x = comboSpr.x + 100;
 			currentTimingShown.y = rating.y + 100;
 		}
-		
+
 		currentTimingShown.acceleration.y = 600;
 		currentTimingShown.velocity.y -= 150;
 
