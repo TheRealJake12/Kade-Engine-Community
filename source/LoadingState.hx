@@ -35,7 +35,7 @@ class LoadingState extends MusicBeatState
 
 	override function create()
 	{
-		funkay = new FlxSprite(0, 0).loadGraphic(Paths.getPath('images/funkay.png', IMAGE, 'images'));
+		funkay = new FlxSprite(0, 0).loadGraphic(Paths.getPath('funkay.png', IMAGE, 'images'));
 		funkay.setGraphicSize(0, FlxG.height);
 		funkay.updateHitbox();
 		funkay.antialiasing = FlxG.save.data.antialiasing;
@@ -43,10 +43,12 @@ class LoadingState extends MusicBeatState
 		// logoBl.screenCenter();
 		// logoBl.color = FlxColor.BLACK;
 
+		/*
 		loadBar = new FlxSprite(0, FlxG.height - 20).makeGraphic(FlxG.width, 10, 0xffff16d2);
 		loadBar.screenCenter(X);
 		loadBar.antialiasing = FlxG.save.data.antialiasing;
 		add(loadBar);
+		*/
 
 		initSongsManifest().onComplete(function(lib)
 		{

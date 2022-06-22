@@ -1,9 +1,6 @@
 package;
 
 import flixel.group.FlxSpriteGroup;
-#if VIDEOS
-import vlc.VideoHandler;
-#end
 import test.Destroyer;
 import CustomFadeTransition;
 import shader.FXAAShader;
@@ -734,8 +731,8 @@ class PlayState extends MusicBeatState
 
 		if (loadRep)
 		{
-			FlxG.watch.addQuick('rep rpesses', repPresses);
-			FlxG.watch.addQuick('rep releases', repReleases);
+			//FlxG.watch.addQuick('rep rpesses', repPresses);
+			//FlxG.watch.addQuick('rep releases', repReleases);
 			// FlxG.watch.addQuick('Queued',inputsQueued);
 
 			PlayStateChangeables.useDownscroll = rep.replay.isDownscroll;
@@ -1084,14 +1081,14 @@ class PlayState extends MusicBeatState
 					schoolIntro(doof);
 				case 'thorns':
 					schoolIntro(doof);
-				#if VIDEOS	
+				#if VIDEOS
 				case 'ugh':
 					playCutscene("ughCutscene.mp4");
 				case 'guns':
 					playCutscene("gunsCutscene.mp4");
 				case 'stress':
 					playCutscene("stressCutscene.mp4");
-				#end	
+				#end
 				default:
 					startCountdown();
 			}
@@ -3732,27 +3729,24 @@ class PlayState extends MusicBeatState
 			pixelShitPart2 = '-pixel';
 			pixelShitPart3 = 'week6';
 		}
-		if (FlxG.save.data.popup)
+		rating.loadGraphic(Paths.loadImage(pixelShitPart1 + daRating + pixelShitPart2, pixelShitPart3));
+		rating.screenCenter();
+		rating.y -= 50;
+		rating.x = coolText.x - 125;
+
+		if (!FlxG.save.data.middleScroll && (!PlayStateChangeables.Optimize))
+			rating.x = (coolText.x - 125)
+		else
+			rating.x = (coolText.x + 200);
+
+		if (FlxG.save.data.changedHit)
 		{
-			rating.loadGraphic(Paths.loadImage(pixelShitPart1 + daRating + pixelShitPart2, pixelShitPart3));
-			rating.screenCenter();
-			rating.y -= 50;
-			rating.x = coolText.x - 125;
-
-			if (!FlxG.save.data.middleScroll && (!PlayStateChangeables.Optimize))
-				rating.x = (coolText.x - 125)
-			else
-				rating.x = (coolText.x + 200);
-
-			if (FlxG.save.data.changedHit)
-			{
-				rating.x = FlxG.save.data.changedHitX;
-				rating.y = FlxG.save.data.changedHitY;
-			}
-			rating.acceleration.y = 550;
-			rating.velocity.y -= FlxG.random.int(140, 175);
-			rating.velocity.x -= FlxG.random.int(0, 10);
+			rating.x = FlxG.save.data.changedHitX;
+			rating.y = FlxG.save.data.changedHitY;
 		}
+		rating.acceleration.y = 550;
+		rating.velocity.y -= FlxG.random.int(140, 175);
+		rating.velocity.x -= FlxG.random.int(0, 10);
 
 		var msTiming = HelperFunctions.truncateFloat(noteDiff / songMultiplier, 3);
 		if (PlayStateChangeables.botPlay && !loadRep)
@@ -3806,7 +3800,10 @@ class PlayState extends MusicBeatState
 			currentTimingShown.alpha = 1;
 
 		if (!PlayStateChangeables.botPlay || loadRep)
-			add(currentTimingShown);
+		{
+			if (FlxG.save.data.popup)
+				add(currentTimingShown);
+		}
 
 		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.loadImage(pixelShitPart1 + 'combo' + pixelShitPart2, pixelShitPart3));
 		comboSpr.screenCenter();
@@ -3823,30 +3820,18 @@ class PlayState extends MusicBeatState
 			currentTimingShown.x = rating.x + 30;
 			currentTimingShown.alignment = FlxTextAlign.RIGHT; // is this even doing anything
 		}
-		if (FlxG.save.data.popup)
-		{
-			if (!PlayStateChangeables.useDownscroll)
-			{
-				currentTimingShown.y = 100;
-			}
-			else
-			{
-				currentTimingShown.y = 300;
-			}
-		}
-		else
-		{
-			currentTimingShown.x = comboSpr.x + 100;
-			currentTimingShown.y = rating.y + 100;
-		}
-
+		currentTimingShown.x = comboSpr.x + 100;
+		currentTimingShown.y = rating.y + 100;
 		currentTimingShown.acceleration.y = 600;
 		currentTimingShown.velocity.y -= 150;
 
 		comboSpr.velocity.x += FlxG.random.int(1, 10);
 		currentTimingShown.velocity.x += comboSpr.velocity.x;
-		if (!PlayStateChangeables.botPlay || loadRep || FlxG.save.data.popup)
-			add(rating);
+		if (!PlayStateChangeables.botPlay || loadRep)
+		{
+			if (FlxG.save.data.popup)
+				add(rating);
+		}
 
 		if (SONG.noteStyle != 'pixel')
 		{
@@ -4445,7 +4430,7 @@ class PlayState extends MusicBeatState
 			if (!note.isSustainNote)
 			{
 				combo += 1;
-				popUpScore(note);
+					popUpScore(note);
 			}
 
 			var altAnim:String = "";
@@ -4821,8 +4806,6 @@ class PlayState extends MusicBeatState
 	}
 
 	#if VIDEOS
-	var video:VideoHandler;
-
 	function playCutscene(name:String, ?atend:Bool)
 	{
 		inCutscene = true;
@@ -4836,11 +4819,11 @@ class PlayState extends MusicBeatState
 			if (atend == true)
 			{
 				if (storyPlaylist.length <= 0)
-					MusicBeatState.switchState(new StoryMenuState());
+					FlxG.switchState(new StoryMenuState());
 				else
 				{
 					SONG = Song.loadFromJson(storyPlaylist[0].toLowerCase(), diff);
-					LoadingState.loadAndSwitchState(new PlayState(), true);
+					FlxG.switchState(new PlayState());
 				}
 			}
 			else

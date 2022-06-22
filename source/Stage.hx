@@ -454,18 +454,21 @@ class Stage extends MusicBeatState
 					toAdd.push(ground);
 					moveTank();
 
-					foregroundSprites = new FlxTypedGroup<TankBGSprite>();
-					foregroundSprites.add(new TankBGSprite('tank0', -500, 650, 1.7, 1.5, ['fg']));
 					if (FlxG.save.data.distractions)
-						foregroundSprites.add(new TankBGSprite('tank1', -300, 750, 2, 0.2, ['fg']));
-					foregroundSprites.add(new TankBGSprite('tank2', 450, 940, 1.5, 1.5, ['foreground']));
-					if (FlxG.save.data.distractions)
-						foregroundSprites.add(new TankBGSprite('tank4', 1300, 900, 1.5, 1.5, ['fg']));
-					foregroundSprites.add(new TankBGSprite('tank5', 1620, 700, 1.5, 1.5, ['fg']));
-					if (FlxG.save.data.distractions)
-						foregroundSprites.add(new TankBGSprite('tank3', 1300, 1200, 3.5, 2.5, ['fg']));
-					toAdd.push(foregroundSprites);
-					swagBacks['foregroundSprites'] = foregroundSprites;
+					{
+						foregroundSprites = new FlxTypedGroup<TankBGSprite>();
+						foregroundSprites.add(new TankBGSprite('tank0', -500, 650, 1.7, 1.5, ['fg']));
+						if (FlxG.save.data.distractions)
+							foregroundSprites.add(new TankBGSprite('tank1', -300, 750, 2, 0.2, ['fg']));
+						foregroundSprites.add(new TankBGSprite('tank2', 450, 940, 1.5, 1.5, ['foreground']));
+						if (FlxG.save.data.distractions)
+							foregroundSprites.add(new TankBGSprite('tank4', 1300, 900, 1.5, 1.5, ['fg']));
+						foregroundSprites.add(new TankBGSprite('tank5', 1620, 700, 1.5, 1.5, ['fg']));
+						if (FlxG.save.data.distractions)
+							foregroundSprites.add(new TankBGSprite('tank3', 1300, 1200, 3.5, 2.5, ['fg']));
+						toAdd.push(foregroundSprites);
+						swagBacks['foregroundSprites'] = foregroundSprites;
+					}
 
 					if (PlayState.SONG.gfVersion == 'picoSpeaker')
 					{

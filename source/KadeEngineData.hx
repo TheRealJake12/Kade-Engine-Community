@@ -188,7 +188,7 @@ class KadeEngineData
 			FlxG.save.data.alpha = 0.6;
 			
 		if (FlxG.save.data.laneUnderlay == null)
-			FlxG.save.data.laneUnderlay = 0.1;	
+			FlxG.save.data.laneUnderlay = 0;	
 
 		Conductor.recalculateTimings();
 		PlayerSettings.player1.controls.loadKeyBinds();

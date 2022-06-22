@@ -1,9 +1,6 @@
 package;
 
 import test.Destroyer;
-#if VIDEOS
-import vlc.VideoHandler;
-#end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionableState;
