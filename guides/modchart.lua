@@ -1,3 +1,5 @@
+-- Script for forced middlescroll.
+
 local receptor = null
 local R0 = null 
 local R1 = null 
