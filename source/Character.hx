@@ -540,7 +540,6 @@ class Character extends FlxSprite
 			}
 		}
 		TankDead.animationNotes = animationNotes;
-		trace(animationNotes);
 		animationNotes.sort(sortAnims);
 	}
 

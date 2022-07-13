@@ -1,6 +1,7 @@
 package;
 
 import Controls.KeyboardScheme;
+import test.Destroyer;
 import flixel.util.FlxTimer;
 #if desktop
 import Discord.DiscordClient;
@@ -26,7 +27,7 @@ using StringTools;
 class MainMenuState extends MusicBeatState
 {
 	public static var nightly:String = "";
-	public static var kecVer:String = 'Kade Engine Community 1.5.1';
+	public static var kecVer:String = 'Kade Engine Community 1.5.2';
 	public static var keVer:String = "Kade Engine 1.8";
 	public static var curSelected:Int = 0;
 
@@ -45,6 +46,9 @@ class MainMenuState extends MusicBeatState
 
 	override function create()
 	{
+		if (FlxG.save.data.unload)
+			Destroyer.clearStoredMemory();
+
 		#if desktop
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
@@ -131,6 +135,9 @@ class MainMenuState extends MusicBeatState
 		changeItem();
 
 		super.create();
+
+		if (FlxG.save.data.unload)
+			Destroyer.clearUnusedMemory();
 	}
 
 	var selectedSomethin:Bool = false;
@@ -147,13 +154,13 @@ class MainMenuState extends MusicBeatState
 
 		if (!selectedSomethin)
 		{
-			if (FlxG.keys.justPressed.UP)
+			if (FlxG.keys.justPressed.UP || controls.UP_P)
 			{
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 				changeItem(-1);
 			}
 
-			if (FlxG.keys.justPressed.DOWN)
+			if (FlxG.keys.justPressed.DOWN || controls.DOWN_P)
 			{
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 				changeItem(1);

@@ -1362,12 +1362,9 @@ class ChartingState extends MusicBeatState
 
 		/*player2 = new Character(0,0, _song.player2);
 			player1 = new Boyfriend(player2.width * 0.2,0 + player2.height, _song.player1);
-
 			player1.y = player1.y - player1.height;
-
 			player2.setGraphicSize(Std.int(player2.width * 0.2));
 			player1.setGraphicSize(Std.int(player1.width * 0.2));
-
 			UI_box.add(player1);
 			UI_box.add(player2); */
 	}
@@ -1585,7 +1582,6 @@ class ChartingState extends MusicBeatState
 			loopCheck.checked = curNoteSelected.doesLoop;
 			tooltips.add(loopCheck, {title: 'Section looping', body: "Whether or not it's a simon says style section", style: tooltipType});
 			bullshitUI.add(loopCheck);
-
 		 */
 	}
 
@@ -3435,23 +3431,18 @@ class ChartingState extends MusicBeatState
 		function calculateSectionLengths(?sec:SwagSection):Int
 		{
 			var daLength:Int = 0;
-
 			for (i in _song.notes)
 			{
 				var swagLength = i.lengthInSteps;
-
 				if (i.typeOfSection == Section.COPYCAT)
 					swagLength * 2;
-
 				daLength += swagLength;
-
 				if (sec != null && sec == i)
 				{
 					Debug.logTrace('swag loop??');
 					break;
 				}
 			}
-
 			return daLength;
 	}*/
 	private var daSpacing:Float = 0.3;

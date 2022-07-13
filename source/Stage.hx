@@ -9,6 +9,9 @@ import flixel.addons.effects.chainable.FlxWaveEffect;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
+import openfl.filters.ShaderFilter;
+import flixel.util.FlxColor;
+import openfl.display.BlendMode;
 
 class Stage extends MusicBeatState
 {
@@ -186,13 +189,13 @@ class Stage extends MusicBeatState
 
 					var overlayShit:FlxSprite = new FlxSprite(-500, -600).loadGraphic(Paths.loadImage('limo/limoOverlay', 'week4'));
 					overlayShit.alpha = 0.5;
-					// add(overlayShit);
+					add(overlayShit);
 
-					// var shaderBullshit = new BlendModeEffect(new OverlayShader(), FlxColor.RED);
+					//var shaderBullshit = new BlendModeEffect(new OverlayShader(), FlxColor.RED);
 
-					// FlxG.camera.setFilters([new ShaderFilter(cast shaderBullshit.shader)]);
+					//FlxG.camera.setFilters([new ShaderFilter(cast shaderBullshit.shader)]);
 
-					// overlayShit.shader = shaderBullshit;
+					//overlayShit.shader = shaderBullshit;
 
 					var limoTex = Paths.getSparrowAtlas('limo/limoDrive', 'week4');
 
@@ -405,7 +408,7 @@ class Stage extends MusicBeatState
 				{
 					camZoom = 0.9;
 
-					var sky:TankBGSprite = new TankBGSprite('tankSky', -400, -400, 0, 0);
+					var sky:TankBGSprite = new TankBGSprite('tankSky', -200, -200, 0, 0);
 					toAdd.push(sky);
 
 					if (FlxG.save.data.distractions)

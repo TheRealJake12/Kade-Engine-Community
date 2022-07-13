@@ -318,11 +318,11 @@ class FreeplayState extends MusicBeatState
 		var charting = FlxG.keys.justPressed.SEVEN;
 		var bfDebug = FlxG.keys.justPressed.ZERO;
 
-		if (upP)
+		if (upP || controls.UP_P)
 		{
 			changeSelection(-1);
 		}
-		if (downP)
+		if (downP || controls.DOWN_P)
 		{
 			changeSelection(1);
 		}
@@ -364,9 +364,9 @@ class FreeplayState extends MusicBeatState
 		}
 		else
 		{
-			if (FlxG.keys.justPressed.LEFT)
+			if (FlxG.keys.justPressed.LEFT || controls.LEFT_P)
 				changeDiff(-1);
-			if (FlxG.keys.justPressed.RIGHT)
+			if (FlxG.keys.justPressed.RIGHT || controls.RIGHT_P)
 				changeDiff(1);
 		}
 

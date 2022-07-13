@@ -132,6 +132,7 @@ class OptionsMenu extends FlxSubState
 				new InstantRespawn("Toggle if you instantly respawn after dying."),
 				new CamZoomOption("Toggle the camera zoom in-game."),
 				// new OffsetMenu("Get a note offset based off of your inputs!"),
+				new ReplayOption("Watch Replays"),
 				new DFJKOption(),
 				new Judgement("Create a custom judgement preset"),
 				new CustomizeGameplay("Drag and drop gameplay modules to your prefered positions!")
@@ -177,6 +178,7 @@ class OptionsMenu extends FlxSubState
 				new FPSCapOption("Change your FPS Cap."), 
 				#end
 				new Memory("Toggle the Memory Counter"),
+				new RainbowFPSOption("Make the FPS Counter flicker through rainbow colors."),
 				new General("Traces things in the debug console or logs. Affects performance in debug builds."),
 				new EditorRes("Not showing the editor grid will greatly increase editor performance"),
 				new DistractionsAndEffectsOption("Turns On Extra Images That Reduce Your FPS Significantly(Week 5 and 7 esp)"),
@@ -188,6 +190,7 @@ class OptionsMenu extends FlxSubState
 				new CharacterCaching("Caches Characters"), 
 				new SongCaching("Caches Songs for close to Instant loading"),
 				new CachingOption("Caches all of the options above (High Memory Depending On Your Cache Options.)"),
+				new UnloadNow("Clears All Cache We Can Remove"),
 				#end
 
 			]),

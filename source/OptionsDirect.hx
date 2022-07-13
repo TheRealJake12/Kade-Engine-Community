@@ -9,6 +9,9 @@ class OptionsDirect extends MusicBeatState
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
 
+		if (FlxG.save.data.unload)
+			test.Destroyer.clearStoredMemory();
+
 		if (FlxG.sound.music.playing)
 		{
 			FlxG.sound.playMusic(Paths.music('optionsmenu'));

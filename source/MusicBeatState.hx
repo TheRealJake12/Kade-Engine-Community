@@ -12,6 +12,7 @@ import flixel.FlxSprite;
 import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
 import flixel.FlxState;
+import openfl.Lib;
 import flixel.FlxBasic;
 
 class MusicBeatState extends FlxUIState
@@ -22,6 +23,7 @@ class MusicBeatState extends FlxUIState
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
 	private var curDecimalBeat:Float = 0;
+	public static var currentColor = 0;
 
 	private var assets:Array<FlxBasic> = [];
 	public static var initSave:Bool = false;
@@ -63,6 +65,8 @@ class MusicBeatState extends FlxUIState
 		#end
 	}
 
+	
+
 	override function add(Object:flixel.FlxBasic):flixel.FlxBasic
 	{
 		if (FlxG.save.data.optimize)
@@ -73,29 +77,6 @@ class MusicBeatState extends FlxUIState
 
 	override function update(elapsed:Float)
 	{
-		// everyStep();
-		/*var nextStep:Int = updateCurStep();
-
-			if (nextStep >= 0)
-			{
-				if (nextStep > curStep)
-				{
-					for (i in curStep...nextStep)
-					{
-						curStep++;
-						updateBeat();
-						stepHit();
-					}
-				}
-				else if (nextStep < curStep)
-				{
-					//Song reset?
-					curStep = nextStep;
-					updateBeat();
-					stepHit();
-				}
-		}*/
-
 		if (Conductor.songPosition < 0)
 			curDecimalBeat = 0;
 		else
@@ -126,13 +107,37 @@ class MusicBeatState extends FlxUIState
 					}
 					else if (ste < curStep)
 					{
-						//trace("reset steps for some reason?? at " + Conductor.songPosition);
-						// Song reset?
 						curStep = ste;
 						updateBeat();
 						stepHit();
 					}
 				}
+
+				var array:Array<FlxColor> = [
+					FlxColor.fromRGB(148, 0, 211),
+					FlxColor.fromRGB(75, 0, 130),
+					FlxColor.fromRGB(0, 0, 255),
+					FlxColor.fromRGB(0, 255, 0),
+					FlxColor.fromRGB(255, 255, 0),
+					FlxColor.fromRGB(255, 127, 0),
+					FlxColor.fromRGB(255, 0, 0)
+				];
+
+				var skippedFrames = 0;
+
+				if (FlxG.save.data.fpsRain && skippedFrames >= 6)
+				{
+					if (currentColor >= array.length)
+						currentColor = 0;
+					(cast(Lib.current.getChildAt(0), Main)).changeFPSColor(array[currentColor]);
+					currentColor++;
+					skippedFrames = 0;
+				}
+				else
+					skippedFrames++;
+
+				if ((cast(Lib.current.getChildAt(0), Main)).getFPSCap != FlxG.save.data.fpsCap && FlxG.save.data.fpsCap <= 420)
+					(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);	
 			}
 			else
 			{
@@ -151,8 +156,6 @@ class MusicBeatState extends FlxUIState
 					}
 					else if (nextStep < curStep)
 					{
-						// Song reset?
-						//trace("(no bpm change) reset steps for some reason?? at " + Conductor.songPosition);
 						curStep = nextStep;
 						updateBeat();
 						stepHit();
@@ -200,7 +203,6 @@ class MusicBeatState extends FlxUIState
 				{
 					FlxG.resetState();
 				};
-				// trace('resetted');
 			}
 			else
 			{
@@ -208,7 +210,6 @@ class MusicBeatState extends FlxUIState
 				{
 					FlxG.switchState(nextState);
 				};
-				// trace('changed state');
 			}
 			return;
 		}
@@ -236,6 +237,5 @@ class MusicBeatState extends FlxUIState
 
 	public function beatHit():Void
 	{
-		//do literally nothing dumbass
 	}
 }

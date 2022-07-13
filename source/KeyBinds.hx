@@ -9,8 +9,6 @@ import flixel.input.keyboard.FlxKey;
 
 class KeyBinds
 {
-	public static var gamepad:Bool = false;
-
 	public static function resetBinds():Void
 	{
 		FlxG.save.data.upBind = "W";

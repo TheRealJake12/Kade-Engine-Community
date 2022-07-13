@@ -79,12 +79,10 @@ class Debug
 	 */
 	public static function logTrace(input:Dynamic, ?pos:haxe.PosInfos):Void
 	{
-		#if debug
 		if (input == null)
 			return;
 		var output = formatOutput(input, pos);
 		writeToLogFile(output, 'TRACE');
-		#end
 	}
 
 	/**
@@ -108,14 +106,12 @@ class Debug
 	 */
 	public static inline function watchVariable(object:Dynamic, field:String, name:String):Void
 	{
-		#if debug
 		if (object == null)
 		{
 			Debug.logError("Tried to watch a variable on a null object!");
 			return;
 		}
 		FlxG.watch.add(object, field, name == null ? field : name);
-		#end
 		// Else, do nothing outside of debug mode.
 	}
 
@@ -128,9 +124,7 @@ class Debug
 	 */
 	public inline static function quickWatch(value:Dynamic, name:String)
 	{
-		#if debug
 		FlxG.watch.addQuick(name == null ? "QuickWatch" : name, value);
-		#end
 		// Else, do nothing outside of debug mode.
 	}
 
@@ -207,7 +201,7 @@ class Debug
 		#else
 		logInfo("This is a RELEASE build.");
 		#end
-		logInfo('HaxeFlixel version: ${Std.string(FlxG.VERSION)}');
+		logInfo("HaxeFlixel version: TheRealJake_12's fork of Flixel");
 		logInfo('Kade Engine version: ${MainMenuState.keVer}');
 		logInfo('KEC version: ${MainMenuState.kecVer}');
 	}

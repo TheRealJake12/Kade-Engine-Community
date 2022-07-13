@@ -67,17 +67,14 @@ class KeyBindMenu extends FlxSubState
 
 		blackBox = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(blackBox);
-
-		infoText = new FlxText(-10, 630, 1280,
-			'Current Mode: ${KeyBinds.gamepad ? 'GAMEPAD' : 'KEYBOARD'}. Press TAB to switch\n(${KeyBinds.gamepad ? 'RIGHT Trigger' : 'Escape'} to save, ${KeyBinds.gamepad ? 'LEFT Trigger' : 'Backspace'} to leave without saving. ${KeyBinds.gamepad ? 'START To change a keybind' : ''})',
-			72);
+		
 		infoText.scrollFactor.set(0, 0);
 		infoText.setFormat("VCR OSD Mono", 24, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		infoText.borderSize = 3;
 		infoText.borderQuality = 1;
 		infoText.alpha = 0;
 		infoText.screenCenter(FlxAxes.X);
-		add(infoText);
+		//add(infoText);
 		add(keyTextDisplay);
 
 		blackBox.alpha = 0;
@@ -99,8 +96,7 @@ class KeyBindMenu extends FlxSubState
 
 		if (frames <= 10)
 			frames++;
-
-		infoText.text = 'Current Mode: ${KeyBinds.gamepad ? 'GAMEPAD' : 'KEYBOARD'}. Press TAB to switch\n(${KeyBinds.gamepad ? 'RIGHT Trigger' : 'Escape'} to save, ${KeyBinds.gamepad ? 'LEFT Trigger' : 'Backspace'} to leave without saving. ${KeyBinds.gamepad ? 'START To change a keybind' : ''})\n${lastKey != "" ? lastKey + " is blacklisted!" : ""}';
+		
 
 		switch (state)
 		{
@@ -130,7 +126,6 @@ class KeyBindMenu extends FlxSubState
 				{
 					reset();
 				}
-				KeyBinds.gamepad = false;
 			case "input":
 				{
 					tempKey = keys[curSelected];

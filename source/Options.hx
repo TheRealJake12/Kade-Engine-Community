@@ -1245,7 +1245,7 @@ class ScrollSpeedOption extends Option
 		return true;
 	}
 }
-/*
+
 class RainbowFPSOption extends Option
 {
 	public function new(desc:String)
@@ -1254,7 +1254,7 @@ class RainbowFPSOption extends Option
 		description = desc;
 	}
 
-	public override function left():Bool
+	public override function press():Bool
 	{
 		FlxG.save.data.fpsRain = !FlxG.save.data.fpsRain;
 		(cast(Lib.current.getChildAt(0), Main)).changeFPSColor(FlxColor.WHITE);
@@ -1262,18 +1262,11 @@ class RainbowFPSOption extends Option
 		return true;
 	}
 
-	public override function right():Bool
-	{
-		left();
-		return true;
-	}
-
 	private override function updateDisplay():String
 	{
-		return "FPS Rainbow: < " + (!FlxG.save.data.fpsRain ? "off" : "on") + " >";
+		return "FPS Rainbow " + (!FlxG.save.data.fpsRain ? "off" : "on");
 	}
-}doesnt work so im just removing it
-*/ 
+}
 
 class NPSDisplayOption extends Option
 {
@@ -2303,6 +2296,33 @@ class UnloadSongs extends Option
 	}
 }
 
+class UnloadNow extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		if (OptionsMenu.isInPause)
+			description = "Clears All Cache We Can Remove.";
+		else
+			description = desc;
+	}
+
+	public override function press():Bool
+	{
+		if (!OptionsMenu.isInPause)
+		{
+			test.Destroyer.clearUnusedMemory();
+			//test.Destroyer.clearStoredMemory();
+		}
+		return false;
+	}
+
+	private override function updateDisplay():String
+	{
+		return ('Clears All Cache We Can Remove.');
+	}
+}
+
 class Memory extends Option
 {
 	public function new(desc:String)
@@ -2500,6 +2520,7 @@ class ResetSettings extends Option
 		FlxG.save.data.gen = null;
 		FlxG.save.data.oldcharter = null;
 		FlxG.save.data.motion = null;
+		FlxG.save.data.popup = null;
 		
 
 		KadeEngineData.initSave();

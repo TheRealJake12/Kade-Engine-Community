@@ -45,8 +45,8 @@ class Destroyer
 		Assets.cache.clear("songs");
 		Assets.cache.clear("characters");
 		Assets.cache.clear("music");
-		Assets.cache.clear("images");
-		// */
+		//Assets.cache.clear("images");
+		//
 	}
 
 	public static function excludeAsset(key:String)

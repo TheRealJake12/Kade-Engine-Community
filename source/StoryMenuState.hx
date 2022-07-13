@@ -99,9 +99,9 @@ class StoryMenuState extends MusicBeatState
 	{
 		#if desktop
 		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
-		#end
-		
-		Destroyer.clearUnusedMemory();
+		#end	
+		if (FlxG.save.data.unload)
+			Destroyer.clearUnusedMemory();
 
 		weekUnlocked = unlockWeeks();
 
@@ -264,12 +264,12 @@ class StoryMenuState extends MusicBeatState
 			if (!selectedWeek)
 			{
 
-				if (FlxG.keys.justPressed.UP)
+				if (FlxG.keys.justPressed.UP || controls.UP_P)
 				{
 					changeWeek(-1);
 				}
 
-				if (FlxG.keys.justPressed.DOWN)
+				if (FlxG.keys.justPressed.DOWN || controls.DOWN_P)
 				{
 					changeWeek(1);
 				}
@@ -354,7 +354,7 @@ class StoryMenuState extends MusicBeatState
 			
 			new FlxTimer().start(1, function(tmr:FlxTimer)
 			{
-				LoadingState.loadAndSwitchState(new PlayState(), true);
+				FlxG.switchState(new Load());
 				clean();
 			});
 		}

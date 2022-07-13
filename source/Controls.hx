@@ -114,8 +114,7 @@ class Controls extends FlxActionSet
 	#else
 	var byName:Map<String, FlxActionDigital> = new Map<String, FlxActionDigital>();
 	#end
-
-	public var gamepadsAdded:Array<Int> = [];
+	
 	public var keyboardScheme = KeyboardScheme.None;
 
 	public var UP(get, never):Bool;
@@ -396,15 +395,6 @@ class Controls extends FlxActionSet
 		{
 			case null:
 				// add all
-				#if (haxe >= "4.0.0")
-				for (gamepad in controls.gamepadsAdded)
-					if (!gamepadsAdded.contains(gamepad))
-						gamepadsAdded.push(gamepad);
-				#else
-				for (gamepad in controls.gamepadsAdded)
-					if (gamepadsAdded.indexOf(gamepad) == -1)
-						gamepadsAdded.push(gamepad);
-				#end
 
 				mergeKeyboardScheme(controls.keyboardScheme);
 			case Keys:
@@ -562,7 +552,7 @@ class Controls extends FlxActionSet
 		inline bindKeys(Control.DOWN, [FlxKey.fromString(FlxG.save.data.downBind), FlxKey.DOWN]);
 		inline bindKeys(Control.LEFT, [FlxKey.fromString(FlxG.save.data.leftBind), FlxKey.LEFT]);
 		inline bindKeys(Control.RIGHT, [FlxKey.fromString(FlxG.save.data.rightBind), FlxKey.RIGHT]);
-		inline bindKeys(Control.ACCEPT, [Z, SPACE, ENTER]);
+		inline bindKeys(Control.ACCEPT, [SPACE, ENTER]);
 		inline bindKeys(Control.BACK, [BACKSPACE, ESCAPE]);
 		inline bindKeys(Control.PAUSE, [FlxKey.fromString(FlxG.save.data.pauseBind)]);
 		inline bindKeys(Control.RESET, [FlxKey.fromString(FlxG.save.data.resetBind)]);

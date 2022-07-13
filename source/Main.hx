@@ -6,6 +6,7 @@ import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.FlxState;
 import openfl.Assets;
+import flixel.util.FlxColor;
 #if FEATURE_DISCORD
 import Discord.DiscordClient;
 #end
@@ -113,7 +114,7 @@ class Main extends Sprite
 		fpsCounter = new FPS(0, 0, 0xFFFFFF);
 		addChild(fpsCounter);
 		toggleFPS(FlxG.save.data.fps);
-		mem = new MemoryCounter(0, 0, 0xffffff);
+		mem = new MemoryCounter(0, 13, 0xffffff);
 		addChild(mem);
 		toggleMemory(FlxG.save.data.mem);
 		#end
@@ -140,6 +141,12 @@ class Main extends Sprite
 	public function toggleFPS(fpsEnabled:Bool):Void
 	{
 		fpsCounter.visible = fpsEnabled;
+	}
+
+	public function changeFPSColor(color:FlxColor)
+	{
+		fpsCounter.textColor = color;
+		mem.textColor = color;	
 	}
 
 	public function setFPSCap(cap:Float)

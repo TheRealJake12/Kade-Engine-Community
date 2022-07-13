@@ -1,44 +1,69 @@
-
 package;
 
+import haxe.Timer;
 import openfl.events.Event;
-import openfl.system.System;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
+import openfl.system.System;
 
-/**
- * FPS class extension to display memory usage.
- * @author Kirill Poletaev
- */
 class MemoryCounter extends TextField
 {
-	private var times:Array<Float>;
-	private var memPeak:Float = 0;
+	#if flash
+	private var currentTime: Float;
+	#end
 
-	public function new(inX:Float = 10.0, inY:Float = 10.0, inCol:Int = 0x000000)
+	/**
+		The current frame rate, expressed using frames-per-second
+	**/
+	public function new(x:Float = 100, y:Float = 10, color:Int = 0xFFFFFF)
 	{
 		super();
 
-		x = inX;
-		y = inY;
-		selectable = false;
-		defaultTextFormat = new TextFormat("_sans", 12, inCol);
+		this.x = x;
+		this.y = y;
 
-		addEventListener(Event.ENTER_FRAME, onEnter);
-		width = 150;
-		height = 70;
+		selectable = false;
+		mouseEnabled = false;
+		defaultTextFormat = new TextFormat("_sans", 12, color);
+		text = memoryUsage();
+
+		#if flash
+		addEventListener(Event.ENTER_FRAME, function(e)
+		{
+			var time = Lib.getTimer();
+			__enterFrame(time - currentTime);
+		});
+		#end
 	}
 
-	private function onEnter(_)
+	// Event Handlers
+	private #if !flash override #end function __enterFrame(deltaTime:Float):Void
 	{
-		var mem:Float = Math.round(System.totalMemory / (1e+6));
+		text = memoryUsage();
+	}
 
-		if (mem > memPeak)
-			memPeak = mem;
-
-		if (visible)
+	private static function memoryUsage(): String
+	{
+		var usage: Float = System.totalMemory;
+		var mag = " bytes";
+		
+		if (usage >= 1024 * 1024 * 1024)
 		{
-			text = "\nMEM: " + mem + " MB\nMEM peak: " + memPeak + " MB";
+			usage /= 1024 * 1024 * 1024;
+			mag = " GB";
 		}
+		else if (usage >= 1024 * 1024)
+		{
+			usage /= 1024 * 1024;
+			mag = " MB";
+		}
+		else if (usage >= 1024)
+		{
+			usage /= 1024;
+			mag = " KB";
+		}
+		
+		usage = Math.ffloor(usage * 100) / 100;
+		return Std.string(usage) + mag;
 	}
 }

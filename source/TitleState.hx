@@ -1,4 +1,5 @@
 package;
+
 import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.transition.TransitionData;
@@ -50,13 +51,11 @@ class TitleState extends MusicBeatState
 
 	override public function create():Void
 	{
-		// TODO: Refactor this to use OpenFlAssets.
 		#if FEATURE_FILESYSTEM
 		if (!sys.FileSystem.exists(Sys.getCwd() + "/assets/replays"))
 			sys.FileSystem.createDirectory(Sys.getCwd() + "/assets/replays");
-		
 		#end
-		
+
 		FlxG.autoPause = false;
 
 		FlxG.save.bind('funkin', 'ninjamuffin99');
@@ -66,12 +65,9 @@ class TitleState extends MusicBeatState
 		KadeEngineData.initSave();
 
 		KeyBinds.keyCheck();
-		// It doesn't reupdate the list before u restart rn lmao
-		//Lmao I just made it update on Cache 
 
 		CustomNoteHelpers.Skin.updateNoteskins();
 		CustomNoteHelpers.Splash.updateNotesplashes();
-		
 
 		FlxG.mouse.visible = false;
 
@@ -86,8 +82,6 @@ class TitleState extends MusicBeatState
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 		if (FlxG.save.data.gen)
 			Debug.logInfo('hello');
-
-		// DEBUG BULLSHIT
 
 		super.create();
 
@@ -106,7 +100,6 @@ class TitleState extends MusicBeatState
 		#else
 		startIntro();
 		#end
-		
 		#end
 	}
 
@@ -121,17 +114,13 @@ class TitleState extends MusicBeatState
 
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		bg.antialiasing = FlxG.save.data.antialiasing;
-		// bg.setGraphicSize(Std.int(bg.width * 0.6));
-		// bg.updateHitbox();
 		add(bg);
-		
+
 		logoBl = new FlxSprite(-150, -100);
 		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
 		logoBl.antialiasing = FlxG.save.data.antialiasing;
 		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24, false);
 		logoBl.updateHitbox();
-		// logoBl.screenCenter();
-		// logoBl.color = FlxColor.BLACK;
 
 		gfDance = new FlxSprite(FlxG.width * 0.4, FlxG.height * 0.07);
 		gfDance.frames = Paths.getSparrowAtlas('gfDanceTitle');
@@ -148,16 +137,11 @@ class TitleState extends MusicBeatState
 		titleText.antialiasing = FlxG.save.data.antialiasing;
 		titleText.animation.play('idle');
 		titleText.updateHitbox();
-		// titleText.screenCenter(X);
 		add(titleText);
 
 		var logo:FlxSprite = new FlxSprite().loadGraphic(Paths.loadImage('logo'));
 		logo.screenCenter();
 		logo.antialiasing = FlxG.save.data.antialiasing;
-		// add(logo);
-
-		// FlxTween.tween(logoBl, {y: logoBl.y + 50}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG});
-		// FlxTween.tween(logo, {y: logoBl.y + 50}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG, startDelay: 0.1});
 
 		credGroup = new FlxGroup();
 		add(credGroup);
@@ -168,8 +152,6 @@ class TitleState extends MusicBeatState
 
 		credTextShit = new Alphabet(0, 0, "ninjamuffin99\nPhantomArcade\nkawaisprite\nevilsk8er", true);
 		credTextShit.screenCenter();
-
-		// credTextShit.alignment = CENTER;
 
 		credTextShit.visible = false;
 
@@ -186,10 +168,10 @@ class TitleState extends MusicBeatState
 		FlxG.mouse.visible = false;
 
 		if (initialized)
-		new FlxTimer().start(0.01, function(tmr:FlxTimer)
-		{
-			skipIntro();
-		});	
+			new FlxTimer().start(0.01, function(tmr:FlxTimer)
+			{
+				skipIntro();
+			});
 		else
 		{
 			FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
@@ -198,8 +180,6 @@ class TitleState extends MusicBeatState
 			Conductor.changeBPM(102);
 			initialized = true;
 		}
-
-		// credGroup.add(credTextShit);
 	}
 
 	function getIntroTextShit():Array<Array<String>>
@@ -245,7 +225,6 @@ class TitleState extends MusicBeatState
 			FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
 
 			transitioning = true;
-			// FlxG.sound.music.stop();
 			new FlxTimer().start(2, function(tmr:FlxTimer)
 			{
 				var http = new haxe.Http("https://raw.githubusercontent.com/TheRealJake12/Kade-Engine-Community/master/version.downloadMe");
@@ -254,11 +233,11 @@ class TitleState extends MusicBeatState
 				http.onData = function(data:String)
 				{
 					returnedData[0] = data.substring(0, data.indexOf(';'));
-					Debug.logTrace(returnedData[0]);
+					Debug.logTrace('Github Version : ' + returnedData[0]);
 					returnedData[1] = data.substring(data.indexOf('-'), data.length);
 					if (!MainMenuState.kecVer.contains(returnedData[0].trim()) && !OutdatedSubState.leftState)
 					{
-						trace('outdated lmao! ' + returnedData[0] + ' != ' + MainMenuState.kecVer);
+						Debug.logTrace('The Latest Github Version Is ' + returnedData[0] + ' While Your Version Is ' + MainMenuState.kecVer);
 						OutdatedSubState.needVer = returnedData[0];
 						OutdatedSubState.currChanges = returnedData[1];
 						MusicBeatState.switchState(new OutdatedSubState());
@@ -351,59 +330,35 @@ class TitleState extends MusicBeatState
 				deleteCoolText();
 			case 1:
 				createCoolText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']);
-			// credTextShit.visible = true;
 			case 3:
 				addMoreText('present');
-			// credTextShit.text += '\npresent...';
-			// credTextShit.addText();
 			case 4:
 				deleteCoolText();
-			// credTextShit.visible = false;
-			// credTextShit.text = 'In association \nwith';
-			// credTextShit.screenCenter();
 			case 5:
 				if (Main.watermarks)
 					createCoolText(['KE Community', 'by']);
 				else
 					createCoolText(['KE Community', 'by']);
 			case 7:
-				if (Main.watermarks)
 				{
 					addMoreText('TheRealJake_12');
 					ngSpr.visible = true;
 				}
-				else
-				{
-					addMoreText('TheRealJake_12');
-					ngSpr.visible = true;
-				}
-			// credTextShit.text += '\TheRealJake_12';
 			case 8:
 				deleteCoolText();
 				ngSpr.visible = false;
-			// credTextShit.visible = false;
-
-			// credTextShit.text = 'Shoutouts Tom Fulp';
-			// credTextShit.screenCenter();
 			case 9:
 				createCoolText([curWacky[0]]);
-			// credTextShit.visible = true;
 			case 11:
 				addMoreText(curWacky[1]);
-			// credTextShit.text += '\nlmao';
 			case 12:
 				deleteCoolText();
-			// credTextShit.visible = false;
-			// credTextShit.text = "Friday";
-			// credTextShit.screenCenter();
 			case 13:
 				addMoreText('Friday');
-			// credTextShit.visible = true;
 			case 14:
 				addMoreText('Night');
-			// credTextShit.text += '\nNight';
 			case 15:
-				addMoreText('Funkin'); // credTextShit.text += '\nFunkin';
+				addMoreText('Funkin');
 
 			case 16:
 				skipIntro();
@@ -435,9 +390,7 @@ class TitleState extends MusicBeatState
 				if (logoBl.angle == 4)
 					FlxTween.angle(logoBl, logoBl.angle, -4, 4, {ease: FlxEase.quartInOut});
 			}, 0);
-
-			// It always bugged me that it didn't do this before.
-			// Skip ahead in the song to the drop.
+			
 			FlxG.sound.music.time = 9400; // 9.4 seconds
 
 			skippedIntro = true;
