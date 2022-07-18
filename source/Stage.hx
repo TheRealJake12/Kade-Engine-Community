@@ -137,8 +137,6 @@ class Stage extends MusicBeatState
 					trainSound = new FlxSound().loadEmbedded(Paths.sound('train_passes', 'shared'));
 					FlxG.sound.list.add(trainSound);
 
-					// var cityLights:FlxSprite = new FlxSprite().loadGraphic(AssetPaths.win0.png);
-
 					var street:FlxSprite = new FlxSprite(-40, streetBehind.y).loadGraphic(Paths.loadImage('philly/street', 'week3'));
 					street.antialiasing = FlxG.save.data.antialiasing;
 					swagBacks['street'] = street;
@@ -408,7 +406,7 @@ class Stage extends MusicBeatState
 				{
 					camZoom = 0.9;
 
-					var sky:TankBGSprite = new TankBGSprite('tankSky', -200, -200, 0, 0);
+					var sky:TankBGSprite = new TankBGSprite('tankSky', -200, -300, 0, 0);
 					toAdd.push(sky);
 
 					if (FlxG.save.data.distractions)
@@ -660,7 +658,7 @@ class Stage extends MusicBeatState
 						{
 							trainCooldown = FlxG.random.int(-4, 0);
 							trainStart();
-							trace('train');
+							Debug.logTrace('train');
 						}
 					}
 			}

@@ -1624,7 +1624,7 @@ class MiddleScrollOption extends Option
 		return "Middle Scroll: < " + (FlxG.save.data.middleScroll ? "Enabled" : "Disabled") + " >";
 	}
 }
-/*
+
 class RotateSpritesOption extends Option
 {
 	public function new(desc:String)
@@ -1656,7 +1656,7 @@ class RotateSpritesOption extends Option
 		return "Rotate Sprites: < " + (FlxG.save.data.rotateSprites ? "Disabled" : "Enabled") + " >";
 	}
 }
-*/
+
 
 class NoteskinOption extends Option
 {

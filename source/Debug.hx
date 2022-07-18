@@ -362,7 +362,14 @@ class DebugLogWriter
 		#if FEATURE_FILESYSTEM
 		printDebug("Initializing log file...");
 
-		var logFilePath = '$LOG_FOLDER/${Sys.time()}.log';
+		var dateNow:String = Date.now().toString();
+
+		dateNow = dateNow.replace(" ", "_");
+		dateNow = dateNow.replace(":", "'");
+
+		var logFilePath = '$LOG_FOLDER/Debug Log ${dateNow}.txt';
+
+		//updates in seconds which is annoying and unreadable
 
 		// Make sure that the path exists
 		if (logFilePath.indexOf("/") != -1)

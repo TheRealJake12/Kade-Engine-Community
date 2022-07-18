@@ -429,7 +429,7 @@ class ModchartState
 
 		if (result != 0)
 		{
-			Application.current.window.alert("LUA COMPILE ERROR:\n" + Lua.tostring(lua, result), "Kade Engine Modcharts");
+			Application.current.window.alert("LUA COMPILE ERROR:\n" + Lua.tostring(lua, result), "Modcharts");
 			FlxG.switchState(new FreeplayState());
 			return;
 		}
@@ -441,6 +441,7 @@ class ModchartState
 		setVar("scrollspeed", FlxG.save.data.scrollSpeed != 1 ? FlxG.save.data.scrollSpeed : PlayState.SONG.speed);
 		setVar("fpsCap", FlxG.save.data.fpsCap);
 		setVar("downscroll", FlxG.save.data.downscroll);
+		setVar("middleScroll", FlxG.save.data.middleScroll);
 		setVar("flashing", FlxG.save.data.flashing);
 		setVar("distractions", FlxG.save.data.distractions);
 		setVar("colour", FlxG.save.data.colour);
