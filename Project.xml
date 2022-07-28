@@ -205,6 +205,6 @@
   <!-- Defines whether the Thread class can be used. -->
   <haxedef name="FEATURE_MULTITHREADING" if="cpp" />
   <!-- Videos -->
-  <haxedef name="VIDEOS" if="desktop"/>
+  <haxedef name="VIDEOS" if="desktop" unless="web"/>
 
 </project>
