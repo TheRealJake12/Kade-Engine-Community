@@ -23,6 +23,8 @@ class GameOverState extends FlxTransitionableState
 
 	override function create()
 	{
+		if (FlxG.save.data.unload)
+			test.Destroyer.clearUsedMemory();
 		var loser:FlxSprite = new FlxSprite(100, 100);
 		var loseTex = Paths.getSparrowAtlas('lose');
 		loser.frames = loseTex;
@@ -51,6 +53,8 @@ class GameOverState extends FlxTransitionableState
 		FlxTween.tween(restart, {y: restart.y + 40}, 7, {ease: FlxEase.quartInOut, type: PINGPONG});
 
 		super.create();
+		if (FlxG.save.data.unload)
+			test.Destroyer.clearUnusedMemory();
 	}
 
 	private var fading:Bool = false;
@@ -58,8 +62,6 @@ class GameOverState extends FlxTransitionableState
 	override function update(elapsed:Float)
 	{
 		var pressed:Bool = FlxG.keys.justPressed.ANY;
-
-		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
 
 		if (FlxG.save.data.InstantRespawn)
 		{
@@ -82,12 +84,6 @@ class GameOverState extends FlxTransitionableState
 					FlxG.sound.music.fadeIn(0.2, 1, 4);
 				}
 			});
-		}
-
-		if (gamepad != null)
-		{
-			if (gamepad.justPressed.ANY)
-				pressed = true;
 		}
 
 		pressed = false;

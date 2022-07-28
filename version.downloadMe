@@ -2,4 +2,6 @@
 
 - Debugging Now Gives More Information.
 - Crash Handler (Thanks sqirra-rng!)
+- Seperated BF's Dead Animations To Its Own Sheet (Reduced VRAM Usage For BF).
+- Fixed(?) Vocals Playing After Dying.
 - Minor Bugfixes.

@@ -579,6 +579,25 @@ class PlayState extends MusicBeatState
 				case 7:
 					stageCheck = 'tank';	
 			}
+				switch SONG.songId
+				{
+					case 'bopeebo' | 'fresh' | 'dadbattle':
+						stageCheck = 'stage';
+					case 'spookeez' | 'south' | 'monster':
+						stageCheck = 'halloween';
+					case 'pico' | 'philly' | 'blammed':
+						stageCheck = 'philly';
+					case 'satin-panties' | 'high' | 'milf':
+						stageCheck = 'limo';
+					case 'cocoa' | 'eggnog':
+						stageCheck = 'mall';
+					case 'winter-horrorland':
+						stageCheck = 'mallEvil';
+					case 'senpai' | 'roses':
+						stageCheck = 'school';
+					case 'thorns':
+					stageCheck = 'schoolEvil';
+				}	
 		}
 		else
 		{
@@ -893,7 +912,7 @@ class PlayState extends MusicBeatState
 
 		add(camFollow);
 
-		FlxG.camera.follow(camFollow, LOCKON, 0.04 * (30 / Application.current.window.frameRate));
+		FlxG.camera.follow(camFollow, LOCKON, 0.04 * (60 / Application.current.window.frameRate));
 		FlxG.camera.zoom = Stage.camZoom;
 		FlxG.camera.focusOn(camFollow.getPosition());
 
@@ -1955,13 +1974,13 @@ class PlayState extends MusicBeatState
 			if (isStoryMode)
 			{
 				babyArrow.y -= 10;
-				if (!FlxG.save.data.middleScroll || executeModchart || player == 1)
+				if (!FlxG.save.data.middleScroll || player == 1)
 					FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
 			}
 			if (!isStoryMode)
 			{
 				babyArrow.y -= 10;
-				if (!FlxG.save.data.middleScroll || executeModchart || player == 1)
+				if (!FlxG.save.data.middleScroll || player == 1)
 					FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
 			}
 
@@ -1979,7 +1998,7 @@ class PlayState extends MusicBeatState
 			babyArrow.x += 90; // Tryna make it not offset because it was pissing me off + Psych Engine has it somewhat like this.
 			babyArrow.x += ((FlxG.width / 2) * player);
 
-			if (PlayStateChangeables.Optimize || (FlxG.save.data.middleScroll && !executeModchart))
+			if (PlayStateChangeables.Optimize || (FlxG.save.data.middleScroll))
 				babyArrow.x -= 300;
 
 			strumLineNotes.add(babyArrow);
@@ -1991,7 +2010,7 @@ class PlayState extends MusicBeatState
 		var index = 0;
 		strumLineNotes.forEach(function(babyArrow:FlxSprite)
 		{
-			if (isStoryMode && !FlxG.save.data.middleScroll || (PlayStateChangeables.Optimize) || executeModchart)
+			if (isStoryMode && !FlxG.save.data.middleScroll || (PlayStateChangeables.Optimize))
 				babyArrow.alpha = 1;
 			if (index > 3 && FlxG.save.data.middleScroll)
 				babyArrow.alpha = 1;
@@ -2008,12 +2027,10 @@ class PlayState extends MusicBeatState
 	{
 		if (paused)
 		{
-			if (FlxG.sound.music.playing)
+			if (FlxG.sound.music != null)
 			{
 				FlxG.sound.music.pause();
-				if (vocals != null)
-					if (vocals.playing)
-						vocals.pause();
+				vocals.pause();
 			}
 
 			#if FEATURE_DISCORD
@@ -2841,9 +2858,8 @@ class PlayState extends MusicBeatState
 		FlxG.watch.addQuick("stepShit", curStep);
 
 		if (health <= 0 && !cannotDie)
-		{
-			if (!usedTimeTravel)
 			{
+				vocals.stop();
 				boyfriend.stunned = true;
 
 				persistentUpdate = false;
@@ -2859,6 +2875,10 @@ class PlayState extends MusicBeatState
 				}
 				else
 				{
+					if (FlxG.save.data.unload)
+					{
+						unloadAssets();
+					}
 					openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 				}
 
@@ -2877,10 +2897,8 @@ class PlayState extends MusicBeatState
 					+ misses, iconRPC);
 				#end
 			}
-			else
-				health = 1;
-		}
-		if (!inCutscene && FlxG.save.data.resetButton)
+		
+		if (!inCutscene)
 		{
 			var resetBind = FlxKey.fromString(FlxG.save.data.resetBind);
 			if ((FlxG.keys.anyJustPressed([resetBind])))
@@ -2922,7 +2940,27 @@ class PlayState extends MusicBeatState
 					+ misses, iconRPC);
 				#end
 			}
-		}
+		}	
+			if (FlxG.save.data.resetButton)
+			{
+				var resetBind = FlxKey.fromString(FlxG.save.data.resetBind);
+				if ((FlxG.keys.anyJustPressed([resetBind])))
+					{
+						boyfriend.stunned = true;
+
+						persistentUpdate = false;
+						persistentDraw = false;
+						paused = true;
+			
+						vocals.stop();
+						FlxG.sound.music.stop();
+			
+						openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+						#if windows
+						DiscordClient.changePresence("GAME OVER -- " + SONG.song + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy),"\nAcc: " + HelperFunctions.truncateFloat(accuracy, 2) + "% | Score: " + songScore + " | Misses: " + misses  , iconRPC);
+						#end
+					}
+			}
 
 		if (generatedMusic)
 		{
