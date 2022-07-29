@@ -912,7 +912,7 @@ class PlayState extends MusicBeatState
 
 		add(camFollow);
 
-		FlxG.camera.follow(camFollow, LOCKON, 0.04 * (60 / Application.current.window.frameRate));
+		FlxG.camera.follow(camFollow, LOCKON, 0.06 * (60 / Application.current.window.frameRate));
 		FlxG.camera.zoom = Stage.camZoom;
 		FlxG.camera.focusOn(camFollow.getPosition());
 
@@ -4671,9 +4671,10 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	#if VIDEOS
+	
 	function playCutscene(name:String, ?atend:Bool)
 	{
+		#if VIDEOS
 		inCutscene = true;
 
 		var diff:String = ["-easy", "", "-hard"][storyDifficulty];
@@ -4697,5 +4698,7 @@ class PlayState extends MusicBeatState
 		}
 		video.playVideo(Paths.video(name));
 	}
+	#else
+		FlxG.log("Platform Not Supported.");
 	#end
 }

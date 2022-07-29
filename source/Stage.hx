@@ -440,7 +440,9 @@ class Stage extends MusicBeatState
 						toAdd.push(smokeRight);
 
 						tankWatchtower = new TankBGSprite('tankWatchtower', 100, 50, 0.5, 0.5, ['watchtower gradient color']);
+						tankWatchtower.animation.addByPrefix('idle', 'watchtower gradient color', 24, false);//sfjl
 						toAdd.push(tankWatchtower);
+						animatedBacks.push(tankWatchtower);
 					}
 
 					tankGround = new TankBGSprite('tankRolling', 300, 300, 0.5, 0.5, ['BG tank w lighting'], true);
