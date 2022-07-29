@@ -4374,9 +4374,11 @@ class PlayState extends MusicBeatState
 	override function stepHit()
 	{
 		super.stepHit();
-		if (FlxG.sound.music.time > Conductor.rawPosition + 20 || FlxG.sound.music.time < Conductor.rawPosition - 20)
-		{
-			resyncVocals();
+		if (!paused){
+			if (FlxG.sound.music.time > Conductor.rawPosition + 20 || FlxG.sound.music.time < Conductor.rawPosition - 20)
+			{
+				resyncVocals();
+			}
 		}
 
 		if (curSong == 'ugh')
