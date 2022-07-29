@@ -579,6 +579,7 @@ class PlayState extends MusicBeatState
 				case 7:
 					stageCheck = 'tank';	
 			}
+				/*
 				switch SONG.songId
 				{
 					case 'bopeebo' | 'fresh' | 'dadbattle':
@@ -598,6 +599,7 @@ class PlayState extends MusicBeatState
 					case 'thorns':
 					stageCheck = 'schoolEvil';
 				}	
+				*/ // doesnt do shit
 		}
 		else
 		{
