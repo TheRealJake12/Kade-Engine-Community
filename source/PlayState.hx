@@ -4346,9 +4346,11 @@ class PlayState extends MusicBeatState
 	override function stepHit()
 	{
 		super.stepHit();
-		if (FlxG.sound.music.time > Conductor.rawPosition + 20 || FlxG.sound.music.time < Conductor.rawPosition - 20)
-		{
-			resyncVocals();
+		if (!paused){
+			if (FlxG.sound.music.time > Conductor.rawPosition + 20 || FlxG.sound.music.time < Conductor.rawPosition - 20)
+			{
+				resyncVocals();
+			}
 		}
 
 		if (curSong == 'ugh')
@@ -4669,8 +4671,8 @@ class PlayState extends MusicBeatState
 				startCountdown();
 		}
 		video.playVideo(Paths.video(name));
+		#else
+		FlxG.log.warn("Platform Not Supported.");
+		#end
 	}
-	#else
-		FlxG.log("Platform Not Supported.");
-	#end
 }
