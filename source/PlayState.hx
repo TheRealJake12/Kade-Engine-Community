@@ -4697,8 +4697,9 @@ class PlayState extends MusicBeatState
 				startCountdown();
 		}
 		video.playVideo(Paths.video(name));
-	}
-	#else
+		#else
 		FlxG.log("Platform Not Supported.");
-	#end
+		#end
+	}
+
 }
