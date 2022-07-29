@@ -35,9 +35,10 @@ class LoadingState extends MusicBeatState
 
 	override function create()
 	{
-		funkay = new FlxSprite(0, 0).loadGraphic(Paths.getPath('funkay.png', IMAGE, 'images'));
+		funkay = new FlxSprite(0, 0).loadGraphic(Paths.image('funkay'));
 		funkay.setGraphicSize(0, FlxG.height);
 		funkay.updateHitbox();
+		funkay.scale.set(0.76, 0.67);
 		funkay.antialiasing = FlxG.save.data.antialiasing;
 		add(funkay);
 		// logoBl.screenCenter();

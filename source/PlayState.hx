@@ -912,7 +912,7 @@ class PlayState extends MusicBeatState
 
 		add(camFollow);
 
-		FlxG.camera.follow(camFollow, LOCKON, 0.06 * (60 / Application.current.window.frameRate));
+		FlxG.camera.follow(camFollow, LOCKON, 0.07 * (60 / Application.current.window.frameRate));
 		FlxG.camera.zoom = Stage.camZoom;
 		FlxG.camera.focusOn(camFollow.getPosition());
 
@@ -2110,13 +2110,15 @@ class PlayState extends MusicBeatState
 
 	function resyncVocals():Void
 	{
-		vocals.stop();
-		FlxG.sound.music.stop();
+		if (endingSong)
+			return;
+		vocals.pause();
+		FlxG.sound.music.pause();
 
 		FlxG.sound.music.play();
-		vocals.play();
 		FlxG.sound.music.time = Conductor.songPosition * songMultiplier;
 		vocals.time = FlxG.sound.music.time;
+		vocals.play();
 
 		@:privateAccess
 		{
@@ -2859,69 +2861,59 @@ class PlayState extends MusicBeatState
 
 		if (health <= 0 && !cannotDie)
 			{
-				vocals.stop();
-				boyfriend.stunned = true;
-
-				persistentUpdate = false;
-				persistentDraw = false;
-				paused = true;
-
-				vocals.stop();
-				FlxG.sound.music.stop();
-
-				if (FlxG.save.data.InstantRespawn)
+				if (!usedTimeTravel)
 				{
-					FlxG.switchState(new PlayState());
+					boyfriend.stunned = true;
+					persistentUpdate = false;
+					persistentDraw = false;
+					paused = true;
+					vocals.stop();
+					FlxG.sound.music.stop();
+					if (FlxG.save.data.InstantRespawn || PlayStateChangeables.Optimize)
+					{
+						MusicBeatState.switchState(new PlayState());
+					}
+					else
+					{
+						openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+					}
+
+					#if FEATURE_DISCORD
+					DiscordClient.changePresence("GAME OVER -- "
+						+ SONG.song
+						+ " ("
+						+ storyDifficultyText
+						+ ") "
+						+ Ratings.GenerateLetterRank(accuracy),
+						"\nAcc: "
+						+ HelperFunctions.truncateFloat(accuracy, 2)
+						+ "% | Score: "
+						+ songScore
+						+ " | Misses: "
+						+ misses, iconRPC);
+					#end
 				}
 				else
-				{
-					if (FlxG.save.data.unload)
-					{
-						unloadAssets();
-					}
-					openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+					health = 1;
 				}
-
-				#if FEATURE_DISCORD
-				DiscordClient.changePresence("GAME OVER -- "
-					+ SONG.song
-					+ " ("
-					+ storyDifficultyText
-					+ ") "
-					+ Ratings.GenerateLetterRank(accuracy),
-					"\nAcc: "
-					+ HelperFunctions.truncateFloat(accuracy, 2)
-					+ "% | Score: "
-					+ songScore
-					+ " | Misses: "
-					+ misses, iconRPC);
-				#end
-			}
-		
-		if (!inCutscene)
+		if (!inCutscene && FlxG.save.data.resetButton)
 		{
 			var resetBind = FlxKey.fromString(FlxG.save.data.resetBind);
+
 			if ((FlxG.keys.anyJustPressed([resetBind])))
 			{
 				boyfriend.stunned = true;
-
 				persistentUpdate = false;
 				persistentDraw = false;
 				paused = true;
-
 				vocals.stop();
 				FlxG.sound.music.stop();
-
-				if (FlxG.save.data.InstantRespawn)
+				if (FlxG.save.data.InstantRespawn ||PlayStateChangeables.Optimize)
 				{
-					FlxG.switchState(new PlayState());
+					MusicBeatState.switchState(new PlayState());
 				}
 				else
 				{
-					if (FlxG.save.data.unload)
-					{
-						unloadAssets();
-					}
 					openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 				}
 
@@ -2940,27 +2932,7 @@ class PlayState extends MusicBeatState
 					+ misses, iconRPC);
 				#end
 			}
-		}	
-			if (FlxG.save.data.resetButton)
-			{
-				var resetBind = FlxKey.fromString(FlxG.save.data.resetBind);
-				if ((FlxG.keys.anyJustPressed([resetBind])))
-					{
-						boyfriend.stunned = true;
-
-						persistentUpdate = false;
-						persistentDraw = false;
-						paused = true;
-			
-						vocals.stop();
-						FlxG.sound.music.stop();
-			
-						openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
-						#if windows
-						DiscordClient.changePresence("GAME OVER -- " + SONG.song + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy),"\nAcc: " + HelperFunctions.truncateFloat(accuracy, 2) + "% | Score: " + songScore + " | Misses: " + misses  , iconRPC);
-						#end
-					}
-			}
+		}
 
 		if (generatedMusic)
 		{

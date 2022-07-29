@@ -312,19 +312,15 @@ class Character extends FlxSprite
 				flipX = true;
 
 			case 'bfAndGFDead':
-				frames = Paths.getSparrowAtlas('bfPixelsDEAD', 'shared', true);
-				animation.addByPrefix('singUP', "BF Dies pixel", 24, false);
-				animation.addByPrefix('firstDeath', "BF Dies pixel", 24, false);
-				animation.addByPrefix('deathLoop', "Retry Loop", 24, false);
-				animation.addByPrefix('deathConfirm', "RETRY CONFIRM", 24, false);
+				frames = Paths.getSparrowAtlas('bfHoldingGF-DEAD', 'shared', true);
+				animation.addByPrefix('firstDeath', "BF Dies with GF", 24, false);
+				animation.addByPrefix('deathLoop', "BF Dead with GF Loop", 24, false);
+				animation.addByPrefix('deathConfirm', "RETRY confirm holding gf", 24, false);
 				animation.play('firstDeath');
 
 				loadOffsetFile(curCharacter);
 				playAnim('firstDeath');
-				// pixel bullshit
-				setGraphicSize(Std.int(width * 6));
-				updateHitbox();
-				antialiasing = false;
+				antialiasing = FlxG.save.data.antialiasing;
 				flipX = true;
 
 			case 'bf-christmas':
