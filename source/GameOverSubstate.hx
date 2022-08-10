@@ -19,10 +19,12 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	override function create()
 	{
-		test.Destroyer.clearUnusedMemory();
+		//test.Destroyer.clearStoredMemory();
 		instance = this;
 
 		super.create();
+		if (FlxG.save.data.unload)
+			test.Destroyer.clearUnusedMemory();
 	}
 
 	public function new(x:Float, y:Float)

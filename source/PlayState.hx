@@ -302,6 +302,7 @@ class PlayState extends MusicBeatState
 	public static var highestCombo:Int = 0;
 
 	public var executeModchart = false;
+	public var overlayCam:FlxCamera;
 
 	// Animation common suffixes
 	private var dataSuffix:Array<String> = ['LEFT', 'DOWN', 'UP', 'RIGHT'];
@@ -450,6 +451,8 @@ class PlayState extends MusicBeatState
 		camSustains.bgColor.alpha = 0;
 		camNotes = new FlxCamera();
 		camNotes.bgColor.alpha = 0;
+		overlayCam = new FlxCamera();
+		overlayCam.bgColor.alpha = 0;
 
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD);
@@ -457,6 +460,7 @@ class PlayState extends MusicBeatState
 		//FlxG.camera.setFilters([new ShaderFilter(new FXAAShader())]);  it makes the camera or whatever invisible but with a performance drop. wtf.
 		FlxG.cameras.add(camSustains);
 		FlxG.cameras.add(camNotes);
+		FlxG.cameras.add(overlayCam);
 
 		laneunderlayOpponent = new FlxSprite(0, 0).makeGraphic(110 * 4 + 50, FlxG.height * 2);
 		laneunderlayOpponent.alpha = FlxG.save.data.laneTransparency;
@@ -579,27 +583,6 @@ class PlayState extends MusicBeatState
 				case 7:
 					stageCheck = 'tank';	
 			}
-				/*
-				switch SONG.songId
-				{
-					case 'bopeebo' | 'fresh' | 'dadbattle':
-						stageCheck = 'stage';
-					case 'spookeez' | 'south' | 'monster':
-						stageCheck = 'halloween';
-					case 'pico' | 'philly' | 'blammed':
-						stageCheck = 'philly';
-					case 'satin-panties' | 'high' | 'milf':
-						stageCheck = 'limo';
-					case 'cocoa' | 'eggnog':
-						stageCheck = 'mall';
-					case 'winter-horrorland':
-						stageCheck = 'mallEvil';
-					case 'senpai' | 'roses':
-						stageCheck = 'school';
-					case 'thorns':
-					stageCheck = 'schoolEvil';
-				}	
-				*/ // doesnt do shit
 		}
 		else
 		{
@@ -1013,6 +996,22 @@ class PlayState extends MusicBeatState
 				healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
 		}
 
+			if (!PlayStateChangeables.Optimize)
+			{
+				if ( FlxG.save.data.distractions)
+				{
+					if (PlayState.SONG.songId.toLowerCase() == 'satin-panties'|| PlayState.SONG.songId.toLowerCase() == 'high'|| PlayState.SONG.songId.toLowerCase() == 'milf')
+					{
+						var redShit:FlxSprite = new FlxSprite(0,0).makeGraphic(2048, 2048, FlxColor.RED);
+						redShit.screenCenter();
+						redShit.scrollFactor.set();
+						redShit.alpha = 0.1;
+						redShit.cameras = [PlayState.instance.overlayCam];
+						add(redShit);
+						
+					}
+				}
+			}
 		var splash:NoteSplash = new NoteSplash(100, 100, 0);
 		grpNoteSplashes.add(splash);
 		splash.alpha = 0.0;
@@ -1081,14 +1080,6 @@ class PlayState extends MusicBeatState
 					schoolIntro(doof);
 				case 'thorns':
 					schoolIntro(doof);
-				#if VIDEOS
-				case 'ugh':
-					playCutscene("ughCutscene.mp4");
-				case 'guns':
-					playCutscene("gunsCutscene.mp4");
-				case 'stress':
-					playCutscene("stressCutscene.mp4");
-				#end
 				default:
 					startCountdown();
 			}
@@ -1759,9 +1750,9 @@ class PlayState extends MusicBeatState
 				var swagNote:Note;
 
 				if (gottaHitNote)
-					swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, true, false, 0);
+					swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, true, false, songNotes[4]);
 				else
-					swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, false, false, 0);
+					swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, false, false, songNotes[4]);
 
 				if (!gottaHitNote && PlayStateChangeables.Optimize)
 					continue;
@@ -3110,32 +3101,7 @@ class PlayState extends MusicBeatState
 					daNote.modAngle = strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
 				}
 
-				if (daNote.mustPress && !daNote.modifiedByLua)
-				{
-					daNote.visible = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].visible;
-					daNote.x = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].x;
-					if (!daNote.isSustainNote)
-						daNote.modAngle = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].angle;
-					if (daNote.sustainActive)
-					{
-						if (executeModchart)
-							daNote.alpha = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].alpha;
-					}
-					daNote.modAngle = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].angle;
-				}
-				else if (!daNote.wasGoodHit && !daNote.modifiedByLua)
-				{
-					daNote.visible = strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].visible;
-					daNote.x = strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].x;
-					if (!daNote.isSustainNote)
-						daNote.modAngle = strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].angle;
-					if (daNote.sustainActive)
-					{
-						if (executeModchart)
-							daNote.alpha = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].alpha;
-					}
-					daNote.modAngle = strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].angle;
-				}
+				//there was some code idk what it did but it fucked with color quantization shit. ik its a feature not many like but I like it.
 
 				if (!daNote.mustPress && FlxG.save.data.middleScroll && !executeModchart)
 					daNote.alpha = 0;
@@ -3144,7 +3110,7 @@ class PlayState extends MusicBeatState
 				{
 					daNote.x += daNote.width / 2 + 17;
 					if (SONG.noteStyle == 'pixel')
-						daNote.x -= 9;
+						daNote.x -= 8;
 				}
 
 				if (daNote.isSustainNote && daNote.wasGoodHit && Conductor.songPosition >= daNote.strumTime)
@@ -3494,11 +3460,35 @@ class PlayState extends MusicBeatState
 					PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0], diff);
 					FlxG.sound.music.stop();
 
-					#if desktop
-					FlxG.switchState(new PlayState());
-					clean();
+					#if VIDEOS
+					var video:VideoHandler = new VideoHandler();
+						switch (curSong.toLowerCase())
+						{
+							case 'ugh':
+							video.playVideo(Paths.video('gunsCutscene.mp4'));
+							unloadAssets();
+							video.finishCallback = function()
+							{
+								LoadingState.loadAndSwitchState(new PlayState(), true);
+								clean();
+							}
+							inCutscene = true;
+							case 'guns':
+								video.playVideo(Paths.video('stressCutscene.mp4'));
+								unloadAssets();
+							video.finishCallback = function()
+							{
+								LoadingState.loadAndSwitchState(new PlayState(), true);
+								clean();
+							}
+							inCutscene = true;	
+							default:
+								LoadingState.loadAndSwitchState(new PlayState(), true);
+								clean();
+
+						}	
 					#else
-					LoadingState.loadAndSwitchState(new PlayState());
+					LoadingState.loadAndSwitchState(new PlayState(), true);
 					clean();
 					#end
 				}
@@ -4634,19 +4624,10 @@ class PlayState extends MusicBeatState
 		FlxG.sound.music.fadeTween = null;
 	}
 
-	public function daCamMove(pDad:Bool)
+	function ttweenCamIn():Void
 	{
-		if (pDad)
-		{
-			camPos.set(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
-			tweenCamIn();
-		}
-		else
-		{
-			camPos.set(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
-		}
+		FlxTween.tween(FlxG.camera, {zoom: 2}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.elasticInOut});
 	}
-
 	
 	function playCutscene(name:String, ?atend:Bool)
 	{

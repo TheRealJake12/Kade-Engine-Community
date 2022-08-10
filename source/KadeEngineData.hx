@@ -137,16 +137,16 @@ class KadeEngineData
 			FlxG.save.data.zoom = 1;
 
 		if (FlxG.save.data.shitMs == null)
-			FlxG.save.data.shitMs = 160.0;
+			FlxG.save.data.shitMs = 100.0;
 
 		if (FlxG.save.data.badMs == null)
-			FlxG.save.data.badMs = 135.0;
+			FlxG.save.data.badMs = 95.0;
 
 		if (FlxG.save.data.goodMs == null)
-			FlxG.save.data.goodMs = 90.0;
+			FlxG.save.data.goodMs = 75.0;
 
 		if (FlxG.save.data.sickMs == null)
-			FlxG.save.data.sickMs = 45.0;
+			FlxG.save.data.sickMs = 35.0;
 
 		if (FlxG.save.data.marvMs == null)
 			FlxG.save.data.marvMs = 20.0;	

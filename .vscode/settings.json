@@ -47,6 +47,6 @@
       ]
     }
   ],
-  "editor.quickSuggestionsDelay": 0,
+  "editor.quickSuggestionsDelay": 3,
   "editor.acceptSuggestionOnEnter": "off"
 }

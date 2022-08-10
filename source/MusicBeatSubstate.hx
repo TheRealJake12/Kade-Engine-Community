@@ -16,6 +16,8 @@ class MusicBeatSubstate extends FlxSubState
 
 	override function destroy()
 	{
+		Application.current.window.onFocusIn.remove(onWindowFocusOut);
+		Application.current.window.onFocusIn.remove(onWindowFocusIn);
 		super.destroy();
 	}
 
@@ -93,5 +95,39 @@ class MusicBeatSubstate extends FlxSubState
 	public function beatHit():Void
 	{
 		// do literally nothing dumbass
+	}
+
+	function onWindowFocusOut():Void
+	{
+		if (PlayState.inDaPlay)
+		{
+			if (!PlayState.instance.paused && !PlayState.instance.endingSong && PlayState.instance.songStarted)
+			{
+				Debug.logTrace("Lost Focus");
+				PlayState.instance.openSubState(new PauseSubState());
+				PlayState.boyfriend.stunned = true;
+
+				PlayState.instance.persistentUpdate = false;
+				PlayState.instance.persistentDraw = true;
+				PlayState.instance.paused = true;
+
+				PlayState.instance.vocals.pause();
+				FlxG.sound.music.pause();
+			}
+		}
+	}
+
+	function onWindowFocusIn():Void
+	{
+		if (PlayState.inDaPlay)
+		{
+			if (FlxG.save.data.gen)
+				Debug.logTrace("Gained Focus");
+
+			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
+
+			PlayState.instance.vocals.play();
+			FlxG.sound.music.play();
+		}
 	}
 }

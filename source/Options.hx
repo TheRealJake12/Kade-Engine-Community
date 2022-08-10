@@ -933,7 +933,7 @@ class MarvMSOption extends Option
 	public override function onType(char:String)
 	{
 		if (char.toLowerCase() == "r")
-			FlxG.save.data.marvMs = 20;
+			FlxG.save.data.marvMs = null;
 	}
 
 	private override function updateDisplay():String
@@ -970,7 +970,7 @@ class SickMSOption extends Option
 	public override function onType(char:String)
 	{
 		if (char.toLowerCase() == "r")
-			FlxG.save.data.sickMs = 45;
+			FlxG.save.data.sickMs = null;
 	}
 
 	private override function updateDisplay():String
@@ -1007,7 +1007,7 @@ class GoodMsOption extends Option
 	public override function onType(char:String)
 	{
 		if (char.toLowerCase() == "r")
-			FlxG.save.data.goodMs = 90;
+			FlxG.save.data.goodMs = null;
 	}
 
 	private override function updateDisplay():String
@@ -1044,7 +1044,7 @@ class BadMsOption extends Option
 	public override function onType(char:String)
 	{
 		if (char.toLowerCase() == "r")
-			FlxG.save.data.badMs = 135;
+			FlxG.save.data.badMs = null;
 	}
 
 	private override function updateDisplay():String
@@ -1074,7 +1074,7 @@ class ShitMsOption extends Option
 	public override function onType(char:String)
 	{
 		if (char.toLowerCase() == "r")
-			FlxG.save.data.shitMs = 160;
+			FlxG.save.data.shitMs = null;
 	}
 
 	public override function right():Bool

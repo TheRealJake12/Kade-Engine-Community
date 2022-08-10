@@ -211,12 +211,13 @@ class Note extends FlxSprite
 		animation.play(dataColor[noteData] + 'Scroll');
 		originColor = noteData; // The note's origin color will be checked by its sustain notes
 
+		
+
 		if (FlxG.save.data.stepMania && !isSustainNote && !(PlayState.instance != null ? PlayState.instance.executeModchart : false))
 		{
 			var col:Int = 0;
 
 			var beatRow = Math.round(beat * 48);
-
 			// STOLEN ETTERNA CODE (IN 2002)
 
 			if (beatRow % (192 / 4) == 0)
@@ -233,20 +234,20 @@ class Note extends FlxSprite
 				col = quantityColor[4];
 
 			animation.play(dataColor[col] + 'Scroll');
-			if (FlxG.save.data.rotateSprites)
-			{
-				localAngle -= arrowAngles[col];
-				localAngle += arrowAngles[noteData];
-				originAngle = localAngle;
-			}
+			
 			originColor = col;
+
+			if (FlxG.save.data.rotateSprites) //ok honestly who the fuck wanted this. Im keeping it for a challenge but what the fuck
+		{
+			localAngle -= arrowAngles[col];
+			localAngle += arrowAngles[noteData];
+			originAngle = localAngle;
+		}
+			
 		}
 
-		// we make sure its downscroll and its a SUSTAIN NOTE (aka a trail, not a note)
-		// and flip it so it doesn't look weird.
-		// THIS DOESN'T FUCKING FLIP THE NOTE, CONTRIBUTERS DON'T JUST COMMENT THIS OUT JESUS
-		// then what is this lol
-		// BRO IT LITERALLY SAYS IT FLIPS IF ITS A TRAIL AND ITS DOWNSCROLL
+		
+		
 		if (FlxG.save.data.downscroll && sustainNote)
 			flipY = true;
 

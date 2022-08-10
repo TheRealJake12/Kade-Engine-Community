@@ -138,9 +138,6 @@ class PauseSubState extends MusicBeatSubstate
 
 		super.update(elapsed);
 
-		if (PlayState.instance.useVideo)
-			menuItems.remove('Resume');
-
 		for (i in FlxG.sound.list)
 		{
 			if (i.playing && i.ID != 9000)
