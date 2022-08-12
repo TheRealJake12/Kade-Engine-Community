@@ -251,10 +251,16 @@ class FreeplayState extends MusicBeatState
 
 			meta.diffs = diffsThatExist;
 
+			var stopLogging:Bool = false;
+
 			FreeplayState.songData.set(songId, diffs);
 			if (FlxG.save.data.gen)
 			{
-				Debug.logTrace('Loaded Difficulties For ' + songId);
+				if (stopLogging = false)
+				{
+					Debug.logTrace('Loaded Difficulties For ' + songId);
+					stopLogging = true;
+				}
 			}
 
 			FreeplayState.songs.push(meta);

@@ -122,6 +122,7 @@ class PlayState extends MusicBeatState
 	public static var noteskinSprite:FlxAtlasFrames;
 	public static var cpuNoteskinSprite:FlxAtlasFrames;
 	public static var notesplashSprite:FlxAtlasFrames;
+	public static var cpuNotesplashSprite:FlxAtlasFrames;
 	public static var noteskinPixelSprite:BitmapData;
 	public static var noteskinPixelSpriteEnds:BitmapData;
 
@@ -813,6 +814,7 @@ class PlayState extends MusicBeatState
 		cpuNoteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.cpuNoteskin);
 
 		notesplashSprite = CustomNoteHelpers.Splash.generateNotesplashSprite(FlxG.save.data.notesplash);
+		cpuNotesplashSprite = CustomNoteHelpers.Splash.generateNotesplashSprite(FlxG.save.data.cpuNotesplash);
 
 		generateStaticArrows(0);
 		generateStaticArrows(1);
@@ -837,7 +839,7 @@ class PlayState extends MusicBeatState
 				Debug.logInfo('Succesfully Loaded ' + SONG.song);
 		}
 
-		generateSong(SONG.songId);
+		generateSong(SONG.song);
 
 		#if FEATURE_LUAMODCHART
 		if (executeModchart)
@@ -1847,7 +1849,7 @@ class PlayState extends MusicBeatState
 			var strum = cpuStrums.members[note.noteData];
 			if (strum != null)
 			{
-				spawnNoteSplash(strum.x, strum.y, note.noteData);
+				spawnNoteSplash2(strum.x, strum.y, note.noteData);
 			}
 		}
 	}
@@ -1856,6 +1858,13 @@ class PlayState extends MusicBeatState
 	{
 		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
 		splash.setupNoteSplash(x, y, data);
+		grpNoteSplashes.add(splash);
+	}
+
+	public function spawnNoteSplash2(x:Float, y:Float, data:Int)
+	{
+		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
+		splash.setupNoteSplash2(x, y, data);
 		grpNoteSplashes.add(splash);
 	}
 
@@ -3049,12 +3058,12 @@ class PlayState extends MusicBeatState
 
 						if (FlxG.save.data.cpuStrums)
 						{
-							cpuStrums.forEach(function(spr:StaticArrow)
-							{
-								pressArrow(spr, spr.ID, daNote);
-								if (FlxG.save.data.notesplashes && (!FlxG.save.data.middleScroll))
-									spawnNoteSplashOnNoteDad(daNote);
-							});
+								cpuStrums.forEach(function(spr:StaticArrow)
+								{
+									pressArrow(spr, spr.ID, daNote);
+									if (FlxG.save.data.cpuSplash && (!FlxG.save.data.middleScroll))
+										spawnNoteSplashOnNoteDad(daNote);
+								});
 						}
 
 						#if FEATURE_LUAMODCHART

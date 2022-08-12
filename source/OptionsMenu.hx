@@ -142,7 +142,9 @@ class OptionsMenu extends FlxSubState
 				new NoteskinOption("Change your Noteskin"),
 				new CPUNoteskinOption("Change the CPU Noteskin"),
 				new NotesplashOption("Change your Notesplash"),
+				new CPUNotesplashOption("Change the CPU Notesplash"),
 				#end
+				new CPUSplash("Allows The CPU To Do Notesplashes"),
 				new NotesplashesOption("Uses Notesplashes (Only use it on Arrow skins or else theres gonna be some visual bugs(wrong offsets))."),
 				new RotateSpritesOption("Should the game rotate the sprites to do color quantization (turn off for bar skins)"),
 				new LowMotion("Reduces the motion on screen for people who get motion sickness or for a smoother experiance."),

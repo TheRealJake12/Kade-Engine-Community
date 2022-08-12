@@ -933,7 +933,7 @@ class MarvMSOption extends Option
 	public override function onType(char:String)
 	{
 		if (char.toLowerCase() == "r")
-			FlxG.save.data.marvMs = null;
+			FlxG.save.data.marvMs = 25;
 	}
 
 	private override function updateDisplay():String
@@ -970,7 +970,7 @@ class SickMSOption extends Option
 	public override function onType(char:String)
 	{
 		if (char.toLowerCase() == "r")
-			FlxG.save.data.sickMs = null;
+			FlxG.save.data.sickMs = 45;
 	}
 
 	private override function updateDisplay():String
@@ -1007,7 +1007,7 @@ class GoodMsOption extends Option
 	public override function onType(char:String)
 	{
 		if (char.toLowerCase() == "r")
-			FlxG.save.data.goodMs = null;
+			FlxG.save.data.goodMs = 90;
 	}
 
 	private override function updateDisplay():String
@@ -1044,7 +1044,7 @@ class BadMsOption extends Option
 	public override function onType(char:String)
 	{
 		if (char.toLowerCase() == "r")
-			FlxG.save.data.badMs = null;
+			FlxG.save.data.badMs = 110;
 	}
 
 	private override function updateDisplay():String
@@ -1074,7 +1074,7 @@ class ShitMsOption extends Option
 	public override function onType(char:String)
 	{
 		if (char.toLowerCase() == "r")
-			FlxG.save.data.shitMs = null;
+			FlxG.save.data.shitMs = 135;
 	}
 
 	public override function right():Bool
@@ -1974,6 +1974,38 @@ class NotesplashesOption extends Option
 	}
 }
 
+class CPUSplash extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		if (OptionsMenu.isInPause)
+			description = "This option cannot be toggled in the pause menu.";
+		else
+			description = desc;
+	}
+
+	public override function left():Bool
+	{
+		if (OptionsMenu.isInPause)
+			return false;
+		FlxG.save.data.cpuSplash = !FlxG.save.data.cpuSplash;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "CPU Notesplashes < " + (FlxG.save.data.cpuSplash ? "Enabled" : "Disabled") + " >";
+	}
+}
+
 class General extends Option
 {
 	public function new(desc:String)
@@ -2386,9 +2418,50 @@ class NotesplashOption extends Option
 
 	public override function getValue():String
 	{
-		return "Current Notesplashes: < " + CustomNoteHelpers.Splash.getNotesplashByID(FlxG.save.data.notesplash) + " >";
+		return "Current Player Notesplashes: < " + CustomNoteHelpers.Splash.getNotesplashByID(FlxG.save.data.notesplash) + " >";
 	}
 }
+
+class CPUNotesplashOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		if (OptionsMenu.isInPause)
+			description = "This option cannot be toggled in the pause menu.";
+		else
+			description = desc;
+	}
+
+	public override function left():Bool
+	{
+		if (OptionsMenu.isInPause)
+			return false;
+		FlxG.save.data.cpuNotesplash--;
+		if (FlxG.save.data.cpuNotesplash < 0)
+			FlxG.save.data.cpuNotesplash = CustomNoteHelpers.Splash.getNotesplash().length - 1;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		if (OptionsMenu.isInPause)
+			return false;
+		FlxG.save.data.cpuNotesplash++;
+		if (FlxG.save.data.cpuNotesplash > CustomNoteHelpers.Splash.getNotesplash().length - 1)
+			FlxG.save.data.cpuNotesplash = 0;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function getValue():String
+	{
+		return "Current CPU Notesplashes: < " + CustomNoteHelpers.Splash.getNotesplashByID(FlxG.save.data.cpuNotesplash) + " >";
+	}
+}
+
+
 
 class RatingPopup extends Option
 {

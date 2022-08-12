@@ -128,10 +128,10 @@ class KadeEngineData
 			FlxG.save.data.editor = false;
 
 		if (FlxG.save.data.noteskin == null)
-			FlxG.save.data.noteskin = "Arrows.png";	
+			FlxG.save.data.noteskin = 0;	
 
-		if (FlxG.save.data.cpuNoteskin == null)
-			FlxG.save.data.noteskin = "Arrows.png";		
+		if (FlxG.save.data.cpuNotesplash == null)
+			FlxG.save.data.cpuNotesplash = 0;	
 
 		if (FlxG.save.data.zoom == null)
 			FlxG.save.data.zoom = 1;
@@ -168,6 +168,9 @@ class KadeEngineData
 
 		if (FlxG.save.data.notesplashes == null)
 			FlxG.save.data.notesplashes = true;
+
+		if (FlxG.save.data.cpuSplash == null)
+			FlxG.save.data.cpuSplash = true;	
 			
 		if (FlxG.save.data.cacheCharacters == null)
 			FlxG.save.data.cacheCharacters = false;

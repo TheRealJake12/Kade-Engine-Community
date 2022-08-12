@@ -17,30 +17,64 @@ class NoteSplash extends FlxSprite
 		super(x, y);
 
 		setupNoteSplash(x, y, noteData);
+		setupNoteSplash2(x, y, noteData);
 	}
 
 	public function setupNoteSplash(x:Float, y:Float, noteData:Int)
-	{
+	{	
 		frames = PlayState.notesplashSprite;	
 		antialiasing = FlxG.save.data.antialiasing;
 
 		switch (noteData)
 		{
 			case 0: // Purple
-				setPosition(x - Note.swagWidth * 0.95, y - Note.swagWidth);
+				setPosition(x - Note.swagWidth * 0.95 + 20, y - Note.swagWidth);
 			case 1: // Blue
-				setPosition(x - Note.swagWidth * 0.95 + 55, y - Note.swagWidth + 32);
+				setPosition(x - Note.swagWidth * 0.95 + 25, y - Note.swagWidth + 32);
 			case 2: // Green
 				setPosition(x - Note.swagWidth * 0.95 + 45, y - Note.swagWidth + 32);
 			case 3: // Red
 				setPosition(x - Note.swagWidth * 0.95 + 45, y - Note.swagWidth + 32);
 		}
-
-		alpha = 1;
+		
+		alpha = 1;	
 
 		for (i in 0...anims.length)
 		{
 			animation.addByPrefix(anims[i], 'notesplash ' + anims[i], 48, false);
+			animation.addByPrefix(anims[i], 'note impact 1 ' + anims[i], 30, false);
+			animation.addByPrefix(anims[i], 'note impact 2 ' + anims[i], 30, false);
+		}
+
+		// x -= 100;
+		// y -= 100;
+
+		animation.play(anims[noteData]);
+	}
+
+	public function setupNoteSplash2(x:Float, y:Float, noteData:Int, ?isPlayer:Bool = false)
+	{
+		frames = PlayState.cpuNotesplashSprite;
+		antialiasing = FlxG.save.data.antialiasing;
+
+		switch (noteData)
+		{
+			case 0: // Purple
+				setPosition(x - Note.swagWidth * 0.95 + 20, y - Note.swagWidth);
+			case 1: // Blue
+				setPosition(x - Note.swagWidth * 0.95 + 25, y - Note.swagWidth + 32);
+			case 2: // Green
+				setPosition(x - Note.swagWidth * 0.95 + 45, y - Note.swagWidth + 32);
+			case 3: // Red
+				setPosition(x - Note.swagWidth * 0.95 + 45, y - Note.swagWidth + 32);
+		}
+		alpha = 1;	
+
+		for (i in 0...anims.length)
+		{
+			animation.addByPrefix(anims[i], 'notesplash ' + anims[i], 48, false);
+			animation.addByPrefix(anims[i], 'note impact 1 ' + anims[i], 30, false);
+			animation.addByPrefix(anims[i], 'note impact 2 ' + anims[i], 30, false);
 		}
 
 		// x -= 100;
