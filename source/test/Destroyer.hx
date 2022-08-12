@@ -7,19 +7,19 @@ import openfl.Assets;
 import flixel.system.FlxSound;
 import openfl.display.Bitmap;
 import openfl.system.System;
-
 import flash.media.Sound;
 
 /*
-this entire hx file is just things that destroy music and hopefully fix some memory leaks
-*/
-
+	this entire hx file is just things that destroy music and hopefully fix some memory leaks
+ */
 class Destroyer
 {
 	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
 
 	public static function killMusic(songsArray:Array<FlxSound>)
 	{
+		// FUCK YOU HTML5
+		#if PRELOAD_ALL
 		// neat function thing for songs
 		for (i in 0...songsArray.length)
 		{
@@ -27,6 +27,7 @@ class Destroyer
 			songsArray[i].stop();
 			songsArray[i].destroy();
 		}
+		#end
 	}
 
 	public static function dumpCache()
@@ -42,10 +43,13 @@ class Destroyer
 				obj.destroy();
 			}
 		}
+		// FUCK YOU HTML5
+		#if PRELOAD_ALL
 		Assets.cache.clear("songs");
+		#end
 		Assets.cache.clear("characters");
 		Assets.cache.clear("music");
-		//Assets.cache.clear("images");
+		// Assets.cache.clear("images");
 		//
 	}
 
@@ -55,10 +59,7 @@ class Destroyer
 			dumpExclusions.push(key);
 	}
 
-	public static var dumpExclusions:Array<String> = [
-		'assets/music/freakyMenu.$SOUND_EXT',
-		'assets/shared/music/breakfast.$SOUND_EXT'
-	];
+	public static var dumpExclusions:Array<String> = ['assets/music/freakyMenu.$SOUND_EXT', 'assets/shared/music/breakfast.$SOUND_EXT'];
 
 	public static function clearUnusedMemory()
 	{
@@ -104,6 +105,8 @@ class Destroyer
 			}
 		}
 
+		// FUCK YOU HTML5
+		#if PRELOAD_ALL
 		// clear all sounds that are cached
 		for (key in currentTrackedSounds.keys())
 		{
@@ -117,5 +120,6 @@ class Destroyer
 		// flags everything to be cleared out next unused memory clear
 		localTrackedAssets = [];
 		openfl.Assets.cache.clear("songs");
+		#end
 	}
 }
