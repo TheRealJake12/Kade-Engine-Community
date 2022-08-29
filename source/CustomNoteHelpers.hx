@@ -68,6 +68,24 @@ class Skin
 		#end
 	}
 
+	static public function generateNoteTypeSprite(id:Int)
+	{
+		#if FEATURE_FILESYSTEM
+		// TODO: Make this use OpenFlAssets.
+
+		Debug.logInfo("Generating Custom Notetype Shit.");
+
+		var path = FileSystem.absolutePath("assets/shared/images/notetypes") + "/" + "pain";
+		var data:BitmapData = BitmapData.fromFile(path + ".png");
+
+		return FlxAtlasFrames.fromSparrow(FlxGraphic.fromBitmapData(data), xmlData[id]);
+
+		// return Paths.getSparrowAtlas('noteskins/' + NoteskinHelpers.getNoteskinByID(FlxG.save.data.noteskin), "shared");
+		#else
+		return Paths.getSparrowAtlas('notetypes/pain', "shared");
+		#end
+	}
+
 	static public function generatePixelSprite(id:Int, ends:Bool = false)
 	{
 		#if FEATURE_FILESYSTEM
@@ -138,8 +156,7 @@ class Splash
 		return FlxAtlasFrames.fromSparrow(FlxGraphic.fromBitmapData(data), xmlData[id]);
 		
 		#else
-		return Paths.getSparrowAtlas('splashes/Default', "shared");
+		return Paths.getSparrowAtlas('splashes/Week7', "shared");
 		#end
 	}
 }
-

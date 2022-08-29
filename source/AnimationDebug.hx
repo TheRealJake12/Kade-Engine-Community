@@ -342,7 +342,7 @@ class AnimationDebug extends MusicBeatState
 		{
 			FlxG.mouse.visible = false;
 			LoadingState.loadAndSwitchState(new SelectEditorsState());
-			Destroyer.dumpCache();
+			Main.dumpCache();
 		}
 
 		if (FlxG.keys.justPressed.E)

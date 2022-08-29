@@ -7,6 +7,7 @@ import flixel.FlxGame;
 import flixel.FlxState;
 import openfl.Assets;
 import flixel.util.FlxColor;
+import openfl.display.Bitmap;
 #if FEATURE_DISCORD
 import Discord.DiscordClient;
 #end
@@ -41,6 +42,7 @@ class Main extends Sprite
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
 
 	public static var instance:Main;
+	public static var bitmapFPS:Bitmap;
 
 	public static var watermarks = true; // Whether to put Kade Engine literally anywhere
 
@@ -104,7 +106,9 @@ class Main extends Sprite
 		// Gotta run this before any assets get loaded.
 
 		#if !mobile
-		fpsCounter = new FPS(10, 3, 0xFFFFFF);
+		fpsCounter = new KadeEngineFPS(10, 3, 0xFFFFFF);
+		bitmapFPS = ImageOutline.renderImage(fpsCounter, 1, 0x000000, true);
+		bitmapFPS.smoothing = true;
 		#end
 
 		FlxGraphic.defaultPersist = false;
@@ -124,12 +128,8 @@ class Main extends Sprite
 		#end
 
 		#if !mobile
-		fpsCounter = new FPS(0, 0, 0xFFFFFF);
 		addChild(fpsCounter);
 		toggleFPS(FlxG.save.data.fps);
-		mem = new MemoryCounter(0, 13, 0xffffff);
-		addChild(mem);
-		toggleMemory(FlxG.save.data.mem);
 		#end
 
 		#if html5
@@ -142,6 +142,27 @@ class Main extends Sprite
 		#if desktop
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 		#end
+	}
+	//motherfucker had to be special and have to be in main. smh.
+	public static function dumpCache()
+	{
+		///* SPECIAL THANKS TO HAYA
+		#if PRELOAD_ALL
+		@:privateAccess
+		for (key in FlxG.bitmap._cache.keys())
+		{
+			var obj = FlxG.bitmap._cache.get(key);
+			if (obj != null)
+			{
+				Assets.cache.removeBitmapData(key);
+				FlxG.bitmap._cache.remove(key);
+				obj.destroy();
+			}
+		}
+		Assets.cache.clear("songs");
+		Assets.cache.clear("images");
+		#end
+		// */
 	}
 
 	#if desktop
@@ -165,7 +186,7 @@ class Main extends Sprite
 			}
 		}
 		errMsg += "\nUncaught Error: "
-			+ "Version :" + '${MainMenuState.kecVer}'
+			+ "Version : " + '${MainMenuState.kecVer}'
 			+ e.error
 			+ "\nWoops! We fucked up somewhere! Report this window here : https://github.com/TheRealJake12/Kade-Engine-Community.git\n\n Why dont you join the discord while you're at it? : https://discord.gg/TKCzG5rVGf \n\n> Crash Handler written by: sqirra-rng";
 		if (!FileSystem.exists("./logs/"))
@@ -181,13 +202,7 @@ class Main extends Sprite
 
 	var game:FlxGame;
 
-	var fpsCounter:FPS;
-	var mem:MemoryCounter;
-
-	public function toggleMemory(memoryEnabled:Bool):Void
-	{
-		mem.visible = memoryEnabled;
-	}
+	var fpsCounter:KadeEngineFPS;
 	
 	public function toggleFPS(fpsEnabled:Bool):Void
 	{
@@ -197,7 +212,6 @@ class Main extends Sprite
 	public function changeFPSColor(color:FlxColor)
 	{
 		fpsCounter.textColor = color;
-		mem.textColor = color;	
 	}
 
 	public function setFPSCap(cap:Float)

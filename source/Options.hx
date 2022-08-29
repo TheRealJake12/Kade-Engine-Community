@@ -2366,7 +2366,6 @@ class Memory extends Option
 	public override function left():Bool
 	{
 		FlxG.save.data.mem = !FlxG.save.data.mem;
-		(cast(Lib.current.getChildAt(0), Main)).toggleMemory(FlxG.save.data.mem);
 		display = updateDisplay();
 		return true;
 	}

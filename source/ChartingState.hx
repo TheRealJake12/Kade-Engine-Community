@@ -82,6 +82,7 @@ class ChartingState extends MusicBeatState
 	var curSection:Int = 0;
 
 	public static var lastSection:Int = 0;
+	var notetypetext:FlxText;
 
 	var bpmTxt:FlxText;
 
@@ -141,6 +142,9 @@ class ChartingState extends MusicBeatState
 
 	public static var latestChartVersion = "2";
 
+	var noteShit:Int = 0;
+	var shits:Array<String> = ['normal', 'hurt'];
+
 	public function new(reloadOnInit:Bool = false)
 	{
 		super();
@@ -164,6 +168,7 @@ class ChartingState extends MusicBeatState
 		Debug.logTrace(PlayState.noteskinSprite);
 
 		PlayState.noteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.noteskin);
+		PlayState.noteShitSprite = CustomNoteHelpers.Skin.generateNoteTypeSprite(FlxG.save.data.noteskin);
 
 		FlxG.mouse.visible = true;
 
@@ -383,6 +388,10 @@ class ChartingState extends MusicBeatState
 		bpmTxt = new FlxText(985, 25, 0, "", 16);
 		bpmTxt.scrollFactor.set();
 		add(bpmTxt);
+
+		notetypetext = new FlxText(875, 650, "", 32);
+		notetypetext.scrollFactor.set();
+		add(notetypetext);
 
 		strumLine = new FlxSprite(0, 0).makeGraphic(Std.int(GRID_SIZE * 8), 4);
 
@@ -1710,15 +1719,7 @@ class ChartingState extends MusicBeatState
 	}
 
 	var updatedSection:Bool = false;
-
-	/* this function got owned LOL
-		function lengthBpmBullshit():Float
-		{
-			if (getSectionByTime(Conductor.songPosition).changeBPM)
-				return getSectionByTime(Conductor.songPosition).lengthInSteps * (getSectionByTime(Conductor.songPosition).bpm / _song.bpm);
-			else
-				return getSectionByTime(Conductor.songPosition).lengthInSteps;
-	}*/
+	
 	function poggers()
 	{
 		var notes = [];
@@ -2444,6 +2445,23 @@ class ChartingState extends MusicBeatState
 			var downO = FlxG.keys.justPressed.SIX;
 			var upO = FlxG.keys.justPressed.SEVEN;
 			var rightO = FlxG.keys.justPressed.EIGHT;
+			
+			var notename:String;
+			notename = "";
+			switch (noteShit)
+			{
+				case 0:
+					notename = "Normal";
+				case 1:
+					notename = "Hurt";
+			}
+			if (shits == null)
+			{
+				notename = "Null Notetype";
+				Debug.logInfo("Make Sure Your Notetype Code Is Correct. (Null)");
+			}
+
+			notetypetext.text = "Note type " + notename;
 
 			if (FlxG.keys.justPressed.F1)
 				FlxG.save.data.showHelp = !FlxG.save.data.showHelp;
@@ -2482,75 +2500,6 @@ class ChartingState extends MusicBeatState
 					}
 				}
 			}
-			/*curRenderedNotes.forEach(function(note:Note) {
-				if (strumLine.overlaps(note) && strumLine.y == note.y) // yandere dev type shit
-				{
-					if (getSectionByTime(Conductor.songPosition).mustHitSection)
-						{
-							Debug.logTrace('must hit ' + Math.abs(note.noteData));
-							if (note.noteData < 4)
-							{
-								switch (Math.abs(note.noteData))
-								{
-									case 2:
-										player1.playAnim('singUP', true);
-									case 3:
-										player1.playAnim('singRIGHT', true);
-									case 1:
-										player1.playAnim('singDOWN', true);
-									case 0:
-										player1.playAnim('singLEFT', true);
-								}
-							}
-							if (note.noteData >= 4)
-							{
-								switch (note.noteData)
-								{
-									case 6:
-										player2.playAnim('singUP', true);
-									case 7:
-										player2.playAnim('singRIGHT', true);
-									case 5:
-										player2.playAnim('singDOWN', true);
-									case 4:
-										player2.playAnim('singLEFT', true);
-								}
-							}
-						}
-						else
-						{
-							Debug.logTrace('hit ' + Math.abs(note.noteData));
-							if (note.noteData < 4)
-							{
-								switch (Math.abs(note.noteData))
-								{
-									case 2:
-										player2.playAnim('singUP', true);
-									case 3:
-										player2.playAnim('singRIGHT', true);
-									case 1:
-										player2.playAnim('singDOWN', true);
-									case 0:
-										player2.playAnim('singLEFT', true);
-								}
-							}
-							if (note.noteData >= 4)
-							{
-								switch (note.noteData)
-								{
-									case 6:
-										player1.playAnim('singUP', true);
-									case 7:
-										player1.playAnim('singRIGHT', true);
-									case 5:
-										player1.playAnim('singDOWN', true);
-									case 4:
-										player1.playAnim('singLEFT', true);
-								}
-							}
-						}
-				}
-			});*/
 
 			FlxG.watch.addQuick('daBeat', curDecimalBeat);
 
@@ -2711,6 +2660,21 @@ class ChartingState extends MusicBeatState
 
 				if (!typingShit.hasFocus)
 				{
+					if (FlxG.keys.justPressed.Z)
+					{
+						this.noteShit--;
+						if (noteShit < 0)
+						{
+							noteShit = shits.length - 1;
+						}
+					}
+
+					if (FlxG.keys.justPressed.X)
+					{
+						this.noteShit++;
+						if (noteShit == shits.length)
+							noteShit = 0;
+					}
 					var shiftThing:Int = 1;
 					if (FlxG.keys.pressed.SHIFT)
 						shiftThing = 4;
@@ -3006,8 +2970,9 @@ class ChartingState extends MusicBeatState
 				var daNoteInfo = i[1];
 				var daStrumTime = i[0];
 				var daSus = i[2];
+				var daShit = i[5];
 
-				var note:Note = new Note(daStrumTime, daNoteInfo % 4, null, false, true, i[3], i[4]);
+				var note:Note = new Note(daStrumTime, daNoteInfo % 4, null, false, true, i[3], i[4], daShit);
 				note.rawNoteData = daNoteInfo;
 				note.sustainLength = daSus;
 				note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));
@@ -3330,6 +3295,7 @@ class ChartingState extends MusicBeatState
 		var noteStrum = strum;
 		var noteData = Math.floor(FlxG.mouse.x / GRID_SIZE);
 		var noteSus = 0;
+		var noteShit = shits[this.noteShit];
 
 		Debug.logTrace("adding note with " + strum + " from dummyArrow with data " + noteData);
 
@@ -3339,10 +3305,11 @@ class ChartingState extends MusicBeatState
 				n.noteData,
 				n.sustainLength,
 				false,
-				TimingStruct.getBeatFromTime(n.strumTime)
+				TimingStruct.getBeatFromTime(n.strumTime),
+				n.noteShit
 			]);
 		else
-			section.sectionNotes.push([noteStrum, noteData, noteSus, false, TimingStruct.getBeatFromTime(noteStrum)]);
+			section.sectionNotes.push([noteStrum, noteData, noteSus, false, TimingStruct.getBeatFromTime(noteStrum), noteShit]);
 
 		var thingy = section.sectionNotes[section.sectionNotes.length - 1];
 
@@ -3352,7 +3319,7 @@ class ChartingState extends MusicBeatState
 
 		if (n == null)
 		{
-			var note:Note = new Note(noteStrum, noteData % 4, null, false, true, TimingStruct.getBeatFromTime(noteStrum));
+			var note:Note = new Note(noteStrum, noteData % 4, null, false, true, TimingStruct.getBeatFromTime(noteStrum), noteShit);
 			note.rawNoteData = noteData;
 			note.sustainLength = noteSus;
 			note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));
@@ -3382,7 +3349,7 @@ class ChartingState extends MusicBeatState
 		}
 		else
 		{
-			var note:Note = new Note(n.strumTime, n.noteData % 4, null, false, true, n.isAlt, TimingStruct.getBeatFromTime(n.strumTime));
+			var note:Note = new Note(n.strumTime, n.noteData % 4, null, false, true, n.isAlt, TimingStruct.getBeatFromTime(n.strumTime), noteShit);
 			note.beat = TimingStruct.getBeatFromTime(n.strumTime);
 			note.rawNoteData = n.noteData;
 			note.sustainLength = noteSus;

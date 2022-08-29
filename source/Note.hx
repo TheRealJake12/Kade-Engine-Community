@@ -6,9 +6,6 @@ import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
-#if polymod
-import polymod.format.ParseRules.TargetSignatureElement;
-#end
 import PlayState;
 
 using StringTools;
@@ -35,6 +32,7 @@ class Note extends FlxSprite
 	public var originColor:Int = 0; // The sustain note's original note's color
 	public var noteSection:Int = 0;
 
+	public var noteShit:String = 'normal';
 	public var luaID:Int = 0;
 
 	public var isAlt:Bool = false;
@@ -68,15 +66,11 @@ class Note extends FlxSprite
 	public var spotInLine:Int = 0;
 	public var sustainActive:Bool = true;
 
-	public var noteType:Int = 0;
-
 	public var children:Array<Note> = [];
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inCharter:Bool = false, ?isPlayer:Bool = false,?isAlt:Bool = false, ?bet:Float = 0, ?noteType:Int = 0)
+	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inCharter:Bool = false, ?isPlayer:Bool = false,?isAlt:Bool = false, ?bet:Float = 0, ?noteShit:String = 'normal')
 	{
 		super();
-
-		this.noteType = noteType;
 
 		if (prevNote == null)
 			prevNote = this;
@@ -123,13 +117,44 @@ class Note extends FlxSprite
 
 		if (inCharter)
 		{
-			frames = PlayState.noteskinSprite;
-			for (i in 0...4)
+			switch (noteShit)
 			{
-				animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
-				animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
-				animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
-			}
+				case 'hurt':
+					{
+						frames = Paths.getSparrowAtlas("notetypes/type1", 'shared');
+						for (i in 0...4)
+						{
+							animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
+							animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
+							animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
+						}
+					}
+					default:
+					{
+						frames = PlayState.noteskinSprite;
+						for (i in 0...4)
+						{
+							animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
+							animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
+							animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
+
+							animation.addByPrefix('greenScroll', 'green0');
+							animation.addByPrefix('redScroll', 'red0');
+							animation.addByPrefix('blueScroll', 'blue0');
+							animation.addByPrefix('purpleScroll', 'purple0');
+
+							animation.addByPrefix('purpleholdend', 'pruple end hold');
+							animation.addByPrefix('greenholdend', 'green hold end');
+							animation.addByPrefix('redholdend', 'red hold end');
+							animation.addByPrefix('blueholdend', 'blue hold end');
+
+							animation.addByPrefix('purplehold', 'purple hold piece');
+							animation.addByPrefix('greenhold', 'green hold piece');
+							animation.addByPrefix('redhold', 'red hold piece');
+							animation.addByPrefix('bluehold', 'blue hold piece');
+						}
+					}
+			}		
 
 			setGraphicSize(Std.int(width * 0.7));
 			updateHitbox();
@@ -154,7 +179,7 @@ class Note extends FlxSprite
 			{
 				case 'pixel':
 					#if html5
-					loadGraphic(Paths.image('noteskins/Arrows-pixel', 'shared'), true, 17, 17);
+					loadGraphic(Paths.image('noteskins/Arrows-pixel', 'shared'), true, 12, 12);
 					if (isSustainNote)
 						loadGraphic(Paths.image('noteskins/Arrows-pixel-ends', 'shared'), true, 7, 6);
 					#else
@@ -174,10 +199,23 @@ class Note extends FlxSprite
 					setGraphicSize(Std.int(width * CoolUtil.daPixelZoom));
 					updateHitbox();
 				default:
-				if(isPlayer)
-					frames =PlayState.noteskinSprite;
-				else
-					frames = PlayState.cpuNoteskinSprite;	
+				switch (noteShit)
+				{
+					case'hurt':
+					{
+						frames = Paths.getSparrowAtlas("notetypes/type1", 'shared');
+						for (i in 0...4)
+						{
+							animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
+							animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
+							animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
+						}
+					}
+					default:
+					if(isPlayer)
+						frames = PlayState.noteskinSprite;
+					else
+						frames = PlayState.cpuNoteskinSprite;	
 								for (i in 0...4)
 								{
 									animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
@@ -199,11 +237,12 @@ class Note extends FlxSprite
 									animation.addByPrefix('redhold', 'red hold piece');
 									animation.addByPrefix('bluehold', 'blue hold piece');
 								}
+				}
 
-								setGraphicSize(Std.int(width * 0.7));
-								updateHitbox();
+				setGraphicSize(Std.int(width * 0.7));
+				updateHitbox();
 
-								antialiasing = FlxG.save.data.antialiasing;
+				antialiasing = FlxG.save.data.antialiasing;
 			}
 		}
 

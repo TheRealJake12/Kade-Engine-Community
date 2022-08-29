@@ -47,7 +47,11 @@ class MainMenuState extends MusicBeatState
 	override function create()
 	{
 		if (FlxG.save.data.unload)
+		{
 			Destroyer.clearStoredMemory();
+			Destroyer.clearUnusedMemory();
+		}
+			
 
 		#if desktop
 		// Updating Discord Rich Presence
@@ -135,9 +139,6 @@ class MainMenuState extends MusicBeatState
 		changeItem();
 
 		super.create();
-
-		if (FlxG.save.data.unload)
-			Destroyer.clearUnusedMemory();
 	}
 
 	var selectedSomethin:Bool = false;

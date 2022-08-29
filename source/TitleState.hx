@@ -30,6 +30,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
+import test.Destroyer;
 
 using StringTools;
 
@@ -51,6 +52,8 @@ class TitleState extends MusicBeatState
 
 	override public function create():Void
 	{
+		Destroyer.clearStoredMemory();
+		Destroyer.clearUnusedMemory();
 		#if FEATURE_FILESYSTEM
 		if (!sys.FileSystem.exists(Sys.getCwd() + "/assets/replays"))
 			sys.FileSystem.createDirectory(Sys.getCwd() + "/assets/replays");

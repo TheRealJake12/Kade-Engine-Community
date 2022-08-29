@@ -77,6 +77,8 @@ It will take a while to build for both versions.
 
 - [PolybiusProxy](https://github.com/polybiusproxy) - The MP4 Video Support
 
+- [BoloVEVO](https://github.com/BoloVEVO) - Fixed My Shit Code And Improving The Memory Code. (As Well As NoteTypes.)
+
 - [ShadowMario](https://github.com/ShadowMario) - The Memory Leak Fix. And A Few Other Things. (thanks)
 
 - [TposeJank](https://github.com/tposejank) Epic friend that gave me ideas and helped :epicttrooll:
