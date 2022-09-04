@@ -1,5 +1,4 @@
-package test;
-
+package perf;
 #if FEATURE_MULTITHREADING
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -7,11 +6,10 @@ import flixel.addons.ui.FlxUI;
 import flixel.graphics.FlxGraphic;
 import sys.thread.Mutex;
 
-/*
+/**
 	From: https://github.com/KadeDev/Hex-The-Weekend-Update
 	Credits: KadeDev the funni avg4k frogman 
-    then I stole it from PKE. How the turn tables.
-*/
+**/
 class MasterObjectLoader
 {
 	public static var mutex:Mutex;
@@ -51,7 +49,7 @@ class MasterObjectLoader
 	public static function resetAssets(removeLoadingScreen:Bool = false):Void
 	{
 		var keep:Array<Dynamic> = [];
-		//mutex.acquire();
+		mutex.acquire();
 		var counter:Int = 0;
 		for (object in Objects)
 		{
@@ -79,7 +77,7 @@ class MasterObjectLoader
 		Objects = [];
 		for (k in keep)
 			Objects.push(k);
-		//mutex.release();
+		mutex.release();
 	}
 }
 #end

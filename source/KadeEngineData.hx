@@ -187,6 +187,9 @@ class KadeEngineData
 		if (FlxG.save.data.motion == null)
 			FlxG.save.data.motion = false;
 
+		if (FlxG.save.data.fpsmark == null)
+			FlxG.save.data.fpsmark = true;	
+
 		if (FlxG.save.data.alpha == null)
 			FlxG.save.data.alpha = 0.6;
 			

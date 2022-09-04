@@ -1,5 +1,6 @@
 package;
 
+import perf.Destroyer;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
@@ -22,6 +23,8 @@ class OutdatedSubState extends MusicBeatState
 
 	override function create()
 	{
+		Destroyer.clearStoredMemory();
+		Destroyer.clearUnusedMemory();
 		super.create();
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.loadImage('stageback', 'shared'));
 		bg.screenCenter();
@@ -94,6 +97,8 @@ class OutdatedSubState extends MusicBeatState
 			else
 				colorRotation = 0;
 		}, 0);
+
+		Destroyer.clearUnusedMemory();
 	}
 
 	override function update(elapsed:Float)

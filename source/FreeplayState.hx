@@ -1,6 +1,6 @@
 package;
 
-import test.Destroyer;
+import perf.Destroyer;
 import openfl.utils.Future;
 import openfl.media.Sound;
 import flixel.system.FlxSound;

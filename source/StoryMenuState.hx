@@ -1,6 +1,6 @@
 package;
 
-import test.Destroyer;
+import perf.Destroyer;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionableState;
@@ -100,8 +100,8 @@ class StoryMenuState extends MusicBeatState
 		#if desktop
 		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
 		#end	
-		if (FlxG.save.data.unload)
-			Destroyer.clearUnusedMemory();
+		
+		Destroyer.clearUnusedMemory();
 
 		weekUnlocked = unlockWeeks();
 

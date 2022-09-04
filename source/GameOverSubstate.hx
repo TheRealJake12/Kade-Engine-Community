@@ -6,6 +6,7 @@ import flixel.FlxSubState;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+import perf.Destroyer;
 
 class GameOverSubstate extends MusicBeatSubstate
 {
@@ -19,12 +20,10 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	override function create()
 	{
-		//test.Destroyer.clearStoredMemory();
 		instance = this;
 
 		super.create();
-		if (FlxG.save.data.unload)
-			test.Destroyer.clearUnusedMemory();
+		Destroyer.clearUnusedMemory();
 	}
 
 	public function new(x:Float, y:Float)

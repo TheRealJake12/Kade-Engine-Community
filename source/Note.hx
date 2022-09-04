@@ -71,7 +71,7 @@ class Note extends FlxSprite
 	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inCharter:Bool = false, ?isPlayer:Bool = false,?isAlt:Bool = false, ?bet:Float = 0, ?noteShit:String = 'normal')
 	{
 		super();
-
+		this.noteShit = noteShit; //FFFFFFFFFFFFFFFFFFFFFFUUUUUUUUUUUUUUUUUUUUUUUUUUUU
 		if (prevNote == null)
 			prevNote = this;
 
@@ -129,6 +129,14 @@ class Note extends FlxSprite
 							animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
 						}
 					}
+				case 'mustpress':
+					frames = Paths.getSparrowAtlas("notetypes/type2", 'shared');
+					for (i in 0...4)
+					{
+						animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
+						animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
+						animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
+					}	
 					default:
 					{
 						frames = PlayState.noteskinSprite;
@@ -178,17 +186,37 @@ class Note extends FlxSprite
 			switch (noteTypeCheck)
 			{
 				case 'pixel':
-					#if html5
-					loadGraphic(Paths.image('noteskins/Arrows-pixel', 'shared'), true, 12, 12);
-					if (isSustainNote)
-						loadGraphic(Paths.image('noteskins/Arrows-pixel-ends', 'shared'), true, 7, 6);
-					#else
-					loadGraphic(PlayState.noteskinPixelSprite, true, 17, 17);
-					if (isSustainNote)
-						loadGraphic(PlayState.noteskinPixelSpriteEnds, true, 7, 6);
-					#end
-					
+					switch (noteShit)
+					{
+						case 'hurt':
+							{
+								frames = Paths.getSparrowAtlas("notetypes/type1", 'shared');
+								for (i in 0...4)
+								{
+									animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
+									animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
+									animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
+								}
+							}
 
+						case 'mustpress':
+							frames = Paths.getSparrowAtlas("notetypes/type2", 'shared');
+							for (i in 0...4)
+							{
+								animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
+								animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
+								animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
+							}	
+							#if html5
+							loadGraphic(Paths.image('noteskins/Arrows-pixel', 'shared'), true, 12, 12);
+							if (isSustainNote)
+								loadGraphic(Paths.image('noteskins/Arrows-pixel-ends', 'shared'), true, 7, 6);
+							#else
+							loadGraphic(PlayState.noteskinPixelSprite, true, 17, 17);
+							if (isSustainNote)
+								loadGraphic(PlayState.noteskinPixelSpriteEnds, true, 7, 6);
+							#end
+					}
 					for (i in 0...4)
 					{
 						animation.add(dataColor[i] + 'Scroll', [i + 4]); // Normal notes
@@ -211,6 +239,15 @@ class Note extends FlxSprite
 							animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
 						}
 					}
+
+						case 'mustpress':
+							frames = Paths.getSparrowAtlas("notetypes/type2", 'shared');
+							for (i in 0...4)
+							{
+								animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
+								animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
+								animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
+							}	
 					default:
 					if(isPlayer)
 						frames = PlayState.noteskinSprite;

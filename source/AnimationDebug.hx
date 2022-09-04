@@ -1,6 +1,6 @@
 package;
 
-import test.Destroyer;
+import perf.Destroyer;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;

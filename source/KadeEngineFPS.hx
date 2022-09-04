@@ -112,6 +112,7 @@ class KadeEngineFPS extends TextField
 		}
 
 		var currentCount = times.length;
+		var lmao:String = (FlxG.save.data.fpsmark ? (Main.watermarks ? "\n"+ MainMenuState.kecVer : "\n" + "Kade Engine 1.8.1") : "");
 		currentFPS = Math.round((currentCount + cacheCount) / 2);
 		displayFPS = (FlxG.save.data.fps ? "FPS: " + currentFPS : "");
 		memoryMegas = Math.abs(FlxMath.roundDecimal(System.totalMemory / 1000000, 1));
@@ -121,9 +122,12 @@ class KadeEngineFPS extends TextField
 			if (memoryMegas > memoryTotal)
 				memoryTotal = memoryMegas;
 			memoryUsage = (FlxG.save.data.mem ? "Memory Usage: " + memoryMegas + " MB" : "");
+
 			text = ('$displayFPS\n'
 				+ '$memoryUsage'
-				+ (Main.watermarks ? "\n"+ MainMenuState.kecVer : ""));
+				+ lmao);
+
+				//made simpler :)
 
 			#if (gl_stats && !disable_cffi && (!html5 || !canvas))
 			text += "\ntotalDC: " + Context3DStats.totalDrawCalls();

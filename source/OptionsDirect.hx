@@ -1,5 +1,6 @@
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.FlxG;
+import perf.Destroyer;
 import flixel.FlxSprite;
 
 class OptionsDirect extends MusicBeatState
@@ -10,7 +11,7 @@ class OptionsDirect extends MusicBeatState
 		transOut = FlxTransitionableState.defaultTransOut;
 
 		if (FlxG.save.data.unload)
-			test.Destroyer.clearStoredMemory();
+			Destroyer.clearStoredMemory();
 
 		if (FlxG.sound.music.playing)
 		{

@@ -30,7 +30,11 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
-import test.Destroyer;
+import perf.Destroyer;
+import perf.MasterObjectLoader;
+#if FEATURE_MULTITHREADING
+import sys.thread.Mutex;
+#end
 
 using StringTools;
 
@@ -52,6 +56,9 @@ class TitleState extends MusicBeatState
 
 	override public function create():Void
 	{
+		#if FEATURE_MULTITHREADING
+		MasterObjectLoader.mutex = new Mutex();
+		#end
 		Destroyer.clearStoredMemory();
 		Destroyer.clearUnusedMemory();
 		#if FEATURE_FILESYSTEM

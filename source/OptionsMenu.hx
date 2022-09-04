@@ -181,6 +181,7 @@ class OptionsMenu extends FlxSubState
 				#end
 				new Memory("Toggle the Memory Counter"),
 				new BorderFps("Adds A Border To Make The FPS Display Easier To See. (Uses A Ton Of CPU And A Little GPU)"),
+				new WaterMarkFPS("Shows What Version Of The Game You Are Running In The FPS Counter."),
 				new RainbowFPSOption("Make the FPS Counter flicker through rainbow colors."),
 				new General("Traces things in the debug console or logs. Affects performance in debug builds."),
 				new EditorRes("Not showing the editor grid will greatly increase editor performance"),

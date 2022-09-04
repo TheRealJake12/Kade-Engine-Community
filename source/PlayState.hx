@@ -1,7 +1,7 @@
 package;
 
 import flixel.group.FlxSpriteGroup;
-import test.Destroyer;
+import perf.Destroyer;
 import CustomFadeTransition;
 import shader.FXAAShader;
 import shader.ShadersHandler;
@@ -123,7 +123,6 @@ class PlayState extends MusicBeatState
 	public static var songPosBar:FlxBar;
 
 	public static var noteskinSprite:FlxAtlasFrames;
-	public static var noteShitSprite:FlxAtlasFrames;
 	public static var cpuNoteskinSprite:FlxAtlasFrames;
 	public static var notesplashSprite:FlxAtlasFrames;
 	public static var cpuNotesplashSprite:FlxAtlasFrames;
@@ -329,8 +328,7 @@ class PlayState extends MusicBeatState
 
 	override public function create()
 	{
-		if (FlxG.save.data.unload)
-			Destroyer.clearStoredMemory();
+		Destroyer.clearStoredMemory();
 
 		FlxG.mouse.visible = false;
 		instance = this;
@@ -371,11 +369,8 @@ class PlayState extends MusicBeatState
 		if (currentSong != SONG.songName)
 		{
 			currentSong = SONG.songName;
-			if (FlxG.save.data.unload)
-			{
-				Destroyer.clearStoredMemory();
-				Main.dumpCache();
-			}
+			Destroyer.clearStoredMemory();
+			Main.dumpCache();
 		}
 		marvs = 0;
 		sicks = 0;
@@ -412,6 +407,7 @@ class PlayState extends MusicBeatState
 		if (FileSystem.exists(Sys.getCwd() + 'assets/data/${SONG.song.toLowerCase()}/haxeModchart.hx'))
 		{
 			var expr = Paths.getHaxeScript(SONG.song.toLowerCase());
+			Debug.logTrace(SONG.song.toLowerCase());
 			var parser = new hscript.Parser();
 			var ast = parser.parseString(expr);
 			var interp = new hscript.Interp();
@@ -823,7 +819,6 @@ class PlayState extends MusicBeatState
 		cpuStrums = new FlxTypedGroup<StaticArrow>();
 		
 		noteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.noteskin);
-		noteShitSprite = CustomNoteHelpers.Skin.generateNoteTypeSprite(FlxG.save.data.noteskin);
 
 		if (SONG.noteStyle == 'pixel')
 		{
@@ -1876,21 +1871,23 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	public function NoteSplashesSpawn(daNote:Note):Void
+	public function NoteSplashesSpawn(daNote:Note)
 	{
 		var sploosh:FlxSprite = new FlxSprite(playerStrums.members[daNote.noteData].x + 10.5, playerStrums.members[daNote.noteData].y - 20);
 		sploosh.antialiasing = FlxG.save.data.antialiasing;
+		var rawJson = Paths.loadData('images/splashes/Week7', 'shared');
+		var data:SplashData = cast rawJson;
 		if (FlxG.save.data.notesplashes)
 		{
 				sploosh.frames = PlayState.notesplashSprite;
-				sploosh.animation.addByPrefix('splash 0 0', 'note splash 1 purple', 24, false);
-				sploosh.animation.addByPrefix('splash 0 1', 'note splash 1 blue', 24, false);
-				sploosh.animation.addByPrefix('splash 0 2', 'note splash 1 green', 24, false);
-				sploosh.animation.addByPrefix('splash 0 3', 'note splash 1 red', 24, false);
-				sploosh.animation.addByPrefix('splash 1 0', 'note splash 2 purple', 24, false);
-				sploosh.animation.addByPrefix('splash 1 1', 'note splash 2 blue', 24, false);
-				sploosh.animation.addByPrefix('splash 1 2', 'note splash 2 green', 24, false);
-				sploosh.animation.addByPrefix('splash 1 3', 'note splash 2 red', 24, false);
+				sploosh.animation.addByPrefix('splash 0 0', 'note splash 1 purple', data.fps, false);
+				sploosh.animation.addByPrefix('splash 0 1', 'note splash 1 blue', data.fps, false);
+				sploosh.animation.addByPrefix('splash 0 2', 'note splash 1 green', data.fps, false);
+				sploosh.animation.addByPrefix('splash 0 3', 'note splash 1 red', data.fps, false);
+				sploosh.animation.addByPrefix('splash 1 0', 'note splash 2 purple', data.fps, false);
+				sploosh.animation.addByPrefix('splash 1 1', 'note splash 2 blue', data.fps, false);
+				sploosh.animation.addByPrefix('splash 1 2', 'note splash 2 green', data.fps, false);
+				sploosh.animation.addByPrefix('splash 1 3', 'note splash 2 red', data.fps, false);
 			add(sploosh);
 			//sfjl
 			sploosh.cameras = [camNotes];
@@ -1908,6 +1905,8 @@ class PlayState extends MusicBeatState
 	public function NoteSplashesSpawn2(daNote:Note):Void
 	{
 		var sploosh:FlxSprite = new FlxSprite(cpuStrums.members[daNote.noteData].x + 10.5, cpuStrums.members[daNote.noteData].y - 20);
+		var rawJson = Paths.loadData('images/splashes/Default', 'shared');
+		var data:SplashData = cast rawJson;
 		sploosh.antialiasing = FlxG.save.data.antialiasing;
 		if (FlxG.save.data.cpuSplash)
 		{
@@ -3213,116 +3212,13 @@ class PlayState extends MusicBeatState
 					switch (daNote.noteShit)
 					{
 						case 'hurt':
+							if (daNote.isSustainNote && daNote.wasGoodHit)
 							{
-								if (daNote.isSustainNote && daNote.wasGoodHit)
-								{
-									health = 0;
-									daNote.kill();
-									notes.remove(daNote, true);
-								}
-								else
-								{
-									if (loadRep && daNote.isSustainNote)
-									{
-										if (findByTime(daNote.strumTime) != null)
-											totalNotesHit += 1;
-										else
-										{
-											vocals.volume = 0;
-											if (theFunne && !daNote.isSustainNote)
-											{
-												noteMiss(daNote.noteData, daNote);
-											}
-											if (daNote.isParent)
-											{
-												health -= 0.15;
-												for (i in daNote.children)
-												{
-													i.alpha = 0.3;
-													i.sustainActive = false;
-												}
-											}
-											else
-											{
-												if (!daNote.wasGoodHit
-													&& daNote.isSustainNote
-													&& daNote.sustainActive
-													&& daNote.spotInLine != daNote.parent.children.length)
-												{
-													for (i in daNote.parent.children)
-													{
-														i.alpha = 0.3;
-														i.sustainActive = false;
-													}
-													if (daNote.parent.wasGoodHit)
-													{
-														misses++;
-														totalNotesHit -= 1;
-													}
-													updateAccuracy();
-												}
-												else if (!daNote.wasGoodHit && !daNote.isSustainNote)
-												{
-													health -= 0.15;
-												}
-											}
-										}
-									}
-									else
-									{
-										vocals.volume = 0;
-										if (theFunne && !daNote.isSustainNote)
-										{
-											if (PlayStateChangeables.botPlay)
-											{
-												daNote.rating = "marv";
-												goodNoteHit(daNote);
-											}
-											else
-												noteMiss(daNote.noteData, daNote);
-										}
-
-										if (daNote.isParent && daNote.visible)
-										{
-											health -= 0.15;
-											trace("hold fell over at the start");
-											for (i in daNote.children)
-											{
-												i.alpha = 0.3;
-												i.sustainActive = false;
-											}
-										}
-										else
-										{
-											if (!daNote.wasGoodHit
-												&& daNote.isSustainNote
-												&& daNote.sustainActive
-												&& daNote.spotInLine != daNote.parent.children.length)
-											{
-												trace("hold fell over at " + daNote.spotInLine);
-												for (i in daNote.parent.children)
-												{
-													i.alpha = 0.3;
-													i.sustainActive = false;
-												}
-												if (daNote.parent.wasGoodHit)
-												{
-													misses++;
-													totalNotesHit -= 1;
-												}
-												updateAccuracy();
-											}
-											else if (!daNote.wasGoodHit && !daNote.isSustainNote)
-											{
-												health -= 0.15;
-											}
-										}
-										daNote.visible = false;
-										daNote.kill();
-										notes.remove(daNote, true);
-									}
-								}
+								daNote.kill();
+								notes.remove(daNote, true);
 							}
+						// note bitches
+						//custom noteshit p1
 						default:
 						{
 						if (daNote.isSustainNote && daNote.wasGoodHit)
@@ -3802,7 +3698,7 @@ class PlayState extends MusicBeatState
 				sicks++;
 				if (FlxG.save.data.notesplashes)
 				{
-					if (SONG.noteStyle == 'normal')
+					if (SONG.noteStyle == 'normal' && daNote.noteShit == 'normal')
 						NoteSplashesSpawn(daNote);//sfjl
 				}
 			case 'marv':
@@ -3813,7 +3709,7 @@ class PlayState extends MusicBeatState
 				marvs++;
 				if (FlxG.save.data.notesplashes)
 				{
-					if (SONG.noteStyle == 'normal')
+					if (SONG.noteStyle == 'normal' && daNote.noteShit == 'normal')
 						NoteSplashesSpawn(daNote);
 				}
 		}
@@ -4314,6 +4210,8 @@ class PlayState extends MusicBeatState
 
 	function noteMiss(direction:Int = 1, daNote:Note):Void
 	{
+		if (daNote.noteShit == 'normal')
+		{
 			if (!boyfriend.stunned)
 			{
 				if (combo > 5 && gf.animOffsets.exists('sad'))
@@ -4326,10 +4224,6 @@ class PlayState extends MusicBeatState
 					popUpScore(null);
 				}
 				misses++;
-
-				if (daNote.noteShit == 'hurt'){
-					health = 0;
-				}
 
 				if (daNote != null)
 				{
@@ -4369,7 +4263,7 @@ class PlayState extends MusicBeatState
 				{
 					FlxG.sound.play(Paths.soundRandom('missnote' + altSuffix, 1, 3), FlxG.random.float(0.1, 0.2));
 				}
-				
+
 				boyfriend.playAnim('sing' + dataSuffix[direction] + 'miss', true);
 
 				#if FEATURE_LUAMODCHART
@@ -4379,6 +4273,12 @@ class PlayState extends MusicBeatState
 
 				updateAccuracy();
 			}
+		}
+		else if(daNote.noteShit == 'mustpress')
+		{
+			health -= 1;
+			Debug.logTrace("You Suck!");
+		}
 	}
 	
 	function updateAccuracy()
@@ -4419,19 +4319,6 @@ class PlayState extends MusicBeatState
 
 		note.rating = Ratings.judgeNote(noteDiff);
 
-		/* if (loadRep)
-			{
-				if (controlArray[note.noteData])
-					goodNoteHit(note, false);
-				else if (rep.replay.keyPresses.length > repPresses && !controlArray[note.noteData])
-				{
-					if (NearlyEquals(note.strumTime,rep.replay.keyPresses[repPresses].time, 4))
-					{
-						goodNoteHit(note, false);
-					}
-				}
-		}*/
-
 		if (controlArray[note.noteData])
 		{
 			goodNoteHit(note, (mashing > getKeyPresses(note)));
@@ -4469,13 +4356,18 @@ class PlayState extends MusicBeatState
 		{
 			if (note.noteShit == 'hurt')
 			{
-				health == -9;
-				Debug.logTrace("no biches");
+				health -= 0.1;
+				//HealthDrain();
 			}
-			if (!note.isSustainNote)
+			if (note.noteShit == 'mustpress')
+			{
+				health += 1;
+				FlxG.sound.play(Paths.sound("Vine Boom"), 0.6);
+			}
+			if (!note.isSustainNote && note.noteShit == 'normal' || note.noteShit == 'mustpress')
 			{
 				combo += 1;
-					popUpScore(note);
+				popUpScore(note);
 			}
 
 			var altAnim:String = "";
@@ -4485,7 +4377,8 @@ class PlayState extends MusicBeatState
 				trace("Alt note on BF");
 			}
 
-			boyfriend.playAnim('sing' + dataSuffix[note.noteData] + altAnim, true);
+			if (note.noteShit == 'normal')
+				boyfriend.playAnim('sing' + dataSuffix[note.noteData] + altAnim, true);
 
 			#if FEATURE_LUAMODCHART
 			if (luaModchart != null)
@@ -4816,12 +4709,8 @@ class PlayState extends MusicBeatState
 
 	function HealthDrain():Void
 	{
-		boyfriend.playAnim("hit", true);
+		//boyfriend.playAnim("hit", true);
 		new FlxTimer().start(0.3, function(tmr:FlxTimer)
-		{
-			boyfriend.playAnim("idle", true);
-		});
-		new FlxTimer().start(0.01, function(tmr:FlxTimer)
 		{
 			health -= 0.005;
 		}, 300);
@@ -4855,11 +4744,11 @@ class PlayState extends MusicBeatState
 			if (atend == true)
 			{
 				if (storyPlaylist.length <= 0)
-					FlxG.switchState(new StoryMenuState());
+					LoadingState.loadAndSwitchState(new StoryMenuState());
 				else
 				{
 					SONG = Song.loadFromJson(storyPlaylist[0].toLowerCase(), diff);
-					FlxG.switchState(new PlayState());
+					LoadingState.loadAndSwitchState(new PlayState());
 				}
 			}
 			else
@@ -4870,4 +4759,18 @@ class PlayState extends MusicBeatState
 		FlxG.log.warn("Platform Not Supported.");
 		#end
 	}
+}
+
+typedef SplashData =
+{
+	/**
+	 * The name of this animation.
+	 */
+	var name:String;
+	/**
+	 * The frame rate of this animation.
+	 		* @default 24
+	 */
+	var fps:Int;
+	//theres gonna be more but the fps fucks me so much rn
 }

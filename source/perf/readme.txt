@@ -1,0 +1,1 @@
+renamed to the perf folder. Its the shit that decreases memory and shitz. (was test)
