@@ -24,7 +24,7 @@ class MemoryCounter extends TextField
 
 		selectable = false;
 		mouseEnabled = false;
-		defaultTextFormat = new TextFormat("_sans", 12, color);
+		defaultTextFormat = new TextFormat(openfl.utils.Assets.getFont("assets/fonts/vcr.ttf").fontName, 14, color);
 		text = memoryUsage();
 
 		#if flash

@@ -59,11 +59,19 @@ class LoadingState extends MusicBeatState
 				if (PlayState.SONG.needsVoices)
 					checkLoadSong(getVocalPath());
 			}
-			checkLibrary("shared");
-			if (PlayState.storyWeek > 0)
-				checkLibrary("week" + PlayState.storyWeek);
+			if (!FlxG.save.data.optimize)
+			{
+				if (PlayState.storyWeek > 0)
+					checkLibrary("week" + PlayState.storyWeek); // Non-important libraries for optimization (stages, unique-week elements, in-game cutscenes)
+				else
+					checkLibrary("tutorial");
+			}
 			else
-				checkLibrary("tutorial");
+			{
+				if (OpenFlAssets.hasLibrary("week" + PlayState.storyWeek))
+					OpenFlAssets.unloadLibrary("week" +
+						PlayState.storyWeek); // Unloading the week library in case it's loaded to save memory in optimization mode or with no background.
+			}
 
 			var fadeTime = 0.5;
 			FlxG.camera.fade(FlxG.camera.bgColor, fadeTime, true);

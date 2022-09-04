@@ -53,8 +53,21 @@ class Debug
 		if (input == null)
 			return;
 		var output = formatOutput(input, pos);
-		writeToFlxGLog(output, LOG_STYLE_WARN);
+		writeToFlxGLog(output, LOG_STYLE_INFO);
 		writeToLogFile(output, 'WARN');
+	}
+
+	public static inline function logDebug(input:Dynamic, ?pos:haxe.PosInfos):Void
+	{
+		#if DEBUG
+		if (input == null)
+			return;
+		var output = formatOutput(input, pos);
+		writeToFlxGLog(output, LOG_STYLE_WARN);
+		writeToLogFile(output, 'DEBUG');
+		#else
+		logInfo("Some Debug Stuff :)");
+		#end
 	}
 
 	/**

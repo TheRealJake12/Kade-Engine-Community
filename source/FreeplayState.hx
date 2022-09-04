@@ -1,6 +1,6 @@
 package;
 
-import test.Destroyer;
+import perf.Destroyer;
 import openfl.utils.Future;
 import openfl.media.Sound;
 import flixel.system.FlxSound;
@@ -97,7 +97,9 @@ class FreeplayState extends MusicBeatState
 		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
 
 		if (FlxG.save.data.unload)
+			Main.dumpCache();
 			Destroyer.clearStoredMemory();
+			Destroyer.clearUnusedMemory();
 
 		clean();
 		list = CoolUtil.coolTextFile(Paths.txt('data/freeplaySonglist'));
@@ -389,12 +391,13 @@ class FreeplayState extends MusicBeatState
 			MusicBeatState.switchState(new MainMenuState());
 			if (FlxG.save.data.unload)
 			{
-				Destroyer.dumpCache();
+				Main.dumpCache();
 			}
 		}
 		if (space)
 		{
 			FlxG.sound.playMusic(Paths.inst(songs[curSelected].songName), 0);
+			Destroyer.clearUnusedMemory();
 		}
 
 		if (accepted)

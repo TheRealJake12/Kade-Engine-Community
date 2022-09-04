@@ -13,6 +13,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import openfl.ui.Keyboard;
 import flixel.FlxSprite;
 import flixel.FlxG;
+import perf.Destroyer;
 
 class GameplayCustomizeState extends MusicBeatState
 {
@@ -62,6 +63,8 @@ class GameplayCustomizeState extends MusicBeatState
 	public static var freeplayWeek:Int = 1;
 	public override function create()
 	{
+		Destroyer.clearStoredMemory();
+		Destroyer.clearUnusedMemory();
 		#if FEATURE_DISCORD
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("Customizing Gameplay Modules", null);

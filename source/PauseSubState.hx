@@ -1,6 +1,7 @@
 package;
 
 import openfl.Lib;
+import perf.Destroyer;
 #if FEATURE_LUAMODCHART
 import llua.Lua;
 #end
@@ -191,14 +192,17 @@ class PauseSubState extends MusicBeatSubstate
 					if (PlayState.isStoryMode)
 					{
 						MusicBeatState.switchState(new StoryMenuState());
-						test.Destroyer.clearStoredMemory();
+						if (FlxG.save.data.unload)
+						{
+							Destroyer.clearStoredMemory();
+						}
 					}
 					else
 					{
 						MusicBeatState.switchState(new FreeplayState());
 						if (FlxG.save.data.unload)
 						{
-							test.Destroyer.clearStoredMemory();
+							Destroyer.clearStoredMemory();
 						}
 					}
 						

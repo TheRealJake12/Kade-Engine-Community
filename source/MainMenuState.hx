@@ -1,7 +1,7 @@
 package;
 
 import Controls.KeyboardScheme;
-import test.Destroyer;
+import perf.Destroyer;
 import flixel.util.FlxTimer;
 #if desktop
 import Discord.DiscordClient;
@@ -46,13 +46,14 @@ class MainMenuState extends MusicBeatState
 
 	override function create()
 	{
-		if (FlxG.save.data.unload)
-			Destroyer.clearStoredMemory();
-
+		Destroyer.clearStoredMemory();
+		Destroyer.clearUnusedMemory();
 		#if desktop
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
+
+		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
 
 		if (!FlxG.sound.music.playing)
 		{
@@ -135,9 +136,6 @@ class MainMenuState extends MusicBeatState
 		changeItem();
 
 		super.create();
-
-		if (FlxG.save.data.unload)
-			Destroyer.clearUnusedMemory();
 	}
 
 	var selectedSomethin:Bool = false;

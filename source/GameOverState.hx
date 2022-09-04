@@ -7,6 +7,7 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
+import perf.Destroyer;
 
 class GameOverState extends FlxTransitionableState
 {
@@ -23,8 +24,7 @@ class GameOverState extends FlxTransitionableState
 
 	override function create()
 	{
-		if (FlxG.save.data.unload)
-			test.Destroyer.clearUsedMemory();
+		Destroyer.clearUnusedMemory();
 		var loser:FlxSprite = new FlxSprite(100, 100);
 		var loseTex = Paths.getSparrowAtlas('lose');
 		loser.frames = loseTex;
@@ -53,8 +53,7 @@ class GameOverState extends FlxTransitionableState
 		FlxTween.tween(restart, {y: restart.y + 40}, 7, {ease: FlxEase.quartInOut, type: PINGPONG});
 
 		super.create();
-		if (FlxG.save.data.unload)
-			test.Destroyer.clearUnusedMemory();
+		Destroyer.clearUnusedMemory();
 	}
 
 	private var fading:Bool = false;
