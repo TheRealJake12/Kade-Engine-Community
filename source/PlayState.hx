@@ -1118,7 +1118,8 @@ class PlayState extends MusicBeatState
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, releaseInput);
 
 		super.create();
-		Destroyer.clearUnusedMemory();
+		if (FlxG.save.data.unload)
+			Destroyer.clearUnusedMemory();
 	}
 
 	function tankIntro()
@@ -1874,8 +1875,7 @@ class PlayState extends MusicBeatState
 	{
 		var sploosh:FlxSprite = new FlxSprite(playerStrums.members[daNote.noteData].x + 10.5, playerStrums.members[daNote.noteData].y - 20);
 		sploosh.antialiasing = FlxG.save.data.antialiasing;
-		
-		var rawJson = Paths.loadData('images/splashes/Week7');
+		var rawJson = Paths.loadData('images/splashes/Default');
 		var data:SplashData = cast rawJson;
 		if (FlxG.save.data.notesplashes)
 		{
@@ -1905,7 +1905,7 @@ class PlayState extends MusicBeatState
 	public function NoteSplashesSpawn2(daNote:Note):Void
 	{
 		var sploosh:FlxSprite = new FlxSprite(cpuStrums.members[daNote.noteData].x + 10.5, cpuStrums.members[daNote.noteData].y - 20);
-		var rawJson = Paths.loadData('images/splashes/Week7');
+		var rawJson = Paths.loadData('images/splashes/Default');
 		var data:SplashData = cast rawJson;
 		sploosh.antialiasing = FlxG.save.data.antialiasing;
 		if (FlxG.save.data.cpuSplash)
@@ -3196,9 +3196,9 @@ class PlayState extends MusicBeatState
 
 				if (daNote.isSustainNote)
 				{
-					daNote.x += daNote.width / 2 + 17;
+					daNote.x += 36.5;
 					if (SONG.noteStyle == 'pixel')
-						daNote.x -= 8;
+						daNote.x -= 7;
 				}
 
 				if (daNote.isSustainNote && daNote.wasGoodHit && Conductor.songPosition >= daNote.strumTime)
@@ -4276,7 +4276,7 @@ class PlayState extends MusicBeatState
 		}
 		else if(daNote.noteShit == 'mustpress')
 		{
-			health -= 1;
+			health -= 0.8;
 			Debug.logTrace("You Suck!");
 		}
 	}
@@ -4356,13 +4356,13 @@ class PlayState extends MusicBeatState
 		{
 			if (note.noteShit == 'hurt')
 			{
-				health -= 0.1;
-				//HealthDrain();
+				health -= 0.3;
+				HealthDrain();
 			}
 			if (note.noteShit == 'mustpress')
 			{
 				health += 1;
-				FlxG.sound.play(Paths.sound("Vine Boom"), 0.6);
+				FlxG.sound.play(Paths.sound("Vine Boom"), 2);
 			}
 			if (!note.isSustainNote && note.noteShit == 'normal' || note.noteShit == 'mustpress')
 			{
@@ -4709,8 +4709,9 @@ class PlayState extends MusicBeatState
 
 	function HealthDrain():Void
 	{
+		FlxG.sound.play(Paths.sound("Vine Boom"), 2);
 		//boyfriend.playAnim("hit", true);
-		new FlxTimer().start(0.3, function(tmr:FlxTimer)
+		new FlxTimer().start(0.01, function(tmr:FlxTimer)
 		{
 			health -= 0.005;
 		}, 300);
@@ -4775,5 +4776,4 @@ typedef SplashData =
 
 	var alpha:Int;
 	//theres gonna be more but the fps fucks me so much rn
-
 }

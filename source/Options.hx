@@ -1270,7 +1270,7 @@ class RainbowFPSOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "FPS Rainbow : <" + (!FlxG.save.data.fpsRain ? "off" : "on" + ">");
+		return "FPS Rainbow : <" + (!FlxG.save.data.fpsRain ? "off" : "on") + " >";
 	}
 }
 
@@ -2252,33 +2252,6 @@ class SongCaching extends Option
 	}
 }
 
-class WaterMarkFPS extends Option // sfjl
-{
-	public function new(desc:String)
-	{
-		super();
-		description = desc;
-	}
-
-	public override function left():Bool
-	{
-		FlxG.save.data.fpsmark = !FlxG.save.data.fpsmark;
-		display = updateDisplay();
-		return true;
-	}
-
-	public override function right():Bool
-	{
-		left();
-		return true;
-	}
-
-	private override function updateDisplay():String
-	{
-		return "FPS Watermark: < " + (FlxG.save.data.fpsmark ? "Enabled" : "Disabled") + " >";
-	}
-}
-
 class GraphicLoading extends Option
 {
 	public function new(desc:String)
@@ -2328,6 +2301,33 @@ class CachingOption extends Option
 	}
 }
 #end
+
+class WaterMarkFPS extends Option // sfjl
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function left():Bool
+	{
+		FlxG.save.data.fpsmark = !FlxG.save.data.fpsmark;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "FPS Watermark: < " + (FlxG.save.data.fpsmark ? "Enabled" : "Disabled") + " >";
+	}
+}
 
 class UnloadSongs extends Option
 {

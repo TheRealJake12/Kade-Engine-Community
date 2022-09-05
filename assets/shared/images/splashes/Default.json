@@ -1,4 +1,5 @@
 {
     "name": "Default",
-    "fps": 48
+    "fps": 48,
+    "alpha": 0.8
 }

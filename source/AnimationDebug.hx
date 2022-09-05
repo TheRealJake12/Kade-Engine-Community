@@ -5,6 +5,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.FlxCamera;
 import flixel.addons.display.FlxGridOverlay;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
@@ -41,6 +42,8 @@ class AnimationDebug extends MusicBeatState
 	var isDad:Bool = true;
 	var daAnim:String = 'spooky';
 	var camFollow:FlxObject;
+	var camHUD:FlxCamera;
+	var camGame:FlxCamera;
 
 	var background:FlxSprite;
 	var curt:FlxSprite;
@@ -123,18 +126,8 @@ class AnimationDebug extends MusicBeatState
 		UI_box.resize(150, 200);
 		UI_box.x = FlxG.width - UI_box.width - 20;
 		UI_box.y = 20;
-
-		// var opt_tabs = [{name: "test", label: 'test'}];
-
-		// UI_options = new FlxUITabMenu(null, opt_tabs, true);
-
-		// UI_options.scrollFactor.set();
-		// UI_options.selected_tab = 0;
-		// UI_options.resize(300, 200);
-		// UI_options.x = UI_box.x;
-		// UI_options.y = FlxG.height - 300;
-		// no need for now
-		// add(UI_options);
+		UI_box.cameras = [camHUD];
+		
 		add(UI_box);
 
 		addOffsetUI();
@@ -142,6 +135,16 @@ class AnimationDebug extends MusicBeatState
 		camFollow = new FlxObject(0, 0, 2, 2);
 		camFollow.screenCenter();
 		add(camFollow);
+
+		camHUD = new FlxCamera();
+		camHUD.bgColor.alpha = 0;
+		camGame = new FlxCamera();
+		camGame.zoom = 0.7;
+		FlxG.cameras.add(camGame);
+		FlxG.cameras.add(camHUD);
+		FlxCamera.defaultCameras = [camGame];
+		FlxG.camera = camGame;
+		camGame.follow(camFollow);
 
 		FlxG.camera.follow(camFollow);
 
@@ -295,6 +298,7 @@ class AnimationDebug extends MusicBeatState
 		helpText.scrollFactor.set();
 		helpText.y = FlxG.height - helpText.height - 20;
 		helpText.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
+		//helpText.cameras = [camHUD];
 		helpText.color = FlxColor.WHITE;
 
 		add(helpText);
@@ -346,9 +350,13 @@ class AnimationDebug extends MusicBeatState
 		}
 
 		if (FlxG.keys.justPressed.E)
-			FlxG.camera.zoom += 0.25;
+			camGame.zoom += 0.1;
 		if (FlxG.keys.justPressed.Q)
-			FlxG.camera.zoom -= 0.25;
+		{
+			if (camGame.zoom > 0.11) // me when floating point error
+				camGame.zoom -= 0.1;
+		}
+		//FlxG.watch.addQuick('Camera Zoom', camGame.zoom);
 
 		if (FlxG.keys.justPressed.F)
 			char.flipX = !char.flipX;
