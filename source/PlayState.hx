@@ -106,6 +106,10 @@ class PlayState extends MusicBeatState
 	public static var sicks:Int = 0;
 	public static var marvs:Int = 0;
 
+	public static var lastRating:FlxSprite;
+	public static var lastCombo:FlxSprite;
+	public static var lastScore:Array<FlxSprite> = [];
+
 	public var boyfriendGroup:FlxSpriteGroup;
 	public var dadGroup:FlxSpriteGroup;
 	public var gfGroup:FlxSpriteGroup;
@@ -819,12 +823,8 @@ class PlayState extends MusicBeatState
 		cpuStrums = new FlxTypedGroup<StaticArrow>();
 		
 		noteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.noteskin);
-
-		if (SONG.noteStyle == 'pixel')
-		{
-			noteskinPixelSprite = CustomNoteHelpers.Skin.generatePixelSprite(FlxG.save.data.noteskin);
-			noteskinPixelSpriteEnds = CustomNoteHelpers.Skin.generatePixelSprite(FlxG.save.data.noteskin, true);
-		}
+		noteskinPixelSprite = CustomNoteHelpers.Skin.generatePixelSprite(FlxG.save.data.noteskin);
+		noteskinPixelSpriteEnds = CustomNoteHelpers.Skin.generatePixelSprite(FlxG.save.data.noteskin, true);
 
 		cpuNoteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.cpuNoteskin);
 
@@ -1680,7 +1680,8 @@ class PlayState extends MusicBeatState
 			songPosBar = new FlxBar(640 - (Std.int(songPosBG.width - 100) / 2), songPosBG.y + 4, LEFT_TO_RIGHT, Std.int(songPosBG.width - 100),
 				Std.int(songPosBG.height + 6), this, 'songPositionBar', 0, songLength);
 			songPosBar.scrollFactor.set();
-			songPosBar.createFilledBar(FlxColor.BLACK, FlxColor.fromRGB(0, 255, 128));
+			songPosBar.createFilledBar(FlxColor.BLACK,dad.barColor);
+			songPosBar.numDivisions = 50;
 			add(songPosBar);
 
 			bar = new FlxSprite(songPosBar.x, songPosBar.y).makeGraphic(Math.floor(songPosBar.width), Math.floor(songPosBar.height), FlxColor.TRANSPARENT);
@@ -1746,9 +1747,9 @@ class PlayState extends MusicBeatState
 				var swagNote:Note;
 
 				if (gottaHitNote)
-					swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, true, false, songNotes[4], daNoteType);
+					swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, true, null, songNotes[4], daNoteType);
 				else
-					swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, false, false, songNotes[4], daNoteType);
+					swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, false, null, songNotes[4], daNoteType);
 
 				if (!gottaHitNote && PlayStateChangeables.Optimize)
 					continue;
@@ -1777,11 +1778,11 @@ class PlayState extends MusicBeatState
 					var sustainNote:Note;
 
 					if (gottaHitNote)
-						sustainNote = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, true,
-							false, false, daNoteType);
+						sustainNote = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, false,
+							true, null, songNotes[4], daNoteType);
 					else
 						sustainNote = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, false,
-						false, false, daNoteType);
+							false, null, songNotes[4], daNoteType);
 					sustainNote.scrollFactor.set();
 					unspawnNotes.push(sustainNote);
 					sustainNote.isAlt = songNotes[3]
@@ -3817,6 +3818,25 @@ class PlayState extends MusicBeatState
 		comboSpr.acceleration.y = 600;
 		comboSpr.velocity.y -= 150;
 
+		if (!FlxG.save.data.rateStack)
+		{
+			if(lastRating != null) lastRating.kill();
+			lastRating = rating;
+		}
+
+		if (lastCombo != null)
+			lastCombo.kill();
+		lastCombo = comboSpr;
+
+		if (lastScore != null)
+		{
+			while (lastScore.length > 0)
+			{
+				lastScore[0].kill();
+				lastScore.remove(lastScore[0]);
+			}
+		}	
+
 		currentTimingShown.screenCenter();
 		if (!FlxG.save.data.middleScroll)
 			currentTimingShown.x = comboSpr.x + 100;
@@ -3913,7 +3933,8 @@ class PlayState extends MusicBeatState
 			if (FlxG.save.data.popup)
 				add(numScore);
 
-			visibleCombos.push(numScore);
+			if (FlxG.save.data.rateStack)
+				lastScore.push(numScore);
 
 			FlxTween.tween(numScore, {alpha: 0}, 0.2, {
 				onComplete: function(tween:FlxTween)

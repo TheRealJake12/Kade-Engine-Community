@@ -127,6 +127,21 @@ class Note extends FlxSprite
 							animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
 							animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
 							animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
+
+							animation.addByPrefix('greenScroll', 'green0');
+							animation.addByPrefix('redScroll', 'red0');
+							animation.addByPrefix('blueScroll', 'blue0');
+							animation.addByPrefix('purpleScroll', 'purple0');
+
+							animation.addByPrefix('purpleholdend', 'pruple end hold');
+							animation.addByPrefix('greenholdend', 'green hold end');
+							animation.addByPrefix('redholdend', 'red hold end');
+							animation.addByPrefix('blueholdend', 'blue hold end');
+
+							animation.addByPrefix('purplehold', 'purple hold piece');
+							animation.addByPrefix('greenhold', 'green hold piece');
+							animation.addByPrefix('redhold', 'red hold piece');
+							animation.addByPrefix('bluehold', 'blue hold piece');
 						}
 					}
 				case 'mustpress':
@@ -136,6 +151,21 @@ class Note extends FlxSprite
 						animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
 						animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
 						animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
+
+						animation.addByPrefix('greenScroll', 'green0');
+						animation.addByPrefix('redScroll', 'red0');
+						animation.addByPrefix('blueScroll', 'blue0');
+						animation.addByPrefix('purpleScroll', 'purple0');
+
+						animation.addByPrefix('purpleholdend', 'pruple end hold');
+						animation.addByPrefix('greenholdend', 'green hold end');
+						animation.addByPrefix('redholdend', 'red hold end');
+						animation.addByPrefix('blueholdend', 'blue hold end');
+
+						animation.addByPrefix('purplehold', 'purple hold piece');
+						animation.addByPrefix('greenhold', 'green hold piece');
+						animation.addByPrefix('redhold', 'red hold piece');
+						animation.addByPrefix('bluehold', 'blue hold piece');
 					}	
 					default:
 					{
@@ -200,6 +230,7 @@ class Note extends FlxSprite
 							}
 
 						case 'mustpress':
+						{
 							frames = Paths.getSparrowAtlas("notetypes/type2", 'shared');
 							for (i in 0...4)
 							{
@@ -207,25 +238,28 @@ class Note extends FlxSprite
 								animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
 								animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
 							}	
-							#if html5
-							loadGraphic(Paths.image('noteskins/Arrows-pixel', 'shared'), true, 12, 12);
-							if (isSustainNote)
-								loadGraphic(Paths.image('noteskins/Arrows-pixel-ends', 'shared'), true, 7, 6);
-							#else
-							loadGraphic(PlayState.noteskinPixelSprite, true, 17, 17);
-							if (isSustainNote)
-								loadGraphic(PlayState.noteskinPixelSpriteEnds, true, 7, 6);
-							#end
-					}
-					for (i in 0...4)
-					{
-						animation.add(dataColor[i] + 'Scroll', [i + 4]); // Normal notes
-						animation.add(dataColor[i] + 'hold', [i]); // Holds
-						animation.add(dataColor[i] + 'holdend', [i + 4]); // Tails
+						}
+						default:
+						#if html5
+						loadGraphic(Paths.image('noteskins/Arrows-pixel', 'shared'), true, 12, 12);
+						if (isSustainNote)
+							loadGraphic(Paths.image('noteskins/Arrows-pixel-ends', 'shared'), true, 7, 6);
+						#else
+						loadGraphic(PlayState.noteskinPixelSprite, true, 17, 17);
+						if (isSustainNote)
+							loadGraphic(PlayState.noteskinPixelSpriteEnds, true, 7, 6);
+						#end
+						for (i in 0...4)
+						{
+							animation.add(dataColor[i] + 'Scroll', [i + 4]); // Normal notes
+							animation.add(dataColor[i] + 'hold', [i]); // Holds
+							animation.add(dataColor[i] + 'holdend', [i + 4]); // Tails
+						}
+
+						setGraphicSize(Std.int(width * CoolUtil.daPixelZoom));
+						updateHitbox();
 					}
 
-					setGraphicSize(Std.int(width * CoolUtil.daPixelZoom));
-					updateHitbox();
 				default:
 				switch (noteShit)
 				{

@@ -27,7 +27,7 @@ using StringTools;
 class MainMenuState extends MusicBeatState
 {
 	public static var nightly:String = "";
-	public static var kecVer:String = 'Kade Engine Community 1.6';
+	public static var kecVer:String = 'Kade Engine Community 1.6.1';
 	public static var keVer:String = "Kade Engine 1.8";
 	public static var curSelected:Int = 0;
 
@@ -187,10 +187,12 @@ class MainMenuState extends MusicBeatState
 				LoadingState.loadAndSwitchState(new PlayState());
 			}
 
+			#if debug
 			if (FlxG.keys.justPressed.SEVEN)
 			{
 				MusicBeatState.switchState(new SelectEditorsState());
 			}
+			#end
 
 			if (controls.ACCEPT)
 			{

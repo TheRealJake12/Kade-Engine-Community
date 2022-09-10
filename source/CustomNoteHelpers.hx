@@ -68,24 +68,6 @@ class Skin
 		#end
 	}
 
-	static public function generateNoteTypeSprite(id:Int)
-	{
-		#if FEATURE_FILESYSTEM
-		// TODO: Make this use OpenFlAssets.
-
-		Debug.logInfo("Generating Custom Notetype Shit.");
-
-		var path = FileSystem.absolutePath("assets/shared/images/notetypes") + "/" + "pain";
-		var data:BitmapData = BitmapData.fromFile(path + ".png");
-
-		return FlxAtlasFrames.fromSparrow(FlxGraphic.fromBitmapData(data), xmlData[id]);
-
-		// return Paths.getSparrowAtlas('noteskins/' + NoteskinHelpers.getNoteskinByID(FlxG.save.data.noteskin), "shared");
-		#else
-		return Paths.getSparrowAtlas('notetypes/pain', "shared");
-		#end
-	}
-
 	static public function generatePixelSprite(id:Int, ends:Bool = false)
 	{
 		#if FEATURE_FILESYSTEM
@@ -94,7 +76,7 @@ class Skin
 		var path = FileSystem.absolutePath("assets/shared/images/noteskins") + "/" + getNoteskinByID(id) + "-pixel" + (ends ? "-ends" : "");
 		if (!FileSystem.exists(path + ".png"))
 		{
-			Debug.logTrace("getting default pixel skin");
+			//Debug.logTrace("getting default pixel skin");
 			return BitmapData.fromFile(FileSystem.absolutePath("assets/shared/images/noteskins") + "/Arrows-pixel" + (ends ? "-ends" : "") + ".png");
 		}
 		return BitmapData.fromFile(path + ".png");
@@ -154,7 +136,6 @@ class Splash
 		var data:BitmapData = BitmapData.fromFile(path + ".png");
 
 		return FlxAtlasFrames.fromSparrow(FlxGraphic.fromBitmapData(data), xmlData[id]);
-		
 		#else
 		return Paths.getSparrowAtlas('splashes/Week7', "shared");
 		#end

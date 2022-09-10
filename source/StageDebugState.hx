@@ -15,7 +15,7 @@ import openfl.net.FileReference;
 
 using StringTools;
 
-class StageDebugState extends FlxState
+class StageDebugState extends MusicBeatState
 {
 	public var daStage:String;
 	public var daBf:String;
@@ -54,6 +54,7 @@ class StageDebugState extends FlxState
 
 	override function create()
 	{
+		//perf.Destroyer.clearStoredMemory();
 		FlxG.sound.music.stop();
 		FlxG.mouse.visible = true;
 
@@ -112,6 +113,7 @@ class StageDebugState extends FlxState
 		add(posText);
 
 		addHelpText();
+		perf.Destroyer.clearUnusedMemory();
 	}
 
 	var helpText:FlxText;
@@ -209,36 +211,8 @@ class StageDebugState extends FlxState
 
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
-			LoadingState.loadAndSwitchState(new PlayState());
+			FlxG.switchState(new PlayState());
 			PlayState.stageTesting = true;
-			for (i in Stage.toAdd)
-			{
-				remove(i);
-			}
-
-			for (group in Stage.swagGroup)
-			{
-				remove(group);
-			}
-
-			for (index => array in Stage.layInFront)
-			{
-				switch (index)
-				{
-					case 0:
-						remove(gf);
-						for (bg in array)
-							remove(bg);
-					case 1:
-						remove(dad);
-						for (bg in array)
-							remove(bg);
-					case 2:
-						remove(boyfriend);
-						for (bg in array)
-							remove(bg);
-				}
-			}
 		}
 
 		if (FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.S)

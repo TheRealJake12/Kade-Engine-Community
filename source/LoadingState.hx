@@ -59,6 +59,7 @@ class LoadingState extends MusicBeatState
 				if (PlayState.SONG.needsVoices)
 					checkLoadSong(getVocalPath());
 			}
+			
 			if (!FlxG.save.data.optimize)
 			{
 				if (PlayState.storyWeek > 0)
@@ -72,6 +73,7 @@ class LoadingState extends MusicBeatState
 					OpenFlAssets.unloadLibrary("week" +
 						PlayState.storyWeek); // Unloading the week library in case it's loaded to save memory in optimization mode or with no background.
 			}
+			
 
 			var fadeTime = 0.5;
 			FlxG.camera.fade(FlxG.camera.bgColor, fadeTime, true);

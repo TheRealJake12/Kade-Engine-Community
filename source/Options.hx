@@ -2551,6 +2551,33 @@ class BorderlessWindow extends Option
 	}
 }
 
+class RatingStack extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function left():Bool
+	{
+		FlxG.save.data.rateStack = !FlxG.save.data.rateStack;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Stack Ratings : < " + (!FlxG.save.data.rateStack ? "off" : "on") + " >";
+	}
+}
+
 class OldCharter extends Option
 {
 	public function new(desc:String)
@@ -2653,6 +2680,10 @@ class ResetSettings extends Option
 		FlxG.save.data.oldcharter = null;
 		FlxG.save.data.motion = null;
 		FlxG.save.data.popup = null;
+		FlxG.save.data.fpsMark = null;
+		FlxG.save.data.borderless = null;
+		FlxG.save.data.rateStack = null;
+		
 		
 
 		KadeEngineData.initSave();
