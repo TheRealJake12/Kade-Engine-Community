@@ -4216,7 +4216,79 @@ class PlayState extends MusicBeatState
 
 	function noteMiss(direction:Int = 1, daNote:Note):Void
 	{
-		if (daNote.noteShit == 'normal')
+		if (FlxG.save.data.ghost)
+		{
+			if (daNote.noteShit == 'normal')
+			{
+				if (!boyfriend.stunned)
+				{
+					if (combo > 5 && gf.animOffsets.exists('sad'))
+					{
+						gf.playAnim('sad');
+					}
+					if (combo != 0)
+					{
+						combo = 0;
+						popUpScore(null);
+					}
+					misses++;
+
+					if (daNote != null)
+					{
+						if (!loadRep)
+						{
+							saveNotes.push([
+								daNote.strumTime,
+								0,
+								direction,
+								-(166 * Math.floor((PlayState.rep.replay.sf / 60) * 1000) / 166)
+							]);
+							saveJudge.push("miss");
+						}
+					}
+					else if (!loadRep)
+					{
+						saveNotes.push([
+							Conductor.songPosition,
+							0,
+							direction,
+							-(166 * Math.floor((PlayState.rep.replay.sf / 60) * 1000) / 166)
+						]);
+						saveJudge.push("miss");
+					}
+
+					totalNotesHit -= 1;
+
+					if (daNote != null)
+					{
+						if (!daNote.isSustainNote)
+							songScore -= 10;
+					}
+					else
+						songScore -= 10;
+
+					if (FlxG.save.data.missSounds)
+					{
+						FlxG.sound.play(Paths.soundRandom('missnote' + altSuffix, 1, 3), FlxG.random.float(0.1, 0.2));
+					}
+
+					boyfriend.playAnim('sing' + dataSuffix[direction] + 'miss', true);
+
+					#if FEATURE_LUAMODCHART
+					if (luaModchart != null)
+						luaModchart.executeState('playerOneMiss', [direction, Conductor.songPosition]);
+					#end
+
+					updateAccuracy();
+				}
+			}
+			else if (daNote.noteShit == 'mustpress')
+			{
+				health -= 0.8;
+				Debug.logTrace("You Suck!");
+			}
+		}
+		else
 		{
 			if (!boyfriend.stunned)
 			{
@@ -4278,12 +4350,7 @@ class PlayState extends MusicBeatState
 				#end
 
 				updateAccuracy();
-			}
-		}
-		else if(daNote.noteShit == 'mustpress')
-		{
-			health -= 0.8;
-			Debug.logTrace("You Suck!");
+			} //really weird bug where you miss anything without ghost tapping it just crashes. Idk why. Will fix soon
 		}
 	}
 	
