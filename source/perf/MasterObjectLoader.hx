@@ -73,7 +73,7 @@ class MasterObjectLoader
 				counter++;
 			}
 		}
-		Debug.logTrace('Removed ${counter} objects');
+		//Debug.logTrace('Removed ${counter} objects');
 		Objects = [];
 		for (k in keep)
 			Objects.push(k);

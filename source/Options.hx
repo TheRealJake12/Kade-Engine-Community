@@ -2524,6 +2524,33 @@ class RatingPopup extends Option
 	}
 }
 
+class BorderlessWindow extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function left():Bool
+	{
+		FlxG.save.data.borderless = !FlxG.save.data.borderless;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Borderless Window : < " + (!FlxG.save.data.borderless ? "off" : "on") + " >";
+	}
+}
+
 class OldCharter extends Option
 {
 	public function new(desc:String)

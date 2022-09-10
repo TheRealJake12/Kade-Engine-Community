@@ -190,6 +190,9 @@ class KadeEngineData
 		if (FlxG.save.data.fpsmark == null)
 			FlxG.save.data.fpsmark = true;	
 
+		if (FlxG.save.data.borderless == null)
+			FlxG.save.data.borderless = false;	
+
 		if (FlxG.save.data.alpha == null)
 			FlxG.save.data.alpha = 0.6;
 			

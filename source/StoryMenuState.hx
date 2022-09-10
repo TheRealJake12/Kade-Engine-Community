@@ -359,9 +359,10 @@ class StoryMenuState extends MusicBeatState
 				{
 					{
 						FlxG.sound.music.stop();
-						remove(grpWeekCharacters);	
-						remove(grpLocks);	
+						remove(grpWeekCharacters);
+						remove(grpLocks);
 						video.playVideo(Paths.video('ughCutscene.mp4'));
+						//VideoHandler.canCrash = true;
 						video.finishCallback = function()
 						{
 							LoadingState.loadAndSwitchState(new PlayState(), true);

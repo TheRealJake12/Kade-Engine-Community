@@ -1577,28 +1577,6 @@ class PlayState extends MusicBeatState
 		Conductor.songPosition = startTime;
 		startTime = 0;
 
-		/*@:privateAccess
-			{
-				var aux = AL.createAux();
-				var fx = AL.createEffect();
-				AL.effectf(fx,AL.PITCH,songMultiplier);
-				AL.auxi(aux, AL.EFFECTSLOT_EFFECT, fx);
-				var instSource = FlxG.sound.music._channel.__source;
-
-				var backend:lime._internal.backend.native.NativeAudioSource = instSource.__backend;
-
-				AL.source3i(backend.handle, AL.AUXILIARY_SEND_FILTER, aux, 1, AL.FILTER_NULL);
-				if (vocals != null)
-				{
-					var vocalSource = vocals._channel.__source;
-
-					backend = vocalSource.__backend;
-					AL.source3i(backend.handle, AL.AUXILIARY_SEND_FILTER, aux, 1, AL.FILTER_NULL);
-				}
-
-				trace("pitched to " + songMultiplier);
-		}*/
-
 		#if cpp
 		@:privateAccess
 		{
@@ -1870,24 +1848,35 @@ class PlayState extends MusicBeatState
 			}
 		}
 	}
+	 
+	//I wanna softcode but I suck ass :(((
 
-	public function NoteSplashesSpawn(daNote:Note)
+	public function NoteSplashesSpawn(daNote:Note, ?name:String = 'Default')
 	{
 		var sploosh:FlxSprite = new FlxSprite(playerStrums.members[daNote.noteData].x + 10.5, playerStrums.members[daNote.noteData].y - 20);
 		sploosh.antialiasing = FlxG.save.data.antialiasing;
-		var rawJson = Paths.loadData('images/splashes/Default');
+		switch (FlxG.save.data.notesplash)
+		{
+			case 0:
+				name = 'Default';
+			case 1:
+				name = 'Week7';
+			
+		}
+		var rawJson = Paths.loadData('images/splashes/' + name);
 		var data:SplashData = cast rawJson;
+		
 		if (FlxG.save.data.notesplashes)
 		{
-				sploosh.frames = PlayState.notesplashSprite;
-				sploosh.animation.addByPrefix('splash 0 0', 'note splash 1 purple', data.fps, false);
-				sploosh.animation.addByPrefix('splash 0 1', 'note splash 1 blue', data.fps, false);
-				sploosh.animation.addByPrefix('splash 0 2', 'note splash 1 green', data.fps, false);
-				sploosh.animation.addByPrefix('splash 0 3', 'note splash 1 red', data.fps, false);
-				sploosh.animation.addByPrefix('splash 1 0', 'note splash 2 purple', data.fps, false);
-				sploosh.animation.addByPrefix('splash 1 1', 'note splash 2 blue', data.fps, false);
-				sploosh.animation.addByPrefix('splash 1 2', 'note splash 2 green', data.fps, false);
-				sploosh.animation.addByPrefix('splash 1 3', 'note splash 2 red', data.fps, false);
+			sploosh.frames = PlayState.notesplashSprite;
+			sploosh.animation.addByPrefix('splash 0 0', 'note splash 1 purple', data.fps, false);
+			sploosh.animation.addByPrefix('splash 0 1', 'note splash 1 blue', data.fps, false);
+			sploosh.animation.addByPrefix('splash 0 2', 'note splash 1 green', data.fps, false);
+			sploosh.animation.addByPrefix('splash 0 3', 'note splash 1 red', data.fps, false);
+			sploosh.animation.addByPrefix('splash 1 0', 'note splash 2 purple', data.fps, false);
+			sploosh.animation.addByPrefix('splash 1 1', 'note splash 2 blue', data.fps, false);
+			sploosh.animation.addByPrefix('splash 1 2', 'note splash 2 green', data.fps, false);
+			sploosh.animation.addByPrefix('splash 1 3', 'note splash 2 red', data.fps, false);	
 			add(sploosh);
 			//sfjl
 			sploosh.cameras = [camNotes];
@@ -1902,12 +1891,20 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	public function NoteSplashesSpawn2(daNote:Note):Void
+	public function NoteSplashesSpawn2(daNote:Note, ?name:String = 'Default')
 	{
 		var sploosh:FlxSprite = new FlxSprite(cpuStrums.members[daNote.noteData].x + 10.5, cpuStrums.members[daNote.noteData].y - 20);
-		var rawJson = Paths.loadData('images/splashes/Default');
-		var data:SplashData = cast rawJson;
 		sploosh.antialiasing = FlxG.save.data.antialiasing;
+		switch (FlxG.save.data.cpuNotesplash)
+		{
+			case 0:
+				name = 'Default';
+			case 1:
+				name = 'Week7';
+		}
+		var rawJson = Paths.loadData('images/splashes/' + name);
+		var data:SplashData = cast rawJson;
+
 		if (FlxG.save.data.cpuSplash)
 		{
 			sploosh.frames = PlayState.cpuNotesplashSprite;
@@ -2258,6 +2255,15 @@ class PlayState extends MusicBeatState
 			PlayStateChangeables.botPlay = true;
 			addedBotplay = true;
 			add(botPlayState);
+		}
+
+		if (FlxG.save.data.borderless)
+		{
+			FlxG.stage.window.borderless = true;
+		}
+		else
+		{
+			FlxG.stage.window.borderless = false;
 		}
 
 		if (unspawnNotes[0] != null)

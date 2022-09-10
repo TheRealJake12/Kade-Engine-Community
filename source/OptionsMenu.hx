@@ -148,6 +148,9 @@ class OptionsMenu extends FlxSubState
 				new NotesplashesOption("Uses Notesplashes (Only use it on Arrow skins or else theres gonna be some visual bugs(wrong offsets))."),
 				new RotateSpritesOption("Should the game rotate the sprites to do color quantization (turn off for bar skins)"),
 				new LowMotion("Reduces the motion on screen for people who get motion sickness or for a smoother experiance."),
+				#if desktop
+				new BorderlessWindow("Turns Off The Window Border."),
+				#end
 				new ScrollAlpha("Changes the Transparancy of the Hold Notes."),
 				new MiddleScrollOption("Put your lane in the center or on the right."),
 				new HealthBarOption("Toggles health bar visibility"),

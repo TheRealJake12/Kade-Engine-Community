@@ -75,9 +75,9 @@ It will take a while to build for both versions.
 
 - [KadeDev](https://github.com/KadeDev) - The Original Guy who created Kade Engine
 
-- [PolybiusProxy](https://github.com/polybiusproxy) - The MP4 Video Support
+- [PolybiusProxy](https://github.com/polybiusproxy) - The Video Support
 
-- [BoloVEVO](https://github.com/BoloVEVO) - Fixed My Shit Code And Improving The Memory Code. (As Well As NoteTypes.)
+- [BoloVEVO](https://github.com/BoloVEVO) - Fixed my shit code and improved the chart editor as well as many other things(thanks!)
 
 - [ShadowMario](https://github.com/ShadowMario) - The Memory Leak Fix. And A Few Other Things. (thanks)
 
