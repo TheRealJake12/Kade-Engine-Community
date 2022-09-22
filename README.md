@@ -57,7 +57,7 @@ haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
 haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
 haxelib git faxe https://github.com/uhrobots/faxe
 haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
-haxelib git hxCodec https://github.com/polybiusproxy/hxCodec.git
+haxelib git hxCodec https://github.com/TheRealJake12/hxCodec.git
 ```
 4. [Read the original FNF source code guide for Visual Studio](https://github.com/ninjamuffin99/Funkin.git)
 Once it is installed you should be able to build your game.
