@@ -2610,6 +2610,83 @@ class OldCharter extends Option
 	}
 }
 
+class Resolution extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+		acceptValues = true;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.resizeWindow(intToMode(FlxG.save.data.resolution)[0], intToMode(FlxG.save.data.resolution)[1]);
+		FlxG.resizeGame(intToMode(FlxG.save.data.resolution)[0], intToMode(FlxG.save.data.resolution)[1]);
+		if (!OptionsMenu.isInPause)
+			Debug.logTrace("Current Resolution = " + FlxG.width + "x" + FlxG.height);
+			
+		display = updateDisplay();
+		return true;
+	}
+
+	override function left():Bool
+	{
+		if (FlxG.save.data.resolution == 0)
+			return false;
+
+		FlxG.save.data.resolution -= 1;
+		//Debug.logTrace("Current Resolution == " + FlxG.save.data.resolution);
+		// FlxG.resizeWindow(intToMode(FlxG.save.data.resolution)[0],intToMode(FlxG.save.data.resolution)[1]);
+
+		return true;
+	}
+
+	override function getValue():String
+	{
+		return "Resolution <" + intToMode(FlxG.save.data.resolution)[0] + 'x' + intToMode(FlxG.save.data.resolution)[1]+ " >";
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Resolution < " + intToMode(FlxG.save.data.resolution)[0] + 'x' + intToMode(FlxG.save.data.resolution)[1] + " >";
+	}
+
+	function intToMode(i:Int):Array<Int>
+	{
+		var resolution:Array<Int> = [];
+		switch (i)
+		{
+			case 0:
+				resolution = [640, 360];
+			case 1:
+				resolution = [768, 432];
+			case 2:
+				resolution = [896, 504];
+			case 3:
+				resolution = [1024, 576];
+			case 4:
+				resolution = [1152, 648];
+			case 5:
+				resolution = [1280, 720];
+			case 6:
+				resolution = [1920, 1080];
+		}
+		return resolution;
+	}
+
+	override function right():Bool
+	{
+		if (FlxG.save.data.resolution == 6)
+			return false;
+
+		FlxG.save.data.resolution += 1;
+		//Debug.logTrace("Current Resolution == " + FlxG.save.data.resolution);
+
+		return true;
+	}
+}
+
 class ResetSettings extends Option
 {
 	var confirm:Bool = false;
@@ -2683,8 +2760,6 @@ class ResetSettings extends Option
 		FlxG.save.data.fpsMark = null;
 		FlxG.save.data.borderless = null;
 		FlxG.save.data.rateStack = null;
-		
-		
 
 		KadeEngineData.initSave();
 		confirm = false;

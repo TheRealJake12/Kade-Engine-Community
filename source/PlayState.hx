@@ -1409,6 +1409,7 @@ class PlayState extends MusicBeatState
 
 	private function handleInput(evt:KeyboardEvent):Void
 	{
+		var canMiss:Bool = !FlxG.save.data.ghost;
 
 		if (PlayStateChangeables.botPlay || loadRep || paused)
 			return;
@@ -1424,6 +1425,7 @@ class PlayState extends MusicBeatState
 		];
 
 		var data = -1;
+		var notesStopped:Bool = false;
 
 		switch (evt.keyCode) // arrow keys
 		{
@@ -1460,34 +1462,30 @@ class PlayState extends MusicBeatState
 		notes.forEachAlive(function(daNote:Note)
 		{
 			if (daNote.canBeHit && daNote.mustPress && !daNote.wasGoodHit)
+			{
 				closestNotes.push(daNote);
+				canMiss = true;
+			}
 		});
 
-		closestNotes.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
-
 		var dataNotes = [];
+		var coolNote = null;
+
+		closestNotes.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
 		for (i in closestNotes)
 			if (i.noteData == data && !i.isSustainNote)
 				dataNotes.push(i);
 
-		if (dataNotes.length != 0)
+		if (dataNotes.length > 0)
 		{
-			var coolNote = null;
-
-			for (i in dataNotes)
+			for (i in 0...dataNotes.length)
 			{
-				coolNote = i;
-				break;
-			}
+				var note = dataNotes[i];
 
-			if (dataNotes.length > 1)
-			{
-				for (i in 0...dataNotes.length)
+				for (i in dataNotes)
 				{
-					if (i == 0)
-						continue;
-
-					var note = dataNotes[i];
+					coolNote = i;
+					break;
 
 					if (!note.isSustainNote && ((note.strumTime - coolNote.strumTime) < 2) && note.noteData == data)
 					{
@@ -1495,23 +1493,53 @@ class PlayState extends MusicBeatState
 						notes.remove(note, true);
 						note.destroy();
 					}
+					else
+						notesStopped = true;
+				}
+				
+				if (!notesStopped)
+				{
+					goodNoteHit(coolNote);
 				}
 			}
-
-			boyfriend.holdTimer = 0;
-			goodNoteHit(coolNote);
-			var noteDiff:Float = -(coolNote.strumTime - Conductor.songPosition);
-			ana.hit = true;
-			ana.hitJudge = Ratings.judgeNote(noteDiff);
-			ana.nearestNote = [coolNote.strumTime, coolNote.noteData, coolNote.sustainLength];
 		}
-		else if (!FlxG.save.data.ghost && songStarted)
+		else
 		{
-			noteMiss(data, null);
-			ana.hit = false;
-			ana.hitJudge = "shit";
-			ana.nearestNote = [];
+			if (canMiss)
+			{
+				noteMissPress(data);
+			}
+		}
+	}
+	//sadly stolen from Psych. Im sorry :(((
+	function noteMissPress(direction:Int = 1):Void
+	{
+		if (FlxG.save.data.ghost)
+			return;
+
+		if (!boyfriend.stunned)
+		{
 			health -= 0.20;
+			if (combo > 5 && gf != null && gf.animOffsets.exists('sad'))
+			{
+				gf.playAnim('sad');
+			}
+			combo = 0;
+			
+			songScore -= 10;
+			if (!endingSong)
+			{
+				misses++;
+			}
+			totalPlayed++;
+
+			if (FlxG.save.data.missSounds)
+			{
+				FlxG.sound.play(Paths.soundRandom('missnote' + altSuffix, 1, 3), FlxG.random.float(0.1, 0.2));
+			}
+			boyfriend.playAnim('sing' + dataSuffix[direction] + 'miss', true);
+			vocals.volume = 0;
+			updateAccuracy();
 		}
 	}
 
@@ -3224,6 +3252,7 @@ class PlayState extends MusicBeatState
 								daNote.kill();
 								notes.remove(daNote, true);
 							}
+
 						// note bitches
 						//custom noteshit p1
 						default:
@@ -3242,7 +3271,7 @@ class PlayState extends MusicBeatState
 								else
 								{
 									vocals.volume = 0;
-									if (theFunne && !daNote.isSustainNote)
+									if (theFunne && !daNote.isSustainNote &&  daNote.noteShit == 'normal')
 									{
 										noteMiss(daNote.noteData, daNote);
 									}
@@ -4235,82 +4264,8 @@ class PlayState extends MusicBeatState
 
 	public var videoSprite:FlxSprite;
 
-	function noteMiss(direction:Int = 1, daNote:Note):Void
+	function noteMiss(direction:Int = 1, ?daNote:Note):Void
 	{
-		if (FlxG.save.data.ghost)
-		{
-			if (daNote.noteShit == 'normal')
-			{
-				if (!boyfriend.stunned)
-				{
-					if (combo > 5 && gf.animOffsets.exists('sad'))
-					{
-						gf.playAnim('sad');
-					}
-					if (combo != 0)
-					{
-						combo = 0;
-						popUpScore(null);
-					}
-					misses++;
-
-					if (daNote != null)
-					{
-						if (!loadRep)
-						{
-							saveNotes.push([
-								daNote.strumTime,
-								0,
-								direction,
-								-(166 * Math.floor((PlayState.rep.replay.sf / 60) * 1000) / 166)
-							]);
-							saveJudge.push("miss");
-						}
-					}
-					else if (!loadRep)
-					{
-						saveNotes.push([
-							Conductor.songPosition,
-							0,
-							direction,
-							-(166 * Math.floor((PlayState.rep.replay.sf / 60) * 1000) / 166)
-						]);
-						saveJudge.push("miss");
-					}
-
-					totalNotesHit -= 1;
-
-					if (daNote != null)
-					{
-						if (!daNote.isSustainNote)
-							songScore -= 10;
-					}
-					else
-						songScore -= 10;
-
-					if (FlxG.save.data.missSounds)
-					{
-						FlxG.sound.play(Paths.soundRandom('missnote' + altSuffix, 1, 3), FlxG.random.float(0.1, 0.2));
-					}
-
-					boyfriend.playAnim('sing' + dataSuffix[direction] + 'miss', true);
-
-					#if FEATURE_LUAMODCHART
-					if (luaModchart != null)
-						luaModchart.executeState('playerOneMiss', [direction, Conductor.songPosition]);
-					#end
-
-					updateAccuracy();
-				}
-			}
-			else if (daNote.noteShit == 'mustpress')
-			{
-				health -= 0.8;
-				Debug.logTrace("You Suck!");
-			}
-		}
-		else
-		{
 			if (!boyfriend.stunned)
 			{
 				if (combo > 5 && gf.animOffsets.exists('sad'))
@@ -4365,14 +4320,19 @@ class PlayState extends MusicBeatState
 
 				boyfriend.playAnim('sing' + dataSuffix[direction] + 'miss', true);
 
+				if (daNote.noteShit == 'mustpress')
+				{
+					health -= 0.8;
+					//Debug.logTrace("You Suck!"); removed because this is more of a test thing.
+				}
+
 				#if FEATURE_LUAMODCHART
 				if (luaModchart != null)
 					luaModchart.executeState('playerOneMiss', [direction, Conductor.songPosition]);
 				#end
 
 				updateAccuracy();
-			} //really weird bug where you miss anything without ghost tapping it just crashes. Idk why. Will fix soon
-		}
+			}
 	}
 	
 	function updateAccuracy()
@@ -4456,7 +4416,7 @@ class PlayState extends MusicBeatState
 			if (note.noteShit == 'mustpress')
 			{
 				health += 1;
-				FlxG.sound.play(Paths.sound("Vine Boom"), 2);
+				//FlxG.sound.play(Paths.sound("Vine Boom"), 2); Vine Boom
 			}
 			if (!note.isSustainNote && note.noteShit == 'normal' || note.noteShit == 'mustpress')
 			{
@@ -4803,7 +4763,7 @@ class PlayState extends MusicBeatState
 
 	function HealthDrain():Void
 	{
-		FlxG.sound.play(Paths.sound("Vine Boom"), 2);
+		//FlxG.sound.play(Paths.sound("Vine Boom"), 2);
 		//boyfriend.playAnim("hit", true);
 		new FlxTimer().start(0.01, function(tmr:FlxTimer)
 		{

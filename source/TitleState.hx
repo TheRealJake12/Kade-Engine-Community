@@ -214,6 +214,30 @@ class TitleState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
+		switch (FlxG.save.data.resolution)
+		{
+			case 0:
+				FlxG.resizeWindow(640, 360);
+				FlxG.resizeGame(640, 360);
+			case 1:
+				FlxG.resizeWindow(768, 432);
+				FlxG.resizeGame(768, 432);
+			case 2:
+				FlxG.resizeWindow(896, 504);
+				FlxG.resizeGame(896, 504);
+			case 3:
+				FlxG.resizeWindow(1024, 576);
+				FlxG.resizeGame(1024, 576);
+			case 4:
+				FlxG.resizeWindow(1152, 648);
+				FlxG.resizeGame(1152, 648);
+			case 5:
+				FlxG.resizeWindow(1280, 720);
+				FlxG.resizeGame(1280, 720);
+			case 6:
+				FlxG.resizeWindow(1920, 1080);
+				FlxG.resizeGame(1920, 1080);	
+		}		
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;
 
