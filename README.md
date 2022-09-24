@@ -70,7 +70,7 @@ It will take a while to build for both versions.
 
 6. Play Around with the code and make your mod or consider Contributing to the Engine!
 
-[lime windows](https://media.discordapp.net/attachments/740596147449757716/1021916474350248047/caption.gif)
+[lime windows](art/readme/lime windows.gif)
 
 ### Shoutouts
 
