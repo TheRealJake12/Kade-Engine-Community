@@ -8,12 +8,14 @@ So I will now do a guide to build the game.
 ### Installing the needed things
 1. Install the latest Haxe. Instead of using Haxe 4.1.5, as the original game used, we will update to Haxe 4.2.4 (or the latest version)
 You will first need to go to this link to download [Haxe](https://haxe.org/download/) Choose your platform and just do the normal download proccess.
-2. Install HaxeFlixel. Once Haxe is installed, you can download HaxeFlixel. Open a Command Prompt (Windows is right click windows icon and hit command prompt or windows powershell) Once its open, run ```haxelib install flixel``` and Flixel will install.
-3. Im just gonna quickly add all the librarys you need to download by putting it in a prompt
+2. Install HaxeFlixel. Once Haxe is installed, you can download HaxeFlixel. Open a Command Prompt (Windows is right click windows icon and hit command prompt or windows powershell).
+3. You will need [Git](https://git-scm.com/downloads) 
+As you did with Haxe, just install the setup and finish it.
+4. Im just gonna quickly add all the librarys you need to download by putting it in a prompt
 ```cmd
 haxelib install lime 7.9.0
 haxelib install openfl
-haxelib install flixel 4.10.0
+haxelib install flixel
 haxelib install flixel-tools
 haxelib install flixel-ui
 haxelib install hscript
@@ -24,24 +26,21 @@ haxelib run lime setup
 haxelib run lime setup flixel
 haxelib run flixel-tools setup
 ```
-Once you have these installed, you will need [Git](https://git-scm.com/downloads) 
-As you did with Haxe, just install the setup and finish it.
-HaxeFlixel 4.11.0 Breaks some camera shit or something so lets just use 4.10.0 for now.
-[hxCodec](https://github.com/polybiusproxy/hxCodec.git) is for the MP4 Video Support. Instead of having the code. It is a library now. I will update the guide for playing the videos soon.
+Once you have these installed, 
+HaxeFlixel 4.11.0 Breaks some shader shit or something so I went ahead and made it use a custom file that fixes the issue.
+(FlxDrawQuadsItem or smth)
 When its finished, you will need to download these like you did with the Libraries above.
 ```cmd
 haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
 haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
 haxelib git faxe https://github.com/uhrobots/faxe
 haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
-haxelib git hxCodec https://github.com/polybiusproxy/hxCodec.git
+haxelib git hxCodec https://github.com/TheRealJake12/hxCodec.git
 ```
 4. [Read the original FNF source code guide for Visual Studio](https://github.com/ninjamuffin99/Funkin.git)
 Once it is installed you should be able to build your game.
 
-**IF YOU ARE LAZY JUST USE THE SETUP.BAT IN THE CODE!**
-
-5. Run ```Lime test windows``` or ```Lime test windows -debug```. No debug is the release version that doenst have all the debug stuff, As the debug does.
+5. Run ```lime test windows``` or ```lime test windows -debug```. No debug is the release version that doenst have all the debug stuff, As the debug does.
 It will take a while to build for both versions.
 
-6. Play Around with the code and make your mod or consider Contributing to the Engine!
+[lime windows](https://media.discordapp.net/attachments/740596147449757716/1021916474350248047/caption.gif)
