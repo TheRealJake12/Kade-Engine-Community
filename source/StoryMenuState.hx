@@ -362,7 +362,7 @@ class StoryMenuState extends MusicBeatState
 						remove(grpWeekCharacters);
 						remove(grpLocks);
 						video.playVideo(Paths.video('ughCutscene.mp4'));
-						//VideoHandler.canCrash = true;
+						//VideoHandler.canCrash = false;
 						video.finishCallback = function()
 						{
 							LoadingState.loadAndSwitchState(new PlayState(), true);

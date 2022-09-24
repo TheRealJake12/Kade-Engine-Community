@@ -185,6 +185,7 @@ class PlayState extends MusicBeatState
 	public static var cpuStrums:FlxTypedGroup<StaticArrow> = null;
 
 	private var camZooming:Bool = false;
+	private var theMotionThing:Bool = FlxG.save.data.motion;
 	private var curSong:String = "";
 
 	private var gfSpeed:Int = 1;
@@ -364,7 +365,7 @@ class PlayState extends MusicBeatState
 			previousRate = 1;
 
 		if (FlxG.save.data.fpsCap > 420)
-			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(800);
+			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(420);
 
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
@@ -556,11 +557,6 @@ class PlayState extends MusicBeatState
 		}
 
 		recalculateAllSectionTimes();
-		if (FlxG.save.data.gen)
-		{
-			trace('INFORMATION ABOUT WHAT U PLAYIN WIT:\nFRAMES: ' + PlayStateChangeables.safeFrames + '\nZONE: ' + Conductor.safeZoneOffset + '\nTS: '
-				+ Conductor.timeScale + '\nBotPlay : ' + PlayStateChangeables.botPlay);
-		}
 
 		// if the song has dialogue, so we don't accidentally try to load a nonexistant file and crash the game
 		if (Paths.doesTextAssetExist(Paths.txt('data/songs/${PlayState.SONG.songId}/dialogue')))
@@ -1118,8 +1114,7 @@ class PlayState extends MusicBeatState
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, releaseInput);
 
 		super.create();
-		if (FlxG.save.data.unload)
-			Destroyer.clearUnusedMemory();
+		Destroyer.clearUnusedMemory();
 	}
 
 	function tankIntro()
@@ -1879,19 +1874,20 @@ class PlayState extends MusicBeatState
 	}
 	 
 	//I wanna softcode but I suck ass :(((
+	var name:String;
 
 	public function NoteSplashesSpawn(daNote:Note, ?name:String = 'Default')
 	{
+		this.name = name;
 		var sploosh:FlxSprite = new FlxSprite(playerStrums.members[daNote.noteData].x + 10.5, playerStrums.members[daNote.noteData].y - 20);
 		sploosh.antialiasing = FlxG.save.data.antialiasing;
-		switch (FlxG.save.data.notesplash)
-		{
+		switch(FlxG.save.data.notesplash){
 			case 0:
 				name = 'Default';
 			case 1:
 				name = 'Week7';
-			
 		}
+
 		var rawJson = Paths.loadData('images/splashes/' + name);
 		var data:SplashData = cast rawJson;
 		
@@ -1922,10 +1918,10 @@ class PlayState extends MusicBeatState
 
 	public function NoteSplashesSpawn2(daNote:Note, ?name:String = 'Default')
 	{
+		this.name = name;
 		var sploosh:FlxSprite = new FlxSprite(cpuStrums.members[daNote.noteData].x + 10.5, cpuStrums.members[daNote.noteData].y - 20);
 		sploosh.antialiasing = FlxG.save.data.antialiasing;
-		switch (FlxG.save.data.cpuNotesplash)
-		{
+		switch(FlxG.save.data.cpuNotesplash){
 			case 0:
 				name = 'Default';
 			case 1:
@@ -1933,7 +1929,6 @@ class PlayState extends MusicBeatState
 		}
 		var rawJson = Paths.loadData('images/splashes/' + name);
 		var data:SplashData = cast rawJson;
-
 		if (FlxG.save.data.cpuSplash)
 		{
 			sploosh.frames = PlayState.cpuNotesplashSprite;
@@ -1941,17 +1936,13 @@ class PlayState extends MusicBeatState
 			sploosh.animation.addByPrefix('splash 0 1', 'note splash 1 blue', data.fps, false);
 			sploosh.animation.addByPrefix('splash 0 2', 'note splash 1 green', data.fps, false);
 			sploosh.animation.addByPrefix('splash 0 3', 'note splash 1 red', data.fps, false);
-			sploosh.animation.addByPrefix('splash 1 0', 'note splash 2 purple', data.fps, false);
-			sploosh.animation.addByPrefix('splash 1 1', 'note splash 2 blue', data.fps, false);
-			sploosh.animation.addByPrefix('splash 1 2', 'note splash 2 green', data.fps, false);
-			sploosh.animation.addByPrefix('splash 1 3', 'note splash 2 red', data.fps, false);
 			add(sploosh);
 			// sfjl
 			sploosh.cameras = [camNotes];
 			if (!FlxG.save.data.stepMania)
-				sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.noteData);
+				sploosh.animation.play('splash 0 ' + daNote.noteData);
 			else
-				sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.originColor);
+				sploosh.animation.play('splash 0'  + daNote.originColor);
 			sploosh.alpha = data.alpha;
 			sploosh.offset.x += 90;
 			sploosh.offset.y += 80; // lets stick to eight not nine
@@ -2945,9 +2936,10 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (camZooming || !FlxG.save.data.motion)
+		if (camZooming)
 		{
-			if (FlxG.save.data.zoom < 0.8)
+			if (theMotionThing){
+				if (FlxG.save.data.zoom < 0.8)
 				FlxG.save.data.zoom = 0.8;
 
 			if (FlxG.save.data.zoom > 1.2)
@@ -2968,6 +2960,7 @@ class PlayState extends MusicBeatState
 
 				camNotes.zoom = camHUD.zoom;
 				camSustains.zoom = camHUD.zoom;
+			}
 			}
 		}
 
@@ -3175,8 +3168,7 @@ class PlayState extends MusicBeatState
 								cpuStrums.forEach(function(spr:StaticArrow)
 								{
 									pressArrow(spr, spr.ID, daNote);
-									if (FlxG.save.data.cpuSplash && (!FlxG.save.data.middleScroll))
-										NoteSplashesSpawn2(daNote);
+									//sadly we had to remove the cpu splashes because of bugs and shit
 								});
 						}
 
@@ -3252,6 +3244,12 @@ class PlayState extends MusicBeatState
 								daNote.kill();
 								notes.remove(daNote, true);
 							}
+						case 'mustpress':
+							if (daNote.isSustainNote && daNote.wasGoodHit)
+							{
+								daNote.kill();
+								notes.remove(daNote, true);
+							}
 
 						// note bitches
 						//custom noteshit p1
@@ -3271,7 +3269,7 @@ class PlayState extends MusicBeatState
 								else
 								{
 									vocals.volume = 0;
-									if (theFunne && !daNote.isSustainNote &&  daNote.noteShit == 'normal')
+									if (theFunne && !daNote.isSustainNote)
 									{
 										noteMiss(daNote.noteData, daNote);
 									}
@@ -3286,10 +3284,7 @@ class PlayState extends MusicBeatState
 									}
 									else
 									{
-										if (!daNote.wasGoodHit
-											&& daNote.isSustainNote
-											&& daNote.sustainActive
-											&& daNote.spotInLine != daNote.parent.children.length)
+										if (!daNote.wasGoodHit&& daNote.isSustainNote&& daNote.sustainActive&& daNote.spotInLine != daNote.parent.children.length)
 										{
 											for (i in daNote.parent.children)
 											{
@@ -3327,7 +3322,6 @@ class PlayState extends MusicBeatState
 								if (daNote.isParent && daNote.visible)
 								{
 									health -= 0.15;
-									trace("hold fell over at the start");
 									for (i in daNote.children)
 									{
 										i.alpha = 0.3;
@@ -3336,12 +3330,8 @@ class PlayState extends MusicBeatState
 								}
 								else
 								{
-									if (!daNote.wasGoodHit
-										&& daNote.isSustainNote
-										&& daNote.sustainActive
-										&& daNote.spotInLine != daNote.parent.children.length)
+									if (!daNote.wasGoodHit&& daNote.isSustainNote&& daNote.sustainActive&& daNote.spotInLine != daNote.parent.children.length)
 									{
-										trace("hold fell over at " + daNote.spotInLine);
 										for (i in daNote.parent.children)
 										{
 											i.alpha = 0.3;
@@ -3549,8 +3539,7 @@ class PlayState extends MusicBeatState
 						FlxG.sound.playMusic(Paths.music('freakyMenu'));
 						Conductor.changeBPM(102);
 						MusicBeatState.switchState(new StoryMenuState());
-						if (FlxG.save.data.unload)
-							Main.dumpCache();
+						Main.dumpCache();
 						clean();
 					}
 
@@ -4575,7 +4564,7 @@ class PlayState extends MusicBeatState
 
 		wiggleShit.update(Conductor.crochet);
 
-		if (!FlxG.save.data.motion || FlxG.save.data.camzoom && songMultiplier == 1)
+		if (FlxG.save.data.camzoom && songMultiplier == 1)
 		{
 			if (PlayState.SONG.songId == 'milf' && curBeat >= 168 && curBeat < 200 && camZooming && FlxG.camera.zoom < 1.35)
 			{
@@ -4589,7 +4578,7 @@ class PlayState extends MusicBeatState
 				camHUD.zoom += 0.03 / songMultiplier;
 			}
 		}
-		if (!FlxG.save.data.motion)
+		if (!theMotionThing)
 		{
 			if (songMultiplier == 1)
 			{
@@ -4753,11 +4742,11 @@ class PlayState extends MusicBeatState
 		return super.add(Object);
 	}
 
-	function unloadAssets():Void
-	{
-		for (asset in trackedAssets)
-		{
-			remove(asset);
+	function unloadAssets():Void{
+		if (FlxG.save.data.unload){
+			for (asset in trackedAssets){
+				remove(asset);
+			}
 		}
 	}
 

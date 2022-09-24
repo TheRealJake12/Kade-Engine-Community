@@ -1,11 +1,13 @@
 package;
 
+import flixel.util.FlxTimer;
 import flixel.FlxCamera;
 import flixel.FlxSubState;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import openfl.Lib;
+import PlayState;
 import Options;
 import Controls.Control;
 import flash.text.TextField;
@@ -17,14 +19,16 @@ import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import lime.utils.Assets;
-import flash.text.TextField;
-import flixel.FlxG;
-import flixel.FlxSprite;
+import flixel.ui.FlxBar;
+
+using StringTools;
 
 class OptionCata extends FlxSprite
 {
 	public var title:String;
+
+	public static var instance:OptionCata;
+
 	public var options:Array<Option>;
 
 	public var optionObjects:FlxTypedGroup<FlxText>;
@@ -32,6 +36,8 @@ class OptionCata extends FlxSprite
 	public var titleObject:FlxText;
 
 	public var middle:Bool = false;
+
+	public var text:FlxText;
 
 	public function new(x:Float, y:Float, _title:String, _options:Array<Option>, middleType:Bool = false)
 	{
@@ -64,7 +70,7 @@ class OptionCata extends FlxSprite
 		for (i in 0...options.length)
 		{
 			var opt = options[i];
-			var text:FlxText = new FlxText((middleType ? 1180 / 2 : 72), titleObject.y + 120 + (40 * i), 0, opt.getValue());
+			text = new FlxText((middleType ? 1180 / 2 : 72), 120 + 54 + (46 * i), 0, opt.getValue());
 			if (middleType)
 			{
 				text.screenCenter(X);
@@ -73,6 +79,7 @@ class OptionCata extends FlxSprite
 			text.borderSize = 3;
 			text.borderQuality = 1;
 			text.scrollFactor.set();
+
 			optionObjects.add(text);
 		}
 	}
@@ -104,7 +111,9 @@ class OptionsMenu extends FlxSubState
 
 	public var shownStuff:FlxTypedGroup<FlxText>;
 
-	public static var visibleRange = [114, 640];
+	public static var visibleRange = [164, 640];
+
+	var changedOption = false;
 
 	public function new(pauseMenu:Bool = false)
 	{
@@ -132,22 +141,22 @@ class OptionsMenu extends FlxSubState
 				new InstantRespawn("Toggle if you instantly respawn after dying."),
 				new CamZoomOption("Toggle the camera zoom in-game."),
 				// new OffsetMenu("Get a note offset based off of your inputs!"),
-				new ReplayOption("Watch Replays"),
+				//new ReplayOption("Watch Replays"),
 				new DFJKOption(),
 				new Judgement("Create a custom judgement preset"),
 				new CustomizeGameplay("Drag and drop gameplay modules to your prefered positions!")
 			]),
 			new OptionCata(345, 40, "Appearance", [
 				#if desktop
-				new NoteskinOption("Change your Noteskin"),
-				new CPUNoteskinOption("Change the CPU Noteskin"),
+				new NoteskinOption("Change your Noteskin"), 
+				new CPUNoteskinOption("Change the CPU Noteskin"), 
 				new NotesplashOption("Change your Notesplash"),
-				new CPUNotesplashOption("Change the CPU Notesplash"),
+				//new CPUNotesplashOption("Change the CPU Notesplash"),
 				#end
-				new CPUSplash("Allows The CPU To Do Notesplashes"),
+				//new CPUSplash("Allows The CPU To Do Notesplashes"),
 				new NotesplashesOption("Uses Notesplashes (Only use it on Arrow skins or else theres gonna be some visual bugs(wrong offsets))."),
 				new RotateSpritesOption("Should the game rotate the sprites to do color quantization (turn off for bar skins)"),
-				new LowMotion("Reduces the motion on screen for people who get motion sickness or for a smoother experiance."),
+				new LowMotion("Makes The Icons Not Bump On The Healthbar."),
 				#if desktop
 				new BorderlessWindow("Turns Off The Window Border."),
 				#end
@@ -181,7 +190,7 @@ class OptionsMenu extends FlxSubState
 			new OptionCata(50, 104, "Perf", [
 				new FPSOption("Toggle the FPS Counter"),
 				#if desktop
-				new FPSCapOption("Change your FPS Cap."), 
+				new FPSCapOption("Change your FPS Cap."),
 				#end
 				new Memory("Toggle the Memory Counter"),
 				new BorderFps("Adds A Border To Make The FPS Display Easier To See. (Uses A Ton Of CPU And A Little GPU)"),
@@ -195,10 +204,9 @@ class OptionsMenu extends FlxSubState
 				new DistractionsAndEffectsOption("Turns On Extra Images That Reduce Your FPS Significantly(Week 5 and 7 esp)"),
 				new Optimization("Nothing but Your Strumline is visible. Best Performance."),
 				new AntialiasingOption("Toggle antialiasing, improving graphics quality at a slight performance penalty."),
-				//new FXAAOption("Enable FXAA Antialiasing. (EXTREME PERFORMANCE IMPACT! ONLY ENABLE IF YOUR PC HAS LIKE AN RTX CARD!)"),
-				#if desktop 
-				new UnloadSongs("Unload Songs And Characters"),
-				new CharacterCaching("Caches Characters"), 
+				// new FXAAOption("Enable FXAA Antialiasing. (EXTREME PERFORMANCE IMPACT! ONLY ENABLE IF YOUR PC HAS LIKE AN RTX CARD!)"),
+				#if desktop
+				new UnloadSongs("Unload Songs And Characters"), new CharacterCaching("Caches Characters"),
 				new SongCaching("Caches Songs for close to Instant loading"),
 				new CachingOption("Caches all of the options above (High Memory Depending On Your Cache Options.)"),
 				new UnloadNow("Clears All Cache We Can Remove"),
@@ -244,7 +252,6 @@ class OptionsMenu extends FlxSubState
 		if (isInPause)
 		{
 			var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-			bg.alpha = 0;
 			bg.scrollFactor.set();
 			menu.add(bg);
 
@@ -263,7 +270,7 @@ class OptionsMenu extends FlxSubState
 
 		for (i in 0...options.length - 1)
 		{
-			if (i >= 6)
+			if (i > 5) //impoirtant
 				continue;
 			var cat = options[i];
 			add(cat);
@@ -290,9 +297,7 @@ class OptionsMenu extends FlxSubState
 	{
 		try
 		{
-			visibleRange = [114, 640];
-			if (cat.middle)
-				visibleRange = [Std.int(cat.titleObject.y), 640];
+			visibleRange = [164, 640];
 			if (selectedOption != null)
 			{
 				var object = selectedCat.optionObjects.members[selectedOptionIndex];
@@ -311,7 +316,7 @@ class OptionsMenu extends FlxSubState
 			for (i in 0...selectedCat.options.length)
 			{
 				var opt = selectedCat.optionObjects.members[i];
-				opt.y = 175 + (40 * i);
+				opt.y = options[4].titleObject.y + 54 + (46 * i);
 			}
 
 			while (shownStuff.members.length != 0)
@@ -335,7 +340,7 @@ class OptionsMenu extends FlxSubState
 				for (i in 0...selectedCat.options.length)
 				{
 					var opt = selectedCat.optionObjects.members[i];
-					opt.y = 175 + (40 * i);
+					opt.y = options[4].titleObject.y + 54 + (46 * i);
 				}
 			}
 
@@ -358,7 +363,7 @@ class OptionsMenu extends FlxSubState
 		}
 		catch (e)
 		{
-			Debug.logError("oops\n" + e);
+			Debug.logError("Bug:\n" + e);
 			selectedCatIndex = 0;
 		}
 	}
@@ -390,6 +395,9 @@ class OptionsMenu extends FlxSubState
 		var down = false;
 		var any = false;
 		var escape = false;
+		var clickedCat = false;
+
+		changedOption = false;
 
 		accept = FlxG.keys.justPressed.ENTER || (gamepad != null ? gamepad.justPressed.A : false);
 		right = FlxG.keys.justPressed.RIGHT || (gamepad != null ? gamepad.justPressed.DPAD_RIGHT : false);
@@ -527,22 +535,20 @@ class OptionsMenu extends FlxSubState
 
 						if (selectedOptionIndex > options[selectedCatIndex].options.length - 1)
 						{
-							for (i in 0...selectedCat.options.length)
-							{
-								var opt = selectedCat.optionObjects.members[i];
-								opt.y = 175 + (40 * i);
-							}
-							selectedOptionIndex = 0;
+								for (i in 0...selectedCat.options.length)
+								{
+									var opt = selectedCat.optionObjects.members[i];
+									opt.y = options[4].titleObject.y + 54 + (46 * i);
+								}
+								selectedOptionIndex = 0;
 						}
-
-						if (selectedOptionIndex != 0
-							&& selectedOptionIndex != options[selectedCatIndex].options.length - 1
-							&& options[selectedCatIndex].options.length > 6)
+	
+						if (selectedOptionIndex != 0 && options[selectedCatIndex].options.length > 6)
 						{
-							if (selectedOptionIndex >= (options[selectedCatIndex].options.length - 1) / 2)
+							if (selectedOptionIndex >= (options[selectedCatIndex].options.length - 1) / (2+options[selectedCatIndex].options.length*0.1))
 								for (i in selectedCat.optionObjects.members)
 								{
-									i.y -= 40;
+									i.y -= 46;
 								}
 						}
 
@@ -561,29 +567,30 @@ class OptionsMenu extends FlxSubState
 						if (selectedOptionIndex < 0)
 						{
 							selectedOptionIndex = options[selectedCatIndex].options.length - 1;
-
-							if (options[selectedCatIndex].options.length > 6)
-								for (i in selectedCat.optionObjects.members)
+							if (options[selectedCatIndex].options.length > 6){
+								for (i in 0...selectedCat.options.length)
 								{
-									i.y -= (40 * ((options[selectedCatIndex].options.length - 1) / 2));
+									var opt = selectedCat.optionObjects.members[i];
+									opt.y = options[4].titleObject.y + 54 -(options[selectedCatIndex].options.length*(16+options[selectedCatIndex].options.length)) + (46 * i);
 								}
+							}
 						}
-
+	
 						if (selectedOptionIndex != 0 && options[selectedCatIndex].options.length > 6)
 						{
-							if (selectedOptionIndex >= (options[selectedCatIndex].options.length - 1) / 2)
+							if (selectedOptionIndex >= (options[selectedCatIndex].options.length - 1) / (2+options[selectedCatIndex].options.length*0.1))
 								for (i in selectedCat.optionObjects.members)
 								{
-									i.y += 40;
+									i.y += 46;
 								}
 						}
-
-						if (selectedOptionIndex < (options[selectedCatIndex].options.length - 1) / 2)
+	
+						if (selectedOptionIndex < (options[selectedCatIndex].options.length - 1) / (2+options[selectedCatIndex].options.length*0.1))
 						{
 							for (i in 0...selectedCat.options.length)
 							{
 								var opt = selectedCat.optionObjects.members[i];
-								opt.y = 175 + (40 * i);
+								opt.y = options[4].titleObject.y + 54 + (46 * i);
 							}
 						}
 
@@ -595,6 +602,7 @@ class OptionsMenu extends FlxSubState
 						FlxG.sound.play(Paths.sound('scrollMenu'));
 						var object = selectedCat.optionObjects.members[selectedOptionIndex];
 						selectedOption.right();
+						changedOption = true;
 
 						FlxG.save.flush();
 
@@ -605,6 +613,7 @@ class OptionsMenu extends FlxSubState
 						FlxG.sound.play(Paths.sound('scrollMenu'));
 						var object = selectedCat.optionObjects.members[selectedOptionIndex];
 						selectedOption.left();
+						changedOption = true;
 
 						FlxG.save.flush();
 
@@ -624,15 +633,13 @@ class OptionsMenu extends FlxSubState
 							FlxG.save.data.shitMs,
 							FlxG.save.data.badMs,
 							FlxG.save.data.goodMs,
-							FlxG.save.data.sickMs,
-							FlxG.save.data.marvMs
-
+							FlxG.save.data.sickMs
 						];
 
 						for (i in 0...selectedCat.options.length)
 						{
 							var opt = selectedCat.optionObjects.members[i];
-							opt.y = 175 + (40 * i);
+							opt.y = options[4].titleObject.y + 54 + (46 * i);
 						}
 						selectedCat.optionObjects.members[selectedOptionIndex].text = selectedOption.getValue();
 						isInCat = true;
@@ -659,7 +666,7 @@ class OptionsMenu extends FlxSubState
 		}
 		catch (e)
 		{
-			Debug.logError("wtf we actually did something wrong, but we dont crash bois.\n" + e);
+			Debug.logError("Error but no crash men.\n" + e);
 			selectedCatIndex = 0;
 			selectedOptionIndex = 0;
 			FlxG.sound.play(Paths.sound('scrollMenu'));
@@ -668,7 +675,7 @@ class OptionsMenu extends FlxSubState
 				for (i in 0...selectedCat.options.length)
 				{
 					var opt = selectedCat.optionObjects.members[i];
-					opt.y = 175 + (40 * i);
+					opt.y = options[4].titleObject.y + 54 + (46 * i);
 				}
 				selectedCat.optionObjects.members[selectedOptionIndex].text = selectedOption.getValue();
 				isInCat = true;

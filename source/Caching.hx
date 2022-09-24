@@ -56,19 +56,13 @@ class Caching extends MusicBeatState
 
 	override function create()
 	{
-		FlxG.save.bind('funkin', 'ninjamuffin99');
-
-		PlayerSettings.init();
-
 		#if FEATURE_DISCORD
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("I Have A Chad PC (Caching)", null);
 		#end
 
-		KadeEngineData.initSave();
-
 		// It doesn't reupdate the list before u restart rn lmao
-		CustomNoteHelpers.Skin.updateNoteskins();
+		//CustomNoteHelpers.Skin.updateNoteskins();
 
 		FlxG.mouse.visible = false;
 
@@ -106,14 +100,11 @@ class Caching extends MusicBeatState
 		// TODO: Get the audio list from OpenFlAssets.
 		if (FlxG.save.data.cacheSongs)
 			songs = Paths.listSongsToCache();
-
-		if (FlxG.save.data.cacheSounds)
-			sounds = Paths.listAudioToCache(true);
 		
 		// TODO: Get the song list from OpenFlAssets.
 		#end
 
-		toBeDone =  Lambda.count(noteskins) + Lambda.count(characters) + Lambda.count(songs) + Lambda.count(music) + Lambda.count(sounds);
+		toBeDone =  Lambda.count(characters) + Lambda.count(songs) + Lambda.count(music) + Lambda.count(sounds);
 
 		add(kadeLogo);
 		add(text);
@@ -199,7 +190,7 @@ class Caching extends MusicBeatState
 		}
 		loaded = true;
 		#end
-		FlxG.switchState(new OptionsDirect());
+		MusicBeatState.switchState(new OptionsDirect());
 	}
 }
 #end

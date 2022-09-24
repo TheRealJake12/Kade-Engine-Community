@@ -95,11 +95,10 @@ class FreeplayState extends MusicBeatState
 	override function create()
 	{
 		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
-
-		if (FlxG.save.data.unload)
-			Main.dumpCache();
-			Destroyer.clearStoredMemory();
-			Destroyer.clearUnusedMemory();
+		
+		Main.dumpCache();
+		Destroyer.clearStoredMemory();
+		Destroyer.clearUnusedMemory();
 
 		clean();
 		list = CoolUtil.coolTextFile(Paths.txt('data/freeplaySonglist'));
@@ -389,10 +388,7 @@ class FreeplayState extends MusicBeatState
 		if (controls.BACK)
 		{
 			MusicBeatState.switchState(new MainMenuState());
-			if (FlxG.save.data.unload)
-			{
-				Main.dumpCache();
-			}
+			//Main.dumpCache();
 		}
 		if (space)
 		{

@@ -2055,7 +2055,6 @@ class LowMotion extends Option
 	public override function left():Bool
 	{
 		FlxG.save.data.motion = !FlxG.save.data.motion;
-		trace('Low Motion Mode : ' + FlxG.save.data.motion);
 		display = updateDisplay();
 		return true;
 	}
@@ -2068,7 +2067,7 @@ class LowMotion extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Low Motion Mode: < " + (!FlxG.save.data.motion ? "off" : "on") + " >";
+		return "Icon Bumping: < " + (!FlxG.save.data.motion ? "On" : "Off") + " >";
 	}
 }
 
@@ -2262,7 +2261,7 @@ class GraphicLoading extends Option
 
 	public override function press():Bool
 	{
-		FlxG.save.data.cacheImages = !FlxG.save.data.cacheImages;
+		FlxG.save.data.cacheCharacters = !FlxG.save.data.cacheCharacters;
 
 		display = updateDisplay();
 		return true;
@@ -2270,7 +2269,7 @@ class GraphicLoading extends Option
 
 	private override function updateDisplay():String
 	{
-		return "";
+		return "Caching Characters in Next Cache: < " + (!FlxG.save.data.cacheCharacters ? "off" : "on") + " >";
 	}
 }
 
@@ -2287,7 +2286,6 @@ class CachingOption extends Option
 
 	public override function press():Bool
 	{
-		trace("switch");
 		if (!OptionsMenu.isInPause)
 		{
 			MusicBeatState.switchState(new Caching());
@@ -2302,7 +2300,7 @@ class CachingOption extends Option
 }
 #end
 
-class WaterMarkFPS extends Option // sfjl
+class WaterMarkFPS extends Option
 {
 	public function new(desc:String)
 	{
@@ -2623,8 +2621,6 @@ class Resolution extends Option
 	{
 		FlxG.resizeWindow(intToMode(FlxG.save.data.resolution)[0], intToMode(FlxG.save.data.resolution)[1]);
 		FlxG.resizeGame(intToMode(FlxG.save.data.resolution)[0], intToMode(FlxG.save.data.resolution)[1]);
-		if (!OptionsMenu.isInPause)
-			Debug.logTrace("Current Resolution = " + FlxG.width + "x" + FlxG.height);
 			
 		display = updateDisplay();
 		return true;
@@ -2636,9 +2632,6 @@ class Resolution extends Option
 			return false;
 
 		FlxG.save.data.resolution -= 1;
-		//Debug.logTrace("Current Resolution == " + FlxG.save.data.resolution);
-		// FlxG.resizeWindow(intToMode(FlxG.save.data.resolution)[0],intToMode(FlxG.save.data.resolution)[1]);
-
 		return true;
 	}
 
@@ -2759,6 +2752,7 @@ class ResetSettings extends Option
 		FlxG.save.data.popup = null;
 		FlxG.save.data.fpsMark = null;
 		FlxG.save.data.borderless = null;
+		FlxG.save.data.resolution = null;
 		FlxG.save.data.rateStack = null;
 
 		KadeEngineData.initSave();

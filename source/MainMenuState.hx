@@ -136,6 +136,7 @@ class MainMenuState extends MusicBeatState
 		changeItem();
 
 		super.create();
+		Destroyer.clearUnusedMemory();
 	}
 
 	var selectedSomethin:Bool = false;

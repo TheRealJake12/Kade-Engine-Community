@@ -60,6 +60,8 @@ class Destroyer
 			MasterObjectLoader.resetAssets();
 			#end
 
+			clearStoredMemoryOld();
+
 			// clear anything not in the tracked assets list
 			var counterAssets:Int = 0;
 
@@ -121,6 +123,7 @@ class Destroyer
 		{
 			// clear non local assets in the tracked assets list
 			var counter:Int = 0;
+			clearUnusedMemoryOld();
 			for (key in currentTrackedAssets.keys())
 			{
 				// if it is not currently contained within the used local assets
@@ -155,5 +158,59 @@ class Destroyer
 
 			System.gc();
 		}
+	}
+
+	public static function clearUnusedMemoryOld() //graphics and sprites
+	{
+		// clear non local assets in the tracked assets list
+		for (key in currentTrackedAssets.keys())
+		{
+			// if it is not currently contained within the used local assets
+			if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key))
+			{
+				// get rid of it
+				var obj = currentTrackedAssets.get(key);
+				@:privateAccess
+				if (obj != null)
+				{
+					openfl.Assets.cache.removeBitmapData(key);
+					FlxG.bitmap._cache.remove(key);
+					obj.destroy();
+					currentTrackedAssets.remove(key);
+				}
+			}
+		}
+		// run the garbage collector for good measure lmfao
+		System.gc();
+	}
+
+	public static function clearStoredMemoryOld(?cleanUnused:Bool = false)
+	{
+		// clear anything not in the tracked assets list
+		@:privateAccess
+		for (key in FlxG.bitmap._cache.keys())
+		{
+			var obj = FlxG.bitmap._cache.get(key);
+			if (obj != null && !currentTrackedAssets.exists(key))
+			{
+				openfl.Assets.cache.removeBitmapData(key);
+				FlxG.bitmap._cache.remove(key);
+				obj.destroy();
+			}
+		}
+
+		// clear all sounds that are cached
+		for (key in currentTrackedSounds.keys())
+		{
+			if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && key != null)
+			{
+				// trace('test: ' + dumpExclusions, key);
+				Assets.cache.clear(key);
+				currentTrackedSounds.remove(key);
+			}
+		}
+		// flags everything to be cleared out next unused memory clear
+		localTrackedAssets = [];
+		openfl.Assets.cache.clear("songs");
 	}
 }

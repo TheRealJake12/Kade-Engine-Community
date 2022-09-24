@@ -214,7 +214,7 @@ class Debug
 		#else
 		logInfo("This is a RELEASE build.");
 		#end
-		logInfo("HaxeFlixel version: TheRealJake_12's fork of Flixel");
+		logInfo('HaxeFlixel version: ${Std.string(FlxG.VERSION)}');
 		logInfo('Kade Engine version: ${MainMenuState.keVer}');
 		logInfo('KEC version: ${MainMenuState.kecVer}');
 	}

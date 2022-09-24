@@ -32,6 +32,7 @@ import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
 import perf.Destroyer;
 import perf.MasterObjectLoader;
+import openfl.Lib;
 #if FEATURE_MULTITHREADING
 import sys.thread.Mutex;
 #end
@@ -66,6 +67,9 @@ class TitleState extends MusicBeatState
 			sys.FileSystem.createDirectory(Sys.getCwd() + "/assets/replays");
 		#end
 
+		if (FlxG.save.data.fpsCap > 420)
+			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(420);
+
 		FlxG.autoPause = false;
 
 		FlxG.save.bind('funkin', 'ninjamuffin99');
@@ -91,7 +95,7 @@ class TitleState extends MusicBeatState
 
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 		if (FlxG.save.data.gen)
-			Debug.logInfo('hello');
+			Debug.logInfo('Hello.');
 
 		super.create();
 
@@ -172,6 +176,7 @@ class TitleState extends MusicBeatState
 		add(ngSpr);
 		ngSpr.visible = false;
 		ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));
+		ngSpr.scale.set(0.6,0.6);
 		ngSpr.updateHitbox();
 		ngSpr.screenCenter(X);
 		ngSpr.antialiasing = FlxG.save.data.antialiasing;
@@ -214,6 +219,33 @@ class TitleState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
+		if (FlxG.sound.music != null)
+			Conductor.songPosition = FlxG.sound.music.time;
+
+		var pressedEnter:Bool = controls.ACCEPT;
+
+		#if mobile
+		for (touch in FlxG.touches.list)
+		{
+			if (touch.justPressed)
+			{
+				pressedEnter = true;
+			}
+		}
+		#end
+
+		if (FlxG.save.data.fpsCap > 420)
+			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(420);
+
+		if (FlxG.save.data.borderless)
+		{
+			FlxG.stage.window.borderless = true;
+		}	
+		else
+		{
+			FlxG.stage.window.borderless = false;
+		}
+		
 		switch (FlxG.save.data.resolution)
 		{
 			case 0:
@@ -236,31 +268,10 @@ class TitleState extends MusicBeatState
 				FlxG.resizeGame(1280, 720);
 			case 6:
 				FlxG.resizeWindow(1920, 1080);
-				FlxG.resizeGame(1920, 1080);	
-		}		
-		if (FlxG.sound.music != null)
-			Conductor.songPosition = FlxG.sound.music.time;
-
-		var pressedEnter:Bool = controls.ACCEPT;
-
-		#if mobile
-		for (touch in FlxG.touches.list)
-		{
-			if (touch.justPressed)
-			{
-				pressedEnter = true;
-			}
-		}
-		#end
-
-		if (FlxG.save.data.borderless)
-		{
-			FlxG.stage.window.borderless = true;
+				FlxG.resizeGame(1920, 1080);
 		}	
-		else
-		{
-			FlxG.stage.window.borderless = false;
-		}
+
+		(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
 
 		if (pressedEnter && !transitioning && skippedIntro)
 		{
@@ -300,7 +311,7 @@ class TitleState extends MusicBeatState
 
 				http.onError = function(error)
 				{
-					trace('error: $error');
+					Debug.logTrace('Error: $error');
 					new FlxTimer().start(2, function(tmr:FlxTimer)
 					{
 						{

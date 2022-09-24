@@ -38,7 +38,7 @@ As you did with Haxe, just install the setup and finish it.
 ```cmd
 haxelib install lime 7.9.0
 haxelib install openfl
-haxelib git flixel https://github.com/TheRealJake12/flixel.git
+haxelib install flixel
 haxelib install flixel-tools
 haxelib install flixel-ui
 haxelib install hscript
@@ -50,7 +50,8 @@ haxelib run lime setup flixel
 haxelib run flixel-tools setup
 ```
 Once you have these installed, 
-HaxeFlixel 4.11.0 Breaks some shader shit or something so lets just use my own version with a fix for it.
+HaxeFlixel 4.11.0 Breaks some shader shit or something so I went ahead and made it use a custom file that fixes the issue.
+(FlxDrawQuadsItem or smth)
 When its finished, you will need to download these like you did with the Libraries above.
 ```cmd
 haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
@@ -64,27 +65,27 @@ Once it is installed you should be able to build your game.
 
 **IF YOU ARE LAZY JUST USE THE SETUP.BAT IN THE CODE!**
 
-5. Run ```Lime test windows``` or ```Lime test windows -debug```. No debug is the release version that doenst have all the debug stuff, As the debug does.
+5. Run ```lime test windows``` or ```lime test windows -debug```. No debug is the release version that doenst have all the debug stuff, As the debug does.
 It will take a while to build for both versions.
 
 6. Play Around with the code and make your mod or consider Contributing to the Engine!
 
+[lime windows](https://media.discordapp.net/attachments/740596147449757716/1021916474350248047/caption.gif)
+
 ### Shoutouts
 
-- [TheRealJake_12](https://www.youtube.com/channel/UCYy-RfMjVx-1dYnmNQGB2sw) - *everything.*
+- [TheRealJake_12](https://www.youtube.com/channel/UCYy-RfMjVx-1dYnmNQGB2sw) - ** *everything.* ** 
 
-- [KadeDev](https://github.com/KadeDev) - The Original Guy who created Kade Engine
+- [KadeDev](https://github.com/KadeDev) - The Original Guy who created Kade Engine.
 
-- [PolybiusProxy](https://github.com/polybiusproxy) - The Video Support
+- [PolybiusProxy](https://github.com/polybiusproxy) - The Video Support.
 
-- [BoloVEVO](https://github.com/BoloVEVO) - Fixed my shit code and improved the chart editor as well as many other things(thanks!)
+- [BoloVEVO](https://github.com/BoloVEVO) - Fixed my shit code and improved the chart editor as well as many other things.(thanks!)
 
 - [ShadowMario](https://github.com/ShadowMario) - The Memory Leak Fix. And A Few Other Things. (thanks)
 
 - [TposeJank](https://github.com/tposejank) Epic friend that gave me ideas and helped :epicttrooll:
 
-- [gaminbottomtext](https://github.com/gaminbottomtext) also epic fren that helped with notesplashes :letrollisfefe:
+- [gaminbottomtext](https://github.com/gaminbottomtext) also epic fren that helped with notesplashes. He has disappeared.
 
 - [discord server for this project](https://discord.gg/G2jJ8RfWtm) thanks for joining if you do.
-
-- Please Credit This Project For Your Mods On GameBanana. Thanks In Advance!
