@@ -43,4 +43,4 @@ Once it is installed you should be able to build your game.
 5. Run ```lime test windows``` or ```lime test windows -debug```. No debug is the release version that doenst have all the debug stuff, As the debug does.
 It will take a while to build for both versions.
 
-[lime windows](https://media.discordapp.net/attachments/740596147449757716/1021916474350248047/caption.gif)
+![lime windows](https://user-images.githubusercontent.com/84357907/192084304-397d651c-8f11-4f42-9596-18dcabe79eaf.gif)
