@@ -74,7 +74,7 @@ It will take a while to build for both versions.
 
 ### Shoutouts
 
-- [TheRealJake_12](https://www.youtube.com/channel/UCYy-RfMjVx-1dYnmNQGB2sw) - ** *everything.* ** 
+- [TheRealJake_12](https://www.youtube.com/channel/UCYy-RfMjVx-1dYnmNQGB2sw) - *everything.*
 
 - [KadeDev](https://github.com/KadeDev) - The Original Guy who created Kade Engine.
 
