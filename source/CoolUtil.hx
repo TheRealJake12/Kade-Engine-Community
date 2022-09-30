@@ -72,12 +72,22 @@ class CoolUtil
 
 	public static function coolTextFile(path:String):Array<String>
 	{
-		var daList:Array<String> = OpenFlAssets.getText(path).trim().split('\n');
+		var daList:Array<String>;
 
-		for (i in 0...daList.length)
+		try
 		{
-			daList[i] = daList[i].trim();
+			daList = OpenFlAssets.getText(path).trim().split('\n');
 		}
+		catch (e)
+		{
+			daList = null;
+		}
+
+		if (daList != null)
+			for (i in 0...daList.length)
+			{
+				daList[i] = daList[i].trim();
+			}
 
 		return daList;
 	}
