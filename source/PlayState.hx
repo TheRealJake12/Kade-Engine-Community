@@ -348,7 +348,7 @@ class PlayState extends MusicBeatState
 			FlxG.save.data.marvMs
 		];
 
-		Application.current.window.title = '${MainMenuState.kecVer}: ' + SONG.song + ' ' + CoolUtil.defaultDifficulties[storyDifficulty];
+		Application.current.window.title = '${MainMenuState.kecVer}: ' + SONG.songName + ' ' + CoolUtil.defaultDifficulties[storyDifficulty];
 
 		// grab variables here too or else its gonna break stuff later on
 		GameplayCustomizeState.freeplayBf = SONG.player1;
@@ -399,7 +399,7 @@ class PlayState extends MusicBeatState
 		PlayStateChangeables.zoom = FlxG.save.data.zoom;
 
 		#if FEATURE_LUAMODCHART
-		executeModchart = FileSystem.exists(Paths.lua('songs/${PlayState.SONG.song}/modchart'));
+		executeModchart = FileSystem.exists(Paths.lua('songs/${PlayState.SONG.songId}/modchart'));
 		if (isSM)
 			executeModchart = FileSystem.exists(pathToSm + "/modchart.lua");
 		#end
@@ -409,10 +409,10 @@ class PlayState extends MusicBeatState
 		if (FlxG.save.data.gen)
 			Debug.logInfo('Searching for mod chart? ($executeModchart) at ${Paths.lua('songs/${PlayState.SONG.songId}/modchart')}');
 		#if FEATURE_FILESYSTEM	
-		if (FileSystem.exists(Sys.getCwd() + 'assets/data/${SONG.song.toLowerCase()}/haxeModchart.hx'))
+		if (FileSystem.exists(Sys.getCwd() + 'assets/data/${SONG.songId.toLowerCase()}/haxeModchart.hx'))
 		{
-			var expr = Paths.getHaxeScript(SONG.song.toLowerCase());
-			Debug.logTrace(SONG.song.toLowerCase());
+			var expr = Paths.getHaxeScript(SONG.songId.toLowerCase());
+			Debug.logTrace(SONG.songId.toLowerCase());
 			var parser = new hscript.Parser();
 			var ast = parser.parseString(expr);
 			var interp = new hscript.Interp();
@@ -847,10 +847,10 @@ class PlayState extends MusicBeatState
 			if (SONG.songId == null)
 				Debug.logInfo('SongID Is Null.');
 			else
-				Debug.logInfo('Succesfully Loaded ' + SONG.song);
+				Debug.logInfo('Succesfully Loaded ' + SONG.songName);
 		}
 
-		generateSong(SONG.song);
+		generateSong(SONG.songId);
 
 		#if FEATURE_LUAMODCHART
 		if (executeModchart)
@@ -932,7 +932,7 @@ class PlayState extends MusicBeatState
 		// Add watermark
 		kadeEngineWatermark = new FlxText(4, healthBarBG.y
 			+ 50, 0,
-			PlayState.SONG.song
+			PlayState.SONG.songName
 			+ (FlxMath.roundDecimal(songMultiplier, 2) != 1.00 ? " (" + FlxMath.roundDecimal(songMultiplier, 2) + "x)" : "")
 			+ " - "
 			+ CoolUtil.difficultyFromInt(storyDifficulty),
@@ -1119,7 +1119,7 @@ class PlayState extends MusicBeatState
 
 	function tankIntro()
 	{
-		switch (SONG.song.toLowerCase())
+		switch (SONG.songId.toLowerCase())
 		{
 			case 'ugh':
 				FlxG.sound.cache(Paths.sound("wellWellWell", "week7"));
@@ -1581,7 +1581,7 @@ class PlayState extends MusicBeatState
 		#if FEATURE_DISCORD
 		DiscordClient.changePresence(detailsText
 			+ " "
-			+ SONG.song
+			+ SONG.songName
 			+ " ("
 			+ storyDifficultyText
 			+ ") "
@@ -1719,7 +1719,7 @@ class PlayState extends MusicBeatState
 			songName.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			songName.scrollFactor.set();
 
-			songName.text = SONG.song + ' (' + FlxStringUtil.formatTime(songLength, false) + ')';
+			songName.text = SONG.songName + ' (' + FlxStringUtil.formatTime(songLength, false) + ')';
 			songName.y = songPosBG.y + (songPosBG.height / 3);
 
 			add(songName);
@@ -1898,20 +1898,16 @@ class PlayState extends MusicBeatState
 			sploosh.animation.addByPrefix('splash 0 1', 'note splash 1 blue', data.fps, false);
 			sploosh.animation.addByPrefix('splash 0 2', 'note splash 1 green', data.fps, false);
 			sploosh.animation.addByPrefix('splash 0 3', 'note splash 1 red', data.fps, false);
-			sploosh.animation.addByPrefix('splash 1 0', 'note splash 2 purple', data.fps, false);
-			sploosh.animation.addByPrefix('splash 1 1', 'note splash 2 blue', data.fps, false);
-			sploosh.animation.addByPrefix('splash 1 2', 'note splash 2 green', data.fps, false);
-			sploosh.animation.addByPrefix('splash 1 3', 'note splash 2 red', data.fps, false);	
 			add(sploosh);
 			//sfjl
 			sploosh.cameras = [camNotes];
 			if (!FlxG.save.data.stepMania)
-				sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.noteData);
+				sploosh.animation.play('splash 0 '+ daNote.noteData);
 			else
-				sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.originColor);
+				sploosh.animation.play('splash 0 ' + daNote.originColor);
 			sploosh.alpha = data.alpha;
-			sploosh.offset.x += 90;
-			sploosh.offset.y += 80; // lets stick to eight not nine
+			sploosh.offset.x += data.xOffset;
+			sploosh.offset.y += data.yOffset; // lets stick to eight not nine
 			sploosh.animation.finishCallback = function(name) sploosh.kill();
 		}
 	}
@@ -2133,7 +2129,7 @@ class PlayState extends MusicBeatState
 
 			#if FEATURE_DISCORD
 			DiscordClient.changePresence("PAUSED on "
-				+ SONG.song
+				+ SONG.songName
 				+ " ("
 				+ storyDifficultyText
 				+ ") "
@@ -2182,7 +2178,7 @@ class PlayState extends MusicBeatState
 			{
 				DiscordClient.changePresence(detailsText
 					+ " "
-					+ SONG.song
+					+ SONG.songName
 					+ " ("
 					+ storyDifficultyText
 					+ ") "
@@ -2231,7 +2227,7 @@ class PlayState extends MusicBeatState
 		#if FEATURE_DISCORD
 		DiscordClient.changePresence(detailsText
 			+ " "
-			+ SONG.song
+			+ SONG.songName
 			+ " ("
 			+ storyDifficultyText
 			+ ") "
@@ -2762,7 +2758,7 @@ class PlayState extends MusicBeatState
 					secondsTotal = 0;
 
 				if (FlxG.save.data.songPosition)
-					songName.text = SONG.song + ' (' + FlxStringUtil.formatTime((songLength - secondsTotal), false) + ')';
+					songName.text = SONG.songName + ' (' + FlxStringUtil.formatTime((songLength - secondsTotal), false) + ')';
 			}
 		}
 
@@ -2938,8 +2934,7 @@ class PlayState extends MusicBeatState
 
 		if (camZooming)
 		{
-			if (theMotionThing){
-				if (FlxG.save.data.zoom < 0.8)
+			if (FlxG.save.data.zoom < 0.8)
 				FlxG.save.data.zoom = 0.8;
 
 			if (FlxG.save.data.zoom > 1.2)
@@ -2960,7 +2955,6 @@ class PlayState extends MusicBeatState
 
 				camNotes.zoom = camHUD.zoom;
 				camSustains.zoom = camHUD.zoom;
-			}
 			}
 		}
 
@@ -2989,7 +2983,7 @@ class PlayState extends MusicBeatState
 
 					#if FEATURE_DISCORD
 					DiscordClient.changePresence("GAME OVER -- "
-						+ SONG.song
+					+ SONG.songName
 						+ " ("
 						+ storyDifficultyText
 						+ ") "
@@ -3028,7 +3022,7 @@ class PlayState extends MusicBeatState
 
 				#if FEATURE_DISCORD
 				DiscordClient.changePresence("GAME OVER -- "
-					+ SONG.song
+					+ SONG.songName
 					+ " ("
 					+ storyDifficultyText
 					+ ") "
@@ -3555,8 +3549,6 @@ class PlayState extends MusicBeatState
 					{
 						Highscore.saveWeekScore(storyWeek, campaignScore, storyDifficulty);
 					}
-
-					StoryMenuState.unlockNextWeek(storyWeek);
 				}
 				else
 				{
@@ -4399,8 +4391,7 @@ class PlayState extends MusicBeatState
 		{
 			if (note.noteShit == 'hurt')
 			{
-				health -= 0.3;
-				HealthDrain();
+				health -= 0.8;
 			}
 			if (note.noteShit == 'mustpress')
 			{
@@ -4817,6 +4808,22 @@ typedef SplashData =
 	 */
 	var fps:Int;
 
+	/**
+	 * The transparency of the notesplashes.
+	 		* @default 24
+	 */
 	var alpha:Int;
+
+	/**
+	 * The X Offset so it can be centered better.
+	 		* @default 90
+	 */
+	var xOffset:Int;
+
+	/**
+	 * The Y Offset so it can be centered better.
+	 		* @default 80
+	 */
+	var yOffset:Int;	
 	//theres gonna be more but the fps fucks me so much rn
 }

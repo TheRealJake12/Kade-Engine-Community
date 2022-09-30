@@ -77,7 +77,7 @@ class PauseSubState extends MusicBeatSubstate
 		add(bg);
 
 		var levelInfo:FlxText = new FlxText(20, 15, 0, "", 32);
-		levelInfo.text += PlayState.SONG.song;
+		levelInfo.text += PlayState.SONG.songId.toUpperCase();
 		levelInfo.scrollFactor.set();
 		levelInfo.setFormat(Paths.font("vcr.ttf"), 32);
 		levelInfo.updateHitbox();
@@ -106,18 +106,6 @@ class PauseSubState extends MusicBeatSubstate
 
 		grpMenuShit = new FlxTypedGroup<Alphabet>();
 		add(grpMenuShit);
-		perSongOffset = new FlxText(5, FlxG.height
-			- 18, 0,
-			"Additive Offset (Left, Right): "
-			+ PlayState.songOffset
-			+ " - Description - "
-			+ 'Adds value to global offset, per song.', 12);
-		perSongOffset.scrollFactor.set();
-		perSongOffset.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-
-		#if FEATURE_FILESYSTEM
-		add(perSongOffset);
-		#end
 
 		for (i in 0...menuItems.length)
 		{
@@ -147,7 +135,7 @@ class PauseSubState extends MusicBeatSubstate
 
 		var oldOffset:Float = 0;
 
-		var songPath = 'assets/data/songs/${PlayState.SONG.song}/';
+		var songPath = 'assets/data/songs/${PlayState.SONG.songId}/';
 
 		#if FEATURE_STEPMANIA
 		if (PlayState.isSM && !PlayState.isStoryMode)
@@ -170,6 +158,13 @@ class PauseSubState extends MusicBeatSubstate
 			switch (daSelected)
 			{
 				case "Resume":
+					Ratings.timingWindows = [
+						FlxG.save.data.shitMs,
+						FlxG.save.data.badMs,
+						FlxG.save.data.goodMs,
+						FlxG.save.data.sickMs,
+						FlxG.save.data.marvMs
+					];
 					close();
 				case "Restart Song":
 					restartSong();

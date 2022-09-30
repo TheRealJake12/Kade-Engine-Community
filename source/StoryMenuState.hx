@@ -74,6 +74,7 @@ class StoryMenuState extends MusicBeatState
 	var sprDifficulty:FlxSprite;
 	var leftArrow:FlxSprite;
 	var rightArrow:FlxSprite;
+	var yellowBG:FlxSprite;
 
 	var trackedAssets:Array<flixel.FlxBasic> = [];
 
@@ -102,8 +103,6 @@ class StoryMenuState extends MusicBeatState
 		#end	
 		
 		Destroyer.clearUnusedMemory();
-
-		weekUnlocked = unlockWeeks();
 
 		PlayState.currentSong = "bruh";
 		PlayState.inDaPlay = false;
@@ -137,13 +136,13 @@ class StoryMenuState extends MusicBeatState
 		rankText.screenCenter(X);
 
 		var ui_tex = Paths.getSparrowAtlas('campaign_menu_UI_assets');
-		var yellowBG:FlxSprite = new FlxSprite(0, 56).makeGraphic(FlxG.width, 400, 0xFFF9CF51);
+		yellowBG = new FlxSprite(0, 56).makeGraphic(FlxG.width, 400, 0xFFF9CF51);
 
 		grpWeekText = new FlxTypedGroup<MenuItem>();
 		add(grpWeekText);
 
 		grpLocks = new FlxTypedGroup<FlxSprite>();
-		add(grpLocks);
+		//add(grpLocks);
 
 		var blackBarThingie:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 56, FlxColor.BLACK);
 		add(blackBarThingie);
@@ -162,16 +161,13 @@ class StoryMenuState extends MusicBeatState
 			// weekThing.updateHitbox();
 
 			// Needs an offset thingie
-			if (!weekUnlocked[i])
-			{
-				var lock:FlxSprite = new FlxSprite(weekThing.width + 10 + weekThing.x);
-				lock.frames = ui_tex;
-				lock.animation.addByPrefix('lock', 'lock');
-				lock.animation.play('lock');
-				lock.ID = i;
-				lock.antialiasing = FlxG.save.data.antialiasing;
-				grpLocks.add(lock);
-			}
+			var lock:FlxSprite = new FlxSprite(weekThing.width + 10 + weekThing.x);
+			lock.frames = ui_tex;
+			lock.animation.addByPrefix('lock', 'lock');
+			lock.animation.play('lock');
+			lock.ID = i;
+			lock.antialiasing = FlxG.save.data.antialiasing;
+			grpLocks.add(lock);
 		}
 	
 
@@ -230,10 +226,8 @@ class StoryMenuState extends MusicBeatState
 		for (item in grpWeekText.members)
 		{
 			item.targetY = bullShit - curWeek;
-			if (item.targetY == Std.int(0) && weekUnlocked[curWeek])
+			if (item.targetY == Std.int(0))
 				item.alpha = 1;
-			else
-				item.alpha = 0.6;
 			bullShit++;
 		}
 
@@ -252,7 +246,7 @@ class StoryMenuState extends MusicBeatState
 
 		// FlxG.watch.addQuick('font', scoreText.font);
 
-		difficultySelectors.visible = weekUnlocked[curWeek];
+		difficultySelectors.visible = true;
 
 		grpLocks.forEach(function(lock:FlxSprite)
 		{
@@ -315,8 +309,6 @@ class StoryMenuState extends MusicBeatState
 
 	function selectWeek()
 	{
-		if (weekUnlocked[curWeek])
-		{
 			if (stopspamming == false)
 			{
 				FlxG.sound.play(Paths.sound('confirmMenu'));
@@ -354,21 +346,27 @@ class StoryMenuState extends MusicBeatState
 			#if VIDEOS
 			var video:VideoHandler = new VideoHandler();
 
-			if (curWeek == 7)
+			if (curWeek == 7){
+			new FlxTimer().start(1, function(tmr:FlxTimer)
+				{
+					FlxG.sound.music.stop();
+					video.playVideo(Paths.video('ughCutscene.mp4'));
+					// VideoHandler.canCrash = false;
+					video.finishCallback = function()
+					{
+						LoadingState.loadAndSwitchState(new PlayState(), true);
+					}
+				});
 				new FlxTimer().start(1, function(tmr:FlxTimer)
 				{
 					{
-						FlxG.sound.music.stop();
 						remove(grpWeekCharacters);
-						remove(grpLocks);
-						video.playVideo(Paths.video('ughCutscene.mp4'));
-						//VideoHandler.canCrash = false;
-						video.finishCallback = function()
-						{
-							LoadingState.loadAndSwitchState(new PlayState(), true);
-						}
+						remove(yellowBG);
+						remove(grpWeekText);
+						//removes the shit that could take up gpu usage
 					}
 				});
+			}	
 			else
 			{
 				new FlxTimer().start(1, function(tmr:FlxTimer)
@@ -382,7 +380,6 @@ class StoryMenuState extends MusicBeatState
 				LoadingState.loadAndSwitchState(new PlayState(), true);
 			});
 			#end
-		}
 	}
 
 	function changeDifficulty(change:Int = 0):Void
@@ -439,10 +436,8 @@ class StoryMenuState extends MusicBeatState
 		for (item in grpWeekText.members)
 		{
 			item.targetY = bullShit - curWeek;
-			if (item.targetY == Std.int(0) && weekUnlocked[curWeek])
+			if (item.targetY == Std.int(0))
 				item.alpha = 1;
-			else
-				item.alpha = 0.6;
 			bullShit++;
 		}
 
@@ -475,17 +470,6 @@ class StoryMenuState extends MusicBeatState
 		#end
 	}
 
-	public static function unlockNextWeek(week:Int):Void
-	{
-		if (week <= weekData().length - 1 /*&& FlxG.save.data.weekUnlocked == week*/) // fuck you, unlocks all weeks
-		{
-			weekUnlocked.push(true);
-		}
-
-		FlxG.save.data.weekUnlocked = weekUnlocked.length - 1;
-		FlxG.save.flush();
-	}
-
 	override function beatHit()
 	{
 		super.beatHit();
@@ -510,9 +494,11 @@ class StoryMenuState extends MusicBeatState
 
 	function unloadAssets():Void
 	{
-		for (asset in trackedAssets)
-		{
-			remove(asset);
+		if (FlxG.save.data.unload){
+			for (asset in trackedAssets)
+			{
+				remove(asset);
+			}
 		}
 	}
 }

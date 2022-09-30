@@ -296,12 +296,12 @@ class ModchartState
 	{
 		#if FEATURE_FILESYSTEM
 		// TODO: Make this use OpenFlAssets.
-		var data:BitmapData = BitmapData.fromFile(Sys.getCwd() + "assets/data/songs/" + PlayState.SONG.song + '/' + spritePath + ".png");
+		var data:BitmapData = BitmapData.fromFile(Sys.getCwd() + "assets/data/songs/" + PlayState.SONG.songId + '/' + spritePath + ".png");
 
 		var sprite:FlxSprite = new FlxSprite(0, 0);
 
 		sprite.frames = FlxAtlasFrames.fromSparrow(FlxGraphic.fromBitmapData(data),
-			Sys.getCwd() + "assets/data/songs/" + PlayState.SONG.song + "/" + spritePath + ".xml");
+			Sys.getCwd() + "assets/data/songs/" + PlayState.SONG.songId + "/" + spritePath + ".xml");
 
 		trace(sprite.frames.frames.length);
 
@@ -325,7 +325,7 @@ class ModchartState
 	{
 		#if FEATURE_FILESYSTEM
 		// pre lowercasing the song name (makeLuaSprite)
-		var songLowercase = StringTools.replace(PlayState.SONG.song, " ", "-").toLowerCase();
+		var songLowercase = StringTools.replace(PlayState.SONG.songId, " ", "-").toLowerCase();
 		switch (songLowercase)
 		{
 			case 'dad-battle':
@@ -336,7 +336,7 @@ class ModchartState
 				songLowercase = 'milf';
 		}
 
-		var path = Sys.getCwd() + "assets/data/songs/" + PlayState.SONG.song + '/';
+		var path = Sys.getCwd() + "assets/data/songs/" + PlayState.SONG.songId + '/';
 
 		if (PlayState.isSM)
 			path = PlayState.pathToSm + "/";
@@ -410,7 +410,7 @@ class ModchartState
 		// shaders = new Array<LuaShader>();
 
 		// pre lowercasing the song name (new)
-		var songLowercase = StringTools.replace(PlayState.SONG.song, " ", "-").toLowerCase();
+		var songLowercase = StringTools.replace(PlayState.SONG.songId, " ", "-").toLowerCase();
 		switch (songLowercase)
 		{
 			case 'dad-battle':
@@ -421,7 +421,7 @@ class ModchartState
 				songLowercase = 'milf';
 		}
 
-		var path = Paths.lua('songs/${PlayState.SONG.song}/modchart');
+		var path = Paths.lua('songs/${PlayState.SONG.songId}/modchart');
 		if (PlayState.isSM)
 			path = PlayState.pathToSm + "/modchart.lua";
 
