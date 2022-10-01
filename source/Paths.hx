@@ -145,6 +145,11 @@ class Paths
 		return 'assets/$file';
 	}
 
+	inline static public function hscript(key:String, ?library:String)
+	{
+		return getPath('data/$key.hx', TEXT, library);
+	}
+
 	inline static public function file(file:String, ?library:String, type:AssetType = TEXT)
 	{
 		return getPath(file, type, library);

@@ -209,5 +209,7 @@
   <haxedef name="FEATURE_MULTITHREADING" if="cpp" />
   <!-- Videos -->
   <haxedef name="VIDEOS" if="desktop" unless="web"/>
+  <!-- Defines if hscript are enabled. Dosen't work in browser -->
+  <define name="FEATURE_HSCRIPT" if="desktop" />
 
 </project>
