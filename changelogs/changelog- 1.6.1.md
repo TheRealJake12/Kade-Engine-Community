@@ -1,3 +1,4 @@
+Changelog For Update 1.6.1
 - Fixed Crash When Missing A Note When Ghost Tapping Is Disabled.
 - Fixed Some Notesplash Code To Be More Customizable.
 - Added The Ability To Change The Resolution.
