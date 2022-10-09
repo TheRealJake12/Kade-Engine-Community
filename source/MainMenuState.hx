@@ -21,6 +21,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import lime.app.Application;
 import flixel.input.keyboard.FlxKey;
+import ModCore;
 
 using StringTools;
 
@@ -52,6 +53,8 @@ class MainMenuState extends MusicBeatState
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
+
+		ModCore.initialize();
 
 		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
 

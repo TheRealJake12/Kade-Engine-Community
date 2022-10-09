@@ -3,4 +3,4 @@ gf-car
 gf-christmas
 gf-pixel
 gftank
-picoSpeaker
+pico-speaker

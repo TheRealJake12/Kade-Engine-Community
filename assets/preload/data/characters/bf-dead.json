@@ -1,0 +1,24 @@
+{
+  "name": "bf-dead",
+  "asset": "characters/bfDEAD",
+  "holdLength": 1,
+  "flipX": true,
+  "frameRate":24,
+  "animations": [
+    {
+      "name": "firstDeath",
+      "prefix": "BF dies",
+      "offsets": [37, 11]
+    },
+    {
+      "name": "deathLoop",
+      "prefix": "BF Dead Loop",
+      "offsets": [37, 5]
+    },
+    {
+      "name": "deathConfirm",
+      "prefix": "BF Dead confirm",
+      "offsets": [37, 69]
+    }
+  ]
+}

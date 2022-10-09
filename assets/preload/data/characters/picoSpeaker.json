@@ -1,0 +1,64 @@
+{
+  "name": "Pico (Speaker)",
+  "asset": "characters/picoSpeaker",
+  "barColor": "#A5004D",
+  "startingAnim": "shoot1",
+  "animations": [
+    {
+      "name": "shoot1",
+      "prefix": "Pico shoot 1",
+      "looped": false,
+      "nextAnim": "shoot1Loop",
+      "offsets": [0, 0]
+    },
+    {
+      "name": "shoot2",
+      "prefix": "Pico shoot 2",
+      "looped": false,
+      "nextAnim": "shoot2Loop",
+      "offsets": [-1,  -128]
+    },
+    {
+      "name": "shoot3",
+      "prefix": "Pico shoot 3",
+      "looped": false,
+      "nextAnim": "shoot3Loop",
+      "offsets": [412, -64]
+    },
+    {
+      "name": "shoot4",
+      "prefix": "Pico shoot 4",
+      "looped": false,
+      "nextAnim": "shoot4Loop",
+      "offsets": [439, -19]
+    },
+    {
+      "name": "shoot3Loop",
+      "prefix": "Pico shoot 3",
+      "offsets": [412, -64],
+      "frameIndices": [50,51,52],
+      "looped": true
+    },
+    {
+      "name": "shoot1Loop",
+      "prefix": "Pico shoot 1",
+      "offsets": [0, 0],
+      "frameIndices": [23,24,25],
+      "looped": true
+    },
+    {
+      "name": "shoot2Loop",
+      "prefix": "Pico shoot 2",
+      "offsets": [-1, -128],
+	    "frameIndices": [57,58,59],
+      "looped": true
+    },
+    {
+      "name": "shoot4Loop",
+      "prefix": "Pico shoot 4",
+      "offsets": [439, -19],
+      "frameIndices": [50,51,52],
+      "looped": true
+    }
+  ]
+}

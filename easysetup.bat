@@ -11,6 +11,7 @@ haxelib install flixel
 haxelib install flixel-tools
 haxelib install flixel-ui
 haxelib install hscript
+haxelib install polymod
 haxelib install flixel-addons
 haxelib install actuate
 haxelib install hxcpp-debug-server

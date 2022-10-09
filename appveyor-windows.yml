@@ -19,6 +19,7 @@ install:
   - RefreshEnv
   - haxelib install openfl
   - haxelib git flixel https://github.com/TheRealJake12/flixel.git
+  - haxelib install polymod
   - haxelib run lime setup flixel
   - haxelib run lime setup
   - haxelib install flixel-tools

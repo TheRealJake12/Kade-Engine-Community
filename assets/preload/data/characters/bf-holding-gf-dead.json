@@ -1,0 +1,32 @@
+{
+	"asset": "characters/bfHoldingGF-DEAD",
+	"barColor": "#31B0D1",
+	"camPos": [0,0],
+	"holdLength": 4,
+	"scale": 1.05,
+	"flipX": true,
+	"startingAnim": "firstDeath",
+	"animations": [
+		{
+			"offsets": [37,-3],
+			"frameRate": 24,
+			"name": "deathLoop",
+			"looped": true,
+			"prefix": "BF Dead with GF Loop"
+		},
+		{
+			"offsets": [37,14],
+			"frameRate": 24,
+			"name": "firstDeath",
+			"looped": false,
+			"prefix": "BF Dies with GF"
+		},
+		{
+			"offsets": [37,28],
+			"frameRate": 24,
+			"name": "deathConfirm",
+			"looped": false,
+			"prefix": "RETRY confirm holding gf"
+		}
+	]
+}

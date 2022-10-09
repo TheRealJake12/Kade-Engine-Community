@@ -1,0 +1,30 @@
+{
+  "name": "Girlfriend (Tankmen)",
+  "asset": "characters/gfTankmen",
+  "barColor": "#A5004D",
+  "camPos":[0,140],
+  "isDancing": true,
+  "startingAnim":"danceRight",
+  "holdLength": 4.1,
+  "replacesGF": true,
+  "animations": [
+    {
+      "name": "danceLeft",
+      "prefix": "GF Dancing at Gunpoint",
+      "offsets": [0, -9],
+      "frameIndices": [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+    },
+    {
+      "name": "danceRight",
+      "prefix": "GF Dancing at Gunpoint",
+      "offsets": [0, -9],
+      "frameIndices": [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
+    },
+    {
+      "name": "sad",
+      "prefix": "GF Crying at Gunpoint",
+      "offsets": [0, -27],
+      "frameIndices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    }
+  ]
+}

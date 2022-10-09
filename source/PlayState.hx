@@ -6,6 +6,7 @@ import CustomFadeTransition;
 import shader.FXAAShader;
 import shader.ShadersHandler;
 import flixel.util.FlxSpriteUtil;
+import openfl.utils.Assets as OpenFlAssets;
 #if FEATURE_LUAMODCHART
 import LuaClass.LuaCamera;
 import LuaClass.LuaCharacter;
@@ -173,7 +174,7 @@ class PlayState extends MusicBeatState
 
 	public var notes:FlxTypedGroup<Note>;
 
-	private var unspawnNotes:Array<Note> = [];
+	public var unspawnNotes:Array<Note> = [];
 
 	public var strumLine:FlxSprite;
 
@@ -321,6 +322,7 @@ class PlayState extends MusicBeatState
 	public static var highestCombo:Int = 0;
 
 	public var executeModchart = false;
+	public var executeHScript = false;
 	public var runHscript = false;
 	public var overlayCam:FlxCamera;
 
@@ -412,22 +414,29 @@ class PlayState extends MusicBeatState
 		PlayStateChangeables.zoom = FlxG.save.data.zoom;
 
 		#if FEATURE_LUAMODCHART
-		executeModchart = FileSystem.exists(Paths.lua('songs/${PlayState.SONG.songId}/modchart'));
+		executeModchart = OpenFlAssets.exists(Paths.lua('songs/${PlayState.SONG.songId}/modchart'));
 		if (isSM)
-			executeModchart = FileSystem.exists(pathToSm + "/modchart.lua");
+			executeModchart = OpenFlAssets.exists(pathToSm + "/modchart.lua");
 		#end
 		#if !cpp
 		executeModchart = false;
 		#end
 
 		#if FEATURE_HSCRIPT
-		runHscript = FileSystem.exists(Paths.hscript('songs/${PlayState.SONG.songId}/script'));
-		#else
-		runHscript = false;
+		if (!isStoryMode)
+			executeHScript = OpenFlAssets.exists(Paths.hscript('songs/${PlayState.SONG.songId}/script'));
+		else
+			executeHScript = OpenFlAssets.exists(Paths.hscript('songs/${PlayState.SONG.songId}/script'));
+		#if FEATURE_STEPMANIA
+		if (isSM)
+			executeHScript = FileSystem.exists(pathToSm + "/script.hx");
 		#end
-		if (FlxG.save.data.gen)
+		#end
+		if (FlxG.save.data.gen){
 			Debug.logInfo('Searching for Lua Modchart? ($executeModchart) at ${Paths.lua('songs/${PlayState.SONG.songId}/modchart')}');
-		Debug.logInfo('Searching for HScript? ($runHscript) at ${Paths.hscript('songs/${PlayState.SONG.songId}/script')}');
+			Debug.logInfo('Searching for HScript? ($executeHScript) at ${Paths.hscript('songs/${PlayState.SONG.songId}/script')}');
+		}
+		
 
 		if (executeModchart)
 			songMultiplier = 1;
@@ -639,11 +648,11 @@ class PlayState extends MusicBeatState
 			gfCheck = SONG.gfVersion;
 		}
 
-		if (!stageTesting)
+		if (!stageTesting || !FlxG.save.data.optimize)
 		{
 			gf = new Character(400, 130, gfCheck);
 
-			if (gf.frames == null)
+			if (!FlxG.save.data.optimize && gf.frames == null)
 			{
 				#if debug
 				FlxG.log.warn(["Couldn't load gf: " + gfCheck + ". Loading default gf"]);
@@ -653,7 +662,7 @@ class PlayState extends MusicBeatState
 
 			boyfriend = new Boyfriend(770, 450, SONG.player1);
 
-			if (boyfriend.frames == null)
+			if (!FlxG.save.data.optimize && boyfriend.frames == null)
 			{
 				#if debug
 				FlxG.log.warn(["Couldn't load boyfriend: " + SONG.player1 + ". Loading default boyfriend"]);
@@ -663,7 +672,7 @@ class PlayState extends MusicBeatState
 
 			dad = new Character(100, 100, SONG.player2);
 
-			if (dad.frames == null)
+			if (!FlxG.save.data.optimize && dad.frames == null)
 			{
 				#if debug
 				FlxG.log.warn(["Couldn't load opponent: " + SONG.player2 + ". Loading default opponent"]);
@@ -683,11 +692,22 @@ class PlayState extends MusicBeatState
 					if (person.curCharacter == char)
 						person.setPosition(pos[0], pos[1]);
 		}
-		for (i in Stage.toAdd)
+		if (!FlxG.save.data.optimize)
 		{
-			add(i);
-		}
-		if (!PlayStateChangeables.Optimize)
+			for (i in Stage.toAdd)
+			{
+				add(i);
+			}
+			if (FlxG.save.data.distractions){
+					if (SONG.songId == 'stress')
+					{
+						switch (gf.curCharacter)
+						{
+							case 'picoSpeaker':
+								Character.loadMappedAnims();
+						}
+					}
+				}
 			for (index => array in Stage.layInFront)
 			{
 				switch (index)
@@ -708,41 +728,43 @@ class PlayState extends MusicBeatState
 					case 3:
 				}
 			}
+		}
+		
+			
 
-		camPos = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
-
-		switch (dad.curCharacter)
+		if (!FlxG.save.data.optimize)
 		{
-			case 'gf':
-				if (!stageTesting)
-					dad.setPosition(gf.x, gf.y);
-				gf.visible = false;
-				if (isStoryMode)
-				{
-					camPos.x += 600;
-					tweenCamIn();
-				}
-			case 'dad':
-				camPos.x += 400;
-			case 'tankman':
-				camPos.y == 400;
-			case 'pico':
-				camPos.x += 600;
-			case 'senpai':
-				camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
-			case 'senpai-angry':
-				camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
-			case 'spirit':
-				if (FlxG.save.data.distractions)
-				{
-					if (!PlayStateChangeables.Optimize)
-					{
-						var evilTrail = new FlxTrail(dad, null, 4, 24, 0.3, 0.069);
-						add(evilTrail);
-					}
-				}
+			camPos = new FlxPoint(dad.getGraphicMidpoint().x + dad.camPos[0], dad.getGraphicMidpoint().y + dad.camPos[1]);
 
-				camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
+			switch (Stage.curStage)
+			{
+				case 'halloween':
+					camPos = new FlxPoint(gf.getMidpoint().x + dad.camPos[0], gf.getMidpoint().y + dad.camPos[1]);
+				case 'tank':
+					if (SONG.player2 == 'tankman')
+						camPos = new FlxPoint(436.5, 534.5);
+				case 'stage':
+					if (dad.replacesGF)
+						camPos = new FlxPoint(dad.getGraphicMidpoint().x + dad.camPos[0] - 200, dad.getGraphicMidpoint().y + dad.camPos[1]);
+				case 'mallEvil':
+					camPos = new FlxPoint(boyfriend.getMidpoint().x - 100 + boyfriend.camPos[0], boyfriend.getMidpoint().y - 100 + boyfriend.camPos[1]);
+				default:
+					camPos = new FlxPoint(dad.getGraphicMidpoint().x + dad.camPos[0], dad.getGraphicMidpoint().y + dad.camPos[1]);
+			}
+		}
+		else
+		{
+			camPos = new FlxPoint(0, 0);
+		}
+
+		if (dad.replacesGF)
+		{
+			if (!stageTesting)
+				dad.setPosition(gf.x, gf.y);
+			gf.visible = false;
+
+			camPos.x += 600;
+			//tweenCamIn();
 		}
 
 		Stage.update(0);
@@ -862,7 +884,10 @@ class PlayState extends MusicBeatState
 		generateSong(SONG.songId);
 
 		#if FEATURE_HSCRIPT
-		startScript();
+		if (executeHScript)
+		{
+			startScript();
+		}
 		#end
 
 
@@ -1064,10 +1089,13 @@ class PlayState extends MusicBeatState
 		{
 			trace('starting');
 		}
-		dad.dance();
-		boyfriend.dance();
-		gf.dance();
-
+		if (!FlxG.save.data.optimize)
+		{
+			dad.dance();
+			boyfriend.dance();
+			if (gf.curCharacter != 'pico-speaker')
+				gf.dance();
+		}
 		if (isStoryMode)
 		{
 			switch (StringTools.replace(curSong, " ", "-").toLowerCase())
@@ -1128,11 +1156,40 @@ class PlayState extends MusicBeatState
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, releaseInput);
 
 		super.create();
+
+		
+		if (FlxG.save.data.distractions && FlxG.save.data.background && !FlxG.save.data.optimize)
+		{
+			if (gfCheck == 'picoSpeaker' && Stage.curStage == 'tank')
+			{
+				if (FlxG.save.data.distractions)
+				{
+					var firstTank:TankDead = new TankDead(20, 500, true);
+					firstTank.resetShit(20, 600, true);
+					firstTank.strumTime = 10;
+					if (Stage.swagBacks['tankmanRun'] != null)
+					{
+						Stage.swagBacks['tankmanRun'].add(firstTank);
+
+						for (i in 0...TankDead.animationNotes.length)
+						{
+							if (FlxG.random.bool(16))
+							{
+								var tankBih = Stage.swagBacks['tankmanRun'].recycle(TankDead);
+								tankBih.strumTime = TankDead.animationNotes[i].strumTime;
+								tankBih.resetShit(500, 200 + FlxG.random.int(50, 100), TankDead.animationNotes[i].noteData < 2);
+								Stage.swagBacks['tankmanRun'].add(tankBih);
+							}
+						}
+					}
+				}
+			}
+		}
 		Destroyer.clearUnusedMemory();
 		#if FEATURE_HSCRIPT
-		if (script != null)
+		if (executeHScript && script != null)
 		{
-			script.executeFunc("onCreate");
+			script.executeFunc("create");
 		}
 		#end
 	}
@@ -1273,19 +1330,29 @@ class PlayState extends MusicBeatState
 
 		var swagCounter:Int = 0;
 
-		startTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
+		startTimer = createTimer((Conductor.crochet / 1000), function(tmr:FlxTimer)
 		{
-			if (allowedToHeadbang && swagCounter % gfSpeed == 0)
-				gf.dance();
-			if (swagCounter % idleBeat == 0)
+			// this just based on beatHit stuff but compact
+			if (!FlxG.save.data.optimize)
 			{
-				if (idleToBeat && !boyfriend.animation.curAnim.name.endsWith("miss"))
-					boyfriend.dance(forcedToIdle);
-				if (idleToBeat)
-					dad.dance(forcedToIdle);
+				if (allowedToHeadbang && swagCounter % gfSpeed == 0 && gf.curCharacter != 'picoSpeaker')
+					gf.dance();
+
+				if (swagCounter % Math.floor(idleBeat * songMultiplier) == 0)
+				{
+					if (boyfriend != null && idleToBeat && !boyfriend.animation.curAnim.name.endsWith("miss"))
+						boyfriend.dance(forcedToIdle);
+					if (dad != null && idleToBeat)
+						dad.dance(forcedToIdle);
+				}
+				else if (swagCounter % Math.floor(idleBeat * songMultiplier) != 0)
+				{
+					if (boyfriend != null && boyfriend.isDancing && !boyfriend.animation.curAnim.name.endsWith("miss"))
+						boyfriend.dance();
+					if (dad != null && dad.isDancing)
+						dad.dance();
+				}
 			}
-			else if (dad.curCharacter == 'spooky' || dad.curCharacter == 'gf')
-				dad.dance();
 
 			var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
 			introAssets.set('default', ['ready', "set", "go"]);
@@ -1552,7 +1619,10 @@ class PlayState extends MusicBeatState
 			{
 				FlxG.sound.play(Paths.soundRandom('missnote' + altSuffix, 1, 3), FlxG.random.float(0.1, 0.2));
 			}
-			boyfriend.playAnim('sing' + dataSuffix[direction] + 'miss', true);
+			if (!FlxG.save.data.optimize)
+			{
+				boyfriend.playAnim('sing' + dataSuffix[direction] + 'miss', true);
+			}
 			vocals.volume = 0;
 			updateAccuracy();
 		}
@@ -1575,18 +1645,31 @@ class PlayState extends MusicBeatState
 		previousFrameTime = FlxG.game.ticks;
 		lastReportedPlayheadPosition = 0;
 
-		FlxG.sound.music.play();
+		FlxG.sound.playMusic(Paths.inst(PlayState.SONG.songId), 1, false);
 		vocals.play();
 		
-		if (allowedToHeadbang)
-			gf.dance();
-		if (idleToBeat && !boyfriend.animation.curAnim.name.startsWith("sing"))
-			boyfriend.dance(forcedToIdle);
-		if (idleToBeat && !dad.animation.curAnim.name.startsWith("sing"))
-			dad.dance(forcedToIdle);
+		if (!FlxG.save.data.optimize)
+		{
+			if (allowedToHeadbang)
+				if (gf.curCharacter != 'picoSpeaker')
+					gf.dance();
+			if (idleToBeat && !boyfriend.animation.curAnim.name.startsWith("sing"))
+				boyfriend.dance(forcedToIdle);
+			if (idleToBeat && !dad.animation.curAnim.name.startsWith("sing"))
+				dad.dance(forcedToIdle);
+
+			// Song check real quick
+			switch (SONG.songId)
+			{
+				case 'bopeebo' | 'philly' | 'blammed' | 'cocoa' | 'eggnog':
+					allowedToCheer = true;
+				default:
+					allowedToCheer = false;
+			}
+		}
 
 		#if FEATURE_HSCRIPT
-		if (script != null)
+		if (executeHScript && script != null)
 		{
 			script.executeFunc("onSongStart");
 		}	
@@ -1647,14 +1730,14 @@ class PlayState extends MusicBeatState
 		if (needSkip)
 		{
 			skipActive = true;
-			skipText = new FlxText(healthBarBG.x + 80, healthBarBG.y - 110, 500);
+			skipText = new FlxText(healthBarBG.x + 80, 500, 500);
 			skipText.text = "Press Space to Skip Intro";
 			skipText.size = 30;
 			skipText.color = FlxColor.WHITE;
 			skipText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2, 1);
 			skipText.cameras = [camHUD];
 			skipText.alpha = 0;
-			FlxTween.tween(skipText, {alpha: 1}, 0.2);
+			createTween(skipText, {alpha: 1}, 0.2);
 			add(skipText);
 		}
 	}
@@ -1988,7 +2071,7 @@ class PlayState extends MusicBeatState
 					babyArrow.animation.add('green', [6]);
 					babyArrow.animation.add('red', [7]);
 					babyArrow.animation.add('blue', [5]);
-					babyArrow.animation.add('purplel', [4]);
+					babyArrow.animation.add('purple', [4]);
 
 					babyArrow.setGraphicSize(Std.int(babyArrow.width * CoolUtil.daPixelZoom));
 					babyArrow.updateHitbox();
@@ -2097,9 +2180,9 @@ class PlayState extends MusicBeatState
 		strumLineNotes.forEach(function(babyArrow:FlxSprite)
 		{
 			if (isStoryMode && !FlxG.save.data.middleScroll || (PlayStateChangeables.Optimize))
-				babyArrow.alpha = 1;
+				babyArrow.visible = true;
 			if (index > 3 && FlxG.save.data.middleScroll)
-				babyArrow.alpha = 1;
+				babyArrow.visible = true;
 			index++;
 		});
 	}
@@ -2483,6 +2566,18 @@ class PlayState extends MusicBeatState
 			camSustains.x = camHUD.x;
 			camSustains.y = camHUD.y;
 			camSustains.angle = camHUD.angle;
+		}
+		#end
+
+		#if FEATURE_HSCRIPT
+		if (executeHScript && script != null && songStarted)
+		{
+			script.setVariable('zoomAllowed', FlxG.save.data.camzoom);
+			script.setVariable('songPos', Conductor.songPosition);
+			script.setVariable('hudZoom', camHUD.zoom);
+			script.setVariable('curBeat', HelperFunctions.truncateFloat(curDecimalBeat, 3));
+			script.setVariable('cameraZoom', FlxG.camera.zoom);
+			script.executeFunc('onUpdate', [elapsed]);
 		}
 		#end
 		
@@ -3111,74 +3206,10 @@ class PlayState extends MusicBeatState
 					}
 				}
 
-				if (!daNote.mustPress && Conductor.songPosition >= daNote.strumTime)
+				if (!daNote.mustPress)
 				{
-					if (SONG.songId != 'tutorial')
-						camZooming = true;
-
-					var altAnim:String = "";
-
-					if (daNote.isAlt)
-					{
-						altAnim = '-alt';
-						trace("YOO WTF THIS IS AN ALT NOTE????");
-					}
-					
-					if (!daNote.isParent && daNote.parent != null)
-					{
-						if (daNote.spotInLine != daNote.parent.children.length - 1)
-						{
-							var singData:Int = Std.int(Math.abs(daNote.noteData));
-							dad.playAnim('sing' + dataSuffix[singData] + altAnim, true);
-
-							if (FlxG.save.data.cpuStrums)
-							{
-								cpuStrums.forEach(function(spr:StaticArrow)
-								{
-									pressArrow(spr, spr.ID, daNote);
-								});
-							}
-
-							#if FEATURE_LUAMODCHART
-							if (luaModchart != null)
-								luaModchart.executeState('playerTwoSing', [Math.abs(daNote.noteData), Conductor.songPosition]);
-							#end
-
-							dad.holdTimer = 0;
-
-							if (SONG.needsVoices)
-								vocals.volume = 1;
-						}
-					}
-					else
-					{
-						var singData:Int = Std.int(Math.abs(daNote.noteData)); // Normal 1 hit Notes
-						dad.playAnim('sing' + dataSuffix[singData] + altAnim, true);
-
-						if (FlxG.save.data.cpuStrums)
-						{
-								cpuStrums.forEach(function(spr:StaticArrow)
-								{
-									pressArrow(spr, spr.ID, daNote);
-									//sadly we had to remove the cpu splashes because of bugs and shit
-								});
-						}
-
-						#if FEATURE_LUAMODCHART
-						if (luaModchart != null)
-							luaModchart.executeState('playerTwoSing', [Math.abs(daNote.noteData), Conductor.songPosition]);
-						#end
-
-						dad.holdTimer = 0;
-
-						if (SONG.needsVoices)
-							vocals.volume = 1;
-					}
-					daNote.active = false;
-
-					daNote.kill();
-					notes.remove(daNote, true);
-					daNote.destroy();
+					if (Conductor.songPosition >= daNote.strumTime)
+						opponentNoteHit(daNote);
 				}
 
 				if (daNote.mustPress && !daNote.modifiedByLua)
@@ -3211,7 +3242,7 @@ class PlayState extends MusicBeatState
 				//there was some code idk what it did but it fucked with color quantization shit. ik its a feature not many like but I like it.
 
 				if (!daNote.mustPress && FlxG.save.data.middleScroll && !executeModchart)
-					daNote.alpha = 0;
+					daNote.visible = false;
 
 				if (daNote.isSustainNote)
 				{
@@ -3373,13 +3404,6 @@ class PlayState extends MusicBeatState
 		#end
 
 		super.update(elapsed);
-
-		#if FEATURE_HSCRIPT
-		if (script != null)
-		{
-			script.executeFunc("update");
-		}
-		#end
 	}
 
 	public function getSectionByTime(ms:Float):SwagSection
@@ -4304,13 +4328,15 @@ class PlayState extends MusicBeatState
 					FlxG.sound.play(Paths.soundRandom('missnote' + altSuffix, 1, 3), FlxG.random.float(0.1, 0.2));
 				}
 
-				boyfriend.playAnim('sing' + dataSuffix[direction] + 'miss', true);
+				if (!FlxG.save.data.optimize)
+				{
+					boyfriend.playAnim('sing' + dataSuffix[direction] + 'miss', true);
+				}
 
 				if (daNote.noteShit == 'mustpress')
-				{
-					health -= 0.8;
-					//Debug.logTrace("You Suck!"); removed because this is more of a test thing.
-				}
+					{
+						health -= 0.8;
+					}
 
 				#if FEATURE_LUAMODCHART
 				if (luaModchart != null)
@@ -4365,10 +4391,93 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	function opponentNoteHit(daNote:Note):Void
+	{
+		var altAnim:String = "";
+		var curSection:Int = Math.floor((curStep / 16));
+
+		if (daNote.isAlt)
+		{
+			altAnim = '-alt';
+			trace("YOO WTF THIS IS AN ALT NOTE????");
+		}
+
+		if (daNote.isParent)
+			for (i in daNote.children)
+				i.sustainActive = true;
+		
+		dad.holdTimer = 0;
+		// Accessing the animation name directly to play it
+		if (!daNote.isParent && daNote.parent != null)
+		{
+			if (daNote.spotInLine != daNote.parent.children.length - 1)
+			{
+				var singData:Int = Std.int(Math.abs(daNote.noteData));
+
+				if (!FlxG.save.data.optimize)
+				{
+					dad.playAnim('sing' + dataSuffix[singData] + altAnim, true);
+				}
+				if (FlxG.save.data.cpuStrums)
+				{
+					cpuStrums.forEach(function(spr:StaticArrow)
+					{
+						pressArrow(spr, spr.ID, daNote);
+					});
+				}
+				#if FEATURE_LUAMODCHART
+				if (luaModchart != null)
+					luaModchart.executeState('playerTwoSing', [Math.abs(daNote.noteData), Conductor.songPosition]);
+				#end
+
+				if (SONG.needsVoices)
+					vocals.volume = 1;
+			}
+		}
+		else
+		{
+			var singData:Int = Std.int(Math.abs(daNote.noteData));
+
+			if (!PlayStateChangeables.Optimize)
+			{
+				dad.playAnim('sing' + dataSuffix[singData] + altAnim, true);
+			}
+			if (FlxG.save.data.cpuStrums)
+			{
+				cpuStrums.forEach(function(spr:StaticArrow)
+				{
+					pressArrow(spr, spr.ID, daNote);
+				});
+			}
+			#if FEATURE_LUAMODCHART
+			if (luaModchart != null)
+					luaModchart.executeState('playerTwoSing', [Math.abs(daNote.noteData), Conductor.songPosition]);
+			#end
+				dad.holdTimer = 0;
+			if (SONG.needsVoices)
+				vocals.volume = 1;
+		}
+		daNote.active = false;
+		daNote.kill();
+		notes.remove(daNote, true);
+		daNote.destroy();
+	}
+
 	function goodNoteHit(note:Note, resetMashViolation = true):Void
 	{
 		if (mashing != 0)
 			mashing = 0;
+
+		// add newest note to front of notesHitArray
+		// the oldest notes are at the end and are removed first
+		if (!note.isSustainNote)
+			notesHitArray.unshift(Date.now());
+
+		if (!resetMashViolation && mashViolations >= 1)
+			mashViolations--;
+
+		if (mashViolations < 0)
+			mashViolations = 0;
 
 		var noteDiff:Float = -(note.strumTime - Conductor.songPosition);
 
@@ -4394,24 +4503,27 @@ class PlayState extends MusicBeatState
 
 		if (!note.wasGoodHit)
 		{
+			if (!note.isSustainNote && note.noteShit == 'normal' || note.noteShit == 'mustpress')
+			{
+				combo += 1;
+				popUpScore(note);
+				if (note.isParent)
+					for (i in note.children)
+						i.sustainActive = true;
+			}
 			if (note.noteShit == 'hurt')
 			{
 				health -= 0.8;
 			}
 			if (note.noteShit == 'mustpress')
 			{
-				health += 1;
+				health += 0.8;
 				//FlxG.sound.play(Paths.sound("Vine Boom"), 2); Vine Boom
-			}
-			if (!note.isSustainNote && note.noteShit == 'normal' || note.noteShit == 'mustpress')
-			{
-				combo += 1;
-				popUpScore(note);
 			}
 
 			#if FEATURE_HSCRIPT
 			// sfjl
-			if (script != null)
+			if (executeHScript && script != null)
 			{
 				script.setVariable("note", Note);
 				script.executeFunc("goodNoteHit", [note.noteData]);
@@ -4425,8 +4537,12 @@ class PlayState extends MusicBeatState
 				trace("Alt note on BF");
 			}
 
-			if (note.noteShit == 'normal')
-				boyfriend.playAnim('sing' + dataSuffix[note.noteData] + altAnim, true);
+			if (note.noteShit == 'normal'){
+				if (!FlxG.save.data.optimize){
+					boyfriend.playAnim('sing' + dataSuffix[note.noteData] + altAnim, true);
+				}
+			}
+			
 
 			#if FEATURE_LUAMODCHART
 			if (luaModchart != null)
@@ -4537,7 +4653,7 @@ class PlayState extends MusicBeatState
 		}
 		#end
 		#if FEATURE_HSCRIPT
-		if (script != null)
+		if (executeHScript && script != null)
 		{
 			script.setVariable("curStep", curStep);
 			script.executeFunc("stepHit");
@@ -4561,17 +4677,22 @@ class PlayState extends MusicBeatState
 		}
 		#end
 
-		if (currentSection != null)
+		if (currentSection != null && !FlxG.save.data.optimize)
 		{
-			if (curBeat % idleBeat == 0)
+			if (curBeat % Math.floor(idleBeat * songMultiplier) == 0)
 			{
 				if (idleToBeat && !dad.animation.curAnim.name.startsWith('sing'))
 					dad.dance(forcedToIdle, currentSection.CPUAltAnim);
 				if (idleToBeat && !boyfriend.animation.curAnim.name.startsWith('sing'))
 					boyfriend.dance(forcedToIdle, currentSection.playerAltAnim);
 			}
-			else if ((dad.curCharacter == 'spooky' || dad.curCharacter == 'gf') && !dad.animation.curAnim.name.startsWith('sing'))
-				dad.dance(forcedToIdle, currentSection.CPUAltAnim);
+			else if (curBeat % Math.floor(idleBeat * songMultiplier) != 0)
+			{
+				if (boyfriend.isDancing && !boyfriend.animation.curAnim.name.startsWith('sing'))
+					boyfriend.dance(forcedToIdle, currentSection.CPUAltAnim);
+				if (dad.isDancing && !dad.animation.curAnim.name.startsWith('sing'))
+					dad.dance(forcedToIdle, currentSection.CPUAltAnim);
+			}
 		}
 
 		wiggleShit.update(Conductor.crochet);
@@ -4632,7 +4753,6 @@ class PlayState extends MusicBeatState
 				else
 				{
 					dad.playAnim('sad', true);
-					FlxG.sound.play(Paths.soundRandom('GF_', 1, 4, 'shared'), 0.3);
 				}
 			}
 
@@ -4641,10 +4761,10 @@ class PlayState extends MusicBeatState
 					vocals.volume = 1;
 		}
 		#if FEATURE_HSCRIPT
-		if (script != null)
+		if (executeHScript && script != null)
 		{
 			script.setVariable("curBeat", curBeat);
-			script.executeFunc("onBeatHit");
+			script.executeFunc("beatHit");
 		}
 		#end
 	}
@@ -4771,10 +4891,9 @@ class PlayState extends MusicBeatState
 
 	override function destroy(){
 		#if FEATURE_HSCRIPT
-		if (script != null)
+		if (executeHScript && script != null)
 		{
 			script.executeFunc("destroy");
-
 			script.destroy();
 		}
 		#end
@@ -4834,7 +4953,19 @@ class PlayState extends MusicBeatState
 			{
 			});
 			//sfjl
-			script.setVariable("update", function()
+			script.setVariable("curStageZoom", function(camZoom:Float)
+			{
+				Stage.camZoom = camZoom;
+			});
+
+			script.setVariable("goodNoteHit", function(note:Note) {
+				goodNoteHit(note);
+			});
+
+			script.setVariable("opponentNoteHit", function(daNote:Note){
+				opponentNoteHit(daNote);
+			});
+			script.setVariable("onUpdate", function()
 			{
 			});
 			script.setVariable("import", function(lib:String, ?as:Null<String>) // Does this even work?
@@ -4875,15 +5006,14 @@ class PlayState extends MusicBeatState
 
 
 			script.setVariable("Debug", Debug);
-			script.setVariable("note", Note);
+			script.setVariable("Note", Note);
+			script.setVariable("KadeEngineData", KadeEngineData);
 
 			//Da Characters
 			script.setVariable("dad", PlayState.dad);
 			script.setVariable("gf", PlayState.gf);
 			script.setVariable("bf", PlayState.boyfriend);
-
-			//Stage maybe
-			script.setVariable("stage", Stage);
+			//not really needed cuz you can do PlayState.charactershit but it makes it cleaner imo;
 
 			script.runScript(hxdata);
 		}
@@ -4904,6 +5034,12 @@ class PlayState extends MusicBeatState
 		return tween;
 	}
 
+	public function createTimer(Time:Float = 1, ?OnComplete:FlxTimer->Void, Loops:Int = 1):FlxTimer
+	{
+		var timer:FlxTimer = new FlxTimer();
+		timer.manager = timerManager;
+		return timer.start(Time, OnComplete, Loops);
+	}
 	
 	function playCutscene(name:String, ?atend:Bool)
 	{

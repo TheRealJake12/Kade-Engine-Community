@@ -34,6 +34,7 @@ jobs:
           haxelib run lime setup
           haxelib install flixel-tools
           haxelib install flixel-addons
+           haxelib install polymod
           haxelib install flixel-ui
           haxelib install hscript
           haxelib install flixel-addons
