@@ -5,7 +5,7 @@ Hey you!
 Thanks for visiting this Repo!
 Versions Below 1.4 Were Made With Kade Engine 1.7.1 Pre-Release With 0 Modsupport.
 Versions 1.4 And Above Are Made With The Latest (As Of 11/5/21 or 5/11/21) Kade Engine 1.8.
-The goal of this Repo is to make it community focused. If theres a feature (no modsupport oh my god) just submit a pull request and someone will take a look at it.
+The goal of this Repo is to make it community focused. If theres a feature just submit a pull request and someone will take a look at it.
 
 ![Options](art/readme/optionsredo.png)
 
@@ -42,6 +42,7 @@ haxelib install flixel
 haxelib install flixel-tools
 haxelib install flixel-ui
 haxelib install hscript
+haxelib install polymod
 haxelib install flixel-addons
 haxelib install actuate
 haxelib install hxcpp-debug-server
@@ -80,7 +81,7 @@ It will take a while to build for both versions.
 
 - [PolybiusProxy](https://github.com/polybiusproxy) - The Video Support.
 
-- [BoloVEVO](https://github.com/BoloVEVO) - Fixed my shit code and improved the chart editor as well as many other things.(thanks!)
+- [BoloVEVO](https://github.com/BoloVEVO) - Fixed my shit code and improved the chart editor. Made a ton of code improvements.(thanks!!!)
 
 - [ShadowMario](https://github.com/ShadowMario) - The Memory Leak Fix. And A Few Other Things. (thanks)
 
