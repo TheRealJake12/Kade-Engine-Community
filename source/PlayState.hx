@@ -1587,8 +1587,7 @@ class PlayState extends MusicBeatState
 		}
 		else
 		{
-			if (canMiss)
-			{
+			if (canMiss){
 				noteMissPress(data);
 			}
 		}
@@ -3273,6 +3272,99 @@ class PlayState extends MusicBeatState
 								daNote.kill();
 								notes.remove(daNote, true);
 							}
+							else{
+							if (loadRep && daNote.isSustainNote)
+							{
+								if (findByTime(daNote.strumTime) != null)
+									totalNotesHit += 1;
+								else
+								{
+									vocals.volume = 0;
+									if (theFunne && !daNote.isSustainNote)
+									{
+										noteMiss(daNote.noteData, daNote);
+									}
+									if (daNote.isParent)
+									{
+										health -= 0.8;
+										for (i in daNote.children)
+										{
+											i.alpha = 0.3;
+											i.sustainActive = false;
+										}
+									}
+									else
+									{
+										if (!daNote.wasGoodHit&& daNote.isSustainNote&& daNote.sustainActive&& daNote.spotInLine != daNote.parent.children.length)
+										{
+											for (i in daNote.parent.children)
+											{
+												i.alpha = 0.3;
+												i.sustainActive = false;
+											}
+											if (daNote.parent.wasGoodHit)
+											{
+												misses++;
+												totalNotesHit -= 1;
+											}
+											updateAccuracy();
+										}
+										else if (!daNote.wasGoodHit && !daNote.isSustainNote)
+										{
+											health -= 0.15;
+										}
+									}
+								}
+							}
+							else
+							{
+								vocals.volume = 0;
+								if (theFunne && !daNote.isSustainNote)
+								{
+									if (PlayStateChangeables.botPlay)
+									{
+										daNote.rating = "marv";
+										//goodNoteHit(daNote);
+									}
+									else
+										noteMiss(daNote.noteData, daNote);
+								}
+
+								if (daNote.isParent && daNote.visible)
+								{
+									health -= 0.8;
+									for (i in daNote.children)
+									{
+										i.alpha = 0.3;
+										i.sustainActive = false;
+									}
+								}
+								else
+								{
+									if (!daNote.wasGoodHit&& daNote.isSustainNote&& daNote.sustainActive&& daNote.spotInLine != daNote.parent.children.length)
+									{
+										for (i in daNote.parent.children)
+										{
+											i.alpha = 0.3;
+											i.sustainActive = false;
+										}
+										if (daNote.parent.wasGoodHit)
+										{
+											misses++;
+											totalNotesHit -= 1;
+										}
+										updateAccuracy();
+									}
+									else if (!daNote.wasGoodHit && !daNote.isSustainNote)
+									{
+										health -= 0.8;
+									}
+								}
+									daNote.visible = false;
+									daNote.kill();
+									notes.remove(daNote, true);
+								}
+							}
 
 						// note bitches
 						//custom noteshit p1
@@ -4276,6 +4368,7 @@ class PlayState extends MusicBeatState
 
 	function noteMiss(direction:Int = 1, ?daNote:Note):Void
 	{
+		Debug.logTrace("Note Miss");
 			if (!boyfriend.stunned)
 			{
 				if (combo > 5 && gf.animOffsets.exists('sad'))
@@ -4332,11 +4425,6 @@ class PlayState extends MusicBeatState
 				{
 					boyfriend.playAnim('sing' + dataSuffix[direction] + 'miss', true);
 				}
-
-				if (daNote.noteShit == 'mustpress')
-					{
-						health -= 0.8;
-					}
 
 				#if FEATURE_LUAMODCHART
 				if (luaModchart != null)
