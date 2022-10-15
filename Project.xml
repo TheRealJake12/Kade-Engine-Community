@@ -99,7 +99,6 @@
 	<assets path="assets/week6"    library="week6"    exclude="*.mp3" unless="web"/>
 	<assets path="assets/week7"    library="week7"    exclude="*.ogg" if="web"/>
 	<assets path="assets/week7"    library="week7"    exclude="*.mp3" unless="web"/>
-	<assets path='mods' embed='false'/>
 	
 	<assets path='art/readme.txt' rename='do NOT readme.txt' />
 	<assets path='LICENSE' rename='LICENSE.txt' />
@@ -127,7 +126,6 @@
 	<haxelib name="flixel-ui" />
 	<haxelib name="faxe" if='switch'/>
 	<haxelib name="discord_rpc" if="desktop"/>
-	<haxelib name="polymod"/>
 	<haxelib name="linc_luajit" if="desktop"/>
 	<haxelib name="hxvm-luajit" if="desktop"/>
 	<haxelib name="hxcpp-debug-server" if="desktop"/>
@@ -177,8 +175,6 @@
 	<!--Where credit is due, Thanks sqirra-rng.-->	
 	<haxedef name="HXCPP_CHECK_POINTER" if="desktop" />
 	<haxedef name="HXCPP_STACK_LINE" if="desktop" />
-	
-	<haxedef name="no-deprecation-warnings" />
 
 	<!-- _________________________________ Custom _______________________________ -->
 
@@ -211,9 +207,5 @@
   <haxedef name="FEATURE_MULTITHREADING" if="cpp" />
   <!-- Videos -->
   <haxedef name="VIDEOS" if="desktop" unless="web"/>
-  <!-- Defines if hscript are enabled. Dosen't work in browser -->
-  <define name="FEATURE_HSCRIPT" if="desktop" />
-  <!-- Defines whether modcore can be used. -->
-  <haxedef name="FEATURE_MODCORE" if="desktop" />
 
 </project>
