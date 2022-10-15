@@ -211,7 +211,8 @@ class StageDebugState extends MusicBeatState
 
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
-			MusicBeatState.switchState(new FreeplayState());
+			FlxG.switchState(new PlayState());
+			PlayState.stageTesting = true;
 		}
 
 		if (FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.S)

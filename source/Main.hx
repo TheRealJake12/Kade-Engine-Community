@@ -104,7 +104,6 @@ class Main extends Sprite
 		Debug.onInitProgram();		
 
 		// Gotta run this before any assets get loaded.
-		ModCore.initialize();
 
 		#if !mobile
 		fpsCounter = new KadeEngineFPS(10, 3, 0xFFFFFF);

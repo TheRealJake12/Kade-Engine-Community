@@ -48,9 +48,9 @@ class OutdatedSubState extends MusicBeatState
 				+ "\nWhich is a PRE-RELEASE BUILD!"
 				+ "\n\nReport all bugs to the author of the pre-release.\nSpace/Escape ignores this.";
 
-		txt.setFormat("VCR OSD Mono", 23, FlxColor.fromRGB(200, 200, 200), CENTER);
+		txt.setFormat("VCR OSD Mono", 32, FlxColor.fromRGB(200, 200, 200), CENTER);
 		txt.borderColor = FlxColor.BLACK;
-		txt.borderSize = 2;
+		txt.borderSize = 3;
 		txt.borderStyle = FlxTextBorderStyle.OUTLINE;
 		txt.screenCenter();
 		add(txt);
@@ -72,7 +72,7 @@ class OutdatedSubState extends MusicBeatState
 				+ "\nWhich is a PRE-RELEASE BUILD!"
 				+ "\n\nReport all bugs to the author of the pre-release.\nSpace/Escape ignores this.";
 
-		mom.setFormat("VCR OSD Mono", 23, FlxColor.fromRGB(200, 200, 200), CENTER);
+		mom.setFormat("VCR OSD Mono", 32, FlxColor.fromRGB(200, 200, 200), CENTER);
 		mom.borderColor = FlxColor.BLACK;
 		mom.borderSize = 3;
 		mom.borderStyle = FlxTextBorderStyle.OUTLINE;
@@ -105,7 +105,7 @@ class OutdatedSubState extends MusicBeatState
 	{
 		if (FlxG.keys.justPressed.SPACE && MainMenuState.nightly == "")
 		{
-			fancyOpenURL("https://therealjake12.github.io/Kade-Engine-Community/changelogs/");
+			fancyOpenURL("https://therealjake12.github.io/Kade-Engine-Community/changelogs/" + needVer);
 		}
 		else if (controls.ACCEPT)
 		{

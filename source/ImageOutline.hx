@@ -31,14 +31,14 @@ class ImageOutline
 
 		// extract dimensions from actual object type.
 		// (unfortunately, IBitmapDrawable does not include width and height getters.)
-		if (Std.isOfType(src, DisplayObject))
+		if (Std.is(src, DisplayObject))
 		{
 			var dsp:DisplayObject = cast(src, DisplayObject);
 			m = dsp.transform.matrix;
 			w = Std.int(dsp.width);
 			h = Std.int(dsp.height);
 		}
-		else if (Std.isOfType(src, BitmapData))
+		else if (Std.is(src, BitmapData))
 		{
 			var bmp:BitmapData = cast(src, BitmapData);
 			w = Std.int(bmp.width);

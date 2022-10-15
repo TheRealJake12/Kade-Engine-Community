@@ -13,7 +13,7 @@ class Paths
 {
 	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
 
-	public static var currentLevel:String;
+	static var currentLevel:String;
 
 	static public function setCurrentLevel(name:String)
 	{
@@ -143,11 +143,6 @@ class Paths
 	inline static function getPreloadPath(file:String)
 	{
 		return 'assets/$file';
-	}
-
-	inline static public function hscript(key:String, ?library:String)
-	{
-		return getPath('data/$key.hx', TEXT, library);
 	}
 
 	inline static public function file(file:String, ?library:String, type:AssetType = TEXT)

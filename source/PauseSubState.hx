@@ -106,6 +106,18 @@ class PauseSubState extends MusicBeatSubstate
 
 		grpMenuShit = new FlxTypedGroup<Alphabet>();
 		add(grpMenuShit);
+		perSongOffset = new FlxText(5, FlxG.height
+			- 18, 0,
+			"Additive Offset (Left, Right): "
+			+ PlayState.songOffset
+			+ " - Description - "
+			+ 'Adds value to global offset, per song.', 12);
+		perSongOffset.scrollFactor.set();
+		perSongOffset.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+
+		#if FEATURE_FILESYSTEM
+		add(perSongOffset);
+		#end
 
 		for (i in 0...menuItems.length)
 		{
@@ -158,13 +170,6 @@ class PauseSubState extends MusicBeatSubstate
 			switch (daSelected)
 			{
 				case "Resume":
-					Ratings.timingWindows = [
-						FlxG.save.data.shitMs,
-						FlxG.save.data.badMs,
-						FlxG.save.data.goodMs,
-						FlxG.save.data.sickMs,
-						FlxG.save.data.marvMs
-					];
 					close();
 				case "Restart Song":
 					restartSong();

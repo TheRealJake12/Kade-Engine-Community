@@ -111,7 +111,7 @@ class Splash
 			notesplashArray.push(i.replace(".png", ""));
 		}
 		#else
-		notesplashArray = ["Default", "Week7"];
+		notesplashArray = ["Default"];
 		#end
 
 		return notesplashArray;

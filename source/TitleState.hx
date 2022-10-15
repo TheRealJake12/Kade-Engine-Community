@@ -99,9 +99,6 @@ class TitleState extends MusicBeatState
 
 		super.create();
 
-		FlxG.sound.volume = FlxG.save.data.volume;
-		FlxG.sound.muted = FlxG.save.data.mute;
-
 		#if FREEPLAY
 		FlxG.switchState(new FreeplayState());
 		clean();
