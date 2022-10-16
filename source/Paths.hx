@@ -180,6 +180,11 @@ class Paths
 		return getPath('data/$key.json', TEXT, library);
 	}
 
+	inline static public function hx(key:String, ?library:String)
+	{
+		return getPath('data/$key.hx', TEXT, library);
+	}
+
 	inline static public function data(key:String, ?library:String)
 	{
 		return getPath(key + '.json', TEXT, library);
@@ -194,17 +199,6 @@ class Paths
 	{
 		return sound(key + FlxG.random.int(min, max), library);
 	}
-
-	static public function getHaxeScript(string:String)
-	{
-		return OpenFlAssets.getText('assets/data/$string/modchart.hx');
-	}
-
-	inline static public function hx(key:String, ?library:String)
-	{
-		return getPath('data/$key.hx', TEXT, library);
-	}
-
 	#if VIDEOS
 
 	inline static public function video(key:String)

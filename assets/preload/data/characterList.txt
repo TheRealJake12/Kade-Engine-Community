@@ -18,4 +18,4 @@ spirit
 tankman
 gftank
 bf-holding-gf
-picoSpeaker
+pico-speaker

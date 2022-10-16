@@ -53,38 +53,18 @@
     {
 			"offsets": [1,16],
 			"frameRate": 24,
-			"name": "singDOWN-alt",
+			"name": "good",
 			"looped": false,
       "interrupt": false,
 			"prefix": "PRETTY GOOD tankman"
 		},
     {
-			"offsets": [48,54],
+			"offsets": [1,16],
 			"frameRate": 24,
-			"name": "singUPmiss",
+			"name": "singDOWN-alt",
 			"looped": false,
-			"prefix": "Tankman UP note MISS"
-		},
-		{
-			"offsets": [76,-101],
-			"frameRate": 24,
-			"name": "singDOWNmiss",
-			"looped": false,
-			"prefix": "Tankman DOWN note MISS"
-		},
-		{
-			"offsets": [84,-14],
-			"frameRate": 24,
-			"name": "singLEFTmiss",
-			"looped": false,
-			"prefix": "Tankman Right Note MISS"
-		},
-		{
-			"offsets": [-21,-31],
-			"frameRate": 24,
-			"name": "singRIGHTmiss",
-			"looped": false,
-			"prefix": "Tankman Note Left MISS"
+      "interrupt": false,
+			"prefix": "PRETTY GOOD tankman"
 		}
   ]
 }

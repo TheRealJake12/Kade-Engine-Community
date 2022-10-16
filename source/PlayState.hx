@@ -698,12 +698,13 @@ class PlayState extends MusicBeatState
 			{
 				add(i);
 			}
+
 			if (FlxG.save.data.distractions){
 					if (SONG.songId == 'stress')
 					{
 						switch (gf.curCharacter)
 						{
-							case 'picoSpeaker':
+							case 'pico-speaker':
 								Character.loadMappedAnims();
 						}
 					}
@@ -932,10 +933,6 @@ class PlayState extends MusicBeatState
 				Debug.logInfo("Removed " + toBeRemoved.length + " cuz of start time");
 			}
 		}
-		if (FlxG.save.data.gen)
-		{
-			trace('generated');
-		}
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 
@@ -1050,7 +1047,7 @@ class PlayState extends MusicBeatState
 
 			if (!PlayStateChangeables.Optimize)
 			{
-				if ( FlxG.save.data.distractions)
+				if (FlxG.save.data.distractions)
 				{
 					if (PlayState.SONG.songId.toLowerCase() == 'satin-panties'|| PlayState.SONG.songId.toLowerCase() == 'high'|| PlayState.SONG.songId.toLowerCase() == 'milf')
 					{
@@ -1085,10 +1082,6 @@ class PlayState extends MusicBeatState
 		kadeEngineWatermark.cameras = [camHUD];
 
 		startingSong = true;
-		if (FlxG.save.data.gen)
-		{
-			trace('starting');
-		}
 		if (!FlxG.save.data.optimize)
 		{
 			dad.dance();
@@ -1158,9 +1151,9 @@ class PlayState extends MusicBeatState
 		super.create();
 
 		
-		if (FlxG.save.data.distractions && FlxG.save.data.background && !FlxG.save.data.optimize)
+		if (FlxG.save.data.distractions && PlayStateChangeables.Optimize)
 		{
-			if (gfCheck == 'picoSpeaker' && Stage.curStage == 'tank')
+			if (gfCheck == 'pico-speaker' && Stage.curStage == 'tank')
 			{
 				if (FlxG.save.data.distractions)
 				{
@@ -1335,7 +1328,7 @@ class PlayState extends MusicBeatState
 			// this just based on beatHit stuff but compact
 			if (!FlxG.save.data.optimize)
 			{
-				if (allowedToHeadbang && swagCounter % gfSpeed == 0 && gf.curCharacter != 'picoSpeaker')
+				if (allowedToHeadbang && swagCounter % gfSpeed == 0 && gf.curCharacter != 'pico-speaker')
 					gf.dance();
 
 				if (swagCounter % Math.floor(idleBeat * songMultiplier) == 0)
@@ -1649,9 +1642,8 @@ class PlayState extends MusicBeatState
 		
 		if (!FlxG.save.data.optimize)
 		{
-			if (allowedToHeadbang)
-				if (gf.curCharacter != 'picoSpeaker')
-					gf.dance();
+			if (gf.curCharacter != 'pico-speaker')
+				gf.dance();
 			if (idleToBeat && !boyfriend.animation.curAnim.name.startsWith("sing"))
 				boyfriend.dance(forcedToIdle);
 			if (idleToBeat && !dad.animation.curAnim.name.startsWith("sing"))
@@ -1716,10 +1708,6 @@ class PlayState extends MusicBeatState
 			if (vocals.playing)
 				lime.media.openal.AL.sourcef(vocals._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);
 		}
-		if (FlxG.save.data.gen)
-		{
-			trace("pitched inst and vocals to " + songMultiplier);
-		}
 		#end
 
 		for (i in 0...unspawnNotes.length)
@@ -1764,10 +1752,6 @@ class PlayState extends MusicBeatState
 		else
 			vocals = new FlxSound();
 		#end
-		if (FlxG.save.data.gen)
-		{
-			trace('loaded vocals');
-		}
 
 		FlxG.sound.list.add(vocals);
 
@@ -1776,7 +1760,6 @@ class PlayState extends MusicBeatState
 			#if FEATURE_STEPMANIA
 			if (!isStoryMode && isSM)
 			{
-				trace("Loading " + pathToSm + "/" + sm.header.MUSIC);
 				var bytes = File.getBytes(pathToSm + "/" + sm.header.MUSIC);
 				var sound = new Sound();
 				sound.loadCompressedDataFromByteArray(bytes.getData(), bytes.length);
@@ -2281,11 +2264,13 @@ class PlayState extends MusicBeatState
 		if (endingSong)
 			return;
 		vocals.pause();
-		FlxG.sound.music.pause();
 
 		FlxG.sound.music.play();
-		FlxG.sound.music.time = Conductor.songPosition * songMultiplier;
-		vocals.time = FlxG.sound.music.time;
+		Conductor.songPosition = FlxG.sound.music.time;
+		if (Conductor.songPosition <= vocals.length)
+		{
+			vocals.time = Conductor.songPosition;
+		}
 		vocals.play();
 
 		@:privateAccess
@@ -2470,7 +2455,6 @@ class PlayState extends MusicBeatState
 
 				if (timingSegBpm != Conductor.bpm)
 				{
-					trace("BPM CHANGE to " + timingSegBpm);
 					Conductor.changeBPM(timingSegBpm, false);
 					Conductor.crochet = ((60 / (timingSegBpm) * 1000)) / songMultiplier;
 					Conductor.stepCrochet = Conductor.crochet / 4;
@@ -2487,7 +2471,6 @@ class PlayState extends MusicBeatState
 						if (i.position <= curDecimalBeat && !pastScrollChanges.contains(i))
 						{
 							pastScrollChanges.push(i);
-							trace("SCROLL SPEED CHANGE to " + i.value);
 							newScroll = i.value;
 						}
 				}
@@ -2609,10 +2592,10 @@ class PlayState extends MusicBeatState
 			persistentDraw = true;
 			paused = true;
 
-			// 1 / 10000 chance for Gitaroo Man easter egg
-			if (FlxG.random.bool(0.01))
+			// 1 / 100000 chance for Gitaroo Man easter egg
+			// happened to me way to frequently. Annoying
+			if (FlxG.random.bool(0.001))
 			{
-				trace('GITAROO MAN EASTER EGG');
 				FlxG.switchState(new GitarooPause());
 				clean();
 			}
@@ -3430,8 +3413,6 @@ class PlayState extends MusicBeatState
 										daNote.rating = "marv";
 										goodNoteHit(daNote);
 									}
-									else
-										noteMiss(daNote.noteData, daNote);
 								}
 
 								if (daNote.isParent && daNote.visible)
@@ -3462,6 +3443,7 @@ class PlayState extends MusicBeatState
 									else if (!daNote.wasGoodHit && !daNote.isSustainNote)
 									{
 										health -= 0.15;
+										noteMiss(daNote.noteData, daNote);
 									}
 								}
 									daNote.visible = false;
@@ -4275,12 +4257,6 @@ class PlayState extends MusicBeatState
 					if (boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss'))
 						boyfriend.dance();
 				}
-				else if (!FlxG.save.data.ghost)
-				{
-					for (shit in 0...pressArray.length)
-						if (pressArray[shit])
-							noteMiss(shit, null);
-				}
 			}
 
 			if (!loadRep)
@@ -4296,7 +4272,6 @@ class PlayState extends MusicBeatState
 					if (loadRep)
 					{
 						var n = findByTime(daNote.strumTime);
-						trace(n);
 						if (n != null)
 						{
 							goodNoteHit(daNote);
@@ -4368,7 +4343,6 @@ class PlayState extends MusicBeatState
 
 	function noteMiss(direction:Int = 1, ?daNote:Note):Void
 	{
-		Debug.logTrace("Note Miss");
 			if (!boyfriend.stunned)
 			{
 				if (combo > 5 && gf.animOffsets.exists('sad'))
@@ -4487,7 +4461,6 @@ class PlayState extends MusicBeatState
 		if (daNote.isAlt)
 		{
 			altAnim = '-alt';
-			trace("YOO WTF THIS IS AN ALT NOTE????");
 		}
 
 		if (daNote.isParent)
@@ -4610,7 +4583,6 @@ class PlayState extends MusicBeatState
 			}
 
 			#if FEATURE_HSCRIPT
-			// sfjl
 			if (executeHScript && script != null)
 			{
 				script.setVariable("note", Note);
@@ -4622,7 +4594,6 @@ class PlayState extends MusicBeatState
 			if (note.isAlt)
 			{
 				altAnim = '-alt';
-				trace("Alt note on BF");
 			}
 
 			if (note.noteShit == 'normal'){
@@ -4747,6 +4718,30 @@ class PlayState extends MusicBeatState
 			script.executeFunc("stepHit");
 		}
 		#end
+
+			if (!endingSong && currentSection != null)
+			{
+				if (!FlxG.save.data.optimize)
+				{
+					if (curStep % Math.floor(64 * songMultiplier) == Math.floor(60 * songMultiplier)
+						&& SONG.songId == 'tutorial'
+						&& dad.curCharacter == 'gf'
+						&& curStep > 64 * songMultiplier
+						&& curStep < 192 * songMultiplier)
+					{
+						if (vocals.volume != 0)
+						{
+							boyfriend.playAnim('hey', true);
+							dad.playAnim('cheer', true);
+						}
+						else
+						{
+							dad.playAnim('sad', true);
+							FlxG.sound.play(Paths.soundRandom('GF_', 1, 4, 'shared'), 0.3);
+						}
+					}
+				}
+		}
 	}
 
 	override function beatHit()
@@ -4909,8 +4904,6 @@ class PlayState extends MusicBeatState
 					notes.remove(i);
 			}
 
-			trace("FUCK YOU BITCH FUCKER CUCK SUCK BITCH " + cleanedSong.notes.length);
-
 			SONG = cleanedSong;
 		}
 		else
@@ -4956,8 +4949,6 @@ class PlayState extends MusicBeatState
 				for (i in saveRemove)
 					notes.remove(i);
 			}
-
-			trace("FUCK YOU BITCH FUCKER CUCK SUCK BITCH " + cleanedSong.notes.length);
 
 			SONG = cleanedSong;
 		}
@@ -5040,7 +5031,6 @@ class PlayState extends MusicBeatState
 			script.setVariable("stepHit", function()
 			{
 			});
-			//sfjl
 			script.setVariable("curStageZoom", function(camZoom:Float)
 			{
 				Stage.camZoom = camZoom;

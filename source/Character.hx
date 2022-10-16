@@ -195,7 +195,7 @@ class Character extends FlxSprite
 
 			switch (curCharacter)
 			{
-				case 'picoSpeaker':
+				case 'pico-speaker':
 					if (animationNotes.length > 0 && Conductor.songPosition >= animationNotes[0].strumTime)
 					{
 						var noteData:Int = 1;
@@ -226,7 +226,7 @@ class Character extends FlxSprite
 				if (animation.curAnim != null)
 				{
 					var canInterrupt = animInterrupt.get(animation.curAnim.name);
-
+					if (curCharacter != 'pico-speaker')
 					if (canInterrupt)
 					{
 						if (isDancing)

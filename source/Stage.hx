@@ -17,11 +17,9 @@ class Stage extends MusicBeatState
 {
 	public var curStage:String = '';
 	public var ground:FlxSprite;
-
 	public var tankWatchtower:FlxSprite;
 	public var tankGround:FlxSprite;
 	public var tankmanRun:FlxTypedGroup<TankDead>;
-
 	public var foregroundSprites:FlxTypedGroup<TankBGSprite>;
 
 	public var camZoom:Float; // The zoom of the camera to have at the start of the game
@@ -60,7 +58,7 @@ class Stage extends MusicBeatState
 			'bf' => [850, 400],
 			'bf-holding-gf' => [850, 300],
 			'gftank' => [200, 0],
-			'picoSpeaker' => [240, -160]
+			'pico-speaker' => [240, -160]
 		]
 	];
 
@@ -660,7 +658,6 @@ class Stage extends MusicBeatState
 						{
 							trainCooldown = FlxG.random.int(-4, 0);
 							trainStart();
-							Debug.logTrace('train');
 						}
 					}
 			}
