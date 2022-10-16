@@ -1,4 +1,6 @@
-1.6.2;
+1.6.3;
 
-- Fixed Cam Zoom not going back on beat.
-- Fixed Must Press Notes Not Punishing You.
+-ModCore. Simplest of Modsupport.
+-Characters Use JSONS Because of ModCore.
+-HScript Modcharts. Very Limited.
+-
