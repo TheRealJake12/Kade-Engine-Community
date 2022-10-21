@@ -7,11 +7,11 @@ class OptionsDirect extends MusicBeatState
 {
 	override function create()
 	{
+		var menuBG:FlxSprite;
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
-
-		if (FlxG.save.data.unload)
-			Destroyer.clearStoredMemory();
+		
+		Paths.clearStoredMemory();
 
 		if (FlxG.sound.music.playing)
 		{
@@ -24,7 +24,7 @@ class OptionsDirect extends MusicBeatState
 
 		persistentUpdate = false;
 
-		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.loadImage("menuDesat"));
+		menuBG = new FlxSprite().loadGraphic(Paths.image("menuDesat"));
 		menuBG.color = 0xFFea71fd;
 		menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));
 		menuBG.updateHitbox();

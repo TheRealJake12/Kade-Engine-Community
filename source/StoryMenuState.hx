@@ -102,7 +102,7 @@ class StoryMenuState extends MusicBeatState
 		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
 		#end	
 		
-		Destroyer.clearUnusedMemory();
+		Paths.clearUnusedMemory();
 
 		PlayState.currentSong = "bruh";
 		PlayState.inDaPlay = false;
@@ -343,43 +343,10 @@ class StoryMenuState extends MusicBeatState
 			PlayState.SONG = Song.conversionChecks(Song.loadFromJson(PlayState.storyPlaylist[0], diff));
 			PlayState.storyWeek = curWeek;
 			PlayState.campaignScore = 0;
-			#if VIDEOS
-			var video:VideoHandler = new VideoHandler();
-
-			if (curWeek == 7){
-			new FlxTimer().start(1, function(tmr:FlxTimer)
-				{
-					FlxG.sound.music.stop();
-					video.playVideo(Paths.video('ughCutscene.mp4'));
-					// VideoHandler.canCrash = false;
-					video.finishCallback = function()
-					{
-						LoadingState.loadAndSwitchState(new PlayState(), true);
-					}
-				});
-				new FlxTimer().start(1, function(tmr:FlxTimer)
-				{
-					{
-						remove(grpWeekCharacters);
-						remove(yellowBG);
-						remove(grpWeekText);
-						//removes the shit that could take up gpu usage
-					}
-				});
-			}	
-			else
-			{
-				new FlxTimer().start(1, function(tmr:FlxTimer)
-				{
-					LoadingState.loadAndSwitchState(new PlayState(), true);
-				});
-			}
-			#else
 			new FlxTimer().start(1, function(tmr:FlxTimer)
 			{
 				LoadingState.loadAndSwitchState(new PlayState(), true);
 			});
-			#end
 	}
 
 	function changeDifficulty(change:Int = 0):Void

@@ -2,6 +2,7 @@
   "name": "Pico (Speaker)",
   "asset": "characters/picoSpeaker",
   "barColor": "#A5004D",
+  "charPos":[0, -100],
   "startingAnim": "shoot1",
   "animations": [
     {

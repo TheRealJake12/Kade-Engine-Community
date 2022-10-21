@@ -63,8 +63,8 @@ class GameplayCustomizeState extends MusicBeatState
 	public static var freeplayWeek:Int = 1;
 	public override function create()
 	{
-		Destroyer.clearStoredMemory();
-		Destroyer.clearUnusedMemory();
+		Paths.clearStoredMemory();
+		Paths.clearUnusedMemory();
 		#if FEATURE_DISCORD
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("Customizing Gameplay Modules", null);
@@ -382,7 +382,7 @@ class GameplayCustomizeState extends MusicBeatState
 			switch (noteTypeCheck)
 			{
 				case 'pixel':
-					babyArrow.loadGraphic(Paths.loadImage('weeb/pixelUI/arrows-pixels', 'week6'), true, 17, 17);
+					babyArrow.loadGraphic(Paths.image('weeb/pixelUI/arrows-pixels', 'week6'), true, 17, 17);
 					babyArrow.animation.add('green', [6]);
 					babyArrow.animation.add('red', [7]);
 					babyArrow.animation.add('blue', [5]);

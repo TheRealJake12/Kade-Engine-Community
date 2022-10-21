@@ -25,6 +25,7 @@ class MusicBeatState extends FlxUIState
 	private var curBeat:Int = 0;
 	private var curDecimalBeat:Float = 0;
 	public static var currentColor = 0;
+	public static var switchingState:Bool = false;
 
 	private var assets:Array<FlxBasic> = [];
 	public static var initSave:Bool = false;
@@ -201,6 +202,7 @@ class MusicBeatState extends FlxUIState
 
 	public static function switchState(nextState:FlxState)
 	{
+		MusicBeatState.switchingState = true;
 		// Custom made Trans in
 		var curState:Dynamic = FlxG.state;
 		var leState:MusicBeatState = curState;
@@ -211,6 +213,7 @@ class MusicBeatState extends FlxUIState
 			{
 				CustomFadeTransition.finishCallback = function()
 				{
+					MusicBeatState.switchingState = false;
 					FlxG.resetState();
 				};
 			}
@@ -218,6 +221,7 @@ class MusicBeatState extends FlxUIState
 			{
 				CustomFadeTransition.finishCallback = function()
 				{
+					MusicBeatState.switchingState = false;
 					FlxG.switchState(nextState);
 				};
 			}

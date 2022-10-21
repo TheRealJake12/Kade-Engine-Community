@@ -193,6 +193,7 @@ class OptionsMenu extends MusicBeatSubstate
 				new FPSCapOption("Change your FPS Cap."),
 				#end
 				new Memory("Toggle the Memory Counter"),
+				new GPURendering("Makes All Sprites Load Into VRAM, Reducing Normal RAM Usage. (Not Recommended For ~3GB VRAM)"), //Ill come back to this. I'm tired asf
 				new BorderFps("Adds A Border To Make The FPS Display Easier To See. (Uses A Ton Of CPU And A Little GPU)"),
 				new WaterMarkFPS("Shows What Version Of The Game You Are Running In The FPS Counter."),
 				new RainbowFPSOption("Make the FPS Counter flicker through rainbow colors."),
@@ -206,7 +207,9 @@ class OptionsMenu extends MusicBeatSubstate
 				new AntialiasingOption("Toggle antialiasing, improving graphics quality at a slight performance penalty."),
 				// new FXAAOption("Enable FXAA Antialiasing. (EXTREME PERFORMANCE IMPACT! ONLY ENABLE IF YOUR PC HAS LIKE AN RTX CARD!)"),
 				#if desktop
-				new UnloadSongs("Unload Songs And Characters"), new CharacterCaching("Caches Characters"),
+				new StressMP4("Makes Stress Use An MP4 Instead Of Actual Sprites."),
+				new UnloadSongs("Unload Songs And Characters"), 
+				new CharacterCaching("Caches Characters"),
 				new SongCaching("Caches Songs for close to Instant loading"),
 				new CachingOption("Caches all of the options above (High Memory Depending On Your Cache Options.)"),
 				new UnloadNow("Clears All Cache We Can Remove"),

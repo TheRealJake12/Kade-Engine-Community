@@ -3,7 +3,6 @@
 	"asset": "characters/bfAndGF",
 	"barColor": "#31B0D1",
 	"camPos": [0,0],
-	"holdLength": 1,
 	"scale": 1,
 	"startingAnim": "idle",
 	"flipX": true,

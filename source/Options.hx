@@ -2608,6 +2608,38 @@ class OldCharter extends Option
 	}
 }
 
+class StressMP4 extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		if (OptionsMenu.isInPause)
+			description = "Makes Stress Use An MP4 Instead Of Ingame For Lowend PCs Recommended.";
+		else
+			description = desc;
+	}
+
+	public override function left():Bool
+	{
+		if (OptionsMenu.isInPause)
+			return false;
+		FlxG.save.data.stressMP4 = !FlxG.save.data.stressMP4;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Stress MP4: < " + (!FlxG.save.data.stressMP4 ? "off" : "on") + " >";
+	}
+}
+
 class Resolution extends Option
 {
 	public function new(desc:String)
@@ -2677,6 +2709,57 @@ class Resolution extends Option
 		//Debug.logTrace("Current Resolution == " + FlxG.save.data.resolution);
 
 		return true;
+	}
+}
+
+class GPURendering extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		if (OptionsMenu.isInPause)
+			description = "This option cannot be toggled in the pause menu.";
+		else
+			description = desc;
+
+		#if html5
+		description = "This option is handled automaticly by browser.";
+		#end
+	}
+
+	public override function left():Bool
+	{
+		#if !html5
+		if (OptionsMenu.isInPause)
+			return false;
+
+		FlxG.save.data.gpuRender = !FlxG.save.data.gpuRender;
+		display = updateDisplay();
+		return true;
+		#else
+		return false;
+		#end
+	}
+
+	public override function right():Bool
+	{
+		#if !html5
+		if (OptionsMenu.isInPause)
+			return false;
+		left();
+		return true;
+		#else
+		return false;
+		#end
+	}
+
+	private override function updateDisplay():String
+	{
+		#if !html5
+		return "GPU Rendering: < " + (!FlxG.save.data.gpuRender ? "off" : "on") + " >";
+		#else
+		return "GPU Rendering: < " + "Auto" + " >";
+		#end
 	}
 }
 

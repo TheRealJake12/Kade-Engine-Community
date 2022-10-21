@@ -23,10 +23,10 @@ class OutdatedSubState extends MusicBeatState
 
 	override function create()
 	{
-		Destroyer.clearStoredMemory();
-		Destroyer.clearUnusedMemory();
+		Paths.clearStoredMemory();
+		Paths.clearUnusedMemory();
 		super.create();
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.loadImage('stageback', 'shared'));
+		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('stageback', 'shared'));
 		bg.screenCenter();
 		bg.antialiasing = FlxG.save.data.antialiasing;
 		add(bg);
@@ -98,7 +98,7 @@ class OutdatedSubState extends MusicBeatState
 				colorRotation = 0;
 		}, 0);
 
-		Destroyer.clearUnusedMemory();
+		Paths.clearUnusedMemory();
 	}
 
 	override function update(elapsed:Float)

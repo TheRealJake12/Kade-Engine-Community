@@ -6,7 +6,6 @@
   "antialiasing": false,
   "startingAnim": "idle",
   "flipX": true,
-  "holdLenght": 1,
   "animations": [
     {
       "name": "idle",

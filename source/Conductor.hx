@@ -17,7 +17,7 @@ typedef BPMChangeEvent =
 class Conductor
 {
 	public static var bpm:Float = 100;
-	public static var crochet:Float = ((60 / bpm) * 1000); // beats in milliseconds
+	public static var crochet:Float = ((60 / bpm) * 1000) / PlayState.songMultiplier; // beats in milliseconds
 	public static var stepCrochet:Float = crochet / 4; // steps in milliseconds
 	public static var songPosition:Float;
 	public static var lastSongPos:Float;
@@ -66,6 +66,7 @@ class Conductor
 			totalSteps += deltaSteps;
 			totalPos += ((60 / curBPM) * 1000 / 4) * deltaSteps;
 		}
+		trace("new BPM map BUDDY " + bpmChangeMap);
 	}
 
 	public static function recalculateTimingStruct(SONG:SongData)
@@ -88,7 +89,7 @@ class Conductor
 	{
 		bpm = newBpm;
 
-		crochet = ((60 / bpm) * 1000);
+		crochet = ((60 / bpm) * 1000) / PlayState.songMultiplier;
 		stepCrochet = crochet / 4;
 	}
 }

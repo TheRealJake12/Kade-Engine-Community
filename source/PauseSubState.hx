@@ -1,7 +1,7 @@
 package;
 
+import flixel.input.gamepad.FlxGamepad;
 import openfl.Lib;
-import perf.Destroyer;
 #if FEATURE_LUAMODCHART
 import llua.Lua;
 #end
@@ -25,22 +25,24 @@ class PauseSubState extends MusicBeatSubstate
 	public static var goToOptions:Bool = false;
 	public static var goBack:Bool = false;
 
-	var menuItems:Array<String> = ['Resume', 'Restart Song', 'Options', 'Exit to menu'];
+	public static var menuItems:Array<String> = ['Resume', 'Restart Song', 'Options', 'Exit to menu'];
+
 	var curSelected:Int = 0;
 
 	public static var playingPause:Bool = false;
-
-	public var black:FlxSprite;
 
 	var pauseMusic:FlxSound;
 
 	var perSongOffset:FlxText;
 
 	var offsetChanged:Bool = false;
-	var startOffset:Float = PlayState.songOffset;
+	var startOffset:Float = PlayState.SONG.offset;
+
+	var bg:FlxSprite;
 
 	public function new()
 	{
+		Paths.clearUnusedMemory();
 		super();
 
 		if (FlxG.sound.music.playing)
@@ -71,13 +73,13 @@ class PauseSubState extends MusicBeatSubstate
 			}
 		}
 
-		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		bg = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		bg.alpha = 0;
 		bg.scrollFactor.set();
 		add(bg);
 
 		var levelInfo:FlxText = new FlxText(20, 15, 0, "", 32);
-		levelInfo.text += PlayState.SONG.song;
+		levelInfo.text += PlayState.SONG.songName.toUpperCase();
 		levelInfo.scrollFactor.set();
 		levelInfo.setFormat(Paths.font("vcr.ttf"), 32);
 		levelInfo.updateHitbox();
@@ -95,10 +97,6 @@ class PauseSubState extends MusicBeatSubstate
 
 		levelInfo.x = FlxG.width - (levelInfo.width + 20);
 		levelDifficulty.x = FlxG.width - (levelDifficulty.width + 20);
-
-		black = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		black.alpha = 0;
-		black.scrollFactor.set();
 
 		FlxTween.tween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
 		FlxTween.tween(levelInfo, {alpha: 1, y: 20}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.3});
@@ -120,6 +118,10 @@ class PauseSubState extends MusicBeatSubstate
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 	}
 
+	#if !mobile
+	var oldPos = FlxG.mouse.getScreenPosition();
+	#end
+
 	override function update(elapsed:Float)
 	{
 		if (pauseMusic.volume < 0.5)
@@ -127,15 +129,29 @@ class PauseSubState extends MusicBeatSubstate
 
 		super.update(elapsed);
 
+		#if !mobile
+		if (FlxG.mouse.wheel != 0)
+			#if desktop
+			changeSelection(-FlxG.mouse.wheel);
+			#else
+			if (FlxG.mouse.wheel < 0)
+				changeSelection(1);
+			if (FlxG.mouse.wheel > 0)
+				changeSelection(-1);
+			#end
+		#end
+
 		for (i in FlxG.sound.list)
 		{
 			if (i.playing && i.ID != 9000)
 				i.pause();
 		}
 
+		if (bg.alpha > 0.6)
+			bg.alpha = 0.6;
 		var oldOffset:Float = 0;
 
-		var songPath = 'assets/data/songs/${PlayState.SONG.song}/';
+		var songPath = 'assets/data/songs/${PlayState.SONG.songId}/';
 
 		#if FEATURE_STEPMANIA
 		if (PlayState.isSM && !PlayState.isStoryMode)
@@ -151,27 +167,31 @@ class PauseSubState extends MusicBeatSubstate
 			changeSelection(1);
 		}
 
-		if (controls.ACCEPT && !FlxG.keys.pressed.ALT)
+		if ((controls.ACCEPT && !FlxG.keys.pressed.ALT) || FlxG.mouse.pressed)
 		{
 			var daSelected:String = menuItems[curSelected];
 
 			switch (daSelected)
 			{
 				case "Resume":
-					Ratings.timingWindows = [
-						FlxG.save.data.shitMs,
-						FlxG.save.data.badMs,
-						FlxG.save.data.goodMs,
-						FlxG.save.data.sickMs,
-						FlxG.save.data.marvMs
-					];
 					close();
 				case "Restart Song":
-					restartSong();
+					PlayState.startTime = 0;
+					MusicBeatState.switchState(new PlayState());
+					PlayState.stageTesting = false;
 				case "Options":
 					goToOptions = true;
 					close();
 				case "Exit to menu":
+					PlayState.startTime = 0;
+					if (PlayState.loadRep)
+					{
+						FlxG.save.data.botplay = false;
+						FlxG.save.data.scrollSpeed = 1;
+						FlxG.save.data.downscroll = false;
+					}
+					PlayState.loadRep = false;
+					PlayState.stageTesting = false;
 					#if FEATURE_LUAMODCHART
 					if (PlayState.luaModchart != null)
 					{
@@ -182,44 +202,16 @@ class PauseSubState extends MusicBeatSubstate
 					if (FlxG.save.data.fpsCap > 420)
 						(cast(Lib.current.getChildAt(0), Main)).setFPSCap(420);
 
-					PlayState.instance.clean();
-
 					if (PlayState.isStoryMode)
 					{
+						GameplayCustomizeState.freeplayNoteStyle = 'normal';
 						MusicBeatState.switchState(new StoryMenuState());
-						if (FlxG.save.data.unload)
-						{
-							Destroyer.clearStoredMemory();
-						}
 					}
 					else
 					{
 						MusicBeatState.switchState(new FreeplayState());
-						if (FlxG.save.data.unload)
-						{
-							Destroyer.clearStoredMemory();
-						}
 					}
-						
-					
 			}
-		}
-	}
-
-	public static function restartSong(noTrans:Bool = false)
-	{
-		PlayState.instance.paused = true;
-		FlxG.sound.music.volume = 0;
-		PlayState.instance.vocals.volume = 0;
-
-		if (noTrans)
-		{
-			FlxTransitionableState.skipNextTransOut = true;
-			FlxG.resetState();
-		}
-		else
-		{
-			MusicBeatState.resetState();
 		}
 	}
 

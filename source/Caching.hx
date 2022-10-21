@@ -62,7 +62,7 @@ class Caching extends MusicBeatState
 		#end
 
 		// It doesn't reupdate the list before u restart rn lmao
-		//CustomNoteHelpers.Skin.updateNoteskins();
+		// CustomNoteHelpers.Skin.updateNoteskins();
 
 		FlxG.mouse.visible = false;
 
@@ -87,24 +87,15 @@ class Caching extends MusicBeatState
 		FlxGraphic.defaultPersist = false;
 
 		#if FEATURE_FILESYSTEM
-		if (FlxG.save.data.cacheCharacters)
-		{
-			for (i in FileSystem.readDirectory(FileSystem.absolutePath("assets/shared/images/characters")))
-			{
-				if (!i.endsWith(".png"))
-					continue;
-				characters.push(i);
-			}
-		}
 
 		// TODO: Get the audio list from OpenFlAssets.
 		if (FlxG.save.data.cacheSongs)
 			songs = Paths.listSongsToCache();
-		
+
 		// TODO: Get the song list from OpenFlAssets.
 		#end
 
-		toBeDone =  Lambda.count(characters) + Lambda.count(songs) + Lambda.count(music) + Lambda.count(sounds);
+		toBeDone = Lambda.count(songs) + Lambda.count(music) + Lambda.count(sounds);
 
 		add(kadeLogo);
 		add(text);
@@ -144,21 +135,6 @@ class Caching extends MusicBeatState
 	function cache()
 	{
 		#if FEATURE_FILESYSTEM
-
-		for (i in characters)
-		{
-			var replaced = i.replace(".png", "");
-			var imagePath = Paths.image('characters/' + replaced, 'shared');
-			var data = OpenFlAssets.getBitmapData(imagePath);
-			var graph = FlxGraphic.fromBitmapData(data);
-			if (FlxG.save.data.general)
-			{
-				Debug.logTrace('Caching character graphic $i ($imagePath)...');
-			}
-			graph.persist = true;
-			bitmapData.set(replaced, graph);
-			done++;
-		}
 
 		for (i in songs)
 		{

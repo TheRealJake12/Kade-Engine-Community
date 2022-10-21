@@ -28,9 +28,10 @@ using StringTools;
 class MainMenuState extends MusicBeatState
 {
 	public static var nightly:String = "";
-	public static var kecVer:String = 'Kade Engine Community 1.6.3';
+	public static var kecVer:String = 'Kade Engine Community 1.6.2';
 	public static var keVer:String = "Kade Engine 1.8";
 	public static var curSelected:Int = 0;
+	public static var freakyPlaying:Bool;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	private var camGame:FlxCamera;
@@ -47,8 +48,8 @@ class MainMenuState extends MusicBeatState
 
 	override function create()
 	{
-		Destroyer.clearStoredMemory();
-		Destroyer.clearUnusedMemory();
+		Paths.clearStoredMemory();
+		Paths.clearUnusedMemory();
 		#if desktop
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
@@ -60,7 +61,8 @@ class MainMenuState extends MusicBeatState
 
 		if (!FlxG.sound.music.playing)
 		{
-			FlxG.sound.playMusic(Paths.music('freakyMenu'));
+			FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
+			freakyPlaying = true;
 		}
 
 		camGame = new FlxCamera();
@@ -74,7 +76,7 @@ class MainMenuState extends MusicBeatState
 		persistentUpdate = persistentDraw = true;
 
 		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
-		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
+		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image2('menuBG'));
 		bg.scrollFactor.set(0, yScroll);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
 		bg.updateHitbox();
@@ -87,7 +89,7 @@ class MainMenuState extends MusicBeatState
 		add(camFollow);
 		add(camFollowPos);
 
-		magenta = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
+		magenta = new FlxSprite(-80).loadGraphic(Paths.image2('menuDesat'));
 		magenta.scrollFactor.set(0, yScroll);
 		magenta.setGraphicSize(Std.int(magenta.width * 1.175));
 		magenta.updateHitbox();
@@ -95,7 +97,7 @@ class MainMenuState extends MusicBeatState
 		magenta.visible = false;
 		magenta.antialiasing = FlxG.save.data.antialiasing;
 		magenta.color = 0xFFfd719b;
-		add(magenta);
+		//add(magenta);
 
 		// magenta.scrollFactor.set();
 
@@ -139,7 +141,7 @@ class MainMenuState extends MusicBeatState
 		changeItem();
 
 		super.create();
-		Destroyer.clearUnusedMemory();
+		Paths.clearUnusedMemory();
 	}
 
 	var selectedSomethin:Bool = false;

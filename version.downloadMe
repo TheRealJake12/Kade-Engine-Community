@@ -1,6 +1,6 @@
-1.6.3;
+1.6.2;
 
 -ModCore. Simplest of Modsupport.
 -Characters Use JSONS Because of ModCore.
 -HScript Modcharts. Very Limited.
--
+-GPU Rendering. (Thanks Bolo)

@@ -1,17 +1,26 @@
 package;
 
+import LuaClass;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.animation.FlxBaseAnimation;
 import flixel.graphics.frames.FlxAtlasFrames;
+import PlayState;
 
 using StringTools;
 
 class StaticArrow extends FlxSprite
 {
+	#if FEATURE_LUAMODCHART
+	public var luaObject:LuaReceptor;
+	#end
 	public var modifiedByLua:Bool = false;
 	public var modAngle:Float = 0; // The angle set by modcharts
 	public var localAngle:Float = 0; // The angle to be edited inside here
+
+	public var direction:Float = 90;
+
+	public var downScroll:Bool = false;
 
 	public function new(xx:Float, yy:Float)
 	{

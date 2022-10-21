@@ -24,7 +24,7 @@ class GameOverState extends FlxTransitionableState
 
 	override function create()
 	{
-		Destroyer.clearUnusedMemory();
+		Paths.clearUnusedMemory();
 		var loser:FlxSprite = new FlxSprite(100, 100);
 		var loseTex = Paths.getSparrowAtlas('lose');
 		loser.frames = loseTex;
@@ -53,7 +53,7 @@ class GameOverState extends FlxTransitionableState
 		FlxTween.tween(restart, {y: restart.y + 40}, 7, {ease: FlxEase.quartInOut, type: PINGPONG});
 
 		super.create();
-		Destroyer.clearUnusedMemory();
+		Paths.clearUnusedMemory();
 	}
 
 	private var fading:Bool = false;

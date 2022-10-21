@@ -2944,11 +2944,13 @@ class ChartingState extends MusicBeatState
 
 		// fail-safe
 		// TODO: Refactor this to use OpenFlAssets.
-		if (!FileSystem.exists(Paths.image('icons/icon-' + head.split("-")[0])) && !FileSystem.exists(Paths.image('icons/icon-' + head)))
+		if (!Paths.fileExists("images/icons/icon-" + head.split("-")[0] + ".png", IMAGE)
+			&& !Paths.fileExists("images/icons/icon-" + head + ".png", IMAGE))
 		{
 			if (i.icon.animation.curAnim == null)
 				iconUpdate(true);
 		}
+		//
 		else if (i.icon.animation.curAnim.name != head
 			&& i.icon.animation.curAnim.name != head.split("-")[0]
 			|| head == 'bf-pixel'

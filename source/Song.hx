@@ -65,7 +65,7 @@ typedef SongMeta =
 
 class Song
 {
-	public static var latestChart:String = "KEC 1.6.1";
+	public static var latestChart:String = "KEC 1.5";
 
 	public static function loadFromJsonRAW(rawJson:String)
 	{

@@ -45,7 +45,11 @@ class Character extends FlxSprite
 		curCharacter = character;
 		this.isPlayer = isPlayer;
 
-		parseDataFile();
+		switch (character){
+			default:
+			parseDataFile();
+		}
+		
 
 		if (isPlayer && frames != null)
 		{
@@ -106,6 +110,10 @@ class Character extends FlxSprite
 
 			if (data.AtlasType == 'PackerAtlas')
 				tex = Paths.getPackerAtlas(data.asset, 'shared');
+			else if (data.AtlasType == 'TextureAtlas')
+				tex = Paths.getTextureAtlas(data.asset, 'shared');
+			else if (data.AtlasType == 'JsonAtlas')
+				tex = Paths.getJSONAtlas(data.asset, 'shared');
 			else
 				tex = Paths.getSparrowAtlas(data.asset, 'shared');
 
@@ -167,18 +175,35 @@ class Character extends FlxSprite
 		if (animation.curAnim != null)
 		{
 			if (!isPlayer)
-		{
-			if (animation.curAnim.name.startsWith('sing'))
-				holdTimer += elapsed;
-
-			if (holdTimer >= Conductor.stepCrochet * holdLength * 0.001)
 			{
-				if (isDancing)
-					playAnim('danceLeft'); // overridden by dance correctly later
-				dance();
-				holdTimer = 0;
+				if (!PlayStateChangeables.opponentMode)
+				{
+					if (animation.curAnim.name.startsWith('sing'))
+					{
+						holdTimer += elapsed;
+					}
+
+					if (holdTimer >= Conductor.stepCrochet * 0.0011 * holdLength * PlayState.songMultiplier)
+					{
+						dance();
+
+						holdTimer = 0;
+					}
+				}
+				else
+				{
+					if (animation.curAnim.name.startsWith('sing'))
+						holdTimer += elapsed;
+					else
+						holdTimer = 0;
+
+					if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode)
+						dance();
+
+					if (animation.curAnim.name == 'firstDeath' && animation.curAnim.finished)
+						playAnim('deathLoop');
+				}
 			}
-		}
 
 			if (!debugMode)
 			{
@@ -223,37 +248,42 @@ class Character extends FlxSprite
 		{
 			if (!FlxG.save.data.optimize)
 			{
-				if (animation.curAnim != null)
-				{
-					var canInterrupt = animInterrupt.get(animation.curAnim.name);
-					if (curCharacter != 'pico-speaker')
-					if (canInterrupt)
-					{
-						if (isDancing)
-						{
-							danced = !danced;
 
-							if (altAnim && animation.getByName('danceRight-alt') != null && animation.getByName('danceLeft-alt') != null)
-							{
-								if (danced)
-									playAnim('danceRight-alt');
-								else
-									playAnim('danceLeft-alt');
-							}
-							else
-							{
-								if (danced)
-									playAnim('danceRight');
-								else
-									playAnim('danceLeft');
-							}
-						}
-						else
+				if (curCharacter != 'pico-speaker'){
+					if (animation.curAnim != null)
+					{
+						var canInterrupt = animInterrupt.get(animation.curAnim.name);
+
+						if (canInterrupt)
 						{
-							if (altAnim && animation.getByName('idle-alt') != null)
-								playAnim('idle-alt', forced);
+							if (isDancing)
+							{
+								danced = !danced;
+
+								if (altAnim
+									&& animation.getByName('danceRight-alt') != null
+									&& animation.getByName('danceLeft-alt') != null)
+								{
+									if (danced)
+										playAnim('danceRight-alt');
+									else
+										playAnim('danceLeft-alt');
+								}
+								else
+								{
+									if (danced)
+										playAnim('danceRight');
+									else
+										playAnim('danceLeft');
+								}
+							}
 							else
-								playAnim('idle', forced);
+							{
+								if (altAnim && animation.getByName('idle-alt') != null)
+									playAnim('idle-alt', forced);
+								else
+									playAnim('idle', forced);
+							}
 						}
 					}
 				}
@@ -321,12 +351,12 @@ class Character extends FlxSprite
 					oldNote = PlayState.instance.unspawnNotes[Std.int(PlayState.instance.unspawnNotes.length - 1)];
 				else
 					oldNote = null;
-				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, false, false, songNotes[4]);
+				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, false, false, false, songNotes[4]);
 
 				animationNotes.push(swagNote);
 			}
 		}
-		TankDead.animationNotes = animationNotes;
+		TankmenBG.animationNotes = animationNotes;
 		animationNotes.sort(sortAnims);
 	}
 

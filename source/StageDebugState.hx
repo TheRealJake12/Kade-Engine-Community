@@ -113,7 +113,7 @@ class StageDebugState extends MusicBeatState
 		add(posText);
 
 		addHelpText();
-		perf.Destroyer.clearUnusedMemory();
+		Paths.clearUnusedMemory();
 	}
 
 	var helpText:FlxText;

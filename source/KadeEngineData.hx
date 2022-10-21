@@ -187,6 +187,9 @@ class KadeEngineData
 		if (FlxG.save.data.motion == null)
 			FlxG.save.data.motion = false;
 
+		if (FlxG.save.data.gpuRender == null)
+			FlxG.save.data.gpuRender = false;	
+
 		if (FlxG.save.data.fpsmark == null)
 			FlxG.save.data.fpsmark = true;	
 
@@ -203,7 +206,39 @@ class KadeEngineData
 			FlxG.save.data.alpha = 0.6;
 			
 		if (FlxG.save.data.laneUnderlay == null)
-			FlxG.save.data.laneUnderlay = 0;	
+			FlxG.save.data.laneUnderlay = 0;
+
+		//credits to bolovevo. real chad		
+
+		if (FlxG.save.data.hgain == null)
+			FlxG.save.data.hgain = 1;
+
+		if (FlxG.save.data.hloss == null)
+			FlxG.save.data.hloss = 1;
+
+		if (FlxG.save.data.hdrain == null)
+			FlxG.save.data.hdrain = false;
+
+		if (FlxG.save.data.sustains == null)
+			FlxG.save.data.sustains = true;
+
+		if (FlxG.save.data.noMisses == null)
+			FlxG.save.data.noMisses = false;
+
+		if (FlxG.save.data.modcharts == null)
+			FlxG.save.data.modcharts = true;
+
+		if (FlxG.save.data.practice == null)
+			FlxG.save.data.practice = false;
+
+		if (FlxG.save.data.opponent == null)
+			FlxG.save.data.opponent = false;
+
+		if (FlxG.save.data.mirror == null)
+			FlxG.save.data.mirror = false;	
+
+		if (FlxG.save.data.stressMP4 == null)
+			FlxG.save.data.stressMP4 = true;	
 
 		Conductor.recalculateTimings();
 		PlayerSettings.player1.controls.loadKeyBinds();

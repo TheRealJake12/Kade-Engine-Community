@@ -60,8 +60,8 @@ class TitleState extends MusicBeatState
 		#if FEATURE_MULTITHREADING
 		MasterObjectLoader.mutex = new Mutex();
 		#end
-		Destroyer.clearStoredMemory();
-		Destroyer.clearUnusedMemory();
+		Paths.clearStoredMemory();
+		Paths.clearUnusedMemory();
 		#if FEATURE_FILESYSTEM
 		if (!sys.FileSystem.exists(Sys.getCwd() + "/assets/replays"))
 			sys.FileSystem.createDirectory(Sys.getCwd() + "/assets/replays");
@@ -156,7 +156,7 @@ class TitleState extends MusicBeatState
 		titleText.updateHitbox();
 		add(titleText);
 
-		var logo:FlxSprite = new FlxSprite().loadGraphic(Paths.loadImage('logo'));
+		var logo:FlxSprite = new FlxSprite().loadGraphic(Paths.image2('logo'));
 		logo.screenCenter();
 		logo.antialiasing = FlxG.save.data.antialiasing;
 
@@ -175,7 +175,7 @@ class TitleState extends MusicBeatState
 
 		credTextShit.visible = false;
 
-		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('credshit/meredo'));
+		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image2('credshit/meredo'));
 		add(ngSpr);
 		ngSpr.visible = false;
 		ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));
@@ -195,7 +195,7 @@ class TitleState extends MusicBeatState
 			});
 		else
 		{
-			FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+			FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
 
 			FlxG.sound.music.fadeIn(4, 0, 0.7);
 			Conductor.changeBPM(102);
@@ -273,7 +273,7 @@ class TitleState extends MusicBeatState
 				FlxG.resizeWindow(1920, 1080);
 				FlxG.resizeGame(1920, 1080);
 		}	
-
+		
 		(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
 
 		if (pressedEnter && !transitioning && skippedIntro)

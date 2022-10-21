@@ -112,8 +112,6 @@ class Main extends Sprite
 		bitmapFPS.smoothing = true;
 		#end
 
-		FlxGraphic.defaultPersist = false;
-
 		//FlxTransitionableState.skipNextTransIn = true;
 
 		game = new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen);
@@ -147,27 +145,25 @@ class Main extends Sprite
 	//motherfucker had to be special and have to be in main. smh.
 	public static function dumpCache()
 	{
-		if (FlxG.save.data.unload)
+		if (FlxG.save.data.unload){
+		#if PRELOAD_ALL
+		@:privateAccess
+		for (key in FlxG.bitmap._cache.keys())
 		{
-			@:privateAccess
-			for (key in FlxG.bitmap._cache.keys())
+			var obj = FlxG.bitmap._cache.get(key);
+			if (obj != null)
 			{
-				var obj = FlxG.bitmap._cache.get(key);
-				if (obj != null)
-				{
-					Assets.cache.removeBitmapData(key);
-					FlxG.bitmap._cache.remove(key);
-					obj.destroy();
-				}
+				Assets.cache.removeBitmapData(key);
+				FlxG.bitmap._cache.remove(key);
+				obj.destroy();
 			}
-			// FUCK YOU HTML5
-			#if PRELOAD_ALL
-			Assets.cache.clear("songs");
-			#end
-			Assets.cache.clear("characters");
-			Assets.cache.clear("music");
-			// Assets.cache.clear("images");
 		}
+		Assets.cache.clear("songs");
+		Assets.cache.clear("images");
+		#end
+		
+		}
+		
 	}
 
 	#if desktop
