@@ -69,6 +69,7 @@ class FreeplayState extends MusicBeatState
 	var bg:FlxSprite;
 
 	var Inst:FlxSound;
+	var opponentText:FlxText;
 
 	public static var openMod:Bool = false;
 
@@ -179,6 +180,10 @@ class FreeplayState extends MusicBeatState
 		var scoreBG:FlxSprite = new FlxSprite(scoreText.x - 6, 0).makeGraphic(Std.int(FlxG.width * 0.4), 337, 0xFF000000);
 		scoreBG.alpha = 0.6;
 		add(scoreBG);
+
+		opponentText = new FlxText(scoreText.x, scoreText.y + 66, 0, "", 24);
+		opponentText.font = scoreText.font;
+		add(opponentText);
 
 		comboText = new FlxText(scoreText.x, scoreText.y + 36, 0, "", 24);
 		comboText.font = scoreText.font;
@@ -474,6 +479,8 @@ class FreeplayState extends MusicBeatState
 			comboText.text = "RANK: " + letter + " | " + combo + " (" + HelperFunctions.truncateFloat(lerpaccuracy, 2) + "%)\n";
 			comboText.alpha = 1;
 		}
+
+		opponentText.text = "OPPONENT MODE: " + (FlxG.save.data.opponent ? "ON" : "OFF");
 
 		if (FlxG.sound.music.volume > 0.8)
 		{
