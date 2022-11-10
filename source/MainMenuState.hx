@@ -193,6 +193,25 @@ class MainMenuState extends MusicBeatState
 				LoadingState.loadAndSwitchState(new PlayState());
 			}
 
+			var shiftMult:Int = 1;
+
+		if (FlxG.mouse.wheel != 0)
+		{
+			changeItem(-shiftMult * FlxG.mouse.wheel);
+		}
+
+		if (FlxG.mouse.overlaps(menuItems, FlxG.camera))
+		{
+			menuItems.forEach(function(daSprite:FlxSprite)
+			{
+				if (FlxG.mouse.overlaps(daSprite) && curSelected != daSprite.ID)
+				{
+					curSelected = daSprite.ID;
+					changeItem();
+				}
+			});
+		}  
+
 			#if debug
 			if (FlxG.keys.justPressed.SEVEN)
 			{
@@ -200,7 +219,7 @@ class MainMenuState extends MusicBeatState
 			}
 			#end
 
-			if (controls.ACCEPT)
+			if (FlxG.mouse.overlaps(menuItems, FlxG.camera) && FlxG.mouse.justPressed || controls.ACCEPT){
 			{
 				if (optionShit[curSelected] == 'donate')
 				{

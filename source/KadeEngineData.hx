@@ -238,7 +238,10 @@ class KadeEngineData
 			FlxG.save.data.mirror = false;	
 
 		if (FlxG.save.data.stressMP4 == null)
-			FlxG.save.data.stressMP4 = true;	
+			FlxG.save.data.stressMP4 = true;
+
+		if (FlxG.save.data.background == null)
+			FlxG.save.data.background = true;		
 
 		Conductor.recalculateTimings();
 		PlayerSettings.player1.controls.loadKeyBinds();

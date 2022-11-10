@@ -81,7 +81,9 @@ It will take a while to build for both versions.
 
 - [PolybiusProxy](https://github.com/polybiusproxy) - The Video Support.
 
-- [BoloVEVO](https://github.com/BoloVEVO) - Fixed my shit code and improved the chart editor. Made a ton of code improvements.(thanks!!!)
+- [BoloVEVO](https://github.com/BoloVEVO) - Fixed my shit code and made most of the cool Freeplay things, modifiers, and other options.(thanks!!!!)
+
+- [Glowsoony](https://github.com/glowsoony) - Pixel Notesplashes, HScript. Thanks!  
 
 - [ShadowMario](https://github.com/ShadowMario) - The Memory Leak Fix. And A Few Other Things. (thanks)
 

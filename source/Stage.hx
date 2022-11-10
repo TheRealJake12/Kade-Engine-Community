@@ -67,11 +67,11 @@ class Stage extends MusicBeatState
 	public function new(daStage:String)
 	{
 		super();
+		
 		this.curStage = daStage;
 		camZoom = 1.05; // Don't change zoom here, unless you want to change zoom of every stage that doesn't have custom one
-		if (PlayStateChangeables.Optimize)
-			return;
 
+		if (!FlxG.save.data.optimize && FlxG.save.data.background){
 		switch (daStage)
 		{
 			case 'halloween':
@@ -637,6 +637,40 @@ class Stage extends MusicBeatState
 					black.scrollFactor.set(0, 0);
 					toAdd.push(black);
 
+				case 'stage':
+					{
+						camZoom = 0.9;
+						curStage = 'stage';
+						var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image2('stageback', 'shared'));
+						bg.antialiasing = FlxG.save.data.antialiasing;
+						bg.scrollFactor.set(0.9, 0.9);
+						bg.active = false;
+						swagBacks['bg'] = bg;
+						toAdd.push(bg);
+
+					var stageFront:FlxSprite = new FlxSprite(-650, 600).loadGraphic(Paths.image2('stagefront', 'shared'));
+						stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
+						stageFront.updateHitbox();
+						stageFront.antialiasing = FlxG.save.data.antialiasing;
+						stageFront.scrollFactor.set(0.9, 0.9);
+						stageFront.active = false;
+						swagBacks['stageFront'] = stageFront;
+						toAdd.push(stageFront);
+
+						if (FlxG.save.data.distractions)
+						{
+						var stageCurtains:FlxSprite = new FlxSprite(-500, -300).loadGraphic(Paths.image2('stagecurtains', 'shared'));
+							stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
+							stageCurtains.updateHitbox();
+							stageCurtains.antialiasing = FlxG.save.data.antialiasing;
+							stageCurtains.scrollFactor.set(1.3, 1.3);
+							stageCurtains.active = false;
+
+							swagBacks['stageCurtains'] = stageCurtains;
+							toAdd.push(stageCurtains);
+						}
+					}	
+
 				default:
 					{
 						camZoom = 0.9;
@@ -671,6 +705,7 @@ class Stage extends MusicBeatState
 						}
 					}
 			}
+		}
 	}
 
 	override public function update(elapsed:Float)
@@ -940,11 +975,13 @@ class Stage extends MusicBeatState
 	var tankSpeed:Float = FlxG.random.float(5, 7);
 	var tankAngle:Float = FlxG.random.int(-90, 45);
 
-	function moveTank(?elapsed:Float = 0):Void
+	function moveTank():Void
 	{
-		tankAngle += elapsed * tankSpeed;
-		tankGround.angle = tankAngle - 90 + 15;
-		tankGround.x = tankX + 1500 * Math.cos(Math.PI / 180 * (1 * tankAngle + 180));
-		tankGround.y = 1300 + 1100 * Math.sin(Math.PI / 180 * (1 * tankAngle + 180));
+		tankAngle += FlxG.elapsed * tankSpeed * PlayState.songMultiplier;
+		// Worst fix I've ever done in my life. I hope this doesn't make lag stutters.
+		if (!PlayState.instance.endingSong)
+			PlayState.instance.createTween(swagBacks['tankGround'], {angle: tankAngle - 90 + 15}, 0.01, {type: FlxTweenType.ONESHOT});
+		swagBacks['tankGround'].x = tankX + 1500 * FlxMath.fastCos(FlxAngle.asRadians(tankAngle + 180));
+		swagBacks['tankGround'].y = 1300 + 1100 * FlxMath.fastSin(FlxAngle.asRadians(tankAngle + 180));
 	}
 }

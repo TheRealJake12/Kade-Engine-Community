@@ -180,6 +180,9 @@
 	
 	<haxedef name="no-deprecation-warnings" />
 
+	<haxeflag name="--no-traces" unless="debug" />
+	<haxeflag name="--dce full" if="release" />
+
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
@@ -192,9 +195,6 @@
 	<icon path="art/icon256.png" size='256'/>
 	<icon path="art/icon512.png" size='512'/>
 	<icon path="art/iconOG.png" />
-
-	<haxeflag name="--no-traces" unless="debug" />
-	<haxeflag name="--dce full" if="release" />
 
   <!-- Use defines to ensure compile-time definitions have readable context. -->
   <!-- Allowed inputs are mobile,desktop,web,ios,android,windows,mac,linux,switch,html5,cpp,neko,flash,js -->

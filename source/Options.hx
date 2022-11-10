@@ -2087,7 +2087,7 @@ class ScrollAlpha extends Option
 
 	private override function updateDisplay():String
 	{
-		return (FlxG.save.data.alpha ? "Scroll Alpha" : "Scroll Alpha");
+		return ("Scroll Alpha");
 	}
 
 	override function right():Bool
@@ -2637,6 +2637,38 @@ class StressMP4 extends Option
 	private override function updateDisplay():String
 	{
 		return "Stress MP4: < " + (!FlxG.save.data.stressMP4 ? "off" : "on") + " >";
+	}
+}
+
+class BackgroundsOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		if (OptionsMenu.isInPause)
+			description = "Does Not Load Backgrounds Into The Game. Improves Performnace, (Optimize mode bootleg)";
+		else
+			description = desc;
+	}
+
+	public override function left():Bool
+	{
+		if (OptionsMenu.isInPause)
+			return false;
+		FlxG.save.data.background = !FlxG.save.data.background;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Backgrounds: < " + (!FlxG.save.data.background ? "off" : "on") + " >";
 	}
 }
 

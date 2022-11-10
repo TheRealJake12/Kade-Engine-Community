@@ -200,6 +200,7 @@ class OptionsMenu extends MusicBeatSubstate
 				#if desktop
 				new Resolution("Change The Resolution The Game Plays In. (Press Enter To Apply.)"),
 				#end
+				new BackgroundsOption("Toggles Backrounds From Being Visible. (Good Performance Booster.)"),
 				new General("Traces things in the debug console or logs. Affects performance in debug builds."),
 				new EditorRes("Not showing the editor grid will greatly increase editor performance"),
 				new DistractionsAndEffectsOption("Turns On Extra Images That Reduce Your FPS Significantly(Week 5 and 7 esp)"),
