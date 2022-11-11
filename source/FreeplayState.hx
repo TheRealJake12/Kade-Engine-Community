@@ -695,7 +695,7 @@ class FreeplayState extends MusicBeatState
 
 		if (!openMod && !MusicBeatState.switchingState)
 		{
-			if (controls.BACK || FlxG.mouse.justPressedRight)
+			if (controls.BACK)
 			{
 				MusicBeatState.switchState(new MainMenuState());
 				if (colorTween != null)
