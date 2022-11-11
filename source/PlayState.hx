@@ -3309,7 +3309,7 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.keys.justPressed.TWO && songStarted)
 		{
-			if (!usedTimeTravel && Conductor.songPosition + 10000 < FlxG.sound.music.length)
+			if (!usedTimeTravel && Conductor.songPosition + 10000 < inst.length)
 			{
 				usedTimeTravel = true;
 				inst.pause();
@@ -4312,6 +4312,11 @@ class PlayState extends MusicBeatState
 				}
 			}
 		}
+	}
+
+	function percentageOfSong():Float
+	{
+		return (Conductor.songPosition / songLength) * 100;
 	}
 
 	public var endingSong:Bool = false;
