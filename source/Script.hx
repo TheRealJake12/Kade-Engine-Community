@@ -29,6 +29,10 @@ class Script extends FlxBasic
 	{
 		var parser = new hscript.Parser();
 
+		parser.allowTypes = true; // Allow typing of variables ex: 'var three:Int = 3;'.
+        parser.allowJSON = true; // Allows 'JSON Compatibility' in HScript.
+        parser.allowMetadata = true; // Allows Haxe Metadata declarations in HScript.
+
 		try
 		{
 			var ast = parser.parseString(script);

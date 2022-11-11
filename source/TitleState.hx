@@ -62,15 +62,13 @@ class TitleState extends MusicBeatState
 		#end
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
-		#if FEATURE_FILESYSTEM
-		if (!sys.FileSystem.exists(Sys.getCwd() + "/assets/replays"))
-			sys.FileSystem.createDirectory(Sys.getCwd() + "/assets/replays");
-		#end
 
 		if (FlxG.save.data.fpsCap > 420)
 			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(420);
 
 		FlxG.autoPause = false;
+		// I spent so long looking for this. To just leave it false hurts me but theres some features that require it false.
+		FlxG.mouse.load(Paths.image('curser'));
 
 		FlxG.save.bind('funkin', 'ninjamuffin99');
 
@@ -82,8 +80,6 @@ class TitleState extends MusicBeatState
 
 		CustomNoteHelpers.Skin.updateNoteskins();
 		CustomNoteHelpers.Splash.updateNotesplashes();
-
-		FlxG.mouse.visible = false;
 
 		FlxG.worldBounds.set(0, 0);
 
@@ -186,8 +182,6 @@ class TitleState extends MusicBeatState
 
 		FlxTween.tween(credTextShit, {y: credTextShit.y + 20}, 2.9, {ease: FlxEase.quadInOut, type: PINGPONG});
 
-		FlxG.mouse.visible = false;
-
 		if (initialized)
 			new FlxTimer().start(0.01, function(tmr:FlxTimer)
 			{
@@ -276,7 +270,7 @@ class TitleState extends MusicBeatState
 		
 		(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
 
-		if (pressedEnter && !transitioning && skippedIntro)
+		if (pressedEnter && !transitioning && skippedIntro || FlxG.mouse.justPressed && !transitioning && skippedIntro)
 		{
 			if (FlxG.save.data.flashing)
 			{
@@ -336,7 +330,7 @@ class TitleState extends MusicBeatState
 			];
 		}
 
-		if (pressedEnter && !skippedIntro && initialized)
+		if (pressedEnter && !skippedIntro && initialized || FlxG.mouse.justPressed && !skippedIntro && initialized)
 		{
 			skipIntro();
 		}

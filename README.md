@@ -81,14 +81,14 @@ It will take a while to build for both versions.
 
 - [PolybiusProxy](https://github.com/polybiusproxy) - The Video Support.
 
-- [BoloVEVO](https://github.com/BoloVEVO) - Fixed my shit code and made most of the cool Freeplay things, modifiers, and other options.(thanks!!!!)
-
-- [Glowsoony](https://github.com/glowsoony) - Pixel Notesplashes, HScript. Thanks!  
+- [BoloVEVO](https://github.com/BoloVEVO) - Fixed my shit code and improved the chart editor. Made a ton of code improvements.(thanks!!!)
 
 - [ShadowMario](https://github.com/ShadowMario) - The Memory Leak Fix. And A Few Other Things. (thanks)
 
 - [TposeJank](https://github.com/tposejank) Epic friend that gave me ideas and helped :epicttrooll:
 
 - [gaminbottomtext](https://github.com/gaminbottomtext) also epic fren that helped with notesplashes. He has disappeared.
+
+- [yakY](https://twitter.com/yak_yyy) person that made the mouse icon specifically for the engine. (epico)
 
 - [discord server for this project](https://discord.gg/G2jJ8RfWtm) thanks for joining if you do.

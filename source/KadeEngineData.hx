@@ -172,9 +172,6 @@ class KadeEngineData
 		if (FlxG.save.data.cpuSplash == null)
 			FlxG.save.data.cpuSplash = true;	
 			
-		if (FlxG.save.data.cacheCharacters == null)
-			FlxG.save.data.cacheCharacters = false;
-
 		if (FlxG.save.data.cacheSongs == null)
 			FlxG.save.data.cacheSongs = false;
 
@@ -241,7 +238,16 @@ class KadeEngineData
 			FlxG.save.data.stressMP4 = true;
 
 		if (FlxG.save.data.background == null)
-			FlxG.save.data.background = true;		
+			FlxG.save.data.background = true;
+
+		if (FlxG.save.data.hitSound == null)
+			FlxG.save.data.hitSound = 0;
+
+		if (FlxG.save.data.hitVolume == null)
+			FlxG.save.data.hitVolume = 0.5;
+
+		if (FlxG.save.data.strumHit == null)
+			FlxG.save.data.strumHit = true;				
 
 		Conductor.recalculateTimings();
 		PlayerSettings.player1.controls.loadKeyBinds();

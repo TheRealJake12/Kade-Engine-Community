@@ -134,6 +134,9 @@ class OptionsMenu extends MusicBeatSubstate
 				new ScrollSpeedOption("Change your scroll speed. (1 = Chart dependent)"),
 				new OffsetThing("Change the note visual offset (how many milliseconds a note looks like it is offset in a chart)"),
 				new AccuracyDOption("Change how accuracy is calculated. (Accurate = Simple, Complex = Milisecond Based)"),
+				new HitSoundOption("Toogle hitsound every time you hit a Strum Note."),
+				new HitSoundVolume("Set hitsound volume."),
+				new HitSoundMode("Set at what condition you want the hitsound to play."),
 				new GhostTapOption("Toggle counting pressing a directional input when no arrow is there as a miss."),
 				new DownscrollOption("Toggle making the notes scroll down rather than up."),
 				new BotPlay("A bot plays for you!"),
@@ -210,7 +213,6 @@ class OptionsMenu extends MusicBeatSubstate
 				#if desktop
 				new StressMP4("Makes Stress Use An MP4 Instead Of Actual Sprites."),
 				new UnloadSongs("Unload Songs And Characters"), 
-				new CharacterCaching("Caches Characters"),
 				new SongCaching("Caches Songs for close to Instant loading"),
 				new CachingOption("Caches all of the options above (High Memory Depending On Your Cache Options.)"),
 				new UnloadNow("Clears All Cache We Can Remove"),
@@ -476,7 +478,7 @@ class OptionsMenu extends MusicBeatSubstate
 					selectOption(selectedCat.options[0]);
 				}
 
-				if (escape)
+				if (escape || FlxG.mouse.justPressedRight)
 				{
 					if (!isInPause)
 					{
@@ -526,6 +528,16 @@ class OptionsMenu extends MusicBeatSubstate
 							object.text = "> " + selectedOption.getValue();
 						}
 					}
+
+					#if !mobile
+					if (FlxG.mouse.wheel != 0)
+					{
+						if (FlxG.mouse.wheel < 0)
+							down = true;
+						else if (FlxG.mouse.wheel > 0)
+							up = true;
+					}
+					#end
 
 					if (down)
 					{
@@ -667,6 +679,19 @@ class OptionsMenu extends MusicBeatSubstate
 					}
 				}
 			}
+			#if !mobile
+			for (i in 0...options.length - 1)
+			{
+				clickedCat = ((FlxG.mouse.overlaps(options[i].titleObject) || FlxG.mouse.overlaps(options[i])) && FlxG.mouse.justPressed);
+				if (clickedCat)
+				{
+					selectedCatIndex = i;
+					switchCat(options[i]);
+					isInCat = false;
+					selectOption(selectedCat.options[0]);
+				}
+			}
+			#end
 		}
 		catch (e)
 		{

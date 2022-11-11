@@ -67,6 +67,7 @@ class Note extends FlxSprite
 	public var sustainActive:Bool = true;
 
 	public var children:Array<Note> = [];
+	public var distance:Float = 2000;
 
 	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inCharter:Bool = false, ?isPlayer:Bool = false,?isAlt:Bool = false, ?bet:Float = 0, ?noteShit:String = 'normal')
 	{

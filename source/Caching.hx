@@ -47,6 +47,7 @@ class Caching extends MusicBeatState
 	var characters = [];
 
 	var songs = [];
+	var images = [];
 	var noteskins = [];
 	var music = [];
 	var sounds = [];
@@ -64,13 +65,11 @@ class Caching extends MusicBeatState
 		// It doesn't reupdate the list before u restart rn lmao
 		// CustomNoteHelpers.Skin.updateNoteskins();
 
-		FlxG.mouse.visible = false;
-
 		FlxG.worldBounds.set(0, 0);
 
 		bitmapData = new Map<String, FlxGraphic>();
 
-		funkay = new FlxSprite(0, 0).loadGraphic(Paths.image('funkay'));
+		funkay = new FlxSprite(0, 0).loadGraphic(Paths.image2('funkay'));
 		funkay.setGraphicSize(0, FlxG.height);
 		funkay.updateHitbox();
 		funkay.scale.set(0.76, 0.67);
@@ -93,6 +92,26 @@ class Caching extends MusicBeatState
 			songs = Paths.listSongsToCache();
 
 		// TODO: Get the song list from OpenFlAssets.
+
+		if (FlxG.save.data.cacheCharacters)
+		{
+			Debug.logTrace("caching images...");
+
+			// TODO: Refactor this to use OpenFlAssets.
+			for (i in FileSystem.readDirectory(FileSystem.absolutePath("assets/shared/images/characters")))
+			{
+				if (!i.endsWith(".png"))
+					continue;
+				images.push(i);
+			}
+
+			for (i in FileSystem.readDirectory(FileSystem.absolutePath("assets/shared/images/noteskins")))
+			{
+				if (!i.endsWith(".png"))
+					continue;
+				images.push(i);
+			}
+		}
 		#end
 
 		toBeDone = Lambda.count(songs) + Lambda.count(music) + Lambda.count(sounds);
@@ -135,6 +154,21 @@ class Caching extends MusicBeatState
 	function cache()
 	{
 		#if FEATURE_FILESYSTEM
+
+		for (i in images)
+		{
+			var replaced = i.replace(".png", "");
+
+			// var data:BitmapData = BitmapData.fromFile("assets/shared/images/characters/" + i);
+			var imagePath = Paths.image('characters/$i', 'shared');
+			Debug.logTrace('Caching character graphic $i ($imagePath)...');
+			var data = OpenFlAssets.getBitmapData(imagePath);
+			var graph = FlxGraphic.fromBitmapData(data);
+			graph.persist = true;
+			graph.destroyOnNoUse = false;
+			bitmapData.set(replaced, graph);
+			done++;
+		}
 
 		for (i in songs)
 		{

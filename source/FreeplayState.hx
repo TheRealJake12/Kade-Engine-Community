@@ -245,7 +245,7 @@ class FreeplayState extends MusicBeatState
 		if (MainMenuState.freakyPlaying)
 		{
 			if (!FlxG.sound.music.playing)
-				FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "ke_freakyMenu" : "freakyMenu"));
+				FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
 			Conductor.changeBPM(102);
 		}
 
@@ -584,6 +584,10 @@ class FreeplayState extends MusicBeatState
 					changeDiff(-1);
 				if (FlxG.keys.justPressed.RIGHT || controls.RIGHT_P)
 					changeDiff(1);
+				
+				if (FlxG.mouse.justPressedRight){
+					changeDiff(1);
+				}	
 			}
 
 			#if desktop
@@ -691,7 +695,7 @@ class FreeplayState extends MusicBeatState
 
 		if (!openMod && !MusicBeatState.switchingState)
 		{
-			if (controls.BACK)
+			if (controls.BACK || FlxG.mouse.justPressedRight)
 			{
 				MusicBeatState.switchState(new MainMenuState());
 				if (colorTween != null)
@@ -849,9 +853,9 @@ class FreeplayState extends MusicBeatState
 		curDifficulty += change;
 
 		if (curDifficulty < 0)
-			curDifficulty = songs[curSelected].diffs.length - 1;
-		if (curDifficulty > songs[curSelected].diffs.length - 1)
-			curDifficulty = 0;
+			curDifficulty = songs[curSelected].diffs.length-1;
+		if (curDifficulty >= songs[curSelected].diffs.length)
+			curDifficulty = 0;	
 
 		var songHighscore = StringTools.replace(songs[curSelected].songName, " ", "-");
 		switch (songHighscore)

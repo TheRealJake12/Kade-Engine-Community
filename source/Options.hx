@@ -2672,6 +2672,117 @@ class BackgroundsOption extends Option
 	}
 }
 
+class HitSoundOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function left():Bool
+	{
+		FlxG.save.data.hitSound--;
+		if (FlxG.save.data.hitSound < 0)
+			FlxG.save.data.hitSound = HitSounds.getSound().length - 1;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		FlxG.save.data.hitSound++;
+		if (FlxG.save.data.hitSound > HitSounds.getSound().length - 1)
+			FlxG.save.data.hitSound = 0;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function getValue():String
+	{
+		return "Hitsound Style: < " + HitSounds.getSoundByID(FlxG.save.data.hitSound) + " >";
+	}
+}
+
+class HitSoundVolume extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+
+		acceptValues = true;
+	}
+
+	public override function press():Bool
+	{
+		return false;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Hitsound Volume: < " + HelperFunctions.truncateFloat(FlxG.save.data.hitVolume, 1) + " >";
+	}
+
+	override function right():Bool
+	{
+		FlxG.save.data.hitVolume += 0.1;
+
+		if (FlxG.save.data.hitVolume < 0)
+			FlxG.save.data.hitVolume = 0;
+
+		if (FlxG.save.data.hitVolume > 1)
+			FlxG.save.data.hitVolume = 1;
+		return true;
+	}
+
+	override function getValue():String
+	{
+		return "Hitsound Volume: < " + HelperFunctions.truncateFloat(FlxG.save.data.hitVolume, 1) + " >";
+	}
+
+	override function left():Bool
+	{
+		FlxG.save.data.hitVolume -= 0.1;
+
+		if (FlxG.save.data.hitVolume < 0)
+			FlxG.save.data.hitVolume = 0;
+
+		if (FlxG.save.data.hitVolume > 1)
+			FlxG.save.data.hitVolume = 1;
+
+		return true;
+	}
+}
+
+class HitSoundMode extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function left():Bool
+	{
+		FlxG.save.data.strumHit = !FlxG.save.data.strumHit;
+
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Hitsound Mode: < " + (FlxG.save.data.strumHit ? "On Key Hit" : "On Note Hit") + " >";
+	}
+}
+
 class Resolution extends Option
 {
 	public function new(desc:String)
