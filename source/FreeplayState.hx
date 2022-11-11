@@ -524,10 +524,6 @@ class FreeplayState extends MusicBeatState
 		if (!MainMenuState.freakyPlaying)
 		{
 			var bpmRatio = Conductor.bpm / 100;
-			if (FlxG.save.data.camzoom)
-			{
-				FlxG.camera.zoom = FlxMath.lerp(1, FlxG.camera.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * bpmRatio * rate), 0, 1));
-			}
 
 			var mult:Float = FlxMath.lerp(1, iconArray[curSelected].scale.x, CoolUtil.boundTo(1 - (elapsed * 35 * rate), 0, 1));
 			iconArray[curSelected].scale.set(mult, mult);
@@ -751,10 +747,6 @@ class FreeplayState extends MusicBeatState
 
 		if (!MainMenuState.freakyPlaying)
 		{
-			if (FlxG.save.data.camzoom && FlxG.camera.zoom < 1.35 && curStep % Math.round(16 * rate) == 0)
-			{
-				FlxG.camera.zoom += 0.03 / rate;
-			}
 
 			if (FlxG.save.data.motion){
 				if (curStep % Math.round(4 * rate) == 0)
