@@ -60,7 +60,7 @@ class Stage extends MusicBeatState
 			'bf' => [850, 400],
 			'bf-holding-gf' => [850, 300],
 			'gftank' => [200, 0],
-			'picoSpeaker' => [240, -160]
+			'pico-speaker' => [240, 0]
 		]
 	];
 
@@ -513,7 +513,7 @@ class Stage extends MusicBeatState
 
 					if (PlayState.isStoryMode)
 					{
-						if (PlayState.SONG.songId == 'stress')
+						if (PlayState.SONG.songId == 'stress' && !FlxG.save.data.stressMP4)
 						{
 							var dummyGf:FlxSprite = new FlxSprite(200, 105);
 							dummyGf.antialiasing = FlxG.save.data.antialiasing;
@@ -555,9 +555,9 @@ class Stage extends MusicBeatState
 						switch (PlayState.SONG.songId)
 						{
 							case 'ugh':
-								tankman.setPosition(-12, -PlayState.dad.y + 425);
+								tankman.setPosition(10, PlayState.dad.y + 110);
 							case 'guns':
-								tankman.setPosition(18, 333);
+								tankman.setPosition(50, 230);
 							case 'stress':
 								tankman.setPosition(-77, 307);
 						}
@@ -565,7 +565,9 @@ class Stage extends MusicBeatState
 						tankman.frames = Paths.getSparrowAtlas('cutscenes/' + PlayState.SONG.songId, 'week7');
 						tankman.antialiasing = FlxG.save.data.antialiasing;
 						swagBacks['tankman'] = tankman;
-						layInFront[2].push(tankman);
+						if (PlayState.SONG.songId != 'stress' && FlxG.save.data.stressMP4){
+							layInFront[2].push(tankman);
+						}
 					}
 
 					var foreGround0 = new FlxSprite(-500, 600);

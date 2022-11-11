@@ -25,6 +25,7 @@ using StringTools;
 class StoryMenuState extends MusicBeatState
 {
 	var scoreText:FlxText;
+	var diffList:Array<String> = [];
 
 	static function weekData():Array<Dynamic>
 	{
@@ -75,6 +76,7 @@ class StoryMenuState extends MusicBeatState
 	var leftArrow:FlxSprite;
 	var rightArrow:FlxSprite;
 	var yellowBG:FlxSprite;
+	var diffsThatExists:Array<String>;
 
 	var trackedAssets:Array<flixel.FlxBasic> = [];
 
@@ -94,6 +96,45 @@ class StoryMenuState extends MusicBeatState
 			weeks.push(true);
 		}
 		return weeks;
+	}
+
+	function cleanDifficulties()
+	{
+		diffsThatExists = [];
+		diffList = CoolUtil.coolTextFile(Paths.txt('data/weeksDifficulties'));
+
+		try
+		{
+			var splitDiffs:Array<String> = diffList[curWeek].split(':');
+
+			if (splitDiffs[0].contains('easy'))
+				diffsThatExists.push('easy');
+			else if (splitDiffs[0].contains('normal'))
+				diffsThatExists.push('normal');
+			else if (splitDiffs[0].contains('hard'))
+				diffsThatExists.push('hard');
+
+			if (splitDiffs[1].contains('easy'))
+				diffsThatExists.push('easy');
+			else if (splitDiffs[1].contains('normal'))
+				diffsThatExists.push('normal');
+			else if (splitDiffs[1].contains('hard'))
+				diffsThatExists.push('hard');
+
+			if (splitDiffs[2].contains('easy'))
+				diffsThatExists.push('easy');
+			else if (splitDiffs[2].contains('normal'))
+				diffsThatExists.push('normal');
+			else if (splitDiffs[2].contains('hard'))
+				diffsThatExists.push('hard');
+		}
+		catch (e)
+		{
+			Debug.logWarn(e);
+		}
+
+		if (diffsThatExists.length == 0)
+			diffsThatExists = ["easy", "normal", "hard"];
 	}
 
 	override function create()
@@ -194,6 +235,7 @@ class StoryMenuState extends MusicBeatState
 		sprDifficulty.animation.addByPrefix('hard', 'HARD');
 		sprDifficulty.animation.play('easy');
 		sprDifficulty.antialiasing = FlxG.save.data.antialiasing;
+		cleanDifficulties();
 		changeDifficulty();
 
 		difficultySelectors.add(sprDifficulty);
@@ -284,13 +326,29 @@ class StoryMenuState extends MusicBeatState
 					changeDifficulty(-1);
 			}
 
-			if (controls.ACCEPT)
+			if (controls.ACCEPT || FlxG.mouse.justPressed)
 			{
 				selectWeek();
 			}
+
+			if (FlxG.mouse.justPressedRight){
+					changeDifficulty(1);
+				}	
+
+			if (FlxG.mouse.wheel != 0)
+			{
+				#if desktop
+				changeWeek(-FlxG.mouse.wheel);
+				#else
+				if (FlxG.mouse.wheel < 0) // HTML5 BRAIN'T
+					changeWeek(1);
+				else if (FlxG.mouse.wheel > 0)
+					changeWeek(-1);
+				#end
+			}
 		}
 
-		if (controls.BACK && !movedBack && !selectedWeek || FlxG.mouse.justPressedRight && !movedBack && !selectedWeek)
+		if (controls.BACK && !movedBack && !selectedWeek)
 		{
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			movedBack = true;
@@ -332,7 +390,9 @@ class StoryMenuState extends MusicBeatState
 
 			PlayState.storyDifficulty = curDifficulty;
 			
-			var diff:String = ["-easy", "", "-hard"][PlayState.storyDifficulty];
+			var diff:String = '-${diffsThatExists[PlayState.storyDifficulty]}';
+			if (diff == '-normal')
+				diff = '';
 			
 			PlayState.marvs = 0;
 			PlayState.sicks = 0;
@@ -354,9 +414,9 @@ class StoryMenuState extends MusicBeatState
 		curDifficulty += change;
 		
 			if (curDifficulty < 0)
-				curDifficulty = 2;
-			if (curDifficulty > 2)
-				curDifficulty = 0;
+			curDifficulty = diffsThatExists.length - 1;
+		if (curDifficulty > diffsThatExists.length - 1)
+			curDifficulty = 0;
 
 		sprDifficulty.offset.x = 0;
 

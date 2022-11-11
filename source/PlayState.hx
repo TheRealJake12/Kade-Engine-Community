@@ -769,7 +769,7 @@ class PlayState extends MusicBeatState
 			if (FlxG.save.data.background)
 				Stage.update(0);
 
-		if (!FlxG.save.data.optimize)
+		if (FlxG.save.data.background)
 		{
 			for (i in Stage.toAdd)
 			{
@@ -1253,11 +1253,18 @@ class PlayState extends MusicBeatState
 				case 'thorns':
 					schoolIntro(doof);
 				case 'ugh', 'guns':
-					if (!FlxG.save.data.optimize)
+					if (FlxG.save.data.background)
 						tankIntro();
+					else
+					{
+						removeStaticArrows();
+						#if VIDEOS
+						playCutscene('${SONG.songId}Cutscene.mp4', false);
+						#end
+					}
 				case 'stress':
 				{
-					if (!FlxG.save.data.stressMP4){
+					if (FlxG.save.data.stressMP4){
 						playCutscene("stressCutscene.mp4");
 					}
 					else{
@@ -1287,7 +1294,7 @@ class PlayState extends MusicBeatState
 		super.create();
 
 		
-		if (FlxG.save.data.distractions && PlayStateChangeables.Optimize)
+		if (FlxG.save.data.distractions && FlxG.save.data.background)
 		{
 			if (gfCheck == 'pico-speaker' && Stage.curStage == 'tank')
 			{
@@ -1351,7 +1358,7 @@ class PlayState extends MusicBeatState
 			FlxG.sound.music.stop();
 
 			var cutSceneStuff:Array<FlxSprite> = [Stage.swagBacks['tankman']];
-			if (SONG.songId == 'stress')
+			if (SONG.songId == 'stress' && !FlxG.save.data.stressMP4)
 			{
 				cutSceneStuff.push(Stage.swagBacks['bfCutscene']);
 				cutSceneStuff.push(Stage.swagBacks['gfCutscene']);
@@ -1651,7 +1658,7 @@ class PlayState extends MusicBeatState
 					tankManEnd();
 					boyfriend.animation.finishCallback = null;
 				});
-				}
+			}
 		}
 	}
 
@@ -2232,7 +2239,7 @@ class PlayState extends MusicBeatState
 		if (!PlayState.isSM)
 			FlxG.sound.cache(Paths.inst(PlayState.SONG.songId));
 		
-		songLength = ((FlxG.sound.music.length / songMultiplier) / 1000);
+		songLength = ((inst.length / songMultiplier) / 1000);
 
 		Conductor.crochet = ((60 / (SONG.bpm) * 1000));
 		Conductor.stepCrochet = Conductor.crochet / 4;
@@ -4073,11 +4080,10 @@ class PlayState extends MusicBeatState
 
 		if (!inCutscene && songStarted)
 			keyShit();
-
 		#if debug
 		if (FlxG.keys.justPressed.ONE)
 			endSong();
-		#end
+		#end	
 
 		super.update(elapsed);
 	}
@@ -4531,7 +4537,7 @@ class PlayState extends MusicBeatState
 		comboSpr.acceleration.y = 600;
 		comboSpr.velocity.y -= 150;
 
-		if (!FlxG.save.data.rateStack)
+		if (FlxG.save.data.rateStack)
 		{
 			if(lastRating != null) lastRating.kill();
 			lastRating = rating;
@@ -4611,6 +4617,12 @@ class PlayState extends MusicBeatState
 		{
 			var str:String = comboSplit[i];
 			seperatedScore.push(Std.parseInt(str));
+		}
+
+		if (FlxG.save.data.rateStack)
+		{
+			if (lastCombo != null) lastCombo.kill();
+			lastCombo = comboSpr;
 		}
 
 		var daLoop:Int = 0;

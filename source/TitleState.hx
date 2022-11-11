@@ -67,6 +67,7 @@ class TitleState extends MusicBeatState
 			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(420);
 
 		FlxG.autoPause = false;
+		FlxG.mouse.visible = true;
 		// I spent so long looking for this. To just leave it false hurts me but theres some features that require it false.
 		FlxG.mouse.load(Paths.image('curser'));
 

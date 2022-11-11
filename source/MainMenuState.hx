@@ -57,6 +57,8 @@ class MainMenuState extends MusicBeatState
 
 		ModCore.initialize();
 
+		FlxG.mouse.visible = true;
+
 		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
 
 		if (!FlxG.sound.music.playing)
