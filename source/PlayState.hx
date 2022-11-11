@@ -2108,7 +2108,6 @@ class PlayState extends MusicBeatState
 
 		inst.play();
 		vocals.play();
-		songLength = ((inst.length / songMultiplier) / 1000);
 		
 		if (!FlxG.save.data.optimize)
 		{
@@ -2167,6 +2166,8 @@ class PlayState extends MusicBeatState
 
 		recalculateAllSectionTimes();
 
+		songLength = ((inst.length / songMultiplier) / 1000);
+
 		songPosBG = new FlxSprite(0, FlxG.height - 710).loadGraphic(Paths.image2('healthBar', 'shared'));
 
 		if (PlayStateChangeables.useDownscroll)
@@ -2174,7 +2175,6 @@ class PlayState extends MusicBeatState
 
 		songPosBG.screenCenter(X);
 		songPosBG.scrollFactor.set();
-
 		songPosBar = new FlxBar(640 - (Std.int(songPosBG.width - 100) / 2), songPosBG.y + 4, LEFT_TO_RIGHT, Std.int(songPosBG.width - 100),
 			Std.int(songPosBG.height + 6), this, 'songPositionBar', 0, songLength);
 		songPosBar.alpha = 0;
@@ -3031,7 +3031,7 @@ class PlayState extends MusicBeatState
 		else if (updateFrame != 5)
 			updateFrame++;
 
-		if (FlxG.sound.music.playing)
+		if (inst.playing)
 		{
 			var timingSeg = TimingStruct.getTimingAtBeat(curDecimalBeat);
 
@@ -3397,6 +3397,7 @@ class PlayState extends MusicBeatState
 			Conductor.rawPosition = inst.time;
 			
 			songPositionBar = (Conductor.songPosition - songLength) / 1000;
+			
 			currentSection = getSectionByTime(Conductor.songPosition / songMultiplier);
 			if (!paused)
 			{
@@ -3417,7 +3418,6 @@ class PlayState extends MusicBeatState
 					secondsTotal = 0;
 				songName.text = SONG.song + ' (' + FlxStringUtil.formatTime((songLength - secondsTotal), false) + ')';
 			}
-			// Conductor.lastSongPos = FlxG.sound.music.time;
 		}
 
 		if (generatedMusic && currentSection != null)
@@ -3624,7 +3624,7 @@ class PlayState extends MusicBeatState
 					|| FlxG.save.data.optimize
 					|| (PlayStateChangeables.opponentMode && !dad.animOffsets.exists('firstDeath')))
 					{
-						MusicBeatState.switchState(new PlayState());
+						MusicBeatState.resetState();
 					}
 					else
 					{
@@ -4031,9 +4031,9 @@ class PlayState extends MusicBeatState
 								if (daNote.isParent && daNote.visible)
 								{
 									if (!PlayStateChangeables.opponentMode)
-										health -= (0.08 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
+										health -= (0.15 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
 									else
-										health += (0.08 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
+										health += (0.15 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
 									for (i in daNote.children)
 									{
 										i.alpha = 0.3;
@@ -4895,7 +4895,6 @@ class PlayState extends MusicBeatState
 					{
 						// trace('ReplayNote ' + tmpRepNote.strumtime + ' | ' + tmpRepNote.direction);
 						var n = findByTime(daNote.strumTime);
-						trace(n);
 						if (n != null)
 						{
 							goodNoteHit(daNote);
