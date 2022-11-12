@@ -2002,6 +2002,7 @@ class PlayState extends MusicBeatState
 
 		var dataNotes = [];
 		var coolNote = null;
+		var noteDiff:Float = -(coolNote.strumTime - Conductor.songPosition);
 
 		closestNotes.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
 		for (i in closestNotes)
@@ -2036,6 +2037,9 @@ class PlayState extends MusicBeatState
 					else
 						dad.holdTimer = 0;
 					goodNoteHit(coolNote);
+					ana.hit = true;
+					ana.hitJudge = Ratings.judgeNote(noteDiff);
+					ana.nearestNote = [coolNote.strumTime, coolNote.noteData, coolNote.sustainLength];
 				}
 			}
 		}
