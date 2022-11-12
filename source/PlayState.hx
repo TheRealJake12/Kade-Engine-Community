@@ -2002,7 +2002,6 @@ class PlayState extends MusicBeatState
 
 		var dataNotes = [];
 		var coolNote = null;
-		var noteDiff:Float = -(coolNote.strumTime - Conductor.songPosition);
 
 		closestNotes.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
 		for (i in closestNotes)
@@ -2032,6 +2031,7 @@ class PlayState extends MusicBeatState
 				
 				if (!notesStopped)
 				{
+					var noteDiff:Float = -(coolNote.strumTime - Conductor.songPosition);
 					if (!PlayStateChangeables.opponentMode)
 						boyfriend.holdTimer = 0;
 					else
