@@ -111,6 +111,12 @@ class Note extends FlxSprite
 
 		this.noteData = noteData;
 
+		if (PlayStateChangeables.mirrorMode)
+		{
+			this.noteData = Std.int(Math.abs(3 - noteData));
+			noteData = Std.int(Math.abs(3 - noteData));
+		}
+
 		var daStage:String = ((PlayState.instance != null && !PlayStateChangeables.Optimize) ? PlayState.Stage.curStage : 'stage');
 
 		// defaults if no noteStyle was found in chart
