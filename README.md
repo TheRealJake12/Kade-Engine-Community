@@ -75,13 +75,13 @@ It will take a while to build for both versions.
 
 ### Shoutouts
 
-- [TheRealJake_12](https://www.youtube.com/channel/UCYy-RfMjVx-1dYnmNQGB2sw) - *everything.*
+- [TheRealJake_12](https://www.youtube.com/channel/UCYy-RfMjVx-1dYnmNQGB2sw) - *mostly everything.*
 
 - [KadeDev](https://github.com/KadeDev) - The Original Guy who created Kade Engine.
 
 - [PolybiusProxy](https://github.com/polybiusproxy) - The Video Support.
 
-- [BoloVEVO](https://github.com/BoloVEVO) - Fixed my shit code and improved the chart editor. Made a ton of code improvements.(thanks!!!)
+- [BoloVEVO](https://github.com/BoloVEVO) - Fixed my shit code and improved the chart editor. Made a ton of code improvements. Did the gameplay changers(thanks!!!)
 
 - [ShadowMario](https://github.com/ShadowMario) - The Memory Leak Fix. And A Few Other Things. (thanks)
 
