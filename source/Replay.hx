@@ -117,16 +117,6 @@ class Replay
 		var data:String = Json.stringify(json, null, "");
 
 		var time = Date.now().getTime();
-
-		#if FEATURE_FILESYSTEM
-		File.saveContent("assets/replays/replay-" + PlayState.SONG.songId + "-time" + time + ".kadeReplay", data);
-
-		path = "replay-" + PlayState.SONG.songId + "-time" + time + ".kadeReplay"; // for score screen shit
-
-		LoadFromJSON();
-
-		replay.ana = ana;
-		#end
 	}
 
 	public function LoadFromJSON()

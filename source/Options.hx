@@ -2614,7 +2614,7 @@ class StressMP4 extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "Makes Stress Use An MP4 Instead Of Ingame For Lowend PCs Recommended.";
+			description = "Makes Week 7 Use An MP4 Instead Of Ingame For Lowend PCs Recommended.";
 		else
 			description = desc;
 	}
@@ -2636,7 +2636,7 @@ class StressMP4 extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Stress MP4: < " + (!FlxG.save.data.stressMP4 ? "off" : "on") + " >";
+		return "Week 7 Videos: < " + (!FlxG.save.data.stressMP4 ? "off" : "on") + " >";
 	}
 }
 

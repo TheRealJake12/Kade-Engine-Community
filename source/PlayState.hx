@@ -1252,8 +1252,8 @@ class PlayState extends MusicBeatState
 					schoolIntro(doof);
 				case 'thorns':
 					schoolIntro(doof);
-				case 'ugh', 'guns':
-					if (FlxG.save.data.background)
+				case 'ugh', 'guns', 'stress':
+					if (!FlxG.save.data.stressMP4 && FlxG.save.data.background)
 						tankIntro();
 					else
 					{
@@ -1261,16 +1261,7 @@ class PlayState extends MusicBeatState
 						#if VIDEOS
 						playCutscene('${SONG.songId}Cutscene.mp4', false);
 						#end
-					}
-				case 'stress':
-				{
-					if (FlxG.save.data.stressMP4){
-						playCutscene("stressCutscene.mp4");
-					}
-					else{
-						tankIntro();
-					}
-				}			
+					}	
 				default:
 					startCountdown();
 			}
@@ -3698,7 +3689,6 @@ class PlayState extends MusicBeatState
 		if (generatedMusic && !(inCutscene || inCinematic))
 		{
 			var holdArray:Array<Bool> = [controls.LEFT, controls.DOWN, controls.UP, controls.RIGHT];
-			var leSpeed = FlxG.save.data.scrollSpeed == 1 ? SONG.speed : PlayStateChangeables.scrollSpeed;
 			var stepHeight = (0.45 * Conductor.stepCrochet * FlxMath.roundDecimal((PlayState.SONG.speed * PlayState.songMultiplier) * PlayState.songMultiplier,
 				2));
 
@@ -3706,34 +3696,14 @@ class PlayState extends MusicBeatState
 
 			notes.forEachAlive(function(daNote:Note)
 			{
-				if (daNote.noteData == -1)
-				{
-					Debug.logWarn('Weird Note detected! Note Data = "${daNote.rawNoteData}" is not valid, deleting...');
-					daNote.kill();
-					daNote.alive = false;
-					notes.remove(daNote, true);
-					daNote.destroy();
-				}
-
-				if (!daNote.active)
-				{
-					daNote.kill();
-					daNote.alive = false;
-					notes.remove(daNote, true);
-					daNote.destroy();
-					return;
-				}
 				var strum:FlxTypedGroup<StaticArrow> = playerStrums;
 				if (!daNote.mustPress)
 					strum = cpuStrums;
-
-				var strumY = strum.members[daNote.noteData].y;
+			
 				var strumX = strum.members[daNote.noteData].x;
 				var strumAngle = strum.members[daNote.noteData].modAngle;
-				var strumScrollType = strum.members[daNote.noteData].downScroll;
 				var strumDirection = strum.members[daNote.noteData].direction;
 				var angleDir = strumDirection * Math.PI / 180;
-				var origin = strumY + Note.swagWidth / 2;
 				daNote.x = strumX + Math.cos(angleDir) * daNote.distance;
 				if (!daNote.modifiedByLua)
 				{
@@ -3754,7 +3724,7 @@ class PlayState extends MusicBeatState
 						if (daNote.isSustainNote)
 						{
 							daNote.y -= daNote.height - stepHeight;
-							
+
 							if ((PlayStateChangeables.botPlay
 								|| !daNote.mustPress
 								|| daNote.wasGoodHit

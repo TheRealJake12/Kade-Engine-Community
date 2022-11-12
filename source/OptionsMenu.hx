@@ -211,7 +211,7 @@ class OptionsMenu extends MusicBeatSubstate
 				new AntialiasingOption("Toggle antialiasing, improving graphics quality at a slight performance penalty."),
 				// new FXAAOption("Enable FXAA Antialiasing. (EXTREME PERFORMANCE IMPACT! ONLY ENABLE IF YOUR PC HAS LIKE AN RTX CARD!)"),
 				#if desktop
-				new StressMP4("Makes Stress Use An MP4 Instead Of Actual Sprites."),
+				new StressMP4("Makes Week 7 Use A Video Instead Of Actual Sprites."),
 				new UnloadSongs("Unload Songs And Characters"), 
 				new SongCaching("Caches Songs for close to Instant loading"),
 				new CachingOption("Caches all of the options above (High Memory Depending On Your Cache Options.)"),
