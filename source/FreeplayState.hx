@@ -1059,7 +1059,6 @@ class FreeplayState extends MusicBeatState
 		combo = Highscore.getCombo(songHighscore, curDifficulty);
 		letter = Highscore.getLetter(songHighscore, curDifficulty);
 		intendedaccuracy = Highscore.getAcc(songHighscore, curDifficulty);
-		// lerpScore = 0;
 		#end
 
 		var hmm;

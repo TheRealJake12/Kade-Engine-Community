@@ -432,7 +432,8 @@ class Paths
 	/// haya I love you for the base cache dump I took to the max
 	public static function clearUnusedMemory()
 	{
-		// clear non local assets in the tracked assets list
+		if (FlxG.save.data.unload){
+			// clear non local assets in the tracked assets list
 		var counter:Int = 0;
 		for (key in currentTrackedAssets.keys())
 		{
@@ -465,11 +466,13 @@ class Paths
 		// run the garbage collector for good measure lmfao
 
 		System.gc();
+		}
 	}
 
 	public static function clearStoredMemory(?cleanUnused:Bool = false)
 	{
-		#if FEATURE_MULTITHREADING
+		if (FlxG.save.data.unload){
+			#if FEATURE_MULTITHREADING
 		// clear remaining objects
 		perf.MasterObjectLoader.resetAssets();
 		#end
@@ -522,6 +525,7 @@ class Paths
 		localTrackedAssets = [];
 		openfl.Assets.cache.clear("songs");
 		#end
+		}
 	}
 
 	static public function getSparrowAtlas(key:String, ?library:String, ?isCharacter:Bool = false, ?gpuRender:Bool)

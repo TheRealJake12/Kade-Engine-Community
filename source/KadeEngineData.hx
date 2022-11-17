@@ -167,7 +167,10 @@ class KadeEngineData
 			FlxG.save.data.notesplashes = true;
 
 		if (FlxG.save.data.cpuSplash == null)
-			FlxG.save.data.cpuSplash = true;	
+			FlxG.save.data.cpuSplash = true;
+
+		if (FlxG.save.data.cpuNoteskin == null)		
+			FlxG.save.data.cpuNoteskin = 0;
 			
 		if (FlxG.save.data.cacheSongs == null)
 			FlxG.save.data.cacheSongs = false;

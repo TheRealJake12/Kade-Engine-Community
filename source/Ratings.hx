@@ -2,25 +2,26 @@ import flixel.FlxG;
 
 class Ratings
 {
-	public static function GenerateLetterRank(accuracy:Float) // generate a letter ranking
+	public static function GenerateComboRank(accuracy:Float) // generate a letter ranking
 	{
-		var ranking:String = "N/A";
-		if (FlxG.save.data.botplay && !PlayState.loadRep)
-			ranking = "BotPlay";
-
+		var comboranking:String = "N/A";
 		if (PlayState.misses == 0 && PlayState.bads == 0 && PlayState.shits == 0 && PlayState.goods == 0) // Marvelous (SICK) Full Combo
-			ranking = "(MFC)";
+			comboranking = "(MFC)";
 		else if (PlayState.misses == 0 && PlayState.bads == 0 && PlayState.shits == 0 && PlayState.goods >= 1) // Good Full Combo (Nothing but Goods & Sicks)
-			ranking = "(GFC)";
+			comboranking = "(GFC)";
 		else if (PlayState.misses == 0) // Regular FC
-			ranking = "(FC)";
+			comboranking = "(FC)";
 		else if (PlayState.misses < 10) // Single Digit Combo Breaks
-			ranking = "(SDCB)";
+			comboranking = "(SDCB)";
 		else
-			ranking = "(Clear)";
+			comboranking = "(Clear)";
 
+		return comboranking;
 		// WIFE TIME :)))) (based on Wife3)
-
+	}
+	public static function GenerateLetterRank(accuracy:Float)
+	{
+		var letterRanking:String = "";
 		var wifeConditions:Array<Bool> = [
 			accuracy >= 99.9935, // AAAAA
 			accuracy >= 99.980, // AAAA:
@@ -43,53 +44,54 @@ class Ratings
 		for (i in 0...wifeConditions.length)
 		{
 			var b = wifeConditions[i];
+
 			if (b)
 			{
 				switch (i)
 				{
 					case 0:
-						ranking += " AAAAA";
+						letterRanking += "AAAAA";
 					case 1:
-						ranking += " AAAA:";
+						letterRanking += "AAAA:";
 					case 2:
-						ranking += " AAAA.";
+						letterRanking += "AAAA.";
 					case 3:
-						ranking += " AAAA";
+						letterRanking += "AAAA";
 					case 4:
-						ranking += " AAA:";
+						letterRanking += "AAA:";
 					case 5:
-						ranking += " AAA.";
+						letterRanking += "AAA.";
 					case 6:
-						ranking += " AAA";
+						letterRanking += "AAA";
 					case 7:
-						ranking += " AA:";
+						letterRanking += "AA:";
 					case 8:
-						ranking += " AA.";
+						letterRanking += "AA.";
 					case 9:
-						ranking += " AA";
+						letterRanking += "AA";
 					case 10:
-						ranking += " A:";
+						letterRanking += "A:";
 					case 11:
-						ranking += " A.";
+						letterRanking += "A.";
 					case 12:
-						ranking += " A";
+						letterRanking += "A";
 					case 13:
-						ranking += " B";
+						letterRanking += "B";
 					case 14:
-						ranking += " C";
+						letterRanking += "C";
 					case 15:
-						ranking += " D";
+						letterRanking += "D";
 				}
 				break;
 			}
 		}
-
-		if (accuracy == 0)
-			ranking = "N/A";
-		else if (FlxG.save.data.botplay && !PlayState.loadRep)
-			ranking = "BotPlay";
-
-		return ranking;
+		if (accuracy == 0 && !PlayStateChangeables.practiceMode)
+			letterRanking = "N/A";
+		else if (PlayStateChangeables.botPlay && !PlayState.loadRep)
+			letterRanking = "BotPlay";
+		else if (PlayStateChangeables.practiceMode)
+			letterRanking = "PRACTICE";
+		return letterRanking;
 	}
 
 	public static var timingWindows = [];
@@ -134,12 +136,17 @@ class Ratings
 				|| PlayState.loadRep ? "Score:" + (Conductor.safeFrames != 10 ? score + " (" + scoreDef + ")" : "" + score) + // Score
 					(FlxG.save.data.accuracyDisplay ? // Accuracy Toggle
 						" | Combo Breaks:"
-						+ PlayState.misses
-						+ // 	Misses/Combo Breaks
-						" | Accuracy:"
+						+ PlayState.misses // 	Misses/Combo Breaks
+						+ (!FlxG.save.data.healthBar ? " | Health:"
+							+ (!PlayStateChangeables.opponentMode ? Math.round(PlayState.instance.health * 50) : Math.round(100
+								- (PlayState.instance.health * 50)))
+							+ "%" : "")
+						+ " | Accuracy:"
 						+ (PlayStateChangeables.botPlay && !PlayState.loadRep ? "N/A" : HelperFunctions.truncateFloat(accuracy, 2) + " %")
 						+ // 	Accuracy
 						" | "
-						+ GenerateLetterRank(accuracy) : "") : ""); // 	Letter Rank
+						+ GenerateComboRank(accuracy)
+						+ " "
+						+ (!PlayStateChangeables.practiceMode ? GenerateLetterRank(accuracy) : 'PRACTICE') : "") : ""); // 	Letter Rank
 	}
 }

@@ -83,6 +83,8 @@ It will take a while to build for both versions.
 
 - [BoloVEVO](https://github.com/BoloVEVO) - Fixed my shit code and improved the chart editor. Made a ton of code improvements. Did the gameplay changers(thanks!!!)
 
+- [Glowsoony] - Pixel Notesplashes, Revamped Notesplash Code, Hscript, The guy does a ton. (Thanks!)
+
 - [ShadowMario](https://github.com/ShadowMario) - The Memory Leak Fix. And A Few Other Things. (thanks)
 
 - [TposeJank](https://github.com/tposejank) Epic friend that gave me ideas and helped :epicttrooll:

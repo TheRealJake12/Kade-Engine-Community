@@ -818,6 +818,10 @@ class PlayState extends MusicBeatState
 
 		if (loadRep)
 		{
+			FlxG.watch.addQuick('rep rpesses', repPresses);
+			FlxG.watch.addQuick('rep releases', repReleases);
+			// FlxG.watch.addQuick('Queued',inputsQueued);
+
 			PlayStateChangeables.useDownscroll = rep.replay.isDownscroll;
 			PlayStateChangeables.safeFrames = rep.replay.sf;
 			PlayStateChangeables.botPlay = true;
@@ -1069,7 +1073,7 @@ class PlayState extends MusicBeatState
 		scoreTxt.screenCenter(X);
 		scoreTxt.scrollFactor.set();
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS, accuracy);
+		//scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS, accuracy);
 		if (!FlxG.save.data.healthBar)
 			scoreTxt.y = healthBarBG.y;
 
@@ -2914,6 +2918,9 @@ class PlayState extends MusicBeatState
 			}
 		}
 
+		if (nps >= 0)
+			updateScoreText();
+
 		#if cpp
 		if (inst.playing)
 			@:privateAccess
@@ -4080,10 +4087,10 @@ class PlayState extends MusicBeatState
 		vocals.stop();
 		if (SONG.validScore)
 		{
-			#if !switch
 			Highscore.saveScore(PlayState.SONG.songId, Math.round(songScore), storyDifficulty);
-			Highscore.saveCombo(PlayState.SONG.songId, Ratings.GenerateLetterRank(accuracy), storyDifficulty);
-			#end
+			Highscore.saveCombo(PlayState.SONG.songId, Ratings.GenerateComboRank(accuracy), storyDifficulty);
+			Highscore.saveAcc(PlayState.SONG.songId, HelperFunctions.truncateFloat(accuracy, 2), storyDifficulty);
+			Highscore.saveLetter(PlayState.SONG.songId, Ratings.GenerateLetterRank(accuracy), storyDifficulty);
 		}
 
 		if (offsetTesting)
@@ -4960,6 +4967,7 @@ class PlayState extends MusicBeatState
 				#end
 
 				updateAccuracy();
+				updateScoreText();
 			}
 	}
 	
@@ -4968,9 +4976,13 @@ class PlayState extends MusicBeatState
 		totalPlayed += 1;
 		accuracy = Math.max(0, totalNotesHit / totalPlayed * 100);
 		accuracyDefault = Math.max(0, totalNotesHitDefault / totalPlayed * 100);
-
-		scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS, accuracy);
+		
 		judgementCounter.text = 'Marvelous: ${marvs} \nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\nMisses: ${misses}';
+	}
+
+	function updateScoreText()
+	{
+		scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS,(FlxG.save.data.roundAccuracy ? FlxMath.roundDecimal(accuracy, 0) : accuracy));
 	}
 
 	function getKeyPresses(note:Note):Int
@@ -5033,6 +5045,7 @@ class PlayState extends MusicBeatState
 		{
 			if (!daNote.isSustainNote)
 			{
+				updateScoreText();
 				if (!PlayStateChangeables.opponentMode)
 				{
 					health -= .04 * PlayStateChangeables.healthLoss;
@@ -5264,7 +5277,10 @@ class PlayState extends MusicBeatState
 				note.wasGoodHit = true;
 			}
 			if (!note.isSustainNote)
+			{
 				updateAccuracy();
+				updateScoreText();
+			}
 		}
 	}
 
