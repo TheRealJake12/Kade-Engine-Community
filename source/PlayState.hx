@@ -584,37 +584,6 @@ class PlayState extends MusicBeatState
 			SONG.eventObjects = [new Song.Event("Init BPM", 0, SONG.bpm, "BPM Change")];
 		}
 
-		TimingStruct.clearTimings();
-
-		var currentIndex = 0;
-		for (i in SONG.eventObjects)
-		{
-			if (i.type == "BPM Change")
-			{
-				var beat:Float = i.position;
-
-				var endBeat:Float = Math.POSITIVE_INFINITY;
-
-				var bpm = i.value * songMultiplier;
-
-				TimingStruct.addTiming(beat, bpm, endBeat, 0); // offset in this case = start time since we don't have a offset
-
-				if (currentIndex != 0)
-				{
-					var data = TimingStruct.AllTimings[currentIndex - 1];
-					data.endBeat = beat;
-					data.length = ((data.endBeat - data.startBeat) / (data.bpm / 60)) / songMultiplier;
-					var step = ((60 / data.bpm) * 1000) / 4;
-					TimingStruct.AllTimings[currentIndex].startStep = Math.floor((((data.endBeat / (data.bpm / 60)) * 1000) / step) / songMultiplier);
-					TimingStruct.AllTimings[currentIndex].startTime = data.startTime + data.length / songMultiplier;
-				}
-
-				currentIndex++;
-			}
-		}
-
-		recalculateAllSectionTimes();
-
 		// if the song has dialogue, so we don't accidentally try to load a nonexistant file and crash the game
 		if (Paths.doesTextAssetExist(Paths.txt('data/songs/${PlayState.SONG.songId}/dialogue')))
 		{
@@ -933,21 +902,18 @@ class PlayState extends MusicBeatState
 
 		if (isStoryMode)
 		{
-			if ((storyPlaylist.length >= 3 && inCutscene))
+			if (inCutscene)
 			{
 				laneunderlayOpponent.alpha = 0;
 				laneunderlay.alpha = 0;
 			}
 		}
-
-		if (!FlxG.save.data.laneUnderlay)
+		
+		if (!FlxG.save.data.middleScroll)
 		{
-			if (!FlxG.save.data.middleScroll)
-			{
-				add(laneunderlayOpponent);
-			}
-			add(laneunderlay);
-		}	
+			add(laneunderlayOpponent);
+		}
+		add(laneunderlay);	
 
 		strumLineNotes = new FlxTypedGroup<StaticArrow>();
 		add(strumLineNotes);
@@ -1751,9 +1717,9 @@ class PlayState extends MusicBeatState
 	{
 		if (inCinematic || inCutscene)
 		{
-			createTween(laneunderlay, {alpha: FlxG.save.data.laneTransparency}, 0.75, {ease: FlxEase.bounceOut});
+			FlxTween.tween(laneunderlay, {alpha: FlxG.save.data.laneTransparency}, 0.75);
 			if (!FlxG.save.data.middleScroll)
-				createTween(laneunderlayOpponent, {alpha: FlxG.save.data.laneTransparency}, 0.75, {ease: FlxEase.bounceOut});
+				FlxTween.tween(laneunderlayOpponent, {alpha: FlxG.save.data.laneTransparency}, 0.75);
 
 			if (!arrowsGenerated)
 			{
@@ -2059,9 +2025,9 @@ class PlayState extends MusicBeatState
 		if (!boyfriend.stunned)
 		{
 			if (!PlayStateChangeables.opponentMode)
-				health -= 0.04 * PlayStateChangeables.healthLoss;
+				health -= 0.15 * PlayStateChangeables.healthLoss;
 			else
-				health += 0.04 * PlayStateChangeables.healthLoss;
+				health += 0.15 * PlayStateChangeables.healthLoss;
 			if (combo > 5 && gf != null && gf.animOffsets.exists('sad'))
 			{
 				gf.playAnim('sad');
@@ -2271,6 +2237,8 @@ class PlayState extends MusicBeatState
 		FlxG.sound.list.add(vocals);
 
 		inst.pause();
+
+		addSongTiming();
 
 		if (PlayStateChangeables.skillIssue)
 		{
@@ -2990,42 +2958,6 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (updateFrame == 4)
-		{
-			TimingStruct.clearTimings();
-
-			var currentIndex = 0;
-			for (i in SONG.eventObjects)
-			{
-				if (i.type == "BPM Change")
-				{
-					var beat:Float = i.position;
-
-					var endBeat:Float = Math.POSITIVE_INFINITY;
-
-					var bpm = i.value * songMultiplier;
-
-					TimingStruct.addTiming(beat, bpm, endBeat, 0);
-
-					if (currentIndex != 0)
-					{
-						var data = TimingStruct.AllTimings[currentIndex - 1];
-						data.endBeat = beat;
-						data.length = ((data.endBeat - data.startBeat) / (data.bpm / 60)) / songMultiplier;
-						var step = ((60 / data.bpm) * 1000) / 4;
-						TimingStruct.AllTimings[currentIndex].startStep = Math.floor((((data.endBeat / (data.bpm / 60)) * 1000) / step) / songMultiplier);
-						TimingStruct.AllTimings[currentIndex].startTime = data.startTime + data.length / songMultiplier;
-					}
-
-					currentIndex++;
-				}
-			}
-
-			updateFrame++;
-		}
-		else if (updateFrame != 5)
-			updateFrame++;
-
 		if (inst.playing)
 		{
 			var timingSeg = TimingStruct.getTimingAtBeat(curDecimalBeat);
@@ -3615,9 +3547,7 @@ class PlayState extends MusicBeatState
 					paused = true;
 					vocals.stop();
 					inst.stop();
-					if (FlxG.save.data.InstantRespawn
-					|| FlxG.save.data.optimize
-					|| (PlayStateChangeables.opponentMode && !dad.animOffsets.exists('firstDeath')))
+					if (FlxG.save.data.InstantRespawn || (PlayStateChangeables.opponentMode))
 					{
 						MusicBeatState.resetState();
 					}
@@ -3625,8 +3555,6 @@ class PlayState extends MusicBeatState
 					{
 						if (!PlayStateChangeables.opponentMode)
 							openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
-						else
-							openSubState(new GameOverSubstate(dad.getScreenPosition().x, dad.getScreenPosition().y));
 					}
 
 					#if FEATURE_DISCORD
@@ -3881,7 +3809,7 @@ class PlayState extends MusicBeatState
 										}
 										else if (!daNote.wasGoodHit && !daNote.isSustainNote)
 										{
-											health -= 0.15;
+											health -= 0.3;
 										}
 									}
 								}
@@ -3953,19 +3881,22 @@ class PlayState extends MusicBeatState
 									totalNotesHit += 1;
 								else
 								{
-									vocals.volume = 0;
 									if (theFunne && !daNote.isSustainNote)
 									{
 										noteMiss(daNote.noteData, daNote);
 									}
 									if (daNote.isParent)
 									{
-										health -= 0.15;
+										if (!PlayStateChangeables.opponentMode)
+											health -= (0.15 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
+										else
+											health += (0.15 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
 										for (i in daNote.children)
 										{
 											i.alpha = 0.3;
 											i.sustainActive = false;
 										}
+										noteMiss(daNote.noteData, daNote);
 									}
 									else
 									{
@@ -3985,7 +3916,11 @@ class PlayState extends MusicBeatState
 										}
 										else if (!daNote.wasGoodHit && !daNote.isSustainNote)
 										{
-											health -= 0.15;
+											if (!PlayStateChangeables.opponentMode)
+												health -= (0.15 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
+											else
+												health += (0.15 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
+											noteMiss(daNote.noteData, daNote);
 										}
 									}
 								}
@@ -4004,10 +3939,7 @@ class PlayState extends MusicBeatState
 
 								if (daNote.isParent && daNote.visible)
 								{
-									if (!PlayStateChangeables.opponentMode)
-										health -= (0.15 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
-									else
-										health += (0.15 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
+									health -= 0.15;
 									for (i in daNote.children)
 									{
 										i.alpha = 0.3;
@@ -4034,9 +3966,9 @@ class PlayState extends MusicBeatState
 									else if (!daNote.wasGoodHit && !daNote.isSustainNote)
 									{
 										if (!PlayStateChangeables.opponentMode)
-											health -= (0.04 * PlayStateChangeables.healthLoss);
+											health -= (0.15 * PlayStateChangeables.healthLoss);
 										else
-											health += (0.04 * PlayStateChangeables.healthLoss);
+											health += (0.15 * PlayStateChangeables.healthLoss);
 										noteMiss(daNote.noteData, daNote);
 									}
 								}
@@ -4384,11 +4316,11 @@ class PlayState extends MusicBeatState
 				}
 				if (!PlayStateChangeables.opponentMode && health < 2)
 				{
-					health += 0.04 * PlayStateChangeables.healthGain;
+					health += 0.15 * PlayStateChangeables.healthGain;
 				}
 				else if (PlayStateChangeables.opponentMode && health > 0)
 				{
-					health -= 0.04 * PlayStateChangeables.healthGain;
+					health -= 0.15 * PlayStateChangeables.healthGain;
 				}
 			case 'marv':
 				if (FlxG.save.data.accuracyMod == 0)
@@ -4965,12 +4897,6 @@ class PlayState extends MusicBeatState
 	{
 			if (!boyfriend.stunned)
 			{
-				if (PlayStateChangeables.skillIssue)
-				if (!PlayStateChangeables.opponentMode)
-					health = 0;
-				else
-					health = 2.1;
-
 				if (combo > 5 && gf.animOffsets.exists('sad') && !PlayStateChangeables.opponentMode)
 				{
 					gf.playAnim('sad');
@@ -5279,7 +5205,7 @@ class PlayState extends MusicBeatState
 			if (executeHScript && script != null)
 			{
 				script.setVariable("note", Note);
-				script.executeFunc("goodNoteHit", [note.noteData]);
+				script.executeFunc("goodNoteHit", [note.noteData, note.noteShit]);
 			}
 			#end
 
@@ -6118,6 +6044,40 @@ class PlayState extends MusicBeatState
 			});
 			arrowsGenerated = false;
 		}
+	}
+
+	private function addSongTiming()
+	{
+		TimingStruct.clearTimings();
+
+		var currentIndex = 0;
+		for (i in SONG.eventObjects)
+		{
+			if (i.type == "BPM Change")
+			{
+				var beat:Float = i.position;
+
+				var endBeat:Float = Math.POSITIVE_INFINITY;
+
+				var bpm = i.value * songMultiplier;
+
+				TimingStruct.addTiming(beat, bpm, endBeat, 0); // offset in this case = start time since we don't have a offset
+
+				if (currentIndex != 0)
+				{
+					var data = TimingStruct.AllTimings[currentIndex - 1];
+					data.endBeat = beat;
+					data.length = ((data.endBeat - (data.startBeat)) / (data.bpm / 60));
+					var step = ((60 / (data.bpm)) * 1000) / 4;
+					TimingStruct.AllTimings[currentIndex].startStep = Math.floor((((data.endBeat / (data.bpm / 60)) * 1000) / step));
+					TimingStruct.AllTimings[currentIndex].startTime = data.startTime + data.length;
+				}
+
+				currentIndex++;
+			}
+		}
+
+		recalculateAllSectionTimes();
 	}
 	
 	function playCutscene(name:String, ?atend:Bool)

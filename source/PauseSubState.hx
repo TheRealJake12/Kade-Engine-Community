@@ -175,6 +175,14 @@ class PauseSubState extends MusicBeatSubstate
 			{
 				case "Resume":
 					close();
+					Ratings.timingWindows = [
+						FlxG.save.data.shitMs,
+						FlxG.save.data.badMs,
+						FlxG.save.data.goodMs,
+						FlxG.save.data.sickMs,
+						FlxG.save.data.marvMs
+					];
+
 				case "Restart Song":
 					PlayState.startTime = 0;
 					MusicBeatState.switchState(new PlayState());

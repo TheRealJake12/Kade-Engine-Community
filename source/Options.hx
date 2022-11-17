@@ -741,11 +741,17 @@ class InstantRespawn extends Option
 		super();
 		description = desc;
 	}
-
-	public override function press():Bool
+	
+	public override function left():Bool
 	{
 		FlxG.save.data.InstantRespawn = !FlxG.save.data.InstantRespawn;
 		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
 		return true;
 	}
 
@@ -2855,6 +2861,34 @@ class Resolution extends Option
 	}
 }
 
+class AutoPauseOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function left():Bool
+	{
+		FlxG.save.data.autoPause = !FlxG.save.data.autoPause;
+		FlxG.autoPause = FlxG.save.data.autoPause;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Auto Pause: < " + (!FlxG.save.data.autoPause ? "off" : "on") + " >";
+	}
+}
+
 class GPURendering extends Option
 {
 	public function new(desc:String)
@@ -2980,6 +3014,11 @@ class ResetSettings extends Option
 		FlxG.save.data.borderless = null;
 		FlxG.save.data.resolution = null;
 		FlxG.save.data.rateStack = null;
+		FlxG.save.data.autoPause = null;
+		FlxG.save.data.background = null;
+		FlxG.save.data.hitSound = null;
+		FlxG.save.data.hitVolume = null;
+		FlxG.save.data.strumHit = null;
 
 		KadeEngineData.initSave();
 		confirm = false;

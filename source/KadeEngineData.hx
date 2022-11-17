@@ -14,9 +14,6 @@ class KadeEngineData
 
 		if (FlxG.save.data.downscroll == null)
 			FlxG.save.data.downscroll = false;
-
-		if (FlxG.save.data.laneUnderlay == null)
-			FlxG.save.data.laneUnderlay = false;
 	
 		if (FlxG.save.data.antialiasing == null)
 			FlxG.save.data.antialiasing = true;
@@ -202,8 +199,8 @@ class KadeEngineData
 		if (FlxG.save.data.alpha == null)
 			FlxG.save.data.alpha = 0.6;
 			
-		if (FlxG.save.data.laneUnderlay == null)
-			FlxG.save.data.laneUnderlay = 0;
+		if (FlxG.save.data.laneTransparency == null)
+			FlxG.save.data.laneTransparency = 0;
 
 		//credits to bolovevo. real chad		
 
@@ -247,8 +244,10 @@ class KadeEngineData
 			FlxG.save.data.hitVolume = 0.5;
 
 		if (FlxG.save.data.strumHit == null)
-			FlxG.save.data.strumHit = true;				
+			FlxG.save.data.strumHit = true;
 
+		if (FlxG.save.data.autoPause == null)
+			FlxG.save.data.autoPause = false;
 		Conductor.recalculateTimings();
 		PlayerSettings.player1.controls.loadKeyBinds();
 

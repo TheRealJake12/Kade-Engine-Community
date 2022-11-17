@@ -85,7 +85,7 @@ class Script extends FlxBasic
 				}
 				catch (e)
 				{
-					trace('$e');
+					Debug.logTrace('$e');
 				}
 				return result;
 			}
@@ -98,7 +98,7 @@ class Script extends FlxBasic
 				}
 				catch (e)
 				{
-					trace('$e');
+					Debug.logTrace('$e');
 				}
 				return result;
 			}

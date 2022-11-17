@@ -171,13 +171,11 @@ class MainMenuState extends MusicBeatState
 		{
 			if (FlxG.keys.justPressed.UP || controls.UP_P)
 			{
-				FlxG.sound.play(Paths.sound('scrollMenu'));
 				changeItem(-1);
 			}
 
 			if (FlxG.keys.justPressed.DOWN || controls.DOWN_P)
 			{
-				FlxG.sound.play(Paths.sound('scrollMenu'));
 				changeItem(1);
 			}
 
@@ -197,22 +195,25 @@ class MainMenuState extends MusicBeatState
 
 			var shiftMult:Int = 1;
 
-		if (FlxG.mouse.wheel != 0)
-		{
-			changeItem(-shiftMult * FlxG.mouse.wheel);
-		}
-
-		if (FlxG.mouse.overlaps(menuItems, FlxG.camera))
-		{
-			menuItems.forEach(function(daSprite:FlxSprite)
+			#if !mobile
+			if (FlxG.mouse.overlaps(menuItems, FlxG.camera))
 			{
-				if (FlxG.mouse.overlaps(daSprite) && curSelected != daSprite.ID)
+				menuItems.forEach(function(daSprite:FlxSprite)
 				{
-					curSelected = daSprite.ID;
-					changeItem();
-				}
-			});
-		}  
+					if (FlxG.mouse.overlaps(daSprite) && curSelected != daSprite.ID)
+					{
+						curSelected = daSprite.ID;
+						changeItem();
+					}
+				});
+			} 
+
+			if (FlxG.mouse.wheel != 0)
+			{
+				changeItem(-shiftMult * FlxG.mouse.wheel);
+			}
+			#end
+
 
 			#if debug
 			if (FlxG.keys.justPressed.SEVEN)
@@ -290,6 +291,8 @@ class MainMenuState extends MusicBeatState
 	function changeItem(huh:Int = 0)
 	{
 		curSelected += huh;
+
+		FlxG.sound.play(Paths.sound('scrollMenu'));
 
 		if (curSelected >= menuItems.length)
 			curSelected = 0;

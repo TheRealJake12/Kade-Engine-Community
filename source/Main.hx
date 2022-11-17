@@ -161,9 +161,7 @@ class Main extends Sprite
 		Assets.cache.clear("songs");
 		Assets.cache.clear("images");
 		#end
-		
 		}
-		
 	}
 
 	#if desktop
@@ -217,7 +215,18 @@ class Main extends Sprite
 
 	public function setFPSCap(cap:Float)
 	{
+		var framerate = Std.int(cap);
 		openfl.Lib.current.stage.frameRate = cap;
+		if (framerate > FlxG.drawFramerate)
+		{
+			FlxG.updateFramerate = framerate;
+			FlxG.drawFramerate = framerate;
+		}
+		else
+		{
+			FlxG.drawFramerate = framerate;
+			FlxG.updateFramerate = framerate;
+		}
 	}
 
 	public function getFPSCap():Float

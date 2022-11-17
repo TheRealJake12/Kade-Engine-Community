@@ -180,6 +180,7 @@ class OptionsMenu extends MusicBeatSubstate
 			]),
 			new OptionCata(640, 40, "Misc", [
 				new FlashingLightsOption("Toggle flashing lights that can cause epileptic seizures and strain."),
+				new AutoPauseOption("Makes The Game Stop Updating/Running When Tabbed Out Of The Game."),
 				new WatermarkOption("Enable and disable all watermarks from the engine."),
 				new MissSoundsOption("Toggle miss sounds playing when you don't hit a note."),
 				new ScoreScreen("Show the score screen after the end of a song"),

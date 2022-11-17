@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxG;
 import openfl.utils.Assets as OpenFlAssets;
+import flixel.math.FlxMath;
 
 using StringTools;
 
@@ -43,6 +44,16 @@ class CoolUtil
 	inline public static function boundTo(value:Float, min:Float, max:Float):Float
 	{
 		return Math.max(min, Math.min(max, value));
+	}
+
+	public static function fpsLerp(v1:Float, v2:Float, ratio:Float):Float
+	{
+		return FlxMath.lerp(v1, v2, getFPSRatio(ratio));
+	}
+
+	public static function getFPSRatio(ratio:Float):Float
+	{
+		return FlxMath.bound(ratio * 60 * FlxG.elapsed, 0, 1);
 	}
 
 	public static function listFromString(string:String):Array<String>
