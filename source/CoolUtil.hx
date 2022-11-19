@@ -132,6 +132,8 @@ class CoolUtil
 		return dumbArray;
 	}
 
+	#if FEATURE_FILESYSTEM
+
 	public static function findFilesInPath(path:String, extns:Array<String>, ?filePath:Bool = false, ?deepSearch:Bool = true):Array<String>
 	{
 		var files:Array<String> = [];
@@ -170,4 +172,5 @@ class CoolUtil
 	{
 		return Path.withoutDirectory(Path.withoutExtension(file));
 	}
+	#end
 }

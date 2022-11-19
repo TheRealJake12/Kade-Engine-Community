@@ -371,8 +371,10 @@ class PlayState extends MusicBeatState
 	override public function create()
 	{
 		Paths.clearStoredMemory();
+		#if FEATURE_HSCRIPT
 		scripts = new ScriptGroup();
 		scripts.onAddScript.push(onAddScript);
+		#end
 
 		FlxG.mouse.visible = false;
 		instance = this;
@@ -571,8 +573,9 @@ class PlayState extends MusicBeatState
 		Conductor.changeBPM(SONG.bpm);
 
 		Conductor.bpm = SONG.bpm;
-
-		scripts.setAll("bpm", Conductor.bpm);
+		#if FEATURE_HSCRIPT
+			scripts.setAll("bpm", Conductor.bpm);
+		#end
 
 		if (SONG.eventObjects == null)
 		{
@@ -696,9 +699,12 @@ class PlayState extends MusicBeatState
 			}
 		}
 
+		#if FEATURE_HSCRIPT
 		initScripts();
 
 		scripts.executeAllFunc("create");
+		#end
+		
 
 		if (!stageTesting)
 			Stage = new Stage(SONG.stage);
@@ -1722,8 +1728,11 @@ class PlayState extends MusicBeatState
 			}
 		}
 
+		#if FEATURE_HSCRIPT
 		if (ScriptUtil.hasPause(scripts.executeAllFunc("countdown")))
 			return;
+		#end
+		
 		inCinematic = false;
 		inCutscene = false;
 
@@ -1842,7 +1851,9 @@ class PlayState extends MusicBeatState
 					});
 					FlxG.sound.play(Paths.sound('introGo' + altSuffix), 0.6);
 			}
+			#if FEATURE_HSCRIPT
 			scripts.executeAllFunc("countTick", [swagCounter]);
+			#end
 
 			swagCounter += 1;
 		}, 4);
@@ -2008,7 +2019,10 @@ class PlayState extends MusicBeatState
 		}
 		else
 		{
+			#if FEATURE_HSCRIPT
 			scripts.executeAllFunc("ghostTap", [key]);
+			#end
+			
 			if (canMiss){
 				noteMissPress(data);
 			}
@@ -2065,8 +2079,11 @@ class PlayState extends MusicBeatState
 		previousFrameTime = FlxG.game.ticks;
 		lastReportedPlayheadPosition = 0;
 
+		#if FEATURE_HSCRIPT
 		if (ScriptUtil.hasPause(scripts.executeAllFunc("startSong")))
 			return;
+		#end
+		
 
 		inst.play();
 		vocals.play();
@@ -2211,7 +2228,11 @@ class PlayState extends MusicBeatState
 		var songData = SONG;
 		Conductor.changeBPM(songData.bpm);
 
+		#if FEATURE_HSCRIPT
 		scripts.setAll("bpm", Conductor.bpm);
+		#end
+
+		
 
 		curSong = songData.songId;
 
@@ -2737,6 +2758,7 @@ class PlayState extends MusicBeatState
 		}
 		else if (paused)
 		{
+			#if FEATURE_HSCRIPT
 			if (!ScriptUtil.hasPause(scripts.executeAllFunc("resume")))
 			{
 				if (inst != null && !startingSong)
@@ -2773,6 +2795,42 @@ class PlayState extends MusicBeatState
 				}
 				#end
 			}	
+			#else
+			if (inst != null && !startingSong)
+				{
+					resyncVocals();
+				}
+
+				if (!startTimer.finished)
+					startTimer.active = true;
+				paused = false;
+
+				#if FEATURE_DISCORD
+				if (startTimer.finished)
+				{
+					DiscordClient.changePresence(detailsText
+						+ " "
+						+ SONG.song
+						+ " ("
+						+ storyDifficultyText
+						+ ") "
+						+ Ratings.GenerateLetterRank(accuracy),
+						"\nAcc: "
+						+ HelperFunctions.truncateFloat(accuracy, 2)
+						+ "% | Score: "
+						+ songScore
+						+ " | Misses: "
+						+ misses, iconRPC, true,
+						songLength
+						- Conductor.songPosition);
+				}
+				else
+				{
+					DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy), iconRPC);
+				}
+				#end
+				#end
+
 		}
 
 		super.closeSubState();
@@ -2842,10 +2900,12 @@ class PlayState extends MusicBeatState
 
 	override public function update(elapsed:Float)
 	{
+		#if FEATURE_HSCRIPT
 		if (scripts != null)
 		{
 			scripts.update(elapsed);
 		}
+		#end
 		#if !debug
 		perfectMode = false;
 		#end
@@ -2873,10 +2933,14 @@ class PlayState extends MusicBeatState
 			if (unspawnNotes[0].strumTime - Conductor.songPosition < 14000 * songMultiplier)
 			{
 				var dunceNote:Note = unspawnNotes[0];
+				#if FEATURE_HSCRIPT
 				if (!ScriptUtil.hasPause(scripts.executeAllFunc("spawnNote", [dunceNote])))
 				{
 					notes.add(dunceNote);
 				}
+				#else
+				notes.add(dunceNote);
+				#end
 
 				#if FEATURE_LUAMODCHART
 				if (executeModchart)
@@ -3561,8 +3625,10 @@ class PlayState extends MusicBeatState
 					else
 					{
 						if (!PlayStateChangeables.opponentMode){
+							#if FEATURE_HSCRIPT
 							if (ScriptUtil.hasPause(scripts.executeAllFunc("gameOver")))
 							//return false;
+							#end
 							openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 							isDead = true;
 						}
@@ -3638,9 +3704,13 @@ class PlayState extends MusicBeatState
 				2));
 
 			//hell
-
+			#if FEATURE_HSCRIPT
 			if (!ScriptUtil.hasPause(scripts.executeAllFunc("notesUpdate"))){
-				notes.forEachAlive(function(daNote:Note)
+				scripts.executeAllFunc("notesUpdate");
+			};
+			#end
+			
+			notes.forEachAlive(function(daNote:Note)
 			{
 				var strum:FlxTypedGroup<StaticArrow> = playerStrums;
 				if (!daNote.mustPress)
@@ -3995,7 +4065,6 @@ class PlayState extends MusicBeatState
 					}
 				}
 			});
-			}
 		}
 
 		if (FlxG.save.data.cpuStrums)
@@ -4017,9 +4086,10 @@ class PlayState extends MusicBeatState
 			endSong();
 		#end
 		super.update(elapsed);
-
+		#if FEATURE_HSCRIPT
 		if (scripts != null)
 			scripts.executeAllFunc("updatePost", [elapsed]);
+		#end	
 	}
 
 	public function getSectionByTime(ms:Float):SwagSection
@@ -4095,9 +4165,10 @@ class PlayState extends MusicBeatState
 		vocals.volume = 0;
 		inst.stop();
 		vocals.stop();
-
+		#if FEATURE_HSCRIPT
 		if (ScriptUtil.hasPause(scripts.executeAllFunc("endSong")))
 			return;
+		#end	
 		if (SONG.validScore)
 		{
 			Highscore.saveScore(PlayState.SONG.songId, Math.round(songScore), storyDifficulty);
@@ -4978,8 +5049,9 @@ class PlayState extends MusicBeatState
 				if (luaModchart != null)
 					luaModchart.executeState('playerOneMiss', [direction, Conductor.songPosition]);
 				#end
-
+				#if FEATURE_HSCRIPT
 				scripts.executeAllFunc("noteMiss", [daNote]);
+				#end
 
 				updateAccuracy();
 				updateScoreText();
@@ -4991,8 +5063,10 @@ class PlayState extends MusicBeatState
 		totalPlayed += 1;
 		accuracy = Math.max(0, totalNotesHit / totalPlayed * 100);
 		accuracyDefault = Math.max(0, totalNotesHitDefault / totalPlayed * 100);
+		#if FEATURE_HSCRIPT
 		if (ScriptUtil.hasPause(scripts.executeAllFunc("updateAccuracy")))
 			return;
+		#end	
 		
 		judgementCounter.text = 'Marvelous: ${marvs} \nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\nMisses: ${misses}';
 	}
@@ -5110,7 +5184,9 @@ class PlayState extends MusicBeatState
 						luaModchart.executeState('playerOneSing', [Math.abs(daNote.noteData), Conductor.songPosition]);
 				#end
 
+				#if FEATURE_HSCRIPT
 				scripts.executeAllFunc("opponentNoteHit", [daNote]);
+				#end
 
 				if (SONG.needsVoices)
 					vocals.volume = 1;
@@ -5657,6 +5733,7 @@ class PlayState extends MusicBeatState
 		FlxTween.tween(FlxG.camera, {zoom: 2}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.elasticInOut});
 	}
 
+	#if FEATURE_HSCRIPT
 	function initScripts()
 	{
 		if (scripts == null)
@@ -5757,6 +5834,16 @@ class PlayState extends MusicBeatState
 		script.set("opponentNoteHit", function(?note:Note) {});
 		script.set("noteMiss", function(?note:Note) {});
 
+		script.set("playerOneTurn", function(?note:Note)
+		{
+		});
+		script.set("playerTwoTurn", function(?note:Note)
+		{
+		});
+		script.set("noteMiss", function(?note:Note)
+		{
+		});
+
 		script.set("notesUpdate", function() {}); // ! HAS PAUSE
 
 		script.set("ghostTap", function(?direction:Int) {});
@@ -5829,6 +5916,7 @@ class PlayState extends MusicBeatState
 			}
 		});
 	}
+	#end
 
 	public static inline function getInstance()
 	{
