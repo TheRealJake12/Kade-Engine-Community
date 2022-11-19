@@ -4,6 +4,13 @@ import flixel.FlxG;
 import openfl.utils.Assets as OpenFlAssets;
 import flixel.math.FlxMath;
 
+#if FEATURE_FILESYSTEM
+import sys.io.File;
+import Sys;
+import sys.FileSystem;
+#end
+import haxe.io.Path;
+
 using StringTools;
 
 class CoolUtil
@@ -123,5 +130,44 @@ class CoolUtil
 			dumbArray.push(i);
 		}
 		return dumbArray;
+	}
+
+	public static function findFilesInPath(path:String, extns:Array<String>, ?filePath:Bool = false, ?deepSearch:Bool = true):Array<String>
+	{
+		var files:Array<String> = [];
+
+		if (FileSystem.exists(path))
+		{
+			for (file in FileSystem.readDirectory(path))
+			{
+				var path = haxe.io.Path.join([path, file]);
+				if (!FileSystem.isDirectory(path))
+				{
+					for (extn in extns)
+					{
+						if (file.endsWith(extn))
+						{
+							if (filePath)
+								files.push(path);
+							else
+								files.push(file);
+						}
+					}
+				}
+				else if (deepSearch) // ! YAY !!!! -lunar
+				{
+					var pathsFiles:Array<String> = findFilesInPath(path, extns);
+
+					for (_ in pathsFiles)
+						files.push(_);
+				}
+			}
+		}
+		return files;
+	}
+
+	public static inline function getFileStringFromPath(file:String):String
+	{
+		return Path.withoutDirectory(Path.withoutExtension(file));
 	}
 }

@@ -37,6 +37,8 @@ import openfl.Lib;
 import sys.thread.Mutex;
 #end
 
+import cpp.CPPInterface;
+
 using StringTools;
 
 class TitleState extends MusicBeatState
@@ -62,6 +64,15 @@ class TitleState extends MusicBeatState
 		#end
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
+
+		#if cpp
+		CPPInterface.darkMode();
+		#end
+
+		#if cpp
+		cpp.NativeGc.enable(true);
+		cpp.NativeGc.run(true);
+		#end
 
 		if (FlxG.save.data.fpsCap > 420)
 			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(420);

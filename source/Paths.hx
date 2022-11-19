@@ -199,7 +199,7 @@ class Paths
 		return '$library:assets/$library/$file';
 	}
 
-	inline static function getPreloadPath(file:String)
+	inline static public function getPreloadPath(file:String)
 	{
 		return 'assets/$file';
 	}
@@ -207,6 +207,11 @@ class Paths
 	inline static public function hscript(key:String, ?library:String)
 	{
 		return getPath('data/$key.hx', TEXT, library);
+	}
+
+	inline static public function hx(key:String, ?library:String)
+	{
+		return getPath('$key.hx', TEXT, library);
 	}
 
 	inline static public function file(file:String, ?library:String, type:AssetType = TEXT)
@@ -257,11 +262,6 @@ class Paths
 	inline static public function soundRandom(key:String, min:Int, max:Int, ?library:String)
 	{
 		return sound(key + FlxG.random.int(min, max), library);
-	}
-
-	inline static public function hx(key:String, ?library:String)
-	{
-		return getPath('data/$key.hx', TEXT, library);
 	}
 
 	inline static public function animJson(key:String, ?library:String)

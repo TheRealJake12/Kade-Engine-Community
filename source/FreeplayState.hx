@@ -43,6 +43,7 @@ using StringTools;
 class FreeplayState extends MusicBeatState
 {
 	public static var songs:Array<FreeplaySongMetadata> = [];
+	public static var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
 
 	var selector:FlxText;
 
@@ -115,12 +116,12 @@ class FreeplayState extends MusicBeatState
 		list = CoolUtil.coolTextFile(Paths.txt('data/freeplaySonglist'));
 
 		#if FEATURE_HSCRIPT
-			executeHScript = OpenFlAssets.exists(Paths.hscript('scripts/states/freeplay/script'));
+			executeHScript = OpenFlAssets.exists(Paths.hx('assets/scripts/states/freeplay/script'));
 		#end
 
 		if (FlxG.save.data.gen)
 		{
-			Debug.logInfo('Freeplay Script? $executeHScript at ${Paths.hscript('scripts/states/freeplay/script')}');
+			Debug.logInfo('Freeplay Script? $executeHScript at ${Paths.hscript('assets/scripts/states/freeplay/script')}');
 		}
 
 		cached = false;
@@ -896,10 +897,10 @@ class FreeplayState extends MusicBeatState
 		#if FEATURE_HSCRIPT
 		var path:String;
 
-		if (Script.scriptName == null || Script.scriptName == '' || Script.scriptName == 'script')
-			path = Paths.hscript('scripts/states/freeplay/script');
+		if (Script.scriptName == null || Script.scriptName == '' || Script.scriptName == 'freeplay')
+			path = Paths.hx('states/freeplay', 'scripts');
 		else
-			path = Paths.hscript('scripts/states/freeplay/script');
+			path = Paths.hx('states/freeplay', 'scripts');
 
 		var hxdata:String = "";
 
@@ -912,22 +913,22 @@ class FreeplayState extends MusicBeatState
 
 			script.variables.set('setVar', function(name:String, value:Dynamic)
 			{
-				PlayState.variables.set(name, value);
+				FreeplayState.variables.set(name, value);
 			});
 
 			script.variables.set('getVar', function(name:String)
 			{
 				var result:Dynamic = null;
-				if (PlayState.variables.exists(name))
-					result = PlayState.variables.get(name);
+				if (FreeplayState.variables.exists(name))
+					result = FreeplayState.variables.get(name);
 				return result;
 			});
 
 			script.variables.set('removeVar', function(name:String)
 			{
-				if (PlayState.variables.exists(name))
+				if (FreeplayState.variables.exists(name))
 				{
-					PlayState.variables.remove(name);
+					FreeplayState.variables.remove(name);
 					return true;
 				}
 				return false;
