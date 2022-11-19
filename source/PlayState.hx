@@ -3625,12 +3625,7 @@ class PlayState extends MusicBeatState
 					else
 					{
 						if (!PlayStateChangeables.opponentMode){
-							#if FEATURE_HSCRIPT
-							if (ScriptUtil.hasPause(scripts.executeAllFunc("gameOver")))
-							//return false;
-							#end
 							openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
-							isDead = true;
 						}
 					}
 
@@ -3668,7 +3663,7 @@ class PlayState extends MusicBeatState
 					|| FlxG.save.data.optimize
 					|| (PlayStateChangeables.opponentMode && !dad.animOffsets.exists('firstDeath')))
 				{
-					MusicBeatState.switchState(new PlayState());
+					MusicBeatState.resetState();
 				}
 				else
 				{
@@ -4165,10 +4160,6 @@ class PlayState extends MusicBeatState
 		vocals.volume = 0;
 		inst.stop();
 		vocals.stop();
-		#if FEATURE_HSCRIPT
-		if (ScriptUtil.hasPause(scripts.executeAllFunc("endSong")))
-			return;
-		#end	
 		if (SONG.validScore)
 		{
 			Highscore.saveScore(PlayState.SONG.songId, Math.round(songScore), storyDifficulty);
@@ -5810,6 +5801,7 @@ class PlayState extends MusicBeatState
 		script.set("game", PlayState.instance);
 
 		script.set("Debug", Debug);
+		script.set("health", health);
 
 
 		// FUNCTIONS
