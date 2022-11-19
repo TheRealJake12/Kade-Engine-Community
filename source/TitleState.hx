@@ -36,8 +36,9 @@ import openfl.Lib;
 #if FEATURE_MULTITHREADING
 import sys.thread.Mutex;
 #end
-
+#if cpp
 import cpp.CPPInterface;
+#end
 
 using StringTools;
 
@@ -65,7 +66,7 @@ class TitleState extends MusicBeatState
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 
-		#if cpp
+		#if windows
 		CPPInterface.darkMode();
 		#end
 
