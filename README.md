@@ -1,6 +1,8 @@
 ## **Kade Engine Community**
 ![Kade Engine logo](assets/preload/images/KadeEngineLogoOld.png)
 
+![Repo size](https://img.shields.io/github/repo-size/TheRealJake12/Kade-Engine-Community)
+
 Hey you!
 Thanks for visiting this Repo!
 Versions Below 1.4 Were Made With Kade Engine 1.7.1 Pre-Release With 0 Modsupport.
