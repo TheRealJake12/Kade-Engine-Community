@@ -140,7 +140,7 @@ class MainMenuState extends MusicBeatState
 		else
 			controls.setKeyboardScheme(KeyboardScheme.Duo(true), true);
 
-		changeItem();
+		changeItem(0, false);
 
 		super.create();
 		Paths.clearUnusedMemory();
@@ -171,12 +171,12 @@ class MainMenuState extends MusicBeatState
 		{
 			if (FlxG.keys.justPressed.UP || controls.UP_P)
 			{
-				changeItem(-1);
+				changeItem(-1, true);
 			}
 
 			if (FlxG.keys.justPressed.DOWN || controls.DOWN_P)
 			{
-				changeItem(1);
+				changeItem(1, true);
 			}
 
 			if (controls.BACK || FlxG.mouse.justPressedRight)
@@ -210,7 +210,7 @@ class MainMenuState extends MusicBeatState
 
 			if (FlxG.mouse.wheel != 0)
 			{
-				changeItem(-shiftMult * FlxG.mouse.wheel);
+				changeItem(-shiftMult * FlxG.mouse.wheel, true);
 			}
 			#end
 
@@ -288,11 +288,12 @@ class MainMenuState extends MusicBeatState
 		}
 	}
 
-	function changeItem(huh:Int = 0)
+	function changeItem(huh:Int = 0, ?sound:Bool = false)
 	{
 		curSelected += huh;
 
-		FlxG.sound.play(Paths.sound('scrollMenu'));
+		if (sound = true)
+			FlxG.sound.play(Paths.sound('scrollMenu'));
 
 		if (curSelected >= menuItems.length)
 			curSelected = 0;
