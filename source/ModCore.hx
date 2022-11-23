@@ -117,6 +117,7 @@ class ModCore
 				"songs" => "./songs",
 				"shared" => "./",
 				"videos" => "./videos",
+				"scripts" => "./scripts",
 				"tutorial" => "./tutorial",
 				"week1" => "./week1",
 				"week2" => "./week2",

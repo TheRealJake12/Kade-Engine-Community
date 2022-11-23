@@ -440,6 +440,7 @@ class PlayState extends MusicBeatState
 		PlayStateChangeables.useDownscroll = FlxG.save.data.downscroll;
 		PlayStateChangeables.safeFrames = FlxG.save.data.frames;
 		PlayStateChangeables.scrollSpeed = FlxG.save.data.scrollSpeed * songMultiplier;
+		PlayStateChangeables.Optimize = FlxG.save.data.optimize;
 
 		if (!isStoryMode)
 		{
@@ -717,40 +718,41 @@ class PlayState extends MusicBeatState
 					if (person.curCharacter == char)
 						person.setPosition(pos[0], pos[1]);
 		}
+			if (!FlxG.save.data.optimize){
+				gf.x += gf.charPos[0];
+				gf.y += gf.charPos[1];
+				dad.x += dad.charPos[0];
+				dad.y += dad.charPos[1];
+				boyfriend.x += boyfriend.charPos[0];
+				boyfriend.y += boyfriend.charPos[1];
 
-			gf.x += gf.charPos[0];
-			gf.y += gf.charPos[1];
-			dad.x += dad.charPos[0];
-			dad.y += dad.charPos[1];
-			boyfriend.x += boyfriend.charPos[0];
-			boyfriend.y += boyfriend.charPos[1];
+				if (dad.hasTrail)
+				{
+					if (FlxG.save.data.distractions)
+					{
+						// trailArea.scrollFactor.set();
+						if (!FlxG.save.data.optimize)
+						{
+							var evilTrail = new FlxTrail(dad, null, 4, 24, 0.3, 0.069);
+							// evilTrail.changeValuesEnabled(false, false, false, false);
+							// evilTrail.changeGraphic()
+							add(evilTrail);
+						}
+						// evilTrail.scrollFactor.set(1.1, 1.1);
+					}
+				}
+				if (FlxG.save.data.background)
+					Stage.update(0);
 
-			if (dad.hasTrail)
+			if (FlxG.save.data.background)
 			{
+				for (i in Stage.toAdd)
+				{
+					add(i);
+				}
+
 				if (FlxG.save.data.distractions)
 				{
-					// trailArea.scrollFactor.set();
-					if (!FlxG.save.data.optimize)
-					{
-						var evilTrail = new FlxTrail(dad, null, 4, 24, 0.3, 0.069);
-						// evilTrail.changeValuesEnabled(false, false, false, false);
-						// evilTrail.changeGraphic()
-						add(evilTrail);
-					}
-					// evilTrail.scrollFactor.set(1.1, 1.1);
-				}
-			}
-			if (FlxG.save.data.background)
-				Stage.update(0);
-
-		if (FlxG.save.data.background)
-		{
-			for (i in Stage.toAdd)
-			{
-				add(i);
-			}
-
-			if (FlxG.save.data.distractions){
 					if (SONG.songId == 'stress')
 					{
 						switch (gf.curCharacter)
@@ -760,27 +762,28 @@ class PlayState extends MusicBeatState
 						}
 					}
 				}
-			for (index => array in Stage.layInFront)
-			{
-				switch (index)
+				for (index => array in Stage.layInFront)
 				{
-					case 0:
-						add(gf);
-						gf.scrollFactor.set(0.95, 0.95);
-						for (bg in array)
-							add(bg);
-					case 1:
-						add(dad);
-						for (bg in array)
-							add(bg);
-					case 2:
-						add(boyfriend);
-						for (bg in array)
-							add(bg);
-					case 3:
-				}
+					switch (index)
+					{
+						case 0:
+							add(gf);
+							gf.scrollFactor.set(0.95, 0.95);
+							for (bg in array)
+								add(bg);
+						case 1:
+							add(dad);
+							for (bg in array)
+								add(bg);
+						case 2:
+							add(boyfriend);
+							for (bg in array)
+								add(bg);
+						case 3:
+					}
+				}	
 			}
-		}
+			}	
 		
 			
 
@@ -1238,7 +1241,8 @@ class PlayState extends MusicBeatState
 		{
 			new FlxTimer().start(1, function(timer)
 			{
-				startCountdown();
+				if (!inCutscene)
+					startCountdown();
 			});
 		}
 
@@ -2671,7 +2675,7 @@ class PlayState extends MusicBeatState
 			babyArrow.x += 98.5; // Tryna make it not offset because it was pissing me off + Psych Engine has it somewhat like this.
 			babyArrow.x += ((FlxG.width / 2) * player);
 
-			if (FlxG.save.data.middleScroll)
+			if (FlxG.save.data.middleScroll || FlxG.save.data.optimize)
 			{
 				if (!PlayStateChangeables.opponentMode)
 				{
@@ -4443,7 +4447,7 @@ class PlayState extends MusicBeatState
 		rating.y -= 50;
 		rating.x = coolText.x - 125;
 
-		if (!FlxG.save.data.middleScroll || !FlxG.save.data.popup && (!PlayStateChangeables.Optimize))
+		if (!FlxG.save.data.middleScroll || PlayStateChangeables.Optimize|| !FlxG.save.data.popup)
 			rating.x = (coolText.x - 125)
 		else
 			rating.x = (coolText.x + 200);

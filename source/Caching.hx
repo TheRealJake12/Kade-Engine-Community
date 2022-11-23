@@ -92,26 +92,6 @@ class Caching extends MusicBeatState
 			songs = Paths.listSongsToCache();
 
 		// TODO: Get the song list from OpenFlAssets.
-
-		if (FlxG.save.data.cacheCharacters)
-		{
-			Debug.logTrace("caching images...");
-
-			// TODO: Refactor this to use OpenFlAssets.
-			for (i in FileSystem.readDirectory(FileSystem.absolutePath("assets/shared/images/characters")))
-			{
-				if (!i.endsWith(".png"))
-					continue;
-				images.push(i);
-			}
-
-			for (i in FileSystem.readDirectory(FileSystem.absolutePath("assets/shared/images/noteskins")))
-			{
-				if (!i.endsWith(".png"))
-					continue;
-				images.push(i);
-			}
-		}
 		#end
 
 		toBeDone = Lambda.count(songs) + Lambda.count(music) + Lambda.count(sounds);
@@ -154,21 +134,6 @@ class Caching extends MusicBeatState
 	function cache()
 	{
 		#if FEATURE_FILESYSTEM
-
-		for (i in images)
-		{
-			var replaced = i.replace(".png", "");
-
-			// var data:BitmapData = BitmapData.fromFile("assets/shared/images/characters/" + i);
-			var imagePath = Paths.image('characters/$i', 'shared');
-			Debug.logTrace('Caching character graphic $i ($imagePath)...');
-			var data = OpenFlAssets.getBitmapData(imagePath);
-			var graph = FlxGraphic.fromBitmapData(data);
-			graph.persist = true;
-			graph.destroyOnNoUse = false;
-			bitmapData.set(replaced, graph);
-			done++;
-		}
 
 		for (i in songs)
 		{
