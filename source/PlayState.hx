@@ -3,8 +3,7 @@ package;
 import flixel.group.FlxSpriteGroup;
 import perf.Destroyer;
 import CustomFadeTransition;
-import shader.FXAAShader;
-import shader.ShadersHandler;
+import Shaders;
 import flixel.util.FlxSpriteUtil;
 import openfl.utils.Assets as OpenFlAssets;
 #if FEATURE_LUAMODCHART
@@ -12,6 +11,8 @@ import LuaClass.LuaCamera;
 import LuaClass.LuaCharacter;
 import LuaClass.LuaNote;
 #end
+import openfl.filters.ShaderFilter;
+import openfl.filters.BitmapFilter;
 import lime.media.openal.AL;
 import Song.Event;
 import openfl.media.Sound;
@@ -254,6 +255,12 @@ class PlayState extends MusicBeatState
 
 	public var camOther:FlxCamera;
 
+	public var camHUDShaders:Array<ShaderEffect> = [];
+	public var camGameShaders:Array<ShaderEffect> = [];
+	public var camNotesShaders:Array<ShaderEffect> = [];
+	public var shaderUpdates:Array<Float->Void> = [];
+	public var camStrumsShaders:Array<ShaderEffect> = [];
+	public var overlayShaders:Array<ShaderEffect> = [];
 	var tankmanRun:FlxTypedGroup<TankmenBG>;
 
 	public var cannotDie = false;
@@ -964,7 +971,7 @@ class PlayState extends MusicBeatState
 		#if FEATURE_LUAMODCHART
 		if (executeModchart)
 		{
-			luaModchart = ModchartState.createModchartState(isStoryMode);
+			luaModchart = ModchartState.createModchartState();
 			luaModchart.executeState('start', [PlayState.SONG.songId]);
 		}
 		#end
@@ -1619,6 +1626,62 @@ class PlayState extends MusicBeatState
 					boyfriend.animation.finishCallback = null;
 				});
 			}
+		}
+	}
+
+	public function addShaderToCamera(camera:String, effect:ShaderEffect)
+	{
+		switch (camera.toLowerCase())
+		{
+			case 'camhud' | 'hud':
+				camHUDShaders.push(effect);
+				var newCamEffects:Array<BitmapFilter> = [];
+				for (i in camHUDShaders)
+					newCamEffects.push(new ShaderFilter(i.shader));
+				camHUD.setFilters(newCamEffects);
+			case 'camgame' | 'game':
+				camGameShaders.push(effect);
+				var newCamEffects:Array<BitmapFilter> = [];
+				for (i in camGameShaders)
+					newCamEffects.push(new ShaderFilter(i.shader));
+				camGame.setFilters(newCamEffects);
+			case 'camnotes' | 'notes':
+				camNotesShaders.push(effect);
+				var newCamEffects:Array<BitmapFilter> = [];
+				for (i in camNotesShaders)
+					newCamEffects.push(new ShaderFilter(i.shader));
+				camNotes.setFilters(newCamEffects);
+			case 'camstrums' | 'strums':
+				camStrumsShaders.push(effect);
+				var newCamEffects:Array<BitmapFilter> = [];
+				for (i in camStrumsShaders)
+					newCamEffects.push(new ShaderFilter(i.shader));
+				camStrums.setFilters(newCamEffects);
+			case 'overlay' | 'camoverlay':
+				overlayShaders.push(effect);
+				var newCamEffects:Array<BitmapFilter> = [];
+				for (i in overlayShaders)
+					newCamEffects.push(new ShaderFilter(i.shader));
+				overlayCam.setFilters(newCamEffects);
+		}
+	}
+
+	public function clearShaderFromCamera(camera:String)
+	{
+		switch (camera.toLowerCase())
+		{
+			case 'camhud' | 'hud':
+				camHUDShaders = [];
+				var newCamEffects:Array<BitmapFilter> = [];
+				camHUD.setFilters(newCamEffects);
+			case 'camgame' | 'game':
+				camGameShaders = [];
+				var newCamEffects:Array<BitmapFilter> = [];
+				camGame.setFilters(newCamEffects);
+			case 'overlay' | 'overlaycam':
+				overlayShaders = [];
+				var newCamEffects:Array<BitmapFilter> = [];
+				overlayCam.setFilters(newCamEffects);	
 		}
 	}
 
@@ -3719,6 +3782,7 @@ class PlayState extends MusicBeatState
 				var strumAngle = strum.members[daNote.noteData].modAngle;
 				var strumDirection = strum.members[daNote.noteData].direction;
 				var angleDir = strumDirection * Math.PI / 180;
+				daNote.modAngle = strumDirection - 90 + strumAngle;
 				daNote.x = strumX + Math.cos(angleDir) * daNote.distance;
 				if (!daNote.modifiedByLua)
 				{
@@ -4085,6 +4149,8 @@ class PlayState extends MusicBeatState
 			endSong();
 		#end
 		super.update(elapsed);
+		for (i in shaderUpdates)
+			i(elapsed);
 		#if FEATURE_HSCRIPT
 		if (scripts != null)
 			scripts.executeAllFunc("updatePost", [elapsed]);
@@ -4166,10 +4232,10 @@ class PlayState extends MusicBeatState
 		vocals.stop();
 		if (SONG.validScore)
 		{
-			Highscore.saveScore(PlayState.SONG.songId, Math.round(songScore), storyDifficulty);
-			Highscore.saveCombo(PlayState.SONG.songId, Ratings.GenerateComboRank(accuracy), storyDifficulty);
-			Highscore.saveAcc(PlayState.SONG.songId, HelperFunctions.truncateFloat(accuracy, 2), storyDifficulty);
-			Highscore.saveLetter(PlayState.SONG.songId, Ratings.GenerateLetterRank(accuracy), storyDifficulty);
+			Highscore.saveScore(PlayState.SONG.songId, Math.round(songScore), storyDifficulty, songMultiplier);
+			Highscore.saveCombo(PlayState.SONG.songId, Ratings.GenerateComboRank(accuracy), storyDifficulty, songMultiplier);
+			Highscore.saveAcc(PlayState.SONG.songId, HelperFunctions.truncateFloat(accuracy, 2), storyDifficulty, songMultiplier);
+			Highscore.saveLetter(PlayState.SONG.songId, Ratings.GenerateLetterRank(accuracy), storyDifficulty, songMultiplier);
 		}
 
 		if (offsetTesting)
@@ -4247,7 +4313,7 @@ class PlayState extends MusicBeatState
 
 					if (SONG.validScore)
 					{
-						Highscore.saveWeekScore(storyWeek, campaignScore, storyDifficulty);
+						Highscore.saveWeekScore(storyWeek, campaignScore, storyDifficulty, 1);
 					}
 				}
 				else
@@ -5069,6 +5135,15 @@ class PlayState extends MusicBeatState
 	function updateScoreText()
 	{
 		scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS,(FlxG.save.data.roundAccuracy ? FlxMath.roundDecimal(accuracy, 0) : accuracy));
+	}
+
+	function receptorTween()
+	{
+		for (i in 0...strumLineNotes.length)
+		{
+			createTween(strumLineNotes.members[i], {modAngle: strumLineNotes.members[i].modAngle + 360}, 0.5 / songMultiplier,
+				{ease: FlxEase.smootherStepInOut});
+		}
 	}
 
 	function getKeyPresses(note:Note):Int

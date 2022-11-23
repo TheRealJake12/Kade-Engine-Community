@@ -7,6 +7,7 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import PlayState;
+import LuaClass;
 
 using StringTools;
 
@@ -68,6 +69,10 @@ class Note extends FlxSprite
 
 	public var children:Array<Note> = [];
 	public var distance:Float = 2000;
+
+	#if FEATURE_LUAMODCHART
+	public var LuaNote:LuaNote;
+	#end
 
 	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inCharter:Bool = false, ?isPlayer:Bool = false,?isAlt:Bool = false, ?bet:Float = 0, ?noteShit:String = 'normal')
 	{
@@ -419,7 +424,7 @@ class Note extends FlxSprite
 		{
 			if (!sustainActive)
 			{
-				alpha = 0.3;
+				alpha = FlxG.save.data.alpha - 0.3;
 			}
 		}
 

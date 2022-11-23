@@ -588,28 +588,33 @@ class FreeplayState extends MusicBeatState
 				{
 					rate -= 0.05;
 					updateDiffCalc();
+					updateScoreText();
 				}
 				if (FlxG.keys.justPressed.RIGHT || controls.RIGHT_P)
 				{
 					rate += 0.05;
 					updateDiffCalc();
+					updateScoreText();
 				}
 
 				if (FlxG.keys.justPressed.R)
 				{
 					rate = 1;
 					updateDiffCalc();
+					updateScoreText();
 				}
 
 				if (rate > 3)
 				{
 					rate = 3;
 					updateDiffCalc();
+					updateScoreText();
 				}
 				else if (rate < 0.5)
 				{
 					rate = 0.5;
 					updateDiffCalc();
+					updateScoreText();
 				}
 
 				previewtext.text = "Rate: < " + FlxMath.roundDecimal(rate, 2) + "x >";
@@ -995,7 +1000,15 @@ class FreeplayState extends MusicBeatState
 		if (curDifficulty >= songs[curSelected].diffs.length)
 			curDifficulty = 0;	
 
+		updateScoreText();
+		updateDiffCalc();
+		diffText.text = 'DIFFICULTY: < ' + songs[curSelected].diffs[curDifficulty].toUpperCase() + ' >';
+	}
+
+	function updateScoreText()
+	{
 		var songHighscore = StringTools.replace(songs[curSelected].songName, " ", "-");
+		// adjusting the highscore song name to be compatible (changeDiff)
 		switch (songHighscore)
 		{
 			case 'Dad-Battle':
@@ -1005,15 +1018,12 @@ class FreeplayState extends MusicBeatState
 			case 'M.I.L.F':
 				songHighscore = 'Milf';
 		}
-
 		#if !switch
-		intendedScore = Highscore.getScore(songHighscore, curDifficulty);
-		combo = Highscore.getCombo(songHighscore, curDifficulty);
-		letter = Highscore.getLetter(songHighscore, curDifficulty);
-		intendedaccuracy = Highscore.getAcc(songHighscore, curDifficulty);
+		intendedScore = Highscore.getScore(songHighscore, curDifficulty, rate);
+		combo = Highscore.getCombo(songHighscore, curDifficulty, rate);
+		letter = Highscore.getLetter(songHighscore, curDifficulty, rate);
+		intendedaccuracy = Highscore.getAcc(songHighscore, curDifficulty, rate);
 		#end
-		updateDiffCalc();
-		diffText.text = 'DIFFICULTY: < ' + songs[curSelected].diffs[curDifficulty].toUpperCase() + ' >';
 	}
 
 	public function changeSelection(change:Int = 0)
@@ -1055,12 +1065,7 @@ class FreeplayState extends MusicBeatState
 				songHighscore = 'Milf';
 		}
 
-		#if !switch
-		intendedScore = Highscore.getScore(songHighscore, curDifficulty);
-		combo = Highscore.getCombo(songHighscore, curDifficulty);
-		letter = Highscore.getLetter(songHighscore, curDifficulty);
-		intendedaccuracy = Highscore.getAcc(songHighscore, curDifficulty);
-		#end
+		updateScoreText();
 
 		var hmm;
 		try
