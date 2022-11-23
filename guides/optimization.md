@@ -2,6 +2,7 @@
 
 ## Requirements
 1. A brain lol this is easy
+Not Required If You Are Using Modcore.
 
 
 ### Step 1. Characters
