@@ -1,6 +1,7 @@
 package;
-
+#if desktop
 import cpp.vm.Gc;
+#end
 import openfl.events.Event;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
@@ -131,9 +132,11 @@ class KadeEngineFPS extends TextField
 		#if windows
 		// now be an ACTUAL real man and get the memory from plain & straight c++
 		var actualMem:Float = obtainMemory();
-		#else
+		#elseif !html5
 		// be a real man and calculate memory from hxcpp
 		var actualMem:Float = Gc.memInfo64(3); // update: this sucks
+		#else
+		var actualMem = Math.abs(FlxMath.roundDecimal(System.totalMemory / 1000000, 1));
 		#end
 		var mem:Float = Math.round(actualMem / 1024 / 1024 * 100) / 100;
 		if (mem > memPeak)
@@ -143,7 +146,6 @@ class KadeEngineFPS extends TextField
 		var lmao:String = (FlxG.save.data.fpsmark ? (Main.watermarks ? "\n"+ MainMenuState.kecVer : "\n" + "Kade Engine 1.8.1") : "");
 		currentFPS = Math.round((currentCount + cacheCount) / 2);
 		displayFPS = (FlxG.save.data.fps ? "FPS: " + currentFPS : "");
-		memoryMegas = Math.abs(FlxMath.roundDecimal(System.totalMemory / 1000000, 1));
 
 		if (currentCount != cacheCount)
 		{

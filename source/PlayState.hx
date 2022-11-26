@@ -5953,8 +5953,47 @@ class PlayState extends MusicBeatState
 		// NOTES
 		script.set("notes", notes);
 		script.set("strumLineNotes", strumLineNotes);
-		script.set("playerStrums", playerStrums);
-		script.set("cpuStrums", cpuStrums);
+		// mf give me those x's
+		script.set("playerStrumsX0", playerStrums.members[0].x);
+		script.set("playerStrumsX1", playerStrums.members[1].x);
+		script.set("playerStrumsX2", playerStrums.members[2].x);
+		script.set("playerStrumsX3", playerStrums.members[3].x);
+		script.set("cpuStrumsX0", cpuStrums.members[0].x);
+		script.set("cpuStrumsX1", cpuStrums.members[1].x);
+		script.set("cpuStrumsX2", cpuStrums.members[2].x);
+		script.set("cpuStrumsX3", cpuStrums.members[3].x);
+
+		// mf give me those y's
+		script.set("playerStrumsY0", playerStrums.members[0].y);
+		script.set("playerStrumsY1", playerStrums.members[1].y);
+		script.set("playerStrumsY2", playerStrums.members[2].y);
+		script.set("playerStrumsY3", playerStrums.members[3].y);
+		script.set("cpuStrumsY0", cpuStrums.members[0].y);
+		script.set("cpuStrumsY1", cpuStrums.members[1].y);
+		script.set("cpuStrumsY2", cpuStrums.members[2].y);
+		script.set("cupStrumsY3", cpuStrums.members[3].y);
+
+		// mf give me those angles
+		script.set("playerStrumsAngle0", playerStrums.members[0].angle);
+		script.set("playerStrumsAngle1", playerStrums.members[1].angle);
+		script.set("playerStrumsAngle2", playerStrums.members[2].angle);
+		script.set("playerStrumsAngle3", playerStrums.members[3].angle);
+		script.set("cpuStrumsAngle0", cpuStrums.members[0].angle);
+		script.set("cpuStrumsAngle1", cpuStrums.members[1].angle);
+		script.set("cpuStrumsAngle2", cpuStrums.members[2].angle);
+		script.set("cpuStrumsAngle3", cpuStrums.members[3].angle);
+
+		// all together
+		for (i in 0...playerStrums.length){
+			script.set("playerStrumsX", playerStrums.members[i].x);
+			script.set("playerStrumsY", playerStrums.members[i].y);
+		}
+
+		for (i in 0...cpuStrums.length)
+		{
+			script.set("cpuStrumsX", cpuStrums.members[i].x);
+			script.set("cpuStrumsY", cpuStrums.members[i].y);
+		}
 
 		script.set("unspawnNotes", unspawnNotes);
 

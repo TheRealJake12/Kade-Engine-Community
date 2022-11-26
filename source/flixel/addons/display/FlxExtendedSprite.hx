@@ -1,7 +1,5 @@
 package flixel.addons.display;
 
-package flixel.addons.display;
-
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.plugin.FlxMouseControl;

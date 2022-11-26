@@ -252,8 +252,8 @@ class KadeEngineData
 		if (FlxG.save.data.autoPause == null)
 			FlxG.save.data.autoPause = false;
 
-		if (FlxG.save.data.volume == null)
-			FlxG.save.data.volume = 1;	
+		//if (FlxG.save.data.volume == null)
+			//FlxG.save.data.volume = 1;	
 		Conductor.recalculateTimings();
 		PlayerSettings.player1.controls.loadKeyBinds();
 
