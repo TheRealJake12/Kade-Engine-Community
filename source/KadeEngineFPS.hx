@@ -1,3 +1,9 @@
+package;
+
+import cpp.vm.Gc;
+import openfl.events.Event;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
 import openfl.system.System;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
@@ -21,6 +27,16 @@ import openfl.Lib;
 	The FPS class provides an easy-to-use monitor to display
 	the current frame rate of an OpenFL project
 **/
+#if windows
+@:headerCode("
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <psapi.h>
+// are you serious?? 
+// do i have to include this after windows.h to not get outrageous compilation errors??????
+// one side of my brains loves c++ and the other one hates it
+")
+#end
 #if !openfl_debug
 @:fileXml('tags="haxe,release"')
 @:noDebug
@@ -31,7 +47,8 @@ class KadeEngineFPS extends TextField
 		The current frame rate, expressed using frames-per-second
 	**/
 	public var currentFPS(default, null):Int;
-
+	
+	private var memPeak:Float = 0;
 	public var memoryMegas:Float = 0;
 
 	public var memoryTotal:Float = 0;
@@ -111,6 +128,17 @@ class KadeEngineFPS extends TextField
 			times.shift();
 		}
 
+		#if windows
+		// now be an ACTUAL real man and get the memory from plain & straight c++
+		var actualMem:Float = obtainMemory();
+		#else
+		// be a real man and calculate memory from hxcpp
+		var actualMem:Float = Gc.memInfo64(3); // update: this sucks
+		#end
+		var mem:Float = Math.round(actualMem / 1024 / 1024 * 100) / 100;
+		if (mem > memPeak)
+			memPeak = mem;
+
 		var currentCount = times.length;
 		var lmao:String = (FlxG.save.data.fpsmark ? (Main.watermarks ? "\n"+ MainMenuState.kecVer : "\n" + "Kade Engine 1.8.1") : "");
 		currentFPS = Math.round((currentCount + cacheCount) / 2);
@@ -119,9 +147,7 @@ class KadeEngineFPS extends TextField
 
 		if (currentCount != cacheCount)
 		{
-			if (memoryMegas > memoryTotal)
-				memoryTotal = memoryMegas;
-			memoryUsage = (FlxG.save.data.mem ? "Memory Usage: " + memoryMegas + " MB" : "");
+			memoryUsage = (FlxG.save.data.mem ? "Memory Usage: " + mem + " MB" : "");
 
 			text = ('$displayFPS\n'
 				+ '$memoryUsage'
@@ -156,4 +182,21 @@ class KadeEngineFPS extends TextField
 
 		cacheCount = currentCount;
 	}
+	#if windows // planning to do the same for linux but im lazy af so rn it'll use the hxcpp gc
+	@:functionCode("
+		// ily windows api <3
+		auto memhandle = GetCurrentProcess();
+		PROCESS_MEMORY_COUNTERS pmc;
+		if (GetProcessMemoryInfo(memhandle, &pmc, sizeof(pmc)))
+			return(pmc.WorkingSetSize);
+		else
+			return 0;
+	")
+	function obtainMemory():Dynamic
+	{
+		return 0;
+	}
+	#end
 }
+
+// https://imgur.com/a/LVkQmqe

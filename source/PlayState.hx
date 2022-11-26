@@ -4590,7 +4590,7 @@ class PlayState extends MusicBeatState
 		comboSpr.acceleration.y = 600;
 		comboSpr.velocity.y -= 150;
 
-		if (FlxG.save.data.rateStack)
+		if (!FlxG.save.data.rateStack)
 		{
 			if(lastRating != null) lastRating.kill();
 			lastRating = rating;
@@ -4672,7 +4672,7 @@ class PlayState extends MusicBeatState
 			seperatedScore.push(Std.parseInt(str));
 		}
 
-		if (FlxG.save.data.rateStack)
+		if (!FlxG.save.data.rateStack)
 		{
 			if (lastCombo != null) lastCombo.kill();
 			lastCombo = comboSpr;
@@ -4711,7 +4711,7 @@ class PlayState extends MusicBeatState
 			if (FlxG.save.data.popup)
 				add(numScore);
 
-			if (FlxG.save.data.rateStack)
+			if (!FlxG.save.data.rateStack)
 				lastScore.push(numScore);
 
 			FlxTween.tween(numScore, {alpha: 0}, 0.2, {

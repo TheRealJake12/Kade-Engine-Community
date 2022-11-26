@@ -472,9 +472,9 @@ class Paths
 	public static function clearStoredMemory(?cleanUnused:Bool = false)
 	{
 		if (FlxG.save.data.unload){
-			#if FEATURE_MULTITHREADING
+		#if FEATURE_MULTITHREADING
 		// clear remaining objects
-		perf.MasterObjectLoader.resetAssets();
+		MasterObjectLoader.resetAssets();
 		#end
 
 		// clear anything not in the tracked assets list

@@ -1,4 +1,4 @@
-package perf;
+
 #if FEATURE_MULTITHREADING
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -73,7 +73,6 @@ class MasterObjectLoader
 				counter++;
 			}
 		}
-		//Debug.logTrace('Removed ${counter} objects');
 		Objects = [];
 		for (k in keep)
 			Objects.push(k);

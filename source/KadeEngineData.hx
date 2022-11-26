@@ -71,7 +71,7 @@ class KadeEngineData
 			FlxG.save.data.distractions = true;
 
 		if (FlxG.save.data.colour == null)
-			FlxG.save.data.colour = false;
+			FlxG.save.data.colour = true;
 
 		if (FlxG.save.data.stepMania == null)
 			FlxG.save.data.stepMania = false;
@@ -251,6 +251,9 @@ class KadeEngineData
 
 		if (FlxG.save.data.autoPause == null)
 			FlxG.save.data.autoPause = false;
+
+		if (FlxG.save.data.volume == null)
+			FlxG.save.data.volume = 1;	
 		Conductor.recalculateTimings();
 		PlayerSettings.player1.controls.loadKeyBinds();
 

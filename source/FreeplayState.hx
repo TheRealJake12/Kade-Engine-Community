@@ -107,12 +107,10 @@ class FreeplayState extends MusicBeatState
 	{
 		FlxG.mouse.visible = true;
 		instance = this;
-
-		if (!FlxG.save.data.gpuRender)
-			Main.dumpCache();
+		
+		Main.dumpCache();
 			
 		Paths.clearStoredMemory();
-		Paths.clearUnusedMemory();
 		list = CoolUtil.coolTextFile(Paths.txt('data/freeplaySonglist'));
 
 		#if FEATURE_HSCRIPT
@@ -121,7 +119,7 @@ class FreeplayState extends MusicBeatState
 
 		if (FlxG.save.data.gen)
 		{
-			Debug.logInfo('Freeplay Script? $executeHScript at ${Paths.hscript('assets/scripts/states/freeplay/script')}');
+			Debug.logInfo('Freeplay Script? $executeHScript at ${Paths.hx('assets/scripts/states/freeplay/script')}');
 		}
 
 		cached = false;
@@ -303,6 +301,7 @@ class FreeplayState extends MusicBeatState
 		#end
 
 		super.create();
+		Paths.clearUnusedMemory();
 	}
 
 	public static var cached:Bool = false;

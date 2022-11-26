@@ -31,7 +31,6 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
 import perf.Destroyer;
-import perf.MasterObjectLoader;
 import openfl.Lib;
 #if FEATURE_MULTITHREADING
 import sys.thread.Mutex;
@@ -80,7 +79,7 @@ class TitleState extends MusicBeatState
 		
 		FlxG.mouse.load(Paths.image('curser'));
 
-		FlxG.save.bind('funkin', 'ninjamuffin99');
+		FlxG.save.bind('kec', 'therealjake12');
 
 		PlayerSettings.init();
 
@@ -111,6 +110,7 @@ class TitleState extends MusicBeatState
 		// I spent so long looking for this. To just leave it false hurts me but theres some features that require it false.
 		// haha lol I forgot I could do save data
 
+		
 		FlxG.sound.volume = FlxG.save.data.volume;
 		FlxG.sound.muted = FlxG.save.data.mute;
 
@@ -464,7 +464,8 @@ class TitleState extends MusicBeatState
 					FlxTween.angle(logoBl, logoBl.angle, -4, 4, {ease: FlxEase.quartInOut});
 			}, 0);
 			
-			FlxG.sound.music.time = 9400; // 9.4 seconds
+			if (!initialized)
+				FlxG.sound.music.time = 9400; // 9.4 seconds
 
 			skippedIntro = true;
 		}
