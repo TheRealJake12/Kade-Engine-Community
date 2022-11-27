@@ -105,7 +105,11 @@ class Main extends Sprite
 
 		//FlxTransitionableState.skipNextTransIn = true;
 
+		#if (flixel >= "5.0.0")
 		game = new FlxGame(gameWidth, gameHeight, initialState, framerate, framerate, skipSplash, startFullscreen);
+		#else
+		game = new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen);
+		#end
 		addChild(game);
 
 		#if FEATURE_DISCORD
@@ -136,7 +140,7 @@ class Main extends Sprite
 	//motherfucker had to be special and have to be in main. smh.
 	public static function dumpCache()
 	{
-		if (FlxG.save.data.unload){
+		if (FlxG.save.data.unload && !FlxG.save.data.gpuRender){
 		#if PRELOAD_ALL
 		@:privateAccess
 		for (key in FlxG.bitmap._cache.keys())

@@ -87,17 +87,17 @@ class Character extends FlxSprite
 				FlxG.fullscreen = !FlxG.fullscreen;
 			if (isPlayer)
 			{
-				Debug.displayAlert('Kade Engine JSON Parser', 'Failed to parse JSON data for character  ${curCharacter}. Loading default boyfriend...');
+				Debug.logError('Failed to parse JSON data for character  ${curCharacter}. Loading default boyfriend...');
 				jsonData = Paths.loadJSON('characters/bf');
 			}
 			else if (replacesGF)
 			{
-				Debug.displayAlert('Kade Engine JSON Parser', 'Failed to parse JSON data for character  ${curCharacter}. Loading default girlfriend...');
+				Debug.logError('Failed to parse JSON data for character  ${curCharacter}. Loading default boyfriend...');
 				jsonData = Paths.loadJSON('characters/gf');
 			}
 			else
 			{
-				Debug.displayAlert('Kade Engine JSON Parser', 'Failed to parse JSON data for character  ${curCharacter}. Loading default opponent...');
+				Debug.logError('Failed to parse JSON data for character  ${curCharacter}. Loading default boyfriend...');
 				jsonData = Paths.loadJSON('characters/dad');
 			}
 		}

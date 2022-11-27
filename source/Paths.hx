@@ -13,6 +13,15 @@ import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.display3D.textures.Texture;
 import openfl.display.BitmapData;
+#if cpp
+import cpp.NativeGc;
+#elseif hl
+import hl.Gc;
+#elseif java
+import java.vm.Gc;
+#elseif neko
+import neko.vm.Gc;
+#end
 
 
 using StringTools;
@@ -466,6 +475,15 @@ class Paths
 		// run the garbage collector for good measure lmfao
 
 		System.gc();
+
+			#if cpp
+			NativeGc.compact();
+			NativeGc.run(true);
+			#elseif hl
+			Gc.major();
+			#elseif (java || neko)
+			Gc.run(true);
+			#end
 		}
 	}
 

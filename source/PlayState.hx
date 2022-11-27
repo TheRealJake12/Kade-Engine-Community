@@ -427,7 +427,6 @@ class PlayState extends MusicBeatState
 		{
 			currentSong = SONG.song;
 			Paths.clearStoredMemory();
-			Paths.clearStoredMemory();
 			if (!FlxG.save.data.gpuRender)
 				Main.dumpCache();
 		}
@@ -5954,24 +5953,24 @@ class PlayState extends MusicBeatState
 		script.set("notes", notes);
 		script.set("strumLineNotes", strumLineNotes);
 		// mf give me those x's
-		script.set("playerStrumsX0", playerStrums.members[0].x);
-		script.set("playerStrumsX1", playerStrums.members[1].x);
-		script.set("playerStrumsX2", playerStrums.members[2].x);
-		script.set("playerStrumsX3", playerStrums.members[3].x);
-		script.set("cpuStrumsX0", cpuStrums.members[0].x);
-		script.set("cpuStrumsX1", cpuStrums.members[1].x);
-		script.set("cpuStrumsX2", cpuStrums.members[2].x);
-		script.set("cpuStrumsX3", cpuStrums.members[3].x);
+		script.set("PlayerStrumsX0", playerStrums.members[0].x);
+		script.set("PlayerStrumsX1", playerStrums.members[1].x);
+		script.set("PlayerStrumsX2", playerStrums.members[2].x);
+		script.set("PlayerStrumsX3", playerStrums.members[3].x);
+		script.set("CpuStrumsX0", cpuStrums.members[0].x);
+		script.set("CpuStrumsX1", cpuStrums.members[1].x);
+		script.set("CpuStrumsX2", cpuStrums.members[2].x);
+		script.set("CpuStrumsX3", cpuStrums.members[3].x);
 
 		// mf give me those y's
-		script.set("playerStrumsY0", playerStrums.members[0].y);
-		script.set("playerStrumsY1", playerStrums.members[1].y);
-		script.set("playerStrumsY2", playerStrums.members[2].y);
-		script.set("playerStrumsY3", playerStrums.members[3].y);
-		script.set("cpuStrumsY0", cpuStrums.members[0].y);
-		script.set("cpuStrumsY1", cpuStrums.members[1].y);
-		script.set("cpuStrumsY2", cpuStrums.members[2].y);
-		script.set("cupStrumsY3", cpuStrums.members[3].y);
+		script.set("PlayerStrumsY0", playerStrums.members[0].y);
+		script.set("PlayerStrumsY1", playerStrums.members[1].y);
+		script.set("PlayerStrumsY2", playerStrums.members[2].y);
+		script.set("PlayerStrumsY3", playerStrums.members[3].y);
+		script.set("CpuStrumsY0", cpuStrums.members[0].y);
+		script.set("CpuStrumsY1", cpuStrums.members[1].y);
+		script.set("CpuStrumsY2", cpuStrums.members[2].y);
+		script.set("CpuStrumsY3", cpuStrums.members[3].y);
 
 		// mf give me those angles
 		script.set("playerStrumsAngle0", playerStrums.members[0].angle);
