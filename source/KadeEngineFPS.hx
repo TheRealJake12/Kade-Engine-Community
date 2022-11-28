@@ -33,9 +33,6 @@ import openfl.Lib;
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <psapi.h>
-// are you serious?? 
-// do i have to include this after windows.h to not get outrageous compilation errors??????
-// one side of my brains loves c++ and the other one hates it
 ")
 #end
 #if !openfl_debug
@@ -184,7 +181,7 @@ class KadeEngineFPS extends TextField
 
 		cacheCount = currentCount;
 	}
-	#if windows // planning to do the same for linux but im lazy af so rn it'll use the hxcpp gc
+	#if windows
 	@:functionCode("
 		// ily windows api <3
 		auto memhandle = GetCurrentProcess();
@@ -200,5 +197,3 @@ class KadeEngineFPS extends TextField
 	}
 	#end
 }
-
-// https://imgur.com/a/LVkQmqe

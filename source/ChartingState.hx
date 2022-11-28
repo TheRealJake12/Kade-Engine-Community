@@ -185,8 +185,8 @@ class ChartingState extends MusicBeatState
 		#if FEATURE_DISCORD
 		DiscordClient.changePresence("Chart Editor", null, null, true);
 		#end
-		perf.Destroyer.clearStoredMemory();
-		perf.Destroyer.clearUnusedMemory();
+		Paths.clearStoredMemory();
+		Paths.clearUnusedMemory();
 		speed = PlayState.songMultiplier;
 		curSection = lastSection;
 

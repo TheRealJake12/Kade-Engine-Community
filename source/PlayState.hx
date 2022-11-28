@@ -1,7 +1,6 @@
 package;
 
 import flixel.group.FlxSpriteGroup;
-import perf.Destroyer;
 import CustomFadeTransition;
 import Shaders;
 import flixel.util.FlxSpriteUtil;
@@ -5952,35 +5951,6 @@ class PlayState extends MusicBeatState
 		// NOTES
 		script.set("notes", notes);
 		script.set("strumLineNotes", strumLineNotes);
-		// mf give me those x's
-		script.set("PlayerStrumsX0", playerStrums.members[0].x);
-		script.set("PlayerStrumsX1", playerStrums.members[1].x);
-		script.set("PlayerStrumsX2", playerStrums.members[2].x);
-		script.set("PlayerStrumsX3", playerStrums.members[3].x);
-		script.set("CpuStrumsX0", cpuStrums.members[0].x);
-		script.set("CpuStrumsX1", cpuStrums.members[1].x);
-		script.set("CpuStrumsX2", cpuStrums.members[2].x);
-		script.set("CpuStrumsX3", cpuStrums.members[3].x);
-
-		// mf give me those y's
-		script.set("PlayerStrumsY0", playerStrums.members[0].y);
-		script.set("PlayerStrumsY1", playerStrums.members[1].y);
-		script.set("PlayerStrumsY2", playerStrums.members[2].y);
-		script.set("PlayerStrumsY3", playerStrums.members[3].y);
-		script.set("CpuStrumsY0", cpuStrums.members[0].y);
-		script.set("CpuStrumsY1", cpuStrums.members[1].y);
-		script.set("CpuStrumsY2", cpuStrums.members[2].y);
-		script.set("CpuStrumsY3", cpuStrums.members[3].y);
-
-		// mf give me those angles
-		script.set("playerStrumsAngle0", playerStrums.members[0].angle);
-		script.set("playerStrumsAngle1", playerStrums.members[1].angle);
-		script.set("playerStrumsAngle2", playerStrums.members[2].angle);
-		script.set("playerStrumsAngle3", playerStrums.members[3].angle);
-		script.set("cpuStrumsAngle0", cpuStrums.members[0].angle);
-		script.set("cpuStrumsAngle1", cpuStrums.members[1].angle);
-		script.set("cpuStrumsAngle2", cpuStrums.members[2].angle);
-		script.set("cpuStrumsAngle3", cpuStrums.members[3].angle);
 
 		// all together
 		for (i in 0...playerStrums.length){

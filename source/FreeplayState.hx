@@ -32,7 +32,6 @@ import Modifiers;
 import sys.FileSystem;
 import sys.io.File;
 #end
-import perf.Destroyer;
 import Script;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxTimer;

@@ -1,6 +1,5 @@
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.FlxG;
-import perf.Destroyer;
 import flixel.FlxSprite;
 
 class OptionsDirect extends MusicBeatState

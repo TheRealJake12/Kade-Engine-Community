@@ -3,7 +3,6 @@ package;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import perf.Destroyer;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
@@ -32,8 +31,8 @@ class SelectEditorsState extends MusicBeatState
 	{
 		if (FlxG.save.data.unload)
 		{
-			Destroyer.clearStoredMemory;
-			Destroyer.clearUnusedMemory;
+			Paths.clearStoredMemory();
+			Paths.clearUnusedMemory();
 		}
 		bgSprite = new FlxSprite(0, 0).loadGraphic(Paths.loadImage('menuDesat'));
 		bgSprite.scrollFactor.set(1.0, 1.0);

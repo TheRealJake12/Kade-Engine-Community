@@ -2380,8 +2380,7 @@ class UnloadNow extends Option
 	{
 		if (!OptionsMenu.isInPause)
 		{
-			perf.Destroyer.clearUnusedMemory();
-			//test.Destroyer.clearStoredMemory();
+			Paths.clearUnusedMemory();
 		}
 		return false;
 	}

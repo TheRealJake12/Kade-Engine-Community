@@ -30,7 +30,6 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
-import perf.Destroyer;
 import openfl.Lib;
 #if FEATURE_MULTITHREADING
 import sys.thread.Mutex;

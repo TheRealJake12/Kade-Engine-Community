@@ -1,7 +1,6 @@
 package;
 
 import Controls.KeyboardScheme;
-import perf.Destroyer;
 import flixel.util.FlxTimer;
 #if desktop
 import Discord.DiscordClient;
