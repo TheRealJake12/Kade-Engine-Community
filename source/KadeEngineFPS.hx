@@ -1,12 +1,8 @@
-package;
+import openfl.system.System;
+import flixel.math.FlxMath;
 #if desktop
 import cpp.vm.Gc;
 #end
-import openfl.events.Event;
-import openfl.text.TextField;
-import openfl.text.TextFormat;
-import openfl.system.System;
-import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import openfl.Lib;
 import openfl.display.Bitmap;
@@ -29,11 +25,13 @@ import openfl.Lib;
 	the current frame rate of an OpenFL project
 **/
 #if windows
+#if !debug
 @:headerCode("
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <psapi.h>
 ")
+#end
 #end
 #if !openfl_debug
 @:fileXml('tags="haxe,release"')
@@ -45,11 +43,11 @@ class KadeEngineFPS extends TextField
 		The current frame rate, expressed using frames-per-second
 	**/
 	public var currentFPS(default, null):Int;
-	
-	private var memPeak:Float = 0;
+
 	public var memoryMegas:Float = 0;
 
 	public var memoryTotal:Float = 0;
+	private var memPeak:Float = 0;
 
 	public var memoryUsage:String;
 	public var displayFPS:String;
@@ -127,17 +125,24 @@ class KadeEngineFPS extends TextField
 		}
 
 		#if windows
+		#if !debug
 		// now be an ACTUAL real man and get the memory from plain & straight c++
 		var actualMem:Float = obtainMemory();
+		#end
 		#elseif !html5
 		// be a real man and calculate memory from hxcpp
 		var actualMem:Float = Gc.memInfo64(3); // update: this sucks
 		#else
 		var actualMem = Math.abs(FlxMath.roundDecimal(System.totalMemory / 1000000, 1));
 		#end
+
+		#if !debug
 		var mem:Float = Math.round(actualMem / 1024 / 1024 * 100) / 100;
 		if (mem > memPeak)
 			memPeak = mem;
+		#else
+		var mem:Float = Math.abs(FlxMath.roundDecimal(System.totalMemory / 1000000, 1));
+		#end
 
 		var currentCount = times.length;
 		var lmao:String = (FlxG.save.data.fpsmark ? (Main.watermarks ? "\n"+ MainMenuState.kecVer : "\n" + "Kade Engine 1.8.1") : "");
@@ -146,6 +151,8 @@ class KadeEngineFPS extends TextField
 
 		if (currentCount != cacheCount)
 		{
+			if (memoryMegas > memoryTotal)
+				memoryTotal = memoryMegas;
 			memoryUsage = (FlxG.save.data.mem ? "Memory Usage: " + mem + " MB" : "");
 
 			text = ('$displayFPS\n'
@@ -181,9 +188,10 @@ class KadeEngineFPS extends TextField
 
 		cacheCount = currentCount;
 	}
+
 	#if windows
+	#if !debug
 	@:functionCode("
-		// ily windows api <3
 		auto memhandle = GetCurrentProcess();
 		PROCESS_MEMORY_COUNTERS pmc;
 		if (GetProcessMemoryInfo(memhandle, &pmc, sizeof(pmc)))
@@ -195,5 +203,6 @@ class KadeEngineFPS extends TextField
 	{
 		return 0;
 	}
+	#end
 	#end
 }
