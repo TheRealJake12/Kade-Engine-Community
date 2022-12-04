@@ -583,7 +583,7 @@ class LuaReceptor extends LuaClass
 
 		properties = [
 			"alpha" => {
-				defaultValue: 1,
+				defaultValue: FlxG.save.data.alpha,
 				getter: function(l:State, data:Any):Int
 				{
 					Lua.pushnumber(l, connectedSprite.alpha);

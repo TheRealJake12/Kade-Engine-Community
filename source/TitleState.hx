@@ -108,11 +108,7 @@ class TitleState extends MusicBeatState
 
 		// I spent so long looking for this. To just leave it false hurts me but theres some features that require it false.
 		// haha lol I forgot I could do save data
-
 		
-		FlxG.sound.volume = FlxG.save.data.volume;
-		FlxG.sound.muted = FlxG.save.data.mute;
-
 		#if FREEPLAY
 		FlxG.switchState(new FreeplayState());
 		clean();

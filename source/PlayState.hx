@@ -5952,18 +5952,6 @@ class PlayState extends MusicBeatState
 		script.set("notes", notes);
 		script.set("strumLineNotes", strumLineNotes);
 
-		// all together
-		for (i in 0...playerStrums.length){
-			script.set("playerStrumsX", playerStrums.members[i].x);
-			script.set("playerStrumsY", playerStrums.members[i].y);
-		}
-
-		for (i in 0...cpuStrums.length)
-		{
-			script.set("cpuStrumsX", cpuStrums.members[i].x);
-			script.set("cpuStrumsY", cpuStrums.members[i].y);
-		}
-
 		script.set("unspawnNotes", unspawnNotes);
 
 		// MISC
