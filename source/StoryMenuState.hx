@@ -268,6 +268,7 @@ class StoryMenuState extends MusicBeatState
 		}
 
 		super.create();
+		Paths.clearUnusedMemory();
 	}
 
 	override function update(elapsed:Float)

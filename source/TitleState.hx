@@ -58,64 +58,17 @@ class TitleState extends MusicBeatState
 
 	override public function create():Void
 	{
-		#if FEATURE_MULTITHREADING
-		MasterObjectLoader.mutex = new Mutex();
-		#end
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
-
-		#if windows
-		CPPInterface.darkMode();
-		#end
-
-		#if cpp
-		cpp.NativeGc.enable(true);
-		cpp.NativeGc.run(true);
-		#end
-
-		if (FlxG.save.data.fpsCap > 420)
-			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(420);
-		
-		FlxG.mouse.load(Paths.image('curser'));
-
-		FlxG.save.bind('kec', 'therealjake12');
-
-		PlayerSettings.init();
-
-		KadeEngineData.initSave();
-
-		KeyBinds.keyCheck();
-
-		CustomNoteHelpers.Skin.updateNoteskins();
-		CustomNoteHelpers.Splash.updateNotesplashes();
-
-		FlxG.worldBounds.set(0, 0);
-
-		FlxGraphic.defaultPersist = true;
-
-		MusicBeatState.initSave = true;
-
-		Highscore.load();
 
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 		if (FlxG.save.data.gen)
 			Debug.logInfo('Hello.');
 
 		super.create();
-
-		FlxG.autoPause = FlxG.save.data.autoPause;
-		FlxG.mouse.visible = true;
-
 		// I spent so long looking for this. To just leave it false hurts me but theres some features that require it false.
 		// haha lol I forgot I could do save data
 		
-		#if FREEPLAY
-		FlxG.switchState(new FreeplayState());
-		clean();
-		#elseif CHARTING
-		FlxG.switchState(new ChartingState());
-		clean();
-		#else
 		#if !cpp
 		new FlxTimer().start(1, function(tmr:FlxTimer)
 		{
@@ -123,7 +76,6 @@ class TitleState extends MusicBeatState
 		});
 		#else
 		startIntro();
-		#end
 		#end
 	}
 
@@ -241,45 +193,6 @@ class TitleState extends MusicBeatState
 			}
 		}
 		#end
-
-		if (FlxG.save.data.fpsCap > 420)
-			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(420);
-
-		if (FlxG.save.data.borderless)
-		{
-			FlxG.stage.window.borderless = true;
-		}	
-		else
-		{
-			FlxG.stage.window.borderless = false;
-		}
-		
-		switch (FlxG.save.data.resolution)
-		{
-			case 0:
-				FlxG.resizeWindow(640, 360);
-				FlxG.resizeGame(640, 360);
-			case 1:
-				FlxG.resizeWindow(768, 432);
-				FlxG.resizeGame(768, 432);
-			case 2:
-				FlxG.resizeWindow(896, 504);
-				FlxG.resizeGame(896, 504);
-			case 3:
-				FlxG.resizeWindow(1024, 576);
-				FlxG.resizeGame(1024, 576);
-			case 4:
-				FlxG.resizeWindow(1152, 648);
-				FlxG.resizeGame(1152, 648);
-			case 5:
-				FlxG.resizeWindow(1280, 720);
-				FlxG.resizeGame(1280, 720);
-			case 6:
-				FlxG.resizeWindow(1920, 1080);
-				FlxG.resizeGame(1920, 1080);
-		}	
-		
-		(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
 
 		if (pressedEnter && !transitioning && skippedIntro || FlxG.mouse.justPressed && !transitioning && skippedIntro)
 		{
