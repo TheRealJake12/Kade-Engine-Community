@@ -36,6 +36,8 @@ import Script;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxTimer;
 import flixel.FlxCamera;
+import debug.AnimationDebug;
+import debug.ChartingState;
 
 using StringTools;
 

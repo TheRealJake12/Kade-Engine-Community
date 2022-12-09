@@ -1,4 +1,4 @@
-package;
+package debug;
 
 import flixel.FlxG;
 import flixel.FlxObject;

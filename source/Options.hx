@@ -7,6 +7,7 @@ import Controls.KeyboardScheme;
 import flixel.FlxG;
 import openfl.display.FPS;
 import openfl.Lib;
+import debug.AnimationDebug;
 
 class Option
 {

@@ -89,6 +89,13 @@ import script.Script;
 import script.ScriptGroup;
 import script.ScriptUtil;
 #end
+// Orginization Imports
+import debug.StageDebugState;
+import debug.AnimationDebug;
+import debug.ChartingState;
+
+import stages.Stage;
+import stages.TankmenBG;
 
 using StringTools;
 

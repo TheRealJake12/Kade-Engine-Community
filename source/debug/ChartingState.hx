@@ -1,4 +1,4 @@
-package;
+package debug;
 
 import openfl.net.FileFilter;
 import Song.SongMeta;

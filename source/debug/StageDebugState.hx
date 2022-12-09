@@ -1,4 +1,4 @@
-package;
+package debug;
 
 import flixel.util.FlxColor;
 import flixel.FlxState;
@@ -12,6 +12,7 @@ import flixel.util.FlxCollision;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import openfl.net.FileReference;
+import stages.Stage;
 
 using StringTools;
 
