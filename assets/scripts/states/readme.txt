@@ -1,0 +1,1 @@
+these are all global scripts. Kinda. Everything in the playstate folder will activate. For songs ye gotta put it in its data folder.

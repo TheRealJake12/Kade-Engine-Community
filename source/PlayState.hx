@@ -4085,7 +4085,7 @@ class PlayState extends MusicBeatState
 									if (PlayStateChangeables.botPlay)
 									{
 										daNote.rating = "marv";
-										goodNoteHit(daNote);
+										//goodNoteHit(daNote);
 									}
 								}
 
@@ -4718,23 +4718,46 @@ class PlayState extends MusicBeatState
 
 			if (!FlxG.save.data.rateStack)
 				lastScore.push(numScore);
+			else
+				visibleCombos.push(numScore);	
 
-			FlxTween.tween(numScore, {alpha: 0}, 0.2, {
-				onComplete: function(tween:FlxTween)
-				{
-					visibleCombos.remove(numScore);
-					numScore.destroy();
-				},
-				onUpdate: function(tween:FlxTween)
-				{
-					if (!visibleCombos.contains(numScore))
+			if (FlxG.save.data.rateStack){
+				createTween(numScore, {alpha: 0}, 0.2, {
+					onComplete: function(tween:FlxTween)
 					{
-						tween.cancel();
-						numScore.destroy();
-					}
-				},
-				startDelay: Conductor.crochet * 0.002
-			});
+						visibleCombos.remove(numScore);
+						numScore.kill();
+					},
+					onUpdate: function(tween:FlxTween)
+					{
+						if (!visibleCombos.contains(numScore))
+						{
+							tween.cancel();
+							numScore.destroy();
+						}
+					},
+					startDelay: Conductor.crochet * 0.002 * Math.pow(songMultiplier, 2)
+				});
+			}
+			else{
+				createTween(numScore, {alpha: 0}, 0.2, {
+					onComplete: function(tween:FlxTween)
+					{
+						lastScore.remove(numScore);
+						numScore.kill();
+					},
+					onUpdate: function(tween:FlxTween)
+					{
+						if (!lastScore.contains(numScore))
+						{
+							tween.cancel();
+							numScore.destroy();
+						}
+					},
+					startDelay: Conductor.crochet * 0.002 * Math.pow(songMultiplier, 2)
+				});
+			}
+			
 
 			if (visibleCombos.length > seperatedScore.length + 20)
 			{
@@ -4749,30 +4772,11 @@ class PlayState extends MusicBeatState
 
 		coolText.text = Std.string(seperatedScore);
 
-		FlxTween.tween(rating, {alpha: 0}, 0.2, {
-			startDelay: Conductor.crochet * 0.001,
-			onUpdate: function(tween:FlxTween)
-			{
-				if (currentTimingShown != null)
-					currentTimingShown.alpha -= 0.02;
-				timeShown++;
-			}
+		createTween(rating, {alpha: 0}, 0.2, {
+			startDelay: (Conductor.crochet * Math.pow(songMultiplier, 2)) * 0.001
 		});
 
-		FlxTween.tween(comboSpr, {alpha: 0}, 0.2, {
-			onComplete: function(tween:FlxTween)
-			{
-				coolText.destroy();
-				comboSpr.destroy();
-				if (currentTimingShown != null && timeShown >= 20)
-				{
-					remove(currentTimingShown);
-					currentTimingShown = null;
-				}
-				rating.destroy();
-			},
-			startDelay: Conductor.crochet * 0.001
-		});
+		createTween(currentTimingShown, {alpha: 0}, 0.1, {startDelay: (Conductor.crochet * Math.pow(songMultiplier, 2)) * 0.0005});
 
 		curSection += 1;
 	}
@@ -4951,7 +4955,7 @@ class PlayState extends MusicBeatState
 		if (PlayStateChangeables.botPlay)
 			notes.forEachAlive(function(daNote:Note)
 			{
-				if (daNote.mustPress && Conductor.songPosition >= daNote.strumTime)
+				if (daNote.mustPress && Conductor.songPosition >= daNote.strumTime && daNote.noteShit != 'hurt')
 				{
 					// Force good note hit regardless if it's too late to hit it or not as a fail safe
 					if (loadRep)
@@ -5819,9 +5823,9 @@ class PlayState extends MusicBeatState
 		// SONG && GLOBAL SCRIPTS
 		var files:Array<String> = SONG.songId == null ? [] : ScriptUtil.findScriptsInDir(Paths.getPreloadPath("data/songs/" + Paths.formatToSongPath(SONG.songId)));
 		
-		if (FileSystem.exists("assets/scripts/global"))
+		if (FileSystem.exists("assets/scripts/states/playstate"))
 		{
-			for (_ in ScriptUtil.findScriptsInDir("assets/scripts/global"))
+			for (_ in ScriptUtil.findScriptsInDir("assets/scripts/states/playstate"))
 				files.push(_);
 		}
 
