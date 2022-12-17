@@ -6,12 +6,14 @@ import flixel.addons.ui.FlxUIState;
 import flixel.math.FlxRect;
 import flixel.util.FlxTimer;
 import flixel.addons.transition.FlxTransitionableState;
+import flixel.addons.ui.FlxUI;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
 import flixel.FlxState;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import openfl.Lib;
 import flixel.FlxBasic;
 import lime.app.Application;
@@ -38,7 +40,6 @@ class MusicBeatState extends FlxUIState
 	override function create()
 	{
 		var skip:Bool = FlxTransitionableState.skipNextTransOut;
-		super.create();
 		Application.current.window.onFocusIn.add(onWindowFocusIn);
 		Application.current.window.onFocusOut.add(onWindowFocusOut);
 
@@ -47,15 +48,62 @@ class MusicBeatState extends FlxUIState
 			openSubState(new CustomFadeTransition(0.7, true));
 		}
 		FlxTransitionableState.skipNextTransOut = false;
+		
+		Paths.clearUnusedMemory();
+
+		super.create();
+		(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
+	}
+
+	override function remove(Object:FlxBasic, Splice:Bool = false):FlxBasic
+	{
+		#if FEATURE_MULTITHREADING
+		MasterObjectLoader.removeObject(Object);
+		#end
+		var result = super.remove(Object, Splice);
+		return result;
 	}
 
 	public function clean()
 	{
-		if (FlxG.save.data.optimize)
-		{
+		if (FlxG.save.data.unload){
+			#if FEATURE_MULTITHREADING
+			for (i in MasterObjectLoader.Objects)
+			{
+				destroyObject(i);
+			}
+			#else
 			for (i in assets)
 			{
 				remove(i);
+			}
+			#end
+		}	
+	}
+
+	public function destroyObject(Object:Dynamic):Void
+	{
+		if (Std.isOfType(Object, FlxSprite))
+		{
+			var spr:FlxSprite = cast(Object, FlxSprite);
+			spr.kill();
+			remove(spr, true);
+			spr.destroy();
+			spr = null;
+		}
+		else if (Std.isOfType(Object, FlxTypedGroup))
+		{
+			var grp:FlxTypedGroup<Dynamic> = cast(Object, FlxTypedGroup<Dynamic>);
+			for (ObjectGroup in grp.members)
+			{
+				if (Std.isOfType(ObjectGroup, FlxSprite))
+				{
+					var spr:FlxSprite = cast(ObjectGroup, FlxSprite);
+					spr.kill();
+					remove(spr, true);
+					spr.destroy();
+					spr = null;
+				}
 			}
 		}
 	}
@@ -78,13 +126,24 @@ class MusicBeatState extends FlxUIState
 
 	
 
-	override function add(Object:flixel.FlxBasic):flixel.FlxBasic
+	override function add(Object:FlxBasic):FlxBasic
 	{
-		if (FlxG.save.data.optimize)
-			assets.push(Object);
+		if (Std.isOfType(Object, FlxUI))
+			return null;
+
+		if (Std.isOfType(Object, FlxSprite))
+			var spr:FlxSprite = cast(Object, FlxSprite);
+
+		// Debug.logTrace(Object);
+		#if FEATURE_MULTITHREADING
+		MasterObjectLoader.addObject(Object);
+		#else
+		assets.push(Object);
+		#end
 		var result = super.add(Object);
 		return result;
 	}
+
 
 	override function update(elapsed:Float)
 	{

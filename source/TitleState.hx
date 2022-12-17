@@ -66,8 +66,6 @@ class TitleState extends MusicBeatState
 			Debug.logInfo('Hello.');
 
 		super.create();
-		// I spent so long looking for this. To just leave it false hurts me but theres some features that require it false.
-		// haha lol I forgot I could do save data
 		
 		#if !cpp
 		new FlxTimer().start(1, function(tmr:FlxTimer)
@@ -221,12 +219,10 @@ class TitleState extends MusicBeatState
 						OutdatedSubState.needVer = returnedData[0];
 						OutdatedSubState.currChanges = returnedData[1];
 						MusicBeatState.switchState(new OutdatedSubState());
-						clean();
 					}
 					else
 					{
 						MusicBeatState.switchState(new MainMenuState());
-						clean();
 					}
 				}
 
@@ -237,7 +233,6 @@ class TitleState extends MusicBeatState
 					{
 						{
 							MusicBeatState.switchState(new MainMenuState());
-							clean();
 						}
 					});
 				}

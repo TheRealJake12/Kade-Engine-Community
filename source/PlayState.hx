@@ -1306,6 +1306,14 @@ class PlayState extends MusicBeatState
 		precacheThing('alphabet', 'image', null);
 
 		precacheThing('breakfast', 'music', 'shared');
+		if (FlxG.save.data.notesplashes){
+			switch(FlxG.save.data.notesplash){
+				case 0:
+					precacheThing('splashes/Default', 'image', 'shared');
+				case 1:
+					precacheThing('splashes/Week7', 'image', 'shared');	
+			}
+		}
 		Paths.clearUnusedMemory();
 		#if FEATURE_HSCRIPT
 			scripts.executeAllFunc("createPost");
