@@ -3251,7 +3251,6 @@ class PlayState extends MusicBeatState
 			if (FlxG.random.bool(0.0001))
 			{
 				FlxG.switchState(new GitarooPause());
-				clean();
 			}
 			else
 				openSubState(new PauseSubState());
@@ -3262,7 +3261,6 @@ class PlayState extends MusicBeatState
 			songMultiplier = 1;
 			cannotDie = true;
 			MusicBeatState.switchState(new WaveformTestState());
-			clean();
 			PlayState.stageTesting = false;
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleInput);
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, releaseInput);
@@ -3281,7 +3279,6 @@ class PlayState extends MusicBeatState
 			cannotDie = true;
 			
 			MusicBeatState.switchState(new ChartingState());
-			clean();
 			PlayState.stageTesting = false;
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleInput);
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, releaseInput);
@@ -3325,7 +3322,6 @@ class PlayState extends MusicBeatState
 		if (FlxG.keys.justPressed.SIX)
 		{
 			LoadingState.loadAndSwitchState(new AnimationDebug(dad.curCharacter));
-			clean();
 			PlayState.stageTesting = false;
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleInput);
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, releaseInput);
@@ -3362,7 +3358,6 @@ class PlayState extends MusicBeatState
 					remove(gf);
 				});
 				LoadingState.loadAndSwitchState(new StageDebugState(Stage.curStage, gf.curCharacter, boyfriend.curCharacter, dad.curCharacter));
-				 clean();
 				FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleInput);
 				FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, releaseInput);
 				#if FEATURE_LUAMODCHART
@@ -3377,7 +3372,6 @@ class PlayState extends MusicBeatState
 		if (FlxG.keys.justPressed.NUMPADSEVEN)
 		{
 			MusicBeatState.switchState(new AnimationDebug(boyfriend.curCharacter));
-			clean();
 			PlayState.stageTesting = false;
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleInput);
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, releaseInput);
@@ -4256,7 +4250,6 @@ class PlayState extends MusicBeatState
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 			offsetTesting = false;
 			LoadingState.loadAndSwitchState(new OptionsMenu());
-			clean();
 			FlxG.save.data.offset = offsetTest;
 		}
 		else if (stageTesting)
@@ -4369,7 +4362,6 @@ class PlayState extends MusicBeatState
 				else
 				{
 					MusicBeatState.switchState(new FreeplayState());
-					clean();
 				}
 			}
 		}

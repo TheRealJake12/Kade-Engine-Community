@@ -474,7 +474,7 @@ class Paths
 		}
 		// run the garbage collector for good measure lmfao
 
-		System.gc();
+			System.gc();
 
 			#if cpp
 			NativeGc.compact();
@@ -484,6 +484,14 @@ class Paths
 			#elseif (java || neko)
 			Gc.run(true);
 			#end
+		}
+		var cache:haxe.ds.Map<String, FlxGraphic> = cast Reflect.field(FlxG.bitmap, "_cache");
+		for (key => graphic in cache)
+		{
+			if (key.indexOf("text") == 0 && graphic.useCount <= 0)
+			{
+				FlxG.bitmap.remove(graphic);
+			}
 		}
 	}
 
@@ -544,6 +552,17 @@ class Paths
 		openfl.Assets.cache.clear("songs");
 		#end
 		}
+
+		var cache:haxe.ds.Map<String, FlxGraphic> = cast Reflect.field(FlxG.bitmap, "_cache");
+		for (key => graphic in cache)
+		{
+			if (key.indexOf("text") == 0 && graphic.useCount <= 0)
+			{
+				FlxG.bitmap.remove(graphic);
+			}
+		}
+		// idk if this does anything.
+		// THANK YOU MALICIOUS BUNNY!!
 	}
 
 	static public function getSparrowAtlas(key:String, ?library:String, ?isCharacter:Bool = false, ?gpuRender:Bool)

@@ -388,15 +388,6 @@ class FreeplayState extends MusicBeatState
 			FreeplayState.songData.set(songId, diffs);
 			trace('loaded diffs for ' + songId);
 			FreeplayState.songs.push(meta);
-
-			/*#if FFEATURE_FILESYSTEM
-				sys.thread.Thread.create(() ->
-				{
-					FlxG.sound.cache(Paths.inst(songId));
-				});
-				#else
-				FlxG.sound.cache(Paths.inst(songId));
-				#end */
 		}
 	}
 

@@ -252,6 +252,15 @@ class KadeEngineData
 		if (FlxG.save.data.autoPause == null)
 			FlxG.save.data.autoPause = false;
 
+		if (FlxG.save.data.volume != null)
+		{
+			FlxG.sound.volume = FlxG.save.data.volume;
+		}
+		if (FlxG.save.data.mute != null)
+		{
+			FlxG.sound.muted = FlxG.save.data.mute;
+		}	
+
 		//if (FlxG.save.data.volume == null)
 			//FlxG.save.data.volume = 1;	
 		Conductor.recalculateTimings();
