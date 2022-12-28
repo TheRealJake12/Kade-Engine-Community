@@ -1147,23 +1147,6 @@ class PlayState extends MusicBeatState
 				healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
 		}
 
-			if (!PlayStateChangeables.Optimize)
-			{
-				if (FlxG.save.data.distractions)
-				{
-					if (PlayState.SONG.songId.toLowerCase() == 'satin-panties'|| PlayState.SONG.songId.toLowerCase() == 'high'|| PlayState.SONG.songId.toLowerCase() == 'milf')
-					{
-						var redShit:FlxSprite = new FlxSprite(0,0).makeGraphic(2048, 2048, FlxColor.RED);
-						redShit.screenCenter();
-						redShit.scrollFactor.set();
-						redShit.alpha = 0.1;
-						redShit.cameras = [overlayCam];
-						add(redShit);
-						
-					}
-				}
-			}
-
 		strumLineNotes.cameras = [camHUD];
 		notes.cameras = [camNotes];
 		healthBar.cameras = [camHUD];
@@ -3105,6 +3088,16 @@ class PlayState extends MusicBeatState
 			{
 				if ((inst.length / songMultiplier) - Conductor.songPosition <= 0)
 				{
+					Debug.logTrace("we're fuckin ending the song ");
+					if (FlxG.save.data.songPosition)
+					{
+						FlxTween.tween(judgementCounter, {alpha: 0}, 1, {ease: FlxEase.circIn});
+						FlxTween.tween(scoreTxt, {alpha: 0}, 1, {ease: FlxEase.circIn});
+						FlxTween.tween(kadeEngineWatermark, {alpha: 0}, 1, {ease: FlxEase.circIn});
+						FlxTween.tween(songName, {alpha: 0}, 1, {ease: FlxEase.circIn});
+						FlxTween.tween(songPosBar, {alpha: 0}, 1, {ease: FlxEase.circIn});
+						FlxTween.tween(bar, {alpha: 0}, 1, {ease: FlxEase.circIn});
+					}
 					endingSong = true;
 					endSong();
 				}
@@ -4215,7 +4208,6 @@ class PlayState extends MusicBeatState
 		{
 			PlayStateChangeables.botPlay = false;
 			PlayStateChangeables.scrollSpeed = 1 / songMultiplier;
-			PlayStateChangeables.useDownscroll = false;
 		}
 
 		transIn = FlxTransitionableState.defaultTransIn;
@@ -4335,8 +4327,6 @@ class PlayState extends MusicBeatState
 					}
 
 					Debug.logInfo('PlayState: Loading next story song ${PlayState.storyPlaylist[0]}-${diff}');
-
-					prevCamFollow = camFollow;
 
 					PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0], diff);
 					inst.stop();
@@ -5887,10 +5877,8 @@ class PlayState extends MusicBeatState
 	{
 		script.set("PlayState", PlayState);
 		script.set("game", PlayState.instance);
-
 		script.set("Debug", Debug);
 		script.set("health", health);
-
 
 		// FUNCTIONS
 
