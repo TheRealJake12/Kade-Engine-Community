@@ -134,6 +134,51 @@ class FreeplayState extends MusicBeatState
 		PlayState.inDaPlay = false;
 		PlayState.currentSong = "bruh";
 
+		#if !FEATURE_STEPMANIA
+		if (FlxG.save.data.gen)
+			Debug.logTrace("FEATURE_STEPMANIA was not specified during build, sm file loading is disabled.");
+		#elseif FEATURE_STEPMANIA
+		// TODO: Refactor this to use OpenFlAssets.
+		if (FlxG.save.data.gen)
+			trace("tryin to load sm files");
+		for (i in FileSystem.readDirectory("assets/sm/"))
+		{
+			trace(i);
+			if (FileSystem.isDirectory("assets/sm/" + i))
+			{
+				trace("Reading SM file dir " + i);
+				for (file in FileSystem.readDirectory("assets/sm/" + i))
+				{
+					if (file.contains(" "))
+						FileSystem.rename("assets/sm/" + i + "/" + file, "assets/sm/" + i + "/" + file.replace(" ", "_"));
+					if (file.endsWith(".sm") && !FileSystem.exists("assets/sm/" + i + "/converted.json"))
+					{
+						trace("reading " + file);
+						var file:SMFile = SMFile.loadFile("assets/sm/" + i + "/" + file.replace(" ", "_"));
+						trace("Converting " + file.header.TITLE);
+						var data = file.convertToFNF("assets/sm/" + i + "/converted.json");
+						var meta = new FreeplaySongMetadata(file.header.TITLE, 0, "sm", file, "assets/sm/" + i);
+						songs.push(meta);
+						var song = Song.loadFromJsonRAW(data);
+						songData.set(file.header.TITLE, [song, song, song]);
+					}
+					else if (FileSystem.exists("assets/sm/" + i + "/converted.json") && file.endsWith(".sm"))
+					{
+						trace("reading " + file);
+						var file:SMFile = SMFile.loadFile("assets/sm/" + i + "/" + file.replace(" ", "_"));
+						trace("Converting " + file.header.TITLE);
+						var data = file.convertToFNF("assets/sm/" + i + "/converted.json");
+						var meta = new FreeplaySongMetadata(file.header.TITLE, 0, "sm", file, "assets/sm/" + i);
+						songs.push(meta);
+						var song = Song.loadFromJsonRAW(File.getContent("assets/sm/" + i + "/converted.json"));
+						trace("got content lol");
+						songData.set(file.header.TITLE, [song, song, song]);
+					}
+				}
+			}
+		}
+		#end
+
 		#if FEATURE_DISCORD
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Freeplay Menu", null);
@@ -352,7 +397,7 @@ class FreeplayState extends MusicBeatState
 					{
 						diffsThatExist.push(cDiff);
 						CoolUtil.suffixDiffsArray.push('-${cDiff.toLowerCase()}');
-						CoolUtil.defaultDifficulties.push(cDiff);
+						CoolUtil.difficultyArray.push(cDiff);
 					}
 				}
 			}
@@ -376,7 +421,7 @@ class FreeplayState extends MusicBeatState
 				{
 					var cDiff = customDiffs[i];
 					if (diffsThatExist.contains(cDiff))
-						FreeplayState.loadDiff(CoolUtil.defaultDifficulties.indexOf(cDiff), songId, diffs);
+						FreeplayState.loadDiff(CoolUtil.difficultyArray.indexOf(cDiff), songId, diffs);
 				}
 			}
 
@@ -416,7 +461,7 @@ class FreeplayState extends MusicBeatState
 				{
 					diffsThatExist.push(cDiff);
 					CoolUtil.suffixDiffsArray.push('-${cDiff.toLowerCase()}');
-					CoolUtil.defaultDifficulties.push(cDiff);
+					CoolUtil.difficultyArray.push(cDiff);
 				}
 			}
 		}
@@ -440,7 +485,7 @@ class FreeplayState extends MusicBeatState
 			{
 				var cDiff = customDiffs[i];
 				if (diffsThatExist.contains(cDiff))
-					FreeplayState.loadDiff(CoolUtil.defaultDifficulties.indexOf(cDiff), songName, diffs);
+					FreeplayState.loadDiff(CoolUtil.difficultyArray.indexOf(cDiff), songName, diffs);
 			}
 		}
 
@@ -850,7 +895,7 @@ class FreeplayState extends MusicBeatState
 		}
 		
 		PlayState.SONG = currentSongData;
-		PlayState.storyDifficulty = CoolUtil.defaultDifficulties.indexOf(songs[curSelected].diffs[difficulty]);
+		PlayState.storyDifficulty = CoolUtil.difficultyArray.indexOf(songs[curSelected].diffs[difficulty]);
 		PlayState.storyWeek = songs[curSelected].week;
 		PlayState.isStoryMode = false;
 

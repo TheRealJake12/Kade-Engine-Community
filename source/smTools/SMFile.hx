@@ -133,7 +133,7 @@ class SMFile
 			gfVersion: 'gf',
 			noteStyle: 'normal',
 			stage: 'stage',
-			speed: 1.0,
+			speed: 2.8,
 			validScore: false,
 			chartVersion: "",
 		};
