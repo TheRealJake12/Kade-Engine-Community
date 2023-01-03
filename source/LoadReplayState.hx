@@ -37,12 +37,13 @@ class LoadReplayState extends MusicBeatState
 
 	override function create()
 	{
+		Paths.clearStoredMemory();
+		Paths.clearUnusedMemory();
 		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		// TODO: Refactor this to use OpenFlAssets.
 		#if FEATURE_FILESYSTEM
 		controlsStrings = sys.FileSystem.readDirectory(Sys.getCwd() + "/assets/replays/");
 		#end
-		trace(controlsStrings);
 
 		controlsStrings.sort(sortByDate);
 
@@ -101,6 +102,7 @@ class LoadReplayState extends MusicBeatState
 		changeSelection(0);
 
 		super.create();
+		Paths.clearUnusedMemory();
 	}
 
 	function sortByDate(a:String, b:String)
@@ -123,9 +125,9 @@ class LoadReplayState extends MusicBeatState
 		return week;
 	}
 
-	public function addSong(songName:String, weekNum:Int, songCharacter:String)
+	public function addSong(songId:String, weekNum:Int, songCharacter:String)
 	{
-		songs.push(new FreeplayState.FreeplaySongMetadata(songName, weekNum, songCharacter));
+		songs.push(new FreeplayState.FreeplaySongMetadata(songId, weekNum, songCharacter));
 	}
 
 	public function addWeek(songs:Array<String>, weekNum:Int, ?songCharacters:Array<String>)
@@ -148,7 +150,7 @@ class LoadReplayState extends MusicBeatState
 		super.update(elapsed);
 
 		if (controls.BACK)
-			FlxG.switchState(new OptionsMenu());
+			MusicBeatState.switchState(new OptionsDirect());
 		if (controls.UP_P)
 			changeSelection(-1);
 		if (controls.DOWN_P)
@@ -164,7 +166,7 @@ class LoadReplayState extends MusicBeatState
 			if (PlayState.rep.replay.replayGameVer == Replay.version)
 			{
 				// adjusting the song name to be compatible
-				var songFormat = StringTools.replace(PlayState.rep.replay.songName, " ", "-");
+				var songFormat = StringTools.replace(PlayState.rep.replay.songId, " ", "-");
 				switch (songFormat)
 				{
 					case 'Dad-Battle':
@@ -205,14 +207,14 @@ class LoadReplayState extends MusicBeatState
 					songPath = File.getContent(PlayState.rep.replay.chartPath);
 					try
 					{
-						PlayState.sm = SMFile.loadFile(PlayState.pathToSm + "/" + StringTools.replace(PlayState.rep.replay.songName, " ", "_") + ".sm");
+						PlayState.sm = SMFile.loadFile(PlayState.pathToSm + "/" + StringTools.replace(PlayState.rep.replay.songId, " ", "_") + ".sm");
 					}
 					catch (e:Exception)
 					{
 						Application.current.window.alert("Make sure that the SM file is called "
 							+ PlayState.pathToSm
 							+ "/"
-							+ StringTools.replace(PlayState.rep.replay.songName, " ", "_")
+							+ StringTools.replace(PlayState.rep.replay.songId, " ", "_")
 							+ ".sm!\nAs I couldn't read it.",
 							"SM Replays");
 						return;
@@ -228,18 +230,18 @@ class LoadReplayState extends MusicBeatState
 					}
 					else
 					{
-						var diff:String = ["-easy", "", "-hard"][PlayState.rep.replay.songDiff];
-						PlayState.SONG = Song.loadFromJson(PlayState.rep.replay.songName, diff);
+						var diff:String = CoolUtil.suffixDiffsArray[PlayState.rep.replay.songDiff];
+						PlayState.SONG = Song.loadFromJson(PlayState.rep.replay.songId, diff);
 					}
 				}
 				catch (e:Exception)
 				{
-					Application.current.window.alert("Failed to load the song! Does the JSON exist?", "Replays");
+					Debug.logWarn("Failed to load the song! Does the JSON exist?");
 					return;
 				}
 				PlayState.isStoryMode = false;
 				PlayState.storyDifficulty = PlayState.rep.replay.songDiff;
-				PlayState.storyWeek = getWeekNumbFromSong(PlayState.rep.replay.songName);
+				PlayState.storyWeek = getWeekNumbFromSong(PlayState.rep.replay.songId);
 				LoadingState.loadAndSwitchState(new PlayState());
 			}
 			else
@@ -268,7 +270,7 @@ class LoadReplayState extends MusicBeatState
 		poggerDetails.text = "Replay Details - \nDate Created: "
 			+ rep.replay.timestamp
 			+ "\nSong: "
-			+ rep.replay.songName
+			+ rep.replay.songId
 			+ "\nReplay Version: "
 			+ rep.replay.replayGameVer
 			+ ' ('

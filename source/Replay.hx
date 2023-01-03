@@ -41,8 +41,9 @@ class Analysis
 typedef ReplayJSON =
 {
 	public var replayGameVer:String;
+	public var gameVer:String;
 	public var timestamp:Date;
-	public var songName:String;
+	public var songId:String;
 	public var songDiff:Int;
 	public var songNotes:Array<Dynamic>;
 	public var songJudgements:Array<String>;
@@ -65,12 +66,13 @@ class Replay
 	{
 		this.path = path;
 		replay = {
-			songName: "No Song Found",
+			songId: "No Song Found",
 			songDiff: 1,
 			noteSpeed: 1.5,
 			isDownscroll: false,
 			songNotes: [],
 			replayGameVer: version,
+			gameVer: MainMenuState.kecVer,
 			chartPath: "",
 			sm: false,
 			timestamp: Date.now(),
@@ -86,7 +88,7 @@ class Replay
 
 		rep.LoadFromJSON();
 
-		trace('basic replay data:\nSong Name: ' + rep.replay.songName + '\nSong Diff: ' + rep.replay.songDiff);
+		trace('basic replay data:\nSong Name: ' + rep.replay.songId + '\nSong Diff: ' + rep.replay.songDiff);
 
 		return rep;
 	}
@@ -100,12 +102,13 @@ class Replay
 		#end
 
 		var json = {
-			"song": PlayState.SONG.songId,
+			"songId": PlayState.SONG.songId,
 			"songDiff": PlayState.storyDifficulty,
 			"chartPath": chartPath,
 			"sm": PlayState.isSM,
 			"timestamp": Date.now(),
 			"replayGameVer": version,
+			"gameVer": MainMenuState.kecVer,
 			"sf": Conductor.safeFrames,
 			"noteSpeed": (FlxG.save.data.scrollSpeed > 1 ? FlxG.save.data.scrollSpeed : PlayState.SONG.speed),
 			"isDownscroll": FlxG.save.data.downscroll,
@@ -117,6 +120,16 @@ class Replay
 		var data:String = Json.stringify(json, null, "");
 
 		var time = Date.now().getTime();
+
+		#if FEATURE_FILESYSTEM
+		File.saveContent("assets/replays/replay-" + PlayState.SONG.songId + "-time" + time + ".kadeReplay", data);
+
+		path = "replay-" + PlayState.SONG.songId + "-time" + time + ".kadeReplay"; // for score screen shit
+
+		LoadFromJSON();
+
+		replay.ana = ana;
+		#end
 	}
 
 	public function LoadFromJSON()

@@ -29,11 +29,8 @@ class SelectEditorsState extends MusicBeatState
 
 	override function create()
 	{
-		if (FlxG.save.data.unload)
-		{
-			Paths.clearStoredMemory();
-			Paths.clearUnusedMemory();
-		}
+		Paths.clearStoredMemory();
+		Paths.clearUnusedMemory();
 		bgSprite = new FlxSprite(0, 0).loadGraphic(Paths.loadImage('menuDesat'));
 		bgSprite.scrollFactor.set(1.0, 1.0);
 		bgSprite.screenCenter();
@@ -64,6 +61,7 @@ class SelectEditorsState extends MusicBeatState
 		changeSelection();
 
 		super.create();
+		Paths.clearUnusedMemory();
 	}
 
 	override function update(elapsed:Float)
@@ -88,11 +86,11 @@ class SelectEditorsState extends MusicBeatState
 			switch (editors[curSelected])
 			{
 				case 'Character Editor':
-					LoadingState.loadAndSwitchState(new AnimationDebug());
+					LoadingState.loadAndSwitchState(new debug.AnimationDebug());
 				case 'Stage Editor':
-					LoadingState.loadAndSwitchState(new StageDebugState());
+					LoadingState.loadAndSwitchState(new debug.StageDebugState());
 				case 'Chart Editor':
-					LoadingState.loadAndSwitchState(new ChartingState());
+					LoadingState.loadAndSwitchState(new debug.ChartingState());
 			}
 			FlxG.sound.music.volume = 0;
 		}

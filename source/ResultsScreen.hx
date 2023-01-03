@@ -71,6 +71,7 @@ class ResultsScreen extends FlxSubState
 
 		text = new FlxText(20, -55, 0, "Song Cleared!");
 		text.size = 34;
+		text.font = Paths.font("vcr.ttf");
 		text.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 4, 1);
 		text.color = FlxColor.WHITE;
 		text.scrollFactor.set();
@@ -90,15 +91,17 @@ class ResultsScreen extends FlxSubState
 		var shits = PlayState.isStoryMode ? PlayState.campaignShits : PlayState.shits;
 
 		comboText = new FlxText(20, -75, 0,
-			'Judgements:\nMarvelous - ${marvs}\nSicks - ${sicks}\nGoods - ${goods}\nBads - ${bads}\n\nCombo Breaks: ${(PlayState.isStoryMode ? PlayState.campaignMisses : PlayState.misses)}\nHighest Combo: ${PlayState.highestCombo + 1}\nScore: ${PlayState.instance.songScore}\nAccuracy: ${HelperFunctions.truncateFloat(PlayState.instance.accuracy, 2)}%\n\n${Ratings.GenerateLetterRank(PlayState.instance.accuracy)}\nRate: ${PlayState.songMultiplier}x\n\n${!PlayState.loadRep ? "\nF1 - Replay song" : ""}
+			'Judgements:\nMarvs - ${marvs}\nSicks - ${sicks}\nGoods - ${goods}\nBads - ${bads}\n\nMisses: ${(PlayState.isStoryMode ? PlayState.campaignMisses : PlayState.misses)}\nHighest Combo: ${PlayState.highestCombo + 1}\nScore: ${PlayState.instance.songScore}\nAccuracy: ${HelperFunctions.truncateFloat(PlayState.instance.accuracy, 2)}%\n\n${Ratings.GenerateLetterRank(PlayState.instance.accuracy)}\nRate: ${PlayState.songMultiplier}x\n\n${!PlayState.loadRep ? "\nF1 - Replay song" : ""}
         ');
 		comboText.size = 28;
+		comboText.font = Paths.font("vcr.ttf");
 		comboText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 4, 1);
 		comboText.color = FlxColor.WHITE;
 		comboText.scrollFactor.set();
 		add(comboText);
 
 		contText = new FlxText(FlxG.width - 475, FlxG.height + 50, 0, 'Press ENTER to continue.');
+		contText.font = Paths.font("vcr.ttf");
 		contText.size = 28;
 		contText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 4, 1);
 		contText.color = FlxColor.WHITE;
@@ -160,8 +163,9 @@ class ResultsScreen extends FlxSubState
 		mean = HelperFunctions.truncateFloat(mean / PlayState.rep.replay.songNotes.length, 2);
 
 		settingsText = new FlxText(20, FlxG.height + 50, 0,
-			'Mean: ${mean}ms (MARV:${Ratings.timingWindows[4]}SICK:${Ratings.timingWindows[3]}ms,GOOD:${Ratings.timingWindows[2]}ms,BAD:${Ratings.timingWindows[1]}ms,SHIT:${Ratings.timingWindows[0]}ms)');
+			'Mean: ${mean}ms (MARV:${Ratings.timingWindows[4]}ms,SICK:${Ratings.timingWindows[3]}ms,GOOD:${Ratings.timingWindows[2]}ms,BAD:${Ratings.timingWindows[1]}ms,SHIT:${Ratings.timingWindows[0]}ms)');
 		settingsText.size = 16;
+		settingsText.font = Paths.font("vcr.ttf");
 		settingsText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2, 1);
 		settingsText.color = FlxColor.WHITE;
 		settingsText.scrollFactor.set();
@@ -211,13 +215,14 @@ class ResultsScreen extends FlxSubState
 
 			if (PlayState.isStoryMode)
 			{
-				FlxG.sound.playMusic(Paths.music('freakyMenu'));
+				FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
+				MainMenuState.freakyPlaying = true;
 				Conductor.changeBPM(102);
-				FlxG.switchState(new StoryMenuState());
+				MusicBeatState.switchState(new MainMenuState());
 			}
 			else
-				FlxG.switchState(new FreeplayState());
-			PlayState.instance.clean();
+				MusicBeatState.switchState(new FreeplayState());
+			
 		}
 
 		if (FlxG.keys.justPressed.F1 && !PlayState.loadRep)
@@ -238,7 +243,6 @@ class ResultsScreen extends FlxSubState
 			PlayState.isStoryMode = false;
 			PlayState.storyDifficulty = PlayState.storyDifficulty;
 			LoadingState.loadAndSwitchState(new PlayState());
-			PlayState.instance.clean();
 		}
 
 		super.update(elapsed);

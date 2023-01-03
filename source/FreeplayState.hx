@@ -143,7 +143,6 @@ class FreeplayState extends MusicBeatState
 			trace("tryin to load sm files");
 		for (i in FileSystem.readDirectory("assets/sm/"))
 		{
-			trace(i);
 			if (FileSystem.isDirectory("assets/sm/" + i))
 			{
 				trace("Reading SM file dir " + i);
@@ -431,7 +430,6 @@ class FreeplayState extends MusicBeatState
 				trace("I ONLY FOUND " + diffsThatExist);
 
 			FreeplayState.songData.set(songId, diffs);
-			trace('loaded diffs for ' + songId);
 			FreeplayState.songs.push(meta);
 		}
 	}

@@ -144,7 +144,7 @@ class OptionsMenu extends MusicBeatSubstate
 				new InstantRespawn("Toggle if you instantly respawn after dying."),
 				new CamZoomOption("Toggle the camera zoom in-game."),
 				// new OffsetMenu("Get a note offset based off of your inputs!"),
-				//new ReplayOption("Watch Replays"),
+				new ReplayOption("Watch Replays"),
 				new DFJKOption(),
 				new Judgement("Create a custom judgement preset"),
 				new CustomizeGameplay("Drag and drop gameplay modules to your prefered positions!")

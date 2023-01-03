@@ -219,7 +219,9 @@ class HitGraph extends Sprite
 			var judge = history[i][1];
 
 			switch (judge)
-			{	
+			{
+				case "marv":
+					gfx.beginFill(0x54E600);
 				case "sick":
 					gfx.beginFill(0x00FFFF);
 				case "good":
@@ -249,7 +251,7 @@ class HitGraph extends Sprite
 
 	public function fitX(x:Float)
 	{
-		return (x / FlxG.sound.music.length) * width;
+		return ((x / (PlayState.inst.length / PlayState.songMultiplier)) * width) * PlayState.songMultiplier;
 	}
 
 	public function addToHistory(diff:Float, judge:String, time:Float)

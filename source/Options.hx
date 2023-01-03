@@ -1318,8 +1318,7 @@ class ReplayOption extends Option
 
 	public override function press():Bool
 	{
-		trace("switch");
-		FlxG.switchState(new LoadReplayState());
+		MusicBeatState.switchState(new LoadReplayState());
 		return false;
 	}
 

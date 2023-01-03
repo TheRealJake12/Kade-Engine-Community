@@ -25,6 +25,11 @@ class Init extends MusicBeatState
 		cpp.NativeGc.run(true);
 		#end
 
+		#if FEATURE_FILESYSTEM
+		if (!sys.FileSystem.exists(Sys.getCwd() + "/assets/replays"))
+			sys.FileSystem.createDirectory(Sys.getCwd() + "/assets/replays");
+		#end
+
 		if (FlxG.save.data.fpsCap > 420)
 			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(420);
 		
