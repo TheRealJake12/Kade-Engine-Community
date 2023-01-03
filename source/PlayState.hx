@@ -3310,6 +3310,7 @@ class PlayState extends MusicBeatState
 		scoreTxt.screenCenter(X);
 
 		var pauseBind = FlxKey.fromString(FlxG.save.data.pauseBind);
+		var gppauseBind = FlxKey.fromString(FlxG.save.data.gppauseBind);
 
 		if ((FlxG.keys.anyJustPressed([pauseBind])) && startedCountdown && canPause && !cannotDie)
 		{
@@ -4944,7 +4945,7 @@ class PlayState extends MusicBeatState
 			});
 		}
 
-		if ((!FlxG.keys.justPressed.ANY))
+		if ((KeyBinds.gamepad &&  !FlxG.keys.justPressed.ANY))
 		{
 			if (pressArray.contains(true) && generatedMusic)
 			{

@@ -553,14 +553,14 @@ class FreeplayState extends MusicBeatState
 			FlxG.sound.music.volume -= 0.5 * FlxG.elapsed;
 		}
 
+		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
+
 		var upP = FlxG.keys.justPressed.UP;
 		var downP = FlxG.keys.justPressed.DOWN;
 		var accepted = FlxG.keys.justPressed.ENTER && !FlxG.keys.pressed.ALT;
 		var dadDebug = FlxG.keys.justPressed.SIX;
 		var charting = FlxG.keys.justPressed.SEVEN;
 		var bfDebug = FlxG.keys.justPressed.ZERO;
-
-		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
 
 		#if FEATURE_HSCRIPT
 		if (executeHScript && script != null)

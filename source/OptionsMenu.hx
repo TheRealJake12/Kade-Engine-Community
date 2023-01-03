@@ -223,15 +223,18 @@ class OptionsMenu extends MusicBeatSubstate
 			new OptionCata(345, 104, "Experamental", [
 				new OldCharter("Uses Kade Engine 1.5.4 Chart System.(HIGH CHANCES OF CRASHING!)"),
 			]),
-			new OptionCata(-1, 150, "Editing Keybinds", [
+			new OptionCata(-1, 155, "Editing Keybinds", [
 				new LeftKeybind("The left note's keybind"),
 				new DownKeybind("The down note's keybind"),
 				new UpKeybind("The up note's keybind"),
 				new RightKeybind("The right note's keybind"),
 				new PauseKeybind("The keybind used to pause the game"),
 				new ResetBind("The keybind used to die instantly"),
+				new MuteBind("The keybind used to mute game audio"),
+				new VolUpBind("The keybind used to turn the volume up"),
+				new VolDownBind("The keybind used to turn the volume down"),
 			], true),
-			new OptionCata(-1, 150, "Editing Judgements", [
+			new OptionCata(-1, 160, "Editing Judgements", [
 				new MarvMSOption("How many milliseconds are in the MARV hit window"),
 				new SickMSOption("How many milliseconds are in the SICK hit window"),
 				new GoodMsOption("How many milliseconds are in the GOOD hit window"),

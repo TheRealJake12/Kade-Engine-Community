@@ -259,7 +259,11 @@ class KadeEngineData
 		if (FlxG.save.data.mute != null)
 		{
 			FlxG.sound.muted = FlxG.save.data.mute;
-		}	
+		}
+
+		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
+
+		KeyBinds.gamepad = gamepad != null;	
 
 		//if (FlxG.save.data.volume == null)
 			//FlxG.save.data.volume = 1;	

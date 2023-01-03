@@ -298,12 +298,12 @@ class MuteBind extends Option
 		{
 			FlxG.save.data.muteBind = text;
 			waitingType = false;
+			FlxG.sound.muteKeys = [FlxKey.fromString(Std.string(FlxG.save.data.muteBind))];
 		}
 	}
 
 	public override function press()
 	{
-		Debug.logTrace("keybind change");
 		waitingType = !waitingType;
 
 		return true;
@@ -330,6 +330,7 @@ class VolUpBind extends Option
 		{
 			FlxG.save.data.volUpBind = text;
 			waitingType = false;
+			FlxG.sound.volumeUpKeys = [FlxKey.fromString(Std.string(FlxG.save.data.volUpBind))];
 		}
 	}
 
@@ -362,6 +363,7 @@ class VolDownBind extends Option
 		{
 			FlxG.save.data.volDownBind = text;
 			waitingType = false;
+			FlxG.sound.volumeDownKeys = [FlxKey.fromString(Std.string(FlxG.save.data.volDownBind))];
 		}
 	}
 

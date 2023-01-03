@@ -4,6 +4,7 @@ package;
 import cpp.CPPInterface;
 #end
 import flixel.FlxG;
+import flixel.input.gamepad.FlxGamepad;
 import openfl.Lib;
 import flixel.graphics.FlxGraphic;
 #if FEATURE_MULTITHREADING
@@ -45,6 +46,15 @@ class Init extends MusicBeatState
 
 		CustomNoteHelpers.Skin.updateNoteskins();
 		CustomNoteHelpers.Splash.updateNotesplashes();
+
+		if (FlxG.save.data.volDownBind == null)
+			FlxG.save.data.volDownBind = "MINUS";
+		if (FlxG.save.data.volUpBind == null)
+			FlxG.save.data.volUpBind = "PLUS";
+
+		FlxG.sound.muteKeys = [FlxKey.fromString(Std.string(FlxG.save.data.muteBind))];
+		FlxG.sound.volumeDownKeys = [FlxKey.fromString(Std.string(FlxG.save.data.volDownBind))];
+		FlxG.sound.volumeUpKeys = [FlxKey.fromString(Std.string(FlxG.save.data.volUpBind))];	
 
 		FlxG.worldBounds.set(0, 0);
 
