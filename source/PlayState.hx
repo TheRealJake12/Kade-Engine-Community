@@ -199,7 +199,7 @@ class PlayState extends MusicBeatState
 	#end
 
 	public var vocals:FlxSound;
-	public static var inst:FlxSound;
+	public var inst:FlxSound;
 
 	public static var isSM:Bool = false;
 	#if FEATURE_STEPMANIA
@@ -811,9 +811,6 @@ class PlayState extends MusicBeatState
 			{
 				case 'halloween':
 					camPos = new FlxPoint(gf.getMidpoint().x + dad.camPos[0], gf.getMidpoint().y + dad.camPos[1]);
-				case 'tank':
-					if (SONG.player2 == 'tankman')
-						camPos = new FlxPoint(436.5, 534.5);
 				case 'stage':
 					if (dad.replacesGF)
 						camPos = new FlxPoint(dad.getGraphicMidpoint().x + dad.camPos[0] - 200, dad.getGraphicMidpoint().y + dad.camPos[1]);
@@ -1358,7 +1355,7 @@ class PlayState extends MusicBeatState
 				Stage.swagBacks['tankman'].animation.play('wellWell', true);
 				FlxG.camera.zoom *= 1.2;
 				camFollow.x = 436.5;
-				camFollow.y = 534.5;
+				camFollow.y = 520;
 
 				// Well well well, what do we got here?
 				createTimer(0.1, function(tmr:FlxTimer)
@@ -1382,7 +1379,7 @@ class PlayState extends MusicBeatState
 					createTimer(3, function(tmr:FlxTimer)
 					{
 						camFollow.x = 436.5;
-						camFollow.y = 534.5;
+						camFollow.y = 520;
 						boyfriend.dance();
 						Stage.swagBacks['tankman'].animation.play('killYou', true);
 						FlxG.sound.play(Paths.sound('killYou'));
@@ -1436,7 +1433,7 @@ class PlayState extends MusicBeatState
 				createTimer(1, function(tmr:FlxTimer)
 				{
 					camFollow.x = 436.5;
-					camFollow.y = 534.5;
+					camFollow.y = 520;
 				});
 
 				createTimer(4, function(tmr:FlxTimer)
@@ -5484,12 +5481,7 @@ class PlayState extends MusicBeatState
 					dad.playAnim('sing' + dataSuffix[note.noteData] + altAnim, true);
 				else
 					boyfriend.playAnim('sing' + dataSuffix[note.noteData] + altAnim, true);
-			}	
-
-			playerStrums.forEach(function(spr:StaticArrow)
-			{
-				pressArrow(spr, spr.ID, note);
-			});
+			}
 		}
 
 		if (canPlayAnims && note.isSustainNote)
@@ -5521,7 +5513,17 @@ class PlayState extends MusicBeatState
 				saveNotes.push(array);
 				saveJudge.push(note.rating);
 			}
-			
+
+			if (!note.wasGoodHit)
+			{
+				if (!PlayStateChangeables.botPlay)
+				{
+					playerStrums.forEach(function(spr:StaticArrow)
+					{
+						pressArrow(spr, spr.ID, note);
+					});
+				}
+			}
 
 			if (!note.isSustainNote)
 			{

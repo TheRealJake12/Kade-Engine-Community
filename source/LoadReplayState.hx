@@ -21,6 +21,8 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 
+using StringTools;
+
 class LoadReplayState extends MusicBeatState
 {
 	var selector:FlxText;
@@ -149,6 +151,11 @@ class LoadReplayState extends MusicBeatState
 	{
 		super.update(elapsed);
 
+		if (FlxG.keys.justPressed.BACKSPACE)
+		{
+			deleteTheReplays();
+		}
+
 		if (controls.BACK)
 			MusicBeatState.switchState(new OptionsDirect());
 		if (controls.UP_P)
@@ -253,6 +260,20 @@ class LoadReplayState extends MusicBeatState
 	}
 
 	var isSettingControl:Bool = false;
+
+	public static function deleteTheReplays()
+	{
+		var replays = [];
+		var daPath = FileSystem.absolutePath("assets/replays");
+
+		for (i in FileSystem.readDirectory(FileSystem.absolutePath("assets/replays")))
+		{
+			replays.push(File.getContent(FileSystem.absolutePath("assets/replays") + "/" + i));
+		}
+		for (i in replays){
+			FileSystem.deleteFile(i);
+		}
+	}
 
 	function changeSelection(change:Int = 0)
 	{

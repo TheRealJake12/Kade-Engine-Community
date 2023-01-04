@@ -16,6 +16,8 @@ import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import flixel.addons.transition.FlxTransitionableState;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxTimer;
 
 #if desktop
 // crash handler stuff
@@ -43,6 +45,10 @@ class Main extends Sprite
 
 	public static var instance:Main;
 	public static var bitmapFPS:Bitmap;
+	public static var focusMusicTween:FlxTween;
+	public static var focused:Bool = true;
+	var oldVol:Float = 1.0;
+	var newVol:Float = 0.3;
 
 	public static var watermarks = true; // Whether to put Kade Engine literally anywhere
 
@@ -136,6 +142,8 @@ class Main extends Sprite
 		#if desktop
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 		#end
+		Application.current.window.onFocusOut.add(onWindowFocusOut);
+		Application.current.window.onFocusIn.add(onWindowFocusIn);
 	}
 	//motherfucker had to be special and have to be in main. smh.
 	public static function dumpCache()
@@ -191,6 +199,84 @@ class Main extends Sprite
 		Application.current.window.alert(errMsg, "Error!");
 		DiscordClient.shutdown();
 		Sys.exit(1);
+	}
+
+	function onWindowFocusOut()
+	{
+		focused = false;
+
+		// Lower global volume when unfocused
+		if (Type.getClass(FlxG.state) != PlayState) // imagine stealing my code smh
+		{
+			oldVol = FlxG.sound.volume;
+			if (oldVol > 0.3)
+			{
+				newVol = 0.3;
+			}
+			else
+			{
+				if (oldVol > 0.1)
+				{
+					newVol = 0.1;
+				}
+				else
+				{
+					newVol = 0;
+				}
+			}
+
+			if (focusMusicTween != null)
+				focusMusicTween.cancel();
+			focusMusicTween = FlxTween.tween(FlxG.sound, {volume: newVol}, 0.5);
+			if (FlxG.save.data.gen)
+				Debug.logTrace("Lost Focus");
+
+			if (PlayState.inDaPlay){
+				PlayState.instance.openSubState(new PauseSubState());
+
+				PlayState.boyfriend.stunned = true;
+
+				PlayState.instance.persistentUpdate = false;
+				PlayState.instance.persistentDraw = true;
+				PlayState.instance.paused = true;
+
+				if (PlayState.isSM){
+					PlayState.instance.vocals.pause();
+					PlayState.instance.inst.pause();
+				}
+				else{
+					FlxG.sound.music.pause();
+				}
+			}
+
+			// Conserve power by lowering draw framerate when unfocuced
+		}
+		FlxG.drawFramerate = 30;
+	}
+
+	function onWindowFocusIn()
+	{
+		new FlxTimer().start(0.2, function(tmr:FlxTimer)
+		{
+			focused = true;
+		});
+
+		if (FlxG.save.data.gen)
+			Debug.logTrace("Gained Focus");
+
+		// Lower global volume when unfocused
+		if (Type.getClass(FlxG.state) != PlayState)
+		{
+			// Normal global volume when focused
+			if (focusMusicTween != null)
+				focusMusicTween.cancel();
+
+			focusMusicTween = FlxTween.tween(FlxG.sound, {volume: oldVol}, 0.5);
+
+			// Bring framerate back when focused
+			FlxG.drawFramerate = FlxG.save.data.fpsCap;
+		}
+		(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
 	}
 	#end
 
