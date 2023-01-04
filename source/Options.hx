@@ -1879,6 +1879,43 @@ class LockWeeksOption extends Option
 	}
 }
 
+#if FEATURE_FILESYSTEM
+class DeleteYourPC extends Option
+{
+	var confirm:Bool = false;
+
+	public function new(desc:String)
+	{
+		super();
+		if (OptionsMenu.isInPause)
+			description = "This option cannot be used in the pause menu.";
+		else
+			description = desc;
+	}
+
+	public override function press():Bool
+	{
+		if (OptionsMenu.isInPause)
+			return false;
+		if (!confirm)
+		{
+			confirm = true;
+			display = updateDisplay();
+			return true;
+		}
+		LoadReplayState.deleteTheReplays();
+		Debug.logTrace('Replays Deleted.');
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return confirm ? "Confirm Replays Delete." : "Delete Replays?";
+	}
+}
+#end
+
 class ResetScoreOption extends Option
 {
 	var confirm:Bool = false;

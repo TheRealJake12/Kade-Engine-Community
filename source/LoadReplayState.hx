@@ -150,11 +150,12 @@ class LoadReplayState extends MusicBeatState
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-
+		#if FEATURE_FILESYSTEM
 		if (FlxG.keys.justPressed.BACKSPACE)
 		{
 			deleteTheReplays();
 		}
+		#end
 
 		if (controls.BACK)
 			MusicBeatState.switchState(new OptionsDirect());
@@ -261,6 +262,7 @@ class LoadReplayState extends MusicBeatState
 
 	var isSettingControl:Bool = false;
 
+	#if FEATURE_FILESYSTEM
 	public static function deleteTheReplays()
 	{
 		var replays = [];
@@ -274,6 +276,7 @@ class LoadReplayState extends MusicBeatState
 			FileSystem.deleteFile(i);
 		}
 	}
+	#end
 
 	function changeSelection(change:Int = 0)
 	{

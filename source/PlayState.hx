@@ -2224,14 +2224,10 @@ class PlayState extends MusicBeatState
 
 		recalculateAllSectionTimes();
 		
-		#if FEATURE_STEPMANIA
 		if (isSM)
 			songLength = ((FlxG.sound.music.length / songMultiplier) / 1000);
 		else
 			songLength = ((inst.length / songMultiplier) / 1000);
-		#else
-		songLength = ((inst.length / songMultiplier) / 1000);
-		#end
 
 		songPosBG = new FlxSprite(0, FlxG.height - 710).loadGraphic(Paths.image2('healthBar', 'shared'));
 
@@ -3087,12 +3083,13 @@ class PlayState extends MusicBeatState
 				currentLuaIndex++;
 			}
 		}
-
+		/*
 		if (!paused)
 		{
 			tweenManager.update(elapsed);
 			timerManager.update(elapsed);
 		}
+		*/
 
 		if (generatedMusic && !paused && songStarted && songMultiplier < 1)
 		{

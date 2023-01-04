@@ -141,9 +141,9 @@ class Main extends Sprite
 		Debug.onGameStart();
 		#if desktop
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
-		#end
 		Application.current.window.onFocusOut.add(onWindowFocusOut);
 		Application.current.window.onFocusIn.add(onWindowFocusIn);
+		#end
 	}
 	//motherfucker had to be special and have to be in main. smh.
 	public static function dumpCache()

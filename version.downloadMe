@@ -1,9 +1,11 @@
-1.7;
+1.7.1;
 
--ModCore. Simplest of Modsupport.
--Characters Use JSONS Because of ModCore.
--HScript Modcharts. Very Limited.
--Fixed Notesplash Lag.
--Better Soundtray System With Custom Sound.
--Custom Difficulties In Freeplay.
--GPU Rendering. (Thanks Bolo)
+-Partial Controller Support Added Back.
+-StepMania Format Now Functions Again.
+-Notes Are Handled Better When Pressed.
+-Multiple Chart Editor Fixes.
+-Chart Editor Reskined.
+-Score Screen Now Displays The Inputs Accurately.
+-Score Screen Look Overhaul.
+-Replay Fixes. Not 100% Fixed Though.
+-Uses The KE 1.5 Rating Skins.
