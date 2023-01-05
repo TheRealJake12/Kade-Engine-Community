@@ -1,6 +1,7 @@
 # Changelogs
 
 - [Most Recent Version](https://github.com/TheRealJake12/Kade-Engine-Community/releases/latest) (Most Recent Version)
+- [1.7](https://github.com/TheRealJake12/Kade-Engine-Community/releases/tag/1.7)
 - [1.6.1](https://github.com/TheRealJake12/Kade-Engine-Community/releases/tag/1.6.1)
 - [1.6](https://github.com/TheRealJake12/Kade-Engine-Community/releases/tag/1.6)
 - [1.5.2](https://github.com/TheRealJake12/Kade-Engine-Community/releases/tag/1.5.2)
