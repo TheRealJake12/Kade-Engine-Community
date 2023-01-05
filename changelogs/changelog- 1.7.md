@@ -1,0 +1,9 @@
+Changelog For Update 1.7
+
+- ModCore. Simplest of Modsupport.
+- Characters Use JSONS Because of ModCore.
+- HScript Modcharts. Very Limited.
+- Fixed Notesplash Lag.
+- Better Soundtray System With Custom Sound.
+- Custom Difficulties In Freeplay.
+- GPU Rendering. (Thanks Bolo)
