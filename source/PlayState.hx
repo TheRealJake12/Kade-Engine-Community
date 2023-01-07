@@ -140,8 +140,6 @@ class PlayState extends MusicBeatState
 	#end
 
 	//Character Animation Related
-	public var canPlayAnims:Bool = false; // if a note plays the sing animations
-	public var canNoteSplash:Bool = true; // if a note can notesplash on Sick! and Marv!
 	var currentFrames:Int = 0;
 	var idleToBeat:Bool = true; // change if bf and dad would idle to the beat of the song
 	var idleBeat:Int = 2; // how frequently bf and dad would play their idle animation(1 - every beat, 2 - every 2 beats and so on)
@@ -3934,19 +3932,9 @@ class PlayState extends MusicBeatState
 					}
 				}
 
-				switch (daNote.noteShit)
-				{
-					case 'hurt':
-						canPlayAnims = false;
-					case 'mustpress':
-						canPlayAnims = false;
-					default:
-						canPlayAnims = true;
-				}
-
 				if (!daNote.mustPress)
 				{
-					if (Conductor.songPosition >= daNote.strumTime && canPlayAnims)
+					if (Conductor.songPosition >= daNote.strumTime && daNote.canPlayAnims)
 						opponentNoteHit(daNote);
 				}
 
@@ -4511,16 +4499,6 @@ class PlayState extends MusicBeatState
 
 		var daRating = Ratings.judgeNote(noteDiff);
 
-		switch (daNote.noteShit){
-			case 'hurt':
-			canNoteSplash = false;
-			//goes unused because it doesn't get called to do so.
-			case 'mustpress':
-			canNoteSplash = false;
-			default:
-			canNoteSplash = true;
-		}
-
 		switch (daRating)
 		{
 			case 'shit':
@@ -4562,7 +4540,7 @@ class PlayState extends MusicBeatState
 				if (FlxG.save.data.accuracyMod == 0)
 					totalNotesHit += 1;
 				sicks++;
-				if (FlxG.save.data.notesplashes && canNoteSplash)
+				if (FlxG.save.data.notesplashes && daNote.canNoteSplash)
 				{
 					NoteSplashesSpawn(daNote);
 				}
@@ -4578,7 +4556,7 @@ class PlayState extends MusicBeatState
 				if (FlxG.save.data.accuracyMod == 0)
 					totalNotesHit += 1;
 				marvs++;
-				if (FlxG.save.data.notesplashes && canNoteSplash)
+				if (FlxG.save.data.notesplashes && daNote.canNoteSplash)
 				{
 					NoteSplashesSpawn(daNote);
 				}
@@ -5303,12 +5281,8 @@ class PlayState extends MusicBeatState
 		{
 			case 'hurt':
 				health -= 0.8;
-				canPlayAnims = false;
 			case 'mustpress':
 				health += 0.8;
-				canPlayAnims = false;
-			default:
-				canPlayAnims = true;
 		}	
 
 		if (daNote.isParent)
@@ -5385,7 +5359,7 @@ class PlayState extends MusicBeatState
 		{
 			var singData:Int = Std.int(Math.abs(daNote.noteData));
 
-			if (!FlxG.save.data.optimize && canPlayAnims)
+			if (!FlxG.save.data.optimize && daNote.canPlayAnims)
 			{
 				if (PlayStateChangeables.opponentMode)
 					boyfriend.playAnim('sing' + dataSuffix[singData] + altAnim, true);
@@ -5427,18 +5401,6 @@ class PlayState extends MusicBeatState
 		// add newest note to front of notesHitArray
 		// the oldest notes are at the end and are removed first
 
-		switch (note.noteShit)
-		{
-			case 'hurt':
-				health -= 0.8;
-				canPlayAnims = false;
-			case 'mustpress':
-				health += 0.7;
-				canPlayAnims = false;
-			default:
-				canPlayAnims = true;
-		}
-
 		if (!note.isSustainNote)
 			notesHitArray.unshift(Date.now());
 
@@ -5472,7 +5434,7 @@ class PlayState extends MusicBeatState
 
 		if (!note.wasGoodHit)
 		{
-			if (!note.isSustainNote && canPlayAnims)
+			if (!note.isSustainNote && note.canPlayAnims)
 			{
 				combo += 1;
 				popUpScore(note);
@@ -5501,7 +5463,7 @@ class PlayState extends MusicBeatState
 				altAnim = '-alt';
 			}
 
-			if (canPlayAnims)
+			if (note.canPlayAnims)
 			{
 				if (!FlxG.save.data.optimize)
 				{
@@ -5516,15 +5478,6 @@ class PlayState extends MusicBeatState
 			if (luaModchart != null)
 				luaModchart.executeState('playerOneSing', [note.noteData, Conductor.songPosition]);
 			#end
-
-			if (!loadRep && note.mustPress)
-			{
-				var array = [note.strumTime, note.sustainLength, note.noteData, noteDiff];
-				if (note.isSustainNote)
-					array[1] = -1;
-				saveNotes.push(array);
-				saveJudge.push(note.rating);
-			}
 
 			if (!PlayStateChangeables.botPlay)
 			{
@@ -5554,6 +5507,15 @@ class PlayState extends MusicBeatState
 				updateAccuracy();
 				updateScoreText();
 			}
+		}
+
+		if (!loadRep && note.mustPress)
+		{
+			var array = [note.strumTime, note.sustainLength, note.noteData, noteDiff];
+			if (note.isSustainNote)
+				array[1] = -1;
+			saveNotes.push(array);
+			saveJudge.push(note.rating);
 		}
 	}
 

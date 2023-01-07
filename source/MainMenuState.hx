@@ -138,6 +138,7 @@ class MainMenuState extends MusicBeatState
 			controls.setKeyboardScheme(KeyboardScheme.Duo(true), true);
 
 		changeItem(0, false);
+		Conductor.changeBPM(102);
 
 		super.create();
 	}

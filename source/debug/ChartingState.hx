@@ -183,7 +183,6 @@ class ChartingState extends MusicBeatState
 		#if FEATURE_DISCORD
 		DiscordClient.changePresence("Chart Editor", null, null, true);
 		#end
-		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 		speed = PlayState.songMultiplier;
 		curSection = lastSection;
@@ -460,7 +459,6 @@ class ChartingState extends MusicBeatState
 		add(snapText);
 		updateBpmText();
 		updateNotetypeText();
-		Paths.clearUnusedMemory();
 		super.create();
 	}
 
@@ -2591,7 +2589,6 @@ class ChartingState extends MusicBeatState
 				{
 					if (FlxG.mouse.x > 0 && FlxG.mouse.x < 0 + gridBG.width && FlxG.mouse.y > 0 && FlxG.mouse.y < 0 + height)
 					{
-						FlxG.log.add('added note');
 						addNote();
 					}
 				}
@@ -2720,26 +2717,26 @@ class ChartingState extends MusicBeatState
 					}
 				}
 
+				if (FlxG.keys.justPressed.Z && !FlxG.keys.justPressed.CONTROL)
+				{
+					this.noteShit--;
+					if (noteShit < 0)
+					{
+						noteShit = shits.length - 1;
+					}
+					updateNotetypeText();
+				}
+
+				if (FlxG.keys.justPressed.X && !FlxG.keys.justPressed.CONTROL)
+				{
+					this.noteShit++;
+					if (noteShit == shits.length)
+						noteShit = 0;
+					updateNotetypeText();
+				}
+
 				if (!typingShit.hasFocus)
 				{
-					if (FlxG.keys.justPressed.Z)
-					{
-						this.noteShit--;
-						if (noteShit < 0)
-						{
-							noteShit = shits.length - 1;
-						}
-						updateNotetypeText();
-					}
-
-					if (FlxG.keys.justPressed.X)
-					{
-						this.noteShit++;
-						if (noteShit == shits.length)
-							noteShit = 0;
-						updateNotetypeText();	
-					}
-
 					var shiftThing:Int = 1;
 					if (FlxG.keys.pressed.SHIFT)
 						shiftThing = 4;

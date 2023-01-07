@@ -34,6 +34,8 @@ class Note extends FlxSprite
 	public var noteSection:Int = 0;
 
 	public var noteShit:String = 'normal';
+	public var canPlayAnims:Bool = false; // if a note plays the sing animations
+	public var canNoteSplash:Bool = true; // if a note can notesplash on Sick! and Marv!
 	public var luaID:Int = 0;
 
 	public var isAlt:Bool = false;
@@ -120,6 +122,19 @@ class Note extends FlxSprite
 		{
 			this.noteData = Std.int(Math.abs(3 - noteData));
 			noteData = Std.int(Math.abs(3 - noteData));
+		}
+
+		switch (noteShit)
+		{
+			case 'hurt':
+				canPlayAnims = false;
+				canNoteSplash = false;
+			case 'mustpress':
+				canPlayAnims = false;
+				canNoteSplash = false;
+			default:
+				canPlayAnims = true;
+				canNoteSplash = true;
 		}
 
 		var daStage:String = ((PlayState.instance != null && !PlayStateChangeables.Optimize) ? PlayState.Stage.curStage : 'stage');

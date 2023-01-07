@@ -367,8 +367,7 @@ class TitleState extends MusicBeatState
 					FlxTween.angle(logoBl, logoBl.angle, -4, 4, {ease: FlxEase.quartInOut});
 			}, 0);
 			
-			if (!initialized)
-				FlxG.sound.music.time = 9400; // 9.4 seconds
+			FlxG.sound.music.time = 9400; // 9.4 seconds
 
 			skippedIntro = true;
 		}
