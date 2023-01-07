@@ -47,8 +47,6 @@ class MainMenuState extends MusicBeatState
 
 	override function create()
 	{
-		Paths.clearStoredMemory();
-		Paths.clearUnusedMemory();
 		#if desktop
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
@@ -142,7 +140,6 @@ class MainMenuState extends MusicBeatState
 		changeItem(0, false);
 
 		super.create();
-		Paths.clearUnusedMemory();
 	}
 
 	var selectedSomethin:Bool = false;

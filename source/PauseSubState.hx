@@ -185,8 +185,7 @@ class PauseSubState extends MusicBeatSubstate
 
 				case "Restart Song":
 					PlayState.startTime = 0;
-					MusicBeatState.switchState(new PlayState());
-					PlayState.stageTesting = false;
+					MusicBeatState.resetState();
 				case "Options":
 					goToOptions = true;
 					close();

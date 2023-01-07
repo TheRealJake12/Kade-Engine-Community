@@ -45,11 +45,8 @@ class Character extends FlxSprite
 		animDanced = new Map<String, Bool>();
 		curCharacter = character;
 		this.isPlayer = isPlayer;
-
-		switch (character){
-			default:
-			parseDataFile();
-		}
+		
+		parseDataFile();
 		
 
 		if (isPlayer && frames != null)

@@ -387,7 +387,6 @@ class PlayState extends MusicBeatState
 
 	override public function create()
 	{
-		Paths.clearStoredMemory();
 		#if FEATURE_HSCRIPT
 		scripts = new ScriptGroup();
 		scripts.onAddScript.push(onAddScript);
@@ -436,7 +435,6 @@ class PlayState extends MusicBeatState
 		if (currentSong != SONG.song)
 		{
 			currentSong = SONG.song;
-			Paths.clearStoredMemory();
 			if (!FlxG.save.data.gpuRender)
 				Main.dumpCache();
 		}
@@ -1298,7 +1296,6 @@ class PlayState extends MusicBeatState
 					precacheThing('splashes/Week7', 'image', 'shared');	
 			}
 		}
-		Paths.clearUnusedMemory();
 		#if FEATURE_HSCRIPT
 			scripts.executeAllFunc("createPost");
 		#end
@@ -3018,8 +3015,10 @@ class PlayState extends MusicBeatState
 		if (scripts != null)
 		{
 			scripts.update(elapsed);
+			scripts.executeAllFunc("updatePost", [elapsed]);
 		}
 		#end
+		
 		#if !debug
 		perfectMode = false;
 		#end
@@ -3083,13 +3082,14 @@ class PlayState extends MusicBeatState
 				currentLuaIndex++;
 			}
 		}
-		/*
+		
+		//uhhh dont comment out. It breaks everything
 		if (!paused)
 		{
 			tweenManager.update(elapsed);
 			timerManager.update(elapsed);
 		}
-		*/
+		
 
 		if (generatedMusic && !paused && songStarted && songMultiplier < 1)
 		{
@@ -3934,9 +3934,19 @@ class PlayState extends MusicBeatState
 					}
 				}
 
+				switch (daNote.noteShit)
+				{
+					case 'hurt':
+						canPlayAnims = false;
+					case 'mustpress':
+						canPlayAnims = false;
+					default:
+						canPlayAnims = true;
+				}
+
 				if (!daNote.mustPress)
 				{
-					if (Conductor.songPosition >= daNote.strumTime && daNote.noteShit != 'hurt' && daNote.noteShit != 'mustpress')
+					if (Conductor.songPosition >= daNote.strumTime && canPlayAnims)
 						opponentNoteHit(daNote);
 				}
 
@@ -5282,10 +5292,24 @@ class PlayState extends MusicBeatState
 		var altAnim:String = "";
 		var curSection:Int = Math.floor((curStep / 16));
 
+		//askl
+
 		if (daNote.isAlt)
 		{
 			altAnim = '-alt';
 		}
+
+		switch (daNote.noteShit)
+		{
+			case 'hurt':
+				health -= 0.8;
+				canPlayAnims = false;
+			case 'mustpress':
+				health += 0.8;
+				canPlayAnims = false;
+			default:
+				canPlayAnims = true;
+		}	
 
 		if (daNote.isParent)
 			for (i in daNote.children)
@@ -5361,7 +5385,7 @@ class PlayState extends MusicBeatState
 		{
 			var singData:Int = Std.int(Math.abs(daNote.noteData));
 
-			if (!FlxG.save.data.optimize)
+			if (!FlxG.save.data.optimize && canPlayAnims)
 			{
 				if (PlayStateChangeables.opponentMode)
 					boyfriend.playAnim('sing' + dataSuffix[singData] + altAnim, true);
@@ -5402,6 +5426,19 @@ class PlayState extends MusicBeatState
 
 		// add newest note to front of notesHitArray
 		// the oldest notes are at the end and are removed first
+
+		switch (note.noteShit)
+		{
+			case 'hurt':
+				health -= 0.8;
+				canPlayAnims = false;
+			case 'mustpress':
+				health += 0.7;
+				canPlayAnims = false;
+			default:
+				canPlayAnims = true;
+		}
+
 		if (!note.isSustainNote)
 			notesHitArray.unshift(Date.now());
 
@@ -5423,7 +5460,7 @@ class PlayState extends MusicBeatState
 
 		if (note.rating == "miss")
 			return;
-		
+
 		if (!note.isSustainNote)
 			notesHitArray.unshift(Date.now());
 
@@ -5432,70 +5469,48 @@ class PlayState extends MusicBeatState
 
 		if (mashViolations < 0)
 			mashViolations = 0;
-			
-		var altAnim:String = "";
-		if (note.isAlt)
+
+		if (!note.wasGoodHit)
 		{
-			altAnim = '-alt';
-		}
-
-		switch (note.noteShit){
-			case 'hurt':
-				health -= 0.8;
-				canPlayAnims = false;
-			case 'mustpress':
-				health += 0.8;
-				canPlayAnims = false;
-			default:	
-				canPlayAnims = true;
-		}	
-
-		#if FEATURE_HSCRIPT
-		scripts.executeAllFunc("goodNoteHit", [note]);
-		#end
-
-		if (canPlayAnims && !note.wasGoodHit && !note.isSustainNote)
-		{
-			combo += 1;
-			popUpScore(note);
-			if (FlxG.save.data.hitSound != 0)
+			if (!note.isSustainNote && canPlayAnims)
 			{
-				if (!FlxG.save.data.strumHit)
+				combo += 1;
+				popUpScore(note);
+				if (FlxG.save.data.hitSound != 0)
 				{
-					var daHitSound:FlxSound = new FlxSound()
-						.loadEmbedded(Paths.sound('hitsounds/${HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase()}', 'shared'));
-					daHitSound.volume = FlxG.save.data.hitVolume;
-					daHitSound.play();
+					if (!FlxG.save.data.strumHit)
+					{
+						var daHitSound:FlxSound = new FlxSound()
+							.loadEmbedded(Paths.sound('hitsounds/${HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase()}', 'shared'));
+						daHitSound.volume = FlxG.save.data.hitVolume;
+						daHitSound.play();
+					}
+				}
+				if (note.isParent)
+					for (i in note.children)
+						i.sustainActive = true;
+			}
+
+			#if FEATURE_HSCRIPT
+			scripts.executeAllFunc("goodNoteHit", [note]);
+			#end
+
+			var altAnim:String = "";
+			if (note.isAlt)
+			{
+				altAnim = '-alt';
+			}
+
+			if (canPlayAnims)
+			{
+				if (!FlxG.save.data.optimize)
+				{
+					if (PlayStateChangeables.opponentMode)
+						dad.playAnim('sing' + dataSuffix[note.noteData] + altAnim, true);
+					else
+						boyfriend.playAnim('sing' + dataSuffix[note.noteData] + altAnim, true);
 				}
 			}
-			if (note.isParent)
-				for (i in note.children)
-					i.sustainActive = true;
-			
-			if (!FlxG.save.data.optimize)
-			{
-				if (PlayStateChangeables.opponentMode)
-					dad.playAnim('sing' + dataSuffix[note.noteData] + altAnim, true);
-				else
-					boyfriend.playAnim('sing' + dataSuffix[note.noteData] + altAnim, true);
-			}
-		}
-
-		if (canPlayAnims && note.isSustainNote)
-		{
-			if (!FlxG.save.data.optimize)
-			{
-				if (PlayStateChangeables.opponentMode)
-					dad.playAnim('sing' + dataSuffix[note.noteData] + altAnim, true);
-				else
-					boyfriend.playAnim('sing' + dataSuffix[note.noteData] + altAnim, true);
-			}
-		}
-		
-			playerStrums.forEach(function(spr:StaticArrow)
-			{
-				pressArrow(spr, spr.ID, note);
-			});
 
 			#if FEATURE_LUAMODCHART
 			if (luaModchart != null)
@@ -5511,16 +5526,18 @@ class PlayState extends MusicBeatState
 				saveJudge.push(note.rating);
 			}
 
-			if (!note.wasGoodHit)
+			if (!PlayStateChangeables.botPlay)
 			{
-				if (!PlayStateChangeables.botPlay)
+				playerStrums.forEach(function(spr:StaticArrow)
 				{
-					playerStrums.forEach(function(spr:StaticArrow)
-					{
-						pressArrow(spr, spr.ID, note);
-					});
-				}
+					pressArrow(spr, spr.ID, note);
+				});
 			}
+
+			playerStrums.forEach(function(spr:StaticArrow)
+			{
+				pressArrow(spr, spr.ID, note);
+			});
 
 			if (!note.isSustainNote)
 			{
@@ -5537,6 +5554,7 @@ class PlayState extends MusicBeatState
 				updateAccuracy();
 				updateScoreText();
 			}
+		}
 	}
 
 	function pressArrow(spr:StaticArrow, idCheck:Int, daNote:Note)
@@ -5985,6 +6003,8 @@ class PlayState extends MusicBeatState
 		script.set("game", PlayState.instance);
 		script.set("Debug", Debug);
 		script.set("health", health);
+		script.set("Stage", Stage);
+		script.set("CoolUtil", CoolUtil);
 
 		// FUNCTIONS
 
@@ -5995,6 +6015,10 @@ class PlayState extends MusicBeatState
 		//  COUNTDOWN
 		script.set("countdown", function() {});
 		script.set("countTick", function(?tick:Int) {});
+		script.set("songMultiplier", songMultiplier);
+		script.set("camHUD", camHUD);
+		script.set("camGame", camGame);
+
 
 		//  SONG FUNCTIONS
 		script.set("startSong", function() {}); // ! HAS PAUSE

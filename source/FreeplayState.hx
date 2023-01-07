@@ -120,7 +120,7 @@ class FreeplayState extends MusicBeatState
 
 		if (FlxG.save.data.gen)
 		{
-			Debug.logInfo('Freeplay Script? $executeHScript at ${Paths.hx('assets/scripts/states/freeplay/script')}');
+			//Debug.logInfo('Freeplay Script? $executeHScript at ${Paths.hx('assets/scripts/states/freeplay/script')}');
 		}
 
 		cached = false;

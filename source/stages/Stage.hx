@@ -23,6 +23,8 @@ class Stage extends MusicBeatState
 	public var tankGround:FlxSprite;
 	public var tankmanRun:FlxTypedGroup<TankmenBG>;
 	public var foregroundSprites:FlxTypedGroup<TankBGSprite>;
+	public static var instance:Stage = null;
+
 
 	public var camZoom:Float; // The zoom of the camera to have at the start of the game
 	public var hideLastBG:Bool = false; // True = hide last BGs and show ones from slowBacks on certain step, False = Toggle visibility of BGs from SlowBacks on certain step

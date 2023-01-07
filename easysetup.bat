@@ -5,7 +5,7 @@ echo Press any key to install required libraries.
 pause >nul
 title KEC Setup - Installing libraries
 echo Installing haxelib libraries...
-haxelib install lime 7.9.0
+haxelib install lime
 haxelib install openfl
 haxelib install flixel
 haxelib install flixel-tools

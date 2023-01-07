@@ -30,18 +30,31 @@ import sys.FileSystem;
 import sys.io.File;
 import sys.io.Process;
 
-using StringTools;
+import openfl.system.System;
+import openfl.utils.AssetCache;
+import cpp.vm.Gc;
 #end
+
+#if hl
+import hl.Gc;
+#elseif java
+import java.vm.Gc;
+#elseif neko
+import neko.vm.Gc;
+#end
+using StringTools;
 
 class Main extends Sprite
 {
-	var gameWidth:Int = 1280; // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
-	var gameHeight:Int = 720; // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
-	var initialState:Class<FlxState> = Init; // The FlxState the game starts with.
-	var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions. (Removed from Flixel 5.0.0)
-	var framerate:Int = 60; // How many frames per second the game should run at.
-	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
-	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
+	var game = {
+		width: 1280, // WINDOW width
+		height: 720, // WINDOW height
+		initialState: Init, // initial game state
+		zoom: -1.0, // game state bounds
+		framerate: 60, // default framerate
+		skipSplash: true, // if the default flixel splash screen should be skipped
+		startFullscreen: false // if the game should start at fullscreen mode
+	};
 
 	public static var instance:Main;
 	public static var bitmapFPS:Bitmap;
@@ -93,6 +106,15 @@ class Main extends Sprite
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
 
+		if (game.zoom == -1.0)
+		{
+			var ratioX:Float = stageWidth / game.width;
+			var ratioY:Float = stageHeight / game.height;
+			game.zoom = Math.min(ratioX, ratioY);
+			game.width = Math.ceil(stageWidth / game.zoom);
+			game.height = Math.ceil(stageHeight / game.zoom);
+		}
+
 		#if !cpp
 		framerate = 60;
 		#end
@@ -111,12 +133,33 @@ class Main extends Sprite
 
 		//FlxTransitionableState.skipNextTransIn = true;
 
-		#if (flixel >= "5.0.0")
-		game = new FlxGame(gameWidth, gameHeight, initialState, framerate, framerate, skipSplash, startFullscreen);
-		#else
-		game = new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen);
+		#if cpp
+		Gc.enable(true);
 		#end
-		addChild(game);
+
+		addChild(new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate,
+			game.skipSplash, game.startFullscreen));
+		
+		FlxGraphic.defaultPersist = false;
+
+		FlxG.signals.preStateSwitch.add(function()
+		{
+			Paths.clearStoredMemory(true);
+			FlxG.bitmap.dumpCache();
+
+			var cache = cast(Assets.cache, AssetCache);
+			for (key => font in cache.font)
+				cache.removeFont(key);
+			for (key => sound in cache.sound)
+				cache.removeSound(key);
+
+			gc();
+		});
+		FlxG.signals.postStateSwitch.add(function()
+		{
+			Paths.clearUnusedMemory();
+			gc();
+		});
 
 		#if FEATURE_DISCORD
 		DiscordClient.initialize();
@@ -280,8 +323,6 @@ class Main extends Sprite
 	}
 	#end
 
-	var game:FlxGame;
-
 	var fpsCounter:KadeEngineFPS;
 	
 	public function toggleFPS(fpsEnabled:Bool):Void
@@ -318,5 +359,19 @@ class Main extends Sprite
 	public function getFPS():Float
 	{
 		return fpsCounter.currentFPS;
+	}
+
+	public static function gc()
+	{
+		#if cpp
+		Gc.run(true);
+		#elseif hl
+		Gc.major();
+		#elseif (java || neko)
+		Gc.run(true);
+		#else
+		openfl.system.System.gc();
+		#end
+		
 	}
 }

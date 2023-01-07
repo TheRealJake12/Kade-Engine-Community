@@ -2,6 +2,7 @@ package script;
 
 import Type;
 import flixel.FlxBasic;
+import openfl.utils.Assets as OpenFlAssets;
 import haxe.CallStack;
 import haxe.Json;
 import haxe.Log;
@@ -9,8 +10,10 @@ import hscript.Expr;
 import hscript.Interp;
 import hscript.Parser;
 import openfl.Lib;
+#if FEATURE_FILESYSTEM
 import sys.FileSystem;
 import sys.io.File;
+#end
 import cpp.CPPInterface;
 
 using StringTools;
@@ -126,7 +129,7 @@ class Script extends FlxBasic
 			{
 				var path:String = 'assets/scripts/$scriptName.$extn';
 
-				if (FileSystem.exists(path))
+				if (OpenFlAssets.exists(path))
 				{
 					hx = File.getContent(path);
 					break;

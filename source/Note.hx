@@ -393,6 +393,8 @@ class Note extends FlxSprite
 
 			x -= width / 2;
 
+			moves = false;
+
 			// if (noteTypeCheck == 'pixel')
 			//	x += 30;
 			if (inCharter)
