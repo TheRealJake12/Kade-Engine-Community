@@ -31,9 +31,9 @@ import sys.io.File;
 import sys.io.Process;
 
 import openfl.system.System;
-import openfl.utils.AssetCache;
 import cpp.vm.Gc;
 #end
+import openfl.utils.AssetCache;
 
 #if hl
 import hl.Gc;
@@ -116,7 +116,7 @@ class Main extends Sprite
 		}
 
 		#if !cpp
-		framerate = 60;
+		game.framerate = 60;
 		#end
 
 		// Run this first so we can see logs.
