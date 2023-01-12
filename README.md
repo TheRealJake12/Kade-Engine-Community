@@ -9,6 +9,8 @@ Versions Below 1.4 Were Made With Kade Engine 1.7.1 Pre-Release With 0 Modsuppor
 Versions 1.4 And Above Are Made With The Latest (As Of 11/5/21 or 5/11/21) Kade Engine 1.8.
 The goal of this Repo is to make it community focused. If theres a feature just submit a pull request and someone will take a look at it.
 
+**I am not responsible for maintaining HTML5 builds, as long as it builds sucessfully, it is not my problem. Feel free to fix it if its broken yourself.**
+
 ![Options](art/readme/optionsredo.png)
 
 Options Menu With A Performance Tab For All You People With Shitty PC's Like Myself.
@@ -85,7 +87,9 @@ It will take a while to build for both versions.
 
 - [BoloVEVO](https://github.com/BoloVEVO) - Fixed my shit code and improved the chart editor. Made a ton of code improvements. Did the gameplay changers(thanks!!!)
 
-- [Glowsoony] - Pixel Notesplashes, Revamped Notesplash Code, Hscript, The guy does a ton. (Thanks!)
+- Glowsoony - Pixel Notesplashes, Revamped Notesplash Code, Hscript, The guy does a ton. (Thanks!)
+
+- LunarCleint - Hscript code, like, all of it.
 
 - [ShadowMario](https://github.com/ShadowMario) - The Memory Leak Fix. And A Few Other Things. (thanks)
 
@@ -94,5 +98,7 @@ It will take a while to build for both versions.
 - [gaminbottomtext](https://github.com/gaminbottomtext) also epic fren that helped with notesplashes. He has disappeared.
 
 - [yakY](https://twitter.com/yak_yyy) person that made the mouse icon specifically for the engine. (epico)
+
+- [AhmedxRNMD](https://twitter.com/AhmedxRNMD_) - Made the volume sounds.
 
 - [discord server for this project](https://discord.gg/G2jJ8RfWtm) thanks for joining if you do.
