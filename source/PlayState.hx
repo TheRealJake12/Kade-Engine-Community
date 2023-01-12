@@ -4376,6 +4376,7 @@ class PlayState extends MusicBeatState
 			if (isStoryMode)
 			{
 				campaignScore += Math.round(songScore);
+				campaignMarvs += marvs;
 				campaignMisses += misses;
 				campaignSicks += sicks;
 				campaignGoods += goods;
