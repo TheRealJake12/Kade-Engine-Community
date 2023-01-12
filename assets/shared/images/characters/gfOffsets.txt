@@ -6,6 +6,4 @@ singUP 0 4
 singRIGHT 0 -20
 singLEFT 0 -19
 singDOWN 0 -20
-hairBlow 45 -8
-hairFall 0 -9
 scared -2 -17

@@ -261,9 +261,9 @@ class StageDebugState extends MusicBeatState
 		switch (curCharIndex)
 		{
 			case 0:
-				curCharString = opponent;
-			case 1:
 				curCharString = daBf;
+			case 1:
+				curCharString = opponent;
 			case 2:
 				curCharString = daGf;
 		}

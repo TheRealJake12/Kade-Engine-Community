@@ -767,6 +767,7 @@
       }
     ],
     "player2": "pico",
+    "gfVersion": "gftrain",
     "song": "Blammed",
     "stage": "philly",
     "needsVoices": true,

@@ -1,0 +1,4 @@
+hairBlow 45 -8
+hairFall 0 -9
+danceLeft 0 -9
+danceRight 0 -9

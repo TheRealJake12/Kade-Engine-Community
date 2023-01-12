@@ -19,9 +19,9 @@ class KeyBinds
 		FlxG.save.data.downBind = "S";
 		FlxG.save.data.leftBind = "A";
 		FlxG.save.data.rightBind = "D";
-		FlxG.save.data.muteBind = "ZERO";
-		FlxG.save.data.volUpBind = "PLUS";
-		FlxG.save.data.volDownBind = "MINUS";
+		FlxG.save.data.muteBind = "NUMPADZERO";
+		FlxG.save.data.volUpBind = ["PLUS"];
+		FlxG.save.data.volDownBind = ["MINUS"];
 		FlxG.save.data.gpupBind = "DPAD_UP";
 		FlxG.save.data.gpdownBind = "DPAD_DOWN";
 		FlxG.save.data.gpleftBind = "DPAD_LEFT";
@@ -30,10 +30,6 @@ class KeyBinds
 		FlxG.save.data.gppauseBind = "START";
 		FlxG.save.data.resetBind = "R";
 		FlxG.save.data.gpresetBind = "SELECT";
-
-		FlxG.sound.muteKeys = ["ZERO", "NUMPADZERO"];
-		FlxG.sound.volumeDownKeys = ["MINUS", "NUMPADMINUS"];
-		FlxG.sound.volumeUpKeys = ["PLUS", "NUMPADPLUS"];
 		PlayerSettings.player1.controls.loadKeyBinds();
 	}
 
@@ -93,17 +89,13 @@ class KeyBinds
 			FlxG.save.data.gpresetBind = "SELECT";
 		}
 		// VOLUME CONTROLS !!!!
-		if (FlxG.save.data.muteBind == null)
-		{
-			FlxG.save.data.muteBind = "ZERO";
-		}
 		if (FlxG.save.data.volumeUpKeys == null)
-		{
 			FlxG.save.data.volumeUpKeys = ["PLUS"];
-		}
+
 		if (FlxG.save.data.volumeDownKeys == null)
-		{
 			FlxG.save.data.volumeDownKeys = ["MINUS"];
-		}
+
+		if (FlxG.save.data.muteBind == null)
+			FlxG.save.data.muteBind = "NUMPADZERO";	
 	}
 }

@@ -1,6 +1,7 @@
 {
   "song": {
     "player1": "bf",
+    "gfVersion": "gftrain",
     "notes": [
       { "sectionNotes": [], "lengthInSteps": 16, "mustHitSection": true },
       { "sectionNotes": [], "lengthInSteps": 16, "mustHitSection": true },

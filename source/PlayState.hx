@@ -216,9 +216,7 @@ class PlayState extends MusicBeatState
 	public var strumLine:FlxSprite;
 
 	private var curSection:Int = 0;
-
-	private var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
-
+	
 	private var camFollow:FlxObject;
 
 	private static var prevCamFollow:FlxObject;
@@ -949,6 +947,7 @@ class PlayState extends MusicBeatState
 		cpuNoteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.cpuNoteskin);
 
 		notesplashSprite = CustomNoteHelpers.Splash.generateNotesplashSprite(FlxG.save.data.notesplash);
+		cpuNotesplashSprite = CustomNoteHelpers.Splash.generateNotesplashSprite(FlxG.save.data.cpuNotesplash);
 
 		
 		var tweenBoolshit = !isStoryMode || storyPlaylist.length >= 3 || SONG.songId == 'tutorial';
@@ -2498,33 +2497,11 @@ class PlayState extends MusicBeatState
 	{
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
 	}
-
-	function spawnNoteSplashOnNote(note:Note)
-	{
-		if (note != null)
-		{
-			var strum = playerStrums.members[note.noteData];
-			if (strum != null)
-			{
-				spawnNoteSplash(strum.x, strum.y, note.noteData);
-			}
-		}
-	}
-
-	function spawnNoteSplashOnNoteDad(note:Note)
-	{
-		if (note != null)
-		{
-			var strum = cpuStrums.members[note.noteData];
-			if (strum != null)
-			{
-				spawnNoteSplash2(strum.x, strum.y, note.noteData);
-			}
-		}
-	}
 	 
 	//I wanna softcode but I suck ass :(((
 	var name:String;
+	var nameTwo:String;
+	// for cpu splashes not syncing with player ones
 
 	public function NoteSplashesSpawn(daNote:Note, ?name:String = 'Default')
 	{
@@ -2589,18 +2566,69 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	public function spawnNoteSplash(x:Float, y:Float, data:Int)
+	public function NoteSplashesSpawnDad(daNote:Note, ?nameTwo:String = 'Default')
 	{
-		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
-		splash.setupNoteSplash(x, y, data);
-		grpNoteSplashes.add(splash);
-	}
+		this.nameTwo = nameTwo;
+		var sploosh:FlxSprite = new FlxSprite(cpuStrums.members[daNote.noteData].x + 10.5, cpuStrums.members[daNote.noteData].y - 20);
+		sploosh.antialiasing = FlxG.save.data.antialiasing;
+		switch (SONG.noteStyle)
+		{
+			case 'pixel':
+				var tex:flixel.graphics.frames.FlxAtlasFrames = Paths.getSparrowAtlas('weeb/pixelUI/noteSplashes-pixels', 'week6');
+				sploosh.frames = tex;
+				sploosh.animation.addByPrefix('splash 0 0', 'note splash 1 purple', 24, false);
+				sploosh.animation.addByPrefix('splash 0 1', 'note splash 1  blue', 24, false);
+				sploosh.animation.addByPrefix('splash 0 2', 'note splash 1 green', 24, false);
+				sploosh.animation.addByPrefix('splash 0 3', 'note splash 1 red', 24, false);
+				sploosh.animation.addByPrefix('splash 1 0', 'note splash 2 purple', 24, false);
+				sploosh.animation.addByPrefix('splash 1 1', 'note splash 2 blue', 24, false);
+				sploosh.animation.addByPrefix('splash 1 2', 'note splash 2 green', 24, false);
+				sploosh.animation.addByPrefix('splash 1 3', 'note splash 2 red', 24, false);
 
-	public function spawnNoteSplash2(x:Float, y:Float, data:Int)
-	{
-		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
-		splash.setupNoteSplash2(x, y, data);
-		grpNoteSplashes.add(splash);
+				add(sploosh);
+				sploosh.cameras = [camStrums];
+
+				if (!FlxG.save.data.stepMania)
+					sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.noteData);
+				else
+					sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.originColor);
+				sploosh.alpha = 0.6;
+				sploosh.offset.x += 90;
+				sploosh.offset.y += 80;
+				sploosh.animation.finishCallback = function(name) sploosh.kill();
+
+				sploosh.update(0);
+			default:
+				switch (FlxG.save.data.cpuNotesplash)
+				{
+					case 0:
+						nameTwo = 'Default';
+					case 1:
+						nameTwo = 'Week7';
+				}
+
+				var rawJson = Paths.loadData('images/splashes/' + nameTwo);
+				var data:SplashData = cast rawJson;
+
+				if (FlxG.save.data.cpuSplash)
+				{
+					sploosh.frames = PlayState.cpuNotesplashSprite;
+					sploosh.animation.addByPrefix('splash 0 0', 'note splash 1 purple', data.fps, false);
+					sploosh.animation.addByPrefix('splash 0 1', 'note splash 1 blue', data.fps, false);
+					sploosh.animation.addByPrefix('splash 0 2', 'note splash 1 green', data.fps, false);
+					sploosh.animation.addByPrefix('splash 0 3', 'note splash 1 red', data.fps, false);
+					add(sploosh);
+					sploosh.cameras = [camStrums];
+					if (!FlxG.save.data.stepMania)
+						sploosh.animation.play('splash 0 ' + daNote.noteData);
+					else
+						sploosh.animation.play('splash 0 ' + daNote.originColor);
+					sploosh.alpha = data.alpha;
+					sploosh.offset.x += data.xOffset;
+					sploosh.offset.y += data.yOffset; // lets stick to eight not nine
+					sploosh.animation.finishCallback = function(name) sploosh.kill();
+				}
+		}
 	}
 
 	private function generateStaticArrows(player:Int, ?tween:Bool = true):Void
@@ -5372,6 +5400,11 @@ class PlayState extends MusicBeatState
 				{
 					pressArrow(spr, spr.ID, daNote);
 				});
+
+				if (FlxG.save.data.cpuSplash && daNote.canNoteSplash)
+				{
+					NoteSplashesSpawnDad(daNote);
+				}
 			}
 			#if FEATURE_LUAMODCHART
 			if (luaModchart != null)
@@ -6292,7 +6325,7 @@ class PlayState extends MusicBeatState
 		var diff:String = CoolUtil.suffixDiffsArray[storyDifficulty];
 
 		var video:VideoHandler = new VideoHandler();
-		FlxG.sound.music.stop();
+		inst.stop();
 		video.finishCallback = function()
 		{
 			if (atend == true)

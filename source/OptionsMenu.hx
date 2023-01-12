@@ -154,9 +154,9 @@ class OptionsMenu extends MusicBeatSubstate
 				new NoteskinOption("Change your Noteskin"), 
 				new CPUNoteskinOption("Change the CPU Noteskin"), 
 				new NotesplashOption("Change your Notesplash"),
-				//new CPUNotesplashOption("Change the CPU Notesplash"),
+				new CPUNotesplashOption("Change the CPU Notesplash"),
 				#end
-				//new CPUSplash("Allows The CPU To Do Notesplashes"),
+				new CPUSplash("Allows The CPU To Do Notesplashes"),
 				new NotesplashesOption("Uses Notesplashes (Only use it on Arrow skins or else theres gonna be some visual bugs(wrong offsets))."),
 				new RotateSpritesOption("Should the game rotate the sprites to do color quantization (turn off for bar skins)"),
 				new LowMotion("Makes The Icons Not Bump On The Healthbar."),

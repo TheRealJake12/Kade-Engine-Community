@@ -46,10 +46,6 @@ class Init extends MusicBeatState
 		if (FlxG.save.data.volUpBind == null)
 			FlxG.save.data.volUpBind = "PLUS";
 
-		FlxG.sound.muteKeys = [FlxKey.fromString(Std.string(FlxG.save.data.muteBind))];
-		FlxG.sound.volumeDownKeys = [FlxKey.fromString(Std.string(FlxG.save.data.volDownBind))];
-		FlxG.sound.volumeUpKeys = [FlxKey.fromString(Std.string(FlxG.save.data.volUpBind))];	
-
 		FlxG.worldBounds.set(0, 0);
 
 		FlxGraphic.defaultPersist = true;
