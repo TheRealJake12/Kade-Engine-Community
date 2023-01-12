@@ -11,15 +11,21 @@ The goal of this Repo is to make it community focused. If theres a feature just 
 
 **I am not responsible for maintaining HTML5 builds, as long as it builds sucessfully, it is not my problem. Feel free to fix it if its broken yourself.**
 
-![Options](art/readme/optionsredo.png)
+![Main Menu](art/readme/mainmenu.png)
 
-Options Menu With A Performance Tab For All You People With Shitty PC's Like Myself.
+Stylized Main Menu.
 
-![Colors1](art/readme/colors1.png)
+![Options](art/readme/options.png)
 
-![Colors2](art/readme/colors2.png)
+Expanded Options Menu For More Customizability.
 
-Freeplay Colors So It Looks Like Week 7. And Just A QoL Improvements.
+![Charter](art/readme/charteditor.png)
+
+Reskinned and optimized chart editor.
+
+![Freeplay](art/readme/freeplay.png)
+
+New And Improved Freeplay By BoloVEVO.
 
 ![Better Documented!](art/readme/deez.png)
 
