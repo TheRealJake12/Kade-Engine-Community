@@ -93,6 +93,7 @@ import script.ScriptUtil;
 import debug.StageDebugState;
 import debug.AnimationDebug;
 import debug.ChartingState;
+import hxcodec.VideoHandler;
 
 import stages.Stage;
 import stages.TankmenBG;
@@ -350,8 +351,7 @@ class PlayState extends MusicBeatState
 	public static var songOffset:Float = 0;
 	public var inCinematic:Bool = false;
 	var newLerp:Float = 0;
-	var camLerp = #if !html5 0.04 * (30 / (cast(Lib.current.getChildAt(0), Main))
-		.getFPS()) * songMultiplier; #else 0.09 * (30 / (cast(Lib.current.getChildAt(0), Main)).getFPS()) * songMultiplier; #end
+	//var camLerp = #if !html5 0.04 * (30 / (cast(Lib.current.getChildAt(0), Main)).getFPS()) * songMultiplier; #else 0.09 * (30 / (cast(Lib.current.getChildAt(0), Main)).getFPS()) * songMultiplier; #end
 
 	// BotPlay text
 	private var botPlayState:FlxText;
@@ -805,6 +805,9 @@ class PlayState extends MusicBeatState
 			{
 				case 'halloween':
 					camPos = new FlxPoint(gf.getMidpoint().x + dad.camPos[0], gf.getMidpoint().y + dad.camPos[1]);
+				case 'tank':
+					if (SONG.player2 == 'tankman')
+						camPos = new FlxPoint(436.5, 534.5);	
 				case 'stage':
 					if (dad.replacesGF)
 						camPos = new FlxPoint(dad.getGraphicMidpoint().x + dad.camPos[0] - 200, dad.getGraphicMidpoint().y + dad.camPos[1]);
@@ -1044,7 +1047,7 @@ class PlayState extends MusicBeatState
 
 		add(camFollow);
 
-		FlxG.camera.follow(camFollow, LOCKON, 0.07 * (60 / Application.current.window.frameRate));
+		FlxG.camera.follow(camFollow, LOCKON, 0.065 * (60 / Application.current.window.frameRate));
 		FlxG.camera.zoom = Stage.camZoom;
 		FlxG.camera.focusOn(camFollow.getPosition());
 
@@ -1328,6 +1331,7 @@ class PlayState extends MusicBeatState
 				char.destroy();
 			}
 			Paths.clearUnusedMemory();
+			Main.gc();
 		}
 
 		switch (SONG.songId)
@@ -1349,7 +1353,7 @@ class PlayState extends MusicBeatState
 				Stage.swagBacks['tankman'].animation.play('wellWell', true);
 				FlxG.camera.zoom *= 1.2;
 				camFollow.x = 436.5;
-				camFollow.y = 520;
+				camFollow.y = 500;
 
 				// Well well well, what do we got here?
 				createTimer(0.1, function(tmr:FlxTimer)
@@ -1373,7 +1377,7 @@ class PlayState extends MusicBeatState
 					createTimer(3, function(tmr:FlxTimer)
 					{
 						camFollow.x = 436.5;
-						camFollow.y = 520;
+						camFollow.y = 500;
 						boyfriend.dance();
 						Stage.swagBacks['tankman'].animation.play('killYou', true);
 						FlxG.sound.play(Paths.sound('killYou'));
@@ -1600,7 +1604,6 @@ class PlayState extends MusicBeatState
 							boyfriend.animation.curAnim.finish(); // Instantly goes to last frame
 						}
 					};
-					FlxG.camera.follow(camFollow, LOCKON, 1);
 
 					camFollow.setPosition(1100, 625);
 					FlxG.camera.zoom = 1.3;
@@ -4252,10 +4255,8 @@ class PlayState extends MusicBeatState
 
 		if (!inCutscene && songStarted)
 			keyShit();
-		#if debug
 		if (FlxG.keys.justPressed.ONE)
 			endSong();
-		#end
 		super.update(elapsed);
 		for (i in shaderUpdates)
 			i(elapsed);

@@ -32,7 +32,6 @@ import Modifiers;
 import sys.FileSystem;
 import sys.io.File;
 #end
-import Script;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxTimer;
 import flixel.FlxCamera;
@@ -53,14 +52,8 @@ class FreeplayState extends MusicBeatState
 	public static var curSelected:Int = 0;
 
 	public static var curPlayed:Int = 0;
-	#if FEATURE_HSCRIPT
-	// Hscript
-	public var script:Script;
-	#end
 
 	public static var curDifficulty:Int = 1;
-	public var executeHScript = false;
-	public var runHscript = false;
 
 	var scoreText:FlxText;
 	var comboText:FlxText;
@@ -113,16 +106,6 @@ class FreeplayState extends MusicBeatState
 			
 		Paths.clearStoredMemory();
 		list = CoolUtil.coolTextFile(Paths.txt('data/freeplaySonglist'));
-
-		#if FEATURE_HSCRIPT
-			executeHScript = OpenFlAssets.exists(Paths.hx('assets/scripts/states/freeplay/script'));
-		#end
-
-		if (FlxG.save.data.gen)
-		{
-			//Debug.logInfo('Freeplay Script? $executeHScript at ${Paths.hx('assets/scripts/states/freeplay/script')}');
-		}
-
 		cached = false;
 
 		bg = new FlxSprite().loadGraphic(Paths.image2('menuDesat'));
@@ -332,19 +315,7 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 		#end
-
-		#if FEATURE_HSCRIPT
-		if (executeHScript)
-		{
-			startScript();
-		}
-
-		if (executeHScript && script != null)
-		{
-			script.executeFunc("create");
-		}
-		#end
-
+		
 		super.create();
 		Paths.clearUnusedMemory();
 	}
@@ -561,14 +532,6 @@ class FreeplayState extends MusicBeatState
 		var dadDebug = FlxG.keys.justPressed.SIX;
 		var charting = FlxG.keys.justPressed.SEVEN;
 		var bfDebug = FlxG.keys.justPressed.ZERO;
-
-		#if FEATURE_HSCRIPT
-		if (executeHScript && script != null)
-		{
-			script.setVariable('cameraZoom', FlxG.camera.zoom);
-			script.executeFunc('update', [elapsed]);
-		}
-		#end
 
 		if (!openMod && !MusicBeatState.switchingState)
 		{
@@ -921,109 +884,8 @@ class FreeplayState extends MusicBeatState
 
 	override function destroy()
 	{
-		#if FEATURE_HSCRIPT
-		if (executeHScript && script != null)
-		{
-			script.executeFunc("destroy");
-			script.destroy();
-		}
-		#end
 		super.destroy();
-	}
-
-	public function startScript()
-	{
-		#if FEATURE_HSCRIPT
-		var path:String;
-
-		if (Script.scriptName == null || Script.scriptName == '' || Script.scriptName == 'freeplay')
-			path = Paths.hx('states/freeplay', 'scripts');
-		else
-			path = Paths.hx('states/freeplay', 'scripts');
-
-		var hxdata:String = "";
-
-		if (FileSystem.exists(path))
-			hxdata = File.getContent(path);
-
-		if (hxdata != "")
-		{
-			script = new Script(Script.scriptName);
-
-			script.variables.set('setVar', function(name:String, value:Dynamic)
-			{
-				FreeplayState.variables.set(name, value);
-			});
-
-			script.variables.set('getVar', function(name:String)
-			{
-				var result:Dynamic = null;
-				if (FreeplayState.variables.exists(name))
-					result = FreeplayState.variables.get(name);
-				return result;
-			});
-
-			script.variables.set('removeVar', function(name:String)
-			{
-				if (FreeplayState.variables.exists(name))
-				{
-					FreeplayState.variables.remove(name);
-					return true;
-				}
-				return false;
-			});
-			script.setVariable("destroy", function()
-			{
-			});
-
-			script.setVariable("create", function()
-			{
-			});
-			script.setVariable("import", function(lib:String, ?as:Null<String>) // Does this even work?
-			{
-				if (lib != null && Type.resolveClass(lib) != null)
-				{
-					script.setVariable(as != null ? as : lib, Type.resolveClass(lib));
-				}
-			});
-			script.setVariable("update", function()
-			{
-			});
-			script.setVariable("fromRGB", function(Red:Int, Green:Int, Blue:Int, Alpha:Int = 255)
-			{
-				return FlxColor.fromRGB(Red, Green, Blue, Alpha);
-			});
-
-			// Move the shits
-
-			// PRESET CLASSES
-			script.setVariable("PlayState", instance);
-			script.setVariable("FlxTween", FlxTween);
-			script.setVariable("TweenManager", PlayState.tweenManager);
-			script.setVariable("FlxEase", FlxEase);
-			script.setVariable("FlxSprite", FlxSprite);
-			script.setVariable("Math", Math);
-			script.setVariable("FlxG", FlxG); // maybe handle save data??
-			script.setVariable("FlxTimer", FlxTimer);
-			script.setVariable("Main", Main);
-			script.setVariable("Conductor", Conductor);
-			script.setVariable("Std", Std);
-			script.setVariable("FlxTextBorderStyle", FlxTextBorderStyle);
-			script.setVariable("Paths", Paths);
-			script.setVariable("CENTER", FlxTextAlign.CENTER);
-			script.setVariable("FlxTextFormat", FlxTextFormat);
-			script.setVariable("FlxTextFormatMarkerPair", FlxTextFormatMarkerPair);
-			script.setVariable("FlxCamera", FlxCamera);
-			script.setVariable("Alphabet", Alphabet);
-
-			script.setVariable("Debug", Debug);
-			script.setVariable("KadeEngineData", KadeEngineData);
-			
-
-			script.runScript(hxdata);
-		}
-		#end
-	}
+	}	
 
 	function changeDiff(change:Int = 0)
 	{
