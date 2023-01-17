@@ -39,7 +39,7 @@ jobs:
           haxelib install flixel-addons
           haxelib install flixel-ui
           haxelib install hscript
-          haxelib git polymod https://github.com/MasterEric/polymod.git
+          haxelib git polymod https://github.com/TheRealJake12/polymod.git
           haxelib install flixel-addons
           haxelib install hxcpp-debug-server
           haxelib git faxe https://github.com/uhrobots/faxe

@@ -26,7 +26,7 @@ echo Press any key to install the git libraries.
 pause >nul
 title KEC Setup - Installing libraries
 haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
-haxelib git polymod https://github.com/MasterEric/polymod.git
+haxelib git polymod https://github.com/TheRealJake12/polymod.git
 haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
 haxelib git faxe https://github.com/uhrobots/faxe
 haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
