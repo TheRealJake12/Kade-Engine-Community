@@ -93,7 +93,9 @@ import script.ScriptUtil;
 import debug.StageDebugState;
 import debug.AnimationDebug;
 import debug.ChartingState;
+#if VIDEOS
 import hxcodec.VideoHandler;
+#end
 
 import stages.Stage;
 import stages.TankmenBG;
