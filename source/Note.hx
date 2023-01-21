@@ -44,7 +44,7 @@ class Note extends FlxSprite
 
 	public var noteScore:Float = 1;
 
-	public var noteYOff:Int = 0;
+	public var noteYOff:Float = 0;
 
 	public var beat:Float = 0;
 
@@ -388,12 +388,12 @@ class Note extends FlxSprite
 		if (FlxG.save.data.downscroll && sustainNote)
 			flipY = true;
 
-		var stepHeight = (((0.45 * Conductor.stepCrochet)) * FlxMath.roundDecimal(PlayStateChangeables.scrollSpeed == 1 ? PlayState.SONG.speed : PlayStateChangeables.scrollSpeed,
-			2)) / PlayState.songMultiplier;
+		var stepHeight = (((0.45 * PlayState.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayStateChangeables.scrollSpeed == 1 ? PlayState.SONG.speed : PlayStateChangeables.scrollSpeed,
+			2));
 
 		if (isSustainNote && prevNote != null)
 		{
-			noteYOff = Math.round(-stepHeight + swagWidth * 0.5) + FlxG.save.data.offset + PlayState.songOffset;
+			noteYOff = -stepHeight + swagWidth * 0.5;
 
 			noteScore * 0.2;
 			alpha = FlxG.save.data.alpha;
@@ -432,6 +432,19 @@ class Note extends FlxSprite
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
+		var stepHeight = (((0.45 * PlayState.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayStateChangeables.scrollSpeed == 1 ? PlayState.SONG.speed : PlayStateChangeables.scrollSpeed,
+			2));
+		var newStepHeight = (((0.45 * PlayState.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayStateChangeables.scrollSpeed == 1 ? PlayState.SONG.speed : PlayStateChangeables.scrollSpeed,2));
+
+		if (stepHeight != newStepHeight)
+		{
+			stepHeight = newStepHeight;
+			if (isSustainNote)
+			{
+				noteYOff = -stepHeight + swagWidth * 0.5;
+			}
+		}
+
 		if (!modifiedByLua)
 			angle = modAngle + localAngle;
 		else

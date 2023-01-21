@@ -119,6 +119,10 @@ class PlayState extends MusicBeatState
 	public var scrollSpeed(default, set):Float = 1.0;
 	public var scrollTween:FlxTween;
 
+	// Fake crochet for Sustain Notes
+	public var fakeCrochet:Float = 0;
+	public static var fakeNoteStepCrochet:Float;
+
 	public static var SONG:SongData;
 	public static var isStoryMode:Bool = false;
 	public static var storyWeek:Int = 0;
@@ -2367,6 +2371,19 @@ class PlayState extends MusicBeatState
 		
 		Conductor.crochet = ((60 / (SONG.bpm) * 1000));
 		Conductor.stepCrochet = Conductor.crochet / 4;
+
+		Conductor.mapBPMChanges(SONG);
+		Conductor.changeBPM(SONG.bpm * songMultiplier);
+
+		Conductor.bpm = SONG.bpm * songMultiplier;
+		
+		var timingSeg = TimingStruct.getTimingAtBeat(curDecimalBeat);
+		if (timingSeg != null)
+		{
+			fakeCrochet = ((60 / (timingSeg.bpm) * 1000)) / songMultiplier;
+
+			fakeNoteStepCrochet = fakeCrochet / 4;
+		}
 		
 		notes = new FlxTypedGroup<Note>();
 		add(notes);
@@ -2430,7 +2447,7 @@ class PlayState extends MusicBeatState
 
 				var susLength:Float = swagNote.sustainLength;
 
-				susLength = susLength / Conductor.stepCrochet;
+				susLength = susLength / fakeNoteStepCrochet;
 				unspawnNotes.push(swagNote);
 
 				swagNote.isAlt = songNotes[3]
@@ -3070,9 +3087,13 @@ class PlayState extends MusicBeatState
 			FlxG.stage.window.borderless = false;
 		}
 
+		var shit:Float = 3500;
+		if (SONG.speed < 1 || PlayStateChangeables.scrollSpeed < 1)
+			shit /= PlayStateChangeables.scrollSpeed == 1 ? SONG.speed : PlayStateChangeables.scrollSpeed;
+
 		if (unspawnNotes[0] != null)
 		{
-			if (unspawnNotes[0].strumTime - Conductor.songPosition < 14000 * songMultiplier)
+			if (unspawnNotes[0].strumTime - Conductor.songPosition < shit * songMultiplier)
 			{
 				var dunceNote:Note = unspawnNotes[0];
 				#if FEATURE_HSCRIPT
@@ -3873,8 +3894,7 @@ class PlayState extends MusicBeatState
 		if (generatedMusic && !(inCutscene || inCinematic))
 		{
 			var holdArray:Array<Bool> = [controls.LEFT, controls.DOWN, controls.UP, controls.RIGHT];
-			var stepHeight = (0.45 * Conductor.stepCrochet * FlxMath.roundDecimal((PlayState.SONG.speed * PlayState.songMultiplier) * PlayState.songMultiplier,
-				2));
+			var stepHeight = (0.45 * fakeNoteStepCrochet * FlxMath.roundDecimal((SONG.speed * Math.pow(PlayState.songMultiplier, 2)), 2));
 
 			//hell
 			#if FEATURE_HSCRIPT
@@ -3913,7 +3933,8 @@ class PlayState extends MusicBeatState
 								- daNote.noteYOff;
 						if (daNote.isSustainNote)
 						{
-							daNote.y -= daNote.height - stepHeight;
+							var bpmRatio = (SONG.bpm / 100);
+							daNote.y -= daNote.height - (1.85 * stepHeight / SONG.speed * bpmRatio);
 
 							if ((PlayStateChangeables.botPlay
 								|| !daNote.mustPress
@@ -6142,7 +6163,7 @@ class PlayState extends MusicBeatState
 		speedChanged = true;
 		if (generatedMusic)
 		{
-			var ratio:Float = value / scrollSpeed;
+			var ratio:Float = value / PlayStateChangeables.scrollSpeed;
 			for (note in notes)
 			{
 				if (note.animation.curAnim != null)
@@ -6162,7 +6183,7 @@ class PlayState extends MusicBeatState
 					}
 			}
 		}
-		scrollSpeed = value;
+		PlayStateChangeables.scrollSpeed = value;
 		return value;
 	}
 

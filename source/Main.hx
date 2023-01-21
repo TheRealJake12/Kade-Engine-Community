@@ -56,6 +56,7 @@ class Main extends Sprite
 		startFullscreen: false // if the game should start at fullscreen mode
 	};
 
+	public static var mainClassState:Class<FlxState> = Init; // yoshubs jumpscare (I am aware of *the incident*)
 	public static var instance:Main;
 	public static var bitmapFPS:Bitmap;
 	public static var focusMusicTween:FlxTween;

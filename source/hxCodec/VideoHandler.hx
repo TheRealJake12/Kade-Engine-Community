@@ -1,9 +1,11 @@
 package hxcodec;
 
+#if VIDEOS
 import flixel.input.keyboard.FlxKey;
 import flixel.FlxG;
 import openfl.Lib;
 import openfl.events.Event;
+
 import sys.FileSystem;
 import lime.system.System;
 import hxcodec.vlc.VLCBitmap;
@@ -166,3 +168,4 @@ class VideoHandler extends VLCBitmap
 		return 0;
 	}
 }
+#end

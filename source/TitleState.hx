@@ -61,6 +61,8 @@ class TitleState extends MusicBeatState
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 
+		Main.mainClassState = TitleState;
+
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 		if (FlxG.save.data.gen)
 			Debug.logInfo('Hello.');

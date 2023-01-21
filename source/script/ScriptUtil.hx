@@ -30,7 +30,7 @@ import Section;
 import Song;
 import PlayState;
 import CoolUtil;
-#if sys
+#if FEATURE_FILESYSTEM
 import sys.FileSystem;
 import sys.io.File;
 #end
@@ -54,7 +54,7 @@ class ScriptUtil
 		script.set("StringTools", StringTools);
 		script.set("Json", {parse: Json.parse, stringify: Json.stringify});
 
-		#if sys
+		#if FEATURE_FILESYSTEM
 		script.set("FileSystem", FileSystem);
 		script.set("File", File);
 		script.set("Sys", Sys);

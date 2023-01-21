@@ -219,5 +219,9 @@
   <define name="FEATURE_HSCRIPT" if="desktop" />
   <!-- Defines whether modcore can be used. -->
   <haxedef name="FEATURE_MODCORE" if="desktop" />
+  <!--Polymod shit that'll allow hscript I think.-->
+  <haxedef name="POLYMOD_SCRIPT_EXT" value=".hx" />
+  <haxedef name="POLYMOD_DEBUG" if="debug" />
+  <haxedef name="POLYMOD_SCRIPT_LIBRARY" value="scripts" />
 
 </project>

@@ -197,6 +197,7 @@ class OptionsMenu extends MusicBeatSubstate
 				new FPSCapOption("Change your FPS Cap."),
 				new Memory("Toggle the Memory Counter"),
 				#end
+				new ShowState("Shows The Current Game State. Makes Debugging Easier."),
 				new GPURendering("Makes All Sprites Load Into VRAM, Reducing Normal RAM Usage. (Not Recommended For ~3GB VRAM)"), //Ill come back to this. I'm tired asf
 				new BorderFps("Adds A Border To Make The FPS Display Easier To See. (Uses A Ton Of CPU And A Little GPU)"),
 				new WaterMarkFPS("Shows What Version Of The Game You Are Running In The FPS Counter."),

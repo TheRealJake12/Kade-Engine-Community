@@ -148,6 +148,7 @@ class KadeEngineFPS extends TextField
 		var lmao:String = (FlxG.save.data.fpsmark ? (Main.watermarks ? "\n"+ MainMenuState.kecVer : "\n" + "Kade Engine 1.8.1") : "");
 		currentFPS = Math.round((currentCount + cacheCount) / 2);
 		displayFPS = (FlxG.save.data.fps ? "FPS: " + currentFPS : "");
+		var stateText:String = (FlxG.save.data.showState ? "Game State: " + Main.mainClassState : "");
 
 		if (currentCount != cacheCount)
 		{
@@ -156,7 +157,8 @@ class KadeEngineFPS extends TextField
 			memoryUsage = (FlxG.save.data.mem ? "Memory Usage: " + mem + " MB" : "");
 
 			text = ('$displayFPS\n'
-				+ '$memoryUsage'
+				+ '$memoryUsage\n'
+				+ stateText
 				+ lmao);
 
 				//made simpler :)

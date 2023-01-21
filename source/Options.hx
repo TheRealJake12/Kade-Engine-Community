@@ -2457,6 +2457,33 @@ class Memory extends Option
 	}
 }
 
+class ShowState extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function left():Bool
+	{
+		FlxG.save.data.showState = !FlxG.save.data.showState;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Show The Current Game State: < " + (!FlxG.save.data.showState ? "off" : "on") + " >";
+	}
+}
+
 class NotesplashOption extends Option
 {
 	public function new(desc:String)
@@ -3034,7 +3061,6 @@ class ResetSettings extends Option
 		FlxG.save.data.scoreScreen = null;
 		FlxG.save.data.inputShow = null;
 		FlxG.save.data.optimize = null;
-		FlxG.save.data.cacheImages = null;
 		FlxG.save.data.editor = null;
 		FlxG.save.data.laneTransparency = 0;
 		//custom shit
@@ -3057,6 +3083,8 @@ class ResetSettings extends Option
 		FlxG.save.data.hitSound = null;
 		FlxG.save.data.hitVolume = null;
 		FlxG.save.data.strumHit = null;
+		FlxG.save.data.cpuSplash = null;
+		FlxG.save.data.showState = null;
 
 		KadeEngineData.initSave();
 		confirm = false;

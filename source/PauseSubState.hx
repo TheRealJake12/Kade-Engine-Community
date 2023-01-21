@@ -124,8 +124,8 @@ class PauseSubState extends MusicBeatSubstate
 
 	override function update(elapsed:Float)
 	{
-		if (pauseMusic.volume < 0.5)
-			pauseMusic.volume += 0.01 * elapsed;
+		//if (pauseMusic.volume < 0.5)
+			//pauseMusic.volume += 0.01 * elapsed;
 
 		super.update(elapsed);
 
@@ -182,6 +182,7 @@ class PauseSubState extends MusicBeatSubstate
 						FlxG.save.data.sickMs,
 						FlxG.save.data.marvMs
 					];
+					PlayStateChangeables.scrollSpeed = (FlxG.save.data.scrollSpeed == 1 ? PlayState.SONG.speed * PlayState.songMultiplier : FlxG.save.data.scrollSpeed * PlayState.songMultiplier);
 
 				case "Restart Song":
 					PlayState.startTime = 0;

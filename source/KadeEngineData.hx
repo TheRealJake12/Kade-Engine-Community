@@ -252,6 +252,9 @@ class KadeEngineData
 		if (FlxG.save.data.autoPause == null)
 			FlxG.save.data.autoPause = false;
 
+		if (FlxG.save.data.showState == null)
+			FlxG.save.data.showState = false;	
+
 		if (FlxG.save.data.volume != null)
 		{
 			FlxG.sound.volume = FlxG.save.data.volume;

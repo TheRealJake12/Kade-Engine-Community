@@ -98,6 +98,9 @@ class ModCore
 		// Ensure TXT files have merge support.
 		output.addType("txt", TextFileFormat.LINES);
 		output.addType("hx", TextFileFormat.LINES);
+		output.addType("lua", TextFileFormat.LINES);
+
+		// No idea if this actually does anything
 
 		// You can specify the format of a specific file, with file extension.
 		// output.addFile("data/introText.txt", TextFileFormat.LINES)
@@ -131,6 +134,8 @@ class ModCore
 		// Perform an action based on the error code.
 		switch (error.code)
 		{
+			case MISSING_ICON:
+				Debug.logWarn("No icon?", null);
 			default:
 				// Log the message based on its severity.
 				switch (error.severity)
