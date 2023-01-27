@@ -41,6 +41,8 @@ typedef SongData =
 	 */
 	var songId:String;
 
+	var ?songFile:String;
+
 	var chartVersion:String;
 	var notes:Array<SwagSection>;
 	var eventObjects:Array<Event>;
@@ -79,14 +81,85 @@ class Song
 		return parseJSONshit("rawsong", jsonData, ["name" => jsonData.name]);
 	}
 
-	public static function loadFromJson(songId:String, difficulty:String):SongData
+	public static function loadFromJson(songId:String, diffSuffix:String):SongData
 	{
-		var songFile = '$songId/$songId$difficulty';
+		var songFile = '$songId/$songId$diffSuffix';
+
+		//Debug.logInfo('Loading song JSON: $songFile');
 
 		var rawJson = Paths.loadJSON('songs/$songFile');
-		var rawMetaJson = Paths.loadJSON('songs/$songId/_meta');
 
-		return parseJSONshit(songId, rawJson, rawMetaJson);
+		var songData:SongData = cast rawJson.song;
+		var metaData:SongMeta = loadMetadata(songId);
+
+		return parseJSONData(songId, songData, metaData);
+	}
+
+	public static function parseJSONData(songId:String, jsonData:Dynamic, jsonMetaData:Dynamic):SongData
+	{
+		if (jsonData == null)
+			return null;
+		var songData:SongData = cast jsonData;
+
+		songData.songId = songId;
+
+		var songMetaData:SongMeta = cast jsonMetaData;
+
+		/**
+		 * Default values.
+		 */
+		if (songData.noteStyle == null)
+			songData.noteStyle = "normal";
+
+		if (songData.songFile == null)
+		{
+			songData.songFile = songId;
+		}
+		else
+		{
+			trace('SONG DATA IS ${songData.songFile} BLABLABLA');
+		}
+		
+		if (songData.validScore == null)
+			songData.validScore = true;
+
+		// Inject info from _meta.json.
+		if (songMetaData != null)
+		{
+			if (songMetaData.name != null)
+			{
+				songData.songName = songMetaData.name;
+			}
+			else
+			{
+				songData.songName = songId.split('-').join(' ');
+			}
+
+			songData.offset = songMetaData.offset != null ? songMetaData.offset : 0;
+		}
+
+		return Song.conversionChecks(songData);
+	}
+
+	public static function loadMetadata(songId:String):SongMeta
+	{
+		var rawMetaJson = null;
+		if (Paths.doesTextAssetExist(Paths.songMeta(songId)))
+		{
+			rawMetaJson = Paths.loadJSON('songs/$songId/_meta');
+		}
+		else
+		{
+			Debug.logInfo('Hey, you didn\'t include a _meta.json with your song files (id ${songId}).Won\'t break anything but you should probably add one anyway.');
+		}
+		if (rawMetaJson == null)
+		{
+			return null;
+		}
+		else
+		{
+			return cast rawMetaJson;
+		}
 	}
 
 	public static function conversionChecks(song:SongData):SongData
@@ -94,7 +167,7 @@ class Song
 		var ba = song.bpm;
 
 		var index = 0;
-		
+		trace("conversion stuff " + song.songId + " " + song.notes.length);
 		var convertedStuff:Array<Song.Event> = [];
 
 		if (song.eventObjects == null)
@@ -125,11 +198,11 @@ class Song
 		{
 			if (i.type == "BPM Change")
 			{
-				var beat:Float = i.position;
+				var beat:Float = i.position * PlayState.songMultiplier;
 
 				var endBeat:Float = Math.POSITIVE_INFINITY;
 
-				TimingStruct.addTiming(beat, i.value, endBeat, 0); // offset in this case = start time since we don't have a offset
+				TimingStruct.addTiming(beat, i.value * PlayState.songMultiplier, endBeat, 0); // offset in this case = start time since we don't have a offset
 
 				if (currentIndex != 0)
 				{
@@ -161,6 +234,7 @@ class Song
 
 			if (i.changeBPM && i.bpm != ba)
 			{
+				trace("converting changebpm for section " + index);
 				ba = i.bpm;
 				song.eventObjects.push(new Song.Event("FNF BPM Change " + index, beat, i.bpm, "BPM Change"));
 			}

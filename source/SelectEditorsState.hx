@@ -31,7 +31,7 @@ class SelectEditorsState extends MusicBeatState
 	{
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
-		bgSprite = new FlxSprite(0, 0).loadGraphic(Paths.loadImage('menuDesat'));
+		bgSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('menuDesat'));
 		bgSprite.scrollFactor.set(1.0, 1.0);
 		bgSprite.screenCenter();
 

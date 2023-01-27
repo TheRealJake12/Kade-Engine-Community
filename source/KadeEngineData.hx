@@ -112,6 +112,9 @@ class KadeEngineData
 		if (FlxG.save.data.cacheImages == null)
 			FlxG.save.data.cacheImages = false;
 
+		if (FlxG.save.data.cacheCharacters == null)
+			FlxG.save.data.cacheCharacters = false;	
+
 		if (FlxG.save.data.healthBar == null)
 			FlxG.save.data.healthBar = true;
 

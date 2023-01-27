@@ -408,7 +408,7 @@ class StoryMenuState extends MusicBeatState
 		if (curDifficulty > diffsThatExists.length - 1)
 			curDifficulty = 0;
 
-		var newImage:FlxGraphic = Paths.image2('menuDifficulties/${diffsThatExists[curDifficulty]}');
+		var newImage:FlxGraphic = Paths.image('menuDifficulties/${diffsThatExists[curDifficulty]}');
 
 		if (sprDifficulty.graphic != newImage)
 		{

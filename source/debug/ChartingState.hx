@@ -246,7 +246,7 @@ class ChartingState extends MusicBeatState
 			};
 		}
 
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image2('menuDesat'));
+		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.scrollFactor.set();
 		bg.color = 0xFF0C0C0C;
 		add(bg);

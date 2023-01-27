@@ -534,11 +534,16 @@ class GhostTapOption extends Option
 	public function new(desc:String)
 	{
 		super();
-		description = desc;
+		if (OptionsMenu.isInPause)
+			description = "This option cannot be toggled in the pause menu.";
+		else
+			description = desc;
 	}
 
 	public override function left():Bool
 	{
+		if (OptionsMenu.isInPause)
+			return false;
 		FlxG.save.data.ghost = !FlxG.save.data.ghost;
 		display = updateDisplay();
 		return true;
@@ -724,10 +729,16 @@ class ResetButtonOption extends Option
 		description = desc;
 	}
 
-	public override function press():Bool
+	public override function left():Bool
 	{
 		FlxG.save.data.resetButton = !FlxG.save.data.resetButton;
 		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
 		return true;
 	}
 
@@ -1998,16 +2009,11 @@ class NotesplashesOption extends Option
 	public function new(desc:String)
 	{
 		super();
-		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
-		else
-			description = desc;
+		description = desc;
 	}
 
 	public override function left():Bool
 	{
-		if (OptionsMenu.isInPause)
-			return false;
 		FlxG.save.data.notesplashes = !FlxG.save.data.notesplashes;
 		display = updateDisplay();
 		return true;
@@ -2030,16 +2036,11 @@ class CPUSplash extends Option
 	public function new(desc:String)
 	{
 		super();
-		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
-		else
-			description = desc;
+		description = desc;
 	}
 
 	public override function left():Bool
 	{
-		if (OptionsMenu.isInPause)
-			return false;
 		FlxG.save.data.cpuSplash = !FlxG.save.data.cpuSplash;
 		display = updateDisplay();
 		return true;
@@ -2063,15 +2064,13 @@ class General extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "Lags the game when doing anything. its useless.";
+			description = "Gives More Debug Info In The Logs.";
 		else
 			description = desc;
 	}
 
 	public override function left():Bool
 	{
-		if (OptionsMenu.isInPause)
-			return false;
 		FlxG.save.data.gen = !FlxG.save.data.gen;
 		display = updateDisplay();
 		return true;
@@ -2270,7 +2269,7 @@ class SongCaching extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "Song Cache";
+			description = "This option cannot be toggled in the pause menu.";
 		else
 			description = desc;
 	}
@@ -2385,8 +2384,6 @@ class UnloadSongs extends Option
 
 	public override function left():Bool
 	{
-		if (OptionsMenu.isInPause)
-			return false;
 		FlxG.save.data.unload = !FlxG.save.data.unload;
 		display = updateDisplay();
 		return true;
@@ -2569,7 +2566,10 @@ class RatingPopup extends Option
 	public function new(desc:String)
 	{
 		super();
-		description = desc;
+		if (OptionsMenu.isInPause)
+			description = "This option cannot be toggled in the pause menu.";
+		else
+			description = desc;
 	}
 
 	public override function left():Bool
@@ -2625,11 +2625,16 @@ class RatingStack extends Option
 	public function new(desc:String)
 	{
 		super();
-		description = desc;
+		if (OptionsMenu.isInPause)
+			description = "This option cannot be toggled in the pause menu.";
+		else
+			description = desc;
 	}
 
 	public override function left():Bool
 	{
+		if (OptionsMenu.isInPause)
+			return false;
 		FlxG.save.data.rateStack = !FlxG.save.data.rateStack;
 		display = updateDisplay();
 		return true;
@@ -2685,7 +2690,7 @@ class StressMP4 extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "Makes Week 7 Use An MP4 Instead Of Ingame For Lowend PCs Recommended.";
+			description = "This option cannot be toggled in the pause menu.";
 		else
 			description = desc;
 	}
@@ -2717,7 +2722,7 @@ class BackgroundsOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "Does Not Load Backgrounds Into The Game. Improves Performnace, (Optimize mode bootleg)";
+			description = "This option cannot be toggled in the pause menu.";
 		else
 			description = desc;
 	}

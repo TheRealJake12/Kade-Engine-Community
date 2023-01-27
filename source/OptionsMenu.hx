@@ -215,6 +215,7 @@ class OptionsMenu extends MusicBeatSubstate
 				#if desktop
 				new StressMP4("Makes Week 7 Use A Video Instead Of Actual Sprites."),
 				new UnloadSongs("Unload Songs And Characters"), 
+				//new CharacterCaching("Caches Character Sprites For Faster Loading."),
 				new SongCaching("Caches Songs for close to Instant loading"),
 				new CachingOption("Caches all of the options above (High Memory Depending On Your Cache Options.)"),
 				new UnloadNow("Clears All Cache We Can Remove"),

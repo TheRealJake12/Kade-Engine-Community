@@ -1061,7 +1061,7 @@ class PlayState extends MusicBeatState
 
 		FlxG.fixedTimestep = false;
 
-		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image2('healthBar'));
+		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('healthBar'));
 		if (PlayStateChangeables.useDownscroll)
 			healthBarBG.y = 50;
 		healthBarBG.screenCenter(X);
@@ -2121,6 +2121,12 @@ class PlayState extends MusicBeatState
 				health -= 0.15 * PlayStateChangeables.healthLoss;
 			else
 				health += 0.15 * PlayStateChangeables.healthLoss;
+
+			if (PlayStateChangeables.skillIssue)
+				if (!PlayStateChangeables.opponentMode)
+					health = 0;
+				else
+					health = 2.1;	
 			if (combo > 5 && gf != null && gf.animOffsets.exists('sad'))
 			{
 				gf.playAnim('sad');
@@ -2232,7 +2238,7 @@ class PlayState extends MusicBeatState
 		else
 			songLength = ((inst.length / songMultiplier) / 1000);
 
-		songPosBG = new FlxSprite(0, FlxG.height - 710).loadGraphic(Paths.image2('healthBar', 'shared'));
+		songPosBG = new FlxSprite(0, FlxG.height - 710).loadGraphic(Paths.image('healthBar', 'shared'));
 
 		if (PlayStateChangeables.useDownscroll)
 			songPosBG.y = FlxG.height - 37;
@@ -2365,7 +2371,7 @@ class PlayState extends MusicBeatState
 
 		if (PlayStateChangeables.skillIssue)
 		{
-			var redVignette:FlxSprite = new FlxSprite().loadGraphic(Paths.image2('nomisses_vignette', 'shared'));
+			var redVignette:FlxSprite = new FlxSprite().loadGraphic(Paths.image('nomisses_vignette', 'shared'));
 			redVignette.screenCenter();
 			redVignette.cameras = [camHUD];
 			add(redVignette);
@@ -3073,11 +3079,18 @@ class PlayState extends MusicBeatState
 		if (!PlayStateChangeables.Optimize)
 			Stage.update(elapsed);
 
-		if (!addedBotplay && FlxG.save.data.botplay)
+		if (!addedBotplay && PlayStateChangeables.botPlay)
 		{
 			PlayStateChangeables.botPlay = true;
 			addedBotplay = true;
 			add(botPlayState);
+		}
+
+		if (addedBotplay && PlayStateChangeables.botPlay == false)
+		{
+			remove(botPlayState);
+			addedBotplay = false;
+
 		}
 
 		if (FlxG.save.data.borderless)
@@ -4638,7 +4651,7 @@ class PlayState extends MusicBeatState
 			pixelShitPart2 = '-pixel';
 			pixelShitPart3 = 'week6';
 		}
-		rating.loadGraphic(Paths.image2(pixelShitPart1 + daRating + pixelShitPart2, pixelShitPart3));
+		rating.loadGraphic(Paths.image(pixelShitPart1 + daRating + pixelShitPart2, pixelShitPart3));
 		rating.screenCenter();
 		rating.y -= 50;
 		rating.x = coolText.x - 125;
@@ -4713,7 +4726,7 @@ class PlayState extends MusicBeatState
 				add(currentTimingShown);
 		}
 
-		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image2(pixelShitPart1 + 'combo' + pixelShitPart2, pixelShitPart3));
+		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2, pixelShitPart3));
 		comboSpr.screenCenter();
 		comboSpr.x = rating.x;
 		comboSpr.y = rating.y + 100;
@@ -4811,7 +4824,7 @@ class PlayState extends MusicBeatState
 		var daLoop:Int = 0;
 		for (i in seperatedScore)
 		{
-			var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image2(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2, pixelShitPart3));
+			var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2, pixelShitPart3));
 			numScore.screenCenter();
 			numScore.x = rating.x + (43 * daLoop) - 50;
 
@@ -5193,6 +5206,15 @@ class PlayState extends MusicBeatState
 				{
 					combo = 0;
 				}
+			
+				if (PlayStateChangeables.skillIssue)
+				{
+					if (!PlayStateChangeables.opponentMode)
+						health = 0;
+					else
+						health = 2.1;	
+				}
+
 				misses++;
 
 				if (daNote != null)
@@ -6058,10 +6080,6 @@ class PlayState extends MusicBeatState
 		script.set("playerTwoTurn", function(?note:Note)
 		{
 		});
-		script.set("noteMiss", function(?note:Note)
-		{
-		});
-
 		script.set("notesUpdate", function() {}); // ! HAS PAUSE
 
 		script.set("ghostTap", function(?direction:Int) {});
@@ -6194,7 +6212,7 @@ class PlayState extends MusicBeatState
 		switch (type)
 		{
 			case 'image':
-				Paths.image2(target, library);
+				Paths.image(target, library);
 			case 'sound':
 				Paths.sound(target, library);
 			case 'music':

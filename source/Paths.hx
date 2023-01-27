@@ -55,42 +55,8 @@ class Paths
 
 		return getPreloadPath(file);
 	}
-	/**
-	 * For a given key and library for an image, returns the corresponding BitmapData.
-	 		* We can probably move the cache handling here.
-	 * @param key 
-	 * @param library 
-	 * @return BitmapData
-	 */
-	static public function loadImage(key:String, ?library:String):FlxGraphic
-	{
-		var path = image(key, library);
-
-		#if FEATURE_FILESYSTEM
-		if (Caching.bitmapData != null)
-		{
-			if (Caching.bitmapData.exists(key))
-			{
-				// Get data from cache.
-				return Caching.bitmapData.get(key);
-			}
-		}
-		#end
-
-		if (OpenFlAssets.exists(path, IMAGE))
-		{
-			var bitmap = OpenFlAssets.getBitmapData(path);
-			return FlxGraphic.fromBitmapData(bitmap);
-		}
-		else
-		{
-			Debug.logWarn('Could not find image at path $path');
-			return null;
-		}
-	}
-
 	// Sprite content caching with GPU based on Forever Engine texture compression.
-	static function loadImage2(key:String, ?library:String, ?gpuRender:Bool)
+	public static function loadImage(key:String, ?library:String, ?gpuRender:Bool)
 	{
 		var path:String = '';
 
@@ -105,8 +71,7 @@ class Paths
 			{
 				var bitmap:BitmapData = OpenFlAssets.getBitmapData(path, false);
 				var graphic:FlxGraphic = null;
-
-				var graphic:FlxGraphic = null;
+				
 				if (gpuRender)
 				{
 					var texture = FlxG.stage.context3D.createTexture(bitmap.width, bitmap.height, BGRA, false, 0);
@@ -129,6 +94,17 @@ class Paths
 				// Get data from cache.
 				// Debug.logTrace('Loading existing image from cache: $key');
 			}
+
+			#if FEATURE_FILESYSTEM
+			if (Caching.bitmapData != null)
+			{
+				if (Caching.bitmapData.exists(key))
+				{
+					// Get data from cache.
+					return Caching.bitmapData.get(key);
+				}
+			}
+			#end
 			localTrackedAssets.push(key);
 			return currentTrackedAssets.get(key);
 		}
@@ -136,7 +112,7 @@ class Paths
 		Debug.logWarn('Could not find image at path $path');
 		return null;
 	}
-
+	
 	static public function loadJSON(key:String, ?library:String):Dynamic
 	{
 		var rawJson = OpenFlAssets.getText(Paths.json(key, library)).trim();
@@ -214,6 +190,11 @@ class Paths
 		return getPath('$key.hx', TEXT, library);
 	}
 
+	public static inline function songMeta(key:String, ?library:String)
+	{
+		return getPath('data/songs/$key/_meta.json', TEXT, library);
+	}
+
 	inline static public function file(file:String, ?library:String, type:AssetType = TEXT)
 	{
 		return getPath(file, type, library);
@@ -274,11 +255,16 @@ class Paths
 		return getPath('images/$key/spritemap.json', TEXT, library);
 	}
 
-	inline static public function image2(key:String, ?library:String, ?gpuRender:Bool):FlxGraphic
+	inline static public function image(key:String, ?library:String, ?gpuRender:Bool):FlxGraphic
 	{
 		gpuRender = gpuRender != null ? gpuRender : FlxG.save.data.gpuRender;
-		var image:FlxGraphic = loadImage2(key, library, gpuRender);
+		var image:FlxGraphic = loadImage(key, library, gpuRender);
 		return image;
+	}
+
+	inline static public function oldImage(key:String, ?library:String)
+	{
+		return getPath('images/$key.png', IMAGE, library);
 	}
 
 	#if VIDEOS
@@ -403,11 +389,6 @@ class Paths
 	inline static public function doesTextAssetExist(path:String)
 	{
 		return OpenFlAssets.exists(path, AssetType.TEXT);
-	}
-
-	inline static public function image(key:String, ?library:String)
-	{
-		return getPath('images/$key.png', IMAGE, library);
 	}
 
 	inline static public function font(key:String)
@@ -545,9 +526,9 @@ class Paths
 		gpuRender = gpuRender != null ? gpuRender : FlxG.save.data.gpuRender;
 		if (isCharacter)
 		{
-			return FlxAtlasFrames.fromSparrow(image2('characters/$key', library, gpuRender), file('images/characters/$key.xml', library));
+			return FlxAtlasFrames.fromSparrow(loadImage('characters/$key', library, gpuRender), file('images/characters/$key.xml', library));
 		}
-		return FlxAtlasFrames.fromSparrow(image2(key, library, gpuRender), file('images/$key.xml', library));
+		return FlxAtlasFrames.fromSparrow(loadImage(key, library, gpuRender), file('images/$key.xml', library));
 	}
 
 	/**
@@ -558,9 +539,9 @@ class Paths
 		gpuRender = gpuRender != null ? gpuRender : FlxG.save.data.gpuRender;
 		if (isCharacter)
 		{
-			return FlxAtlasFrames.fromSpriteSheetPacker(image2('characters/$key', library, gpuRender), file('images/characters/$key.txt', library));
+			return FlxAtlasFrames.fromSpriteSheetPacker(loadImage('characters/$key', library, gpuRender), file('images/characters/$key.txt', library));
 		}
-		return FlxAtlasFrames.fromSpriteSheetPacker(image2(key, library, gpuRender), file('images/$key.txt', library));
+		return FlxAtlasFrames.fromSpriteSheetPacker(loadImage(key, library, gpuRender), file('images/$key.txt', library));
 	}
 
 	inline static public function getTextureAtlas(key:String, ?library:String, ?isCharacter:Bool = false, ?excludeArray:Array<String>):FlxFramesCollection
@@ -575,8 +556,8 @@ class Paths
 	{
 		gpuRender = gpuRender != null ? gpuRender : FlxG.save.data.gpuRender;
 		if (isCharacter)
-			return FlxAtlasFrames.fromTexturePackerJson(image2('characters/$key', library, gpuRender), file('images/characters/$key.json', library));
+			return FlxAtlasFrames.fromTexturePackerJson(image('characters/$key', library, gpuRender), file('images/characters/$key.json', library));
 
-		return FlxAtlasFrames.fromTexturePackerJson(image2(key, library), file('images/$key.json', library));
+		return FlxAtlasFrames.fromTexturePackerJson(image(key, library), file('images/$key.json', library));
 	}
 }

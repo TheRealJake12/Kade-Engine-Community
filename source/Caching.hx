@@ -69,7 +69,7 @@ class Caching extends MusicBeatState
 
 		bitmapData = new Map<String, FlxGraphic>();
 
-		funkay = new FlxSprite(0, 0).loadGraphic(Paths.image2('funkay'));
+		funkay = new FlxSprite(0, 0).loadGraphic(Paths.loadImage('funkay'));
 		funkay.setGraphicSize(0, FlxG.height);
 		funkay.updateHitbox();
 		funkay.scale.set(0.76, 0.67);
@@ -82,12 +82,20 @@ class Caching extends MusicBeatState
 		shitz.scrollFactor.set();
 		shitz.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(shitz);
-
-		FlxGraphic.defaultPersist = false;
-
+	
 		#if FEATURE_FILESYSTEM
-
-		// TODO: Get the audio list from OpenFlAssets.
+		/*
+		if (FlxG.save.data.cacheCharacters)
+		{
+			for (i in FileSystem.readDirectory(FileSystem.absolutePath("assets/shared/images/characters")))
+			{
+				if (!i.endsWith(".png"))
+					continue;
+				characters.push(i);
+			}
+		}
+		*/
+		
 		if (FlxG.save.data.cacheSongs)
 			songs = Paths.listSongsToCache();
 
@@ -151,6 +159,22 @@ class Caching extends MusicBeatState
 
 			done++;
 		}
+
+		/*
+		for (i in characters)
+		{
+			var replaced = i.replace(".png", "");
+			var imagePath = Paths.loadImage('characters/' + replaced, 'shared');
+			var graph = FlxGraphic.fromGraphic(imagePath, true);
+			if (FlxG.save.data.gen)
+			{
+				Debug.logTrace('Caching character graphic ' + imagePath + '...');
+			}
+			graph.persist = true;
+			bitmapData.set(replaced, graph);
+			done++;
+		}
+		*/
 
 		for (i in music)
 		{

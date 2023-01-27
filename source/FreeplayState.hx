@@ -108,7 +108,7 @@ class FreeplayState extends MusicBeatState
 		list = CoolUtil.coolTextFile(Paths.txt('data/freeplaySonglist'));
 		cached = false;
 
-		bg = new FlxSprite().loadGraphic(Paths.image2('menuDesat'));
+		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 
 		/*for (i in 0...songs.length - 1)
 			songs[i].diffs.reverse(); */

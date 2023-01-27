@@ -25,7 +25,7 @@ class TankBGSprite extends FlxSprite
 		}
 		else
 		{
-			loadGraphic(Paths.image2(image));
+			loadGraphic(Paths.image(image));
 			active = false;
 		}
 		scrollFactor.set(scrollX, scrollY);

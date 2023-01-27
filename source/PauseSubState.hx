@@ -182,6 +182,7 @@ class PauseSubState extends MusicBeatSubstate
 						FlxG.save.data.sickMs,
 						FlxG.save.data.marvMs
 					];
+					PlayStateChangeables.botPlay = FlxG.save.data.botplay;
 					PlayStateChangeables.scrollSpeed = (FlxG.save.data.scrollSpeed == 1 ? PlayState.SONG.speed * PlayState.songMultiplier : FlxG.save.data.scrollSpeed * PlayState.songMultiplier);
 
 				case "Restart Song":

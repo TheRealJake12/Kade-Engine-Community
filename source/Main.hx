@@ -146,20 +146,26 @@ class Main extends Sprite
 		FlxG.signals.preStateSwitch.add(function()
 		{
 			Paths.clearStoredMemory(true);
-			FlxG.bitmap.dumpCache();
+			if (!FlxG.save.data.gpuRender)
+				FlxG.bitmap.dumpCache();
 
 			var cache = cast(Assets.cache, AssetCache);
 			for (key => font in cache.font)
 				cache.removeFont(key);
-			for (key => sound in cache.sound)
-				cache.removeSound(key);
-
-			gc();
+			if (FlxG.save.data.unload){
+				for (key => sound in cache.sound)
+					cache.removeSound(key);
+			}
+			if (FlxG.save.data.unload)
+				gc();
 		});
 		FlxG.signals.postStateSwitch.add(function()
 		{
-			Paths.clearUnusedMemory();
-			gc();
+			if (FlxG.save.data.unload)
+			{
+				Paths.clearUnusedMemory();
+				gc();
+			}
 		});
 
 		#if FEATURE_DISCORD
