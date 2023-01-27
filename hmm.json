@@ -1,0 +1,76 @@
+{
+  "dependencies": [
+    {
+      "name": "flixel",
+      "type": "git",
+      "version": null
+    },
+    {
+      "name": "hscript",
+      "type": "haxelib",
+      "version" : null
+    },
+    {
+      "name": "hxCodec",
+      "type": "git",
+      "ref": "main",
+      "url": "https://github.com/polybiusproxy/hxCodec"
+    },
+    {
+      "name": "polymod",
+      "type": "git",
+      "ref": "master",
+      "url": "https://github.com/TheRealJake12/polymod.git"
+    },
+    {
+      "name": "linc_luajit",
+      "type": "git",
+      "ref": "master",
+      "url": "https://github.com/nebulazorua/linc_luajit.git"
+    },
+    {
+      "name": "faxe",
+      "type": "git",
+      "ref": "master",
+      "url": "https://github.com/uhrobots/faxe"
+    },
+    {
+      "name": "hxvm-luajit",
+      "type": "git",
+      "ref": "master",
+      "url": "https://github.com/nebulazorua/hxvm-luajit"
+    },
+    {
+      "name": "flixel-ui",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "flixel-tools",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "flixel-addons",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "lime",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "linc_discord-rpc",
+      "type": "git",
+      "dir": "linc_discord-rpc",
+      "ref": "master",
+      "url": "https://github.com/Aidan63/linc_discord-rpc"
+    },
+    {
+      "name": "openfl",
+      "type": "haxelib",
+      "version": null
+    }
+  ]
+}
