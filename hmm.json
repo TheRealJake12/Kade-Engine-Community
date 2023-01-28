@@ -11,6 +11,11 @@
       "version" : null
     },
     {
+      "name": "hxcpp-debug-server",
+      "type": "haxelib",
+      "version" : null
+    },
+    {
       "name": "hxCodec",
       "type": "git",
       "ref": "main",
