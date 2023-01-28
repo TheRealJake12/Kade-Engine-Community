@@ -61,9 +61,9 @@
       "version": null
     },
     {
-      "name": "discord-rpc",
+      "name": "discord_rpc",
       "type": "git",
-      "dir": "discord-rpc",
+      "dir": "discord_rpc",
       "ref": "master",
       "url": "https://github.com/Aidan63/linc_discord-rpc"
     },
