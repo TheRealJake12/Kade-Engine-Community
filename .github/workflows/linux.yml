@@ -1,57 +1,72 @@
-# This is a basic workflow to help you get started with Actions
 
-name: Linux Build CI
-
-# Controls when the workflow will run
-on: [push, pull_request]
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+name: Linux Build
+on:
+  push:
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-22.04
-    
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    name: Linux Build
+    runs-on: ubuntu-latest
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-      - uses: krdlab/setup-haxe@master
+      - name: Pulling the source
+        uses: actions/checkout@v2
+      - name: Setting up Haxe
+        uses: krdlab/setup-haxe@v1
         with:
           haxe-version: 4.2.5
-      # Runs a set of commands using the runners shell
-      - name: Install the shit
-        run: |
-          sudo apt-get update
-          sudo apt-get install gcc-multilib g++-multilib haxe -y
-          sudo apt-get install libvlc-dev
-          sudo apt-get install libvlccore-dev
-          sudo apt-get install vlc-bin
-          sudo apt-get -y install libidn12
-          mkdir "%HAXELIB_ROOT%"
-          haxelib setup "%HAXELIB_ROOT%"
-          haxelib install lime 7.9.0
-          haxelib install openfl
-          haxelib install flixel
-          haxelib run lime setup flixel
-          haxelib run lime setup
-          haxelib install flixel-tools
-          haxelib install flixel-addons
-          haxelib install flixel-ui
-          haxelib install hscript
-          haxelib git polymod https://github.com/TheRealJake12/polymod.git
-          haxelib install flixel-addons
-          haxelib install hxcpp-debug-server
-          haxelib git faxe https://github.com/uhrobots/faxe
-          haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
-          haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
-          haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
-          haxelib git hxCodec https://github.com/TheRealJake12/hxCodec.git
-          haxelib install actuate 
-          haxelib list
-          haxelib run lime build linux
-          
-      - uses: actions/upload-artifact@v2
+      - name: Restore existing build cache for faster compilation
+        uses: actions/cache@v3
         with:
-          name: Linux Build
+          # not caching the bin folder to prevent asset duplication and stuff like that
+          key: cache-build-linux
+          path: |
+            .haxelib/
+            export/release/linux/haxe/
+            export/release/linux/obj/
+          restore-keys: |
+            cache-build-linux
+      - name: Installing/Updating libraries
+        run: |
+          haxe -cp ./update -D analyzer-optimize -main Update --interp
+      - name: Building the game
+        run: |
+          haxelib run lime build linux
+      - name: Uploading artifact (entire build)
+        uses: actions/upload-artifact@v2
+        with:
+          name: Kade Engine Community
           path: export/release/linux/bin
+      - name: Uploading artifact (executable)
+        uses: actions/upload-artifact@v2
+        with:
+          name: Update-Linux
+          path: export/release/linux/bin/Kade Engine Community
+      - name: Clearing already existing cache
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const caches = await github.rest.actions.getActionsCacheList({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+            for (const cache of caches.data.actions_caches) {
+              if (cache.key == "cache-build-linux") {
+                console.log('Clearing ' + cache.key + '...')
+                await github.rest.actions.deleteActionsCacheById({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  cache_id: cache.id,
+                })
+                console.log("Cache cleared.")
+              }
+            }
+      - name: Uploading new cache
+        uses: actions/cache@v3
+        with:
+          # caching again since for some reason it doesnt work with the first post cache shit
+          key: cache-build-linux
+          path: |
+            .haxelib/
+            export/release/linux/haxe/
+            export/release/linux/obj/
+          restore-keys: |
+            cache-build-linux
