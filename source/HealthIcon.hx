@@ -8,7 +8,7 @@ using StringTools;
 
 class HealthIcon extends FlxSprite
 {
-	public var char:String = 'bf';
+	public var char:String = '';
 	public var isPlayer:Bool = false;
 	public var isOldIcon:Bool = false;
 

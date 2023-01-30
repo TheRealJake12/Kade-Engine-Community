@@ -4,6 +4,7 @@
   "barColor": "#D8558E",
   "startingAnim": "idle",
   "camFollow": [0, 100],
+  "healthicon" : "mom",
   "animations": [
     {
       "name": "idle",

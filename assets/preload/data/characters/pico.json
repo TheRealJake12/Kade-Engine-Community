@@ -5,6 +5,7 @@
   "startingAnim": "idle",
   "flipX":true,
   "camPos": [600, 0],
+  "healthicon" : "pico",
   "animations": [
     {
       "name": "idle",

@@ -6,6 +6,7 @@
   "isDancing": true,
   "holdLength": 4.1,
   "replacesGF": true,
+  "healthicon" : "gf",
   "animations": [
     {
       "name": "singLEFT",

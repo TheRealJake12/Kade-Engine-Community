@@ -8,6 +8,7 @@
   "startingAnim": "idle",
   "camPos": [300, 0],
   "hasTrail": true,
+  "healthicon" : "spirit",
   "animations": [
     {
       "name": "idle",

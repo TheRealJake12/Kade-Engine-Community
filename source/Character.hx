@@ -19,7 +19,7 @@ class Character extends FlxSprite
 	public var debugMode:Bool = false;
 
 	public var isPlayer:Bool = false;
-	public var curCharacter:String = 'bf';
+	public var curCharacter:String = '';
 	public var barColor:FlxColor;
 
 	public var holdTimer:Float = 0;
@@ -31,6 +31,7 @@ class Character extends FlxSprite
 	public var charPos:Array<Int>;
 	public var camPos:Array<Int>;
 	public var camFollow:Array<Int>;
+	public var healthIcon:String = 'face';
 
 	public static var animationNotes:Array<Note> = [];
 
@@ -45,6 +46,7 @@ class Character extends FlxSprite
 		animDanced = new Map<String, Bool>();
 		curCharacter = character;
 		this.isPlayer = isPlayer;
+		healthIcon = curCharacter;
 		
 		parseDataFile();
 		
@@ -69,6 +71,7 @@ class Character extends FlxSprite
 					animation.getByName('singLEFTmiss').frames = oldMiss;
 				}
 			}
+			healthIcon = curCharacter;
 		}
 	}
 
@@ -151,6 +154,7 @@ class Character extends FlxSprite
 			this.camPos = data.camPos == null ? [0, 0] : data.camPos;
 			this.camFollow = data.camFollow == null ? [0, 0] : data.camFollow;
 			this.holdLength = data.holdLength == null ? 4 : data.holdLength;
+			this.healthIcon = data.healthicon == null ? "face" : data.healthicon;
 
 			flipX = data.flipX == null ? false : data.flipX;
 
@@ -374,6 +378,8 @@ typedef CharacterData =
 	var name:String;
 	var asset:String;
 	var startingAnim:String;
+
+	var healthicon:String;
 
 	var ?charPos:Array<Int>;
 	var ?camPos:Array<Int>;

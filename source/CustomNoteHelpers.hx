@@ -36,7 +36,7 @@ class Skin
 			noteskinArray.push(i.replace(".png", ""));
 		}
 		#else
-		noteskinArray = ["Arrows.png", "Circles.png"];
+		noteskinArray = ["Arrows", "Circles"];
 		#end
 
 		return noteskinArray;
@@ -54,37 +54,12 @@ class Skin
 
 	static public function generateNoteskinSprite(id:Int)
 	{
-		#if FEATURE_FILESYSTEM
-		// TODO: Make this use OpenFlAssets.
-
-		var path = FileSystem.absolutePath("assets/shared/images/noteskins") + "/" + getNoteskinByID(id);
-		var data:BitmapData = BitmapData.fromFile(path + ".png");
-
-		return FlxAtlasFrames.fromSparrow(FlxGraphic.fromBitmapData(data), xmlData[id]);
-
-		// return Paths.getSparrowAtlas('noteskins/' + NoteskinHelpers.getNoteskinByID(FlxG.save.data.noteskin), "shared");
-		#else
-		return Paths.getSparrowAtlas('noteskins/Arrows', "shared");
-		#end
+		return Paths.getSparrowAtlas('noteskins/${CustomNoteHelpers.Skin.getNoteskinByID(FlxG.save.data.noteskin)}', 'shared');
 	}
 
 	static public function generatePixelSprite(id:Int, ends:Bool = false)
 	{
-		#if FEATURE_FILESYSTEM
-		// TODO: Make this use OpenFlAssets.
-
-		var path = FileSystem.absolutePath("assets/shared/images/noteskins") + "/" + getNoteskinByID(id) + "-pixel" + (ends ? "-ends" : "");
-		if (!FileSystem.exists(path + ".png"))
-		{
-			//Debug.logTrace("getting default pixel skin");
-			return BitmapData.fromFile(FileSystem.absolutePath("assets/shared/images/noteskins") + "/Arrows-pixel" + (ends ? "-ends" : "") + ".png");
-		}
-		return BitmapData.fromFile(path + ".png");
-
-		// return Paths.getSparrowAtlas('noteskins/' + NoteskinHelpers.getNoteskinByID(FlxG.save.data.noteskin), "shared");
-		#else
-		return BitmapData.fromFile(Paths.image('noteskins/Arrows-pixel', "shared"));
-		#end
+		return Paths.image('noteskins/${CustomNoteHelpers.Skin.getNoteskinByID(FlxG.save.data.noteskin)}-pixel${(ends ? '-ends' : '')}', "shared");
 	}
 }
 

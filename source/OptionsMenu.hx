@@ -150,9 +150,9 @@ class OptionsMenu extends MusicBeatSubstate
 				new CustomizeGameplay("Drag and drop gameplay modules to your prefered positions!")
 			]),
 			new OptionCata(345, 40, "Appearance", [
-				#if desktop
-				new NoteskinOption("Change your Noteskin"), 
+				new NoteskinOption("Change your Noteskin"),
 				new CPUNoteskinOption("Change the CPU Noteskin"), 
+				#if desktop
 				new NotesplashOption("Change your Notesplash"),
 				new CPUNotesplashOption("Change the CPU Notesplash"),
 				#end

@@ -3,6 +3,7 @@
   "asset": "characters/Monster_Assets",
   "barColor": "#F3FF6E",
   "startingAnim": "idle",
+  "healthicon" : "monster",
   "animations": [
     {
       "name": "idle",

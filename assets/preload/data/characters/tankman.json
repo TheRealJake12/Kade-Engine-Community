@@ -7,6 +7,7 @@
   "camPos":[0,0],
   "charPos":[0,0],
   "flipX":true,
+  "healthicon" : "tankman",
   "animations": [
     {
       "name": "idle",

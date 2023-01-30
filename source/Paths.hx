@@ -94,17 +94,7 @@ class Paths
 				// Get data from cache.
 				// Debug.logTrace('Loading existing image from cache: $key');
 			}
-
-			#if FEATURE_FILESYSTEM
-			if (Caching.bitmapData != null)
-			{
-				if (Caching.bitmapData.exists(key))
-				{
-					// Get data from cache.
-					return Caching.bitmapData.get(key);
-				}
-			}
-			#end
+			
 			localTrackedAssets.push(key);
 			return currentTrackedAssets.get(key);
 		}

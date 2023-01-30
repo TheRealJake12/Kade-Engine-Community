@@ -182,8 +182,8 @@ class PlayState extends MusicBeatState
 	public static var cpuNoteskinSprite:FlxAtlasFrames;
 	public static var notesplashSprite:FlxAtlasFrames;
 	public static var cpuNotesplashSprite:FlxAtlasFrames;
-	public static var noteskinPixelSprite:BitmapData;
-	public static var noteskinPixelSpriteEnds:BitmapData;
+	public static var noteskinPixelSprite:FlxGraphic;
+	public static var noteskinPixelSpriteEnds:FlxGraphic;
 
 	public static var rep:Replay;
 	public static var loadRep:Bool = false;
@@ -1133,10 +1133,10 @@ class PlayState extends MusicBeatState
 
 		addedBotplay = PlayStateChangeables.botPlay;
 
-		iconP1 = new HealthIcon(boyfriend.curCharacter, true);
+		iconP1 = new HealthIcon(boyfriend.healthIcon, true);
 		iconP1.y = healthBar.y - (iconP1.height / 2);
 
-		iconP2 = new HealthIcon(dad.curCharacter, false);
+		iconP2 = new HealthIcon(dad.healthIcon, false);
 		iconP2.y = healthBar.y - (iconP2.height / 2);
 
 		if (FlxG.save.data.healthBar)

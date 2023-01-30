@@ -5,6 +5,7 @@
   "startingAnim": "idle",
   "holdLength": 6.1,
   "camPos": [400, 0],
+  "healthicon" : "dad",
   "animations": [
     {
       "name": "idle",
