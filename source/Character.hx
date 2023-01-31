@@ -71,7 +71,6 @@ class Character extends FlxSprite
 					animation.getByName('singLEFTmiss').frames = oldMiss;
 				}
 			}
-			healthIcon = curCharacter;
 		}
 	}
 
@@ -379,7 +378,7 @@ typedef CharacterData =
 	var asset:String;
 	var startingAnim:String;
 
-	var healthicon:String;
+	var ?healthicon:String;
 
 	var ?charPos:Array<Int>;
 	var ?camPos:Array<Int>;

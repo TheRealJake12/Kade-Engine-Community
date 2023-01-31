@@ -3,6 +3,7 @@
   "asset": "characters/bfCar",
   "barColor": "#31B0D1",
   "startingAnim": "idle",
+  "healthicon" : "bf",
   "flipX": true,
   "animations": [
     {

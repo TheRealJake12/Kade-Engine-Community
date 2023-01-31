@@ -786,7 +786,7 @@ class Stage extends MusicBeatState
 				bg.animation.play('idle', true);
 		}
 
-		if (!PlayStateChangeables.Optimize)
+		if (!PlayStateChangeables.Optimize && FlxG.save.data.background)
 		{
 			switch (curStage)
 			{
