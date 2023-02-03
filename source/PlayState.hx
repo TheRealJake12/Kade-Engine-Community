@@ -182,8 +182,8 @@ class PlayState extends MusicBeatState
 	public static var cpuNoteskinSprite:FlxAtlasFrames;
 	public static var notesplashSprite:FlxAtlasFrames;
 	public static var cpuNotesplashSprite:FlxAtlasFrames;
-	public static var noteskinPixelSprite:FlxGraphic;
-	public static var noteskinPixelSpriteEnds:FlxGraphic;
+	public static var noteskinPixelSprite:BitmapData;
+	public static var noteskinPixelSpriteEnds:BitmapData;
 
 	public static var rep:Replay;
 	public static var loadRep:Bool = false;
@@ -211,6 +211,9 @@ class PlayState extends MusicBeatState
 	public static var sm:SMFile;
 	public static var pathToSm:String;
 	#end
+
+	public var zoomForTweens:Float = 0;
+	public var zoomForHUDTweens:Float = 1;
 
 	public static var dad:Character;
 	public static var gf:Character;
@@ -543,7 +546,7 @@ class PlayState extends MusicBeatState
 			+ misses, iconRPC);
 		#end
 		
-		camGame = new FlxCamera();
+		camGame = new SwagCamera();
 		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
 		camSustains = new FlxCamera();
@@ -714,7 +717,7 @@ class PlayState extends MusicBeatState
 				#end
 				dad = new Character(100, 100, 'dad');
 			}
-		}
+		}	
 
 		#if FEATURE_HSCRIPT
 		initScripts();
@@ -852,6 +855,30 @@ class PlayState extends MusicBeatState
 		}
 
 		var doof = null;
+
+		switch (SONG.gfVersion)
+		{
+			case 'pico-speaker':
+				gf.x -= 50;
+				gf.y -= 200;
+		}
+
+		switch (Stage.curStage)
+		{
+			case "tank":
+				gf.y += 10;
+				gf.x -= 30;
+				boyfriend.x += 40;
+				boyfriend.y += 0;
+				dad.y += 60;
+				dad.x -= 80;
+
+				if (SONG.gfVersion != 'pico-speaker')
+				{
+					gf.x -= 170;
+					gf.y -= 75;
+				}
+		}
 
 		if (isStoryMode)
 		{
@@ -1053,8 +1080,9 @@ class PlayState extends MusicBeatState
 
 		add(camFollow);
 
-		FlxG.camera.follow(camFollow, LOCKON, 0.065 * (60 / Application.current.window.frameRate));
+		FlxG.camera.follow(camFollow, LOCKON, 0.05);
 		FlxG.camera.zoom = Stage.camZoom;
+		zoomForTweens = Stage.camZoom;
 		FlxG.camera.focusOn(camFollow.getPosition());
 
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
@@ -3800,7 +3828,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (camZooming)
+		if (camZooming && !endingSong)
 		{
 			if (FlxG.save.data.zoom < 0.8)
 				FlxG.save.data.zoom = 0.8;
@@ -3808,11 +3836,13 @@ class PlayState extends MusicBeatState
 				FlxG.save.data.zoom = 1.2;
 			var bpmRatio = SONG.bpm / 100;
 
-			FlxG.camera.zoom = FlxMath.lerp(Stage.camZoom, FlxG.camera.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * bpmRatio * songMultiplier), 0, 1));
-			camHUD.zoom = FlxMath.lerp(FlxG.save.data.zoom, camHUD.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * bpmRatio * songMultiplier), 0, 1));
-			camNotes.zoom = camHUD.zoom;
-			camSustains.zoom = camHUD.zoom;
-			camStrums.zoom = camHUD.zoom;
+			FlxG.camera.zoom = FlxMath.lerp(zoomForTweens, FlxG.camera.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * bpmRatio * songMultiplier), 0, 1));
+			camHUD.zoom = FlxMath.lerp(zoomForHUDTweens, camHUD.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * bpmRatio * songMultiplier), 0, 1));
+		}
+		else
+		{
+			FlxG.camera.zoom = zoomForTweens;
+			camHUD.zoom = zoomForHUDTweens;
 		}
 
 		FlxG.watch.addQuick("curBPM", Conductor.bpm);

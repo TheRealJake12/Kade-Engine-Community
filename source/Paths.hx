@@ -516,9 +516,9 @@ class Paths
 		gpuRender = gpuRender != null ? gpuRender : FlxG.save.data.gpuRender;
 		if (isCharacter)
 		{
-			return FlxAtlasFrames.fromSparrow(loadImage('characters/$key', library, gpuRender), file('images/characters/$key.xml', library));
+			return FlxAtlasFrames.fromSparrow(image('characters/$key', library, gpuRender), file('images/characters/$key.xml', library));
 		}
-		return FlxAtlasFrames.fromSparrow(loadImage(key, library, gpuRender), file('images/$key.xml', library));
+		return FlxAtlasFrames.fromSparrow(image(key, library, gpuRender), file('images/$key.xml', library));
 	}
 
 	/**

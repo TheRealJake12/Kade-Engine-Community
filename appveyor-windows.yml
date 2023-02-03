@@ -15,10 +15,10 @@ install:
   # Setup haxelib
   - mkdir "%HAXELIB_ROOT%"
   - haxelib setup "%HAXELIB_ROOT%"
-  - haxelib install lime 7.9.0
+  - haxelib install lime
   - RefreshEnv
   - haxelib install openfl
-  - haxelib git flixel https://github.com/TheRealJake12/flixel.git
+  - haxelib install flixel
   - haxelib install polymod
   - haxelib run lime setup flixel
   - haxelib run lime setup

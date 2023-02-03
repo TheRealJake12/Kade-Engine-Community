@@ -78,14 +78,17 @@ class CoolUtil
 
 	public static var daPixelZoom:Float = 6;
 
-	public static function camLerpShit(daLerp:Float)
+	public static function camLerpShit(lerp:Float):Float
 	{
-		return (FlxG.elapsed / 0.016666666666666666) * daLerp;
+		return lerp * (FlxG.elapsed / (1 / 60));
 	}
 
-	public static function coolLerp(first:Float, second:Float, third:Float)
+	/*
+	 * just lerp that does camLerpShit for u so u dont have to do it every time
+	 */
+	public static function coolLerp(a:Float, b:Float, ratio:Float):Float
 	{
-		return first + camLerpShit(third) * (second - first);
+		return FlxMath.lerp(a, b, camLerpShit(ratio));
 	}
 
 	public static function coolTextFile(path:String):Array<String>

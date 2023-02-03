@@ -18,9 +18,9 @@ install:
   - tar -xf haxe-4.2.4-linux64.tar.gz -C $HAXE_INSTALLDIR
   - export PATH=$PATH:$HAXE_INSTALLDIR/haxe_20201231082044_5e33a78aa
   - mkdir $HAXELIB_ROOT && haxelib setup $HAXELIB_ROOT
-  - haxelib install lime 7.9.0
+  - haxelib install lime
   - haxelib install openfl
-  - haxelib git flixel https://github.com/TheRealJake12/flixel.git
+  - haxelib install flixel
   - haxelib run lime setup flixel
   - haxelib run lime setup
   - haxelib install flixel-tools

@@ -236,9 +236,16 @@ class KadeEngineData
 
 		if (FlxG.save.data.mirror == null)
 			FlxG.save.data.mirror = false;	
-
+		#if web
 		if (FlxG.save.data.stressMP4 == null)
-			FlxG.save.data.stressMP4 = true;
+			FlxG.save.data.stressMP4 = false;
+		#else
+		if (FlxG.save.data.stressMP4 == null)
+			FlxG.save.data.stressMP4 = true;	
+
+		if (FlxG.save.data.stressMP4 == false)
+			FlxG.save.data.stressMP4 = true;	
+		#end	
 
 		if (FlxG.save.data.background == null)
 			FlxG.save.data.background = true;

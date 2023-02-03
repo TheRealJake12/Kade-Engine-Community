@@ -4,6 +4,7 @@
 	"barColor": "#31B0D1",
 	"camPos": [0,0],
 	"scale": 1,
+	"healthicon" : "bf",
 	"startingAnim": "idle",
 	"flipX": true,
 	"animations": [

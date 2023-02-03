@@ -1,6 +1,5 @@
 package;
 
-import lime.app.Application;
 import flixel.graphics.FlxGraphic;
 import flixel.FlxG;
 import flixel.FlxGame;

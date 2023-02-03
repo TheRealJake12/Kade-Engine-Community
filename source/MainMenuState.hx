@@ -33,7 +33,7 @@ class MainMenuState extends MusicBeatState
 	public static var freakyPlaying:Bool;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
-	private var camGame:FlxCamera;
+	private var camGame:SwagCamera;
 
 	#if !switch
 	var optionShit:Array<String> = ['story mode', 'freeplay', 'donate', 'options'];
@@ -64,11 +64,8 @@ class MainMenuState extends MusicBeatState
 			freakyPlaying = true;
 		}
 
-		camGame = new FlxCamera();
-
-		FlxG.cameras.reset(camGame);
-		FlxCamera.defaultCameras = [camGame];
-
+		camGame = new SwagCamera();
+		
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
 
@@ -87,6 +84,10 @@ class MainMenuState extends MusicBeatState
 		camFollowPos = new FlxObject(0, 0, 1, 1);
 		add(camFollow);
 		add(camFollowPos);
+
+		FlxG.cameras.reset(new SwagCamera());
+		FlxG.camera.follow(camFollow, null, 0.06);
+
 
 		magenta = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
 		magenta.scrollFactor.set(0, yScroll);
@@ -125,7 +126,6 @@ class MainMenuState extends MusicBeatState
 			changeItem();
 			menuItem.x = 120 + (i * 160);
 		}
-		FlxG.camera.follow(camFollowPos, null, 1);
 
 		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, keVer + (Main.watermarks ? " " + kecVer + "" : ""), 12);
 		versionShit.scrollFactor.set();
