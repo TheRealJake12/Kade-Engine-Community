@@ -23,9 +23,8 @@
     },
     {
       "name": "polymod",
-      "type": "git",
-      "ref": "master",
-      "url": "https://github.com/TheRealJake12/polymod.git"
+      "type": "haxelib",
+      "version": null
     },
     {
       "name": "linc_luajit",
