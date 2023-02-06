@@ -37,7 +37,7 @@ class StoryMenuState extends MusicBeatState
 			['satin-panties', "high", "milf"],
 			['cocoa', 'eggnog', 'winter-horrorland'],
 			['senpai', 'roses', 'thorns'],
-			['stress']
+			['ugh', 'guns', 'stress']
 		];
 	}
 
