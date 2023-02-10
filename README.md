@@ -2,6 +2,12 @@
 ![Kade Engine logo](assets/preload/images/KadeEngineLogoOld.png)
 
 ![Repo size](https://img.shields.io/github/repo-size/TheRealJake12/Kade-Engine-Community)
+[![GitHub issues](https://img.shields.io/github/issues/TheRealJake12/Kade-Engine-Community)](https://github.com/TheRealJake12/Kade-Engine-Community/issues) 
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/TheRealJake12/Kade-Engine-Community)](https://github.com/TheRealJake12/Kade-Engine-Community/pulls) []() []()
+![Supported platforms](https://img.shields.io/badge/supported%20platforms-windows%2C%20linux-blue)
+![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/TheRealJake12/Kade-Engine-Community/latest)
+
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/TheRealJake12/Kade-Engine-Community?include_prereleases&label=latest%20version) 
 
 Hey you!
 Thanks for visiting this Repo!
