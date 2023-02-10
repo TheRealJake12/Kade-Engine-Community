@@ -46,7 +46,7 @@ You will first need to go to this link to download [Haxe](https://haxe.org/downl
 As you did with Haxe, just install the setup and finish it.
 4. Im just gonna quickly add all the librarys you need to download by putting it in a prompt
 ```cmd
-haxelib install lime 7.9.0
+haxelib install lime
 haxelib install openfl
 haxelib install flixel
 haxelib install flixel-tools
