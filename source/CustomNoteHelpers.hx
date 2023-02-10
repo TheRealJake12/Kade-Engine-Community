@@ -76,14 +76,14 @@ class Skin
 		var path = FileSystem.absolutePath("assets/shared/images/noteskins") + "/" + getNoteskinByID(id) + "-pixel" + (ends ? "-ends" : "");
 		if (!FileSystem.exists(path + ".png"))
 		{
-			// Debug.logTrace("getting default pixel skin");
-			return BitmapData.fromFile(FileSystem.absolutePath("assets/shared/images/noteskins") + "/Arrows-pixel" + (ends ? "-ends" : "") + ".png");
+			return Paths.image("noteskins/Arrows-pixel" + (ends ? "-ends" : ""), 'shared');
 		}
-		return BitmapData.fromFile(path + ".png");
+		return Paths.image('noteskins/${CustomNoteHelpers.Skin.getNoteskinByID(FlxG.save.data.noteskin)}-pixel${(ends ? '-ends' : '')}', "shared");
+		Debug.logTrace(path);
 
 		// return Paths.getSparrowAtlas('noteskins/' + NoteskinHelpers.getNoteskinByID(FlxG.save.data.noteskin), "shared");
 		#else
-		return BitmapData.fromFile(Paths.image('noteskins/Arrows-pixel', "shared"));
+		return Paths.image('noteskins/${CustomNoteHelpers.Skin.getNoteskinByID(FlxG.save.data.noteskin)}-pixel${(ends ? '-ends' : '')}', "shared");
 		#end
 	}
 }
