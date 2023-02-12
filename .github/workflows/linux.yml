@@ -5,7 +5,7 @@ on:
 jobs:
   build:
     name: Linux Build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Pulling the source
         uses: actions/checkout@v2
@@ -35,11 +35,6 @@ jobs:
         with:
           name: Kade Engine Community
           path: export/release/linux/bin
-      - name: Uploading artifact (executable)
-        uses: actions/upload-artifact@v2
-        with:
-          name: Update-Linux
-          path: export/release/linux/bin/Kade Engine Community
       - name: Clearing already existing cache
         uses: actions/github-script@v6
         with:
