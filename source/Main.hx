@@ -144,6 +144,7 @@ class Main extends Sprite
 
 		FlxG.signals.preStateSwitch.add(function()
 		{
+			if (Std.isOfType(this, debug.StageDebugState))  
 			Paths.clearStoredMemory(true);
 			if (!FlxG.save.data.gpuRender)
 				FlxG.bitmap.dumpCache();

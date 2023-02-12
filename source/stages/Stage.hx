@@ -60,9 +60,9 @@ class Stage extends MusicBeatState
 		'tank' => [
 			'tankman' => [50, 225],
 			'bf' => [850, 400],
-			'bf-holding-gf' => [850, 400],
-			'gftank' => [200, 0],
-			'pico-speaker' => [270, 10]
+			'bf-holding-gf' => [850, 370],
+			'gftank' => [330, 110],
+			'pico-speaker' => [330, 165]
 		]
 	];
 

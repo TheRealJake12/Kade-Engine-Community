@@ -3,7 +3,7 @@
   "songName": "guns",
   "songId": "guns",
   "player1": "bf",
-  "gfVersion": "gftank",
+  "songFile": "guns",
   "notes": [
    {
     "endTime": 1297.2972972973,
@@ -6258,7 +6258,11 @@
    }
   ],
   "player2": "tankman",
-  "chartVersion": "KEC 1.5",
+  "offset": 0,
+  "song": "Guns",
+  "validScore": true,
+  "speed": 2,
+  "gfVersion": "gftank",
   "eventObjects": [
    {
     "name": "Init BPM",
@@ -6267,13 +6271,10 @@
     "type": "BPM Change"
    }
   ],
-  "offset": 0,
-  "song": "Guns",
+  "chartVersion": "KEC 1.5",
   "stage": "tank",
-  "validScore": true,
   "needsVoices": true,
-  "noteStyle": "normal",
   "bpm": 185,
-  "speed": 2
+  "noteStyle": "normal"
  }
 }

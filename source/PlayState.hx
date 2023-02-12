@@ -841,7 +841,7 @@ class PlayState extends MusicBeatState
 			gf.visible = false;
 
 			camPos.x += 600;
-			//tweenCamIn();
+			tweenCamIn();
 		}
 
 		Stage.update(0);
@@ -2293,7 +2293,7 @@ class PlayState extends MusicBeatState
 		songPosBar.alpha = 0;
 		songPosBar.scrollFactor.set();
 		songPosBar.createFilledBar(FlxColor.BLACK, dad.barColor);
-		songPosBar.numDivisions = 150;
+		songPosBar.numDivisions = 200;
 		add(songPosBar);
 
 		bar = new FlxSprite(songPosBar.x, songPosBar.y).makeGraphic(Math.floor(songPosBar.width), Math.floor(songPosBar.height), FlxColor.TRANSPARENT);
@@ -2891,7 +2891,7 @@ class PlayState extends MusicBeatState
 
 	function tweenCamIn():Void
 	{
-		FlxTween.tween(FlxG.camera, {zoom: 1.3}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.elasticInOut});
+		createTween(FlxG.camera, {zoom: 1.3}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.elasticInOut});
 	}
 
 	override function openSubState(SubState:FlxSubState)
@@ -3849,7 +3849,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 		
-		if (camZooming && !endingSong)
+		if (camZooming)
 		{
 			var bpmRatio = SONG.bpm / 100;
 
@@ -5735,7 +5735,7 @@ class PlayState extends MusicBeatState
 				camStrums.visible = false;
 
 				FlxG.sound.play(Paths.sound('Lights_Shut_off'));
-				createTimer(1.5, function(tmr)
+				createTimer(2, function(tmr)
 				{
 					endSong();
 				});

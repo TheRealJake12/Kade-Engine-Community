@@ -127,10 +127,11 @@ class DialogueBox extends FlxSpriteGroup
 
 		box.screenCenter(X);
 		portraitLeft.screenCenter(X);
-		skipText = new FlxText(10, 10, Std.int(FlxG.width * 0.6), "", 16);
-		skipText.font = 'Pixel Arial 11 Bold';
+		skipText = new FlxText(10, 10, Std.int(FlxG.width * 0.6), "", 24);
+		skipText.font = Paths.font("vcr.ttf");
 		skipText.color = 0x000000;
-		skipText.text = 'press back to skip';
+		skipText.text = 'Press Backspace To Skip.';
+		skipText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 		add(skipText);
 		handSelect = new FlxSprite(FlxG.width * 0.9, FlxG.height * 0.9).loadGraphic(Paths.image('weeb/pixelUI/hand_textbox'));
 		add(handSelect);

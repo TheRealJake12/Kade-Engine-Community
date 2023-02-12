@@ -97,7 +97,7 @@ class MainMenuState extends MusicBeatState
 		magenta.visible = false;
 		magenta.antialiasing = FlxG.save.data.antialiasing;
 		magenta.color = 0xFFfd719b;
-		//add(magenta);
+		add(magenta);
 
 		// magenta.scrollFactor.set();
 

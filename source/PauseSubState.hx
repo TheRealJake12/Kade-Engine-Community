@@ -25,7 +25,10 @@ class PauseSubState extends MusicBeatSubstate
 	public static var goToOptions:Bool = false;
 	public static var goBack:Bool = false;
 
-	public static var menuItems:Array<String> = ['Resume', 'Restart Song', 'Options', 'Exit to menu'];
+	var pauseOG:Array<String> = ['Resume', 'Restart Song', 'Change Difficulty', 'Options', 'Exit to menu'];
+	var difficultyChoices:Array<String> = ['EASY', 'NORMAL', 'HARD', 'BACK'];
+
+	var menuItems:Array<String> = [];
 
 	var curSelected:Int = 0;
 
@@ -53,6 +56,8 @@ class PauseSubState extends MusicBeatSubstate
 			if (i.playing && i.ID != 9000)
 				i.pause();
 		}
+
+		menuItems = pauseOG;
 
 		if (!playingPause)
 		{
@@ -116,6 +121,8 @@ class PauseSubState extends MusicBeatSubstate
 		changeSelection();
 
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+
+		regenMenu();
 	}
 
 	#if !mobile
@@ -188,9 +195,20 @@ class PauseSubState extends MusicBeatSubstate
 				case "Restart Song":
 					PlayState.startTime = 0;
 					MusicBeatState.resetState();
+				case 'Change Difficulty':
+					menuItems = difficultyChoices;
+					regenMenu();	
+				case "EASY" | 'NORMAL' | "HARD":
+					PlayState.SONG = Song.loadFromJson(PlayState.SONG.songId.toLowerCase(), CoolUtil.suffixDiffsArray[curSelected]);
+					PlayState.storyDifficulty = curSelected;
+					PlayState.startTime = 0;
+					MusicBeatState.resetState();	
 				case "Options":
 					goToOptions = true;
 					close();
+				case "BACK":
+					menuItems = pauseOG;
+					regenMenu();	
 				case "Exit to menu":
 					PlayState.startTime = 0;
 					if (PlayState.loadRep)
@@ -236,6 +254,25 @@ class PauseSubState extends MusicBeatSubstate
 		}
 
 		super.destroy();
+	}
+
+	private function regenMenu():Void
+	{
+		while (grpMenuShit.members.length > 0)
+		{
+			grpMenuShit.remove(grpMenuShit.members[0], true);
+		}
+
+		for (i in 0...menuItems.length)
+		{
+			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, menuItems[i], true, false);
+			songText.isMenuItem = true;
+			songText.targetY = i;
+			grpMenuShit.add(songText);
+		}
+
+		curSelected = 0;
+		changeSelection();
 	}
 
 	function changeSelection(change:Int = 0):Void
