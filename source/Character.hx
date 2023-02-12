@@ -168,7 +168,10 @@ class Character extends FlxSprite
 			playAnim(data.startingAnim);
 		}
 
-		barColor = FlxColor.fromString(data.barColor);
+		if (data.barType == 'rgb')
+			barColor = FlxColor.fromRGB(data.red, data.green, data.blue);
+		else
+			barColor = FlxColor.fromString(data.barColor);
 	}
 
 	override function update(elapsed:Float)
@@ -386,9 +389,19 @@ typedef CharacterData =
 	var ?holdLength:Float;
 
 	/**
-	 * The color of this character's health bar.
+	 * The color of this character's health bar (In HEX).
 	 */
-	var barColor:String;
+	var ?barColor:String;
+
+	var ?red:Int;
+	var ?green:Int;
+	var ?blue:Int;
+
+	/**
+	 * Whether we use HEX or RGB for coloring.
+	 */
+	var ?barType:String;
+
 
 	var animations:Array<AnimationData>;
 
