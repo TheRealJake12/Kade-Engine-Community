@@ -233,8 +233,8 @@ class PlayState extends MusicBeatState
 
 	private static var prevCamFollow:FlxObject;
 
-	public var laneunderlay:FlxSprite;
-	public var laneunderlayOpponent:FlxSprite;
+	public static var laneunderlay:FlxSprite;
+	public static var laneunderlayOpponent:FlxSprite;
 
 	public static var strumLineNotes:FlxTypedGroup<StaticArrow> = null;
 	public static var playerStrums:FlxTypedGroup<StaticArrow> = null;
@@ -4089,9 +4089,7 @@ class PlayState extends MusicBeatState
 
 				if (daNote.isSustainNote && daNote.wasGoodHit && Conductor.songPosition >= daNote.strumTime)
 				{
-					daNote.kill();
-					notes.remove(daNote, true);
-					daNote.destroy();
+					destroyNote(daNote);
 				}
 				else if ((daNote.mustPress && !PlayStateChangeables.useDownscroll || daNote.mustPress && PlayStateChangeables.useDownscroll)&& daNote.mustPress&& daNote.strumTime / songMultiplier - Conductor.songPosition / songMultiplier < -(166 * Conductor.timeScale)&& songStarted)
 				{
@@ -4100,16 +4098,15 @@ class PlayState extends MusicBeatState
 						case 'hurt':
 							if (daNote.isSustainNote && daNote.wasGoodHit)
 							{
-								daNote.kill();
-								notes.remove(daNote, true);
+								destroyNote(daNote);
 							}
 						case 'mustpress':
 							if (daNote.isSustainNote && daNote.wasGoodHit)
 							{
-								daNote.kill();
-								notes.remove(daNote, true);
+								destroyNote(daNote);
 							}
-							else{
+							else
+							{
 							if (loadRep && daNote.isSustainNote)
 							{
 								if (findByTime(daNote.strumTime) != null)
@@ -4311,9 +4308,7 @@ class PlayState extends MusicBeatState
 										noteMiss(daNote.noteData, daNote);
 									}
 								}
-									daNote.visible = false;
-									daNote.kill();
-									notes.remove(daNote, true);
+										destroyNote(daNote);
 								}
 							}
 						}
@@ -5520,6 +5515,9 @@ class PlayState extends MusicBeatState
 		if (mashing != 0)
 			mashing = 0;
 
+		if (PlayStateChangeables.opponentMode)
+			camZooming = FlxG.save.data.camzoom;	
+
 		// add newest note to front of notesHitArray
 		// the oldest notes are at the end and are removed first
 
@@ -5543,16 +5541,7 @@ class PlayState extends MusicBeatState
 			note.rating = Ratings.judgeNote(noteDiff);
 
 		if (note.rating == "miss")
-			return;
-
-		if (!note.isSustainNote)
-			notesHitArray.unshift(Date.now());
-
-		if (!resetMashViolation && mashViolations >= 1)
-			mashViolations--;
-
-		if (mashViolations < 0)
-			mashViolations = 0;
+			return;	
 
 		if (!note.wasGoodHit)
 		{
@@ -5583,10 +5572,6 @@ class PlayState extends MusicBeatState
 					health += 0.8;
 			}	
 
-			#if FEATURE_HSCRIPT
-			scripts.executeAllFunc("goodNoteHit", [note]);
-			#end
-
 			var altAnim:String = "";
 			if (note.isAlt)
 			{
@@ -5606,10 +5591,28 @@ class PlayState extends MusicBeatState
 
 			#if FEATURE_LUAMODCHART
 			if (luaModchart != null)
-				luaModchart.executeState('playerOneSing', [note.noteData, Conductor.songPosition]);
+				if (!PlayStateChangeables.opponentMode)
+					luaModchart.executeState('playerOneSing', [Math.abs(note.noteData), Conductor.songPosition]);
+				else
+					luaModchart.executeState('playerTwoSing', [Math.abs(note.noteData), Conductor.songPosition]);
 			#end
 
-			if (!PlayStateChangeables.botPlay)
+			#if FEATURE_HSCRIPT
+			scripts.executeAllFunc("goodNoteHit", [note]);
+			#end
+
+			var noteDiff:Float = (note.strumTime - Conductor.songPosition);
+
+			if (!loadRep && note.mustPress)
+			{
+				var array = [note.strumTime, note.sustainLength, note.noteData, noteDiff];
+				if (note.isSustainNote)
+					array[1] = -1;
+				saveNotes.push(array);
+				saveJudge.push(note.rating);
+			}
+
+			if (!PlayStateChangeables.botPlay || FlxG.save.data.cpuStrums)
 			{
 				playerStrums.forEach(function(spr:StaticArrow)
 				{
@@ -5617,35 +5620,16 @@ class PlayState extends MusicBeatState
 				});
 			}
 
-			playerStrums.forEach(function(spr:StaticArrow)
-			{
-				pressArrow(spr, spr.ID, note);
-			});
-
 			if (!note.isSustainNote)
 			{
-				note.kill();
-				notes.remove(note, true);
-				note.destroy();
+				destroyNote(note);
+				updateAccuracy();
+				updateScoreText();
 			}
 			else
 			{
 				note.wasGoodHit = true;
 			}
-			if (!note.isSustainNote)
-			{
-				updateAccuracy();
-				updateScoreText();
-			}
-		}
-
-		if (!loadRep && note.mustPress)
-		{
-			var array = [note.strumTime, note.sustainLength, note.noteData, noteDiff];
-			if (note.isSustainNote)
-				array[1] = -1;
-			saveNotes.push(array);
-			saveJudge.push(note.rating);
 		}
 	}
 

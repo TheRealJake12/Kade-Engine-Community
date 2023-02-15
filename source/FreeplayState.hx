@@ -101,8 +101,8 @@ class FreeplayState extends MusicBeatState
 	{
 		FlxG.mouse.visible = true;
 		instance = this;
-		
-		Main.dumpCache();
+		if (!FlxG.save.data.gpuRender)
+			Main.dumpCache();
 			
 		Paths.clearStoredMemory();
 		list = CoolUtil.coolTextFile(Paths.txt('data/freeplaySonglist'));

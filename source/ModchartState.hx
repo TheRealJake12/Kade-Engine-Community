@@ -575,22 +575,22 @@ class ModchartState
 
 		Lua_helper.add_callback(lua, "setLaneUnderLayPos", function(value:Int)
 		{
-			PlayState.instance.laneunderlay.x = value;
+			PlayState.laneunderlay.x = value;
 		});
 
 		Lua_helper.add_callback(lua, "setOpponentLaneUnderLayOpponentPos", function(value:Int)
 		{
-			PlayState.instance.laneunderlayOpponent.x = value;
+			PlayState.laneunderlayOpponent.x = value;
 		});
 
 		Lua_helper.add_callback(lua, "setLaneUnderLayAlpha", function(value:Int)
 		{
-			PlayState.instance.laneunderlay.alpha = value;
+			PlayState.laneunderlay.alpha = value;
 		});
 
 		Lua_helper.add_callback(lua, "setOpponentLaneUnderLayOpponentAlpha", function(value:Int)
 		{
-			PlayState.instance.laneunderlayOpponent.alpha = value;
+			PlayState.laneunderlayOpponent.alpha = value;
 		});
 
 		// SHADER SHIT (Thanks old psych engine)
