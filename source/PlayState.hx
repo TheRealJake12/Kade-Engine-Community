@@ -489,10 +489,16 @@ class PlayState extends MusicBeatState
 		}
 
 		#if FEATURE_LUAMODCHART
-		executeModchart = OpenFlAssets.exists(Paths.lua('songs/${PlayState.SONG.songId}/modchart')) && PlayStateChangeables.modchart;
+		executeModchart = FileSystem.exists(Paths.lua('songs/${PlayState.SONG.songId}/modchart')) && PlayStateChangeables.modchart;
 		if (isSM)
-			executeModchart = OpenFlAssets.exists(pathToSm + "/modchart.lua");
+			executeModchart = FileSystem.exists(pathToSm + "/modchart.lua");
 		#end
+		#if !cpp
+		executeModchart = false;
+		#end
+
+		// Use FileSystem on desktop for cool modcharts with no compile :>
+
 		#if !cpp
 		executeModchart = false;
 		#end
@@ -4055,24 +4061,12 @@ class PlayState extends MusicBeatState
 					daNote.visible = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].visible;
 					if (!daNote.isSustainNote)
 						daNote.modAngle = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
-					if (daNote.sustainActive)
-					{
-						if (executeModchart)
-							daNote.alpha = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].alpha;
-					}
-					daNote.modAngle = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
 				}
 				else if (!daNote.wasGoodHit && !daNote.modifiedByLua)
 				{
 					daNote.visible = strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].visible;
 					if (!daNote.isSustainNote)
 						daNote.modAngle = strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
-					if (daNote.sustainActive)
-					{
-						if (executeModchart)
-							daNote.alpha = strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].alpha;
-					}
-					daNote.modAngle = strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
 				}
 
 				//there was some code idk what it did but it fucked with color quantization shit. ik its a feature not many like but I like it.

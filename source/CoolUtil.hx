@@ -3,6 +3,9 @@ package;
 import flixel.FlxG;
 import openfl.utils.Assets as OpenFlAssets;
 import flixel.math.FlxMath;
+#if VIDEOS
+import hxcodec.VideoHandler;
+#end
 
 #if FEATURE_FILESYSTEM
 import sys.io.File;
@@ -133,6 +136,43 @@ class CoolUtil
 			dumbArray.push(i);
 		}
 		return dumbArray;
+	}
+
+	public static var loadingVideos:Array<String> = [];
+	public static var loadedVideos:Array<String> = [];
+
+	public static function precacheVideo(name:String):Void
+	{
+		#if VIDEOS
+		if (OpenFlAssets.exists(Paths.video(name)))
+		{
+			if (!loadedVideos.contains(name))
+			{
+				loadingVideos.push(name);
+				var cache:VideoHandler = new VideoHandler();
+				cache.canUseSound = false;
+				cache.playVideo(Paths.video(name));
+				cache.onOpening = function()
+				{
+					cache.stop();
+					cache.dispose();
+					loadedVideos.push(name);
+					loadingVideos.remove(name);
+				}
+				FlxG.log.add('Video file has been cached: ' + name);
+			}
+			else
+			{
+				FlxG.log.add('Video file has already been cached: ' + name);
+			}
+		}
+		else
+		{
+			FlxG.log.warn('Couldnt find video file: ' + name);
+		}
+		#else
+		FlxG.log.warn('Platform not supported!');
+		#end
 	}
 
 	#if FEATURE_FILESYSTEM

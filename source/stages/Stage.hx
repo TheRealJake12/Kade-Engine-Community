@@ -796,7 +796,6 @@ class Stage extends MusicBeatState
 						if (FlxG.save.data.distractions)
 						{
 							lightningStrikeShit();
-							trace('spooky');
 						}
 					}
 				case 'school':
