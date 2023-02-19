@@ -453,8 +453,6 @@ class AlphaCharacter extends FlxSprite
 		animation.play(letter);
 		updateHitbox();
 
-		FlxG.log.add('the row' + row);
-
 		y = (110 - height);
 		y += row * 60;
 	}

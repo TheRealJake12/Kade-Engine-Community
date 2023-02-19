@@ -191,7 +191,7 @@ class KadeEngineData
 			FlxG.save.data.gpuRender = false;	
 
 		if (FlxG.save.data.fpsmark == null)
-			FlxG.save.data.fpsmark = true;	
+			FlxG.save.data.fpsmark = false;	
 
 		if (FlxG.save.data.borderless == null)
 			FlxG.save.data.borderless = false;	

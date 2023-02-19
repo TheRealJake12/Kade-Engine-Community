@@ -221,6 +221,8 @@ class MainMenuState extends MusicBeatState
 
 			if (FlxG.mouse.overlaps(menuItems, FlxG.camera) && FlxG.mouse.justPressed || controls.ACCEPT)
 			{
+				if (FlxG.save.data.flashing)
+					FlxFlicker.flicker(magenta, 1.1, 0.15, false);
 				if (optionShit[curSelected] == 'donate')
 				{
 					fancyOpenURL("https://ninja-muffin24.itch.io/funkin");

@@ -63,8 +63,6 @@ class ModCore
 			parseRules: buildParseRules(),
 		});
 
-		Debug.logInfo('Mod loading complete. We loaded ${loadedModList.length} / ${ids.length} mods.');
-
 		var fileList = Polymod.listModFiles("IMAGE");
 		for (item in fileList)
 			//Debug.logTrace('  * $item');
@@ -85,7 +83,6 @@ class ModCore
 
 	public static function getModIds():Array<String>
 	{
-		Debug.logInfo('Scanning the mods folder...');
 		var modMetadata = Polymod.scan();
 		//Debug.logInfo('Found ${modMetadata.length} mods when scanning.');
 		var modIds = [for (i in modMetadata) i.id];
@@ -134,8 +131,6 @@ class ModCore
 		// Perform an action based on the error code.
 		switch (error.code)
 		{
-			case MISSING_ICON:
-				Debug.logWarn("No icon?", null);
 			default:
 				// Log the message based on its severity.
 				switch (error.severity)

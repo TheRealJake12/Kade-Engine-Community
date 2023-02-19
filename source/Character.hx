@@ -75,7 +75,7 @@ class Character extends FlxSprite
 	}
 
 	function parseDataFile()
-	{
+	{	if (FlxG.save.data.gen)
 		Debug.logInfo('Generating character (${curCharacter}) from JSON data...');
 
 		// Load the data from JSON and cast it to a struct we can easily read.

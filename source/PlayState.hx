@@ -3328,11 +3328,6 @@ class PlayState extends MusicBeatState
 		if (PlayStateChangeables.botPlay && FlxG.keys.justPressed.ONE)
 			camHUD.visible = !camHUD.visible;
 
-		#if FEATURE_HSCRIPT
-			scripts.setAll('cameraZoom', zoomForTweens);
-			scripts.setAll('hudZoom', camHUD.zoom);
-		#end	
-
 		#if FEATURE_LUAMODCHART
 		if (executeModchart && luaModchart != null && songStarted)
 		{
@@ -3585,9 +3580,7 @@ class PlayState extends MusicBeatState
 						daNote.active = false;
 						daNote.visible = false;
 
-						daNote.kill();
-						notes.remove(daNote, true);
-						daNote.destroy();
+						destroyNote(daNote);
 					}
 				});
 
@@ -4189,8 +4182,7 @@ class PlayState extends MusicBeatState
 									}
 								}
 									daNote.visible = false;
-									daNote.kill();
-									notes.remove(daNote, true);
+									destroyNote(daNote);
 								}
 							}
 
@@ -4200,8 +4192,7 @@ class PlayState extends MusicBeatState
 						{
 						if (daNote.isSustainNote && daNote.wasGoodHit)
 						{
-							daNote.kill();
-							notes.remove(daNote, true);
+									destroyNote(daNote);
 						}
 						else
 						{
@@ -5499,9 +5490,7 @@ class PlayState extends MusicBeatState
 				vocals.volume = 1;
 		}
 		daNote.active = false;
-		daNote.kill();
-		notes.remove(daNote, true);
-		daNote.destroy();
+		destroyNote(daNote);
 	}
 
 	function goodNoteHit(note:Note, resetMashViolation = true):Void
@@ -6087,8 +6076,6 @@ class PlayState extends MusicBeatState
 		script.set("countdown", function() {});
 		script.set("countTick", function(?tick:Int) {});
 		script.set("songMultiplier", songMultiplier);
-		script.set("camHUD", camHUD);
-		script.set("camGame", camGame);
 
 
 		//  SONG FUNCTIONS
@@ -6142,6 +6129,7 @@ class PlayState extends MusicBeatState
 		script.set("camGame", camGame);
 		script.set("camHUD", camHUD);
 		script.set("camFollow", camFollow);
+		script.set("camZoom", zoomForTweens);
 
 		// CHARACTERS
 		script.set("boyfriend", boyfriend);
@@ -6253,7 +6241,7 @@ class PlayState extends MusicBeatState
 		switch (type)
 		{
 			case 'image':
-				Paths.image(target, library);
+				Paths.loadImage(target, library);
 			case 'sound':
 				Paths.sound(target, library);
 			case 'music':

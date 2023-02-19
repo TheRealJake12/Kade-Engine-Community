@@ -43,7 +43,7 @@ using StringTools;
 class FreeplayState extends MusicBeatState
 {
 	public static var songs:Array<FreeplaySongMetadata> = [];
-	public static var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
+	private var camGame:SwagCamera;
 
 	var selector:FlxText;
 
@@ -105,6 +105,7 @@ class FreeplayState extends MusicBeatState
 			Main.dumpCache();
 			
 		Paths.clearStoredMemory();
+		Paths.clearUnusedMemory();
 		list = CoolUtil.coolTextFile(Paths.txt('data/freeplaySonglist'));
 		cached = false;
 
@@ -171,6 +172,8 @@ class FreeplayState extends MusicBeatState
 		#if debug
 		isDebug = true;
 		#end
+
+		camGame = new SwagCamera();
 
 		persistentUpdate = persistentDraw = true;
 
@@ -937,6 +940,7 @@ class FreeplayState extends MusicBeatState
 
 		changeDiff();
 
+		/*
 		var newColor:Int = songs[curSelected].color;
 		if (newColor != intendedColor)
 		{
@@ -952,6 +956,7 @@ class FreeplayState extends MusicBeatState
 				}
 			});
 		}
+		*/
 		var songHighscore = StringTools.replace(songs[curSelected].songName, " ", "-");
 		switch (songHighscore)
 		{

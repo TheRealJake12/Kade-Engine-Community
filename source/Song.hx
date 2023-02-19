@@ -67,7 +67,7 @@ typedef SongMeta =
 
 class Song
 {
-	public static var latestChart:String = "KEC 1.5";
+	public static var latestChart:String = MainMenuState.kecVer;
 
 	public static function loadFromJsonRAW(rawJson:String)
 	{
@@ -150,7 +150,8 @@ class Song
 		}
 		else
 		{
-			Debug.logInfo('Hey, you didn\'t include a _meta.json with your song files (id ${songId}).Won\'t break anything but you should probably add one anyway.');
+			if (FlxG.save.data.gen)
+				Debug.logInfo('Hey, you didn\'t include a _meta.json with your song files (id ${songId}).Won\'t break anything but you should probably add one anyway.');
 		}
 		if (rawMetaJson == null)
 		{

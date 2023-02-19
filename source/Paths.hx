@@ -225,9 +225,10 @@ class Paths
 		return getPath(key + '.json', TEXT, library);
 	}
 
-	static public function sound(key:String, ?library:String)
+	static public function sound(key:String, ?library:String):Sound
 	{
-		return getPath('sounds/$key.$SOUND_EXT', SOUND, library);
+		var sound:Sound = loadSound('sounds', key, library);
+		return sound;
 	}
 
 	inline static public function soundRandom(key:String, min:Int, max:Int, ?library:String)
@@ -266,44 +267,43 @@ class Paths
 
 	#end
 
-	inline static public function music(key:String, ?library:String)
+	inline static public function music(key:String, ?library:String):Any
 	{
-		return getPath('music/$key.$SOUND_EXT', MUSIC, library);
+		var file:Sound = loadSound('music', key, library);
+		return file;
 	}
 
-	inline static public function voices(song:String)
+	inline static public function voices(song:String):Any
 	{
-		var songLowercase = StringTools.replace(song, " ", "-").toLowerCase();
-		switch (songLowercase)
+		var songKey:String = '${formatToSongPath(song)}/Voices';
+		var voices = loadSound('songs', songKey);
+		return voices;
+	}
+
+	inline static public function inst(song:String):Any
+	{
+		var songKey:String = '${formatToSongPath(song)}/Inst';
+		var inst = loadSound('songs', songKey);
+		return inst;
+	}
+
+	public static function loadSound(path:String, key:String, ?library:String)
+	{
+		// I hate this so god damn much
+		var gottenPath:String = getPath('$path/$key.$SOUND_EXT', SOUND, library);
+		gottenPath = gottenPath.substring(gottenPath.indexOf(':') + 1, gottenPath.length);
+		// trace(gottenPath);
+		if (!currentTrackedSounds.exists(gottenPath))
 		{
-			case 'dad-battle':
-				songLowercase = 'dadbattle';
-			case 'philly-nice':
-				songLowercase = 'philly';
-			case 'm.i.l.f':
-				songLowercase = 'milf';
-		}
-		var result = 'songs:assets/songs/${songLowercase}/Voices.$SOUND_EXT';
-		// Return null if the file does not exist.
-		return doesSoundAssetExist(result) ? result : null;
-	}
+			var folder:String = '';
+			if (path == 'songs')
+				folder = 'songs:';
 
-	inline static public function inst(song:String)
-	{
-		var songLowercase = StringTools.replace(song, " ", "-").toLowerCase();
-		switch (songLowercase)
-		{
-			case 'dad-battle':
-				songLowercase = 'dadbattle';
-			case 'philly-nice':
-				songLowercase = 'philly';
-			case 'm.i.l.f':
-				songLowercase = 'milf';
+			currentTrackedSounds.set(gottenPath, OpenFlAssets.getSound(folder + getPath('$path/$key.$SOUND_EXT', SOUND, library)));
 		}
-		return 'songs:assets/songs/${songLowercase}/Inst.$SOUND_EXT';
+		localTrackedAssets.push(gottenPath);
+		return currentTrackedSounds.get(gottenPath);
 	}
-
-	
 
 	static public function listSongsToCache()
 	{
@@ -434,6 +434,8 @@ class Paths
 				}
 			}
 		}
+		Main.gc();
+		//to be safe that NO gc memory is left.
 		}
 		var cache:haxe.ds.Map<String, FlxGraphic> = cast Reflect.field(FlxG.bitmap, "_cache");
 		for (key => graphic in cache)
