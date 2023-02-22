@@ -3876,7 +3876,7 @@ class PlayState extends MusicBeatState
 					paused = true;
 					vocals.stop();
 					inst.stop();
-					if (FlxG.save.data.InstantRespawn || (PlayStateChangeables.opponentMode))
+				if (FlxG.save.data.InstantRespawn || (PlayStateChangeables.opponentMode) || PlayStateChangeables.Optimize)
 					{
 						MusicBeatState.resetState();
 					}
