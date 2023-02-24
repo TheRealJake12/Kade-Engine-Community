@@ -36,6 +36,8 @@ class Note extends FlxSprite
 	public var noteShit:String = 'normal';
 	public var canPlayAnims:Bool = false; // if a note plays the sing animations
 	public var canNoteSplash:Bool = true; // if a note can notesplash on Sick! and Marv!
+	public var causesMisses:Bool = true; // if a note will do noteMiss or something.
+
 	public var luaID:Int = 0;
 
 	public var isAlt:Bool = false;
@@ -123,18 +125,21 @@ class Note extends FlxSprite
 			this.noteData = Std.int(Math.abs(3 - noteData));
 			noteData = Std.int(Math.abs(3 - noteData));
 		}
-
+		
+		// le note shit behaviour
 		switch (noteShit)
 		{
 			case 'hurt':
 				canPlayAnims = false;
 				canNoteSplash = false;
+				causesMisses = false;
 			case 'mustpress':
 				canPlayAnims = false;
 				canNoteSplash = false;
 			default:
 				canPlayAnims = true;
 				canNoteSplash = true;
+				causesMisses = true;
 		}
 
 		var daStage:String = ((PlayState.instance != null && !PlayStateChangeables.Optimize) ? PlayState.Stage.curStage : 'stage');
@@ -154,21 +159,6 @@ class Note extends FlxSprite
 							animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
 							animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
 							animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
-
-							animation.addByPrefix('greenScroll', 'green0');
-							animation.addByPrefix('redScroll', 'red0');
-							animation.addByPrefix('blueScroll', 'blue0');
-							animation.addByPrefix('purpleScroll', 'purple0');
-
-							animation.addByPrefix('purpleholdend', 'pruple end hold');
-							animation.addByPrefix('greenholdend', 'green hold end');
-							animation.addByPrefix('redholdend', 'red hold end');
-							animation.addByPrefix('blueholdend', 'blue hold end');
-
-							animation.addByPrefix('purplehold', 'purple hold piece');
-							animation.addByPrefix('greenhold', 'green hold piece');
-							animation.addByPrefix('redhold', 'red hold piece');
-							animation.addByPrefix('bluehold', 'blue hold piece');
 						}
 					}
 				case 'mustpress':
@@ -178,21 +168,6 @@ class Note extends FlxSprite
 						animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
 						animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
 						animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
-
-						animation.addByPrefix('greenScroll', 'green0');
-						animation.addByPrefix('redScroll', 'red0');
-						animation.addByPrefix('blueScroll', 'blue0');
-						animation.addByPrefix('purpleScroll', 'purple0');
-
-						animation.addByPrefix('purpleholdend', 'pruple end hold');
-						animation.addByPrefix('greenholdend', 'green hold end');
-						animation.addByPrefix('redholdend', 'red hold end');
-						animation.addByPrefix('blueholdend', 'blue hold end');
-
-						animation.addByPrefix('purplehold', 'purple hold piece');
-						animation.addByPrefix('greenhold', 'green hold piece');
-						animation.addByPrefix('redhold', 'red hold piece');
-						animation.addByPrefix('bluehold', 'blue hold piece');
 					}	
 					default:
 					{
