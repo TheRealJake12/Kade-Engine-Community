@@ -2171,9 +2171,9 @@ class PlayState extends MusicBeatState
 		if (!boyfriend.stunned)
 		{
 			if (!PlayStateChangeables.opponentMode)
-				health -= 0.15 * PlayStateChangeables.healthLoss;
+				health -= 0.08 * PlayStateChangeables.healthLoss;
 			else
-				health += 0.15 * PlayStateChangeables.healthLoss;
+				health += 0.08 * PlayStateChangeables.healthLoss;
 
 			if (PlayStateChangeables.skillIssue)
 				if (!PlayStateChangeables.opponentMode)
@@ -4109,9 +4109,9 @@ class PlayState extends MusicBeatState
 									else
 									{
 										if (!PlayStateChangeables.opponentMode)
-											health -= (0.15 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
+											health -= (0.08 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
 										else
-											health += (0.15 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
+											health += (0.08 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
 									}
 
 									//wanted to be a little more clean but fuck I hate lag
@@ -4157,9 +4157,9 @@ class PlayState extends MusicBeatState
 										else
 										{
 											if (!PlayStateChangeables.opponentMode)
-												health -= (0.15 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
+												health -= (0.08 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
 											else
-												health += (0.15 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
+												health += (0.08 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
 										}
 									}
 								}
@@ -4224,15 +4224,10 @@ class PlayState extends MusicBeatState
 									else
 									{
 										if (!PlayStateChangeables.opponentMode)
-											health -= (0.15 * PlayStateChangeables.healthLoss);
+											health -= (0.08 * PlayStateChangeables.healthLoss);
 										else
-											health += (0.15 * PlayStateChangeables.healthLoss);
+											health += (0.08 * PlayStateChangeables.healthLoss);
 									}
-									
-									if (!PlayStateChangeables.opponentMode)
-										health -= (0.15 * PlayStateChangeables.healthLoss);
-									else
-										health += (0.15 * PlayStateChangeables.healthLoss);
 								}
 							}
 						}
@@ -5235,9 +5230,9 @@ class PlayState extends MusicBeatState
 				#end
 
 				if (!PlayStateChangeables.opponentMode)
-					health -= (0.15 * PlayStateChangeables.healthLoss);
+					health -= (0.08 * PlayStateChangeables.healthLoss);
 				else
-					health += (0.15 * PlayStateChangeables.healthLoss);
+					health += (0.08 * PlayStateChangeables.healthLoss);
 
 				updateAccuracy();
 				updateScoreText();
@@ -5344,7 +5339,7 @@ class PlayState extends MusicBeatState
 				updateScoreText();
 				if (!PlayStateChangeables.opponentMode)
 				{
-					health -= .04 * PlayStateChangeables.healthLoss;
+					health -= 0.08 * PlayStateChangeables.healthLoss;
 					if (health <= 0.01)
 					{
 						health = 0.01;
@@ -5352,7 +5347,7 @@ class PlayState extends MusicBeatState
 				}
 				else
 				{
-					health += .04 * PlayStateChangeables.healthLoss;
+					health += 0.08 * PlayStateChangeables.healthLoss;
 					if (health >= 2)
 						health = 2;
 				}
