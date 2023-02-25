@@ -2369,9 +2369,6 @@ class PlayState extends MusicBeatState
 
 	public function generateSong(dataPath:String):Void
 	{
-		notes = new FlxTypedGroup<Note>();
-		add(notes);
-
 		var songData = SONG;
 		Conductor.changeBPM(songData.bpm);
 
@@ -2407,16 +2404,13 @@ class PlayState extends MusicBeatState
 		#end
 
 		inst = new FlxSound().loadEmbedded(Paths.inst(PlayState.SONG.songId));
-		FlxG.sound.list.add(inst);
-
-		FlxG.sound.list.add(vocals);
-
 		inst.pause();
 
 		if(isSM)
 			FlxG.sound.music.pause();
 
-		addSongTiming();
+		FlxG.sound.list.add(inst);
+		FlxG.sound.list.add(vocals);
 
 		if (PlayStateChangeables.skillIssue)
 		{
@@ -2425,14 +2419,16 @@ class PlayState extends MusicBeatState
 			redVignette.cameras = [camHUD];
 			add(redVignette);
 		}
-		
-		Conductor.crochet = ((60 / (SONG.bpm) * 1000));
-		Conductor.stepCrochet = Conductor.crochet / 4;
+
+		addSongTiming();
 
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm * songMultiplier);
 
 		Conductor.bpm = SONG.bpm * songMultiplier;
+
+		Conductor.crochet = ((60 / (SONG.bpm * songMultiplier) * 1000));
+		Conductor.stepCrochet = Conductor.crochet / 4;
 		
 		var timingSeg = TimingStruct.getTimingAtBeat(curDecimalBeat);
 		if (timingSeg != null)
@@ -2486,12 +2482,6 @@ class PlayState extends MusicBeatState
 				else
 					swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, false, null, songNotes[4], daNoteType);
 
-				if ((!gottaHitNote && FlxG.save.data.middleScroll && FlxG.save.data.optimize && !PlayStateChangeables.opponentMode
-					&& !PlayStateChangeables.healthDrain)
-					|| (!gottaHitNote && FlxG.save.data.middleScroll && FlxG.save.data.optimize && PlayStateChangeables.opponentMode
-						&& !PlayStateChangeables.healthDrain))
-					continue;
-
 				if (PlayStateChangeables.holds)
 				{
 					swagNote.sustainLength = TimingStruct.getTimeFromBeat((TimingStruct.getBeatFromTime(songNotes[2] / songMultiplier)));
@@ -2500,11 +2490,11 @@ class PlayState extends MusicBeatState
 				{
 					swagNote.sustainLength = 0;
 				}
+				
 				swagNote.scrollFactor.set(0, 0);
 
-				var susLength:Float = swagNote.sustainLength;
-
-				susLength = susLength / fakeNoteStepCrochet;
+				var susLength:Float = swagNote.sustainLength / fakeNoteStepCrochet;
+				
 				unspawnNotes.push(swagNote);
 
 				swagNote.isAlt = songNotes[3]
@@ -2525,18 +2515,13 @@ class PlayState extends MusicBeatState
 					var sustainNote:Note;
 
 					if (gottaHitNote)
-						sustainNote = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, false,
-							true, null, songNotes[4], daNoteType);
+						sustainNote = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, false,true, null, songNotes[4], daNoteType);
 					else
-						sustainNote = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, false,
-							false, null, songNotes[4], daNoteType);
+						sustainNote = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, false,false, null, songNotes[4], daNoteType);
+
 					sustainNote.scrollFactor.set();
 					unspawnNotes.push(sustainNote);
-					sustainNote.isAlt = songNotes[3]
-							|| ((section.altAnim || section.CPUAltAnim) && !gottaHitNote)
-							|| (section.playerAltAnim && gottaHitNote)
-							|| (PlayStateChangeables.opponentMode && gottaHitNote && (section.altAnim || section.CPUAltAnim))
-							|| (PlayStateChangeables.opponentMode && !gottaHitNote && section.playerAltAnim);
+					sustainNote.isAlt = songNotes[3]|| ((section.altAnim || section.CPUAltAnim) && !gottaHitNote)|| (section.playerAltAnim && gottaHitNote)|| (PlayStateChangeables.opponentMode && gottaHitNote && (section.altAnim || section.CPUAltAnim))|| (PlayStateChangeables.opponentMode && !gottaHitNote && section.playerAltAnim);
 
 					sustainNote.mustPress = gottaHitNote;
 
@@ -2565,9 +2550,7 @@ class PlayState extends MusicBeatState
 
 		generatedMusic = true;
 		if (FlxG.save.data.gen)
-		{
 			Debug.logInfo('Generated Chart');
-		}
 	}
 
 	function sortByShit(Obj1:Note, Obj2:Note):Int
