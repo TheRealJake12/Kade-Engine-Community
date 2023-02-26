@@ -939,24 +939,7 @@ class FreeplayState extends MusicBeatState
 			curSelected = 0;
 
 		changeDiff();
-
-		/*
-		var newColor:Int = songs[curSelected].color;
-		if (newColor != intendedColor)
-		{
-			if (colorTween != null)
-			{
-				colorTween.cancel();
-			}
-			intendedColor = newColor;
-			colorTween = FlxTween.color(bg, 0.5, bg.color, intendedColor, {
-				onComplete: function(twn:FlxTween)
-				{
-					colorTween = null;
-				}
-			});
-		}
-		*/
+		
 		var songHighscore = StringTools.replace(songs[curSelected].songName, " ", "-");
 		switch (songHighscore)
 		{

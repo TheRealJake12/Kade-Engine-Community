@@ -36,7 +36,7 @@ class MainMenuState extends MusicBeatState
 	private var camGame:SwagCamera;
 
 	#if !switch
-	var optionShit:Array<String> = ['story mode', 'freeplay', 'donate', 'options'];
+	var optionShit:Array<String> = ['story mode', 'freeplay', 'donate', 'discord', 'options'];
 	#else
 	var optionShit:Array<String> = ['story mode', 'freeplay'];
 	#end
@@ -62,6 +62,11 @@ class MainMenuState extends MusicBeatState
 		{
 			FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
 			freakyPlaying = true;
+		}
+
+		if (!FlxG.save.data.watermark)
+		{
+			optionShit.remove('discord');
 		}
 
 		camGame = new SwagCamera();
@@ -114,7 +119,7 @@ class MainMenuState extends MusicBeatState
 			var menuItem:FlxSprite = new FlxSprite(0, (i * 140) + offset);
 			menuItem.scale.x = scale;
 			menuItem.scale.y = scale;
-			menuItem.frames = tex;
+			menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[i]);
 			menuItem.animation.addByPrefix('idle', optionShit[i] + " basic", 24);
 			menuItem.animation.addByPrefix('selected', optionShit[i] + " white", 24);
 			menuItem.animation.play('idle');
@@ -122,8 +127,7 @@ class MainMenuState extends MusicBeatState
 			menuItems.add(menuItem);
 			menuItem.scrollFactor.set(0, 0.25);
 			menuItem.antialiasing = FlxG.save.data.antialiasing;
-
-			changeItem();
+			
 			menuItem.x = 120 + (i * 160);
 		}
 
@@ -132,12 +136,13 @@ class MainMenuState extends MusicBeatState
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 		add(versionShit);
 
+		changeItem();
+
 		if (FlxG.save.data.dfjk)
 			controls.setKeyboardScheme(KeyboardScheme.Solo, true);
 		else
 			controls.setKeyboardScheme(KeyboardScheme.Duo(true), true);
-
-		changeItem(0, false);
+		
 		Conductor.changeBPM(102);
 
 		super.create();
@@ -168,12 +173,14 @@ class MainMenuState extends MusicBeatState
 		{
 			if (FlxG.keys.justPressed.UP || controls.UP_P)
 			{
-				changeItem(-1, true);
+				changeItem(-1);
+				FlxG.sound.play(Paths.sound('scrollMenu'));
 			}
 
 			if (FlxG.keys.justPressed.DOWN || controls.DOWN_P)
 			{
-				changeItem(1, true);
+				changeItem(1);
+				FlxG.sound.play(Paths.sound('scrollMenu'));
 			}
 
 			if (controls.BACK || FlxG.mouse.justPressedRight)
@@ -200,6 +207,7 @@ class MainMenuState extends MusicBeatState
 					if (FlxG.mouse.overlaps(daSprite) && curSelected != daSprite.ID)
 					{
 						curSelected = daSprite.ID;
+						FlxG.sound.play(Paths.sound('scrollMenu'));
 						changeItem();
 					}
 				});
@@ -207,7 +215,8 @@ class MainMenuState extends MusicBeatState
 
 			if (FlxG.mouse.wheel != 0)
 			{
-				changeItem(-shiftMult * FlxG.mouse.wheel, true);
+				changeItem(-shiftMult * FlxG.mouse.wheel);
+				FlxG.sound.play(Paths.sound('scrollMenu'));
 			}
 			#end
 
@@ -227,6 +236,10 @@ class MainMenuState extends MusicBeatState
 				{
 					fancyOpenURL("https://ninja-muffin24.itch.io/funkin");
 				}
+				else if(optionShit[curSelected] == 'discord')
+				{
+					fancyOpenURL("https://discord.gg/TKCzG5rVGf");
+				}	
 				else
 				{
 					selectedSomethin = true;
@@ -287,12 +300,9 @@ class MainMenuState extends MusicBeatState
 		}
 	}
 
-	function changeItem(huh:Int = 0, ?sound:Bool = false)
+	function changeItem(huh:Int = 0)
 	{
 		curSelected += huh;
-
-		if (sound = true)
-			FlxG.sound.play(Paths.sound('scrollMenu'));
 
 		if (curSelected >= menuItems.length)
 			curSelected = 0;

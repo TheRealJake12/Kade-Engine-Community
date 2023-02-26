@@ -43,7 +43,7 @@ class MusicBeatState extends FlxUIState
 
 		if (!skip)
 		{
-			openSubState(new CustomFadeTransition(0.7, true));
+			openSubState(new CustomFadeTransition(0.75, true));
 		}
 		FlxTransitionableState.skipNextTransOut = false;
 
@@ -145,13 +145,13 @@ class MusicBeatState extends FlxUIState
 			curDecimalBeat = 0;
 		else
 		{
-			var data = TimingStruct.getTimingAtTimestamp(Conductor.songPosition);
+			var data = null;
+
+			data = TimingStruct.getTimingAtTimestamp(Conductor.songPosition);
 
 			if (data != null)
 			{
 				FlxG.watch.addQuick("Current Conductor Timing Seg", data.bpm);
-
-				Conductor.crochet = ((60 / data.bpm) * 1000) / PlayState.songMultiplier;
 
 				var step = ((60 / data.bpm) * 1000) / 4;
 				var startInMS = (data.startTime * 1000);
@@ -177,6 +177,8 @@ class MusicBeatState extends FlxUIState
 						stepHit();
 					}
 				}
+
+				Conductor.crochet = ((60 / data.bpm) * 1000) / PlayState.songMultiplier;
 			}
 			else
 			{
@@ -250,7 +252,7 @@ class MusicBeatState extends FlxUIState
 		var leState:MusicBeatState = curState;
 		if (!FlxTransitionableState.skipNextTransIn)
 		{
-			leState.openSubState(new CustomFadeTransition(0.3, false));
+			leState.openSubState(new CustomFadeTransition(0.4, false));
 			if (nextState == FlxG.state)
 			{
 				CustomFadeTransition.finishCallback = function()

@@ -72,6 +72,9 @@ class Note extends FlxSprite
 	public var sustainActive:Bool = true;
 
 	public var children:Array<Note> = [];
+
+	public var stepHeight:Float = 0;
+
 	public var distance:Float = 2000;
 
 	#if FEATURE_LUAMODCHART
@@ -323,8 +326,6 @@ class Note extends FlxSprite
 		animation.play(dataColor[noteData] + 'Scroll');
 		originColor = noteData; // The note's origin color will be checked by its sustain notes
 
-		
-
 		if (FlxG.save.data.stepMania && !isSustainNote && !(PlayState.instance != null ? PlayState.instance.executeModchart : false))
 		{
 			var col:Int = 0;
@@ -350,25 +351,23 @@ class Note extends FlxSprite
 			originColor = col;
 
 			if (FlxG.save.data.rotateSprites) //ok honestly who the fuck wanted this. Im keeping it for a challenge but what the fuck
-		{
-			localAngle -= arrowAngles[col];
-			localAngle += arrowAngles[noteData];
-			originAngle = localAngle;
-		}
+			{
+				localAngle -= arrowAngles[col];
+				localAngle += arrowAngles[noteData];
+				originAngle = localAngle;
+			}
 			
 		}
 
-		
-		
-		if (FlxG.save.data.downscroll && sustainNote)
-			flipY = true;
-
-		var stepHeight = (((0.45 * PlayState.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayStateChangeables.scrollSpeed == 1 ? PlayState.SONG.speed : PlayStateChangeables.scrollSpeed,
+		stepHeight = (((0.45 * PlayState.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayStateChangeables.scrollSpeed == 1 ? PlayState.SONG.speed : PlayStateChangeables.scrollSpeed,
 			2));
 
 		if (isSustainNote && prevNote != null)
 		{
 			noteYOff = -stepHeight + swagWidth * 0.5;
+
+			if (FlxG.save.data.downscroll)
+				flipY = true;
 
 			noteScore * 0.2;
 			alpha = FlxG.save.data.alpha;
@@ -407,8 +406,6 @@ class Note extends FlxSprite
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		var stepHeight = (((0.45 * PlayState.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayStateChangeables.scrollSpeed == 1 ? PlayState.SONG.speed : PlayStateChangeables.scrollSpeed,
-			2));
 		var newStepHeight = (((0.45 * PlayState.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayStateChangeables.scrollSpeed == 1 ? PlayState.SONG.speed : PlayStateChangeables.scrollSpeed,2));
 
 		if (stepHeight != newStepHeight)
