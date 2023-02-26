@@ -93,6 +93,7 @@ class Note extends FlxSprite
 
 		this.prevNote = prevNote;
 		isSustainNote = sustainNote;
+		moves = false;
 
 		x += 50;
 		// MAKE SURE ITS DEFINITELY OFF SCREEN?
@@ -180,22 +181,23 @@ class Note extends FlxSprite
 							animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
 							animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
 							animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
-
-							animation.addByPrefix('greenScroll', 'green0');
-							animation.addByPrefix('redScroll', 'red0');
-							animation.addByPrefix('blueScroll', 'blue0');
-							animation.addByPrefix('purpleScroll', 'purple0');
-
-							animation.addByPrefix('purpleholdend', 'pruple end hold');
-							animation.addByPrefix('greenholdend', 'green hold end');
-							animation.addByPrefix('redholdend', 'red hold end');
-							animation.addByPrefix('blueholdend', 'blue hold end');
-
-							animation.addByPrefix('purplehold', 'purple hold piece');
-							animation.addByPrefix('greenhold', 'green hold piece');
-							animation.addByPrefix('redhold', 'red hold piece');
-							animation.addByPrefix('bluehold', 'blue hold piece');
 						}
+						animation.addByPrefix('greenScroll', 'green0');
+						animation.addByPrefix('redScroll', 'red0');
+						animation.addByPrefix('blueScroll', 'blue0');
+						animation.addByPrefix('purpleScroll', 'purple0');
+
+						animation.addByPrefix('purpleholdend', 'pruple end hold');
+						animation.addByPrefix('greenholdend', 'green hold end');
+						animation.addByPrefix('redholdend', 'red hold end');
+						animation.addByPrefix('blueholdend', 'blue hold end');
+
+						animation.addByPrefix('purplehold', 'purple hold piece');
+						animation.addByPrefix('greenhold', 'green hold piece');
+						animation.addByPrefix('redhold', 'red hold piece');
+						animation.addByPrefix('bluehold', 'blue hold piece');
+
+						// For Legacy Noteskins.
 					}
 			}		
 
@@ -279,40 +281,43 @@ class Note extends FlxSprite
 						}
 					}
 
-						case 'mustpress':
-							frames = Paths.getSparrowAtlas("notetypes/type2", 'shared');
-							for (i in 0...4)
-							{
-								animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
-								animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
-								animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
-							}	
+					case 'mustpress':
+						frames = Paths.getSparrowAtlas("notetypes/type2", 'shared');
+						for (i in 0...4)
+						{
+							animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
+							animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
+							animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
+						}	
 					default:
-					if(isPlayer)
-						frames = PlayState.noteskinSprite;
-					else
-						frames = PlayState.cpuNoteskinSprite;	
-								for (i in 0...4)
-								{
-									animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
-									animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
-									animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
+					{
+						if (isPlayer)
+							frames = PlayState.noteskinSprite;
+						else
+							frames = PlayState.cpuNoteskinSprite;
+						for (i in 0...4)
+						{
+							animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
+							animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
+							animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
+						}
+							animation.addByPrefix('greenScroll', 'green0');
+							animation.addByPrefix('redScroll', 'red0');
+							animation.addByPrefix('blueScroll', 'blue0');
+							animation.addByPrefix('purpleScroll', 'purple0');
 
-									animation.addByPrefix('greenScroll', 'green0');
-									animation.addByPrefix('redScroll', 'red0');
-									animation.addByPrefix('blueScroll', 'blue0');
-									animation.addByPrefix('purpleScroll', 'purple0');
+							animation.addByPrefix('purpleholdend', 'pruple end hold');
+							animation.addByPrefix('greenholdend', 'green hold end');
+							animation.addByPrefix('redholdend', 'red hold end');
+							animation.addByPrefix('blueholdend', 'blue hold end');
 
-									animation.addByPrefix('purpleholdend', 'pruple end hold');
-									animation.addByPrefix('greenholdend', 'green hold end');
-									animation.addByPrefix('redholdend', 'red hold end');
-									animation.addByPrefix('blueholdend', 'blue hold end');
+							animation.addByPrefix('purplehold', 'purple hold piece');
+							animation.addByPrefix('greenhold', 'green hold piece');
+							animation.addByPrefix('redhold', 'red hold piece');
+							animation.addByPrefix('bluehold', 'blue hold piece');
 
-									animation.addByPrefix('purplehold', 'purple hold piece');
-									animation.addByPrefix('greenhold', 'green hold piece');
-									animation.addByPrefix('redhold', 'red hold piece');
-									animation.addByPrefix('bluehold', 'blue hold piece');
-								}
+							//For Legacy Noteskins.
+					}	
 				}
 
 				setGraphicSize(Std.int(width * 0.7));
@@ -381,8 +386,6 @@ class Note extends FlxSprite
 			updateHitbox();
 
 			x -= width / 2;
-
-			moves = false;
 
 			// if (noteTypeCheck == 'pixel')
 			//	x += 30;

@@ -393,7 +393,7 @@ class PlayState extends MusicBeatState
 	}
 
 	override public function create()
-	{
+	{	Paths.clearStoredMemory();
 		#if FEATURE_HSCRIPT
 		scripts = new ScriptGroup();
 		scripts.onAddScript.push(onAddScript);
@@ -1026,6 +1026,16 @@ class PlayState extends MusicBeatState
 		{
 			if (SONG.noteStyle == 'pixel')
 				precacheThing('weeb/pixelUI/noteSplashes-pixels', 'image', 'week6');
+			else
+			{
+				switch (FlxG.save.data.notesplash)
+				{
+					case 0:
+						precacheThing('splashes/Default', 'image', 'shared');
+					case 1:
+						precacheThing('splashes/Week7', 'image', 'shared');
+				}
+			}	
 		}
 
 		// Update lane underlay positions AFTER static arrows :)
@@ -1212,6 +1222,8 @@ class PlayState extends MusicBeatState
 			gf.dance();
 		}
 
+		cacheCountdown();
+
 		if (inCutscene)
 			removeStaticArrows();
 
@@ -1271,17 +1283,23 @@ class PlayState extends MusicBeatState
 						#end
 					}	
 				default:
-					startCountdown();
+					createTimer(0.5, function(timer)
+					{
+						startCountdown();
+					});
 			}
 		}
 		else
 		{
-			new FlxTimer().start(1, function(timer)
+			createTimer(0.5, function(timer)
 			{
-				if (!inCutscene)
-					startCountdown();
+				startCountdown();
 			});
 		}
+
+		precacheThing('missnote1', 'sound', 'shared');
+		precacheThing('missnote2', 'sound', 'shared');
+		precacheThing('missnote3', 'sound', 'shared');
 
 		if (!loadRep)
 			rep = new Replay("na");
@@ -1325,20 +1343,15 @@ class PlayState extends MusicBeatState
 		if (!isStoryMode)
 			tankIntroEnd = true;
 
-		if (FlxG.save.data.hitSound != 0)
-			precacheThing("hitsounds/" + HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase(), 'sound', 'shared');	
-
 		precacheThing('alphabet', 'image', null);
 
 		precacheThing('breakfast', 'music', 'shared');
-		if (FlxG.save.data.notesplashes){
-			switch(FlxG.save.data.notesplash){
-				case 0:
-					precacheThing('splashes/Default', 'image', 'shared');
-				case 1:
-					precacheThing('splashes/Week7', 'image', 'shared');	
-			}
-		}
+
+		if (FlxG.save.data.hitSound != 0)
+			precacheThing("hitsounds/" + HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase(), 'sound', 'shared');
+
+		cachePopUpScore();
+
 		#if FEATURE_HSCRIPT
 			scripts.executeAllFunc("createPost");
 		#end
@@ -6172,6 +6185,54 @@ class PlayState extends MusicBeatState
 			case 'music':
 				Paths.music(target, library);
 		}
+	}
+
+	// https://github.com/ShadowMario/FNF-PsychEngine/pull/9015
+	// Seems like a good pull request. Credits: Raltyro.
+	private function cachePopUpScore()
+	{
+		var pixelShitPart1:String = '';
+		var pixelShitPart2:String = '';
+		var pixelShitPart3:String = 'shared';
+		var pixelShitPart4:String = null;
+		if (SONG.noteStyle == 'pixel')
+		{
+			pixelShitPart1 = 'weeb/pixelUI/';
+			pixelShitPart2 = '-pixel';
+			pixelShitPart3 = 'week6';
+			pixelShitPart4 = 'week6';
+		}
+
+		var things:Array<String> = ['sick', 'good', 'bad', 'shit', 'combo'];
+		for (precaching in things)
+			Paths.image(pixelShitPart1 + precaching + pixelShitPart2, pixelShitPart3);
+
+		for (i in 0...10)
+		{
+			Paths.image(pixelShitPart1 + 'num' + i + pixelShitPart2, pixelShitPart4);
+		}
+	}
+
+	function cacheCountdown()
+	{
+		var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
+		introAssets.set('default', ['ready', 'set', 'go']);
+		introAssets.set('pixel', ['weeb/pixelUI/ready-pixel', 'weeb/pixelUI/set-pixel', 'weeb/pixelUI/date-pixel']);
+
+		var week6Bullshit = 'shared';
+		var introAlts:Array<String> = introAssets.get('default');
+		if (SONG.noteStyle == 'pixel')
+		{
+			introAlts = introAssets.get('pixel');
+			week6Bullshit = 'week6';
+		}
+
+		for (asset in introAlts)
+			Paths.image(asset, week6Bullshit);
+
+		var things:Array<String> = ['intro3', 'intro2', 'intro1', 'introGo'];
+		for (precaching in things)
+			Paths.sound(precaching + altSuffix);
 	}
 
 	public static function getFlxEaseByString(?ease:String = '')
