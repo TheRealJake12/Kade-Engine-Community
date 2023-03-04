@@ -61,7 +61,7 @@ class MainMenuState extends MusicBeatState
 		"Jesse! We Need To Cook Crystal Meth! (-TheRealJake_12)",
 		#if windows
 		'${Sys.environment()["USERNAME"]}! Get down from the tree and put your clothes on, dammit. (-Antonella)',
-		#elseif linux | mac
+		#elseif linux || mac
 		'${Sys.environment()["USER"]}! Get down from the tree and put your clothes on, dammit. (-Antonella)',
 		#end
 
