@@ -177,10 +177,20 @@ class MainMenuState extends MusicBeatState
 		}
 
 		logo = new FlxSprite(900,0);
-		logo.frames = Paths.getSparrowAtlas("KECLogoOrange");
+		if (Main.watermarks){
+			logo.frames = Paths.getSparrowAtlas("KECLogoOrange");
+			logo.scale.set(0.7, 0.7);
+		}
+			
+		else
+		{
+			logo.frames = Paths.getSparrowAtlas("KadeEngineLogoBumpin");	
+			logo.x = 800;
+			logo.y = -60;
+			logo.scale.set(0.55, 0.55);
+		}
 		logo.animation.addByPrefix("bump", "logo bumpin", 24);
 		logo.antialiasing = FlxG.save.data.antialiasing;
-		logo.scale.set(0.7, 0.7);
 		logo.updateHitbox();
 		add(logo);
 
