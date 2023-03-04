@@ -105,18 +105,34 @@ class Paths
 	
 	static public function loadJSON(key:String, ?library:String):Dynamic
 	{
-		var rawJson = OpenFlAssets.getText(Paths.json(key, library)).trim();
+		var rawJson = '';
+
+		try
+		{
+			rawJson = OpenFlAssets.getText(Paths.json(key, library)).trim();
+		}
+		catch (e)
+		{
+			Debug.logInfo('Error parsing JSON or JSON does not exit');
+			rawJson = null;
+		}
 
 		// Perform cleanup on files that have bad data at the end.
-		while (!rawJson.endsWith("}"))
+		if (rawJson != null)
 		{
-			rawJson = rawJson.substr(0, rawJson.length - 1);
+			while (!rawJson.endsWith("}"))
+			{
+				rawJson = rawJson.substr(0, rawJson.length - 1);
+			}
 		}
 
 		try
 		{
 			// Attempt to parse and return the JSON data.
-			return Json.parse(rawJson);
+			if (rawJson != null)
+				return Json.parse(rawJson);
+
+			return null;
 		}
 		catch (e)
 		{
@@ -162,10 +178,12 @@ class Paths
 
 	inline static function getLibraryPathForce(file:String, library:String)
 	{
-		return '$library:assets/$library/$file';
+		var returnPath = '$library:assets/$library/$file';
+
+		return returnPath;
 	}
 
-	inline static public function getPreloadPath(file:String)
+	public inline static function getPreloadPath(file:String)
 	{
 		return 'assets/$file';
 	}
@@ -275,16 +293,46 @@ class Paths
 
 	inline static public function voices(song:String):Any
 	{
-		var songKey:String = '${formatToSongPath(song)}/Voices';
-		var voices = loadSound('songs', songKey);
-		return voices;
+		var songLowercase = StringTools.replace(song, " ", "-").toLowerCase() + '/Voices';
+		switch (songLowercase)
+		{
+			case 'dad-battle':
+				songLowercase = 'dadbattle';
+			case 'philly-nice':
+				songLowercase = 'philly';
+			case 'm.i.l.f':
+				songLowercase = 'milf';
+		}
+
+		var file;
+		#if PRELOAD_ALL
+		file = loadSound('songs', songLowercase);
+		#else
+		file = 'songs:assets/songs/$songLowercase.$SOUND_EXT';
+		#end
+		return file;
 	}
 
 	inline static public function inst(song:String):Any
 	{
-		var songKey:String = '${formatToSongPath(song)}/Inst';
-		var inst = loadSound('songs', songKey);
-		return inst;
+		var songLowercase = StringTools.replace(song, " ", "-").toLowerCase() + '/Inst';
+		switch (songLowercase)
+		{
+			case 'dad-battle':
+				songLowercase = 'dadbattle';
+			case 'philly-nice':
+				songLowercase = 'philly';
+			case 'm.i.l.f':
+				songLowercase = 'milf';
+		}
+		var file;
+		#if PRELOAD_ALL
+		file = loadSound('songs', songLowercase);
+		#else
+		file = 'songs:assets/songs/$songLowercase.$SOUND_EXT';
+		#end
+
+		return file;
 	}
 
 	public static function loadSound(path:String, key:String, ?library:String)

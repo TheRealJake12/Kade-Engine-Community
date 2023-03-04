@@ -144,7 +144,6 @@ class OptionsMenu extends MusicBeatSubstate
 				new InstantRespawn("Toggle if you instantly respawn after dying."),
 				new CamZoomOption("Toggle the camera zoom in-game."),
 				// new OffsetMenu("Get a note offset based off of your inputs!"),
-				new ReplayOption("Watch Replays"),
 				new DFJKOption(),
 				new Judgement("Create a custom judgement preset"),
 				new CustomizeGameplay("Drag and drop gameplay modules to your prefered positions!")
@@ -187,6 +186,10 @@ class OptionsMenu extends MusicBeatSubstate
 				new ShowInput("Display every single input on the score screen."),
 			]),
 			new OptionCata(935, 40, "Saves", [
+				#if !web
+				new ReplayOption("Watch Replays"),
+				new SaveReplayOption("Allows Replays To Be Saved When A Song Ends."),
+				#end
 				new ResetScoreOption("Reset your score on all songs and weeks. This is irreversible!"),
 				new LockWeeksOption("Reset your story mode progress. This is irreversible!"),
 				new ResetSettings("Reset ALL your settings. This is irreversible!")
@@ -220,6 +223,7 @@ class OptionsMenu extends MusicBeatSubstate
 			]),
 			new OptionCata(345, 104, "Experamental", [
 				new OldCharter("Uses Kade Engine 1.5.4 Chart System.(HIGH CHANCES OF CRASHING!)"),
+				
 			]),
 			new OptionCata(-1, 155, "Editing Keybinds", [
 				new LeftKeybind("The left note's keybind"),

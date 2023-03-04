@@ -394,6 +394,7 @@ class PlayState extends MusicBeatState
 
 	override public function create()
 	{	Paths.clearStoredMemory();
+	
 		#if FEATURE_HSCRIPT
 		scripts = new ScriptGroup();
 		scripts.onAddScript.push(onAddScript);
@@ -1343,6 +1344,9 @@ class PlayState extends MusicBeatState
 		if (!isStoryMode)
 			tankIntroEnd = true;
 
+		updateAccuracy();
+		updateScoreText();	
+
 		precacheThing('alphabet', 'image', null);
 
 		precacheThing('breakfast', 'music', 'shared');
@@ -2216,6 +2220,7 @@ class PlayState extends MusicBeatState
 			}
 			vocals.volume = 0;
 			updateAccuracy();
+			updateScoreText();
 		}
 	}
 
@@ -4120,11 +4125,7 @@ class PlayState extends MusicBeatState
 								}
 								else
 								{
-									if (!daNote.wasGoodHit
-										&& daNote.isSustainNote
-										&& daNote.sustainActive
-										&& daNote.spotInLine != daNote.parent.children.length
-										&& daNote.causesMisses)
+									if (!daNote.wasGoodHit&& daNote.isSustainNote&& daNote.sustainActive&& daNote.spotInLine != daNote.parent.children.length&& daNote.causesMisses)
 									{
 										// health -= 0.05; // give a health punishment for failing a LN
 										trace("hold fell over at " + daNote.spotInLine);
@@ -4138,11 +4139,12 @@ class PlayState extends MusicBeatState
 											totalNotesHit -= 1;
 										}
 										updateAccuracy();
+										updateScoreText();
 									}
 									else if (!daNote.wasGoodHit && !daNote.isSustainNote && daNote.causesMisses)
 									{
 										updateAccuracy();
-
+										updateScoreText();
 										if (daNote.noteShit == 'mustpress')
 										{
 											if (!PlayStateChangeables.opponentMode)
@@ -4204,11 +4206,13 @@ class PlayState extends MusicBeatState
 										totalNotesHit -= 1;
 									}
 									updateAccuracy();
+									updateScoreText();
 								}
 								else if (!daNote.wasGoodHit && !daNote.isSustainNote && daNote.causesMisses)
 								{
 									//misses++;
 									updateAccuracy();
+									updateScoreText();
 
 									if (daNote.noteShit == 'mustpress')
 									{

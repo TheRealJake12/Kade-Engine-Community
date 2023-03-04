@@ -174,6 +174,7 @@ class FreeplayState extends MusicBeatState
 		#end
 
 		camGame = new SwagCamera();
+		FlxG.cameras.reset(new SwagCamera());
 
 		persistentUpdate = persistentDraw = true;
 

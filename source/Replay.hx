@@ -10,6 +10,8 @@ import haxe.Json;
 import flixel.input.keyboard.FlxKey;
 import openfl.utils.Dictionary;
 
+using StringTools;
+
 class Ana
 {
 	public var hitTime:Float;
@@ -119,12 +121,17 @@ class Replay
 
 		var data:String = Json.stringify(json, null, "");
 
-		var time = Date.now().getTime();
+		var dateNow:String = Date.now().toString();
+		dateNow = dateNow.replace(" ", "_");
+		dateNow = dateNow.replace(":", "'");
 
 		#if FEATURE_FILESYSTEM
-		File.saveContent("assets/replays/replay-" + PlayState.SONG.songId + "-time" + time + ".kadeReplay", data);
+		if (FlxG.save.data.saveReplays)
+		{
+			File.saveContent("assets/replays/replay-" + PlayState.SONG.songId + "-time" + dateNow + ".keReplay", data);
+		}
 
-		path = "replay-" + PlayState.SONG.songId + "-time" + time + ".kadeReplay"; // for score screen shit
+		path = "replay-" + PlayState.SONG.songId + "-time" + dateNow + ".keReplay"; // for score screen shit
 
 		LoadFromJSON();
 

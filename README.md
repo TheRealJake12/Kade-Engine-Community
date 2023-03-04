@@ -1,5 +1,5 @@
 ## **Kade Engine Community**
-![Kade Engine logo](assets/preload/images/KadeEngineLogoOld.png)
+![Kade Engine logo](assets/preload/images/KEClogoO.png)
 
 ![Repo size](https://img.shields.io/github/repo-size/TheRealJake12/Kade-Engine-Community)
 [![GitHub issues](https://img.shields.io/github/issues/TheRealJake12/Kade-Engine-Community)](https://github.com/TheRealJake12/Kade-Engine-Community/issues) 

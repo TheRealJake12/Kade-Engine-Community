@@ -1925,6 +1925,33 @@ class DeleteYourPC extends Option
 		return confirm ? "Confirm Replays Delete." : "Delete Replays?";
 	}
 }
+
+class SaveReplayOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function left():Bool
+	{
+		FlxG.save.data.saveReplays = !FlxG.save.data.saveReplays;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Save Replays: < " + (!FlxG.save.data.saveReplays ? "Disabled" : "Enabled") + " >";
+	}
+}
 #end
 
 class ResetScoreOption extends Option

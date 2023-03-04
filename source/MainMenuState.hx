@@ -20,6 +20,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import lime.app.Application;
 import flixel.input.keyboard.FlxKey;
+import flixel.addons.display.FlxBackdrop;
 import ModCore;
 
 using StringTools;
@@ -33,6 +34,42 @@ class MainMenuState extends MusicBeatState
 	public static var freakyPlaying:Bool;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
+	var colorArray:Array<FlxColor> = [
+		FlxColor.fromRGB(148, 0, 211),
+		FlxColor.fromRGB(75, 0, 130),
+		FlxColor.fromRGB(0, 0, 200),
+		FlxColor.fromRGB(0, 255, 0),
+		FlxColor.fromRGB(200, 160, 0),
+		FlxColor.fromRGB(200, 127, 0),
+		FlxColor.fromRGB(160, 0, 0)
+	];
+
+	public static var textArray:Array<String> = [
+	// thanks bolo, I find these ones really funny (I am sorry for stealing code)
+		"Yeah I use Kade Engine *insert gay fat guy dancing* (-Bolo)",
+		"Kade engine *insert burning PC gif* (-Bolo)",
+		"This is my kingdom cum (-Bolo)",
+		"God i love futabu!! so fucking much (-McChomk)", // God died in vain 💀
+		"Are you really reading this thing? (-Bolo)",
+		"I'm not gay, I'm default :trollface: (-Bolo)",
+		"I love men (-HomoKori)",
+		"Why do I have a pic of Mario with massive tits on my phone? (-Rudy)",
+		"Boner (-Red Radiant)",
+		"My Balls Itch (-TheRealJake_12)",
+		"Sus Sus Amogus (-Mryoyo123YT)",
+		"Man I'm Dead (-TheRealJake_12)",
+		"Jesse! We Need To Cook Crystal Meth! (-TheRealJake_12)",
+		#if windows
+		'${Sys.environment()["USERNAME"]}! Get down from the tree and put your clothes on, dammit. (-Antonella)',
+		#elseif linux | mac
+		'${Sys.environment()["USER"]}! Get down from the tree and put your clothes on, dammit. (-Antonella)',
+		#end
+
+	];
+
+	public var logo:FlxSprite;
+
+	public static var myBalls:FlxText;
 	private var camGame:SwagCamera;
 
 	#if !switch
@@ -41,7 +78,8 @@ class MainMenuState extends MusicBeatState
 	var optionShit:Array<String> = ['story mode', 'freeplay'];
 	#end
 
-	var magenta:FlxSprite;
+	var magenta:FlxBackdrop;
+	var bg:FlxBackdrop;
 	var camFollow:FlxObject;
 	var camFollowPos:FlxObject;
 
@@ -65,10 +103,7 @@ class MainMenuState extends MusicBeatState
 		}
 
 		if (!FlxG.save.data.watermark)
-		{
 			optionShit.remove('discord');
-		}
-
 		camGame = new SwagCamera();
 		
 		transIn = FlxTransitionableState.defaultTransIn;
@@ -77,8 +112,7 @@ class MainMenuState extends MusicBeatState
 		persistentUpdate = persistentDraw = true;
 
 		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
-		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
-		bg.scrollFactor.set(0, yScroll);
+		bg = new FlxBackdrop(Paths.image('menuDesat'), X, 0, 0);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
 		bg.updateHitbox();
 		bg.screenCenter();
@@ -87,15 +121,14 @@ class MainMenuState extends MusicBeatState
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 		camFollowPos = new FlxObject(0, 0, 1, 1);
-		add(camFollow);
-		add(camFollowPos);
+		//add(camFollow);
+		//add(camFollowPos);
 
 		FlxG.cameras.reset(new SwagCamera());
-		FlxG.camera.follow(camFollow, null, 0.06);
+		//FlxG.camera.follow(camFollow, null, 0.06);
 
 
-		magenta = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
-		magenta.scrollFactor.set(0, yScroll);
+		magenta = new FlxBackdrop(Paths.image('menuDesat'), X, 0, 0);
 		magenta.setGraphicSize(Std.int(magenta.width * 1.175));
 		magenta.updateHitbox();
 		magenta.screenCenter();
@@ -103,8 +136,6 @@ class MainMenuState extends MusicBeatState
 		magenta.antialiasing = FlxG.save.data.antialiasing;
 		magenta.color = 0xFFfd719b;
 		add(magenta);
-
-		// magenta.scrollFactor.set();
 
 		menuItems = new FlxTypedGroup<FlxSprite>();
 		add(menuItems);
@@ -116,7 +147,7 @@ class MainMenuState extends MusicBeatState
 		for (i in 0...optionShit.length)
 		{
 			var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
-			var menuItem:FlxSprite = new FlxSprite(0, (i * 140) + offset);
+			var menuItem:FlxSprite = new FlxSprite(0,0);
 			menuItem.scale.x = scale;
 			menuItem.scale.y = scale;
 			menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[i]);
@@ -127,14 +158,39 @@ class MainMenuState extends MusicBeatState
 			menuItems.add(menuItem);
 			menuItem.scrollFactor.set(0, 0.25);
 			menuItem.antialiasing = FlxG.save.data.antialiasing;
-			
-			menuItem.x = 120 + (i * 160);
+
+			switch (i)
+			{
+				case 0:
+					menuItem.setPosition(130, 50);
+				case 1:
+					menuItem.setPosition(300, 185);
+				case 2:
+					menuItem.setPosition(190, 320);
+				case 3:
+					menuItem.setPosition(420, 440);
+				case 4:
+					menuItem.setPosition(600, 570);
+			}
 		}
+
+		logo = new FlxSprite(900,0);
+		logo.frames = Paths.getSparrowAtlas("KECLogoOrange");
+		logo.animation.addByPrefix("bump", "logo bumpin", 24);
+		logo.antialiasing = FlxG.save.data.antialiasing;
+		logo.scale.set(0.7, 0.7);
+		logo.updateHitbox();
+		add(logo);
 
 		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, keVer + (Main.watermarks ? " " + kecVer + "" : ""), 12);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 		add(versionShit);
+
+		myBalls = new FlxText(3, FlxG.height - 35,0, textArray[FlxG.random.int(0, textArray.length - 1)], 12);
+		myBalls.scrollFactor.set();
+		myBalls.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
+		add(myBalls);
 
 		changeItem();
 
@@ -144,6 +200,7 @@ class MainMenuState extends MusicBeatState
 			controls.setKeyboardScheme(KeyboardScheme.Duo(true), true);
 		
 		Conductor.changeBPM(102);
+		tweenColorShit();
 
 		super.create();
 	}
@@ -228,10 +285,11 @@ class MainMenuState extends MusicBeatState
 			}
 			#end
 
+			bg.x += 2;
+			magenta.x += 2;
+
 			if (FlxG.mouse.overlaps(menuItems, FlxG.camera) && FlxG.mouse.justPressed || controls.ACCEPT)
 			{
-				if (FlxG.save.data.flashing)
-					FlxFlicker.flicker(magenta, 1.1, 0.15, false);
 				if (optionShit[curSelected] == 'donate')
 				{
 					fancyOpenURL("https://ninja-muffin24.itch.io/funkin");
@@ -244,6 +302,9 @@ class MainMenuState extends MusicBeatState
 				{
 					selectedSomethin = true;
 					FlxG.sound.play(Paths.sound('confirmMenu'));
+
+					if (FlxG.save.data.flashing)
+						FlxFlicker.flicker(magenta, 1.1, 0.15, false);
 
 					menuItems.forEach(function(spr:FlxSprite)
 					{
@@ -326,5 +387,29 @@ class MainMenuState extends MusicBeatState
 				spr.centerOffsets();
 			}
 		});
+	}
+
+	override function beatHit()
+	{
+		super.beatHit();
+
+		logo.animation.play('bump', true);
+	}	
+
+	function tweenColorShit()
+	{
+		var beforeInt = FlxG.random.int(0, 6);
+		var randomInt = FlxG.random.int(0, 6);
+
+		FlxTween.color(bg, 4, bg.color, colorArray[beforeInt], {
+			onComplete: function(twn)
+			{
+				if (beforeInt != randomInt)
+					beforeInt = randomInt;
+
+				tweenColorShit();
+			}
+		});
+		//thanks bolo lmao
 	}
 }

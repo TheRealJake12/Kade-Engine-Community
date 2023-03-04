@@ -214,6 +214,9 @@ class Debug
 		#else
 		logInfo("This is a RELEASE build.");
 		#end
+		#if !web
+		logInfo('Operating System : ${Sys.systemName()}');
+		#end
 		logInfo('HaxeFlixel version: ${Std.string(FlxG.VERSION)}');
 		logInfo('Kade Engine version: ${MainMenuState.keVer}');
 		logInfo('KEC version: ${MainMenuState.kecVer}');

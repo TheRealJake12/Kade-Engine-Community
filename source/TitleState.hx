@@ -93,7 +93,16 @@ class TitleState extends MusicBeatState
 		add(bg);
 
 		logoBl = new FlxSprite(-150, -1000);
-		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
+		if (Main.watermarks)
+		{
+			logoBl.frames = Paths.getSparrowAtlas('KECLogoOrange');
+			logoBl.x += 125;
+			logoBl.scale.set(1.2, 1.2);
+		}
+		else
+		{
+			logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
+		}
 		logoBl.antialiasing = FlxG.save.data.antialiasing;
 		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24, false);
 		logoBl.updateHitbox();
@@ -355,8 +364,10 @@ class TitleState extends MusicBeatState
 
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 			remove(credGroup);
-
-			FlxTween.tween(logoBl, {y: -100}, 1.4, {ease: FlxEase.expoInOut});
+			if (!Main.watermarks)
+				FlxTween.tween(logoBl, {y: -100}, 1.4, {ease: FlxEase.expoInOut});
+			else
+				FlxTween.tween(logoBl, {y: -30}, 1.4, {ease: FlxEase.expoInOut});
 			FlxTween.tween(gfDance, {x: FlxG.width * 0.4}, 1.4, {ease: FlxEase.expoInOut});
 
 			logoBl.angle = -4;
