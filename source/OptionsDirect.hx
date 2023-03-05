@@ -1,6 +1,7 @@
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.util.FlxColor;
 
 class OptionsDirect extends MusicBeatState
 {
@@ -9,6 +10,8 @@ class OptionsDirect extends MusicBeatState
 		var menuBG:FlxSprite;
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
+
+		FlxG.camera.fade(FlxColor.BLACK, 0.6, true);
 
 		if (FlxG.sound.music.playing)
 		{
