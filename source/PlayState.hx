@@ -1083,10 +1083,12 @@ class PlayState extends MusicBeatState
 			for (i in toBeRemoved)
 				unspawnNotes.remove(i);
 			if (FlxG.save.data.gen)
-			{
-				Debug.logInfo("Removed " + toBeRemoved.length + " cuz of start time");
-			}
+				Debug.logTrace("Removed " + toBeRemoved.length + " cuz of start time");
 		}
+
+		for (i in 0...unspawnNotes.length)
+			if (unspawnNotes[i].strumTime < startTime)
+				unspawnNotes.remove(unspawnNotes[i]);
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 
@@ -3155,20 +3157,12 @@ class PlayState extends MusicBeatState
 		var shit:Float = 3500;
 		if (SONG.speed < 1 || PlayStateChangeables.scrollSpeed < 1)
 			shit /= PlayStateChangeables.scrollSpeed == 1 ? SONG.speed : PlayStateChangeables.scrollSpeed;
-
-		if (unspawnNotes[0] != null)
+		while (unspawnNotes.length > 0 && unspawnNotes[0] != null)
 		{
-			if (unspawnNotes[0].strumTime - Conductor.songPosition < shit * songMultiplier)
+			if (unspawnNotes[0].strumTime - Conductor.songPosition < shit)
 			{
 				var dunceNote:Note = unspawnNotes[0];
-				#if FEATURE_HSCRIPT
-				if (!ScriptUtil.hasPause(scripts.executeAllFunc("spawnNote", [dunceNote])))
-				{
-					notes.add(dunceNote);
-				}
-				#else
 				notes.add(dunceNote);
-				#end
 
 				#if FEATURE_LUAMODCHART
 				if (executeModchart)
@@ -3178,23 +3172,18 @@ class PlayState extends MusicBeatState
 				}
 				#end
 
-				if (executeModchart)
-				{
-					#if FEATURE_LUAMODCHART
-					if (!dunceNote.isSustainNote)
-						dunceNote.cameras = [camNotes];
-					else
-						dunceNote.cameras = [camSustains];
-					#end
-				}
+				if (!dunceNote.isSustainNote)
+					dunceNote.cameras = [camNotes];
 				else
-				{
-					dunceNote.cameras = [camHUD];
-				}
+					dunceNote.cameras = [camSustains];
 
 				var index:Int = unspawnNotes.indexOf(dunceNote);
 				unspawnNotes.splice(index, 1);
 				currentLuaIndex++;
+			}
+			else
+			{
+				break;
 			}
 		}
 		
@@ -3851,13 +3840,16 @@ class PlayState extends MusicBeatState
 		
 		if (camZooming)
 		{
-			var bpmRatio = SONG.bpm / 100;
+			var bpmRatio = Conductor.bpm / 100;
 
 			// this motherfucker fucks me so much.
 			FlxG.camera.zoom = FlxMath.lerp(zoomForTweens, FlxG.camera.zoom,
-				CoolUtil.boundTo(1 - (elapsed * 3.125 * bpmRatio * songMultiplier * zoomMultiplier), 0, 1.1));
+				CoolUtil.boundTo(1 - (elapsed * 3.125 * bpmRatio * songMultiplier * zoomMultiplier), 0, 1));
 			camHUD.zoom = FlxMath.lerp(zoomForHUDTweens, camHUD.zoom,
-				CoolUtil.boundTo(1 - (elapsed * 3.125 * bpmRatio * songMultiplier * zoomMultiplier), 0, 1.1));
+				CoolUtil.boundTo(1 - (elapsed * 3.125 * bpmRatio * songMultiplier * zoomMultiplier), 0, 1));
+			camNotes.zoom = camHUD.zoom;
+			camSustains.zoom = camHUD.zoom;
+			camStrums.zoom = camHUD.zoom;	
 		}
 
 		FlxG.watch.addQuick("curBPM", Conductor.bpm);
@@ -4304,6 +4296,7 @@ class PlayState extends MusicBeatState
 
 	function endSong():Void
 	{
+		camZooming = false;
 		endingSong = true;
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleInput);
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, releaseInput);

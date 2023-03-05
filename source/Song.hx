@@ -168,7 +168,6 @@ class Song
 		var ba = song.bpm;
 
 		var index = 0;
-		trace("conversion stuff " + song.songId + " " + song.notes.length);
 		var convertedStuff:Array<Song.Event> = [];
 
 		if (song.eventObjects == null)
@@ -235,7 +234,6 @@ class Song
 
 			if (i.changeBPM && i.bpm != ba)
 			{
-				trace("converting changebpm for section " + index);
 				ba = i.bpm;
 				song.eventObjects.push(new Song.Event("FNF BPM Change " + index, beat, i.bpm, "BPM Change"));
 			}
@@ -288,8 +286,6 @@ class Song
 
 	public static function loadJson(jsonInput:String, ?folder:String):SongData
 	{
-		trace(jsonInput);
-
 		// pre lowercasing the song name (update)
 		var folderLowercase = StringTools.replace(folder, " ", "-").toLowerCase();
 		switch (folderLowercase)

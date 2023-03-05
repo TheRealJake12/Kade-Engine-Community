@@ -278,8 +278,6 @@ class Main extends Sprite
 			if (focusMusicTween != null)
 				focusMusicTween.cancel();
 			focusMusicTween = FlxTween.tween(FlxG.sound, {volume: newVol}, 0.5);
-			if (FlxG.save.data.gen)
-				Debug.logTrace("Lost Focus");
 
 			if (PlayState.inDaPlay){
 				PlayState.instance.openSubState(new PauseSubState());
@@ -310,9 +308,6 @@ class Main extends Sprite
 		{
 			focused = true;
 		});
-
-		if (FlxG.save.data.gen)
-			Debug.logTrace("Gained Focus");
 
 		// Lower global volume when unfocused
 		if (Type.getClass(FlxG.state) != PlayState)
