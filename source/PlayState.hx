@@ -595,21 +595,13 @@ class PlayState extends MusicBeatState
 		persistentUpdate = true;
 		persistentDraw = true;
 
-		if (SONG == null)
-			SONG = Song.loadFromJson('tutorial', '');
-
-		Conductor.mapBPMChanges(SONG);
-		Conductor.changeBPM(SONG.bpm);
-
-		Conductor.bpm = SONG.bpm;
-		#if FEATURE_HSCRIPT
-			scripts.setAll("bpm", Conductor.bpm);
-		#end
-
 		if (SONG.eventObjects == null)
 		{
-			SONG.eventObjects = [new Song.Event("Init BPM", 0, SONG.bpm, "BPM Change")];
+			SONG.eventObjects = [new Song.Event("Init BPM", 0, SONG.bpm * songMultiplier, "BPM Change")];
 		}
+
+		if (SONG == null)
+			SONG = Song.loadFromJson('tutorial', '');
 
 		// if the song has dialogue, so we don't accidentally try to load a nonexistant file and crash the game
 		if (Paths.doesTextAssetExist(Paths.txt('data/songs/${PlayState.SONG.songId}/dialogue')))
@@ -2366,6 +2358,8 @@ class PlayState extends MusicBeatState
 		Conductor.songPosition = startTime;
 		startTime = 0;
 
+		addSongTiming();
+
 		for (i in 0...unspawnNotes.length)
 			if (unspawnNotes[i].strumTime < startTime)
 				unspawnNotes.remove(unspawnNotes[i]);
@@ -2449,7 +2443,7 @@ class PlayState extends MusicBeatState
 
 		Conductor.crochet = ((60 / (SONG.bpm * songMultiplier) * 1000));
 		Conductor.stepCrochet = Conductor.crochet / 4;
-		
+
 		var timingSeg = TimingStruct.getTimingAtBeat(curDecimalBeat);
 		if (timingSeg != null)
 		{
@@ -3290,12 +3284,14 @@ class PlayState extends MusicBeatState
 
 				if (timingSegBpm != Conductor.bpm)
 				{
-					Conductor.changeBPM(timingSegBpm, false);
+					Conductor.changeBPM(timingSegBpm);
+
 					Conductor.crochet = ((60 / (timingSegBpm) * 1000)) / songMultiplier;
 					Conductor.stepCrochet = Conductor.crochet / 4;
+
+					recalculateAllSectionTimes();
 				}
 			}
-
 			var newScroll = 1.0;
 
 			for (i in SONG.eventObjects)
@@ -3306,11 +3302,11 @@ class PlayState extends MusicBeatState
 						if (i.position <= curDecimalBeat && !pastScrollChanges.contains(i))
 						{
 							pastScrollChanges.push(i);
+							trace("SCROLL SPEED CHANGE to " + i.value);
 							newScroll = i.value;
 						}
 				}
 			}
-
 			if (newScroll != 0)
 				PlayStateChangeables.scrollSpeed *= newScroll;
 		}
@@ -4084,8 +4080,9 @@ class PlayState extends MusicBeatState
 							if (findByTime(daNote.strumTime) != null)
 								totalNotesHit += 1;
 							else
-							{
-								vocals.volume = 0;
+							{	
+								if (daNote.causesMisses)
+									vocals.volume = 0;
 								if (theFunne && !daNote.isSustainNote && daNote.causesMisses)
 								{
 									noteMiss(daNote.noteData, daNote);
@@ -4157,7 +4154,8 @@ class PlayState extends MusicBeatState
 						}
 						else
 						{
-							vocals.volume = 0;
+							if (daNote.causesMisses)
+								vocals.volume = 0;
 							if (theFunne && !daNote.isSustainNote && daNote.causesMisses)
 							{
 								if (PlayStateChangeables.botPlay)
@@ -4273,7 +4271,7 @@ class PlayState extends MusicBeatState
 
 	function recalculateAllSectionTimes()
 	{
-		for (i in 0...SONG.notes.length)
+		for (i in 0...SONG.notes.length) // loops through sections
 		{
 			var section = SONG.notes[i];
 
@@ -4284,9 +4282,9 @@ class PlayState extends MusicBeatState
 			if (currentSeg == null)
 				return;
 
-			var start:Float = (currentBeat - currentSeg.startBeat) / ((currentSeg.bpm) / 60);
+			var start:Float = ((currentBeat - currentSeg.startBeat) / ((currentSeg.bpm) / 60));
 
-			section.startTime = (currentSeg.startTime + start) * 1000;
+			section.startTime = (((currentSeg.startTime + start)) * 1000);
 
 			if (i != 0)
 				SONG.notes[i - 1].endTime = section.startTime;
@@ -6058,7 +6056,7 @@ class PlayState extends MusicBeatState
 
 		script.set("curStep", 0);
 		script.set("curBeat", 0);
-		script.set("bpm", 0);
+		script.set("bpm", Conductor.bpm);
 
 		// OBJECTS
 		script.set("camGame", camGame);
