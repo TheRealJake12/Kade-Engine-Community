@@ -61,6 +61,7 @@ haxelib install hscript
 haxelib install flixel-addons
 haxelib install actuate
 haxelib install hxcpp-debug-server
+haxelib install polymod 1.7.0
 haxelib run lime setup
 haxelib run lime setup flixel
 haxelib run flixel-tools setup
@@ -70,7 +71,6 @@ HaxeFlixel 4.11.0 Breaks some shader shit or something so I went ahead and made 
 (FlxDrawQuadsItem or smth)
 When its finished, you will need to download these like you did with the Libraries above.
 ```cmd
-haxelib git polymod https://github.com/BoloVEVO/polymod.git
 haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
 haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
 haxelib git faxe https://github.com/uhrobots/faxe
