@@ -213,7 +213,7 @@ class MainMenuState extends MusicBeatState
 		else
 			controls.setKeyboardScheme(KeyboardScheme.Duo(true), true);
 
-		Conductor.changeBPM(102);
+		Conductor.changeBPM(102, false);
 		tweenColorShit();
 
 		super.create();

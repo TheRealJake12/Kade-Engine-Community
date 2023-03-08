@@ -2661,6 +2661,7 @@ class PlayState extends MusicBeatState
 				var tex:flixel.graphics.frames.FlxAtlasFrames = Paths.getSparrowAtlas('weeb/pixelUI/noteSplashes-pixels', 'week6');
 				sploosh.frames = tex;
 				sploosh.animation.addByPrefix('splash 0 0', 'note splash 1 purple', 24, false);
+				sploosh.animation.addByPrefix('splash 0 ' + daNote.noteData, 'note splash 1 purple', 24, false);
 				sploosh.animation.addByPrefix('splash 0 1', 'note splash 1  blue', 24, false);
 				sploosh.animation.addByPrefix('splash 0 2', 'note splash 1 green', 24, false);
 				sploosh.animation.addByPrefix('splash 0 3', 'note splash 1 red', 24, false);
@@ -5433,7 +5434,7 @@ class PlayState extends MusicBeatState
 					pressArrow(spr, spr.ID, daNote);
 				});
 
-				if (FlxG.save.data.cpuSplash && daNote.canNoteSplash)
+				if (FlxG.save.data.cpuSplash && daNote.canNoteSplash && !FlxG.save.data.middleScroll)
 				{
 					NoteSplashesSpawnDad(daNote);
 				}

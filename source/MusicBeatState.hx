@@ -143,9 +143,6 @@ class MusicBeatState extends FlxUIState
 
 	override function update(elapsed:Float)
 	{
-		if (curDecimalBeat < 0)
-			curDecimalBeat = 0;
-
 		if (Conductor.songPosition < 0)
 			curDecimalBeat = 0;
 		else
@@ -158,15 +155,29 @@ class MusicBeatState extends FlxUIState
 			{
 				FlxG.watch.addQuick("Current Conductor Timing Seg", data.bpm);
 
+				var step = ((60 / data.bpm) * 1000) / 4;
+				var startInMS = (data.startTime * 1000);
+
 				curDecimalBeat = data.startBeat + ((((Conductor.songPosition / 1000)) - data.startTime) * (data.bpm / 60));
-
-				curBeat = Math.floor(curDecimalBeat);
-				curStep = Math.floor(curDecimalBeat * 4);
-
-				if (oldStep != curStep)
+				var ste:Int = Math.floor(data.startStep + ((Conductor.songPosition) - startInMS) / step);
+				if (ste >= 0)
 				{
-					stepHit();
-					oldStep = curStep;
+					if (ste > curStep)
+					{
+						for (i in curStep...ste)
+						{
+							curStep++;
+							updateBeat();
+							stepHit();
+						}
+					}
+					else if (ste < curStep)
+					{
+						// Song reset?
+						curStep = ste;
+						updateBeat();
+						stepHit();
+					}
 				}
 
 				Conductor.crochet = ((60 / data.bpm) * 1000) / PlayState.songMultiplier;
@@ -174,21 +185,37 @@ class MusicBeatState extends FlxUIState
 			else
 			{
 				curDecimalBeat = (((Conductor.songPosition / 1000))) * (Conductor.bpm / 60);
-
-				curBeat = Math.floor(curDecimalBeat);
-				curStep = Math.floor(curDecimalBeat * 4);
-
-				if (oldStep != curStep)
+				var nextStep:Int = Math.floor((Conductor.songPosition) / Conductor.stepCrochet);
+				if (nextStep >= 0)
 				{
-					stepHit();
-					oldStep = curStep;
+					if (nextStep > curStep)
+					{
+						for (i in curStep...nextStep)
+						{
+							curStep++;
+							updateBeat();
+							stepHit();
+						}
+					}
+					else if (nextStep < curStep)
+					{
+						// Song reset?
+						curStep = nextStep;
+						updateBeat();
+						stepHit();
+					}
 				}
-
 				Conductor.crochet = ((60 / Conductor.bpm) * 1000) / PlayState.songMultiplier;
 			}
 		}
 
 		super.update(elapsed);
+	}
+
+	private function updateBeat():Void
+	{
+		lastBeat = curBeat;
+		curBeat = Math.floor(curStep / 4);
 	}
 
 	public function stepHit():Void
