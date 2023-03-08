@@ -83,7 +83,7 @@ class ModCore
 
 	public static function getModIds():Array<String>
 	{
-		var modMetadata = Polymod.scan(MOD_DIRECTORY);
+		var modMetadata = Polymod.scan();
 		// Debug.logInfo('Found ${modMetadata.length} mods when scanning.');
 		var modIds = [for (i in modMetadata) i.id];
 		return modIds;
