@@ -58,6 +58,10 @@ class Init extends MusicBeatState
 
 		Highscore.load();
 
+		// Gotta run this before any assets get loaded.
+		if (FlxG.save.data.loadMods)
+			ModCore.initialize();
+
         super.create();
 
 		FlxG.autoPause = FlxG.save.data.autoPause;

@@ -1954,6 +1954,35 @@ class SaveReplayOption extends Option
 }
 #end
 
+#if FEATURE_MODCORE
+class CanLoadMods extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function left():Bool
+	{
+		FlxG.save.data.loadMods = !FlxG.save.data.loadMods;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Mod Loading: < " + (!FlxG.save.data.loadMods ? "Disabled" : "Enabled") + " >";
+	}
+}
+#end
+
 class ResetScoreOption extends Option
 {
 	var confirm:Bool = false;

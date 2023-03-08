@@ -93,8 +93,8 @@ class MainMenuState extends MusicBeatState
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
-
-		ModCore.initialize();
+		if (FlxG.save.data.loadMods)
+			ModCore.initialize();
 
 		FlxG.mouse.visible = true;
 
