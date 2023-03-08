@@ -43,6 +43,7 @@ using StringTools;
 class FreeplayState extends MusicBeatState
 {
 	public static var songs:Array<FreeplaySongMetadata> = [];
+
 	private var camGame:SwagCamera;
 
 	var selector:FlxText;
@@ -98,12 +99,11 @@ class FreeplayState extends MusicBeatState
 	public static var list:Array<String> = [];
 
 	override function create()
-	{
-		FlxG.mouse.visible = true;
+	{FlxG.mouse.visible = true;
 		instance = this;
 		if (!FlxG.save.data.gpuRender)
 			Main.dumpCache();
-			
+
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 		list = CoolUtil.coolTextFile(Paths.txt('data/freeplaySonglist'));
@@ -319,7 +319,7 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 		#end
-		
+
 		super.create();
 		Paths.clearUnusedMemory();
 	}
@@ -552,7 +552,7 @@ class FreeplayState extends MusicBeatState
 					changeSelection(-1);
 				#end
 			}
-			
+
 			if (upP || controls.UP_P)
 			{
 				changeSelection(-1);
@@ -628,10 +628,11 @@ class FreeplayState extends MusicBeatState
 					changeDiff(-1);
 				if (FlxG.keys.justPressed.RIGHT || controls.RIGHT_P)
 					changeDiff(1);
-				
-				if (FlxG.mouse.justPressedRight){
+
+				if (FlxG.mouse.justPressedRight)
+				{
 					changeDiff(1);
-				}	
+				}
 			}
 
 			#if desktop
@@ -646,7 +647,7 @@ class FreeplayState extends MusicBeatState
 					MainMenuState.freakyPlaying = false;
 
 					Conductor.changeBPM(hmm.bpm);
-					Conductor.mapBPMChanges(hmm);
+
 					Conductor.bpm = hmm.bpm;
 
 					Paths.clearUnusedMemory();
@@ -795,8 +796,8 @@ class FreeplayState extends MusicBeatState
 
 		if (!MainMenuState.freakyPlaying)
 		{
-
-			if (FlxG.save.data.motion){
+			if (FlxG.save.data.motion)
+			{
 				if (curStep % Math.round(4 * rate) == 0)
 				{
 					iconArray[curSelected].scale.set(1.2, 1.2);
@@ -860,7 +861,7 @@ class FreeplayState extends MusicBeatState
 		{
 			return;
 		}
-		
+
 		PlayState.SONG = currentSongData;
 		PlayState.storyDifficulty = CoolUtil.difficultyArray.indexOf(songs[curSelected].diffs[difficulty]);
 		PlayState.storyWeek = songs[curSelected].week;
@@ -891,16 +892,16 @@ class FreeplayState extends MusicBeatState
 	override function destroy()
 	{
 		super.destroy();
-	}	
+	}
 
 	function changeDiff(change:Int = 0)
 	{
 		curDifficulty += change;
 
 		if (curDifficulty < 0)
-			curDifficulty = songs[curSelected].diffs.length-1;
+			curDifficulty = songs[curSelected].diffs.length - 1;
 		if (curDifficulty >= songs[curSelected].diffs.length)
-			curDifficulty = 0;	
+			curDifficulty = 0;
 
 		updateScoreText();
 		updateDiffCalc();
@@ -940,7 +941,7 @@ class FreeplayState extends MusicBeatState
 			curSelected = 0;
 
 		changeDiff();
-		
+
 		var songHighscore = StringTools.replace(songs[curSelected].songName, " ", "-");
 		switch (songHighscore)
 		{
