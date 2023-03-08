@@ -24,7 +24,7 @@
     {
       "name": "polymod",
       "type": "haxelib",
-      "version": null
+      "version": "1.7.0"
     },
     {
       "name": "linc_luajit",
