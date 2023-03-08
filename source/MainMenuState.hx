@@ -45,7 +45,7 @@ class MainMenuState extends MusicBeatState
 	];
 
 	public static var textArray:Array<String> = [
-	// thanks bolo, I find these ones really funny (I am sorry for stealing code)
+		// thanks bolo, I find these ones really funny (I am sorry for stealing code)
 		"Yeah I use Kade Engine *insert gay fat guy dancing* (-Bolo)",
 		"Kade engine *insert burning PC gif* (-Bolo)",
 		"This is my kingdom cum (-Bolo)",
@@ -66,12 +66,12 @@ class MainMenuState extends MusicBeatState
 		#else
 		'${Sys.environment()["USER"]}! Get down from the tree and put your clothes on, dammit. (-Antonella)',
 		#end
-
 	];
 
 	public var logo:FlxSprite;
 
 	public static var myBalls:FlxText;
+
 	private var camGame:SwagCamera;
 
 	#if !switch
@@ -93,8 +93,11 @@ class MainMenuState extends MusicBeatState
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
+
+		#if FEATURE_MODCORE
 		if (FlxG.save.data.loadMods)
 			ModCore.initialize();
+		#end
 
 		FlxG.mouse.visible = true;
 
@@ -109,7 +112,7 @@ class MainMenuState extends MusicBeatState
 		if (!FlxG.save.data.watermark)
 			optionShit.remove('discord');
 		camGame = new SwagCamera();
-		
+
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
 
@@ -125,12 +128,11 @@ class MainMenuState extends MusicBeatState
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 		camFollowPos = new FlxObject(0, 0, 1, 1);
-		//add(camFollow);
-		//add(camFollowPos);
+		// add(camFollow);
+		// add(camFollowPos);
 
 		FlxG.cameras.reset(new SwagCamera());
-		//FlxG.camera.follow(camFollow, null, 0.06);
-
+		// FlxG.camera.follow(camFollow, null, 0.06);
 
 		magenta = new FlxBackdrop(Paths.image('menuDesat'), X, 0, 0);
 		magenta.setGraphicSize(Std.int(magenta.width * 1.175));
@@ -144,14 +146,12 @@ class MainMenuState extends MusicBeatState
 		menuItems = new FlxTypedGroup<FlxSprite>();
 		add(menuItems);
 
-		var tex = Paths.getSparrowAtlas('FNF_main_menu_assets');
-
 		var scale:Float = 1;
 
 		for (i in 0...optionShit.length)
 		{
 			var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
-			var menuItem:FlxSprite = new FlxSprite(0,0);
+			var menuItem:FlxSprite = new FlxSprite(0, 0);
 			menuItem.scale.x = scale;
 			menuItem.scale.y = scale;
 			menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[i]);
@@ -178,15 +178,15 @@ class MainMenuState extends MusicBeatState
 			}
 		}
 
-		logo = new FlxSprite(900,0);
-		if (Main.watermarks){
+		logo = new FlxSprite(900, 0);
+		if (Main.watermarks)
+		{
 			logo.frames = Paths.getSparrowAtlas("KECLogoOrange");
 			logo.scale.set(0.7, 0.7);
 		}
-			
 		else
 		{
-			logo.frames = Paths.getSparrowAtlas("KadeEngineLogoBumpin");	
+			logo.frames = Paths.getSparrowAtlas("KadeEngineLogoBumpin");
 			logo.x = 800;
 			logo.y = -60;
 			logo.scale.set(0.55, 0.55);
@@ -201,7 +201,7 @@ class MainMenuState extends MusicBeatState
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 		add(versionShit);
 
-		myBalls = new FlxText(3, FlxG.height - 35,0, textArray[FlxG.random.int(0, textArray.length - 1)], 12);
+		myBalls = new FlxText(3, FlxG.height - 35, 0, textArray[FlxG.random.int(0, textArray.length - 1)], 12);
 		myBalls.scrollFactor.set();
 		myBalls.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 		add(myBalls);
@@ -212,7 +212,7 @@ class MainMenuState extends MusicBeatState
 			controls.setKeyboardScheme(KeyboardScheme.Solo, true);
 		else
 			controls.setKeyboardScheme(KeyboardScheme.Duo(true), true);
-		
+
 		Conductor.changeBPM(102);
 		tweenColorShit();
 
@@ -283,7 +283,7 @@ class MainMenuState extends MusicBeatState
 						changeItem();
 					}
 				});
-			} 
+			}
 
 			if (FlxG.mouse.wheel != 0)
 			{
@@ -291,7 +291,6 @@ class MainMenuState extends MusicBeatState
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 			}
 			#end
-
 
 			#if debug
 			if (FlxG.keys.justPressed.SEVEN)
@@ -309,10 +308,10 @@ class MainMenuState extends MusicBeatState
 				{
 					fancyOpenURL("https://ninja-muffin24.itch.io/funkin");
 				}
-				else if(optionShit[curSelected] == 'discord')
+				else if (optionShit[curSelected] == 'discord')
 				{
 					fancyOpenURL("https://discord.gg/TKCzG5rVGf");
-				}	
+				}
 				else
 				{
 					selectedSomethin = true;
@@ -409,7 +408,7 @@ class MainMenuState extends MusicBeatState
 		super.beatHit();
 
 		logo.animation.play('bump', true);
-	}	
+	}
 
 	function tweenColorShit()
 	{
@@ -425,6 +424,6 @@ class MainMenuState extends MusicBeatState
 				tweenColorShit();
 			}
 		});
-		//thanks bolo lmao
+		// thanks bolo lmao
 	}
 }

@@ -1,6 +1,5 @@
 package;
 
-import Conductor.BPMChangeEvent;
 import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
 import flixel.math.FlxRect;
@@ -25,11 +24,14 @@ class MusicBeatState extends FlxUIState
 
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
+
 	private var curDecimalBeat:Float = 0;
+
 	public static var currentColor = 0;
 	public static var switchingState:Bool = false;
 
 	private var assets:Array<FlxBasic> = [];
+
 	public static var initSave:Bool = false;
 
 	private var controls(get, never):Controls;
@@ -62,7 +64,8 @@ class MusicBeatState extends FlxUIState
 
 	public function clean()
 	{
-		if (FlxG.save.data.unload){
+		if (FlxG.save.data.unload)
+		{
 			#if FEATURE_MULTITHREADING
 			for (i in MasterObjectLoader.Objects)
 			{
@@ -74,7 +77,7 @@ class MusicBeatState extends FlxUIState
 				remove(i);
 			}
 			#end
-		}	
+		}
 	}
 
 	public function destroyObject(Object:Dynamic):Void
@@ -118,8 +121,6 @@ class MusicBeatState extends FlxUIState
 		#end
 	}
 
-	
-
 	override function add(Object:FlxBasic):FlxBasic
 	{
 		if (Std.isOfType(Object, FlxUI))
@@ -138,9 +139,13 @@ class MusicBeatState extends FlxUIState
 		return result;
 	}
 
+	var oldStep:Int = 0;
 
 	override function update(elapsed:Float)
 	{
+		if (curDecimalBeat < 0)
+			curDecimalBeat = 0;
+
 		if (Conductor.songPosition < 0)
 			curDecimalBeat = 0;
 		else
@@ -153,29 +158,15 @@ class MusicBeatState extends FlxUIState
 			{
 				FlxG.watch.addQuick("Current Conductor Timing Seg", data.bpm);
 
-				var step = ((60 / data.bpm) * 1000) / 4;
-				var startInMS = (data.startTime * 1000);
-
 				curDecimalBeat = data.startBeat + ((((Conductor.songPosition / 1000)) - data.startTime) * (data.bpm / 60));
-				var ste:Int = Math.floor(data.startStep + ((Conductor.songPosition) - startInMS) / step);
-				if (ste >= 0)
+
+				curBeat = Math.floor(curDecimalBeat);
+				curStep = Math.floor(curDecimalBeat * 4);
+
+				if (oldStep != curStep)
 				{
-					if (ste > curStep)
-					{
-						for (i in curStep...ste)
-						{
-							curStep++;
-							updateBeat();
-							stepHit();
-						}
-					}
-					else if (ste < curStep)
-					{
-						// Song reset?
-						curStep = ste;
-						updateBeat();
-						stepHit();
-					}
+					stepHit();
+					oldStep = curStep;
 				}
 
 				Conductor.crochet = ((60 / data.bpm) * 1000) / PlayState.songMultiplier;
@@ -183,53 +174,21 @@ class MusicBeatState extends FlxUIState
 			else
 			{
 				curDecimalBeat = (((Conductor.songPosition / 1000))) * (Conductor.bpm / 60);
-				var nextStep:Int = Math.floor((Conductor.songPosition) / Conductor.stepCrochet);
-				if (nextStep >= 0)
+
+				curBeat = Math.floor(curDecimalBeat);
+				curStep = Math.floor(curDecimalBeat * 4);
+
+				if (oldStep != curStep)
 				{
-					if (nextStep > curStep)
-					{
-						for (i in curStep...nextStep)
-						{
-							curStep++;
-							updateBeat();
-							stepHit();
-						}
-					}
-					else if (nextStep < curStep)
-					{
-						// Song reset?
-						curStep = nextStep;
-						updateBeat();
-						stepHit();
-					}
+					stepHit();
+					oldStep = curStep;
 				}
+
 				Conductor.crochet = ((60 / Conductor.bpm) * 1000) / PlayState.songMultiplier;
 			}
 		}
 
 		super.update(elapsed);
-	}
-
-	private function updateBeat():Void
-	{
-		lastBeat = curBeat;
-		curBeat = Math.floor(curStep / 4);
-	}
-
-	private function updateCurStep():Int
-	{
-		var lastChange:BPMChangeEvent = {
-			stepTime: 0,
-			songTime: 0,
-			bpm: 0
-		}
-		for (i in 0...Conductor.bpmChangeMap.length)
-		{
-			if (Conductor.songPosition >= Conductor.bpmChangeMap[i].songTime)
-				lastChange = Conductor.bpmChangeMap[i];
-		}
-
-		return lastChange.stepTime + Math.floor((Conductor.songPosition - lastChange.songTime) / Conductor.stepCrochet);
 	}
 
 	public function stepHit():Void

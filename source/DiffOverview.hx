@@ -1,6 +1,5 @@
 package;
 
-import Conductor.BPMChangeEvent;
 import flixel.FlxCamera;
 import flixel.math.FlxRect;
 import Song.SongData;
@@ -75,8 +74,6 @@ class DiffOverview extends FlxSubState
 		blackBox = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		blackBox.alpha = 0;
 		add(blackBox);
-
-		FreeplayState.openedPreview = true;
 
 		handOne = DiffCalc.lastDiffHandOne;
 		handTwo = DiffCalc.lastDiffHandTwo;
@@ -184,22 +181,6 @@ class DiffOverview extends FlxSubState
 	public var currentStep = 0;
 	public var oldStep = 0;
 
-	private function updateCurStep():Void
-	{
-		var lastChange:BPMChangeEvent = {
-			stepTime: 0,
-			songTime: 0,
-			bpm: 0
-		}
-		for (i in 0...Conductor.bpmChangeMap.length)
-		{
-			if (Conductor.songPosition >= Conductor.bpmChangeMap[i].songTime)
-				lastChange = Conductor.bpmChangeMap[i];
-		}
-
-		currentStep = lastChange.stepTime + Math.floor((Conductor.songPosition - lastChange.songTime) / Conductor.stepCrochet);
-	}
-
 	function stepHit()
 	{
 		if (FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
@@ -234,8 +215,6 @@ class DiffOverview extends FlxSubState
 
 		if (stopDoingShit)
 			return;
-
-		updateCurStep();
 
 		if (oldStep != currentStep && currentStep > 0)
 			stepHit();
@@ -368,8 +347,6 @@ class DiffOverview extends FlxSubState
 		FlxTween.tween(offset, {alpha: 0}, 1, {ease: FlxEase.expoInOut});
 
 		vocals.fadeOut();
-
-		FreeplayState.openedPreview = false;
 	}
 
 	var vocals:FlxSound;
@@ -477,7 +454,6 @@ class DiffOverview extends FlxSubState
 
 		unspawnNotes.sort(sortByShit);
 
-		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
 
 		FlxG.sound.playMusic(Paths.inst(SONG.songId), 1, false);
