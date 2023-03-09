@@ -3502,6 +3502,7 @@ class PlayState extends MusicBeatState
 		{
 			LoadingState.loadAndSwitchState(new AnimationDebug(dad.curCharacter));
 			PlayState.stageTesting = false;
+			inDaPlay = false;
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleInput);
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, releaseInput);
 			#if FEATURE_LUAMODCHART
@@ -3552,6 +3553,7 @@ class PlayState extends MusicBeatState
 		{
 			MusicBeatState.switchState(new AnimationDebug(boyfriend.curCharacter));
 			PlayState.stageTesting = false;
+			inDaPlay = false;
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleInput);
 			FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, releaseInput);
 			#if FEATURE_LUAMODCHART

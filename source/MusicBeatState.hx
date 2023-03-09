@@ -143,6 +143,9 @@ class MusicBeatState extends FlxUIState
 
 	override function update(elapsed:Float)
 	{
+		if (curDecimalBeat < 0)
+			curDecimalBeat = 0;
+
 		if (Conductor.songPosition < 0)
 			curDecimalBeat = 0;
 		else

@@ -45,6 +45,7 @@ class FreeplayState extends MusicBeatState
 	public static var songs:Array<FreeplaySongMetadata> = [];
 
 	private var camGame:SwagCamera;
+	var lerpSelected:Float = 0;
 
 	var selector:FlxText;
 
@@ -188,13 +189,15 @@ class FreeplayState extends MusicBeatState
 		for (i in 0...songs.length)
 		{
 			var songFixedName = StringTools.replace(songs[i].songName, "-", " ");
-			songText = new Alphabet(0, (70 * i) + 30, songFixedName, true, false, true);
-			songText.isMenuItem = true;
+			songText = new Alphabet(90, 320, songFixedName, true);
 			songText.targetY = i;
 			grpSongs.add(songText);
 
 			icon = new HealthIcon(songs[i].songCharacter);
 			icon.sprTracker = songText;
+
+			songText.visible = songText.active = songText.isMenuItem = false;
+			icon.visible = icon.active = false;
 
 			// using a FlxGroup is too much fuss!
 			iconArray.push(icon);
@@ -264,6 +267,7 @@ class FreeplayState extends MusicBeatState
 			curSelected = 0;
 		bg.color = songs[curSelected].color;
 		intendedColor = bg.color;
+		lerpSelected = curSelected;
 
 		if (!openMod)
 		{
@@ -319,6 +323,8 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 		#end
+
+		updateTexts();
 
 		super.create();
 		Paths.clearUnusedMemory();
@@ -491,8 +497,6 @@ class FreeplayState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		super.update(elapsed);
-
 		Conductor.songPosition = FlxG.sound.music.time * rate;
 
 		if (FlxG.sound.music.volume < 0.7)
@@ -563,17 +567,6 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 		previewtext.text = "Rate: " + FlxMath.roundDecimal(rate, 2) + "x";
-
-		if (!MainMenuState.freakyPlaying)
-		{
-			var bpmRatio = Conductor.bpm / 100;
-
-			var mult:Float = FlxMath.lerp(1, iconArray[curSelected].scale.x, CoolUtil.boundTo(1 - (elapsed * 35 * rate), 0, 1));
-			iconArray[curSelected].scale.set(mult, mult);
-
-			iconArray[curSelected].updateHitbox();
-		}
-
 		previewtext.alpha = 1;
 
 		if (FlxG.keys.justPressed.CONTROL && !openMod && !MusicBeatState.switchingState)
@@ -751,7 +744,7 @@ class FreeplayState extends MusicBeatState
 
 			for (item in grpSongs.members)
 				if (accepted
-					|| (((FlxG.mouse.overlaps(item) && item.targetY == 0) || (FlxG.mouse.overlaps(iconArray[curSelected])))
+					|| (((FlxG.mouse.overlaps(item) && item.targetY == curSelected) || (FlxG.mouse.overlaps(iconArray[curSelected])))
 						&& FlxG.mouse.pressed))
 				{
 					loadSong();
@@ -783,6 +776,10 @@ class FreeplayState extends MusicBeatState
 			for (item in grpSongs.members)
 				item.alpha = 0;
 		}
+
+		updateTexts(elapsed);
+		super.update(elapsed);
+
 	}
 
 	override function beatHit()
@@ -793,19 +790,6 @@ class FreeplayState extends MusicBeatState
 	override function stepHit()
 	{
 		super.stepHit();
-
-		if (!MainMenuState.freakyPlaying)
-		{
-			if (FlxG.save.data.motion)
-			{
-				if (curStep % Math.round(4 * rate) == 0)
-				{
-					iconArray[curSelected].scale.set(1.2, 1.2);
-
-					iconArray[curSelected].updateHitbox();
-				}
-			}
-		}
 	}
 
 	function loadAnimDebug(dad:Bool = true)
@@ -982,17 +966,12 @@ class FreeplayState extends MusicBeatState
 		{
 			if (!openMod && !MusicBeatState.switchingState)
 			{
-				item.targetY = bullShit - curSelected;
 				bullShit++;
 
 				item.alpha = 0.6;
-				// item.setGraphicSize(Std.int(item.width * 0.8));
 
-				if (item.targetY == 0)
-				{
+				if (item.targetY == curSelected)
 					item.alpha = 1;
-					// item.setGraphicSize(Std.int(item.width));
-				}
 			}
 		}
 	}
@@ -1011,6 +990,34 @@ class FreeplayState extends MusicBeatState
 			diffCalcText.alpha = 0.5;
 			diffText.alpha = 0.5;
 			diffCalcText.text = 'RATING: N/A';
+		}
+	}
+
+	var _drawDistance:Int = 4;
+	var _lastVisibles:Array<Int> = [];
+
+	public function updateTexts(elapsed:Float = 0.0)
+	{
+		lerpSelected = FlxMath.lerp(lerpSelected, curSelected, CoolUtil.boundTo(elapsed * 9.6, 0, 1));
+		for (i in _lastVisibles)
+		{
+			grpSongs.members[i].visible = grpSongs.members[i].active = false;
+			iconArray[i].visible = iconArray[i].active = false;
+		}
+		_lastVisibles = [];
+
+		var min:Int = Math.round(Math.max(0, Math.min(songs.length, lerpSelected - _drawDistance)));
+		var max:Int = Math.round(Math.max(0, Math.min(songs.length, lerpSelected + _drawDistance)));
+		for (i in min...max)
+		{
+			var item:Alphabet = grpSongs.members[i];
+			item.visible = item.active = true;
+			item.x = ((item.targetY - lerpSelected) * item.distancePerItem.x) + item.startPosition.x;
+			item.y = ((item.targetY - lerpSelected) * 1.3 * item.distancePerItem.y) + item.startPosition.y;
+
+			var icon:HealthIcon = iconArray[i];
+			icon.visible = icon.active = true;
+			_lastVisibles.push(i);
 		}
 	}
 }

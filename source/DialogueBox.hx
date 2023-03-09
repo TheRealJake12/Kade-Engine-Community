@@ -152,7 +152,7 @@ class DialogueBox extends FlxSpriteGroup
 		swagDialogue.sounds = [FlxG.sound.load(Paths.sound('pixelText'), 0.6)];
 		add(swagDialogue);
 
-		dialogue = new Alphabet(0, 80, "", false, true);
+		dialogue = new Alphabet(0, 80, "", false);
 		// dialogue.x = 90;
 		// add(dialogue);
 	}
