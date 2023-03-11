@@ -47,9 +47,8 @@ class Character extends FlxSprite
 		curCharacter = character;
 		this.isPlayer = isPlayer;
 		healthIcon = curCharacter;
-		
+
 		parseDataFile();
-		
 
 		if (isPlayer && frames != null)
 		{
@@ -75,8 +74,9 @@ class Character extends FlxSprite
 	}
 
 	function parseDataFile()
-	{	if (FlxG.save.data.gen)
-		Debug.logInfo('Generating character (${curCharacter}) from JSON data...');
+	{
+		if (FlxG.save.data.gen)
+			Debug.logInfo('Generating character (${curCharacter}) from JSON data...');
 
 		// Load the data from JSON and cast it to a struct we can easily read.
 		var jsonData = Paths.loadJSON('characters/${curCharacter}');
@@ -252,8 +252,8 @@ class Character extends FlxSprite
 		{
 			if (!FlxG.save.data.optimize)
 			{
-
-				if (curCharacter != 'pico-speaker'){
+				if (curCharacter != 'pico-speaker')
+				{
 					if (animation.curAnim != null)
 					{
 						var canInterrupt = animInterrupt.get(animation.curAnim.name);
@@ -382,7 +382,6 @@ typedef CharacterData =
 	var startingAnim:String;
 
 	var ?healthicon:String;
-
 	var ?charPos:Array<Int>;
 	var ?camPos:Array<Int>;
 	var ?camFollow:Array<Int>;
@@ -401,7 +400,6 @@ typedef CharacterData =
 	 * Whether we use HEX or RGB for coloring.
 	 */
 	var ?barType:String;
-
 
 	var animations:Array<AnimationData>;
 

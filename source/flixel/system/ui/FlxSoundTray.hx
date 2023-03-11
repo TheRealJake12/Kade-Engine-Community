@@ -78,7 +78,7 @@ class FlxSoundTray extends Sprite
 	public function new()
 	{
 		super();
-		
+
 		visible = false;
 		scaleX = _defaultScale;
 		scaleY = _defaultScale;

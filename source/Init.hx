@@ -13,11 +13,12 @@ import sys.thread.Mutex;
 
 class Init extends MusicBeatState
 {
-    override function create(){
+	override function create()
+	{
 		#if FEATURE_MULTITHREADING
 		MasterObjectLoader.mutex = new Mutex();
 		#end
-        #if windows
+		#if windows
 		CPPInterface.darkMode();
 		#end
 		#if FEATURE_FILESYSTEM
@@ -27,12 +28,12 @@ class Init extends MusicBeatState
 
 		if (FlxG.save.data.fpsCap > 420)
 			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(420);
-		
+
 		FlxG.mouse.load(Paths.oldImage('curser'));
 
 		FlxG.save.bind('kec' #if (flixel < "5.0.0"), 'therealjake12' #end);
 
-        PlayerSettings.init();
+		PlayerSettings.init();
 
 		KadeEngineData.initSave();
 
@@ -48,8 +49,8 @@ class Init extends MusicBeatState
 
 		FlxG.sound.muteKeys = [FlxKey.fromString(Std.string(FlxG.save.data.muteBind))];
 		FlxG.sound.volumeDownKeys = [FlxKey.fromString(Std.string(FlxG.save.data.volDownBind))];
-		FlxG.sound.volumeUpKeys = [FlxKey.fromString(Std.string(FlxG.save.data.volUpBind))];	
-		
+		FlxG.sound.volumeUpKeys = [FlxKey.fromString(Std.string(FlxG.save.data.volUpBind))];
+
 		FlxG.worldBounds.set(0, 0);
 
 		FlxGraphic.defaultPersist = true;
@@ -62,12 +63,14 @@ class Init extends MusicBeatState
 		if (FlxG.save.data.loadMods)
 			ModCore.initialize();
 
-        super.create();
+		super.create();
 
 		FlxG.autoPause = FlxG.save.data.autoPause;
 		FlxG.mouse.visible = true;
-    }
-    override function update(elapsed:Float){
+	}
+
+	override function update(elapsed:Float)
+	{
 		if (FlxG.save.data.fpsCap > 420)
 			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(420);
 
@@ -107,6 +110,6 @@ class Init extends MusicBeatState
 
 		(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
 
-        FlxG.switchState(new TitleState());
-    }
+		FlxG.switchState(new TitleState());
+	}
 }

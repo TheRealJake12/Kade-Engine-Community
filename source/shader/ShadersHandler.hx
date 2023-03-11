@@ -8,6 +8,5 @@ class ShadersHandler
 {
 	public static var fxaa:ShaderFilter = new ShaderFilter(new FXAAShader());
 
-	public static var time: Float = 0.0;
-	
+	public static var time:Float = 0.0;
 }

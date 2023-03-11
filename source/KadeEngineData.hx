@@ -14,7 +14,7 @@ class KadeEngineData
 
 		if (FlxG.save.data.downscroll == null)
 			FlxG.save.data.downscroll = false;
-	
+
 		if (FlxG.save.data.antialiasing == null)
 			FlxG.save.data.antialiasing = true;
 
@@ -113,13 +113,13 @@ class KadeEngineData
 			FlxG.save.data.cacheImages = false;
 
 		if (FlxG.save.data.cacheCharacters == null)
-			FlxG.save.data.cacheCharacters = false;	
+			FlxG.save.data.cacheCharacters = false;
 
 		if (FlxG.save.data.healthBar == null)
 			FlxG.save.data.healthBar = true;
 
 		if (FlxG.save.data.popup == null)
-			FlxG.save.data.popup = true;	
+			FlxG.save.data.popup = true;
 
 		if (FlxG.save.data.middleScroll == null)
 			FlxG.save.data.middleScroll = false;
@@ -128,10 +128,10 @@ class KadeEngineData
 			FlxG.save.data.editor = false;
 
 		if (FlxG.save.data.noteskin == null)
-			FlxG.save.data.noteskin = 0;	
+			FlxG.save.data.noteskin = 0;
 
 		if (FlxG.save.data.cpuNotesplash == null)
-			FlxG.save.data.cpuNotesplash = 0;	
+			FlxG.save.data.cpuNotesplash = 0;
 
 		if (FlxG.save.data.zoom == null)
 			FlxG.save.data.zoom = 1;
@@ -149,16 +149,16 @@ class KadeEngineData
 			FlxG.save.data.sickMs = 35.0;
 
 		if (FlxG.save.data.marvMs == null)
-			FlxG.save.data.marvMs = 20.0;	
+			FlxG.save.data.marvMs = 20.0;
 
 		Ratings.timingWindows = [
 			FlxG.save.data.shitMs,
 			FlxG.save.data.badMs,
 			FlxG.save.data.goodMs,
 			FlxG.save.data.sickMs
-		];	
-			
-		//custom shit	
+		];
+
+		// custom shit
 
 		if (FlxG.save.data.mem == null)
 			FlxG.save.data.mem = false;
@@ -172,9 +172,9 @@ class KadeEngineData
 		if (FlxG.save.data.cpuSplash == null)
 			FlxG.save.data.cpuSplash = true;
 
-		if (FlxG.save.data.cpuNoteskin == null)		
+		if (FlxG.save.data.cpuNoteskin == null)
 			FlxG.save.data.cpuNoteskin = 0;
-			
+
 		if (FlxG.save.data.cacheSongs == null)
 			FlxG.save.data.cacheSongs = false;
 
@@ -182,33 +182,33 @@ class KadeEngineData
 			FlxG.save.data.unload = true;
 
 		if (FlxG.save.data.oldcharter == null)
-			FlxG.save.data.oldcharter = false;	
+			FlxG.save.data.oldcharter = false;
 
 		if (FlxG.save.data.motion == null)
 			FlxG.save.data.motion = false;
 
 		if (FlxG.save.data.gpuRender == null)
-			FlxG.save.data.gpuRender = false;	
+			FlxG.save.data.gpuRender = false;
 
 		if (FlxG.save.data.fpsmark == null)
-			FlxG.save.data.fpsmark = false;	
+			FlxG.save.data.fpsmark = false;
 
 		if (FlxG.save.data.borderless == null)
-			FlxG.save.data.borderless = false;	
-			
+			FlxG.save.data.borderless = false;
+
 		if (FlxG.save.data.rateStack == null)
 			FlxG.save.data.rateStack = true;
 
 		if (FlxG.save.data.resolution == null)
-			FlxG.save.data.resolution = 5;			
+			FlxG.save.data.resolution = 5;
 
 		if (FlxG.save.data.alpha == null)
 			FlxG.save.data.alpha = 0.6;
-			
+
 		if (FlxG.save.data.laneTransparency == null)
 			FlxG.save.data.laneTransparency = 0;
 
-		//credits to bolovevo. real chad		
+		// credits to bolovevo. real chad
 
 		if (FlxG.save.data.hgain == null)
 			FlxG.save.data.hgain = 1;
@@ -235,17 +235,17 @@ class KadeEngineData
 			FlxG.save.data.opponent = false;
 
 		if (FlxG.save.data.mirror == null)
-			FlxG.save.data.mirror = false;	
+			FlxG.save.data.mirror = false;
 		#if web
 		if (FlxG.save.data.stressMP4 == null)
 			FlxG.save.data.stressMP4 = false;
 		#else
 		if (FlxG.save.data.stressMP4 == null)
-			FlxG.save.data.stressMP4 = true;	
+			FlxG.save.data.stressMP4 = true;
 
 		if (FlxG.save.data.stressMP4 == false)
-			FlxG.save.data.stressMP4 = true;	
-		#end	
+			FlxG.save.data.stressMP4 = true;
+		#end
 
 		if (FlxG.save.data.background == null)
 			FlxG.save.data.background = true;
@@ -263,13 +263,13 @@ class KadeEngineData
 			FlxG.save.data.autoPause = false;
 
 		if (FlxG.save.data.showState == null)
-			FlxG.save.data.showState = false;	
+			FlxG.save.data.showState = false;
 
 		if (FlxG.save.data.saveReplays == null)
-			FlxG.save.data.saveReplays = false;	
+			FlxG.save.data.saveReplays = false;
 
 		if (FlxG.save.data.loadMods == null)
-			FlxG.save.data.loadMods = true;	
+			FlxG.save.data.loadMods = true;
 
 		if (FlxG.save.data.volume != null)
 		{
@@ -282,10 +282,10 @@ class KadeEngineData
 
 		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
 
-		KeyBinds.gamepad = gamepad != null;	
+		KeyBinds.gamepad = gamepad != null;
 
-		//if (FlxG.save.data.volume == null)
-			//FlxG.save.data.volume = 1;	
+		// if (FlxG.save.data.volume == null)
+		// FlxG.save.data.volume = 1;
 		Conductor.recalculateTimings();
 		PlayerSettings.player1.controls.loadKeyBinds();
 

@@ -61,6 +61,7 @@ class GameplayCustomizeState extends MusicBeatState
 	public static var freeplayStage:String = 'stage';
 	public static var freeplaySong:String = 'bopeebo';
 	public static var freeplayWeek:Int = 1;
+
 	public override function create()
 	{
 		Paths.clearStoredMemory();
@@ -426,7 +427,7 @@ class GameplayCustomizeState extends MusicBeatState
 			babyArrow.scrollFactor.set();
 
 			babyArrow.ID = i;
-			
+
 			playerStrums.add(babyArrow);
 
 			babyArrow.playAnim('static');
@@ -435,7 +436,6 @@ class GameplayCustomizeState extends MusicBeatState
 
 			if (FlxG.save.data.middleScroll)
 				babyArrow.x -= 300;
-			
 
 			strumLineNotes.add(babyArrow);
 		}

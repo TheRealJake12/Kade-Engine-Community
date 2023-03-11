@@ -1,5 +1,4 @@
-dpackage managers;
-
+dpackagemanagers;
 import flixel.util.FlxColor;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;

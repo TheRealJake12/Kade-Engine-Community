@@ -1,4 +1,3 @@
-
 #if FEATURE_MULTITHREADING
 import flixel.FlxG;
 import flixel.FlxSprite;

@@ -55,7 +55,7 @@ class StageDebugState extends MusicBeatState
 
 	override function create()
 	{
-		//perf.Destroyer.clearStoredMemory();
+		// perf.Destroyer.clearStoredMemory();
 		FlxG.sound.music.stop();
 		FlxG.mouse.visible = true;
 

@@ -755,7 +755,7 @@ class InstantRespawn extends Option
 		super();
 		description = desc;
 	}
-	
+
 	public override function left():Bool
 	{
 		FlxG.save.data.InstantRespawn = !FlxG.save.data.InstantRespawn;
@@ -1373,7 +1373,6 @@ class AccuracyDOption extends Option
 	}
 }
 
-
 class CustomizeGameplay extends Option
 {
 	public function new(desc:String)
@@ -1681,7 +1680,6 @@ class RotateSpritesOption extends Option
 		return "Rotate Sprites: < " + (FlxG.save.data.rotateSprites ? "Disabled" : "Enabled") + " >";
 	}
 }
-
 
 class NoteskinOption extends Option
 {
@@ -2468,8 +2466,6 @@ class CPUNotesplashOption extends Option
 	}
 }
 
-
-
 class RatingPopup extends Option
 {
 	public function new(desc:String)
@@ -2781,7 +2777,7 @@ class Resolution extends Option
 	{
 		FlxG.resizeWindow(intToMode(FlxG.save.data.resolution)[0], intToMode(FlxG.save.data.resolution)[1]);
 		FlxG.resizeGame(intToMode(FlxG.save.data.resolution)[0], intToMode(FlxG.save.data.resolution)[1]);
-			
+
 		display = updateDisplay();
 		return true;
 	}
@@ -2797,7 +2793,7 @@ class Resolution extends Option
 
 	override function getValue():String
 	{
-		return "Resolution <" + intToMode(FlxG.save.data.resolution)[0] + 'x' + intToMode(FlxG.save.data.resolution)[1]+ " >";
+		return "Resolution <" + intToMode(FlxG.save.data.resolution)[0] + 'x' + intToMode(FlxG.save.data.resolution)[1] + " >";
 	}
 
 	private override function updateDisplay():String
@@ -2834,7 +2830,7 @@ class Resolution extends Option
 			return false;
 
 		FlxG.save.data.resolution += 1;
-		//Debug.logTrace("Current Resolution == " + FlxG.save.data.resolution);
+		// Debug.logTrace("Current Resolution == " + FlxG.save.data.resolution);
 
 		return true;
 	}
@@ -2977,7 +2973,7 @@ class ResetSettings extends Option
 		FlxG.save.data.optimize = null;
 		FlxG.save.data.editor = null;
 		FlxG.save.data.laneTransparency = 0;
-		//custom shit
+		// custom shit
 		FlxG.save.data.hitsound = null;
 		FlxG.save.data.notesplashes = null;
 		FlxG.save.data.cacheCharacters = null;
@@ -3012,4 +3008,3 @@ class ResetSettings extends Option
 		return confirm ? "Confirm Settings Reset" : "Reset Settings";
 	}
 }
-

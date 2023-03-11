@@ -68,7 +68,7 @@ class TitleState extends MusicBeatState
 			Debug.logInfo('Hello.');
 
 		super.create();
-		
+
 		#if !cpp
 		new FlxTimer().start(1, function(tmr:FlxTimer)
 		{
@@ -124,8 +124,8 @@ class TitleState extends MusicBeatState
 		titleText.updateHitbox();
 		add(titleText);
 
-		//FlxTween.tween(logoBl, {y: logoBl.y + 50}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG});
-		//FlxTween.tween(logo, {y: logoBl.y + 50}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG, startDelay: 0.1});
+		// FlxTween.tween(logoBl, {y: logoBl.y + 50}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG});
+		// FlxTween.tween(logo, {y: logoBl.y + 50}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG, startDelay: 0.1});
 
 		credGroup = new FlxGroup();
 		add(credGroup);
@@ -143,7 +143,7 @@ class TitleState extends MusicBeatState
 		add(ngSpr);
 		ngSpr.visible = false;
 		ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));
-		ngSpr.scale.set(0.6,0.6);
+		ngSpr.scale.set(0.6, 0.6);
 		ngSpr.updateHitbox();
 		ngSpr.screenCenter(X);
 		ngSpr.antialiasing = FlxG.save.data.antialiasing;
@@ -206,7 +206,7 @@ class TitleState extends MusicBeatState
 				titleText.animation.play('press');
 				FlxG.camera.flash(FlxColor.WHITE, 1);
 			}
-			
+
 			FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
 
 			transitioning = true;
@@ -375,7 +375,7 @@ class TitleState extends MusicBeatState
 				if (logoBl.angle == 4)
 					FlxTween.angle(logoBl, logoBl.angle, -4, 4, {ease: FlxEase.quartInOut});
 			}, 0);
-			
+
 			FlxG.sound.music.time = 9400; // 9.4 seconds
 
 			skippedIntro = true;

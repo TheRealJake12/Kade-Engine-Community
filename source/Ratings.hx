@@ -19,6 +19,7 @@ class Ratings
 		return comboranking;
 		// WIFE TIME :)))) (based on Wife3)
 	}
+
 	public static function GenerateLetterRank(accuracy:Float)
 	{
 		var letterRanking:String = "";

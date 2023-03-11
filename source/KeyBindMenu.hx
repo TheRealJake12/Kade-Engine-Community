@@ -32,12 +32,21 @@ class KeyBindMenu extends FlxSubState
 	var keyText:Array<String> = [
 		"LEFT", "DOWN", "UP", "RIGHT", "PAUSE", "RESET", "MUTE", "VOLUME UP", "VOLUME DOWN", "FULLSCREEN", "CHANGE NOTETYPE 1", "CHANGE NOTETYPE 2"
 	];
-	var defaultKeys:Array<String> = ["A", "S", "W", "D", "ENTER", "R", "NUMPADZERO", "NUMPADMINUS", "NUMPADPLUS", "F", "Z", "X"];
+	var defaultKeys:Array<String> = [
+		"A", "S", "W", "D", "ENTER", "R", "NUMPADZERO", "NUMPADMINUS", "NUMPADPLUS", "F", "Z", "X"
+	];
 	var defaultGpKeys:Array<String> = ["DPAD_LEFT", "DPAD_DOWN", "DPAD_UP", "DPAD_RIGHT", "START", "SELECT"];
 	var curSelected:Int = 0;
 
 	var keys:Array<String> = [
-		FlxG.save.data.leftBind, FlxG.save.data.downBind, FlxG.save.data.upBind, FlxG.save.data.rightBind, FlxG.save.data.pauseBind, FlxG.save.data.resetBind, FlxG.save.data.CNT1Bind,FlxG.save.data.CNT2Bind
+		FlxG.save.data.leftBind,
+		FlxG.save.data.downBind,
+		FlxG.save.data.upBind,
+		FlxG.save.data.rightBind,
+		FlxG.save.data.pauseBind,
+		FlxG.save.data.resetBind,
+		FlxG.save.data.CNT1Bind,
+		FlxG.save.data.CNT2Bind
 	];
 
 	var tempKey:String = "";
@@ -67,14 +76,14 @@ class KeyBindMenu extends FlxSubState
 
 		blackBox = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(blackBox);
-		
+
 		infoText.scrollFactor.set(0, 0);
 		infoText.setFormat("VCR OSD Mono", 24, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		infoText.borderSize = 3;
 		infoText.borderQuality = 1;
 		infoText.alpha = 0;
 		infoText.screenCenter(FlxAxes.X);
-		//add(infoText);
+		// add(infoText);
 		add(keyTextDisplay);
 
 		blackBox.alpha = 0;
@@ -93,10 +102,8 @@ class KeyBindMenu extends FlxSubState
 
 	override function update(elapsed:Float)
 	{
-
 		if (frames <= 10)
 			frames++;
-		
 
 		switch (state)
 		{
@@ -171,7 +178,7 @@ class KeyBindMenu extends FlxSubState
 	function textUpdate()
 	{
 		keyTextDisplay.text = "\n\n";
-		
+
 		{
 			for (i in 0...4)
 			{
@@ -204,7 +211,7 @@ class KeyBindMenu extends FlxSubState
 		FlxG.save.data.rightBind = keys[3];
 		FlxG.save.data.pauseBind = keys[4];
 		FlxG.save.data.resetBind = keys[5];
-		
+
 		FlxG.save.data.CNT1Bind = keys[10];
 		FlxG.save.data.CNT2Bind = keys[11];
 

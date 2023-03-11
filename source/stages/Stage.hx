@@ -23,8 +23,8 @@ class Stage extends MusicBeatState
 	public var tankGround:FlxSprite;
 	public var tankmanRun:FlxTypedGroup<TankmenBG>;
 	public var foregroundSprites:FlxTypedGroup<TankBGSprite>;
-	public static var instance:Stage = null;
 
+	public static var instance:Stage = null;
 
 	public var camZoom:Float; // The zoom of the camera to have at the start of the game
 	public var hideLastBG:Bool = false; // True = hide last BGs and show ones from slowBacks on certain step, False = Toggle visibility of BGs from SlowBacks on certain step
@@ -69,14 +69,15 @@ class Stage extends MusicBeatState
 	public function new(daStage:String)
 	{
 		super();
-		
+
 		this.curStage = daStage;
 		camZoom = 1.05; // Don't change zoom here, unless you want to change zoom of every stage that doesn't have custom one
 
-		if (!FlxG.save.data.optimize && FlxG.save.data.background){
-		switch (daStage)
+		if (!FlxG.save.data.optimize && FlxG.save.data.background)
 		{
-			case 'halloween':
+			switch (daStage)
+			{
+				case 'halloween':
 					{
 						if (FlxG.save.data.distractions)
 						{
@@ -523,7 +524,7 @@ class Stage extends MusicBeatState
 							dummyGf.animation.addByPrefix('idle', 'GF Dancing at Gunpoint', 24, false);
 							dummyGf.animation.play('idle');
 							swagBacks['dummyGf'] = dummyGf;
-								layInFront[2].push(dummyGf);
+							layInFront[2].push(dummyGf);
 
 							var gfCutscene:FlxSprite = new FlxSprite(200, 85);
 							gfCutscene.antialiasing = FlxG.save.data.antialiasing;
@@ -540,7 +541,7 @@ class Stage extends MusicBeatState
 							picoCutscene.frames = Paths.getTextureAtlas('cutscenes/stressPico', 'week7');
 							picoCutscene.animation.addByPrefix('anim', 'Pico Badass', 24, false);
 							picoCutscene.visible = false;
-							
+
 							toAdd.push(picoCutscene);
 
 							var bfCutscene:FlxSprite = new FlxSprite(815, 500);
@@ -549,8 +550,7 @@ class Stage extends MusicBeatState
 							bfCutscene.animation.addByPrefix('idle', 'BF idle dance', 24, false);
 							bfCutscene.animation.play('idle', true);
 							swagBacks['bfCutscene'] = bfCutscene;
-								layInFront[2].push(bfCutscene);
-
+							layInFront[2].push(bfCutscene);
 						}
 
 						var tankman:FlxSprite = new FlxSprite();
@@ -568,7 +568,8 @@ class Stage extends MusicBeatState
 						tankman.frames = Paths.getSparrowAtlas('cutscenes/' + PlayState.SONG.songId, 'week7');
 						tankman.antialiasing = FlxG.save.data.antialiasing;
 						swagBacks['tankman'] = tankman;
-						if (!FlxG.save.data.stressMP4){
+						if (!FlxG.save.data.stressMP4)
+						{
 							layInFront[2].push(tankman);
 						}
 					}
@@ -674,7 +675,7 @@ class Stage extends MusicBeatState
 							swagBacks['stageCurtains'] = stageCurtains;
 							toAdd.push(stageCurtains);
 						}
-					}	
+					}
 
 				default:
 					{

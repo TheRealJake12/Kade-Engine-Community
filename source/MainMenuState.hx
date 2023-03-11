@@ -93,6 +93,7 @@ class MainMenuState extends MusicBeatState
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
+		Conductor.changeBPM(102, false);
 
 		#if FEATURE_MODCORE
 		if (FlxG.save.data.loadMods)
@@ -194,7 +195,6 @@ class MainMenuState extends MusicBeatState
 		logo.animation.addByPrefix("bump", "logo bumpin", 24);
 		logo.antialiasing = FlxG.save.data.antialiasing;
 		logo.updateHitbox();
-		add(logo);
 
 		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, keVer + (Main.watermarks ? " " + kecVer + "" : ""), 12);
 		versionShit.scrollFactor.set();
@@ -205,6 +205,7 @@ class MainMenuState extends MusicBeatState
 		myBalls.scrollFactor.set();
 		myBalls.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 		add(myBalls);
+		add(logo);
 
 		changeItem();
 
@@ -213,7 +214,6 @@ class MainMenuState extends MusicBeatState
 		else
 			controls.setKeyboardScheme(KeyboardScheme.Duo(true), true);
 
-		Conductor.changeBPM(102, false);
 		tweenColorShit();
 
 		super.create();

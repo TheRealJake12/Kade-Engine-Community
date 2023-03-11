@@ -6,7 +6,6 @@ import flixel.math.FlxMath;
 #if VIDEOS
 import hxcodec.VideoHandler;
 #end
-
 #if FEATURE_FILESYSTEM
 import sys.io.File;
 import Sys;
@@ -176,7 +175,6 @@ class CoolUtil
 	}
 
 	#if FEATURE_FILESYSTEM
-
 	public static function findFilesInPath(path:String, extns:Array<String>, ?filePath:Bool = false, ?deepSearch:Bool = true):Array<String>
 	{
 		var files:Array<String> = [];

@@ -385,7 +385,7 @@ class DebugLogWriter
 
 		var logFilePath = '$LOG_FOLDER/Debug Log ${dateNow}.txt';
 
-		//updates in seconds which is annoying and unreadable
+		// updates in seconds which is annoying and unreadable
 
 		// Make sure that the path exists
 		if (logFilePath.indexOf("/") != -1)

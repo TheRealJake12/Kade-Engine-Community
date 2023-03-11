@@ -77,9 +77,9 @@ class OutdatedSubState extends MusicBeatState
 		mom.borderStyle = FlxTextBorderStyle.OUTLINE;
 		mom.screenCenter();
 
-		//6% chance of MOM appearing instead of KEC
+		// 6% chance of MOM appearing instead of KEC
 		if (FlxG.random.bool(6))
-		//YOU KNOW WHO ELSE IS OUTDATED? MY MOM!
+			// YOU KNOW WHO ELSE IS OUTDATED? MY MOM!
 		{
 			remove(txt);
 

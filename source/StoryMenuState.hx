@@ -141,7 +141,7 @@ class StoryMenuState extends MusicBeatState
 	{
 		#if desktop
 		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
-		#end	
+		#end
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 
@@ -183,7 +183,7 @@ class StoryMenuState extends MusicBeatState
 		add(grpWeekText);
 
 		grpLocks = new FlxTypedGroup<FlxSprite>();
-		//add(grpLocks);
+		// add(grpLocks);
 
 		var blackBarThingie:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 56, FlxColor.BLACK);
 		add(blackBarThingie);
@@ -210,7 +210,6 @@ class StoryMenuState extends MusicBeatState
 			lock.antialiasing = FlxG.save.data.antialiasing;
 			grpLocks.add(lock);
 		}
-	
 
 		grpWeekCharacters.add(new MenuCharacter(0, 100, 0.5, false));
 		grpWeekCharacters.add(new MenuCharacter(450, 25, 0.9, true));
@@ -241,7 +240,6 @@ class StoryMenuState extends MusicBeatState
 		rightArrow.animation.play('idle');
 		rightArrow.antialiasing = FlxG.save.data.antialiasing;
 		difficultySelectors.add(rightArrow);
-
 
 		add(yellowBG);
 		add(grpWeekCharacters);
@@ -294,7 +292,6 @@ class StoryMenuState extends MusicBeatState
 		{
 			if (!selectedWeek)
 			{
-
 				if (FlxG.keys.justPressed.UP || controls.UP_P)
 				{
 					changeWeek(-1);
@@ -326,9 +323,10 @@ class StoryMenuState extends MusicBeatState
 				selectWeek();
 			}
 
-			if (FlxG.mouse.justPressedRight){
-					changeDifficulty(1);
-				}	
+			if (FlxG.mouse.justPressedRight)
+			{
+				changeDifficulty(1);
+			}
 
 			if (FlxG.mouse.wheel != 0)
 			{
@@ -362,41 +360,41 @@ class StoryMenuState extends MusicBeatState
 
 	function selectWeek()
 	{
-			if (stopspamming == false)
-			{
-				FlxG.sound.play(Paths.sound('confirmMenu'));
+		if (stopspamming == false)
+		{
+			FlxG.sound.play(Paths.sound('confirmMenu'));
 
-				grpWeekText.members[curWeek].startFlashing();
-				grpWeekCharacters.members[1].animation.play('bfConfirm');
-				stopspamming = true;
-			}
+			grpWeekText.members[curWeek].startFlashing();
+			grpWeekCharacters.members[1].animation.play('bfConfirm');
+			stopspamming = true;
+		}
 
-			PlayState.storyPlaylist = weekData()[curWeek];
-			PlayState.isStoryMode = true;
-			selectedWeek = true;
-			PlayState.songMultiplier = 1;
+		PlayState.storyPlaylist = weekData()[curWeek];
+		PlayState.isStoryMode = true;
+		selectedWeek = true;
+		PlayState.songMultiplier = 1;
 
-			PlayState.isSM = false;
+		PlayState.isSM = false;
 
-			PlayState.storyDifficulty = curDifficulty;
-			
-			var diff:String = '-${diffsThatExists[PlayState.storyDifficulty]}';
-			if (diff == '-normal')
-				diff = '';
-			
-			PlayState.marvs = 0;
-			PlayState.sicks = 0;
-			PlayState.bads = 0;
-			PlayState.shits = 0;
-			PlayState.goods = 0;
-			PlayState.campaignMisses = 0;
-			PlayState.SONG = Song.conversionChecks(Song.loadFromJson(PlayState.storyPlaylist[0], diff));
-			PlayState.storyWeek = curWeek;
-			PlayState.campaignScore = 0;
-			new FlxTimer().start(1, function(tmr:FlxTimer)
-			{
-				LoadingState.loadAndSwitchState(new PlayState(), true);
-			});
+		PlayState.storyDifficulty = curDifficulty;
+
+		var diff:String = '-${diffsThatExists[PlayState.storyDifficulty]}';
+		if (diff == '-normal')
+			diff = '';
+
+		PlayState.marvs = 0;
+		PlayState.sicks = 0;
+		PlayState.bads = 0;
+		PlayState.shits = 0;
+		PlayState.goods = 0;
+		PlayState.campaignMisses = 0;
+		PlayState.SONG = Song.conversionChecks(Song.loadFromJson(PlayState.storyPlaylist[0], diff));
+		PlayState.storyWeek = curWeek;
+		PlayState.campaignScore = 0;
+		new FlxTimer().start(1, function(tmr:FlxTimer)
+		{
+			LoadingState.loadAndSwitchState(new PlayState(), true);
+		});
 	}
 
 	function changeDifficulty(change:Int = 0):Void
@@ -516,7 +514,8 @@ class StoryMenuState extends MusicBeatState
 
 	function unloadAssets():Void
 	{
-		if (FlxG.save.data.unload){
+		if (FlxG.save.data.unload)
+		{
 			for (asset in trackedAssets)
 			{
 				remove(asset);

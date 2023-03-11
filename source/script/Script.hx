@@ -58,8 +58,12 @@ class Script extends FlxBasic
 
 		interacter = new Interact(this);
 
-		set("new", function() {});
-		set("destroy", function() {});
+		set("new", function()
+		{
+		});
+		set("destroy", function()
+		{
+		});
 		set("update", (elapsed:Float) -> {});
 
 		set("trace", Reflect.makeVarArgs(function(_)

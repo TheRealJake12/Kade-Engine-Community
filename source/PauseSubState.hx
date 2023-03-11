@@ -123,8 +123,8 @@ class PauseSubState extends MusicBeatSubstate
 
 	override function update(elapsed:Float)
 	{
-		//if (pauseMusic.volume < 0.5)
-			//pauseMusic.volume += 0.01 * elapsed;
+		// if (pauseMusic.volume < 0.5)
+		// pauseMusic.volume += 0.01 * elapsed;
 
 		super.update(elapsed);
 
@@ -191,18 +191,18 @@ class PauseSubState extends MusicBeatSubstate
 					MusicBeatState.resetState();
 				case 'Change Difficulty':
 					menuItems = difficultyChoices;
-					regenMenu();	
+					regenMenu();
 				case "EASY" | 'NORMAL' | "HARD":
 					PlayState.SONG = Song.loadFromJson(PlayState.SONG.songId.toLowerCase(), CoolUtil.suffixDiffsArray[curSelected]);
 					PlayState.storyDifficulty = curSelected;
 					PlayState.startTime = 0;
-					MusicBeatState.resetState();	
+					MusicBeatState.resetState();
 				case "Options":
 					goToOptions = true;
 					close();
 				case "BACK":
 					menuItems = pauseOG;
-					regenMenu();	
+					regenMenu();
 				case "Exit to menu":
 					PlayState.startTime = 0;
 					if (PlayState.loadRep)
@@ -228,7 +228,8 @@ class PauseSubState extends MusicBeatSubstate
 						GameplayCustomizeState.freeplayNoteStyle = 'normal';
 						MusicBeatState.switchState(new StoryMenuState());
 					}
-					else if(PlayState.loadRep){
+					else if (PlayState.loadRep)
+					{
 						MusicBeatState.switchState(new LoadReplayState());
 					}
 					else

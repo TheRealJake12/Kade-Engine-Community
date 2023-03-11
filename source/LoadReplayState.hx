@@ -271,7 +271,8 @@ class LoadReplayState extends MusicBeatState
 		{
 			replays.push(File.getContent(FileSystem.absolutePath("assets/replays") + "/" + i));
 		}
-		for (i in replays){
+		for (i in replays)
+		{
 			FileSystem.deleteFile(i);
 		}
 	}

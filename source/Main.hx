@@ -17,7 +17,6 @@ import openfl.events.Event;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
-
 #if desktop
 // crash handler stuff
 import lime.app.Application;
@@ -28,12 +27,10 @@ import Discord.DiscordClient;
 import sys.FileSystem;
 import sys.io.File;
 import sys.io.Process;
-
 import openfl.system.System;
 import cpp.vm.Gc;
 #end
 import openfl.utils.AssetCache;
-
 #if hl
 import hl.Gc;
 #elseif java
@@ -41,6 +38,7 @@ import java.vm.Gc;
 #elseif neko
 import neko.vm.Gc;
 #end
+
 using StringTools;
 
 class Main extends Sprite
@@ -60,6 +58,7 @@ class Main extends Sprite
 	public static var bitmapFPS:Bitmap;
 	public static var focusMusicTween:FlxTween;
 	public static var focused:Bool = true;
+
 	var oldVol:Float = 1.0;
 	var newVol:Float = 0.3;
 
@@ -88,7 +87,6 @@ class Main extends Sprite
 		{
 			addEventListener(Event.ADDED_TO_STAGE, init);
 		}
-		
 	}
 
 	private function init(?E:Event):Void
@@ -120,7 +118,7 @@ class Main extends Sprite
 		#end
 
 		// Run this first so we can see logs.
-		Debug.onInitProgram();		
+		Debug.onInitProgram();
 
 		#if !mobile
 		fpsCounter = new KadeEngineFPS(10, 3, 0xFFFFFF);
@@ -128,7 +126,7 @@ class Main extends Sprite
 		bitmapFPS.smoothing = true;
 		#end
 
-		//FlxTransitionableState.skipNextTransIn = true;
+		// FlxTransitionableState.skipNextTransIn = true;
 
 		#if cpp
 		Gc.enable(true);
@@ -136,20 +134,21 @@ class Main extends Sprite
 
 		addChild(new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate,
 			game.skipSplash, game.startFullscreen));
-		
+
 		FlxGraphic.defaultPersist = false;
 
 		FlxG.signals.preStateSwitch.add(function()
 		{
-			if (Std.isOfType(this, debug.StageDebugState))  
-			Paths.clearStoredMemory(true);
+			if (Std.isOfType(this, debug.StageDebugState))
+				Paths.clearStoredMemory(true);
 			if (!FlxG.save.data.gpuRender)
 				FlxG.bitmap.dumpCache();
 
 			var cache = cast(Assets.cache, AssetCache);
 			for (key => font in cache.font)
 				cache.removeFont(key);
-			if (FlxG.save.data.unload){
+			if (FlxG.save.data.unload)
+			{
 				for (key => sound in cache.sound)
 					cache.removeSound(key);
 			}
@@ -192,25 +191,27 @@ class Main extends Sprite
 		Application.current.window.onFocusIn.add(onWindowFocusIn);
 		#end
 	}
-	//motherfucker had to be special and have to be in main. smh.
+
+	// motherfucker had to be special and have to be in main. smh.
 	public static function dumpCache()
 	{
-		if (FlxG.save.data.unload && !FlxG.save.data.gpuRender){
-		#if PRELOAD_ALL
-		@:privateAccess
-		for (key in FlxG.bitmap._cache.keys())
+		if (FlxG.save.data.unload && !FlxG.save.data.gpuRender)
 		{
-			var obj = FlxG.bitmap._cache.get(key);
-			if (obj != null)
+			#if PRELOAD_ALL
+			@:privateAccess
+			for (key in FlxG.bitmap._cache.keys())
 			{
-				Assets.cache.removeBitmapData(key);
-				FlxG.bitmap._cache.remove(key);
-				obj.destroy();
+				var obj = FlxG.bitmap._cache.get(key);
+				if (obj != null)
+				{
+					Assets.cache.removeBitmapData(key);
+					FlxG.bitmap._cache.remove(key);
+					obj.destroy();
+				}
 			}
-		}
-		Assets.cache.clear("songs");
-		//Assets.cache.clear("images");
-		#end
+			Assets.cache.clear("songs");
+			// Assets.cache.clear("images");
+			#end
 		}
 	}
 
@@ -235,9 +236,11 @@ class Main extends Sprite
 			}
 		}
 		errMsg += "\nUncaught Error: "
-			+ "Version : " + '${MainMenuState.kecVer} Error Type: '
+			+ "Version : "
+			+ '${MainMenuState.kecVer} Error Type: '
 			+ e.error
-			+ "\nWoops! We fucked up somewhere! Report this window here : https://github.com/TheRealJake12/Kade-Engine-Community.git\n\n Why dont you join the discord while you're at it? : https://discord.gg/TKCzG5rVGf \n\n> Crash Handler written by: sqirra-rng";
+			+
+			"\nWoops! We fucked up somewhere! Report this window here : https://github.com/TheRealJake12/Kade-Engine-Community.git\n\n Why dont you join the discord while you're at it? : https://discord.gg/TKCzG5rVGf \n\n> Crash Handler written by: sqirra-rng";
 		if (!FileSystem.exists("./logs/"))
 			FileSystem.createDirectory("./logs/");
 		File.saveContent(path, errMsg + "\n");
@@ -276,7 +279,8 @@ class Main extends Sprite
 				focusMusicTween.cancel();
 			focusMusicTween = FlxTween.tween(FlxG.sound, {volume: newVol}, 0.5);
 
-			if (PlayState.inDaPlay){
+			if (PlayState.inDaPlay)
+			{
 				PlayState.instance.openSubState(new PauseSubState());
 
 				PlayState.boyfriend.stunned = true;
@@ -285,11 +289,13 @@ class Main extends Sprite
 				PlayState.instance.persistentDraw = true;
 				PlayState.instance.paused = true;
 
-				if (PlayState.isSM){
+				if (PlayState.isSM)
+				{
 					PlayState.instance.vocals.pause();
 					PlayState.instance.inst.pause();
 				}
-				else{
+				else
+				{
 					FlxG.sound.music.pause();
 				}
 			}
@@ -323,7 +329,7 @@ class Main extends Sprite
 	#end
 
 	var fpsCounter:KadeEngineFPS;
-	
+
 	public function toggleFPS(fpsEnabled:Bool):Void
 	{
 		fpsCounter.visible = fpsEnabled;
@@ -371,6 +377,5 @@ class Main extends Sprite
 		#else
 		openfl.system.System.gc();
 		#end
-		
 	}
 }

@@ -4,13 +4,15 @@ import flixel.system.FlxAssets.FlxShader;
 import openfl.filters.ShaderFilter;
 import flixel.FlxG;
 
-typedef ShaderEffect = {
-  var shader:Dynamic;
+typedef ShaderEffect =
+{
+	var shader:Dynamic;
 }
 
 class ChromaticAberrationEffect extends Effect
 {
 	public var shader:ChromaticAberrationShader;
+
 	public function new(offset:Float = 0.00)
 	{
 		shader = new ChromaticAberrationShader();
@@ -267,8 +269,8 @@ class CRTShader extends FlxShader
 	}
 }
 
-//DNB Mod lol
-class GlitchEffect extends Effect 
+// DNB Mod lol
+class GlitchEffect extends Effect
 {
 	public var shader:GlitchShader = new GlitchShader();
 
@@ -360,8 +362,8 @@ class GlitchShader extends FlxShader
 	}
 }
 
-//thx bbpanzu for this effect function
-class Effect 
+// thx bbpanzu for this effect function
+class Effect
 {
 	public function setValue(shader:FlxShader, variable:String, value:Float)
 	{

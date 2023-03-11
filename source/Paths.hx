@@ -14,7 +14,6 @@ import openfl.utils.Assets as OpenFlAssets;
 import openfl.display3D.textures.Texture;
 import openfl.display.BitmapData;
 
-
 using StringTools;
 
 class Paths
@@ -26,6 +25,7 @@ class Paths
 	public static var currentTrackedTextures:Map<String, Texture> = [];
 	public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
 	public static var currentTrackedSounds:Map<String, Sound> = [];
+
 	static public function setCurrentLevel(name:String)
 	{
 		currentLevel = name.toLowerCase();
@@ -55,6 +55,7 @@ class Paths
 
 		return getPreloadPath(file);
 	}
+
 	// Sprite content caching with GPU based on Forever Engine texture compression.
 	public static function loadImage(key:String, ?library:String, ?gpuRender:Bool)
 	{
@@ -71,7 +72,7 @@ class Paths
 			{
 				var bitmap:BitmapData = OpenFlAssets.getBitmapData(path, false);
 				var graphic:FlxGraphic = null;
-				
+
 				if (gpuRender)
 				{
 					var texture = FlxG.stage.context3D.createTexture(bitmap.width, bitmap.height, BGRA, false, 0);
@@ -94,7 +95,7 @@ class Paths
 				// Get data from cache.
 				// Debug.logTrace('Loading existing image from cache: $key');
 			}
-			
+
 			localTrackedAssets.push(key);
 			return currentTrackedAssets.get(key);
 		}
@@ -102,7 +103,7 @@ class Paths
 		Debug.logWarn('Could not find image at path $path');
 		return null;
 	}
-	
+
 	static public function loadJSON(key:String, ?library:String):Dynamic
 	{
 		var rawJson = '';
@@ -148,7 +149,7 @@ class Paths
 	{
 		var rawJson = OpenFlAssets.getText(Paths.data(key, library)).trim();
 
-		//just for other files for jsons shits
+		// just for other files for jsons shits
 
 		// Perform cleanup on files that have bad data at the end.
 		while (!rawJson.endsWith("}"))
@@ -277,12 +278,10 @@ class Paths
 	}
 
 	#if VIDEOS
-
 	inline static public function video(key:String)
 	{
 		return 'assets/videos/$key';
 	}
-
 	#end
 
 	inline static public function music(key:String, ?library:String):Any
@@ -338,17 +337,26 @@ class Paths
 	public static function loadSound(path:String, key:String, ?library:String)
 	{
 		// I hate this so god damn much
-		var gottenPath:String = getPath('$path/$key.$SOUND_EXT', SOUND, library);
-		gottenPath = gottenPath.substring(gottenPath.indexOf(':') + 1, gottenPath.length);
-		// trace(gottenPath);
-		if (!currentTrackedSounds.exists(gottenPath))
-		{
-			var folder:String = '';
-			if (path == 'songs')
-				folder = 'songs:';
 
-			currentTrackedSounds.set(gottenPath, OpenFlAssets.getSound(folder + getPath('$path/$key.$SOUND_EXT', SOUND, library)));
+		var gottenPath:String = getPath('$path/$key.$SOUND_EXT', SOUND, library);
+		var folder:String = '';
+
+		if (path == 'songs')
+			folder = 'songs:';
+
+		// trace(gottenPath);
+		if (OpenFlAssets.exists(folder + gottenPath, SOUND))
+		{
+			if (!currentTrackedSounds.exists(gottenPath))
+			{
+				currentTrackedSounds.set(gottenPath, OpenFlAssets.getSound(folder + gottenPath));
+			}
 		}
+		else
+		{
+			Debug.logWarn('Could not find sound at ${folder + gottenPath}');
+		}
+
 		localTrackedAssets.push(gottenPath);
 		return currentTrackedSounds.get(gottenPath);
 	}
@@ -451,39 +459,40 @@ class Paths
 	/// haya I love you for the base cache dump I took to the max
 	public static function clearUnusedMemory()
 	{
-		if (FlxG.save.data.unload){
-			// clear non local assets in the tracked assets list
-		var counter:Int = 0;
-		for (key in currentTrackedAssets.keys())
+		if (FlxG.save.data.unload)
 		{
-			// if it is not currently contained within the used local assets
-			if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key))
+			// clear non local assets in the tracked assets list
+			var counter:Int = 0;
+			for (key in currentTrackedAssets.keys())
 			{
-				// get rid of it
-				var obj = currentTrackedAssets.get(key);
-				@:privateAccess
-				if (obj != null)
+				// if it is not currently contained within the used local assets
+				if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key))
 				{
-					var isTexture:Bool = currentTrackedTextures.exists(key);
-					if (isTexture)
+					// get rid of it
+					var obj = currentTrackedAssets.get(key);
+					@:privateAccess
+					if (obj != null)
 					{
-						var texture = currentTrackedTextures.get(key);
-						texture.dispose();
-						texture = null;
-						currentTrackedTextures.remove(key);
+						var isTexture:Bool = currentTrackedTextures.exists(key);
+						if (isTexture)
+						{
+							var texture = currentTrackedTextures.get(key);
+							texture.dispose();
+							texture = null;
+							currentTrackedTextures.remove(key);
+						}
+						OpenFlAssets.cache.removeBitmapData(key);
+						OpenFlAssets.cache.clearBitmapData(key);
+						OpenFlAssets.cache.clear(key);
+						FlxG.bitmap._cache.remove(key);
+						obj.destroy();
+						currentTrackedAssets.remove(key);
+						counter++;
 					}
-					OpenFlAssets.cache.removeBitmapData(key);
-					OpenFlAssets.cache.clearBitmapData(key);
-					OpenFlAssets.cache.clear(key);
-					FlxG.bitmap._cache.remove(key);
-					obj.destroy();
-					currentTrackedAssets.remove(key);
-					counter++;
 				}
 			}
-		}
-		Main.gc();
-		//to be safe that NO gc memory is left.
+			Main.gc();
+			// to be safe that NO gc memory is left.
 		}
 		var cache:haxe.ds.Map<String, FlxGraphic> = cast Reflect.field(FlxG.bitmap, "_cache");
 		for (key => graphic in cache)
@@ -497,56 +506,56 @@ class Paths
 
 	public static function clearStoredMemory(?cleanUnused:Bool = false)
 	{
-		if (FlxG.save.data.unload){
-
-		// clear anything not in the tracked assets list
-		var counterAssets:Int = 0;
-
-		@:privateAccess
-		for (key in FlxG.bitmap._cache.keys())
+		if (FlxG.save.data.unload)
 		{
-			var obj = FlxG.bitmap._cache.get(key);
-			if (obj != null && !currentTrackedAssets.exists(key))
-			{
-				OpenFlAssets.cache.removeBitmapData(key);
-				OpenFlAssets.cache.clearBitmapData(key);
-				OpenFlAssets.cache.clear(key);
-				FlxG.bitmap._cache.remove(key);
-				obj.destroy();
-				counterAssets++;
-			}
-		}
+			// clear anything not in the tracked assets list
+			var counterAssets:Int = 0;
 
-		#if PRELOAD_ALL
-		// clear all sounds that are cached
-		var counterSound:Int = 0;
-		for (key in currentTrackedSounds.keys())
-		{
-			if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && key != null)
+			@:privateAccess
+			for (key in FlxG.bitmap._cache.keys())
 			{
-				// trace('test: ' + dumpExclusions, key);
-				OpenFlAssets.cache.removeSound(key);
-				OpenFlAssets.cache.clearSounds(key);
-				currentTrackedSounds.remove(key);
-				counterSound++;
+				var obj = FlxG.bitmap._cache.get(key);
+				if (obj != null && !currentTrackedAssets.exists(key))
+				{
+					OpenFlAssets.cache.removeBitmapData(key);
+					OpenFlAssets.cache.clearBitmapData(key);
+					OpenFlAssets.cache.clear(key);
+					FlxG.bitmap._cache.remove(key);
+					obj.destroy();
+					counterAssets++;
+				}
 			}
-		}
 
-		// Clear everything everything that's left
-		var counterLeft:Int = 0;
-		for (key in OpenFlAssets.cache.getKeys())
-		{
-			if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && key != null)
+			#if PRELOAD_ALL
+			// clear all sounds that are cached
+			var counterSound:Int = 0;
+			for (key in currentTrackedSounds.keys())
 			{
-				OpenFlAssets.cache.clear(key);
-				counterLeft++;
+				if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && key != null)
+				{
+					// trace('test: ' + dumpExclusions, key);
+					OpenFlAssets.cache.removeSound(key);
+					OpenFlAssets.cache.clearSounds(key);
+					currentTrackedSounds.remove(key);
+					counterSound++;
+				}
 			}
-		}
 
-		// flags everything to be cleared out next unused memory clear
-		localTrackedAssets = [];
-		openfl.Assets.cache.clear("songs");
-		#end
+			// Clear everything everything that's left
+			var counterLeft:Int = 0;
+			for (key in OpenFlAssets.cache.getKeys())
+			{
+				if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && key != null)
+				{
+					OpenFlAssets.cache.clear(key);
+					counterLeft++;
+				}
+			}
+
+			// flags everything to be cleared out next unused memory clear
+			localTrackedAssets = [];
+			openfl.Assets.cache.clear("songs");
+			#end
 		}
 
 		var cache:haxe.ds.Map<String, FlxGraphic> = cast Reflect.field(FlxG.bitmap, "_cache");
@@ -591,7 +600,7 @@ class Paths
 
 		return AtlasFrameMaker.construct(key, library, excludeArray);
 	}
-				
+
 	inline static public function getJSONAtlas(key:String, ?library:String, ?isCharacter:Bool = false, ?gpuRender:Bool)
 	{
 		gpuRender = gpuRender != null ? gpuRender : FlxG.save.data.gpuRender;

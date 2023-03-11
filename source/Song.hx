@@ -42,7 +42,6 @@ typedef SongData =
 	var songId:String;
 
 	var ?songFile:String;
-
 	var chartVersion:String;
 	var notes:Array<SwagSection>;
 	var eventObjects:Array<Event>;
@@ -56,7 +55,6 @@ typedef SongData =
 	var stage:String;
 	var ?validScore:Bool;
 	var ?offset:Int;
-	
 }
 
 typedef SongMeta =
@@ -85,7 +83,7 @@ class Song
 	{
 		var songFile = '$songId/$songId$diffSuffix';
 
-		//Debug.logInfo('Loading song JSON: $songFile');
+		// Debug.logInfo('Loading song JSON: $songFile');
 
 		var rawJson = Paths.loadJSON('songs/$songFile');
 
@@ -119,7 +117,7 @@ class Song
 		{
 			trace('SONG DATA IS ${songData.songFile} BLABLABLA');
 		}
-		
+
 		if (songData.validScore == null)
 			songData.validScore = true;
 

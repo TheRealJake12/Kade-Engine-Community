@@ -7,8 +7,6 @@ import flixel.FlxG;
  * ...
  * @author
  */
-
-
 class Conductor
 {
 	public static var bpm:Float = 100;
@@ -24,8 +22,6 @@ class Conductor
 	public static var safeZoneOffset:Float = Math.floor((safeFrames / 60) * 1000); // is calculated in create(), is safeFrames in milliseconds
 	public static var timeScale:Float = Conductor.safeZoneOffset / 166;
 
-
-
 	public function new()
 	{
 	}
@@ -36,7 +32,6 @@ class Conductor
 		Conductor.safeZoneOffset = Math.floor((Conductor.safeFrames / 60) * 1000);
 		Conductor.timeScale = Conductor.safeZoneOffset / 166;
 	}
-
 
 	public static function changeBPM(newBpm:Float, ?recalcLength = true)
 	{

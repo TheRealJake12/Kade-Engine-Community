@@ -222,7 +222,6 @@ class ResultsScreen extends FlxSubState
 			}
 			else
 				MusicBeatState.switchState(new FreeplayState());
-			
 		}
 
 		if (FlxG.keys.justPressed.F1 && !PlayState.loadRep)

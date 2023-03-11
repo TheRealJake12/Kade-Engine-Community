@@ -150,10 +150,9 @@ class OptionsMenu extends MusicBeatSubstate
 			]),
 			new OptionCata(345, 40, "Appearance", [
 				new NoteskinOption("Change your Noteskin"),
-				new CPUNoteskinOption("Change the CPU Noteskin"), 
+				new CPUNoteskinOption("Change the CPU Noteskin"),
 				#if desktop
-				new NotesplashOption("Change your Notesplash"),
-				new CPUNotesplashOption("Change the CPU Notesplash"),
+				new NotesplashOption("Change your Notesplash"), new CPUNotesplashOption("Change the CPU Notesplash"),
 				#end
 				new CPUSplash("Allows The CPU To Do Notesplashes"),
 				new NotesplashesOption("Uses Notesplashes (Only use it on Arrow skins or else theres gonna be some visual bugs(wrong offsets))."),
@@ -190,8 +189,7 @@ class OptionsMenu extends MusicBeatSubstate
 			]),
 			new OptionCata(935, 40, "Saves", [
 				#if !web
-				new ReplayOption("Watch Replays"),
-				new SaveReplayOption("Allows Replays To Be Saved When A Song Ends."),
+				new ReplayOption("Watch Replays"), new SaveReplayOption("Allows Replays To Be Saved When A Song Ends."),
 				#end
 				new ResetScoreOption("Reset your score on all songs and weeks. This is irreversible!"),
 				new LockWeeksOption("Reset your story mode progress. This is irreversible!"),
@@ -200,11 +198,10 @@ class OptionsMenu extends MusicBeatSubstate
 			new OptionCata(50, 104, "Perf", [
 				new FPSOption("Toggle the FPS Counter"),
 				#if desktop
-				new FPSCapOption("Change your FPS Cap."),
-				new Memory("Toggle the Memory Counter"),
+				new FPSCapOption("Change your FPS Cap."), new Memory("Toggle the Memory Counter"),
 				#end
 				new ShowState("Shows The Current Game State. Makes Debugging Easier."),
-				new GPURendering("Makes All Sprites Load Into VRAM, Reducing Normal RAM Usage. (Not Recommended For ~3GB VRAM)"), //Ill come back to this. I'm tired asf
+				new GPURendering("Makes All Sprites Load Into VRAM, Reducing Normal RAM Usage. (Not Recommended For ~3GB VRAM)"), // Ill come back to this. I'm tired asf
 				new BorderFps("Adds A Border To Make The FPS Display Easier To See. (Uses A Ton Of CPU And A Little GPU)"),
 				new WaterMarkFPS("Shows What Version Of The Game You Are Running In The FPS Counter."),
 				new RainbowFPSOption("Make the FPS Counter flicker through rainbow colors."),
@@ -219,14 +216,13 @@ class OptionsMenu extends MusicBeatSubstate
 				new AntialiasingOption("Toggle antialiasing, improving graphics quality at a slight performance penalty."),
 				// new FXAAOption("Enable FXAA Antialiasing. (EXTREME PERFORMANCE IMPACT! ONLY ENABLE IF YOUR PC HAS LIKE AN RTX CARD!)"),
 				#if desktop
-				new UnloadSongs("Unload Songs And Characters"), 
-				new UnloadNow("Clears All Cache We Can Remove"),
+				new UnloadSongs("Unload Songs And Characters"), new UnloadNow("Clears All Cache We Can Remove"),
 				#end
 
 			]),
 			new OptionCata(345, 104, "Experamental", [
 				new OldCharter("Uses Kade Engine 1.5.4 Chart System.(HIGH CHANCES OF CRASHING!)"),
-				
+
 			]),
 			new OptionCata(-1, 155, "Editing Keybinds", [
 				new LeftKeybind("The left note's keybind"),
@@ -285,7 +281,7 @@ class OptionsMenu extends MusicBeatSubstate
 
 		for (i in 0...options.length - 1)
 		{
-			if (i > 5) //impoirtant
+			if (i > 5) // impoirtant
 				continue;
 			var cat = options[i];
 			add(cat);
@@ -560,17 +556,17 @@ class OptionsMenu extends MusicBeatSubstate
 
 						if (selectedOptionIndex > options[selectedCatIndex].options.length - 1)
 						{
-								for (i in 0...selectedCat.options.length)
-								{
-									var opt = selectedCat.optionObjects.members[i];
-									opt.y = options[4].titleObject.y + 54 + (46 * i);
-								}
-								selectedOptionIndex = 0;
+							for (i in 0...selectedCat.options.length)
+							{
+								var opt = selectedCat.optionObjects.members[i];
+								opt.y = options[4].titleObject.y + 54 + (46 * i);
+							}
+							selectedOptionIndex = 0;
 						}
-	
+
 						if (selectedOptionIndex != 0 && options[selectedCatIndex].options.length > 6)
 						{
-							if (selectedOptionIndex >= (options[selectedCatIndex].options.length - 1) / (2+options[selectedCatIndex].options.length*0.1))
+							if (selectedOptionIndex >= (options[selectedCatIndex].options.length - 1) / (2 + options[selectedCatIndex].options.length * 0.1))
 								for (i in selectedCat.optionObjects.members)
 								{
 									i.y -= 46;
@@ -592,25 +588,29 @@ class OptionsMenu extends MusicBeatSubstate
 						if (selectedOptionIndex < 0)
 						{
 							selectedOptionIndex = options[selectedCatIndex].options.length - 1;
-							if (options[selectedCatIndex].options.length > 6){
+							if (options[selectedCatIndex].options.length > 6)
+							{
 								for (i in 0...selectedCat.options.length)
 								{
 									var opt = selectedCat.optionObjects.members[i];
-									opt.y = options[4].titleObject.y + 54 -(options[selectedCatIndex].options.length*(16+options[selectedCatIndex].options.length)) + (46 * i);
+									opt.y = options[4].titleObject.y
+										+ 54
+										- (options[selectedCatIndex].options.length * (16 + options[selectedCatIndex].options.length))
+										+ (46 * i);
 								}
 							}
 						}
-	
+
 						if (selectedOptionIndex != 0 && options[selectedCatIndex].options.length > 6)
 						{
-							if (selectedOptionIndex >= (options[selectedCatIndex].options.length - 1) / (2+options[selectedCatIndex].options.length*0.1))
+							if (selectedOptionIndex >= (options[selectedCatIndex].options.length - 1) / (2 + options[selectedCatIndex].options.length * 0.1))
 								for (i in selectedCat.optionObjects.members)
 								{
 									i.y += 46;
 								}
 						}
-	
-						if (selectedOptionIndex < (options[selectedCatIndex].options.length - 1) / (2+options[selectedCatIndex].options.length*0.1))
+
+						if (selectedOptionIndex < (options[selectedCatIndex].options.length - 1) / (2 + options[selectedCatIndex].options.length * 0.1))
 						{
 							for (i in 0...selectedCat.options.length)
 							{

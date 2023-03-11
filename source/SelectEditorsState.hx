@@ -17,7 +17,7 @@ class SelectEditorsState extends MusicBeatState
 	private var curSelected = 0;
 
 	private var bgColors:Array<String> = ['#314d7f', '#4e7093', '#70526e', '#594465'];
-	
+
 	private var colorRotation:Int = 1;
 
 	public function new()

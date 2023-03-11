@@ -29,7 +29,9 @@ class CPPWindows
         }
         UpdateWindow(window);
     ')
-	public static function _setWindowColorMode(mode:Int) {}
+	public static function _setWindowColorMode(mode:Int)
+	{
+	}
 
 	public static function setWindowColorMode(mode:WindowColorMode)
 	{
@@ -50,7 +52,9 @@ class CPPWindows
 	SetWindowLong(window, GWL_EXSTYLE, GetWindowLong(window, GWL_EXSTYLE) ^ WS_EX_LAYERED);
 	')
 	@:noCompletion
-	public static function _setWindowLayered() {}
+	public static function _setWindowLayered()
+	{
+	}
 
 	@:functionCode('
         HWND window = GetActiveWindow();

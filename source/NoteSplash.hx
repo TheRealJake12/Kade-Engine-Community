@@ -10,7 +10,7 @@ class NoteSplash extends FlxSprite
 	public static var swidths:Array<Float> = [160, 120, 110, 90];
 	public static var posRest:Array<Int> = [0, 35, 50, 70];
 
-	public static var anims:Array<String> = ['purple','blue','green','red'];
+	public static var anims:Array<String> = ['purple', 'blue', 'green', 'red'];
 
 	public function new(x:Float = 0, y:Float = 0, noteData:Int)
 	{
@@ -21,8 +21,8 @@ class NoteSplash extends FlxSprite
 	}
 
 	public function setupNoteSplash(x:Float, y:Float, noteData:Int)
-	{	
-		frames = PlayState.notesplashSprite;	
+	{
+		frames = PlayState.notesplashSprite;
 		antialiasing = FlxG.save.data.antialiasing;
 
 		switch (noteData)
@@ -36,8 +36,8 @@ class NoteSplash extends FlxSprite
 			case 3: // Red
 				setPosition(x - Note.swagWidth * 0.95 + 45, y - Note.swagWidth + 32);
 		}
-		
-		alpha = 1;	
+
+		alpha = 1;
 
 		for (i in 0...anims.length)
 		{
@@ -68,7 +68,7 @@ class NoteSplash extends FlxSprite
 			case 3: // Red
 				setPosition(x - Note.swagWidth * 0.95 + 45, y - Note.swagWidth + 32);
 		}
-		alpha = 1;	
+		alpha = 1;
 
 		for (i in 0...anims.length)
 		{

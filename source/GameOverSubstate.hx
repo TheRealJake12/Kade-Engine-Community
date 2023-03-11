@@ -57,7 +57,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		// FlxG.camera.focusOn(FlxPoint.get(FlxG.width / 2, FlxG.height / 2));
 		FlxG.camera.scroll.set();
 		FlxG.camera.target = null;
-		//bf.animation.curAnim.frameRate = 24; // Force default frameRate if bf dies in non 1x Formats.
+		// bf.animation.curAnim.frameRate = 24; // Force default frameRate if bf dies in non 1x Formats.
 		bf.playAnim('firstDeath');
 	}
 
