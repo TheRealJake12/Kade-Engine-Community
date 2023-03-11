@@ -220,7 +220,7 @@ class OptionsMenu extends MusicBeatSubstate
 				#end
 
 			]),
-			new OptionCata(345, 104, "Experamental", [
+			new OptionCata(345, 104, "Experimental", [
 				new OldCharter("Uses Kade Engine 1.5.4 Chart System.(HIGH CHANCES OF CRASHING!)"),
 
 			]),
