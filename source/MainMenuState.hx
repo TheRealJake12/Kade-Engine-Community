@@ -229,6 +229,9 @@ class MainMenuState extends MusicBeatState
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 		}
 
+		if (FlxG.sound.music != null)
+			Conductor.songPosition = FlxG.sound.music.time;
+
 		if (FlxG.save.data.borderless)
 		{
 			FlxG.stage.window.borderless = true;

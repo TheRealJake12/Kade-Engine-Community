@@ -328,7 +328,7 @@ class PlayState extends MusicBeatState
 
 	var needSkip:Bool = false;
 	var skipActive:Bool = false;
-	var skipText:FlxText;
+	var skipText:Alphabet;
 	var skipTo:Float;
 
 	public static var campaignScore:Int = 0;
@@ -2369,11 +2369,10 @@ class PlayState extends MusicBeatState
 		if (needSkip)
 		{
 			skipActive = true;
-			skipText = new FlxText(healthBarBG.x + 80, 500, 500);
-			skipText.text = "Press Space to Skip Intro";
-			skipText.size = 30;
-			skipText.color = FlxColor.WHITE;
-			skipText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2, 1);
+			skipText = new Alphabet(healthBarBG.x + 375, 1000, "Press Space To Skip Intro.", true);
+			skipText.set_alignment(CENTERED);
+			skipText.scaleY = 0.5;
+			skipText.scaleX = 0.5;
 			skipText.cameras = [camHUD];
 			skipText.alpha = 0;
 			createTween(skipText, {alpha: 1}, 0.2);
@@ -3960,18 +3959,19 @@ class PlayState extends MusicBeatState
 			var stepHeight = (0.45 * fakeNoteStepCrochet * FlxMath.roundDecimal((SONG.speed * Math.pow(PlayState.songMultiplier, 2)), 2));
 
 			// hell
-			#if FEATURE_HSCRIPT
-			if (!ScriptUtil.hasPause(scripts.executeAllFunc("notesUpdate")))
-			{
-				scripts.executeAllFunc("notesUpdate");
-			};
-			#end
 
 			notes.forEachAlive(function(daNote:Note)
 			{
 				var strum:FlxTypedGroup<StaticArrow> = playerStrums;
 				if (!daNote.mustPress)
 					strum = cpuStrums;
+
+				#if FEATURE_HSCRIPT
+				if (!ScriptUtil.hasPause(scripts.executeAllFunc("notesUpdate", [daNote])))
+				{
+					scripts.executeAllFunc("notesUpdate", [daNote]);
+				};
+				#end	
 
 				var strumX = strum.members[daNote.noteData].x;
 				var strumAngle = strum.members[daNote.noteData].modAngle;

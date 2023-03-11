@@ -62,7 +62,7 @@ class Alphabet extends FlxSpriteGroup
 		}
 	}
 
-	private function set_alignment(align:Alignment)
+	public function set_alignment(align:Alignment)
 	{
 		alignment = align;
 		updateAlignment();

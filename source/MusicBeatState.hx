@@ -143,11 +143,6 @@ class MusicBeatState extends FlxUIState
 
 	override function update(elapsed:Float)
 	{
-		if (Type.getClass(FlxG.state) != PlayState)
-		{
-			if (FlxG.sound.music != null)
-				Conductor.songPosition = FlxG.sound.music.time;
-		}
 		if (curDecimalBeat < 0)
 			curDecimalBeat = 0;
 
