@@ -234,6 +234,7 @@ class OptionsMenu extends MusicBeatSubstate
 				new MuteBind("The keybind used to mute game audio"),
 				new VolUpBind("The keybind used to turn the volume up"),
 				new VolDownBind("The keybind used to turn the volume down"),
+				new FullscreenBind("The keybind used to fullscreen the game")
 			], true),
 			new OptionCata(-1, 160, "Editing Judgements", [
 				new MarvMSOption("How many milliseconds are in the MARV hit window"),

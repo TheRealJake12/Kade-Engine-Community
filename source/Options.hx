@@ -401,7 +401,6 @@ class FullscreenBind extends Option
 
 	public override function press()
 	{
-		Debug.logTrace("keybind change");
 		waitingType = !waitingType;
 
 		return true;

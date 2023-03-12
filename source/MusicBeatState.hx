@@ -16,6 +16,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import openfl.Lib;
 import flixel.FlxBasic;
 import lime.app.Application;
+import flixel.input.keyboard.FlxKey;
 
 class MusicBeatState extends FlxUIState
 {
@@ -35,6 +36,7 @@ class MusicBeatState extends FlxUIState
 	public static var initSave:Bool = false;
 
 	private var controls(get, never):Controls;
+	var fullscreenBind:FlxKey;
 
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;
@@ -47,6 +49,7 @@ class MusicBeatState extends FlxUIState
 		{
 			openSubState(new CustomFadeTransition(0.75, true));
 		}
+		fullscreenBind = FlxKey.fromString(Std.string(FlxG.save.data.fullscreenBind));
 		FlxTransitionableState.skipNextTransOut = false;
 
 		super.create();
@@ -186,6 +189,11 @@ class MusicBeatState extends FlxUIState
 
 				Conductor.crochet = ((60 / Conductor.bpm) * 1000) / PlayState.songMultiplier;
 			}
+		}
+
+		if (FlxG.keys.anyJustPressed([fullscreenBind]))
+		{
+			FlxG.fullscreen = !FlxG.fullscreen;
 		}
 
 		super.update(elapsed);
