@@ -2,7 +2,7 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Kade Engine Community" file="Kade Engine Community" packageName="com.therealjake12.kec" package="com.therealjake12.kec" main="Main" version="1.7.1" company="TheRealJake12" />
+	<app title="Funkin' In The Alley" file="FunkinInTheAlley" packageName="com.kookerfoxyt.fita" package="com.kookerfoxyt.fita" main="Main" version="1.0.0" company="KookerFoxYT" />
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
@@ -146,7 +146,7 @@
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
 	<!--Enable the Flixel core recording system-->
-	<!--<haxedef name="FLX_RECORD" />-->
+	<haxedef name="FLX_RECORD" />
 
 	<!--Disable the right and middle mouse buttons-->
 	<!-- <haxedef name="FLX_NO_MOUSE_ADVANCED" /> -->
