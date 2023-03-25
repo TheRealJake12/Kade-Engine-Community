@@ -210,7 +210,6 @@ class Main extends Sprite
 				}
 			}
 			Assets.cache.clear("songs");
-			// Assets.cache.clear("images");
 			#end
 		}
 	}
@@ -369,10 +368,6 @@ class Main extends Sprite
 	public static function gc()
 	{
 		#if cpp
-		Gc.run(true);
-		#elseif hl
-		Gc.major();
-		#elseif (java || neko)
 		Gc.run(true);
 		#else
 		openfl.system.System.gc();
