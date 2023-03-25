@@ -2,7 +2,7 @@ import flixel.input.gamepad.FlxGamepad;
 import openfl.Lib;
 import flixel.FlxG;
 
-class KadeEngineData
+class AlleyEngineData
 {
 	public static function initSave()
 	{

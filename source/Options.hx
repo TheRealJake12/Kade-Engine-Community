@@ -2995,7 +2995,7 @@ class ResetSettings extends Option
 		FlxG.save.data.cpuSplash = null;
 		FlxG.save.data.showState = null;
 
-		KadeEngineData.initSave();
+		AlleyEngineData.initSave();
 		confirm = false;
 		trace('All settings have been reset');
 		display = updateDisplay();

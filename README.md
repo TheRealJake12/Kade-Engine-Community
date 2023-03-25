@@ -1,56 +1,23 @@
-## **Kade Engine Community**
-![Kade Engine logo](assets/preload/images/KEClogoO.png)
+## **Funkin' In The Alley**
+hi no leake
 
-![Repo size](https://img.shields.io/github/repo-size/TheRealJake12/Kade-Engine-Community)
-[![GitHub issues](https://img.shields.io/github/issues/TheRealJake12/Kade-Engine-Community)](https://github.com/TheRealJake12/Kade-Engine-Community/issues) 
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/TheRealJake12/Kade-Engine-Community)](https://github.com/TheRealJake12/Kade-Engine-Community/pulls) []() []()
-![Supported platforms](https://img.shields.io/badge/supported%20platforms-windows%2C%20linux-blue)
-![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/TheRealJake12/Kade-Engine-Community/latest)
 
-![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/TheRealJake12/Kade-Engine-Community?include_prereleases&label=latest%20version) 
-
-Hey you!
-Thanks for visiting this Repo!
-Versions Below 1.4 Were Made With Kade Engine 1.7.1 Pre-Release With 0 Modsupport.
-Versions 1.4 And Above Are Made With The Latest (As Of 11/5/21 or 5/11/21) Kade Engine 1.8.
-The goal of this Repo is to make it community focused. If theres a feature just submit a pull request and someone will take a look at it.
-
-**I am not responsible for maintaining HTML5 builds, as long as it builds sucessfully, it is not my problem. Feel free to fix it if its broken yourself.**
-
-![Main Menu](art/readme/mainmenu.png)
-
-Stylized Main Menu.
-
-![Options](art/readme/options.png)
-
-Expanded Options Menu For More Customizability.
-
-![Charter](art/readme/charteditor.png)
-
-Reskinned and optimized chart editor.
-
-![Freeplay](art/readme/freeplay.png)
-
-New And Improved Freeplay By BoloVEVO.
-
-![Better Documented!](art/readme/deez.png)
-
-A goal I want is this to be well documented so if someone doesn't understand something, they can look in docs!
+**I am not responsible for maintaining HTML5 builds, as long as it builds sucessfully, it is not my problem. Feel free to fix it if it's broken yourself.**
 
 ### How To Build From Source
 
-This is a not to in-depth guide to build the game and get your mod going or to contribute to the engine
+This is a not to in-depth guide to build the game and get your mod going or to contribute to the engine.
 If you have read the normal building guide from the original engine, it most likely won't work here.
 So I will now do a guide to build the game.
 
 
 ### Installing the needed things
-1. Install the latest Haxe. Instead of using Haxe 4.1.5, as the original game used, we will update to Haxe 4.2.4 (or the latest version)
-You will first need to go to this link to download [Haxe](https://haxe.org/download/) Choose your platform and just do the normal download proccess.
+1. Install the latest Haxe. Instead of using Haxe 4.1.5, as the original game used, we will update to Haxe 4.2.4 (or the latest version).
+You will first need to go to this link to download [Haxe](https://haxe.org/download/) Choose your platform and just do the normal download process.
 2. Install HaxeFlixel. Once Haxe is installed, you can download HaxeFlixel. Open a Command Prompt (Windows is right click windows icon and hit command prompt or windows powershell).
 3. You will need [Git](https://git-scm.com/downloads) 
 As you did with Haxe, just install the setup and finish it.
-4. Im just gonna quickly add all the librarys you need to download by putting it in a prompt
+4. I'm just gonna quickly add all the libraries you need to download by putting it in a prompt:
 ```cmd
 haxelib install lime
 haxelib install openfl
@@ -67,9 +34,9 @@ haxelib run lime setup flixel
 haxelib run flixel-tools setup
 ```
 Once you have these installed, 
-HaxeFlixel 4.11.0 Breaks some shader shit or something so I went ahead and made it use a custom file that fixes the issue.
+HaxeFlixel 4.11.0 breaks some shader shit or something so I went ahead and made it use a custom file that fixes the issue.
 (FlxDrawQuadsItem or smth)
-When its finished, you will need to download these like you did with the Libraries above.
+When it's finished, you will need to download these like you did with the libraries above.
 ```cmd
 haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
 haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
@@ -77,29 +44,30 @@ haxelib git faxe https://github.com/uhrobots/faxe
 haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
 haxelib git hxCodec https://github.com/TheRealJake12/hxCodec.git
 ```
-4. [Read the original FNF source code guide for Visual Studio](https://github.com/ninjamuffin99/Funkin.git)
+4. [Read the original FNF source code guide for Visual Studio just in case.](https://github.com/ninjamuffin99/Funkin)
 Once it is installed you should be able to build your game.
 
-**IF YOU ARE LAZY JUST USE THE SETUP.BAT IN THE CODE!**
+**IF YOU ARE LAZY JUST USE THE EASYSETUP.BAT IN THE CODE!**
 
-5. Run ```lime test windows``` or ```lime test windows -debug```. No debug is the release version that doenst have all the debug stuff, As the debug does.
+5. Run ```lime test windows``` or ```lime test windows -debug```. The version without the debugger is the release version that doesn't have all the debug stuff, As the debug version does.
 It will take a while to build for both versions.
 
-6. Play Around with the code and make your mod or consider Contributing to the Engine!
+6. Play around with the code or consider contributing to the mod/engine!
 
 ![lime windows](https://user-images.githubusercontent.com/84357907/192084304-397d651c-8f11-4f42-9596-18dcabe79eaf.gif)
 
 ### Shoutouts
 
-- [TheRealJake_12](https://www.youtube.com/channel/UCYy-RfMjVx-1dYnmNQGB2sw) - *mostly everything.*
+- 
+- [TheRealJake_12](https://www.youtube.com/channel/UCYy-RfMjVx-1dYnmNQGB2sw) - KEC Creator
 
-- [KadeDev](https://github.com/KadeDev) - The Original Guy who created Kade Engine.
+- [KadeDev](https://github.com/KadeDev) - OG Kade Engine Creator
 
-- [PolybiusProxy](https://github.com/polybiusproxy) - The Video Support.
+- [PolybiusProxy](https://github.com/polybiusproxy) - The video support.
 
-- [BoloVEVO](https://github.com/BoloVEVO) - Fixed my shit code and improved the chart editor. Made a ton of code improvements. Did the gameplay changers(thanks!!!)
+- [BoloVEVO](https://github.com/BoloVEVO) - Fixed my shit code and improved the chart editor. Made a ton of code improvements. Did the gameplay changers. (thanks!!!)
 
-- Glowsoony - Pixel Notesplashes, Revamped Notesplash Code, Hscript, The guy does a ton. (Thanks!)
+- Glowsoony - Pixel note splashes, revamped note splash code, hscript, the guy does a ton. (Thanks!)
 
 - LunarCleint - Hscript code, like, all of it.
 
@@ -109,8 +77,6 @@ It will take a while to build for both versions.
 
 - [gaminbottomtext](https://github.com/gaminbottomtext) also epic fren that helped with notesplashes. He has disappeared.
 
-- [yakY](https://twitter.com/yak_yyy) person that made the mouse icon specifically for the engine. (epico)
-
 - [AhmedxRNMD](https://twitter.com/AhmedxRNMD_) - Made the volume sounds.
 
-- [discord server for this project](https://discord.gg/G2jJ8RfWtm) thanks for joining if you do.
+- [discord server for this mod](https://discord.gg/PYqRwbD4es) thanks for joining if you do.

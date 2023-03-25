@@ -35,7 +35,7 @@ class Init extends MusicBeatState
 
 		PlayerSettings.init();
 
-		KadeEngineData.initSave();
+		AlleyEngineData.initSave();
 
 		KeyBinds.keyCheck();
 

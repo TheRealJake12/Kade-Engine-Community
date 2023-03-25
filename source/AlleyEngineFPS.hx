@@ -37,7 +37,7 @@ import openfl.Lib;
 @:fileXml('tags="haxe,release"')
 @:noDebug
 #end
-class KadeEngineFPS extends TextField
+class AlleyEngineFPS extends TextField
 {
 	/**
 		The current frame rate, expressed using frames-per-second
@@ -69,7 +69,7 @@ class KadeEngineFPS extends TextField
 		currentFPS = 0;
 		selectable = false;
 		mouseEnabled = false;
-		defaultTextFormat = new TextFormat(openfl.utils.Assets.getFont("assets/fonts/vcr.ttf").fontName, 14, color);
+		defaultTextFormat = new TextFormat(openfl.utils.Assets.getFont("assets/fonts/vcr.ttf").fontName, 14, color); // VCR FPS FONT LETS GOOOOOO
 		text = "FPS: ";
 		width += 200;
 
@@ -146,7 +146,7 @@ class KadeEngineFPS extends TextField
 		#end
 
 		var currentCount = times.length;
-		var lmao:String = (FlxG.save.data.fpsmark ? (Main.watermarks ? "\n" + MainMenuState.kecVer : "\n" + "Kade Engine 1.8.1") : "");
+		var lmao:String = (FlxG.save.data.fpsmark ? (Main.watermarks ? "\n" + MainMenuState.fitaVer : "\n" + "Funkin' In The Alley") : "");
 		currentFPS = Math.round((currentCount + cacheCount) / 2);
 		displayFPS = (FlxG.save.data.fps ? "FPS: " + currentFPS : "");
 		var stateText:String = (FlxG.save.data.showState ? "Game State: " + Main.mainClassState : "");
@@ -155,7 +155,7 @@ class KadeEngineFPS extends TextField
 		{
 			if (memoryMegas > memoryTotal)
 				memoryTotal = memoryMegas;
-			memoryUsage = (FlxG.save.data.mem ? "Memory Usage: " + mem + " MB" : "");
+			memoryUsage = (FlxG.save.data.mem ? "MEM: " + mem + " MB" : "");
 
 			text = ('$displayFPS\n' + '$memoryUsage\n' + stateText + lmao);
 

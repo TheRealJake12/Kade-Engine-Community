@@ -121,7 +121,7 @@ class Main extends Sprite
 		Debug.onInitProgram();
 
 		#if !mobile
-		fpsCounter = new KadeEngineFPS(10, 3, 0xFFFFFF);
+		fpsCounter = new AlleyEngineFPS(10, 3, 0xFFFFFF);
 		bitmapFPS = ImageOutline.renderImage(fpsCounter, 1, 0x000000, true);
 		bitmapFPS.smoothing = true;
 		#end
@@ -327,7 +327,7 @@ class Main extends Sprite
 	}
 	#end
 
-	var fpsCounter:KadeEngineFPS;
+	var fpsCounter:AlleyEngineFPS;
 
 	public function toggleFPS(fpsEnabled:Bool):Void
 	{

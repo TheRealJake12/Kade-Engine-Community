@@ -28,7 +28,7 @@ using StringTools;
 class MainMenuState extends MusicBeatState
 {
 	public static var nightly:String = "";
-	public static var kecVer:String = 'Kade Engine Community 1.7.1';
+	public static var kecVer:String = "Funkin' In The Alley DEMO";
 	public static var keVer:String = "Kade Engine 1.8.1";
 	public static var curSelected:Int = 0;
 	public static var freakyPlaying:Bool;
@@ -45,26 +45,13 @@ class MainMenuState extends MusicBeatState
 	];
 
 	public static var textArray:Array<String> = [
-		// thanks bolo, I find these ones really funny (I am sorry for stealing code)
-		"Yeah I use Kade Engine *insert gay fat guy dancing* (-Bolo)",
-		"Kade engine *insert burning PC gif* (-Bolo)",
-		"This is my kingdom cum (-Bolo)",
-		"God i love futabu!! so fucking much (-McChomk)", // God died in vain 💀
-		"Are you really reading this thing? (-Bolo)",
-		"I'm not gay, I'm default :trollface: (-Bolo)",
-		"I love men (-HomoKori)",
-		"Why do I have a pic of Mario with massive tits on my phone? (-Rudy)",
-		"Boner (-Red Radiant)",
-		"My Balls Itch (-TheRealJake_12)",
-		"Sus Sus Amogus (-Mryoyo123YT)",
-		"Man I'm Dead (-TheRealJake_12)",
-		"Jesse! We Need To Cook Crystal Meth! (-TheRealJake_12)",
-		#if windows
-		'${Sys.environment()["USERNAME"]}! Get down from the tree and put your clothes on, dammit. (-Antonella)',
-		#elseif web
-		"You're On Web. Why The FUCK Are You On Web. You Can't Get Good Easter Eggs. Mother Fucker.",
-		#else
-		'${Sys.environment()["USER"]}! Get down from the tree and put your clothes on, dammit. (-Antonella)',
+		"500+  Giftcards! (-KookerFoxYT)",
+		"bro became starfire from teen titans go (-Monomouse)",
+		"YOUR ARGUMENT, IS NOW INVALID! (-Monomouse)",
+		"south park refernc!!!11 (-Maicon)",
+		"JHJJTLKGFD WHY IS MILKY SO LOUD IN THE EXPORT (-CHS)",
+		#if web
+		"You're on web. Why the FUCK are you on web. You can't get even decent easter eggs, bitch."
 		#end
 	];
 
@@ -75,7 +62,7 @@ class MainMenuState extends MusicBeatState
 	private var camGame:SwagCamera;
 
 	#if !switch
-	var optionShit:Array<String> = ['story mode', 'freeplay', 'donate', 'discord', 'options'];
+	var optionShit:Array<String> = ['story mode', 'freeplay', 'discord', 'options'];
 	#else
 	var optionShit:Array<String> = ['story mode', 'freeplay'];
 	#end
@@ -130,11 +117,11 @@ class MainMenuState extends MusicBeatState
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 		camFollowPos = new FlxObject(0, 0, 1, 1);
-		// add(camFollow);
-		// add(camFollowPos);
+		add(camFollow);
+		add(camFollowPos);
 
 		FlxG.cameras.reset(new SwagCamera());
-		// FlxG.camera.follow(camFollow, null, 0.06);
+		FlxG.camera.follow(camFollow, null, 0.06);
 
 		magenta = new FlxBackdrop(Paths.image('menuDesat'), X, 0, 0);
 		magenta.setGraphicSize(Std.int(magenta.width * 1.175));
@@ -181,18 +168,10 @@ class MainMenuState extends MusicBeatState
 		}
 
 		logo = new FlxSprite(900, 0);
-		if (Main.watermarks)
-		{
-			logo.frames = Paths.getSparrowAtlas("KECLogoOrange");
-			logo.scale.set(0.7, 0.7);
-		}
-		else
-		{
-			logo.frames = Paths.getSparrowAtlas("KadeEngineLogoBumpin");
-			logo.x = 800;
-			logo.y = -60;
-			logo.scale.set(0.55, 0.55);
-		}
+		logo.frames = Paths.getSparrowAtlas("KadeEngineLogoBumpin");
+		logo.x = 800;
+		logo.y = -60;
+		logo.scale.set(0.55, 0.55);
 		logo.animation.addByPrefix("bump", "logo bumpin", 24);
 		logo.antialiasing = FlxG.save.data.antialiasing;
 		logo.updateHitbox();
@@ -296,23 +275,17 @@ class MainMenuState extends MusicBeatState
 			}
 			#end
 
-			#if debug
 			if (FlxG.keys.justPressed.SEVEN)
 			{
 				MusicBeatState.switchState(new SelectEditorsState());
 			}
-			#end
 
 			bg.x += 2;
 			magenta.x += 2;
 
 			if (FlxG.mouse.overlaps(menuItems, FlxG.camera) && FlxG.mouse.justPressed || controls.ACCEPT)
 			{
-				if (optionShit[curSelected] == 'donate')
-				{
-					fancyOpenURL("https://ninja-muffin24.itch.io/funkin");
-				}
-				else if (optionShit[curSelected] == 'discord')
+				if (optionShit[curSelected] == 'discord')
 				{
 					fancyOpenURL("https://discord.gg/TKCzG5rVGf");
 				}
@@ -372,8 +345,8 @@ class MainMenuState extends MusicBeatState
 				case 'freeplay':
 					MusicBeatState.switchState(new FreeplayState());
 				case 'options':
-					// transIn = FlxTransitionableState.defaultTransIn;
-					// transOut = FlxTransitionableState.defaultTransOut;
+					transIn = FlxTransitionableState.defaultTransIn;
+					transOut = FlxTransitionableState.defaultTransOut;
 					MusicBeatState.switchState(new OptionsDirect());
 			}
 		}
