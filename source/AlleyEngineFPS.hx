@@ -146,7 +146,7 @@ class AlleyEngineFPS extends TextField
 		#end
 
 		var currentCount = times.length;
-		var lmao:String = (FlxG.save.data.fpsmark ? (Main.watermarks ? "\n" + MainMenuState.fitaVer : "\n" + "Funkin' In The Alley") : "");
+		var lmao:String = (FlxG.save.data.fpsmark ? (Main.watermarks ? "\n" + MainMenuState.kecVer : "\n" + "Funkin' In The Alley") : "");
 		currentFPS = Math.round((currentCount + cacheCount) / 2);
 		displayFPS = (FlxG.save.data.fps ? "FPS: " + currentFPS : "");
 		var stateText:String = (FlxG.save.data.showState ? "Game State: " + Main.mainClassState : "");
