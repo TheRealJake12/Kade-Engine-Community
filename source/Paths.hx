@@ -494,14 +494,6 @@ class Paths
 			Main.gc();
 			// to be safe that NO gc memory is left.
 		}
-		var cache:haxe.ds.Map<String, FlxGraphic> = cast Reflect.field(FlxG.bitmap, "_cache");
-		for (key => graphic in cache)
-		{
-			if (key.indexOf("text") == 0 && graphic.useCount <= 0)
-			{
-				FlxG.bitmap.remove(graphic);
-			}
-		}
 	}
 
 	public static function clearStoredMemory(?cleanUnused:Bool = false)
@@ -538,6 +530,7 @@ class Paths
 					OpenFlAssets.cache.clearSounds(key);
 					currentTrackedSounds.remove(key);
 					counterSound++;
+					//Debug.logTrace('Cleared and removed $counterSound cached sounds.');
 				}
 			}
 
@@ -549,6 +542,7 @@ class Paths
 				{
 					OpenFlAssets.cache.clear(key);
 					counterLeft++;
+					//Debug.logTrace('Cleared and removed $counterLeft cached leftover assets.');
 				}
 			}
 

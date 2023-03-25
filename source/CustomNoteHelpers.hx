@@ -64,7 +64,7 @@ class Skin
 
 		// return Paths.getSparrowAtlas('noteskins/' + NoteskinHelpers.getNoteskinByID(FlxG.save.data.noteskin), "shared");
 		#else
-		return Paths.getSparrowAtlas('noteskins/Arrows', "shared");
+		return Paths.getSparrowAtlas('noteskins/' + CustomNoteHelpers.Skin.getNoteskinByID(FlxG.save.data.noteskin), "shared");
 		#end
 	}
 

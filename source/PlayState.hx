@@ -2243,7 +2243,10 @@ class PlayState extends MusicBeatState
 		else
 		{
 			inst.play();
+			// FlxG.sound.music.play();
 			vocals.play();
+
+			songLength = ((inst.length / songMultiplier) / 1000);
 		}
 
 		if (!FlxG.save.data.optimize)
@@ -2298,9 +2301,6 @@ class PlayState extends MusicBeatState
 
 		if (isSM)
 			songLength = ((FlxG.sound.music.length / songMultiplier) / 1000);
-		else
-			songLength = ((inst.length / songMultiplier) / 1000);
-
 		songPosBG = new FlxSprite(0, FlxG.height - 710).loadGraphic(Paths.image('healthBar', 'shared'));
 
 		if (PlayStateChangeables.useDownscroll)
@@ -2391,19 +2391,6 @@ class PlayState extends MusicBeatState
 		scripts.setAll("bpm", Conductor.bpm);
 		#end
 
-		if (!paused)
-		{
-			#if FEATURE_STEPMANIA
-			if (!isStoryMode && isSM)
-			{
-				var bytes = File.getBytes(pathToSm + "/" + sm.header.MUSIC);
-				var sound = new Sound();
-				sound.loadCompressedDataFromByteArray(bytes.getData(), bytes.length);
-				FlxG.sound.playMusic(sound);
-			}
-			#end
-		}
-
 		curSong = songData.songId;
 
 		#if FEATURE_STEPMANIA
@@ -2419,13 +2406,10 @@ class PlayState extends MusicBeatState
 		#end
 
 		inst = new FlxSound().loadEmbedded(Paths.inst(PlayState.SONG.songId));
-		inst.pause();
+		FlxG.sound.list.add(inst);
 
 		if (isSM)
 			FlxG.sound.music.pause();
-
-		FlxG.sound.list.add(inst);
-		FlxG.sound.list.add(vocals);
 
 		if (PlayStateChangeables.skillIssue)
 		{
@@ -2435,8 +2419,23 @@ class PlayState extends MusicBeatState
 			add(redVignette);
 		}
 
-		addSongTiming();
+		FlxG.sound.list.add(vocals);
 
+		if (!paused)
+		{
+			#if FEATURE_STEPMANIA
+			if (!isStoryMode && isSM)
+			{
+				var bytes = File.getBytes(pathToSm + "/" + sm.header.MUSIC);
+				var sound = new Sound();
+				sound.loadCompressedDataFromByteArray(bytes.getData(), bytes.length);
+				FlxG.sound.playMusic(sound);
+			}
+			#end
+		}
+
+		addSongTiming();
+		
 		Conductor.changeBPM(SONG.bpm * songMultiplier);
 
 		Conductor.bpm = SONG.bpm * songMultiplier;
@@ -2768,9 +2767,6 @@ class PlayState extends MusicBeatState
 					}
 
 				default:
-					#if html5
-					babyArrow.frames = Paths.getSparrowAtlas('noteskins/Arrows', 'shared');
-					#else
 					if (!PlayStateChangeables.opponentMode)
 					{
 						if (player == 0)
@@ -2785,7 +2781,6 @@ class PlayState extends MusicBeatState
 						else
 							babyArrow.frames = noteskinSprite;
 					}
-					#end
 					for (j in 0...4)
 					{
 						babyArrow.animation.addByPrefix(dataColor[j], 'arrow' + dataSuffix[j]);
@@ -2912,7 +2907,6 @@ class PlayState extends MusicBeatState
 	{
 		if (paused)
 		{
-			#if FEATURE_STEPMANIA
 			if (isSM)
 			{
 				if (FlxG.sound.music.playing)
@@ -2926,15 +2920,6 @@ class PlayState extends MusicBeatState
 					if (vocals.playing)
 						vocals.pause();
 			}
-			#else
-			if (inst.playing)
-				inst.pause();
-
-			if (vocals != null)
-				if (vocals.playing)
-					vocals.pause();
-			#end
-
 			#if FEATURE_DISCORD
 			DiscordClient.changePresence("PAUSED on "
 				+ SONG.song
@@ -3295,10 +3280,15 @@ class PlayState extends MusicBeatState
 
 				if (timingSegBpm != Conductor.bpm)
 				{
+					Debug.logInfo('Timing Struct BPM: ${timingSeg.bpm} | Current Conductor BPM: ${Conductor.bpm}');
+					Debug.logInfo("BPM CHANGE to " + timingSegBpm);
+
 					Conductor.changeBPM(timingSegBpm);
 
 					Conductor.crochet = ((60 / (timingSegBpm) * 1000)) / songMultiplier;
 					Conductor.stepCrochet = Conductor.crochet / 4;
+
+					Debug.logInfo('Timing Struct BPM: ${timingSeg.bpm} | Current Conductor BPM: ${Conductor.bpm}');
 
 					recalculateAllSectionTimes();
 				}
@@ -3648,16 +3638,15 @@ class PlayState extends MusicBeatState
 			Conductor.rawPosition = inst.time;
 
 			songPositionBar = (Conductor.songPosition - songLength) / 1000;
-
 			currentSection = getSectionByTime(Conductor.songPosition / songMultiplier);
 			if (!paused)
 			{
-				songTime += FlxG.game.ticks - previousFrameTime;
-				previousFrameTime = FlxG.game.ticks;
+				// Interpolation type beat
 				if (Conductor.lastSongPos != Conductor.songPosition)
 				{
-					songTime = (songTime + Conductor.songPosition) / 2;
 					Conductor.lastSongPos = Conductor.songPosition;
+					// Conductor.songPosition += FlxG.elapsed * 1000;
+					// trace('MISSED FRAME');
 				}
 				var curTime:Float = inst.time / songMultiplier;
 
@@ -5278,8 +5267,8 @@ class PlayState extends MusicBeatState
 
 	function updateScoreText()
 	{
-		scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS,
-			(FlxG.save.data.roundAccuracy ? FlxMath.roundDecimal(accuracy, 0) : accuracy));
+			scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS,
+				(FlxG.save.data.roundAccuracy ? FlxMath.roundDecimal(accuracy, 0) : accuracy));
 	}
 
 	function receptorTween()
@@ -5361,7 +5350,6 @@ class PlayState extends MusicBeatState
 		{
 			if (!daNote.isSustainNote)
 			{
-				updateScoreText();
 				if (!PlayStateChangeables.opponentMode)
 				{
 					health -= 0.08 * PlayStateChangeables.healthLoss;
@@ -5574,7 +5562,6 @@ class PlayState extends MusicBeatState
 			{
 				destroyNote(note);
 				updateAccuracy();
-				updateScoreText();
 			}
 			else
 			{

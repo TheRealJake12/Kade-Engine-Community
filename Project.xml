@@ -42,7 +42,7 @@
 
 	<classpath name="source" />
 
-	<assets path="assets/preload/videos" rename="assets/videos" include="*mp4" embed='false' />
+	<assets path="assets/preload/videos" rename="assets/videos" include="*mp4" embed='false' if="VIDEOS" />
 
 	<assets path="assets/preload" rename="assets" exclude="*.ogg" if="web"/>
 	<assets path="assets/preload" rename="assets" exclude="*.mp3" unless="web"/>
@@ -99,10 +99,9 @@
 	<assets path="assets/week6"    library="week6"    exclude="*.mp3" unless="web"/>
 	<assets path="assets/week7"    library="week7"    exclude="*.ogg" if="web"/>
 	<assets path="assets/week7"    library="week7"    exclude="*.mp3" unless="web"/>
-	<assets path="assets/sm"    library="sm"    exclude="*.ogg" if="web"/>
-	<assets path="assets/sm"    library="sm"    exclude="*.mp3" unless="web"/>
-	<assets path="assets/scripts"  library="scripts"/>
-	<assets path='mods' embed='false'/>
+	<assets path="assets/sm"    library="sm"    exclude="*.mp3" if="FEATURE_STEPMANIA"/>
+	<assets path="assets/scripts"  library="scripts" if="FEATURE_HSCRIPT"/>
+	<assets path='mods' embed='false' if="FEATURE_MODCORE"/>
 	
 	<assets path='art/readme.txt' rename='do NOT readme.txt' />
 	<assets path='LICENSE' rename='LICENSE.txt' />
