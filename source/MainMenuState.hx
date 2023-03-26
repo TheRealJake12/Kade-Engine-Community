@@ -188,11 +188,8 @@ class MainMenuState extends MusicBeatState
 		add(logo);
 
 		changeItem();
-
-		if (FlxG.save.data.dfjk)
-			controls.setKeyboardScheme(KeyboardScheme.Solo, true);
-		else
-			controls.setKeyboardScheme(KeyboardScheme.Duo(true), true);
+		
+		controls.setKeyboardScheme(KeyboardScheme.Duo(true), true);
 
 		tweenColorShit();
 

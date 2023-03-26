@@ -387,6 +387,10 @@ class PlayState extends MusicBeatState
 
 	public static var startTime = 0.0;
 
+	// Save Data
+
+	public var psychHolds:Bool = FlxG.save.data.longHolds;
+
 	public function addObject(object:FlxBasic)
 	{
 		add(object);
@@ -792,7 +796,8 @@ class PlayState extends MusicBeatState
 					switch (index)
 					{
 						case 0:
-							add(gf);
+							if (Stage.hasGF)
+								add(gf);
 							gf.scrollFactor.set(0.95, 0.95);
 							for (bg in array)
 								add(bg);
@@ -2384,12 +2389,10 @@ class PlayState extends MusicBeatState
 
 	public function generateSong(dataPath:String):Void
 	{
+		// FlxG.log.add(ChartParser.parse());
 		var songData = SONG;
-		Conductor.changeBPM(songData.bpm);
 
-		#if FEATURE_HSCRIPT
-		scripts.setAll("bpm", Conductor.bpm);
-		#end
+		Conductor.changeBPM(songData.bpm);
 
 		curSong = songData.songId;
 
@@ -2408,16 +2411,15 @@ class PlayState extends MusicBeatState
 		inst = new FlxSound().loadEmbedded(Paths.inst(PlayState.SONG.songId));
 		FlxG.sound.list.add(inst);
 
-		if (isSM)
-			FlxG.sound.music.pause();
-
 		if (PlayStateChangeables.skillIssue)
 		{
 			var redVignette:FlxSprite = new FlxSprite().loadGraphic(Paths.image('nomisses_vignette', 'shared'));
 			redVignette.screenCenter();
-			redVignette.cameras = [camHUD];
+			redVignette.cameras = [overlayCam];
 			add(redVignette);
 		}
+
+		trace('loaded vocals');
 
 		FlxG.sound.list.add(vocals);
 
@@ -2426,6 +2428,7 @@ class PlayState extends MusicBeatState
 			#if FEATURE_STEPMANIA
 			if (!isStoryMode && isSM)
 			{
+				trace("Loading " + pathToSm + "/" + sm.header.MUSIC);
 				var bytes = File.getBytes(pathToSm + "/" + sm.header.MUSIC);
 				var sound = new Sound();
 				sound.loadCompressedDataFromByteArray(bytes.getData(), bytes.length);
@@ -2461,7 +2464,7 @@ class PlayState extends MusicBeatState
 
 		var playerCounter:Int = 0;
 
-		var daBeats:Int = 0;
+		var daBeats:Int = 0; // Not exactly representative of 'daBeats' lol, just how much it has looped
 
 		for (section in noteData)
 		{
@@ -2469,7 +2472,7 @@ class PlayState extends MusicBeatState
 
 			for (songNotes in section.sectionNotes)
 			{
-				var daStrumTime:Float = songNotes[0] / songMultiplier;
+				var daStrumTime:Float = (songNotes[0] - FlxG.save.data.offset - SONG.offset) / songMultiplier;
 				if (daStrumTime < 0)
 					daStrumTime = 0;
 				var daNoteData:Int = Std.int(songNotes[1] % 4);
@@ -2483,11 +2486,11 @@ class PlayState extends MusicBeatState
 					gottaHitNote = !section.mustHitSection;
 
 				var oldNote:Note;
+
 				if (unspawnNotes.length > 0)
 					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 				else
 					oldNote = null;
-
 				var swagNote:Note;
 
 				if (gottaHitNote)
@@ -2496,8 +2499,8 @@ class PlayState extends MusicBeatState
 					swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, false, null, songNotes[4], daNoteType);
 
 				if (PlayStateChangeables.holds)
-				{
-					swagNote.sustainLength = TimingStruct.getTimeFromBeat((TimingStruct.getBeatFromTime(songNotes[2] / songMultiplier)));
+				{	
+					swagNote.sustainLength = songNotes[2] / songMultiplier;
 				}
 				else
 				{
@@ -2506,7 +2509,9 @@ class PlayState extends MusicBeatState
 
 				swagNote.scrollFactor.set(0, 0);
 
-				var susLength:Float = swagNote.sustainLength / fakeNoteStepCrochet;
+				var susLength:Float = swagNote.sustainLength;
+
+				susLength = susLength / Conductor.stepCrochet;
 
 				unspawnNotes.push(swagNote);
 
@@ -2521,55 +2526,55 @@ class PlayState extends MusicBeatState
 
 				var type = 0;
 
-				for (susNote in 0...Math.floor(susLength))
+				if (susLength > 0)
 				{
-					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
-
-					var sustainNote:Note;
-
-					if (gottaHitNote)
-						sustainNote = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, false,
-							true, null, songNotes[4], daNoteType);
-					else
-						sustainNote = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, false,
-							false, null, songNotes[4], daNoteType);
-
-					sustainNote.scrollFactor.set();
-					unspawnNotes.push(sustainNote);
-					sustainNote.isAlt = songNotes[3]
-						|| ((section.altAnim || section.CPUAltAnim) && !gottaHitNote)
-						|| (section.playerAltAnim && gottaHitNote)
-						|| (PlayStateChangeables.opponentMode && gottaHitNote && (section.altAnim || section.CPUAltAnim))
-						|| (PlayStateChangeables.opponentMode && !gottaHitNote && section.playerAltAnim);
-
-					sustainNote.mustPress = gottaHitNote;
-
-					if (sustainNote.mustPress)
+					for (susNote in 0...Math.floor(susLength))
+					// Makes the hold notes long or short, Noted.
+					// for (susNote in 0...Std.int(Math.max(susLength,2)))
 					{
-						sustainNote.x += FlxG.width / 3; // general offset
-					}
+						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
-					sustainNote.parent = swagNote;
-					swagNote.children.push(sustainNote);
-					sustainNote.spotInLine = type;
-					type++;
+						var sustainNote:Note;
+
+						sustainNote = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true);
+							if (gottaHitNote)
+								sustainNote = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, false,
+									true, null, songNotes[4], daNoteType);
+							else
+								sustainNote = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, false,
+									false, null, songNotes[4], daNoteType);
+						sustainNote.scrollFactor.set();
+						unspawnNotes.push(sustainNote);
+						sustainNote.isAlt = songNotes[3]
+							|| ((section.altAnim || section.CPUAltAnim) && !gottaHitNote)
+							|| (section.playerAltAnim && gottaHitNote)
+							|| (PlayStateChangeables.opponentMode && gottaHitNote && (section.altAnim || section.CPUAltAnim))
+							|| (PlayStateChangeables.opponentMode && !gottaHitNote && section.playerAltAnim);
+
+						sustainNote.mustPress = gottaHitNote;
+
+						sustainNote.parent = swagNote;
+						swagNote.children.push(sustainNote);
+						sustainNote.spotInLine = type;
+						type++;
+					}
 				}
 
 				swagNote.mustPress = gottaHitNote;
 
 				if (swagNote.mustPress)
 				{
-					swagNote.x += FlxG.width / 3; // general offset
+					swagNote.x += FlxG.width / 2; // general offset
 				}
 			}
 			daBeats += 1;
 		}
-
+		
 		unspawnNotes.sort(sortByShit);
 
 		generatedMusic = true;
-		if (FlxG.save.data.gen)
-			Debug.logInfo('Generated Chart');
+
+		Debug.logTrace("Generated Song.");
 	}
 
 	function sortByShit(Obj1:Note, Obj2:Note):Int

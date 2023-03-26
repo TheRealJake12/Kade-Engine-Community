@@ -219,5 +219,6 @@
   <haxedef name="POLYMOD_SCRIPT_EXT" value=".hx" />
   <haxedef name="POLYMOD_DEBUG" if="debug" />
   <haxedef name="POLYMOD_SCRIPT_LIBRARY" value="scripts" />
+  <haxedef name="POLYMOD_ROOT_PATH" value="scripts/" />
 
 </project>

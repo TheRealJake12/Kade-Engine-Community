@@ -2184,15 +2184,15 @@ class ScrollAlpha extends Option
 
 	private override function updateDisplay():String
 	{
-		return ("Scroll Alpha");
+		return ("Hold Note Transparency");
 	}
 
 	override function right():Bool
 	{
 		FlxG.save.data.alpha += 0.1;
 
-		if (FlxG.save.data.alpha < 0)
-			FlxG.save.data.alpha = 0;
+		if (FlxG.save.data.alpha < 0.1)
+			FlxG.save.data.alpha = 0.1;
 
 		if (FlxG.save.data.alpha > 1)
 			FlxG.save.data.alpha = 1;
@@ -2201,15 +2201,15 @@ class ScrollAlpha extends Option
 
 	override function getValue():String
 	{
-		return "Current Scroll transparency: " + HelperFunctions.truncateFloat(FlxG.save.data.alpha, 1);
+		return "Hold Note Transparency: " + HelperFunctions.truncateFloat(FlxG.save.data.alpha, 1);
 	}
 
 	override function left():Bool
 	{
 		FlxG.save.data.alpha -= 0.1;
 
-		if (FlxG.save.data.alpha < 0)
-			FlxG.save.data.alpha = 0;
+		if (FlxG.save.data.alpha < 0.1)
+			FlxG.save.data.alpha = 0.1;
 
 		if (FlxG.save.data.alpha > 1)
 			FlxG.save.data.alpha = 1;
@@ -2938,11 +2938,9 @@ class ResetSettings extends Option
 			return true;
 		}
 		FlxG.save.data.weekUnlocked = null;
-		FlxG.save.data.newInput = null;
 		FlxG.save.data.downscroll = null;
 		FlxG.save.data.antialiasing = null;
 		FlxG.save.data.missSounds = null;
-		FlxG.save.data.dfjk = null;
 		FlxG.save.data.accuracyDisplay = null;
 		FlxG.save.data.offset = null;
 		FlxG.save.data.songPosition = null;
@@ -2964,8 +2962,6 @@ class ResetSettings extends Option
 		FlxG.save.data.botplay = null;
 		FlxG.save.data.roundAccuracy = null;
 		FlxG.save.data.cpuStrums = null;
-		FlxG.save.data.strumline = null;
-		FlxG.save.data.customStrumLine = null;
 		FlxG.save.data.camzoom = null;
 		FlxG.save.data.scoreScreen = null;
 		FlxG.save.data.inputShow = null;
@@ -2975,8 +2971,6 @@ class ResetSettings extends Option
 		// custom shit
 		FlxG.save.data.hitsound = null;
 		FlxG.save.data.notesplashes = null;
-		FlxG.save.data.cacheCharacters = null;
-		FlxG.save.data.cacheSongs = null;
 		FlxG.save.data.mem = null;
 		FlxG.save.data.unload = null;
 		FlxG.save.data.gen = null;
