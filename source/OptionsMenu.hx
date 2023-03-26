@@ -151,8 +151,7 @@ class OptionsMenu extends MusicBeatSubstate
 				new NoteskinOption("Change your Noteskin"),
 				new CPUNoteskinOption("Change the CPU Noteskin"),
 				#if desktop
-				new NotesplashOption("Change your Notesplash"), 
-				new CPUNotesplashOption("Change the CPU Notesplash"),
+				new NotesplashOption("Change your Notesplash"), new CPUNotesplashOption("Change the CPU Notesplash"),
 				#end
 				new CPUSplash("Allows The CPU To Do Notesplashes"),
 				new NotesplashesOption("Uses Notesplashes (Only use it on Arrow skins or else theres gonna be some visual bugs(wrong offsets))."),
@@ -184,7 +183,7 @@ class OptionsMenu extends MusicBeatSubstate
 				new ScoreScreen("Show the score screen after the end of a song"),
 				new ShowInput("Display every single input on the score screen."),
 				#if FEATURE_MODCORE
-				new CanLoadMods("Allows Modcore To Detect Mods In The Mods Folder"),
+				new CanLoadMods("Allows Modcore to detect mods in the mods folder."),
 				#end
 			]),
 			new OptionCata(935, 40, "Saves", [

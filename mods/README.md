@@ -1,5 +1,6 @@
 # How do mods work?
 
+**mods are disabled rq cuz dumbass Null Object Reference
 ModCore makes it easy to append, replace, or merge files without editing the game's code.
 
 Kade Engine's ModCore is powered by [Polymod](https://github.com/larsiusprime/polymod). Polymod is what handles loading the relevant assets, ensuring they are injected properly. It also handles ensuring mods are loaded in the proper order.

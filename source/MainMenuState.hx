@@ -21,7 +21,9 @@ import flixel.util.FlxColor;
 import lime.app.Application;
 import flixel.input.keyboard.FlxKey;
 import flixel.addons.display.FlxBackdrop;
+#if FEATURE_MODCORE
 import ModCore;
+#end
 
 using StringTools;
 
