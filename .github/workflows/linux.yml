@@ -40,7 +40,7 @@ jobs:
       - name: Uploading artifact (entire build)
         uses: actions/upload-artifact@v2
         with:
-          name: Kade Engine Community
+          name: FITAalleyengineLINUX
           path: export/release/linux/bin
       - name: Clearing already existing cache
         uses: actions/github-script@v6

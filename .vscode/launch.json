@@ -7,14 +7,14 @@
       "type": "hxcpp",
       "preLaunchTask": "Build Windows (Debug)",
       "request": "launch",
-      "program": "${workspaceFolder}/export/debug/windows/bin/Kade Engine Community.exe"
+      "program": "${workspaceFolder}/export/debug/windows/bin/FunkinInTheAlley.exe"
     },
     {
       "name": "Windows (Release)",
       "type": "hxcpp",
       "preLaunchTask": "Build Windows (Release)",
       "request": "launch",
-      "program": "${workspaceFolder}/export/debug/windows/bin/Kade Engine Community.exe"
+      "program": "${workspaceFolder}/export/debug/windows/bin/FunkinInTheAlley.exe"
     },
     {
       "name": "HTML5 (Debug)",

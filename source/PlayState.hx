@@ -388,7 +388,6 @@ class PlayState extends MusicBeatState
 	public static var startTime = 0.0;
 
 	// Save Data
-
 	public var psychHolds:Bool = FlxG.save.data.longHolds;
 
 	public function addObject(object:FlxBasic)
@@ -1125,7 +1124,8 @@ class PlayState extends MusicBeatState
 			PlayState.SONG.song
 			+ (FlxMath.roundDecimal(songMultiplier, 2) != 1.00 ? " (" + FlxMath.roundDecimal(songMultiplier, 2) + "x)" : "")
 			+ " - "
-			+ CoolUtil.difficultyFromInt(storyDifficulty),
+			+ CoolUtil.difficultyFromInt(storyDifficulty)
+			+ " // Alley Engine (KEC - KE 1.8.1)",
 			16);
 		kadeEngineWatermark.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		kadeEngineWatermark.scrollFactor.set();
@@ -2438,7 +2438,7 @@ class PlayState extends MusicBeatState
 		}
 
 		addSongTiming();
-		
+
 		Conductor.changeBPM(SONG.bpm * songMultiplier);
 
 		Conductor.bpm = SONG.bpm * songMultiplier;
@@ -2499,7 +2499,7 @@ class PlayState extends MusicBeatState
 					swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, false, null, songNotes[4], daNoteType);
 
 				if (PlayStateChangeables.holds)
-				{	
+				{
 					swagNote.sustainLength = songNotes[2] / songMultiplier;
 				}
 				else
@@ -2529,20 +2529,20 @@ class PlayState extends MusicBeatState
 				if (susLength > 0)
 				{
 					for (susNote in 0...Math.floor(susLength))
-					// Makes the hold notes long or short, Noted.
-					// for (susNote in 0...Std.int(Math.max(susLength,2)))
+						// Makes the hold notes long or short, Noted.
+						// for (susNote in 0...Std.int(Math.max(susLength,2)))
 					{
 						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
 						var sustainNote:Note;
 
 						sustainNote = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true);
-							if (gottaHitNote)
-								sustainNote = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, false,
-									true, null, songNotes[4], daNoteType);
-							else
-								sustainNote = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, false,
-									false, null, songNotes[4], daNoteType);
+						if (gottaHitNote)
+							sustainNote = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, false,
+								true, null, songNotes[4], daNoteType);
+						else
+							sustainNote = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, false,
+								false, null, songNotes[4], daNoteType);
 						sustainNote.scrollFactor.set();
 						unspawnNotes.push(sustainNote);
 						sustainNote.isAlt = songNotes[3]
@@ -2569,7 +2569,7 @@ class PlayState extends MusicBeatState
 			}
 			daBeats += 1;
 		}
-		
+
 		unspawnNotes.sort(sortByShit);
 
 		generatedMusic = true;
@@ -3965,7 +3965,7 @@ class PlayState extends MusicBeatState
 				{
 					scripts.executeAllFunc("notesUpdate", [daNote]);
 				};
-				#end	
+				#end
 
 				var strumX = strum.members[daNote.noteData].x;
 				var strumAngle = strum.members[daNote.noteData].modAngle;
@@ -5272,8 +5272,8 @@ class PlayState extends MusicBeatState
 
 	function updateScoreText()
 	{
-			scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS,
-				(FlxG.save.data.roundAccuracy ? FlxMath.roundDecimal(accuracy, 0) : accuracy));
+		scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS,
+			(FlxG.save.data.roundAccuracy ? FlxMath.roundDecimal(accuracy, 0) : accuracy));
 	}
 
 	function receptorTween()

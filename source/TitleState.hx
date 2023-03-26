@@ -186,7 +186,7 @@ class TitleState extends MusicBeatState
 	{
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;
-		
+
 		var pressedEnter:Bool = controls.ACCEPT;
 
 		#if mobile
@@ -311,9 +311,9 @@ class TitleState extends MusicBeatState
 			case 0:
 				deleteCoolText();
 			case 1:
-				createCoolText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']);
+				createCoolText(['Kade Engine', 'by']);
 			case 3:
-				addMoreText('present');
+				addMoreText('KadeDev');
 			case 4:
 				deleteCoolText();
 			case 5:
@@ -336,11 +336,11 @@ class TitleState extends MusicBeatState
 			case 12:
 				deleteCoolText();
 			case 13:
-				addMoreText('Friday');
-			case 14:
-				addMoreText('Night');
-			case 15:
 				addMoreText('Funkin');
+			case 14:
+				addMoreText('In The');
+			case 15:
+				addMoreText('Alley');
 
 			case 16:
 				skipIntro();
