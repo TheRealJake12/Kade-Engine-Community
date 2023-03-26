@@ -131,19 +131,18 @@ class OptionsMenu extends MusicBeatSubstate
 	{
 		options = [
 			new OptionCata(50, 40, "Gameplay", [
+				new DownscrollOption("Toggle making the notes scroll down rather than up."),
+				new CamZoomOption("Toggle the camera zoom in-game."),
+				new GhostTapOption("Toggle counting pressing a directional input when no arrow is there as a miss."),
+				new AccuracyDOption("Change how accuracy is calculated. (Accurate = Simple, Complex = Milisecond Based)"),
 				new ScrollSpeedOption("Change your scroll speed. (1 = Chart dependent)"),
 				new OffsetThing("Change the note visual offset (how many milliseconds a note looks like it is offset in a chart)"),
-				new AccuracyDOption("Change how accuracy is calculated. (Accurate = Simple, Complex = Milisecond Based)"),
 				new HitSoundOption("Toogle hitsound every time you hit a Strum Note."),
 				new HitSoundVolume("Set hitsound volume."),
 				new HitSoundMode("Set at what condition you want the hitsound to play."),
-				new GhostTapOption("Toggle counting pressing a directional input when no arrow is there as a miss."),
-				new DownscrollOption("Toggle making the notes scroll down rather than up."),
 				new BotPlay("A bot plays for you!"),
 				new ResetButtonOption("Toggle pressing R to gameover."),
 				new InstantRespawn("Toggle if you instantly respawn after dying."),
-				new CamZoomOption("Toggle the camera zoom in-game."),
-				// new OffsetMenu("Get a note offset based off of your inputs!"),
 				new DFJKOption(),
 				new Judgement("Create a custom judgement preset"),
 				new CustomizeGameplay("Drag and drop gameplay modules to your prefered positions!")
@@ -152,7 +151,8 @@ class OptionsMenu extends MusicBeatSubstate
 				new NoteskinOption("Change your Noteskin"),
 				new CPUNoteskinOption("Change the CPU Noteskin"),
 				#if desktop
-				new NotesplashOption("Change your Notesplash"), new CPUNotesplashOption("Change the CPU Notesplash"),
+				new NotesplashOption("Change your Notesplash"), 
+				new CPUNotesplashOption("Change the CPU Notesplash"),
 				#end
 				new CPUSplash("Allows The CPU To Do Notesplashes"),
 				new NotesplashesOption("Uses Notesplashes (Only use it on Arrow skins or else theres gonna be some visual bugs(wrong offsets))."),
