@@ -53,7 +53,7 @@ class SelectEditorsState extends MusicBeatState
 
 		for (i in 0...editors.length)
 		{
-			var text:Alphabet = new Alphabet(0, (70 * i) + 30, editors[i], true, false);
+			var text:Alphabet = new Alphabet(0, (70 * i) + 30, editors[i], true);
 			text.isMenuItem = true;
 			text.targetY = i;
 			grpTexts.add(text);
