@@ -20,8 +20,8 @@ jobs:
           key: cache-build-windows
           path: |
             .haxelib/
-            export/release/windows/haxe/
-            export/release/windows/obj/
+            export/debug/windows/haxe/
+            export/debug/windows/obj/
           restore-keys: |
             cache-build-windows
       - name: Installing/Updating libraries
@@ -29,12 +29,12 @@ jobs:
           haxe -cp ./update -D analyzer-optimize -main Update --interp
       - name: Building the game
         run: |
-          haxelib run lime build windows
+          haxelib run lime build windows -debug
       - name: Uploading artifact (entire build)
         uses: actions/upload-artifact@v2
         with:
           name: Kade Engine Community
-          path: export/release/windows/bin
+          path: export/debug/windows/bin
       - name: Clearing already existing cache
         uses: actions/github-script@v6
         with:
@@ -61,7 +61,7 @@ jobs:
           key: cache-build-windows
           path: |
             .haxelib/
-            export/release/windows/haxe/
-            export/release/windows/obj/
+            export/debug/windows/haxe/
+            export/debug/windows/obj/
           restore-keys: |
             cache-build-windows
