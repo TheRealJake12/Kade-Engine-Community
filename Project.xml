@@ -2,7 +2,7 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Funkin' In The Alley" file="FunkinInTheAlley" packageName="com.kookerfoxyt.fita" package="com.kookerfoxyt.fita" main="Main" version="1.0.0" company="KookerFoxYT" />
+	<app title="Funkin' In The Alley" file="Alley Engine" packageName="com.kookerfoxyt.fita" package="com.kookerfoxyt.fita" main="Main" version="1.0.0" company="KookerFoxYT" />
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
