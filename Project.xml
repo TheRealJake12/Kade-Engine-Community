@@ -130,7 +130,6 @@
 	<haxelib name="flixel-ui" />
 	<haxelib name="faxe" if='switch'/>
 	<haxelib name="discord_rpc" if="desktop"/>
-	<haxelib name="polymod"/>
 	<haxelib name="linc_luajit" if="desktop"/>
 	<haxelib name="hxvm-luajit" if="desktop"/>
 	<haxelib name="hxcpp-debug-server" if="desktop"/>
@@ -206,7 +205,7 @@
   <!-- Defines whether Lua Modcharts should be enabled. Only works on Windows. -->
   <haxedef name="FEATURE_LUAMODCHART" if="desktop" />
   <!-- Defines whether StepMania files can be loaded. -->
-  <haxedef name="FEATURE_STEPMANIA" if="desktop" />
+  <!--<haxedef name="FEATURE_STEPMANIA" if="desktop" />-->
   <!-- Defines whether the Thread class can be used. -->
   <haxedef name="FEATURE_MULTITHREADING" if="cpp" />
   <!-- Videos -->
@@ -216,9 +215,9 @@
   <!-- Defines whether modcore can be used. -->
   <!--<haxedef name="FEATURE_MODCORE" if="desktop" />-->
   <!--Polymod shit that'll allow hscript I think.-->
-  <haxedef name="POLYMOD_SCRIPT_EXT" value=".hx" />
-  <haxedef name="POLYMOD_DEBUG" if="debug" />
-  <haxedef name="POLYMOD_SCRIPT_LIBRARY" value="scripts" />
-  <haxedef name="POLYMOD_ROOT_PATH" value="scripts/" />
+  <!--<haxedef name="POLYMOD_SCRIPT_EXT" value=".hx" />-->
+  <!--<haxedef name="POLYMOD_DEBUG" if="debug" />-->
+  <!--<haxedef name="POLYMOD_SCRIPT_LIBRARY" value="scripts" />-->
+  <!--<haxedef name="POLYMOD_ROOT_PATH" value="scripts/" />-->
 
 </project>
