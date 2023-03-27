@@ -11,6 +11,8 @@ class HealthIcon extends FlxSprite
 	public var char:String = '';
 	public var isPlayer:Bool = false;
 	public var isOldIcon:Bool = false;
+	public var initialWidth:Float = 0;
+	public var initialHeight:Float = 0;
 
 	/**
 	 * Used for FreeplayState! If you use it elsewhere, prob gonna annoying
@@ -52,6 +54,9 @@ class HealthIcon extends FlxSprite
 
 		animation.add(char, [0, 1], 0, false, isPlayer);
 		animation.play(char);
+
+		initialWidth = width;
+		initialHeight = height;
 	}
 
 	override function update(elapsed:Float)

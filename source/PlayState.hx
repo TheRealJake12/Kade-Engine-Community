@@ -1306,8 +1306,16 @@ class PlayState extends MusicBeatState
 
 		// This allow arrow key to be detected by flixel. See https://github.com/HaxeFlixel/flixel/issues/2190
 		FlxG.keys.preventDefaultKeys = [];
+		#if FEATURE_MULTITHREADING
+		sys.thread.Thread.create(() ->
+		{
+			FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, handleInput);
+			FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, releaseInput);
+		});
+		#else
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, handleInput);
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, releaseInput);
+		#end
 
 		super.create();
 
@@ -2726,6 +2734,7 @@ class PlayState extends MusicBeatState
 			var babyArrow:StaticArrow = new StaticArrow(-10, strumLine.y);
 
 			var noteTypeCheck:String = 'normal';
+			babyArrow.downScroll = FlxG.save.data.downscroll;
 
 			// if (PlayStateChangeables.Optimize && player == 0)
 			// continue;
@@ -3167,11 +3176,8 @@ class PlayState extends MusicBeatState
 					dunceNote.luaID = currentLuaIndex;
 				}
 				#end
-
-				if (!dunceNote.isSustainNote)
-					dunceNote.cameras = [camNotes];
-				else
-					dunceNote.cameras = [camSustains];
+				
+				dunceNote.cameras = [camHUD]; // Breaks when camera angle is changed or zoom?
 
 				var index:Int = unspawnNotes.indexOf(dunceNote);
 				unspawnNotes.splice(index, 1);
@@ -3310,6 +3316,7 @@ class PlayState extends MusicBeatState
 							pastScrollChanges.push(i);
 							trace("SCROLL SPEED CHANGE to " + i.value);
 							newScroll = i.value;
+							recalculateAllSectionTimes();
 						}
 				}
 			}
@@ -3463,16 +3470,15 @@ class PlayState extends MusicBeatState
 			#end
 		}
 
-		if (health >= 2 && !PlayStateChangeables.opponentMode)
-			health = 2;
-
-		iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.85)));
-		iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.85)));
+		iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.initialWidth, iconP1.width, 0.85)));
+		iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.initialWidth, iconP2.width, 0.85)));
 
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
 
 		var iconOffset:Int = 26;
+		if (health >= 2 && !PlayStateChangeables.opponentMode)
+			health = 2;
 
 		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
 		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
@@ -3950,6 +3956,7 @@ class PlayState extends MusicBeatState
 		if (generatedMusic && !(inCutscene || inCinematic))
 		{
 			var holdArray:Array<Bool> = [controls.LEFT, controls.DOWN, controls.UP, controls.RIGHT];
+			var leSpeed = PlayStateChangeables.scrollSpeed == 1 ? SONG.speed : PlayStateChangeables.scrollSpeed;
 			var stepHeight = (0.45 * fakeNoteStepCrochet * FlxMath.roundDecimal((SONG.speed * Math.pow(PlayState.songMultiplier, 2)), 2));
 
 			// hell
@@ -3970,78 +3977,83 @@ class PlayState extends MusicBeatState
 				var strumX = strum.members[daNote.noteData].x;
 				var strumAngle = strum.members[daNote.noteData].modAngle;
 				var strumDirection = strum.members[daNote.noteData].direction;
+				var strumScrollType = strum.members[daNote.noteData].downScroll;
 				var angleDir = strumDirection * Math.PI / 180;
 				daNote.modAngle = strumDirection - 90 + strumAngle;
 				daNote.x = strumX + Math.cos(angleDir) * daNote.distance;
-				if (!daNote.modifiedByLua)
+
+				if (PlayStateChangeables.useDownscroll)
 				{
-					if (PlayStateChangeables.useDownscroll)
-					{
-						if (daNote.mustPress)
-							daNote.y = (playerStrums.members[Math.floor(Math.abs(daNote.noteData))].y
-								+
-								0.45 * ((Conductor.songPosition - daNote.strumTime) / songMultiplier) * (FlxMath.roundDecimal(PlayStateChangeables.scrollSpeed == 1 ? SONG.speed : PlayStateChangeables.scrollSpeed,
-									2)))
-								- daNote.noteYOff;
-						else
-							daNote.y = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y
-								+
-								0.45 * ((Conductor.songPosition - daNote.strumTime) / songMultiplier) * (FlxMath.roundDecimal(PlayStateChangeables.scrollSpeed == 1 ? SONG.speed : PlayStateChangeables.scrollSpeed,
-									2)))
-								- daNote.noteYOff;
-						if (daNote.isSustainNote)
-						{
-							var bpmRatio = (SONG.bpm / 100);
-							daNote.y -= daNote.height - (1.85 * stepHeight / SONG.speed * bpmRatio);
+					daNote.distance = (0.45 * ((Conductor.songPosition - daNote.strumTime) / songMultiplier) * (FlxMath.roundDecimal(leSpeed, 2)))
+						- daNote.noteYOff;
+				}
+				else
+					daNote.distance = (-0.45 * ((Conductor.songPosition - daNote.strumTime) / songMultiplier) * (FlxMath.roundDecimal(leSpeed, 2)))
+						+ daNote.noteYOff;
 
-							if ((PlayStateChangeables.botPlay
-								|| !daNote.mustPress
-								|| daNote.wasGoodHit
-								|| holdArray[Math.floor(Math.abs(daNote.noteData))])
-								&& daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= (strumLine.y + Note.swagWidth / 2))
-							{
-								var swagRect = new FlxRect(0, 0, daNote.frameWidth * 2, daNote.frameHeight * 2);
-								swagRect.height = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y
-									+ Note.swagWidth / 2
-									- daNote.y) / daNote.scale.y;
-								swagRect.y = daNote.frameHeight - swagRect.height;
-
-								daNote.clipRect = swagRect;
-							}
-						}
-					}
+				if (strumScrollType)
+				{
+					if (daNote.mustPress)
+						daNote.y = (playerStrums.members[Math.floor(Math.abs(daNote.noteData))].y
+							+
+							0.45 * ((Conductor.songPosition - daNote.strumTime) / songMultiplier) * (FlxMath.roundDecimal(PlayStateChangeables.scrollSpeed == 1 ? SONG.speed : PlayStateChangeables.scrollSpeed,
+								2)))
+							- daNote.noteYOff;
 					else
+						daNote.y = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y
+							+
+							0.45 * ((Conductor.songPosition - daNote.strumTime) / songMultiplier) * (FlxMath.roundDecimal(PlayStateChangeables.scrollSpeed == 1 ? SONG.speed : PlayStateChangeables.scrollSpeed,
+								2)))
+							- daNote.noteYOff;
+					if (daNote.isSustainNote)
 					{
-						if (daNote.mustPress)
-							daNote.y = (playerStrums.members[Math.floor(Math.abs(daNote.noteData))].y
-								- 0.45 * ((Conductor.songPosition - daNote.strumTime) / songMultiplier) * (FlxMath.roundDecimal(PlayStateChangeables.scrollSpeed == 1 ? SONG.speed : PlayStateChangeables.scrollSpeed,
-									2)))
-								+ daNote.noteYOff;
-						else
-							daNote.y = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y
-								- 0.45 * ((Conductor.songPosition - daNote.strumTime) / songMultiplier) * (FlxMath.roundDecimal(PlayStateChangeables.scrollSpeed == 1 ? SONG.speed : PlayStateChangeables.scrollSpeed,
-									2)))
-								+ daNote.noteYOff;
-						if (daNote.isSustainNote)
-						{
-							if ((PlayStateChangeables.botPlay
-								|| !daNote.mustPress
-								|| daNote.wasGoodHit
-								|| holdArray[Math.floor(Math.abs(daNote.noteData))])
-								&& daNote.y + daNote.offset.y * daNote.scale.y <= (strumLine.y + Note.swagWidth / 2))
-							{
-								var swagRect = new FlxRect(0, 0, daNote.width / daNote.scale.x, daNote.height / daNote.scale.y);
-								swagRect.y = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y
-									+ Note.swagWidth / 2
-									- daNote.y) / daNote.scale.y;
-								swagRect.height -= swagRect.y;
+						var bpmRatio = (SONG.bpm / 100);
+						daNote.y -= daNote.height - (1.85 * stepHeight / SONG.speed * bpmRatio);
 
-								daNote.clipRect = swagRect;
-							}
+						if ((PlayStateChangeables.botPlay
+							|| !daNote.mustPress
+							|| daNote.wasGoodHit
+							|| holdArray[Math.floor(Math.abs(daNote.noteData))])
+							&& daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= (strumLine.y + Note.swagWidth / 2))
+						{
+							var swagRect = new FlxRect(0, 0, daNote.frameWidth * 2, daNote.frameHeight * 2);
+							swagRect.height = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y
+								+ Note.swagWidth / 2
+								- daNote.y) / daNote.scale.y;
+							swagRect.y = daNote.frameHeight - swagRect.height;
+
+							daNote.clipRect = swagRect;
 						}
 					}
 				}
+				else
+				{
+					if (daNote.mustPress)
+						daNote.y = (playerStrums.members[Math.floor(Math.abs(daNote.noteData))].y
+							- 0.45 * ((Conductor.songPosition - daNote.strumTime) / songMultiplier) * (FlxMath.roundDecimal(PlayStateChangeables.scrollSpeed == 1 ? SONG.speed : PlayStateChangeables.scrollSpeed,
+								2)))
+							+ daNote.noteYOff;
+					else
+						daNote.y = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y
+							- 0.45 * ((Conductor.songPosition - daNote.strumTime) / songMultiplier) * (FlxMath.roundDecimal(PlayStateChangeables.scrollSpeed == 1 ? SONG.speed : PlayStateChangeables.scrollSpeed,
+								2)))
+							+ daNote.noteYOff;
+					if (daNote.isSustainNote)
+					{
+						if ((PlayStateChangeables.botPlay
+							|| !daNote.mustPress
+							|| daNote.wasGoodHit
+							|| holdArray[Math.floor(Math.abs(daNote.noteData))])
+							&& daNote.y + daNote.offset.y * daNote.scale.y <= (strumLine.y + Note.swagWidth / 2))
+						{
+							var swagRect = new FlxRect(0, 0, daNote.width / daNote.scale.x, daNote.height / daNote.scale.y);
+							swagRect.y = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y + Note.swagWidth / 2 - daNote.y) / daNote.scale.y;
+							swagRect.height -= swagRect.y;
 
+							daNote.clipRect = swagRect;
+						}
+					}
+				}
 				if (!daNote.mustPress)
 				{
 					if (Conductor.songPosition >= daNote.strumTime && daNote.canPlayAnims)
@@ -4051,14 +4063,10 @@ class PlayState extends MusicBeatState
 				if (daNote.mustPress && !daNote.modifiedByLua)
 				{
 					daNote.visible = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].visible;
-					if (!daNote.isSustainNote)
-						daNote.modAngle = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
 				}
 				else if (!daNote.wasGoodHit && !daNote.modifiedByLua)
 				{
 					daNote.visible = strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].visible;
-					if (!daNote.isSustainNote)
-						daNote.modAngle = strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
 				}
 
 				// there was some code idk what it did but it fucked with color quantization shit. ik its a feature not many like but I like it.
@@ -4338,6 +4346,7 @@ class PlayState extends MusicBeatState
 			luaModchart = null;
 		}
 		#end
+		poggers(true);
 
 		canPause = false;
 		inst.volume = 0;
@@ -5562,6 +5571,7 @@ class PlayState extends MusicBeatState
 					pressArrow(spr, spr.ID, note);
 				});
 			}
+			
 
 			if (!note.isSustainNote)
 			{
@@ -5668,6 +5678,17 @@ class PlayState extends MusicBeatState
 			}
 		}
 
+		if (!theMotionThing || !paused)
+		{
+			if (curStep % 4 == 0)
+			{
+				iconP1.setGraphicSize(Std.int(iconP1.width + 45 / songMultiplier));
+				iconP2.setGraphicSize(Std.int(iconP2.width + 45 / songMultiplier));
+				iconP1.updateHitbox();
+				iconP2.updateHitbox();
+			}
+		}
+
 		if (!endingSong && currentSection != null)
 		{
 			if (!FlxG.save.data.optimize)
@@ -5742,25 +5763,6 @@ class PlayState extends MusicBeatState
 			{
 				FlxG.camera.zoom += 0.015 * zoomMultiplier / songMultiplier;
 				camHUD.zoom += 0.03 * zoomMultiplier / songMultiplier;
-			}
-		}
-		if (!theMotionThing)
-		{
-			if (songMultiplier == 1)
-			{
-				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
-				iconP2.setGraphicSize(Std.int(iconP2.width + 30));
-
-				iconP1.updateHitbox();
-				iconP2.updateHitbox();
-			}
-			else
-			{
-				iconP1.setGraphicSize(Std.int(iconP1.width + 4));
-				iconP2.setGraphicSize(Std.int(iconP2.width + 4));
-
-				iconP1.updateHitbox();
-				iconP2.updateHitbox();
 			}
 		}
 
