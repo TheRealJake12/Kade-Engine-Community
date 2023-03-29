@@ -4590,7 +4590,7 @@ class PlayState extends MusicBeatState
 				}
 			case 'marv':
 				if (FlxG.save.data.accuracyMod == 0)
-					totalNotesHit += 1.25;
+					totalNotesHit += 1;
 				marvs++;
 				if (!PlayStateChangeables.opponentMode && health < 2)
 				{
