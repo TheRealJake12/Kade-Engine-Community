@@ -530,7 +530,7 @@ class Paths
 					OpenFlAssets.cache.clearSounds(key);
 					currentTrackedSounds.remove(key);
 					counterSound++;
-					//Debug.logTrace('Cleared and removed $counterSound cached sounds.');
+					// Debug.logTrace('Cleared and removed $counterSound cached sounds.');
 				}
 			}
 
@@ -542,7 +542,7 @@ class Paths
 				{
 					OpenFlAssets.cache.clear(key);
 					counterLeft++;
-					//Debug.logTrace('Cleared and removed $counterLeft cached leftover assets.');
+					// Debug.logTrace('Cleared and removed $counterLeft cached leftover assets.');
 				}
 			}
 
