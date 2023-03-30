@@ -1,5 +1,6 @@
 package;
 
+		#if FEATURE_STEPMANIA
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -51,3 +52,4 @@ class WaveformTestState extends FlxState
 			FlxG.camera.x -= 1;
 	}
 }
+#end

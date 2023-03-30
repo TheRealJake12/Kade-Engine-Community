@@ -1,2 +1,8 @@
+# dumbass export folder, which consumes the repo size if you remove the line below
 export/
+
+# the hmm folder
 .haxelib/
+
+# the vscode folder
+.vscode/

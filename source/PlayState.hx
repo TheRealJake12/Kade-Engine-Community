@@ -502,8 +502,10 @@ class PlayState extends MusicBeatState
 
 		#if FEATURE_LUAMODCHART
 		executeModchart = FileSystem.exists(Paths.lua('songs/${PlayState.SONG.songId}/modchart')) && PlayStateChangeables.modchart;
+		#if FEATURE_STEPMANIA
 		if (isSM)
 			executeModchart = FileSystem.exists(pathToSm + "/modchart.lua");
+		#end
 		#end
 		#if !cpp
 		executeModchart = false;
@@ -3430,6 +3432,7 @@ class PlayState extends MusicBeatState
 				openSubState(new PauseSubState());
 		}
 
+		#if FEATURE_STEPMANIA
 		if (FlxG.keys.justPressed.FIVE && songStarted)
 		{
 			songMultiplier = 1;
@@ -3446,6 +3449,7 @@ class PlayState extends MusicBeatState
 			}
 			#end
 		}
+		#end
 
 		if (FlxG.keys.justPressed.SEVEN && songStarted)
 		{
