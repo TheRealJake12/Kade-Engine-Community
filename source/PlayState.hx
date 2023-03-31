@@ -3168,8 +3168,8 @@ class PlayState extends MusicBeatState
 				#end
 
 				dunceNote.cameras = [camHUD]; // Breaks when camera angle is changed or zoom?
-
 				var index:Int = unspawnNotes.indexOf(dunceNote);
+				//unspawnNotes.splice(index, 1);
 				currentLuaIndex++;
 			}
 			else
@@ -4086,7 +4086,7 @@ class PlayState extends MusicBeatState
 				{
 					daNote.x += 36.5;
 					if (SONG.noteStyle == 'pixel')
-						daNote.x -= 7;
+						daNote.x -= 5;
 				}
 
 				if (daNote.isSustainNote && daNote.wasGoodHit && Conductor.songPosition >= daNote.strumTime)
@@ -4627,7 +4627,7 @@ class PlayState extends MusicBeatState
 		if (daRating != 'shit')
 			scoreTxt.color = FlxColor.WHITE;
 
-		if (daRating == 'sick' && daNote.canNoteSplash || daRating == 'marv' && daNote.canNoteSplash)
+		if (daRating == 'sick' && daNote.canNoteSplash && FlxG.save.data.notesplashes || daRating == 'marv' && daNote.canNoteSplash && FlxG.save.data.notesplashes)
 		{
 			NoteSplashesSpawn(daNote);
 		}
