@@ -420,11 +420,13 @@ class Note extends FlxSprite
 				noteYOff = -stepHeight + swagWidth * 0.5;
 			}
 		}
-
-		if (!modifiedByLua)
-			angle = modAngle + localAngle;
-		else
-			angle = modAngle;
+		if (!isSustainNote)
+		{
+			if (!modifiedByLua)
+				angle = modAngle + localAngle;
+			else
+				angle = modAngle;
+		}
 
 		if (!modifiedByLua)
 		{

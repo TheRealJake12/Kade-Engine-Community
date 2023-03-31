@@ -3978,6 +3978,7 @@ class PlayState extends MusicBeatState
 				#end	
 
 				var strumX = strum.members[daNote.noteData].x;
+				var strumY = strum.members[daNote.noteData].y;
 				var strumAngle = strum.members[daNote.noteData].modAngle;
 				var strumDirection = strum.members[daNote.noteData].direction;
 				var strumScrollType = strum.members[daNote.noteData].downScroll;
@@ -3985,7 +3986,7 @@ class PlayState extends MusicBeatState
 				daNote.modAngle = strumDirection - 90 + strumAngle;
 				daNote.x = strumX + Math.cos(angleDir) * daNote.distance;
 
-				if (PlayStateChangeables.useDownscroll)
+				if (strumScrollType)
 				{
 					daNote.distance = (0.45 * ((Conductor.songPosition - daNote.strumTime) / songMultiplier) * (FlxMath.roundDecimal(leSpeed, 2)))
 						- daNote.noteYOff;
@@ -4066,10 +4067,14 @@ class PlayState extends MusicBeatState
 				if (daNote.mustPress && !daNote.modifiedByLua)
 				{
 					daNote.visible = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].visible;
+					if (!daNote.isSustainNote)
+						daNote.modAngle = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
 				}
 				else if (!daNote.wasGoodHit && !daNote.modifiedByLua)
 				{
 					daNote.visible = strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].visible;
+					if (!daNote.isSustainNote)
+						daNote.modAngle = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
 				}
 
 				// there was some code idk what it did but it fucked with color quantization shit. ik its a feature not many like but I like it.
@@ -4156,6 +4161,7 @@ class PlayState extends MusicBeatState
 										{
 											totalNotesHit -= 1;
 										}
+										updateAccuracy();
 									}
 									else if (!daNote.wasGoodHit && !daNote.isSustainNote && daNote.causesMisses)
 									{
@@ -4185,7 +4191,7 @@ class PlayState extends MusicBeatState
 							{
 								if (PlayStateChangeables.botPlay)
 								{
-									daNote.rating = "good";
+									daNote.rating = "sick";
 									goodNoteHit(daNote);
 								}
 								else
@@ -4220,6 +4226,7 @@ class PlayState extends MusicBeatState
 										// misses++;
 										totalNotesHit -= 1;
 									}
+									updateAccuracy();
 								}
 								else if (!daNote.wasGoodHit && !daNote.isSustainNote && daNote.causesMisses)
 								{
@@ -5066,7 +5073,6 @@ class PlayState extends MusicBeatState
 							if (mashViolations != 0)
 								mashViolations--;
 							hit[coolNote.noteData] = true;
-							scoreTxt.color = FlxColor.WHITE;
 							var noteDiff:Float = -(coolNote.strumTime - Conductor.songPosition);
 							anas[coolNote.noteData].hit = true;
 							anas[coolNote.noteData].hitJudge = Ratings.judgeNote(noteDiff);
@@ -5300,8 +5306,8 @@ class PlayState extends MusicBeatState
 
 	function updateScoreText()
 	{
-			scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS,
-				(FlxG.save.data.roundAccuracy ? FlxMath.roundDecimal(accuracy, 0) : accuracy));
+		scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS,
+			(FlxG.save.data.roundAccuracy ? FlxMath.roundDecimal(accuracy, 0) : accuracy));
 	}
 
 	function receptorTween()
@@ -5477,8 +5483,7 @@ class PlayState extends MusicBeatState
 			if (SONG.needsVoices)
 				vocals.volume = 1;
 		}
-
-		daNote.active = false;
+		
 		destroyNote(daNote);
 	}
 
