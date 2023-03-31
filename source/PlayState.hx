@@ -2300,6 +2300,9 @@ class PlayState extends MusicBeatState
 		Conductor.songPosition = startTime;
 		startTime = 0;
 
+		addSongTiming();
+		recalculateAllSectionTimes();
+
 		#if FEATURE_DISCORD
 		DiscordClient.changePresence(detailsText
 			+ " "
@@ -2315,8 +2318,6 @@ class PlayState extends MusicBeatState
 			+ " | Misses: "
 			+ misses, iconRPC);
 		#end
-
-		addSongTiming();
 
 		if (isSM)
 			songLength = ((FlxG.sound.music.length / songMultiplier) / 1000);
@@ -2372,13 +2373,6 @@ class PlayState extends MusicBeatState
 			createTween(bar, {alpha: 1}, 0.5, {ease: FlxEase.circOut});
 		}
 
-		if (inst != null)
-			inst.time = startTime;
-		if (vocals != null)
-			vocals.time = startTime;
-		Conductor.songPosition = startTime;
-		startTime = 0;
-
 		if (needSkip)
 		{
 			skipActive = true;
@@ -2398,6 +2392,8 @@ class PlayState extends MusicBeatState
 	public function generateSong(dataPath:String):Void
 	{
 		var songData = SONG;
+
+		Conductor.changeBPM(songData.bpm);
 
 		curSong = songData.songId;
 
@@ -2482,7 +2478,7 @@ class PlayState extends MusicBeatState
 
 			for (songNotes in section.sectionNotes)
 			{
-				var daStrumTime:Float = songNotes[0] / songMultiplier;
+				var daStrumTime:Float = (songNotes[0] - FlxG.save.data.offset - SONG.offset) / songMultiplier;
 				if (daStrumTime < 0)
 					daStrumTime = 0;
 				var daNoteData:Int = Std.int(songNotes[1] % 4);
@@ -3160,7 +3156,7 @@ class PlayState extends MusicBeatState
 		{
 			if (unspawnNotes[0].strumTime - Conductor.songPosition < shit)
 			{
-				var dunceNote:Note = unspawnNotes.shift(); //perhaps???
+				var dunceNote:Note = unspawnNotes.shift(); // perhaps???
 				notes.add(dunceNote);
 
 				#if FEATURE_LUAMODCHART
@@ -3170,11 +3166,10 @@ class PlayState extends MusicBeatState
 					dunceNote.luaID = currentLuaIndex;
 				}
 				#end
-				
+
 				dunceNote.cameras = [camHUD]; // Breaks when camera angle is changed or zoom?
 
 				var index:Int = unspawnNotes.indexOf(dunceNote);
-				unspawnNotes.splice(index, 1);
 				currentLuaIndex++;
 			}
 			else
@@ -6529,7 +6524,8 @@ class PlayState extends MusicBeatState
 	}
 
 	function playVid(name:String)
-	{
+	{	
+		#if VIDEOS
 		var vid:VideoHandler = new VideoHandler();
 		vid.playVideo(Paths.video(name));
 		vid.finishCallback = function()
@@ -6540,10 +6536,14 @@ class PlayState extends MusicBeatState
 			if (scripts != null)
 				scripts.executeAllFunc("playVid", [name]);
 		#end
+		#else
+		FlxG.log.warn("Platform Not Supported.");
+		#end
 	}
 
 	function playVideoSprite(x:Float, y:Float,scaleX:Float, scaleY:Float, path:String)
 	{
+		#if VIDEOS
 		var vid:VideoSprite = new VideoSprite();
 		vid.x = x;
 		vid.y = y;
@@ -6553,6 +6553,9 @@ class PlayState extends MusicBeatState
 		#if FEATURE_HSCRIPT
 		if (scripts != null)
 			scripts.executeAllFunc("playVideoSprite", [x,y,scaleX,scaleY,path]);
+		#end
+		#else
+		FlxG.log.warn("Platform Not Supported.");
 		#end
 	}
 }
