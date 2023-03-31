@@ -2263,7 +2263,8 @@ class PlayState extends MusicBeatState
 		if (!FlxG.save.data.optimize)
 		{
 			if (allowedToHeadbang)
-				gf.dance();
+				if (gf.curCharacter != 'pico-speaker')
+					gf.dance();
 			if (idleToBeat && !boyfriend.animation.curAnim.name.startsWith("sing"))
 				boyfriend.dance(forcedToIdle);
 			if (idleToBeat && !dad.animation.curAnim.name.startsWith("sing") && !PlayStateChangeables.opponentMode)
@@ -2292,6 +2293,13 @@ class PlayState extends MusicBeatState
 			luaModchart.executeState("songStart", [null]);
 		#end
 
+		if (inst != null)
+			inst.time = startTime;
+		if (vocals != null)
+			vocals.time = startTime;
+		Conductor.songPosition = startTime;
+		startTime = 0;
+
 		#if FEATURE_DISCORD
 		DiscordClient.changePresence(detailsText
 			+ " "
@@ -2308,7 +2316,7 @@ class PlayState extends MusicBeatState
 			+ misses, iconRPC);
 		#end
 
-		recalculateAllSectionTimes();
+		addSongTiming();
 
 		if (isSM)
 			songLength = ((FlxG.sound.music.length / songMultiplier) / 1000);
@@ -2370,12 +2378,6 @@ class PlayState extends MusicBeatState
 			vocals.time = startTime;
 		Conductor.songPosition = startTime;
 		startTime = 0;
-
-		addSongTiming();
-
-		for (i in 0...unspawnNotes.length)
-			if (unspawnNotes[i].strumTime < startTime)
-				unspawnNotes.remove(unspawnNotes[i]);
 
 		if (needSkip)
 		{
@@ -3308,7 +3310,6 @@ class PlayState extends MusicBeatState
 							pastScrollChanges.push(i);
 							trace("SCROLL SPEED CHANGE to " + i.value);
 							newScroll = i.value;
-							recalculateAllSectionTimes();
 						}
 				}
 			}
@@ -4574,6 +4575,8 @@ class PlayState extends MusicBeatState
 					if (PlayStateChangeables.skillIssue)
 						health = 2.1;
 				}
+				if (FlxG.save.data.accuracyMod == 0)
+					totalNotesHit -= 1;
 			case 'bad':
 				score = 100;
 				if (!PlayStateChangeables.opponentMode)
@@ -4606,9 +4609,6 @@ class PlayState extends MusicBeatState
 					totalNotesHit += 1;
 				sicks++;
 			case 'marv':
-				if (FlxG.save.data.accuracyMod == 0)
-					totalNotesHit += 1;
-				marvs++;
 				if (!PlayStateChangeables.opponentMode && health < 2)
 				{
 					health += 0.06 * PlayStateChangeables.healthGain;
@@ -4617,6 +4617,9 @@ class PlayState extends MusicBeatState
 				{
 					health -= 0.06 * PlayStateChangeables.healthGain;
 				}	
+				if (FlxG.save.data.accuracyMod == 0)
+					totalNotesHit += 1;
+				marvs++;	
 		}
 
 		if (daRating != 'shit')
