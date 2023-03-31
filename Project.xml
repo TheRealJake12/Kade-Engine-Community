@@ -101,7 +101,9 @@
 	<assets path="assets/week7"    library="week7"    exclude="*.mp3" unless="web"/>
 	<assets path="assets/sm"    library="sm"    exclude="*.mp3" if="FEATURE_STEPMANIA"/>
 	<assets path="assets/scripts"  library="scripts" if="FEATURE_HSCRIPT"/>
-	<assets path='mods' embed='false' if="FEATURE_MODCORE"/>
+	<section if="FEATURE_MODCORE">
+		<assets path='mods' embed='false'/>
+	</section>
 	
 	<assets path='art/readme.txt' rename='do NOT readme.txt' />
 	<assets path='LICENSE' rename='LICENSE.txt' />
