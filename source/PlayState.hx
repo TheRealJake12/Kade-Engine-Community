@@ -4627,7 +4627,7 @@ class PlayState extends MusicBeatState
 		if (daRating != 'shit')
 			scoreTxt.color = FlxColor.WHITE;
 
-		if (daRating == 'sick' && daNote.canNoteSplash && FlxG.save.data.notesplashes || daRating == 'marv' && daNote.canNoteSplash && FlxG.save.data.notesplashes)
+		 if ((daRating == 'sick' && daNote.canNoteSplash || daRating == 'marv' && daNote.canNoteSplash) && FlxG.save.data.notesplashes)
 		{
 			NoteSplashesSpawn(daNote);
 		}

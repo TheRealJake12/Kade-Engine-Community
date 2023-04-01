@@ -236,6 +236,8 @@ class Note extends FlxSprite
 									animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
 									animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
 								}
+								setGraphicSize(Std.int(width / 1.5));
+								updateHitbox();
 							}
 
 						case 'mustpress':
@@ -247,6 +249,8 @@ class Note extends FlxSprite
 									animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
 									animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
 								}
+								setGraphicSize(Std.int(width / 1.5));
+								updateHitbox();
 							}
 						default:
 							#if html5
