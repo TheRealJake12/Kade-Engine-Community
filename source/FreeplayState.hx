@@ -575,6 +575,13 @@ class FreeplayState extends MusicBeatState
 			openSubState(new FreeplaySubState.ModMenu());
 		}
 
+		if (FlxG.keys.justPressed.TWO && !openMod && !MusicBeatState.switchingState)
+		{
+			openMod = true;
+			FlxG.sound.play(Paths.sound('scrollMenu'));
+			openSubState(new DiffOverview());
+		}
+
 		if (!openMod && !MusicBeatState.switchingState)
 		{
 			if (FlxG.keys.pressed.SHIFT) // && songs[curSelected].songName.toLowerCase() != "tutorial")
@@ -749,7 +756,6 @@ class FreeplayState extends MusicBeatState
 					loadSong();
 					break;
 				}
-			#if debug
 			// Going to charting state via Freeplay is only enable in debug builds.
 			else if (charting)
 				loadSong(true);
@@ -764,7 +770,6 @@ class FreeplayState extends MusicBeatState
 			{
 				loadAnimDebug(false);
 			}
-			#end
 		}
 
 		if (openMod)
