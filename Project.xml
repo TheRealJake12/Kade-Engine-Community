@@ -126,6 +126,7 @@
 	<haxelib name="flixel-addons" />
 	<haxelib name="hscript" />
 	<haxedef name="hscriptPos" value="true" />
+        <haxelib name="polymod" />
 
 
 	<!--In case you want to use the ui package-->
