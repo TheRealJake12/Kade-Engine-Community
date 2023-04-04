@@ -1139,9 +1139,11 @@ class PlayState extends MusicBeatState
 		if (PlayStateChangeables.useDownscroll)
 			kadeEngineWatermark.y = FlxG.height * 0.9 + 45;
 
-		scoreTxt = new FlxText(FlxG.width / 2 - 235, healthBarBG.y + 50, 0, "", 20);
+		scoreTxt = new FlxText(FlxG.width / 2 - 235, healthBarBG.y + 50, 0, "", 16);
 		scoreTxt.screenCenter(X);
 		scoreTxt.scrollFactor.set();
+		scoreTxt.borderQuality = 2;
+		scoreTxt.antialiasing = true; // Should use the save data but its too annoying.
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		// scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS, accuracy);
 		if (!FlxG.save.data.healthBar)
@@ -2267,7 +2269,8 @@ class PlayState extends MusicBeatState
 		if (!FlxG.save.data.optimize)
 		{
 			if (allowedToHeadbang)
-				gf.dance();
+				if (gf.curCharacter != 'pico-speaker')
+					gf.dance();
 			if (idleToBeat && !boyfriend.animation.curAnim.name.startsWith("sing"))
 				boyfriend.dance(forcedToIdle);
 			if (idleToBeat && !dad.animation.curAnim.name.startsWith("sing") && !PlayStateChangeables.opponentMode)
@@ -2296,6 +2299,16 @@ class PlayState extends MusicBeatState
 			luaModchart.executeState("songStart", [null]);
 		#end
 
+		if (inst != null)
+			inst.time = startTime;
+		if (vocals != null)
+			vocals.time = startTime;
+		Conductor.songPosition = startTime;
+		startTime = 0;
+
+		addSongTiming();
+		recalculateAllSectionTimes();
+
 		#if FEATURE_DISCORD
 		DiscordClient.changePresence(detailsText
 			+ " "
@@ -2311,8 +2324,6 @@ class PlayState extends MusicBeatState
 			+ " | Misses: "
 			+ misses, iconRPC);
 		#end
-
-		recalculateAllSectionTimes();
 
 		if (isSM)
 			songLength = ((FlxG.sound.music.length / songMultiplier) / 1000);
@@ -2368,19 +2379,6 @@ class PlayState extends MusicBeatState
 			createTween(bar, {alpha: 1}, 0.5, {ease: FlxEase.circOut});
 		}
 
-		if (inst != null)
-			inst.time = startTime;
-		if (vocals != null)
-			vocals.time = startTime;
-		Conductor.songPosition = startTime;
-		startTime = 0;
-
-		addSongTiming();
-
-		for (i in 0...unspawnNotes.length)
-			if (unspawnNotes[i].strumTime < startTime)
-				unspawnNotes.remove(unspawnNotes[i]);
-
 		if (needSkip)
 		{
 			skipActive = true;
@@ -2400,6 +2398,8 @@ class PlayState extends MusicBeatState
 	public function generateSong(dataPath:String):Void
 	{
 		var songData = SONG;
+
+		Conductor.changeBPM(songData.bpm);
 
 		curSong = songData.songId;
 
@@ -2484,7 +2484,7 @@ class PlayState extends MusicBeatState
 
 			for (songNotes in section.sectionNotes)
 			{
-				var daStrumTime:Float = songNotes[0] / songMultiplier;
+				var daStrumTime:Float = (songNotes[0] - FlxG.save.data.offset - SONG.offset) / songMultiplier;
 				if (daStrumTime < 0)
 					daStrumTime = 0;
 				var daNoteData:Int = Std.int(songNotes[1] % 4);
@@ -3174,9 +3174,8 @@ class PlayState extends MusicBeatState
 				#end
 
 				dunceNote.cameras = [camHUD]; // Breaks when camera angle is changed or zoom?
-
 				var index:Int = unspawnNotes.indexOf(dunceNote);
-				unspawnNotes.splice(index, 1);
+				//unspawnNotes.splice(index, 1);
 				currentLuaIndex++;
 			}
 			else
@@ -3312,7 +3311,6 @@ class PlayState extends MusicBeatState
 							pastScrollChanges.push(i);
 							trace("SCROLL SPEED CHANGE to " + i.value);
 							newScroll = i.value;
-							recalculateAllSectionTimes();
 						}
 				}
 			}
@@ -3988,6 +3986,7 @@ class PlayState extends MusicBeatState
 				#end
 
 				var strumX = strum.members[daNote.noteData].x;
+				var strumY = strum.members[daNote.noteData].y;
 				var strumAngle = strum.members[daNote.noteData].modAngle;
 				var strumDirection = strum.members[daNote.noteData].direction;
 				var strumScrollType = strum.members[daNote.noteData].downScroll;
@@ -3995,7 +3994,7 @@ class PlayState extends MusicBeatState
 				daNote.modAngle = strumDirection - 90 + strumAngle;
 				daNote.x = strumX + Math.cos(angleDir) * daNote.distance;
 
-				if (PlayStateChangeables.useDownscroll)
+				if (strumScrollType)
 				{
 					daNote.distance = (0.45 * ((Conductor.songPosition - daNote.strumTime) / songMultiplier) * (FlxMath.roundDecimal(leSpeed, 2)))
 						- daNote.noteYOff;
@@ -4076,10 +4075,14 @@ class PlayState extends MusicBeatState
 				if (daNote.mustPress && !daNote.modifiedByLua)
 				{
 					daNote.visible = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].visible;
+					if (!daNote.isSustainNote)
+						daNote.modAngle = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
 				}
 				else if (!daNote.wasGoodHit && !daNote.modifiedByLua)
 				{
 					daNote.visible = strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].visible;
+					if (!daNote.isSustainNote)
+						daNote.modAngle = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
 				}
 
 				// there was some code idk what it did but it fucked with color quantization shit. ik its a feature not many like but I like it.
@@ -4091,7 +4094,7 @@ class PlayState extends MusicBeatState
 				{
 					daNote.x += 36.5;
 					if (SONG.noteStyle == 'pixel')
-						daNote.x -= 7;
+						daNote.x -= 5;
 				}
 
 				if (daNote.isSustainNote && daNote.wasGoodHit && Conductor.songPosition >= daNote.strumTime)
@@ -4166,6 +4169,7 @@ class PlayState extends MusicBeatState
 										{
 											totalNotesHit -= 1;
 										}
+										updateAccuracy();
 									}
 									else if (!daNote.wasGoodHit && !daNote.isSustainNote && daNote.causesMisses)
 									{
@@ -4195,7 +4199,7 @@ class PlayState extends MusicBeatState
 							{
 								if (PlayStateChangeables.botPlay)
 								{
-									daNote.rating = "good";
+									daNote.rating = "sick";
 									goodNoteHit(daNote);
 								}
 								else
@@ -4230,6 +4234,7 @@ class PlayState extends MusicBeatState
 										// misses++;
 										totalNotesHit -= 1;
 									}
+									updateAccuracy();
 								}
 								else if (!daNote.wasGoodHit && !daNote.isSustainNote && daNote.causesMisses)
 								{
@@ -4580,6 +4585,8 @@ class PlayState extends MusicBeatState
 					if (PlayStateChangeables.skillIssue)
 						health = 2.1;
 				}
+				if (FlxG.save.data.accuracyMod == 0)
+					totalNotesHit -= 1;
 			case 'bad':
 				score = 100;
 				if (!PlayStateChangeables.opponentMode)
@@ -4612,9 +4619,6 @@ class PlayState extends MusicBeatState
 					totalNotesHit += 1;
 				sicks++;
 			case 'marv':
-				if (FlxG.save.data.accuracyMod == 0)
-					totalNotesHit += 1;
-				marvs++;
 				if (!PlayStateChangeables.opponentMode && health < 2)
 				{
 					health += 0.06 * PlayStateChangeables.healthGain;
@@ -4622,13 +4626,17 @@ class PlayState extends MusicBeatState
 				else if (PlayStateChangeables.opponentMode && health > 0)
 				{
 					health -= 0.06 * PlayStateChangeables.healthGain;
-				}
+
+				}	
+				if (FlxG.save.data.accuracyMod == 0)
+					totalNotesHit += 1;
+				marvs++;	
 		}
 
 		if (daRating != 'shit')
 			scoreTxt.color = FlxColor.WHITE;
 
-		if (daRating == 'sick' && daNote.canNoteSplash || daRating == 'marv' && daNote.canNoteSplash)
+		 if ((daRating == 'sick' && daNote.canNoteSplash || daRating == 'marv' && daNote.canNoteSplash) && FlxG.save.data.notesplashes)
 		{
 			NoteSplashesSpawn(daNote);
 		}
@@ -5073,7 +5081,6 @@ class PlayState extends MusicBeatState
 							if (mashViolations != 0)
 								mashViolations--;
 							hit[coolNote.noteData] = true;
-							scoreTxt.color = FlxColor.WHITE;
 							var noteDiff:Float = -(coolNote.strumTime - Conductor.songPosition);
 							anas[coolNote.noteData].hit = true;
 							anas[coolNote.noteData].hitJudge = Ratings.judgeNote(noteDiff);
@@ -5484,8 +5491,7 @@ class PlayState extends MusicBeatState
 			if (SONG.needsVoices)
 				vocals.volume = 1;
 		}
-
-		daNote.active = false;
+		
 		destroyNote(daNote);
 	}
 
@@ -6530,7 +6536,8 @@ class PlayState extends MusicBeatState
 	}
 
 	function playVid(name:String)
-	{
+	{	
+		#if VIDEOS
 		var vid:VideoHandler = new VideoHandler();
 		vid.playVideo(Paths.video(name));
 		vid.finishCallback = function()
@@ -6541,10 +6548,14 @@ class PlayState extends MusicBeatState
 		if (scripts != null)
 			scripts.executeAllFunc("playVid", [name]);
 		#end
+		#else
+		FlxG.log.warn("Platform Not Supported.");
+		#end
 	}
 
 	function playVideoSprite(x:Float, y:Float, scaleX:Float, scaleY:Float, path:String)
 	{
+		#if VIDEOS
 		var vid:VideoSprite = new VideoSprite();
 		vid.x = x;
 		vid.y = y;
@@ -6554,6 +6565,9 @@ class PlayState extends MusicBeatState
 		#if FEATURE_HSCRIPT
 		if (scripts != null)
 			scripts.executeAllFunc("playVideoSprite", [x, y, scaleX, scaleY, path]);
+		#end
+		#else
+		FlxG.log.warn("Platform Not Supported.");
 		#end
 	}
 }

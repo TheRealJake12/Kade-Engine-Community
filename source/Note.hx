@@ -8,6 +8,7 @@ import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import PlayState;
 import LuaClass;
+import flixel.math.FlxRect;
 
 using StringTools;
 
@@ -235,6 +236,8 @@ class Note extends FlxSprite
 									animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
 									animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
 								}
+								setGraphicSize(Std.int(width / 1.5));
+								updateHitbox();
 							}
 
 						case 'mustpress':
@@ -246,6 +249,8 @@ class Note extends FlxSprite
 									animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
 									animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
 								}
+								setGraphicSize(Std.int(width / 1.5));
+								updateHitbox();
 							}
 						default:
 							#if html5
@@ -420,11 +425,13 @@ class Note extends FlxSprite
 				noteYOff = -stepHeight + swagWidth * 0.5;
 			}
 		}
-
-		if (!modifiedByLua)
-			angle = modAngle + localAngle;
-		else
-			angle = modAngle;
+		if (!isSustainNote)
+		{
+			if (!modifiedByLua)
+				angle = modAngle + localAngle;
+			else
+				angle = modAngle;
+		}
 
 		if (!modifiedByLua)
 		{
@@ -467,5 +474,16 @@ class Note extends FlxSprite
 			if (alpha > 0.3)
 				alpha = 0.3;
 		}
+	}
+
+	@:noCompletion
+	override function set_clipRect(rect:FlxRect):FlxRect
+	{
+		clipRect = rect;
+
+		if (frames != null)
+			frame = frames.frames[animation.frameIndex];
+
+		return rect;
 	}
 }
