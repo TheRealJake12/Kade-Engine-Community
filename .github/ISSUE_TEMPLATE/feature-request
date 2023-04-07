@@ -1,0 +1,23 @@
+name: Feature Request
+description: You want a feature to be added to the engine for this mod? Make an issue so I can make it happen.
+labels: [enhancement]
+body:
+  - type: textarea
+    attributes:
+      label: What feature do you want to get added on the engine/mod?
+    validations:
+      required: true
+  - type: dropdown
+    id: eyetest
+    attributes:
+      label: To test your sight, and reliability, please select the option of what should NOT be requested. 
+      options:
+        - Proper credit that was forgotten (Will make a credits menu later, don't select this yet.)
+        - Thing that would not cause problems
+        - Useful feature
+        - Actual feedback
+        - A good idea
+        - 6K+ support (Recommended)
+        - Code optimization that would make the game faster. (You should make a PR if this is your request, by the way.)
+    validations:
+      required: true
