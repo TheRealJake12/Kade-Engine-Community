@@ -300,8 +300,8 @@ class MainMenuState extends MusicBeatState
 			}
 			#end
 
-			bg.x += 2;
-			magenta.x += 2;
+			bg.x += 240 * elapsed;
+			magenta.x += 240 * elapsed;
 
 			if (FlxG.mouse.overlaps(menuItems, FlxG.camera) && FlxG.mouse.justPressed || controls.ACCEPT)
 			{
