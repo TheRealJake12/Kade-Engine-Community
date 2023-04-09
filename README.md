@@ -4,7 +4,7 @@ hi no leake
 
 **I am not responsible for maintaining HTML5 builds, as long as it builds sucessfully, it is not my problem. Feel free to fix it if it's broken yourself.**
 
-### How To Build From Source
+### How to build from source
 
 This is a not to in-depth guide to build the game and get your mod going or to contribute to the engine.
 If you have read the normal building guide from the original engine, it most likely won't work here.
@@ -12,8 +12,8 @@ So I will now do a guide to build the game.
 
 
 ### Installing the needed things
-1. Install the latest Haxe. Instead of using Haxe 4.1.5, as the original game used, we will update to Haxe 4.2.4 (or the latest version).
-You will first need to go to this link to download [Haxe](https://haxe.org/download/) Choose your platform and just do the normal download process.
+1. Install the latest Haxe. Instead of using Haxe 4.1.5, as the original game used, we will update to Haxe 4.2.5 (4.3.0 might work, if you adjust things a bit.) (or the latest version).
+You will first need to go to this link to download [Haxe](https://haxe.org/download/). Choose your platform and just do the normal download process.
 2. Install HaxeFlixel. Once Haxe is installed, you can download HaxeFlixel. Open a Command Prompt (Windows is right click windows icon and hit command prompt or windows powershell).
 3. You will need [Git](https://git-scm.com/downloads) 
 As you did with Haxe, just install the setup and finish it.
