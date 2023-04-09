@@ -182,7 +182,7 @@
 	
 	<haxedef name="no-deprecation-warnings" />
 
-	<haxeflag name="--no-traces" unless="debug" />
+	<haxeflag name="-D no-traces" unless="debug" />
 	<haxeflag name="--dce full" if="release" />
 
 	<!-- _________________________________ Custom _______________________________ -->
