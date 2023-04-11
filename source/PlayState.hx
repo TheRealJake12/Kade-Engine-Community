@@ -393,7 +393,7 @@ class PlayState extends MusicBeatState
 	public var cpuDoNoteSplash:Bool = FlxG.save.data.cpuSplash;
 	// Array that should make some notes easier to hit	
 	public static var lowPriorityNotes:Array<String> = [
-		"hurt"
+		"hurt", "mustpress"
 	];
 
 	public function addObject(object:FlxBasic)
@@ -1145,7 +1145,7 @@ class PlayState extends MusicBeatState
 		scoreTxt.borderQuality = 2;
 		scoreTxt.antialiasing = true; // Should use the save data but its too annoying.
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		// scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS, accuracy);
+		scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS, accuracy);
 		if (!FlxG.save.data.healthBar)
 			scoreTxt.y = healthBarBG.y;
 
@@ -1350,9 +1350,6 @@ class PlayState extends MusicBeatState
 
 		if (!isStoryMode)
 			tankIntroEnd = true;
-
-		updateAccuracy();
-		updateScoreText();
 
 		precacheThing('alphabet', 'image', null);
 
@@ -4233,6 +4230,7 @@ class PlayState extends MusicBeatState
 										totalNotesHit -= 1;
 									}
 									updateAccuracy();
+
 								}
 								else if (!daNote.wasGoodHit && !daNote.isSustainNote && daNote.causesMisses)
 								{
@@ -4640,20 +4638,11 @@ class PlayState extends MusicBeatState
 
 		if (songMultiplier >= 1.05)
 			score = getRatesScore(songMultiplier, score);
-
-		// trace('Wife accuracy loss: ' + wife + ' | Rating: ' + daRating + ' | Score: ' + score + ' | Weight: ' + (1 - wife));
+		
 
 		if (daRating != 'shit' || daRating != 'bad')
 		{
 			songScore += Math.round(score);
-
-			/* if (combo > 60)
-					daRating = 'sick';
-				else if (combo > 12)
-					daRating = 'good'
-				else if (combo > 4)
-					daRating = 'bad';
-			 */
 
 			var pixelShitPart1:String = "";
 			var pixelShitPart2:String = '';
@@ -4914,14 +4903,9 @@ class PlayState extends MusicBeatState
 
 				daLoop++;
 			}
-			/* 
-				trace(combo);
-				trace(seperatedScore);
-			 */
-
 			coolText.text = Std.string(seperatedScore);
 			// add(coolText);
-
+			
 			createTween(rating, {alpha: 0}, 0.2, {
 				startDelay: (Conductor.crochet * Math.pow(songMultiplier, 2)) * 0.001
 			});
@@ -5383,13 +5367,15 @@ class PlayState extends MusicBeatState
 		{
 			altAnim = '-alt';
 		}
-
-		switch (daNote.noteShit)
+		if (!PlayStateChangeables.opponentMode)
 		{
-			case 'hurt':
-				health -= 0.8;
-			case 'mustpress':
-				health += 0.8;
+			switch (daNote.noteShit)
+			{
+				case 'hurt':
+					health += 0.8;
+				case 'mustpress':
+					health -= 0.8;
+			}
 		}
 
 		if (daNote.isParent)
@@ -5523,15 +5509,18 @@ class PlayState extends MusicBeatState
 		if (mashViolations < 0)
 			mashViolations = 0;
 
-		var noteDiff:Float = -(note.strumTime - Conductor.songPosition);
+		var noteDiff:Float = (note.strumTime - Conductor.songPosition);
 
-		if (loadRep)
+		if (!loadRep && note.mustPress)
 		{
-			noteDiff = findByTime(note.strumTime)[3];
-			note.rating = rep.replay.songJudgements[findByTimeIndex(note.strumTime)];
+			var array = [note.strumTime, note.sustainLength, note.noteData, noteDiff];
+			if (note.isSustainNote)
+				array[1] = -1;
+			saveNotes.push(array);
+			saveJudge.push(note.rating);
 		}
-		else
-			note.rating = Ratings.judgeNote(noteDiff);
+
+		note.rating = Ratings.judgeNote(noteDiff);
 
 		if (note.rating == "miss")
 			return;
@@ -5597,17 +5586,6 @@ class PlayState extends MusicBeatState
 			#if FEATURE_HSCRIPT
 			scripts.executeAllFunc("goodNoteHit", [note]);
 			#end
-
-			var noteDiff:Float = (note.strumTime - Conductor.songPosition);
-
-			if (!loadRep && note.mustPress)
-			{
-				var array = [note.strumTime, note.sustainLength, note.noteData, noteDiff];
-				if (note.isSustainNote)
-					array[1] = -1;
-				saveNotes.push(array);
-				saveJudge.push(note.rating);
-			}
 
 			if (!PlayStateChangeables.botPlay || FlxG.save.data.cpuStrums)
 			{
