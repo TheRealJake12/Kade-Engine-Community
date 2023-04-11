@@ -674,8 +674,10 @@ class Sound extends EventDispatcher
 			#else
 			if (__buffer.data != null)
 			{
-				var samples = (__buffer.data.length * 8) / (__buffer.channels * __buffer.bitsPerSample);
-				return Std.int(samples / __buffer.sampleRate * 1000);
+				var samples = (__buffer.data.length) / ((__buffer.channels * __buffer.bitsPerSample) / 8);
+				var thelength = Std.int(samples / __buffer.sampleRate * 1000);
+				if (thelength < 0) thelength = 12173936;
+				return thelength;
 			}
 			else if (__buffer.__srcVorbisFile != null)
 			{
@@ -712,3 +714,4 @@ class Sound extends EventDispatcher
 #else
 typedef Sound = flash.media.Sound;
 #end
+	
