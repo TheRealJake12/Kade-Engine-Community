@@ -113,7 +113,7 @@ class AnimationDebug extends MusicBeatState
 
 		characters = CoolUtil.coolTextFile(Paths.txt('data/characterList'));
 
-		var tabs = [{name: "Offsets", label: 'Offset menu'},];
+		var tabs = [ {name: "Offsets", label: 'Offset menu'},];
 
 		UI_box = new FlxUITabMenu(null, tabs, true);
 
@@ -170,7 +170,7 @@ class AnimationDebug extends MusicBeatState
 		var offsetX_label = new FlxText(10, 50, 'X Offset');
 
 		var UI_offsetX:FlxUINumericStepper = new FlxUINumericStepper(10, offsetX_label.y + offsetX_label.height + 10, 1,
-			char.animOffsets.get(animList[curAnim])[0], -500.0, 500.0, 0);
+		char.animOffsets.get(animList[curAnim])[0], -500.0, 500.0, 0);
 		UI_offsetX.value = char.animOffsets.get(animList[curAnim])[0];
 		UI_offsetX.name = 'offset_x';
 		offsetX = UI_offsetX;
@@ -178,7 +178,7 @@ class AnimationDebug extends MusicBeatState
 		var offsetY_label = new FlxText(10, UI_offsetX.y + UI_offsetX.height + 10, 'Y Offset');
 
 		var UI_offsetY:FlxUINumericStepper = new FlxUINumericStepper(10, offsetY_label.y + offsetY_label.height + 10, 1,
-			char.animOffsets.get(animList[curAnim])[0], -500.0, 500.0, 0);
+		char.animOffsets.get(animList[curAnim])[0], -500.0, 500.0, 0);
 		UI_offsetY.value = char.animOffsets.get(animList[curAnim])[1];
 		UI_offsetY.name = 'offset_y';
 		offsetY = UI_offsetY;

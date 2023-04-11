@@ -129,7 +129,7 @@ class Character extends FlxSprite
 					if (anim.frameIndices != null)
 					{
 						animation.addByIndices(anim.name, anim.prefix, anim.frameIndices, "", Std.int(frameRate * PlayState.songMultiplier), looped, flipX,
-							flipY);
+											   flipY);
 					}
 					else
 					{
@@ -265,8 +265,8 @@ class Character extends FlxSprite
 								danced = !danced;
 
 								if (altAnim
-									&& animation.getByName('danceRight-alt') != null
-									&& animation.getByName('danceLeft-alt') != null)
+										&& animation.getByName('danceRight-alt') != null
+										&& animation.getByName('danceLeft-alt') != null)
 								{
 									if (danced)
 										playAnim('danceRight-alt');

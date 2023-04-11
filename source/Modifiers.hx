@@ -8,7 +8,7 @@ import flixel.FlxG;
 import openfl.display.FPS;
 import openfl.Lib;
 #if FEATURE_DISCORD
-import Discord.DiscordClient;
+	import Discord.DiscordClient;
 #end
 import FreeplaySubState;
 

@@ -5,8 +5,8 @@ import Song.SongMeta;
 import openfl.system.System;
 import lime.app.Application;
 #if FEATURE_FILESYSTEM
-import sys.io.File;
-import sys.FileSystem;
+	import sys.io.File;
+	import sys.FileSystem;
 #end
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.StrNameLabel;
@@ -48,7 +48,7 @@ import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.transition.FlxTransitionableState;
 import openfl.Lib;
 #if FEATURE_DISCORD
-import Discord.DiscordClient;
+	import Discord.DiscordClient;
 #end
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -57,7 +57,7 @@ import lime.media.AudioBuffer;
 import haxe.io.Bytes;
 import flash.geom.Rectangle;
 #if FEATURE_DISCORD
-import Discord.DiscordClient;
+	import Discord.DiscordClient;
 #end
 
 using StringTools;
@@ -228,7 +228,8 @@ class ChartingState extends MusicBeatState
 		}
 		else
 		{
-			_song = {
+			_song =
+			{
 				chartVersion: latestChartVersion,
 				songId: 'test',
 				songName: 'Test',
@@ -406,11 +407,11 @@ class ChartingState extends MusicBeatState
 
 		dummyArrow = new FlxSprite().makeGraphic(GRID_SIZE, GRID_SIZE);
 		var tabs = [
-			{name: "Song", label: 'Song Data'},
-			{name: "Section", label: 'Section Data'},
-			{name: "Note", label: 'Note Data'},
-			{name: "Assets", label: 'Assets'},
-			{name: "Charting", label: 'Charting'}
+		{name: "Song", label: 'Song Data'},
+		{name: "Section", label: 'Section Data'},
+		{name: "Note", label: 'Note Data'},
+		{name: "Assets", label: 'Assets'},
+		{name: "Charting", label: 'Charting'}
 		];
 
 		UI_box = new FlxUITabMenu(null, tabs, true);
@@ -420,7 +421,7 @@ class ChartingState extends MusicBeatState
 		UI_box.x = FlxG.width / 2 + 40;
 		UI_box.y = 20;
 
-		var opt_tabs = [{name: "Options", label: 'Song Options'}, {name: "Events", label: 'Song Events'}];
+		var opt_tabs = [ {name: "Options", label: 'Song Options'}, {name: "Events", label: 'Song Events'}];
 
 		UI_options = new FlxUITabMenu(null, opt_tabs, true);
 
@@ -596,7 +597,7 @@ class ChartingState extends MusicBeatState
 		var eventSave = new FlxButton(10, 155, "Save Event", function()
 		{
 			var pog:Song.Event = new Song.Event(currentSelectedEventName, currentEventPosition, HelperFunctions.truncateFloat(Std.parseFloat(savedValue), 3),
-				savedType);
+												savedType);
 
 			var obj = containsName(pog.name, _song.eventObjects);
 
@@ -665,7 +666,7 @@ class ChartingState extends MusicBeatState
 		var eventAdd = new FlxButton(95, 155, "Add Event", function()
 		{
 			var pog:Song.Event = new Song.Event("New Event " + HelperFunctions.truncateFloat(curDecimalBeat, 3),
-				HelperFunctions.truncateFloat(curDecimalBeat, 3), _song.bpm, "BPM Change");
+												HelperFunctions.truncateFloat(curDecimalBeat, 3), _song.bpm, "BPM Change");
 
 			var obj = containsName(pog.name, _song.eventObjects);
 
@@ -1511,7 +1512,7 @@ class ChartingState extends MusicBeatState
 					if (note.sustainLength > 0)
 					{
 						var sustainVis:FlxSprite = new FlxSprite(note.x + (GRID_SIZE / 2),
-							note.y + GRID_SIZE).makeGraphic(8, Math.floor((getYfromStrum(note.strumTime + note.sustainLength) * zoomFactor) - note.y));
+								note.y + GRID_SIZE).makeGraphic(8, Math.floor((getYfromStrum(note.strumTime + note.sustainLength) * zoomFactor) - note.y));
 
 						note.noteCharterObject = sustainVis;
 
@@ -1545,18 +1546,18 @@ class ChartingState extends MusicBeatState
 				{
 					// alright we're in this section lets paste the note here.
 					var newData:Array<Dynamic> = [
-						strum,
-						originalNote.rawNoteData,
-						originalNote.sustainLength,
-						originalNote.isAlt,
-						originalNote.beat
-					];
+													 strum,
+													 originalNote.rawNoteData,
+													 originalNote.sustainLength,
+													 originalNote.isAlt,
+													 originalNote.beat
+												 ];
 					ii.sectionNotes.push(newData);
 
 					var thing = ii.sectionNotes[ii.sectionNotes.length - 1];
 
 					var note:Note = new Note(strum, originalNote.noteData, originalNote.prevNote, originalNote.isSustainNote, true, originalNote.isAlt,
-						originalNote.beat, originalNote.noteShit);
+											 originalNote.beat, originalNote.noteShit);
 					note.rawNoteData = originalNote.rawNoteData;
 					note.sustainLength = originalNote.sustainLength;
 					note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));
@@ -1579,7 +1580,7 @@ class ChartingState extends MusicBeatState
 					if (note.sustainLength > 0)
 					{
 						var sustainVis:FlxSprite = new FlxSprite(note.x + (GRID_SIZE / 2),
-							note.y + GRID_SIZE).makeGraphic(8, Math.floor((getYfromStrum(note.strumTime + note.sustainLength) * zoomFactor) - note.y));
+								note.y + GRID_SIZE).makeGraphic(8, Math.floor((getYfromStrum(note.strumTime + note.sustainLength) * zoomFactor) - note.y));
 
 						note.noteCharterObject = sustainVis;
 
@@ -1656,7 +1657,7 @@ class ChartingState extends MusicBeatState
 		var title:FlxText = new FlxText(UI_box.x + 20, UI_box.y + 20, 0);
 		title.font = Paths.font('vcr.ttf');
 		bullshitUI.add(title);
-		/* 
+		/*
 			var loopCheck = new FlxUICheckBox(UI_box.x + 10, UI_box.y + 50, null, null, "Loops", 100, ['loop check']);
 			loopCheck.checked = curNoteSelected.doesLoop;
 			tooltips.add(loopCheck, {title: 'Section looping', body: "Whether or not it's a simon says style section", style: tooltipType});
@@ -1952,7 +1953,7 @@ class ChartingState extends MusicBeatState
 			{
 				curRenderedSustains.remove(i.noteCharterObject);
 				var sustainVis:FlxSprite = new FlxSprite(i.x + (GRID_SIZE / 2),
-					i.y + GRID_SIZE).makeGraphic(8, Math.floor((getYfromStrum(i.strumTime + i.sustainLength) * zoomFactor) - i.y), FlxColor.WHITE);
+						i.y + GRID_SIZE).makeGraphic(8, Math.floor((getYfromStrum(i.strumTime + i.sustainLength) * zoomFactor) - i.y), FlxColor.WHITE);
 
 				i.noteCharterObject = sustainVis;
 				curRenderedSustains.add(i.noteCharterObject);
@@ -2258,7 +2259,7 @@ class ChartingState extends MusicBeatState
 							selectBox.y = Math.min(FlxG.mouse.y, selectInitialY);
 
 							selectBox.makeGraphic(Math.floor(Math.abs(FlxG.mouse.x - selectInitialX)), Math.floor(Math.abs(FlxG.mouse.y - selectInitialY)),
-								FlxColor.fromRGB(173, 216, 230));
+												  FlxColor.fromRGB(173, 216, 230));
 						}
 					}
 				}
@@ -2292,10 +2293,10 @@ class ChartingState extends MusicBeatState
 					for (i in 0...selectedBoxes.members.length)
 					{
 						deletedNotes.push([
-							selectedBoxes.members[i].connectedNote.strumTime,
-							selectedBoxes.members[i].connectedNote.rawNoteData,
-							selectedBoxes.members[i].connectedNote.sustainLength
-						]);
+											  selectedBoxes.members[i].connectedNote.strumTime,
+											  selectedBoxes.members[i].connectedNote.rawNoteData,
+											  selectedBoxes.members[i].connectedNote.sustainLength
+										  ]);
 						notesToBeDeleted.push(selectedBoxes.members[i].connectedNote);
 					}
 
@@ -2313,10 +2314,10 @@ class ChartingState extends MusicBeatState
 					for (i in 0...selectedBoxes.members.length)
 					{
 						deletedNotes.push([
-							selectedBoxes.members[i].connectedNote.strumTime,
-							selectedBoxes.members[i].connectedNote.rawNoteData,
-							selectedBoxes.members[i].connectedNote.sustainLength
-						]);
+											  selectedBoxes.members[i].connectedNote.strumTime,
+											  selectedBoxes.members[i].connectedNote.rawNoteData,
+											  selectedBoxes.members[i].connectedNote.sustainLength
+										  ]);
 						notesToBeDeleted.push(selectedBoxes.members[i].connectedNote);
 					}
 
@@ -2347,12 +2348,12 @@ class ChartingState extends MusicBeatState
 						copiedNotes = [];
 						for (i in selectedBoxes.members)
 							copiedNotes.push([
-								i.connectedNote.strumTime,
-								i.connectedNote.rawNoteData,
-								i.connectedNote.sustainLength,
-								i.connectedNote.isAlt,
-								i.connectedNote.beat
-							]);
+												 i.connectedNote.strumTime,
+												 i.connectedNote.rawNoteData,
+												 i.connectedNote.sustainLength,
+												 i.connectedNote.isAlt,
+												 i.connectedNote.beat
+											 ]);
 
 						var firstNote = copiedNotes[0][0];
 
@@ -2846,8 +2847,8 @@ class ChartingState extends MusicBeatState
 				remove(curSelectedNoteObject.noteCharterObject);
 
 				var sustainVis:FlxSprite = new FlxSprite(curSelectedNoteObject.x + (GRID_SIZE / 2),
-					curSelectedNoteObject.y + GRID_SIZE).makeGraphic(8,
-						Math.floor((getYfromStrum(curSelectedNoteObject.strumTime + curSelectedNote[2]) * zoomFactor) - curSelectedNoteObject.y));
+				curSelectedNoteObject.y + GRID_SIZE).makeGraphic(8,
+				Math.floor((getYfromStrum(curSelectedNoteObject.strumTime + curSelectedNote[2]) * zoomFactor) - curSelectedNoteObject.y));
 				curSelectedNoteObject.sustainLength = curSelectedNote[2];
 				curSelectedNoteObject.noteCharterObject = sustainVis;
 
@@ -2962,16 +2963,16 @@ class ChartingState extends MusicBeatState
 		// fail-safe
 		// TODO: Refactor this to use OpenFlAssets.
 		if (!Paths.fileExists("images/icons/icon-" + head.split("-")[0] + ".png", IMAGE)
-			&& !Paths.fileExists("images/icons/icon-" + head + ".png", IMAGE))
+		&& !Paths.fileExists("images/icons/icon-" + head + ".png", IMAGE))
 		{
 			if (i.icon.animation.curAnim == null)
 				iconUpdate(true);
 		}
 		//
 		else if (i.icon.animation.curAnim.name != head
-			&& i.icon.animation.curAnim.name != head.split("-")[0]
-			|| head == 'bf-pixel'
-			&& i.icon.animation.curAnim.name != 'bf-pixel')
+		&& i.icon.animation.curAnim.name != head.split("-")[0]
+		|| head == 'bf-pixel'
+		&& i.icon.animation.curAnim.name != 'bf-pixel')
 		{
 			if (i.icon.animation.getByName(head) != null)
 				i.icon.animation.play(head);
@@ -3046,7 +3047,7 @@ class ChartingState extends MusicBeatState
 					if (daSus > 0)
 					{
 						var sustainVis:FlxSprite = new FlxSprite(note.x + (GRID_SIZE / 2),
-							note.y + GRID_SIZE).makeGraphic(8, Math.floor((getYfromStrum(note.strumTime + note.sustainLength) * zoomFactor) - note.y));
+						note.y + GRID_SIZE).makeGraphic(8, Math.floor((getYfromStrum(note.strumTime + note.sustainLength) * zoomFactor) - note.y));
 
 						note.noteCharterObject = sustainVis;
 
@@ -3563,24 +3564,24 @@ class ChartingState extends MusicBeatState
 	function updateBpmText()
 	{
 		bpmTxt.text = Std.string(FlxMath.roundDecimal(Conductor.songPosition / 1000, 2))
-			+ " / "
-			+ Std.string(FlxMath.roundDecimal(inst.length / 1000, 2))
-			+ "\nCur Section: "
-			+ curSection
-			+ "\nCurBeat: "
-			+ HelperFunctions.truncateFloat(curDecimalBeat, 3)
-			+ "\nCurStep: "
-			+ curStep
-			+ "\nZoom: "
-			+ HelperFunctions.truncateFloat(zoomFactor, 2)
-			+ "\nSpeed: "
-			+ HelperFunctions.truncateFloat(speed, 1)
-			+ "\n\nSnap: "
-			+ snap
-			+ "\n"
-			+ (doSnapShit ? "Snap enabled" : "Snap disabled")
-			+
-			(FlxG.save.data.showHelp ? "\n\nHelp:\nCtrl-MWheel : Zoom in/out\nShift-Left/Right :\nChange playback speed\nCtrl-Drag Click : Select notes\nCtrl-C : Copy notes\nCtrl-V : Paste notes\nCtrl-Z : Undo\nDelete : Delete selection\nCTRL-Left/Right :\n  Change Snap\nHold Shift : Disable Snap\nClick or 1/2/3/4/5/6/7/8 :\n  Place notes\nUp/Down :\n  Move selected notes 1 step\nShift-Up/Down :\n  Move selected notes 1 beat\nSpace: Play Music\nEnter : Preview\n Z/X Change Notetype.\nPress F1 to hide/show this!" : "");
+					  + " / "
+					  + Std.string(FlxMath.roundDecimal(inst.length / 1000, 2))
+					  + "\nCur Section: "
+					  + curSection
+					  + "\nCurBeat: "
+					  + HelperFunctions.truncateFloat(curDecimalBeat, 3)
+					  + "\nCurStep: "
+					  + curStep
+					  + "\nZoom: "
+					  + HelperFunctions.truncateFloat(zoomFactor, 2)
+					  + "\nSpeed: "
+					  + HelperFunctions.truncateFloat(speed, 1)
+					  + "\n\nSnap: "
+					  + snap
+					  + "\n"
+					  + (doSnapShit ? "Snap enabled" : "Snap disabled")
+					  +
+					  (FlxG.save.data.showHelp ? "\n\nHelp:\nCtrl-MWheel : Zoom in/out\nShift-Left/Right :\nChange playback speed\nCtrl-Drag Click : Select notes\nCtrl-C : Copy notes\nCtrl-V : Paste notes\nCtrl-Z : Undo\nDelete : Delete selection\nCTRL-Left/Right :\n  Change Snap\nHold Shift : Disable Snap\nClick or 1/2/3/4/5/6/7/8 :\n  Place notes\nUp/Down :\n  Move selected notes 1 step\nShift-Up/Down :\n  Move selected notes 1 beat\nSpace: Play Music\nEnter : Preview\n Z/X Change Notetype.\nPress F1 to hide/show this!" : "");
 	}
 
 	function updateNotetypeText()
@@ -3643,7 +3644,8 @@ class ChartingState extends MusicBeatState
 
 		toRemove = []; // clear memory
 
-		var json = {
+		var json =
+		{
 			"song": _song
 		};
 

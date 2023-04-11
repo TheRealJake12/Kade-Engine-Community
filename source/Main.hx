@@ -8,7 +8,7 @@ import openfl.Assets;
 import flixel.util.FlxColor;
 import openfl.display.Bitmap;
 #if FEATURE_DISCORD
-import Discord.DiscordClient;
+	import Discord.DiscordClient;
 #end
 import openfl.Lib;
 import openfl.display.FPS;
@@ -18,32 +18,33 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 #if desktop
-// crash handler stuff
-import lime.app.Application;
-import openfl.events.UncaughtErrorEvent;
-import haxe.CallStack;
-import haxe.io.Path;
-import Discord.DiscordClient;
-import sys.FileSystem;
-import sys.io.File;
-import sys.io.Process;
-import openfl.system.System;
-import cpp.vm.Gc;
+	// crash handler stuff
+	import lime.app.Application;
+	import openfl.events.UncaughtErrorEvent;
+	import haxe.CallStack;
+	import haxe.io.Path;
+	import Discord.DiscordClient;
+	import sys.FileSystem;
+	import sys.io.File;
+	import sys.io.Process;
+	import openfl.system.System;
+	import cpp.vm.Gc;
 #end
 import openfl.utils.AssetCache;
 #if hl
-import hl.Gc;
+	import hl.Gc;
 #elseif java
-import java.vm.Gc;
+	import java.vm.Gc;
 #elseif neko
-import neko.vm.Gc;
+	import neko.vm.Gc;
 #end
 
 using StringTools;
 
 class Main extends Sprite
 {
-	var game = {
+	var game =
+	{
 		width: 1280, // WINDOW width
 		height: 720, // WINDOW height
 		initialState: Init, // initial game state
@@ -133,7 +134,7 @@ class Main extends Sprite
 		#end
 
 		addChild(new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate,
-			game.skipSplash, game.startFullscreen));
+		game.skipSplash, game.startFullscreen));
 
 		FlxGraphic.defaultPersist = false;
 
@@ -235,11 +236,11 @@ class Main extends Sprite
 			}
 		}
 		errMsg += "\nUncaught Error: "
-			+ "Version : "
-			+ '${MainMenuState.kecVer} Error Type: '
-			+ e.error
-			+
-			"\nWoops! We fucked up somewhere! Report this window here : https://github.com/TheRealJake12/Kade-Engine-Community.git\n\n Why dont you join the discord while you're at it? : https://discord.gg/TKCzG5rVGf \n\n> Crash Handler written by: sqirra-rng";
+				  + "Version : "
+				  + '${MainMenuState.kecVer} Error Type: '
+				  + e.error
+				  +
+				  "\nWoops! We fucked up somewhere! Report this window here : https://github.com/TheRealJake12/Kade-Engine-Community.git\n\n Why dont you join the discord while you're at it? : https://discord.gg/TKCzG5rVGf \n\n> Crash Handler written by: sqirra-rng";
 		if (!FileSystem.exists("./logs/"))
 			FileSystem.createDirectory("./logs/");
 		File.saveContent(path, errMsg + "\n");

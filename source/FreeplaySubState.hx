@@ -57,16 +57,16 @@ class ModMenu extends MusicBeatSubstate
 		modObjects = new FlxTypedGroup();
 
 		modifiers = [
-			new OpponentMode("Toggle to play as the opponent."),
-			new Mirror("Flip Notes horizontally (Up is Down, Left is Right)"),
-			new Practice("Skill issue? Try this, and u'll get better :D ."),
-			new NoMissesMode("Skill issuen't? Try this, a single miss you die!"),
-			new Sustains("Toggle Hold Notes in song chart."),
-			new Modchart("Toggle Song Modchart if it has it."),
-			new HealthDrain("Toggle Opponent Health Drain when singing."),
-			new HealthGain("Toggle how many health you want to gain."),
-			new HealthLoss("Toggle how many health you want to loss.")
-		];
+						new OpponentMode("Toggle to play as the opponent."),
+						new Mirror("Flip Notes horizontally (Up is Down, Left is Right)"),
+						new Practice("Skill issue? Try this, and u'll get better :D ."),
+						new NoMissesMode("Skill issuen't? Try this, a single miss you die!"),
+						new Sustains("Toggle Hold Notes in song chart."),
+						new Modchart("Toggle Song Modchart if it has it."),
+						new HealthDrain("Toggle Opponent Health Drain when singing."),
+						new HealthGain("Toggle how many health you want to gain."),
+						new HealthLoss("Toggle how many health you want to loss.")
+					];
 
 		titleObject = new FlxText(176, 49, 0, 'GAMEPLAY MODIFIERS');
 		titleObject.setFormat(Paths.font("vcr.ttf"), 35, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);

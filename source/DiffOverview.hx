@@ -102,10 +102,10 @@ class DiffOverview extends FlxSubState
 		blackBox.x -= 100;
 
 		offset = new FlxText(10, FlxG.height
-			- 40, 0,
-			"Offset: "
-			+ HelperFunctions.truncateFloat(FlxG.save.data.offset, 0)
-			+ " (LEFT/RIGHT to decrease/increase)", 16);
+							 - 40, 0,
+							 "Offset: "
+							 + HelperFunctions.truncateFloat(FlxG.save.data.offset, 0)
+							 + " (LEFT/RIGHT to decrease/increase)", 16);
 		offset.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 4, 1);
 		offset.color = FlxColor.WHITE;
 		offset.scrollFactor.set();
@@ -262,7 +262,6 @@ class DiffOverview extends FlxSubState
 				offsetChange();
 			}
 
-
 			offset.text = "Offset: " + HelperFunctions.truncateFloat(FlxG.save.data.offset,0) + " (LEFT/RIGHT to decrease/increase, SHIFT to go faster) - Time: " + HelperFunctions.truncateFloat(Conductor.songPosition / 1000,0) + "s - Step: " + currentStep;
 		 */
 
@@ -298,14 +297,14 @@ class DiffOverview extends FlxSubState
 			}
 
 			daNote.y = (playerStrums.members[Math.floor(Math.abs(daNote.noteData))].y
-				- 0.45 * (Conductor.songPosition - daNote.strumTime) * FlxMath.roundDecimal(SONG.speed, 2));
+						- 0.45 * (Conductor.songPosition - daNote.strumTime) * FlxMath.roundDecimal(SONG.speed, 2));
 
 			if (daNote.isSustainNote)
 			{
 				daNote.y -= daNote.height / 2;
 
 				if ((!daNote.mustPress || daNote.wasGoodHit || daNote.prevNote.wasGoodHit && !daNote.canBeHit)
-					&& daNote.y + daNote.offset.y * daNote.scale.y <= (strumLine.y + Note.swagWidth / 2))
+						&& daNote.y + daNote.offset.y * daNote.scale.y <= (strumLine.y + Note.swagWidth / 2))
 				{
 					// Clip to strumline
 					var swagRect = new FlxRect(0, 0, daNote.width / daNote.scale.x, daNote.height / daNote.scale.y);

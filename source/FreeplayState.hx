@@ -4,11 +4,11 @@ import openfl.utils.Future;
 import openfl.media.Sound;
 import flixel.system.FlxSound;
 #if FEATURE_STEPMANIA
-import smTools.SMFile;
+	import smTools.SMFile;
 #end
 #if FEATURE_FILESYSTEM
-import sys.FileSystem;
-import sys.io.File;
+	import sys.FileSystem;
+	import sys.io.File;
 #end
 import Song.SongData;
 import flixel.input.gamepad.FlxGamepad;
@@ -24,13 +24,13 @@ import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 import openfl.utils.Assets as OpenFlAssets;
 #if FEATURE_DISCORD
-import Discord.DiscordClient;
+	import Discord.DiscordClient;
 #end
 import FreeplaySubState;
 import Modifiers;
 #if FEATURE_FILESYSTEM
-import sys.FileSystem;
-import sys.io.File;
+	import sys.FileSystem;
+	import sys.io.File;
 #end
 import flixel.tweens.FlxEase;
 import flixel.util.FlxTimer;
@@ -95,12 +95,13 @@ class FreeplayState extends MusicBeatState
 	public static var instance:FreeplayState;
 
 	public static function loadDiff(diff:Int, songId:String, array:Array<SongData>)
-		array.push(Song.conversionChecks(Song.loadFromJson(songId, CoolUtil.suffixDiffsArray[diff])));
+	array.push(Song.conversionChecks(Song.loadFromJson(songId, CoolUtil.suffixDiffsArray[diff])));
 
 	public static var list:Array<String> = [];
 
 	override function create()
-	{FlxG.mouse.visible = true;
+	{
+		FlxG.mouse.visible = true;
 		instance = this;
 		if (!FlxG.save.data.gpuRender)
 			Main.dumpCache();
@@ -218,12 +219,12 @@ class FreeplayState extends MusicBeatState
 		add(bottomBG);
 
 		var bottomText:String = #if !mobile #if PRELOAD_ALL "  Press SPACE to listen to the Song Instrumental / Click and scroll through the songs with your MOUSE /"
-			+ #else "  Click and scroll through the songs with your MOUSE /"
-			+ #end #end
-		" Your offset is "
-		+ FlxG.save.data.offset
-		+ "ms "
-		+ (FlxG.save.data.optimize ? "/ Optimized" : "");
+									+ #else "  Click and scroll through the songs with your MOUSE /"
+										+ #end #end
+										" Your offset is "
+										+ FlxG.save.data.offset
+										+ "ms "
+										+ (FlxG.save.data.optimize ? "/ Optimized" : "");
 
 		var downText:FlxText = new FlxText(bottomBG.x, bottomBG.y + 4, FlxG.width, bottomText, 16);
 		downText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT);
@@ -256,7 +257,7 @@ class FreeplayState extends MusicBeatState
 
 		helpText = new FlxText(scoreText.x, scoreText.y + 211, 0, "", 20);
 		helpText.text = "LEFT-RIGHT to change Difficulty\n\n" + "SHIFT + LEFT-RIGHT to change Rate\n" + "if it's possible\n\n"
-			+ "CTRL to open Gameplay Modifiers\n" + "";
+						+ "CTRL to open Gameplay Modifiers\n" + "";
 		helpText.font = scoreText.font;
 		helpText.color = 0xFFfaff96;
 		add(helpText);
@@ -750,15 +751,15 @@ class FreeplayState extends MusicBeatState
 
 			for (item in grpSongs.members)
 				if (accepted
-					|| (((FlxG.mouse.overlaps(item) && item.targetY == curSelected) || (FlxG.mouse.overlaps(iconArray[curSelected])))
-						&& FlxG.mouse.pressed))
+						|| (((FlxG.mouse.overlaps(item) && item.targetY == curSelected) || (FlxG.mouse.overlaps(iconArray[curSelected])))
+							&& FlxG.mouse.pressed))
 				{
 					loadSong();
 					break;
 				}
 			// Going to charting state via Freeplay is only enable in debug builds.
-			else if (charting)
-				loadSong(true);
+				else if (charting)
+					loadSong(true);
 
 			// AnimationDebug and StageDebug are only enabled in debug builds.
 

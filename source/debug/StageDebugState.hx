@@ -185,8 +185,8 @@ class StageDebugState extends MusicBeatState
 		}
 
 		if (FlxG.mouse.pressed
-			&& FlxCollision.pixelPerfectPointCheck(Math.floor(FlxG.mouse.x), Math.floor(FlxG.mouse.y), curChar)
-			&& !dragging)
+				&& FlxCollision.pixelPerfectPointCheck(Math.floor(FlxG.mouse.x), Math.floor(FlxG.mouse.y), curChar)
+				&& !dragging)
 		{
 			dragging = true;
 			updateMousePos();

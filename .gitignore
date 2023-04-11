@@ -3,3 +3,7 @@ export/
 
 # the vscode folder
 .vscode/
+
+# bro flashdevelop
+*.hxproj
+fita.hxproj
