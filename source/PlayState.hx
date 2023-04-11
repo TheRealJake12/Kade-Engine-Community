@@ -392,6 +392,10 @@ class PlayState extends MusicBeatState
 
 	public var doNoteSplash:Bool = FlxG.save.data.notesplashes;
 	public var cpuDoNoteSplash:Bool = FlxG.save.data.cpuSplash;
+	// Array that should make some notes easier to hit	
+	public static var lowPriorityNotes:Array<String> = [
+		"hurt"
+	];
 
 	public function addObject(object:FlxBasic)
 	{
@@ -5202,6 +5206,16 @@ class PlayState extends MusicBeatState
 				return i;
 		}
 		return -1;
+	}
+
+	function sortHitNotes(a:Note, b:Note):Int
+	{
+		if (lowPriorityNotes.contains(a.noteShit) && !lowPriorityNotes.contains(b.noteShit))
+			return 1;
+		else if (!lowPriorityNotes.contains(a.noteShit) && lowPriorityNotes.contains(b.noteShit))
+			return -1;
+
+		return FlxSort.byValues(FlxSort.ASCENDING, a.strumTime, b.strumTime);
 	}
 
 	public var fuckingVolume:Float = 1;
