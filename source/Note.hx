@@ -16,6 +16,8 @@ class Note extends FlxSprite
 {
 	public var strumTime:Float = 0;
 	public var baseStrum:Float = 0;
+	public var lateHitMult:Float = 1.0;
+	public var earlyHitMult:Float = 1.0;
 
 	public var charterSelected:Bool = false;
 
@@ -96,6 +98,7 @@ class Note extends FlxSprite
 		this.prevNote = prevNote;
 		isSustainNote = sustainNote;
 		moves = false;
+		lateHitMult = isSustainNote ? 0.5 : 1;
 
 		x += 50;
 		// MAKE SURE ITS DEFINITELY OFF SCREEN?
@@ -369,18 +372,18 @@ class Note extends FlxSprite
 			}
 		}
 
-		stepHeight = (((0.45 * PlayState.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayStateChangeables.scrollSpeed == 1 ? PlayState.SONG.speed : PlayStateChangeables.scrollSpeed,
+		stepHeight = (((0.45 * PlayState.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayState.instance.scrollSpeed == 1 ? PlayState.SONG.speed : PlayState.instance.scrollSpeed,
 			2));
 
 		if (isSustainNote && prevNote != null)
 		{
 			noteYOff = -stepHeight + swagWidth * 0.5;
 
-			if (FlxG.save.data.downscroll)
-				flipY = true;
-
 			noteScore * 0.2;
 			alpha = FlxG.save.data.alpha;
+
+			if (FlxG.save.data.downscroll)
+				flipY = true;
 
 			x += width / 2;
 
@@ -394,6 +397,7 @@ class Note extends FlxSprite
 
 			// if (noteTypeCheck == 'pixel')
 			//	x += 30;
+
 			if (inCharter)
 				x += 30;
 
@@ -406,7 +410,15 @@ class Note extends FlxSprite
 				prevNote.updateHitbox();
 
 				if (antialiasing)
-					prevNote.scale.y *= 1.0 + (1.0 / prevNote.frameHeight);
+					switch (FlxG.save.data.noteskin)
+					{
+						case 0:
+							prevNote.scale.y *= 1.0064 + (1.0 / prevNote.frameHeight);
+						default:
+							prevNote.scale.y *= 0.995 + (1.0 / prevNote.frameHeight);
+					}
+				prevNote.updateHitbox();
+				updateHitbox();
 			}
 		}
 	}
@@ -414,7 +426,7 @@ class Note extends FlxSprite
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		var newStepHeight = (((0.45 * PlayState.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayStateChangeables.scrollSpeed == 1 ? PlayState.SONG.speed : PlayStateChangeables.scrollSpeed,
+		var newStepHeight = (((0.45 * PlayState.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayState.instance.scrollSpeed == 1 ? PlayState.SONG.speed : PlayState.instance.scrollSpeed,
 			2));
 
 		if (stepHeight != newStepHeight)
@@ -443,21 +455,24 @@ class Note extends FlxSprite
 
 		if (mustPress)
 		{
-			if (isSustainNote)
+			switch (noteShit)
 			{
-				if (strumTime - Conductor.songPosition <= (((166 * Conductor.timeScale) / (PlayState.songMultiplier < 1 ? PlayState.songMultiplier : 1) * 0.5))
-					&& strumTime - Conductor.songPosition >= (((-166 * Conductor.timeScale) / (PlayState.songMultiplier < 1 ? PlayState.songMultiplier : 1))))
-					canBeHit = true;
-				else
-					canBeHit = false;
-			}
-			else
-			{
-				if (strumTime - Conductor.songPosition <= (((166 * Conductor.timeScale) / (PlayState.songMultiplier < 1 ? PlayState.songMultiplier : 1)))
-					&& strumTime - Conductor.songPosition >= (((-166 * Conductor.timeScale) / (PlayState.songMultiplier < 1 ? PlayState.songMultiplier : 1))))
-					canBeHit = true;
-				else
-					canBeHit = false;
+				case 'hurt':
+					if (strumTime - Conductor.songPosition <= ((Ratings.timingWindows[0]) * 0.2)
+						&& strumTime - Conductor.songPosition >= (-Ratings.timingWindows[0]) * 0.4)
+					{
+						canBeHit = true;
+					}
+					else
+					{
+						canBeHit = false;
+					}
+					if (strumTime - Conductor.songPosition < -Ratings.timingWindows[0] && !wasGoodHit)
+						tooLate = true;
+				default:
+					if (strumTime - Conductor.songPosition <= (((Ratings.timingWindows[0]) * lateHitMult))
+						&& strumTime - Conductor.songPosition >= (((-Ratings.timingWindows[0]) * earlyHitMult)))
+						canBeHit = true;
 			}
 			/*if (strumTime - Conductor.songPosition < (-166 * Conductor.timeScale) && !wasGoodHit)
 				tooLate = true; */

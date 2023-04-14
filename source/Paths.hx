@@ -13,6 +13,8 @@ import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.display3D.textures.Texture;
 import openfl.display.BitmapData;
+import flixel.graphics.frames.FlxBitmapFont;
+import flixel.util.FlxDestroyUtil;
 
 using StringTools;
 
@@ -78,8 +80,8 @@ class Paths
 					var texture = FlxG.stage.context3D.createTexture(bitmap.width, bitmap.height, BGRA, false, 0);
 					texture.uploadFromBitmapData(bitmap);
 					currentTrackedTextures.set(key, texture);
-					bitmap.dispose();
 					bitmap.disposeImage();
+					FlxDestroyUtil.dispose(bitmap);
 					bitmap = null;
 					graphic = FlxGraphic.fromBitmapData(BitmapData.fromTexture(texture), false, key);
 				}
@@ -114,7 +116,7 @@ class Paths
 		}
 		catch (e)
 		{
-			Debug.logInfo('Error parsing JSON or JSON does not exit');
+			Debug.logError('Error loading JSON. $e');
 			rawJson = null;
 		}
 
@@ -131,7 +133,9 @@ class Paths
 		{
 			// Attempt to parse and return the JSON data.
 			if (rawJson != null)
+			{
 				return Json.parse(rawJson);
+			}
 
 			return null;
 		}
@@ -442,6 +446,16 @@ class Paths
 		return 'assets/fonts/$key';
 	}
 
+	inline static public function bitmapFont(key:String, ?library:String):FlxBitmapFont
+	{
+		return FlxBitmapFont.fromAngelCode(image(key, library), fontXML(key, library));
+	}
+
+	inline static public function fontXML(key:String, ?library:String):Xml
+	{
+		return Xml.parse(OpenFlAssets.getText(getPath('images/$key.fnt', TEXT, library)));
+	}
+
 	inline static public function fileExists(key:String, type:AssetType, ?library:String)
 	{
 		if (OpenFlAssets.exists(getPath(key, type, library)))
@@ -469,23 +483,35 @@ class Paths
 				if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key))
 				{
 					// get rid of it
-					var obj = currentTrackedAssets.get(key);
+					var obj = cast(currentTrackedAssets.get(key), FlxGraphic);
 					@:privateAccess
 					if (obj != null)
 					{
-						var isTexture:Bool = currentTrackedTextures.exists(key);
-						if (isTexture)
-						{
-							var texture = currentTrackedTextures.get(key);
-							texture.dispose();
-							texture = null;
-							currentTrackedTextures.remove(key);
-						}
+						obj.persist = false;
+						obj.destroyOnNoUse = true;
 						OpenFlAssets.cache.removeBitmapData(key);
-						OpenFlAssets.cache.clearBitmapData(key);
-						OpenFlAssets.cache.clear(key);
+
 						FlxG.bitmap._cache.remove(key);
+						FlxG.bitmap.removeByKey(key);
+
+						if (obj.bitmap.__texture != null)
+						{
+							obj.bitmap.__texture.dispose();
+							obj.bitmap.__texture = null;
+						}
+
+						FlxG.bitmap.remove(obj);
+
+						obj.dump();
+						obj.bitmap.disposeImage();
+						FlxDestroyUtil.dispose(obj.bitmap);
+
+						obj.bitmap = null;
+
 						obj.destroy();
+
+						obj = null;
+
 						currentTrackedAssets.remove(key);
 						counter++;
 					}
@@ -506,14 +532,34 @@ class Paths
 			@:privateAccess
 			for (key in FlxG.bitmap._cache.keys())
 			{
-				var obj = FlxG.bitmap._cache.get(key);
+				var obj = cast(FlxG.bitmap._cache.get(key), FlxGraphic);
 				if (obj != null && !currentTrackedAssets.exists(key))
 				{
+					obj.persist = false;
+					obj.destroyOnNoUse = true;
+
 					OpenFlAssets.cache.removeBitmapData(key);
-					OpenFlAssets.cache.clearBitmapData(key);
-					OpenFlAssets.cache.clear(key);
+
 					FlxG.bitmap._cache.remove(key);
+
+					FlxG.bitmap.removeByKey(key);
+
+					if (obj.bitmap.__texture != null)
+					{
+						obj.bitmap.__texture.dispose();
+						obj.bitmap.__texture = null;
+					}
+
+					FlxG.bitmap.remove(obj);
+
+					obj.dump();
+
+					obj.bitmap.disposeImage();
+					FlxDestroyUtil.dispose(obj.bitmap);
+					obj.bitmap = null;
+
 					obj.destroy();
+					obj = null;
 					counterAssets++;
 				}
 			}
@@ -526,23 +572,10 @@ class Paths
 				if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && key != null)
 				{
 					// trace('test: ' + dumpExclusions, key);
+					OpenFlAssets.cache.clear(key);
 					OpenFlAssets.cache.removeSound(key);
-					OpenFlAssets.cache.clearSounds(key);
 					currentTrackedSounds.remove(key);
 					counterSound++;
-					//Debug.logTrace('Cleared and removed $counterSound cached sounds.');
-				}
-			}
-
-			// Clear everything everything that's left
-			var counterLeft:Int = 0;
-			for (key in OpenFlAssets.cache.getKeys())
-			{
-				if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && key != null)
-				{
-					OpenFlAssets.cache.clear(key);
-					counterLeft++;
-					//Debug.logTrace('Cleared and removed $counterLeft cached leftover assets.');
 				}
 			}
 
@@ -552,16 +585,7 @@ class Paths
 			#end
 		}
 
-		var cache:haxe.ds.Map<String, FlxGraphic> = cast Reflect.field(FlxG.bitmap, "_cache");
-		for (key => graphic in cache)
-		{
-			if (key.indexOf("text") == 0 && graphic.useCount <= 0)
-			{
-				FlxG.bitmap.remove(graphic);
-			}
-		}
-		// idk if this does anything.
-		// THANK YOU MALICIOUS BUNNY!!
+		Main.gc();
 	}
 
 	static public function getSparrowAtlas(key:String, ?library:String, ?isCharacter:Bool = false, ?gpuRender:Bool)

@@ -58,28 +58,18 @@ class MusicBeatState extends FlxUIState
 
 	override function remove(Object:FlxBasic, Splice:Bool = false):FlxBasic
 	{
-		#if FEATURE_MULTITHREADING
-		MasterObjectLoader.removeObject(Object);
-		#end
 		var result = super.remove(Object, Splice);
 		return result;
 	}
 
 	public function clean()
 	{
-		if (FlxG.save.data.unload)
+		if (FlxG.save.data.optimize)
 		{
-			#if FEATURE_MULTITHREADING
-			for (i in MasterObjectLoader.Objects)
-			{
-				destroyObject(i);
-			}
-			#else
 			for (i in assets)
 			{
 				remove(i);
 			}
-			#end
 		}
 	}
 
@@ -133,11 +123,7 @@ class MusicBeatState extends FlxUIState
 			var spr:FlxSprite = cast(Object, FlxSprite);
 
 		// Debug.logTrace(Object);
-		#if FEATURE_MULTITHREADING
-		MasterObjectLoader.addObject(Object);
-		#else
 		assets.push(Object);
-		#end
 		var result = super.add(Object);
 		return result;
 	}

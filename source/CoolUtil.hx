@@ -3,6 +3,8 @@ package;
 import flixel.FlxG;
 import openfl.utils.Assets as OpenFlAssets;
 import flixel.math.FlxMath;
+import flixel.graphics.frames.FlxBitmapFont;
+import flixel.text.FlxBitmapText;
 #if VIDEOS
 import hxcodec.VideoHandler;
 #end
@@ -17,7 +19,9 @@ using StringTools;
 
 class CoolUtil
 {
-	public static var difficultyArray:Array<String> = ['Easy', 'Normal', 'Hard'];
+	public static var defaultDifficulties:Array<String> = ['Easy', "Normal", "Hard"];
+
+	public static var difficultyArray:Array<String> = defaultDifficulties.copy();
 	public static var suffixDiffsArray:Array<String> = ['-easy', "", "-hard"];
 	public static var defaultDifficulty:String = 'Normal'; // The chart that has no suffix and starting difficulty on Freeplay/Story Mode
 
@@ -76,6 +80,15 @@ class CoolUtil
 		}
 
 		return daList;
+	}
+	
+	public static function getSuffixFromDiff(diff:String):String
+	{
+		var suffix = '';
+		if (diff != 'Normal')
+			suffix = '-${diff.toLowerCase()}';
+
+		return suffix;
 	}
 
 	public static var daPixelZoom:Float = 6;
@@ -214,4 +227,43 @@ class CoolUtil
 		return Path.withoutDirectory(Path.withoutExtension(file));
 	}
 	#end
+}
+
+/**
+	* Helper Class of FlxBitmapText
+	** WARNING: NON-LEFT ALIGNMENT might break some position properties such as X,Y and functions like screenCenter()
+	** NOTE: IF YOU WANT TO USE YOUR CUSTOM FONT MAKE SURE THEY ARE SET TO SIZE = 32
+	* @param 	sizeX	Be aware that this size property can could be not equal to FlxText size.
+	* @param 	sizeY	Be aware that this size property can could be not equal to FlxText size.
+	* @param 	bitmapFont	Optional parameter for component's font prop
+ */
+class CoolText extends FlxBitmapText
+{
+	public function new(xPos:Float, yPos:Float, sizeX:Float, sizeY:Float, ?bitmapFont:FlxBitmapFont)
+	{
+		super(bitmapFont);
+		x = xPos;
+		y = yPos;
+		scale.set(sizeX / (font.size - 2), sizeY / (font.size - 2));
+		updateHitbox();
+	}
+
+	override function destroy()
+	{
+		super.destroy();
+	}
+
+	override function update(elapsed)
+	{
+		super.update(elapsed);
+	}
+	/*public function centerXPos()
+		{
+			var offsetX = 0;
+			if (alignment == FlxTextAlign.LEFT)
+				x = ((FlxG.width - textWidth) / 2);
+			else if (alignment == FlxTextAlign.CENTER)
+				x = ((FlxG.width - (frameWidth - textWidth)) / 2) - frameWidth;
+				
+	}*/
 }

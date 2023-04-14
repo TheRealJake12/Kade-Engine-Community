@@ -148,6 +148,8 @@ class KadeEngineFPS extends TextField
 		var currentCount = times.length;
 		var lmao:String = (FlxG.save.data.fpsmark ? (Main.watermarks ? "\n" + MainMenuState.kecVer : "\n" + "Kade Engine 1.8.1") : "");
 		currentFPS = Math.round((currentCount + cacheCount) / 2);
+		if (currentFPS > FlxG.save.data.fpsCap)
+			currentFPS = FlxG.save.data.fpsCap;
 		displayFPS = (FlxG.save.data.fps ? "FPS: " + currentFPS : "");
 		var stateText:String = (FlxG.save.data.showState ? "Game State: " + Main.mainClassState : "");
 

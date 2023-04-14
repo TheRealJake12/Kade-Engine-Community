@@ -1,3 +1,4 @@
+import lime.app.Application;
 import flixel.input.gamepad.FlxGamepad;
 import openfl.Lib;
 import flixel.FlxG;
@@ -44,7 +45,7 @@ class KadeEngineData
 			FlxG.save.data.fpsCap = 60;
 
 		if (FlxG.save.data.fpsCap > 420 || FlxG.save.data.fpsCap < 60)
-			FlxG.save.data.fpsCap = 60; // baby proof so you can't hard lock ur copy of kade engine
+			FlxG.save.data.fpsCap = Application.current.window.displayMode.refreshRate;
 
 		if (FlxG.save.data.scrollSpeed == null)
 			FlxG.save.data.scrollSpeed = 1;
@@ -277,7 +278,6 @@ class KadeEngineData
 
 		// if (FlxG.save.data.volume == null)
 		// FlxG.save.data.volume = 1;
-		Conductor.recalculateTimings();
 		PlayerSettings.player1.controls.loadKeyBinds();
 
 		Main.watermarks = FlxG.save.data.watermark;

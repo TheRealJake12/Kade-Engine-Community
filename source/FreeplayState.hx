@@ -100,10 +100,13 @@ class FreeplayState extends MusicBeatState
 	public static var list:Array<String> = [];
 
 	override function create()
-	{FlxG.mouse.visible = true;
+	{
+		FlxG.mouse.visible = true;
 		instance = this;
 		if (!FlxG.save.data.gpuRender)
 			Main.dumpCache();
+			
+		clean();	
 
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
@@ -814,6 +817,7 @@ class FreeplayState extends MusicBeatState
 	function loadSong(isCharting:Bool = false)
 	{
 		loadSongInFreePlay(songs[curSelected].songName, curDifficulty, isCharting);
+		clean();
 	}
 
 	/**
