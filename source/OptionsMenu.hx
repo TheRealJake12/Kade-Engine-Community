@@ -482,7 +482,7 @@ class OptionsMenu extends MusicBeatSubstate
 		any = FlxG.keys.justPressed.ANY || (gamepad != null ? gamepad.justPressed.ANY : false);
 		escape = FlxG.keys.justPressed.ESCAPE || (gamepad != null ? gamepad.justPressed.B : false);
 
-		if (selectedCat != null && !isInCat)
+		if (selectedCat != null && !exiting)
 		{
 			for (i in selectedCat.optionObjects.members)
 			{
@@ -554,9 +554,6 @@ class OptionsMenu extends MusicBeatSubstate
 				selectOption(selectedCat.options[0]);
 			}
 
-			if (changedOption)
-				updateOptColors();
-
 			if (escape)
 			{
 				if (!isInPause)
@@ -603,6 +600,7 @@ class OptionsMenu extends MusicBeatSubstate
 						var object = selectedCat.optionObjects.members[selectedOptionIndex];
 						object.text = "> " + selectedOption.getValue();
 						object.updateHitbox();
+						Debug.logTrace("New text: " + object.text);
 						return;
 					}
 					else if (any)
@@ -611,6 +609,7 @@ class OptionsMenu extends MusicBeatSubstate
 						selectedOption.onType(gamepad == null ? FlxG.keys.getIsDown()[0].ID.toString() : gamepad.firstJustPressedID());
 						object.text = "> " + selectedOption.getValue();
 						object.updateHitbox();
+						Debug.logTrace("New text: " + object.text);
 					}
 				}
 
@@ -642,7 +641,7 @@ class OptionsMenu extends MusicBeatSubstate
 
 			for (option in selectedCat.optionObjects.members)
 			{
-				if (selectedOptionIndex > 4)
+				if (selectedOptionIndex > 5)
 				{
 					option.targetY = bullShit - selectedOptionIndex;
 					bullShit++;
@@ -672,6 +671,7 @@ class OptionsMenu extends MusicBeatSubstate
 						}
 					}
 					selectedOptionIndex = 0;
+					Debug.logTrace('returning');
 				}
 
 				selectOption(options[selectedCatIndex].options[selectedOptionIndex]);
@@ -721,7 +721,10 @@ class OptionsMenu extends MusicBeatSubstate
 					}
 				}
 			}
-			
+
+			if (changedOption)
+				updateOptColors();
+
 			if (escape)
 			{
 				FlxG.sound.play(Paths.sound('scrollMenu'));
@@ -739,7 +742,7 @@ class OptionsMenu extends MusicBeatSubstate
 						{
 							if (i != null)
 							{
-								if (selectedOptionIndex > 4)
+								if (selectedOptionIndex > 5)
 								{
 									i.targetY += (selectedOptionIndex - 5);
 									i.y = i.rawY;
@@ -764,7 +767,7 @@ class OptionsMenu extends MusicBeatSubstate
 		{
 			for (i in 0...options.length - 1)
 			{
-				if (i <= 4)
+				if (i <= 5)
 				{
 					clickedCat = ((FlxG.mouse.overlaps(options[i].titleObject) || FlxG.mouse.overlaps(options[i]))
 						&& FlxG.mouse.justPressed);
