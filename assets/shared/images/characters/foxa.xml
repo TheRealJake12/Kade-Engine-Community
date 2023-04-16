@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TextureAtlas imagePath="foxa.png">
+<SubTexture name="Foxa Idle0000" x="2636" y="0" width="356" height="660" frameX="-461" frameY="-60" frameWidth="1280" frameHeight="720" />
+<SubTexture name="Foxa Idle0001" x="2309" y="0" width="327" height="666" frameX="-480" frameY="-54" frameWidth="1280" frameHeight="720" />
+<SubTexture name="Foxa Idle0002" x="1106" y="1375" width="309" height="674" frameX="-486" frameY="-46" frameWidth="1280" frameHeight="720" />
+<SubTexture name="Foxa Idle0003" x="1626" y="680" width="300" height="677" frameX="-489" frameY="-43" frameWidth="1280" frameHeight="720" />
+<SubTexture name="Foxa Idle0004" x="0" y="693" width="290" height="682" frameX="-490" frameY="-38" frameWidth="1280" frameHeight="720" />
+<SubTexture name="Foxa Down0000" x="2309" y="666" width="319" height="665" frameX="-472" frameY="-55" frameWidth="1280" frameHeight="720" />
+<SubTexture name="Foxa Down0001" x="1781" y="1375" width="321" height="670" frameX="-461" frameY="-50" frameWidth="1280" frameHeight="720" />
+<SubTexture name="Foxa Down0002" x="787" y="1375" width="319" height="675" frameX="-461" frameY="-45" frameWidth="1280" frameHeight="720" />
+<SubTexture name="Foxa Down0003" x="1626" y="0" width="317" height="680" frameX="-461" frameY="-40" frameWidth="1280" frameHeight="720" />
+<SubTexture name="Foxa Left0000" x="1415" y="1375" width="366" height="674" frameX="-416" frameY="-46" frameWidth="1280" frameHeight="720" />
+<SubTexture name="Foxa Left0001" x="1943" y="679" width="362" height="678" frameX="-416" frameY="-42" frameWidth="1280" frameHeight="720" />
+<SubTexture name="Foxa Left0002" x="1943" y="0" width="366" height="679" frameX="-415" frameY="-41" frameWidth="1280" frameHeight="720" />
+<SubTexture name="Foxa Left0003" x="290" y="693" width="369" height="682" frameX="-415" frameY="-38" frameWidth="1280" frameHeight="720" />
+<SubTexture name="Foxa Right0000" x="830" y="0" width="412" height="683" frameX="-398" frameY="-37" frameWidth="1280" frameHeight="720" />
+<SubTexture name="Foxa Right0001" x="659" y="693" width="401" height="682" frameX="-398" frameY="-38" frameWidth="1280" frameHeight="720" />
+<SubTexture name="Foxa Right0002" x="0" y="1375" width="388" height="679" frameX="-398" frameY="-41" frameWidth="1280" frameHeight="720" />
+<SubTexture name="Foxa Right0003" x="1242" y="0" width="384" height="683" frameX="-398" frameY="-37" frameWidth="1280" frameHeight="720" />
+<SubTexture name="Foxa Up0000" x="0" y="0" width="419" height="693" frameX="-364" frameY="-27" frameWidth="1280" frameHeight="720" />
+<SubTexture name="Foxa Up0001" x="419" y="0" width="411" height="691" frameX="-364" frameY="-29" frameWidth="1280" frameHeight="720" />
+<SubTexture name="Foxa Up0002" x="1060" y="693" width="407" height="681" frameX="-364" frameY="-39" frameWidth="1280" frameHeight="720" />
+<SubTexture name="Foxa Up0003" x="388" y="1375" width="399" height="676" frameX="-364" frameY="-44" frameWidth="1280" frameHeight="720" />
+</TextureAtlas>

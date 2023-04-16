@@ -6674,4 +6674,3 @@ typedef SplashData =
 
 	// theres gonna be more but the fps fucks me so much rn
 }
-

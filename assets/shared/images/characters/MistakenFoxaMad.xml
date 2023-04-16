@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="MistakenFoxaMad.png">
+	<!-- Created with Adobe Animate version 22.0.7.214 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="Idle instance 10000" x="0" y="0" width="513" height="263" frameX="0" frameY="-142" frameWidth="513" frameHeight="405"/>
+	<SubTexture name="Idle instance 10001" x="513" y="0" width="483" height="307" frameX="-15" frameY="-97" frameWidth="513" frameHeight="405"/>
+	<SubTexture name="Idle instance 10002" x="996" y="0" width="447" height="345" frameX="-33" frameY="-60" frameWidth="513" frameHeight="405"/>
+	<SubTexture name="Idle instance 10003" x="1443" y="0" width="403" height="403" frameX="-55" frameY="0" frameWidth="513" frameHeight="405"/>
+	<SubTexture name="Sing Down instance 10000" x="0" y="403" width="432" height="213" frameX="0" frameY="-21" frameWidth="432" frameHeight="234"/>
+	<SubTexture name="Sing Down instance 10001" x="432" y="403" width="416" height="233" frameX="-8" frameY="0" frameWidth="432" frameHeight="234"/>
+	<SubTexture name="Sing Left instance 10000" x="848" y="403" width="524" height="403"/>
+	<SubTexture name="Sing Left instance 10001" x="1372" y="403" width="492" height="403" frameX="-31" frameY="0" frameWidth="524" frameHeight="403"/>
+	<SubTexture name="Sing Right instance 10000" x="0" y="806" width="546" height="403"/>
+	<SubTexture name="Sing Right instance 10001" x="546" y="806" width="512" height="403" frameX="-5" frameY="0" frameWidth="546" frameHeight="403"/>
+	<SubTexture name="Sing Up instance 10000" x="1058" y="806" width="404" height="505" frameX="-6" frameY="0" frameWidth="416" frameHeight="506"/>
+	<SubTexture name="Sing Up instance 10001" x="1462" y="806" width="416" height="487" frameX="0" frameY="-19" frameWidth="416" frameHeight="506"/>
+</TextureAtlas>
