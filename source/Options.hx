@@ -17,8 +17,10 @@ class Option
 	}
 
 	private var description:String = "";
+	public var pauseDesc:String = "This option cannot be toggled in the pause menu.";
 	private var display:String;
 	private var acceptValues:Bool = false;
+	public var blocked:Bool = false;
 
 	public var acceptType:Bool = false;
 
@@ -45,6 +47,10 @@ class Option
 	};
 
 	public function onType(text:String)
+	{
+	}
+
+	public function updateBlocks()
 	{
 	}
 
@@ -502,7 +508,7 @@ class DownscrollOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+			description = pauseDesc;
 		else
 			description = desc;
 	}
@@ -534,7 +540,7 @@ class GhostTapOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+			description = pauseDesc;
 		else
 			description = desc;
 	}
@@ -566,7 +572,10 @@ class AccuracyOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+		{
+			blocked = true;
+			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -598,7 +607,7 @@ class SongPositionOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+			description = pauseDesc;
 		else
 			description = desc;
 	}
@@ -630,7 +639,7 @@ class DistractionsAndEffectsOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+			description = pauseDesc;
 		else
 			description = desc;
 	}
@@ -661,15 +670,12 @@ class Colour extends Option
 	public function new(desc:String)
 	{
 		super();
-		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
-		else
-			description = desc;
+		description = desc;
 	}
 
 	public override function left():Bool
 	{
-		if (OptionsMenu.isInPause)
+		if (!FlxG.save.data.healthBar)
 			return false;
 		FlxG.save.data.colour = !FlxG.save.data.colour;
 		display = updateDisplay();
@@ -694,7 +700,7 @@ class StepManiaOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+			description = pauseDesc;
 		else
 			description = desc;
 	}
@@ -780,7 +786,7 @@ class FlashingLightsOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+			description = pauseDesc;
 		else
 			description = desc;
 	}
@@ -812,7 +818,7 @@ class AntialiasingOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+			description = pauseDesc;
 		else
 			description = desc;
 	}
@@ -844,7 +850,7 @@ class MissSoundsOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+			description = pauseDesc;
 		else
 			description = desc;
 	}
@@ -903,7 +909,7 @@ class Judgement extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+			description = pauseDesc;
 		else
 			description = desc;
 		acceptValues = true;
@@ -1346,7 +1352,7 @@ class AccuracyDOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+			description = pauseDesc;
 		else
 			description = desc;
 	}
@@ -1378,7 +1384,10 @@ class CustomizeGameplay extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+		{
+			blocked = true;
+			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -1404,7 +1413,7 @@ class WatermarkOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+			description = pauseDesc;
 		else
 			description = desc;
 	}
@@ -1492,7 +1501,7 @@ class OffsetThing extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+			description = pauseDesc;
 		else
 			description = desc;
 	}
@@ -1557,16 +1566,11 @@ class CamZoomOption extends Option
 	public function new(desc:String)
 	{
 		super();
-		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
-		else
-			description = desc;
+		description = desc;
 	}
 
 	public override function left():Bool
 	{
-		if (OptionsMenu.isInPause)
-			return false;
 		FlxG.save.data.camzoom = !FlxG.save.data.camzoom;
 		display = updateDisplay();
 		return true;
@@ -1590,7 +1594,7 @@ class JudgementCounter extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+			description = pauseDesc;
 		else
 			description = desc;
 	}
@@ -1622,7 +1626,7 @@ class MiddleScrollOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+			description = pauseDesc;
 		else
 			description = desc;
 	}
@@ -1654,7 +1658,7 @@ class RotateSpritesOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+			description = pauseDesc;
 		else
 			description = desc;
 	}
@@ -1686,7 +1690,7 @@ class NoteskinOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+			description = pauseDesc;
 		else
 			description = desc;
 	}
@@ -1725,7 +1729,7 @@ class CPUNoteskinOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+			description = pauseDesc;
 		else
 			description = desc;
 	}
@@ -1764,7 +1768,7 @@ class HealthBarOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+			description = pauseDesc;
 		else
 			description = desc;
 	}
@@ -1858,7 +1862,7 @@ class LockWeeksOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+			description = pauseDesc;
 		else
 			description = desc;
 	}
@@ -2869,7 +2873,10 @@ class GPURendering extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+		{
+			blocked = true;
+			description = pauseDesc;
+		}
 		else
 			description = desc;
 

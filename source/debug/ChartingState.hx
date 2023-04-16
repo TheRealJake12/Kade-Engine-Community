@@ -1316,7 +1316,9 @@ class ChartingState extends MusicBeatState
 				_song.notes.remove(i);
 
 			toRemove = []; // clear memory
+			Main.dumpCache();
 			LoadingState.loadAndSwitchState(new PlayState());
+			clean();
 		});
 
 		var duetButton:FlxButton = new FlxButton(10, copyButton.y + 95, "Duet Notes", function()
@@ -2678,6 +2680,7 @@ class ChartingState extends MusicBeatState
 					Main.dumpCache();
 
 					LoadingState.loadAndSwitchState(new PlayState());
+					clean();
 				}
 
 				if (FlxG.keys.justPressed.E)
@@ -3506,6 +3509,7 @@ class ChartingState extends MusicBeatState
 
 		toRemove = []; // clear memory
 		LoadingState.loadAndSwitchState(new ChartingState());
+		clean();
 	}
 
 	function loadAutosave():Void
@@ -3559,6 +3563,7 @@ class ChartingState extends MusicBeatState
 
 		toRemove = []; // clear memory
 		LoadingState.loadAndSwitchState(new ChartingState());
+		clean();
 	}
 
 	function updateBpmText()

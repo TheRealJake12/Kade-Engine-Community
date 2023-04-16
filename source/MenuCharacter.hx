@@ -2,121 +2,75 @@ package;
 
 import flixel.FlxSprite;
 import flixel.FlxG;
-import flixel.graphics.frames.FlxAtlasFrames;
 
-class CharacterSetting
+typedef MenuCharData =
 {
-	public var x(default, null):Int;
-	public var y(default, null):Int;
-	public var scale(default, null):Float;
-	public var flipped(default, null):Bool;
-
-	public function new(x:Int = 0, y:Int = 0, scale:Float = 1.0, flipped:Bool = false)
-	{
-		this.x = x;
-		this.y = y;
-		this.scale = scale;
-		this.flipped = flipped;
-	}
+	var image:String;
+	var scale:Float;
+	var position:Array<Int>;
+	var idle_anim:String;
+	var confirm_anim:String;
+	var flipped:Bool;
 }
 
 class MenuCharacter extends FlxSprite
 {
-	private static var settings:Map<String, CharacterSetting> = [
-		'bf' => new CharacterSetting(0, -20, 1.0, true),
-		'gf' => new CharacterSetting(50, 80, 1.5, true),
-		'dad' => new CharacterSetting(-15, 130),
-		'spooky' => new CharacterSetting(20, 30),
-		'pico' => new CharacterSetting(0, 0, 1.0, true),
-		'mom' => new CharacterSetting(-30, 140, 0.85),
-		'parents-christmas' => new CharacterSetting(100, 130, 1.8),
-		'senpai' => new CharacterSetting(-40, -45, 1.4),
-		'tankman' => new CharacterSetting(-150, -40, 1.0, false)
-	];
+	public var character:String;
+	public var hasConfirmAnimation:Bool = false;
 
-	private var flipped:Bool = false;
-	// questionable variable name lmfao
-	private var goesLeftNRight:Bool = false;
-	private var danceLeft:Bool = false;
-	private var character:String = '';
-
-	public function new(x:Int, y:Int, scale:Float, flipped:Bool)
+	public function new(x:Float, character:String = 'bf')
 	{
-		super(x, y);
-		this.flipped = flipped;
+		super(x);
 
-		antialiasing = FlxG.save.data.antialiasing;
-
-		frames = Paths.getSparrowAtlas('campaign_menu_UI_characters');
-
-		animation.addByPrefix('bf', "BF idle dance white", 24, false);
-		animation.addByPrefix('bfConfirm', 'BF HEY!!', 24, false);
-		animation.addByIndices('gf-left', 'GF Dancing Beat WHITE', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
-		animation.addByIndices('gf-right', 'GF Dancing Beat WHITE', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
-		animation.addByPrefix('dad', "Dad idle dance BLACK LINE", 24, false);
-		animation.addByIndices('spooky-left', 'spooky dance idle BLACK LINES', [0, 2, 6], "", 12, false);
-		animation.addByIndices('spooky-right', 'spooky dance idle BLACK LINES', [8, 10, 12, 14], "", 12, false);
-		animation.addByPrefix('pico', "Pico Idle Dance", 24, false);
-		animation.addByPrefix('mom', "Mom Idle BLACK LINES", 24, false);
-		animation.addByPrefix('parents-christmas', "Parent Christmas Idle", 24, false);
-		animation.addByPrefix('senpai', "SENPAI idle Black Lines", 24, false);
-		animation.addByPrefix('tankman', "Tankman Menu BLACK", 24);
-
-		setGraphicSize(Std.int(width * scale));
-		updateHitbox();
+		changeCharacter(character);
 	}
 
-	public function setCharacter(character:String):Void
+	public function changeCharacter(?character:String = 'bf')
 	{
-		var sameCharacter:Bool = character == this.character;
+		if (character == null)
+			character = '';
+		if (character == this.character)
+			return;
+
 		this.character = character;
-		if (character == '')
-		{
-			visible = false;
-			return;
-		}
-		else
-		{
-			visible = true;
-		}
+		antialiasing = FlxG.save.data.antialiasing;
+		visible = true;
 
-		if (!sameCharacter)
-		{
-			bopHead(true);
-		}
+		var dontPlayAnim:Bool = false;
+		scale.set(1, 1);
+		updateHitbox();
 
-		var setting:CharacterSetting = settings[character];
-		offset.set(setting.x, setting.y);
-		setGraphicSize(Std.int(width * setting.scale));
-		flipX = setting.flipped != flipped;
-	}
+		hasConfirmAnimation = false;
+		switch (character)
+		{
+			case '':
+				visible = false;
+				dontPlayAnim = true;
+			default:
+				var jsonPath:String = 'menuCharacters/' + character;
 
-	public function bopHead(LastFrame:Bool = false):Void
-	{
-		if (character == 'gf' || character == 'spooky')
-		{
-			danceLeft = !danceLeft;
+				var charJson:MenuCharData = cast Paths.loadJSON(jsonPath);
 
-			if (danceLeft)
-				animation.play(character + "-left", true);
-			else
-				animation.play(character + "-right", true);
-		}
-		else if (character == '')
-		{
-			// Don't try to play an animation on an invisible character.
-			return;
-		}
-		else
-		{
-			// no spooky nor girlfriend so we do da normal animation
-			if (animation.name == "bfConfirm")
-				return;
-			animation.play(character, true);
-		}
-		if (LastFrame)
-		{
-			animation.finish();
+				frames = Paths.getSparrowAtlas('menuCharacters/' + charJson.image);
+				animation.addByPrefix('idle', charJson.idle_anim, 24);
+
+				var confirmAnim:String = charJson.confirm_anim;
+				if (confirmAnim != null && confirmAnim.length > 0 && confirmAnim != charJson.idle_anim)
+				{
+					animation.addByPrefix('confirm', confirmAnim, 24, false);
+					if (animation.getByName('confirm') != null) // check for invalid animation
+						hasConfirmAnimation = true;
+				}
+
+				flipX = (charJson.flipped == true);
+
+				if (charJson.scale != 1)
+				{
+					scale.set(charJson.scale, charJson.scale);
+					updateHitbox();
+				}
+				offset.set(charJson.position[0], charJson.position[1]);
+				animation.play('idle');
 		}
 	}
 }

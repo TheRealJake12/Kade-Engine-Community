@@ -1,19 +1,25 @@
-using StringTools;
+import openfl.utils.Assets as OpenFlAssets;
 
-typedef WeekJSON =
+typedef WeekData =
 {
 	var songs:Array<String>;
-
-	var number:Int;
 	var characters:Array<String>;
 	var weekName:String;
+	var difficulties:Array<String>;
 }
 
-class WeekData
+class Week
 {
-	public static var weeksLoaded:Map<String, WeekData> = new Map<String, WeekData>();
-	public static var weeksList:Array<String> = [];
+	public static function loadJSONFile(week:String):WeekData
+	{
+		var rawJson = Paths.loadJSON('weeks/$week');
+		return parseWeek(rawJson);
+	}
 
-	public var songs:Array<Dynamic>;
-	public var characters:Array<String>;
+	public static function parseWeek(json:Dynamic):WeekData
+	{
+		var weekData:WeekData = cast json;
+
+		return weekData;
+	}
 }

@@ -128,10 +128,10 @@ class Replay
 		#if FEATURE_FILESYSTEM
 		if (FlxG.save.data.saveReplays)
 		{
-			File.saveContent("assets/replays/replay-" + PlayState.SONG.songId + "-time" + dateNow + ".keReplay", data);
+			File.saveContent("assets/replays/replay-" + PlayState.SONG.songId + "-" + dateNow + ".keReplay", data);
 		}
 
-		path = "replay-" + PlayState.SONG.songId + "-time" + dateNow + ".keReplay"; // for score screen shit
+		path = "replay-" + PlayState.SONG.songId + "-" + dateNow + ".keReplay"; // for score screen shit
 
 		LoadFromJSON();
 

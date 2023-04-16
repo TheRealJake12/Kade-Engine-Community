@@ -13,6 +13,8 @@ import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.display3D.textures.Texture;
 import openfl.display.BitmapData;
+import flixel.graphics.frames.FlxBitmapFont;
+import flixel.util.FlxDestroyUtil;
 
 using StringTools;
 
@@ -78,8 +80,8 @@ class Paths
 					var texture = FlxG.stage.context3D.createTexture(bitmap.width, bitmap.height, BGRA, false, 0);
 					texture.uploadFromBitmapData(bitmap);
 					currentTrackedTextures.set(key, texture);
-					bitmap.dispose();
 					bitmap.disposeImage();
+					FlxDestroyUtil.dispose(bitmap);
 					bitmap = null;
 					graphic = FlxGraphic.fromBitmapData(BitmapData.fromTexture(texture), false, key);
 				}
@@ -114,7 +116,7 @@ class Paths
 		}
 		catch (e)
 		{
-			Debug.logInfo('Error parsing JSON or JSON does not exit');
+			Debug.logError('Error loading JSON. $e');
 			rawJson = null;
 		}
 
@@ -131,7 +133,9 @@ class Paths
 		{
 			// Attempt to parse and return the JSON data.
 			if (rawJson != null)
+			{
 				return Json.parse(rawJson);
+			}
 
 			return null;
 		}
@@ -442,6 +446,16 @@ class Paths
 		return 'assets/fonts/$key';
 	}
 
+	inline static public function bitmapFont(key:String, ?library:String):FlxBitmapFont
+	{
+		return FlxBitmapFont.fromAngelCode(image(key, library), fontXML(key, library));
+	}
+
+	inline static public function fontXML(key:String, ?library:String):Xml
+	{
+		return Xml.parse(OpenFlAssets.getText(getPath('images/$key.fnt', TEXT, library)));
+	}
+
 	inline static public function fileExists(key:String, type:AssetType, ?library:String)
 	{
 		if (OpenFlAssets.exists(getPath(key, type, library)))
@@ -486,6 +500,7 @@ class Paths
 						OpenFlAssets.cache.clear(key);
 						FlxG.bitmap._cache.remove(key);
 						obj.destroy();
+						FlxDestroyUtil.dispose(obj.bitmap);
 						currentTrackedAssets.remove(key);
 						counter++;
 					}

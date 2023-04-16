@@ -105,6 +105,8 @@ class FreeplayState extends MusicBeatState
 		instance = this;
 		if (!FlxG.save.data.gpuRender)
 			Main.dumpCache();
+			
+		clean();	
 
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
@@ -820,6 +822,7 @@ class FreeplayState extends MusicBeatState
 	function loadSong(isCharting:Bool = false)
 	{
 		loadSongInFreePlay(songs[curSelected].songName, curDifficulty, isCharting);
+		clean();
 	}
 
 	/**

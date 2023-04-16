@@ -1,6 +1,7 @@
 package;
 
 import flixel.util.FlxTimer;
+import CoolUtil.CoolText;
 import flixel.FlxCamera;
 import flixel.FlxSubState;
 import flixel.input.gamepad.FlxGamepad;
@@ -31,21 +32,30 @@ class OptionCata extends FlxSprite
 
 	public var options:Array<Option>;
 
-	public var optionObjects:FlxTypedGroup<FlxText>;
+	public var optionObjects:FlxTypedGroup<OptionText>;
 
 	public var titleObject:FlxText;
 
 	public var middle:Bool = false;
 
-	public var text:FlxText;
+	public var text:OptionText;
+	public var graphics:Array<FlxSprite> = [];
 
 	public function new(x:Float, y:Float, _title:String, _options:Array<Option>, middleType:Bool = false)
 	{
 		super(x, y);
 		title = _title;
 		middle = middleType;
+		graphics = [];
+
+		var blackGraphic = new FlxSprite().makeGraphic(295, 64, FlxColor.BLACK);
+		var cumGraphic = new FlxSprite().makeGraphic(295, 64, FlxColor.WHITE);
+
+		graphics.push(blackGraphic);
+		graphics.push(cumGraphic);
+
 		if (!middleType)
-			makeGraphic(295, 64, FlxColor.BLACK);
+			loadGraphic(graphics[0].graphic);
 		alpha = 0.4;
 
 		options = _options;
@@ -70,14 +80,21 @@ class OptionCata extends FlxSprite
 		for (i in 0...options.length)
 		{
 			var opt = options[i];
-			text = new FlxText((middleType ? 1180 / 2 : 72), 120 + 54 + (46 * i), 0, opt.getValue());
+			text = new OptionText(middleType ? 0 : 75, (46 * i) + 175, 35, 35, Paths.bitmapFont('fonts/vcr'));
+			text.autoSize = true;
+			text.borderStyle = FlxTextBorderStyle.OUTLINE;
+			text.borderSize = 2;
+			text.antialiasing = FlxG.save.data.antialiasing;
+			text.targetY = i;
+			text.alpha = 0.4;
+			text.ID = i;
+
+			text.text = opt.getValue();
+			text.updateHitbox();
+
 			if (middleType)
-			{
-				text.screenCenter(X);
-			}
-			text.setFormat(Paths.font("vcr.ttf"), 35, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-			text.borderSize = 3;
-			text.borderQuality = 1;
+				text.alignment = FlxTextAlign.RIGHT;
+
 			text.scrollFactor.set();
 
 			optionObjects.add(text);
@@ -86,7 +103,27 @@ class OptionCata extends FlxSprite
 
 	public function changeColor(color:FlxColor)
 	{
-		makeGraphic(295, 64, color);
+		if (color == FlxColor.BLACK)
+			loadGraphic(graphics[0].graphic);
+		else if (color == FlxColor.WHITE)
+			loadGraphic(graphics[1].graphic);
+	}
+
+	override function destroy()
+	{
+		for (graphic in graphics)
+			graphic.destroy();
+		graphics.resize(0);
+		for (shit in optionObjects)
+		{
+			shit.destroy();
+		}
+
+		optionObjects.clear();
+
+		options.resize(0);
+
+		super.destroy();
 	}
 }
 
@@ -109,26 +146,26 @@ class OptionsMenu extends MusicBeatSubstate
 
 	public static var isInPause = false;
 
-	public var shownStuff:FlxTypedGroup<FlxText>;
+	public var shownStuff:FlxTypedGroup<OptionText>;
 
 	public static var visibleRange = [164, 640];
 
 	var changedOption = false;
+
+	public var menu:FlxTypedGroup<FlxSprite>;
+
+	public var descText:CoolText;
+	public var descBack:FlxSprite;
+	var saveIndex:Int = 0;
+
+	var saveOptIndex:Int = 0;
 
 	public function new(pauseMenu:Bool = false)
 	{
 		super();
 
 		isInPause = pauseMenu;
-	}
 
-	public var menu:FlxTypedGroup<FlxSprite>;
-
-	public var descText:FlxText;
-	public var descBack:FlxSprite;
-
-	override function create()
-	{
 		options = [
 			new OptionCata(50, 40, "Gameplay", [
 				new DownscrollOption("Toggle making the notes scroll down rather than up."),
@@ -248,36 +285,68 @@ class OptionsMenu extends MusicBeatSubstate
 
 		menu = new FlxTypedGroup<FlxSprite>();
 
-		shownStuff = new FlxTypedGroup<FlxText>();
+		shownStuff = new FlxTypedGroup<OptionText>();
 
 		background = new FlxSprite(50, 40).makeGraphic(1180, 640, FlxColor.BLACK);
 		background.alpha = 0.5;
 		background.scrollFactor.set();
-		menu.add(background);
 
-		descBack = new FlxSprite(50, 680).makeGraphic(1180, 38, FlxColor.BLACK);
-		descBack.alpha = 0.6;
+		descBack = new FlxSprite(50, 642).makeGraphic(1180, 38, FlxColor.BLACK);
+		descBack.alpha = 0.3;
 		descBack.scrollFactor.set();
-		menu.add(descBack);
 
 		if (isInPause)
 		{
 			var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+			bg.alpha = 0;
 			bg.scrollFactor.set();
 			menu.add(bg);
 
+			descBack.alpha = 0.3;
+			background.alpha = 0.5;
 			bg.alpha = 0.6;
 
 			cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 		}
 
 		selectedCat = options[0];
+		selectedOption = selectedCat.options[0];
+		descText = new CoolText(65, 648, 20, 20, Paths.bitmapFont('fonts/vcr'));
+		descText.autoSize = false;
+		descText.fieldWidth = 1750;
+		descText.antialiasing = FlxG.save.data.antialiasing;
+		descText.borderStyle = FlxTextBorderStyle.OUTLINE;
+		descText.borderSize = 2;
+
+		isInCat = true;
+
+		switchCat(selectedCat);
 
 		selectedOption = selectedCat.options[0];
+
+		super.create();
+		openCallback = refresh;
+
+	}
+
+	override function create()
+	{
+		instance = this;
+
+		menu.add(background);
+
+		menu.add(descBack);
+
+		selectedCat = options[0];
 
 		add(menu);
 
 		add(shownStuff);
+
+		add(descBack);
+		add(descText);
+
+		isInCat = true;
 
 		for (i in 0...options.length - 1)
 		{
@@ -288,95 +357,81 @@ class OptionsMenu extends MusicBeatSubstate
 			add(cat.titleObject);
 		}
 
-		descText = new FlxText(62, 685);
-		descText.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		descText.borderSize = 2;
-
-		add(descBack);
-		add(descText);
-
-		isInCat = true;
-
 		switchCat(selectedCat);
 
-		selectedOption = selectedCat.options[0];
-
 		super.create();
+
 	}
 
-	public function switchCat(cat:OptionCata, checkForOutOfBounds:Bool = true)
+	function refresh()
 	{
-		try
+		switchCat(selectedCat);
+	}
+
+	public function switchCat(cat:OptionCata, toSubCat:Bool = false, fromSubCat:Bool = false)
+	{
+		if (toSubCat)
 		{
-			visibleRange = [164, 640];
-			if (selectedOption != null)
-			{
-				var object = selectedCat.optionObjects.members[selectedOptionIndex];
-				object.text = selectedOption.getValue();
-			}
-
-			if (selectedCatIndex > options.length - 3 && checkForOutOfBounds)
-				selectedCatIndex = 0;
-
-			if (selectedCat.middle)
-				remove(selectedCat.titleObject);
-
-			selectedCat.changeColor(FlxColor.BLACK);
-			selectedCat.alpha = 0.3;
-
-			for (i in 0...selectedCat.options.length)
-			{
-				var opt = selectedCat.optionObjects.members[i];
-				opt.y = options[4].titleObject.y + 54 + (46 * i);
-			}
-
-			while (shownStuff.members.length != 0)
-			{
-				shownStuff.members.remove(shownStuff.members[0]);
-			}
-			selectedCat = cat;
-			selectedCat.alpha = 0.2;
-			selectedCat.changeColor(FlxColor.WHITE);
-
-			if (selectedCat.middle)
-				add(selectedCat.titleObject);
-
-			for (i in selectedCat.optionObjects)
-				shownStuff.add(i);
-
-			selectedOption = selectedCat.options[0];
-
-			if (selectedOptionIndex > options[selectedCatIndex].options.length - 1)
-			{
-				for (i in 0...selectedCat.options.length)
-				{
-					var opt = selectedCat.optionObjects.members[i];
-					opt.y = options[4].titleObject.y + 54 + (46 * i);
-				}
-			}
-
+			saveIndex = options.indexOf(selectedCat);
+			saveOptIndex = selectedOptionIndex;
+			isInCat = false;
+		}
+		else if (!fromSubCat)
+		{
+			saveIndex = 0;
+			saveOptIndex = 0;
 			selectedOptionIndex = 0;
-
-			if (!isInCat)
-				selectOption(selectedOption);
-
-			for (i in selectedCat.optionObjects.members)
-			{
-				if (i.y < visibleRange[0] - 24)
-					i.alpha = 0;
-				else if (i.y > visibleRange[1] - 24)
-					i.alpha = 0;
-				else
-				{
-					i.alpha = 0.4;
-				}
-			}
 		}
-		catch (e)
-		{
-			Debug.logError("Bug:\n" + e);
+
+		visibleRange = [164, 640];
+		/*if (cat.middle)
+			visibleRange = [Std.int(cat.titleObject.y), 640]; */
+
+		if (selectedCatIndex > options.length - 3 && !toSubCat)
 			selectedCatIndex = 0;
+
+		if (selectedCat.middle)
+			remove(selectedCat.titleObject);
+
+		selectedCat.changeColor(FlxColor.BLACK);
+		selectedCat.alpha = 0.4;
+		selectedCat = cat;
+		selectedCat.alpha = 0.3;
+		selectedCat.changeColor(FlxColor.WHITE);
+
+		if (fromSubCat)
+		{
+			selectedOption = selectedCat.options[saveOptIndex];
+			selectedOptionIndex = saveOptIndex;
+			isInCat = false;
 		}
+		else
+		{
+			selectedOption = selectedCat.options[0];
+			selectedOptionIndex = 0;
+		}
+
+		for (leStuff in shownStuff)
+		{
+			shownStuff.remove(leStuff, true);
+		}
+
+		shownStuff.members.resize(0);
+		shownStuff.clear();
+
+		if (selectedCat.middle)
+			add(selectedCat.titleObject);
+
+		if (!isInCat)
+			selectOption(selectedOption);
+
+		for (opt in selectedCat.optionObjects.members)
+			opt.targetY = opt.ID - 5;
+
+		for (i in selectedCat.optionObjects)
+			shownStuff.add(i);
+
+		updateOptColors();	
 	}
 
 	public function selectOption(option:Option)
@@ -388,10 +443,14 @@ class OptionsMenu extends MusicBeatSubstate
 		if (!isInCat)
 		{
 			object.text = "> " + option.getValue();
+			updateOptColors();
 
 			descText.text = option.getDescription();
 		}
 	}
+
+	var exiting:Bool = false;
+	var holdTime:Float = 0;
 
 	override function update(elapsed:Float)
 	{
@@ -407,6 +466,9 @@ class OptionsMenu extends MusicBeatSubstate
 		var any = false;
 		var escape = false;
 		var clickedCat = false;
+		var rightHold = FlxG.keys.pressed.RIGHT || (gamepad != null ? gamepad.pressed.DPAD_RIGHT : false);
+
+		var leftHold = FlxG.keys.pressed.LEFT || (gamepad != null ? gamepad.pressed.DPAD_LEFT : false);
 
 		changedOption = false;
 
@@ -419,23 +481,28 @@ class OptionsMenu extends MusicBeatSubstate
 		any = FlxG.keys.justPressed.ANY || (gamepad != null ? gamepad.justPressed.ANY : false);
 		escape = FlxG.keys.justPressed.ESCAPE || (gamepad != null ? gamepad.justPressed.B : false);
 
-		if (selectedCat != null && !isInCat)
+		if (selectedCat != null && !exiting)
 		{
 			for (i in selectedCat.optionObjects.members)
 			{
 				if (selectedCat.middle)
 				{
 					i.screenCenter(X);
+					i.updateHitbox();
 				}
 
 				// I wanna die!!!
-				if (i.y < visibleRange[0] - 24)
-					i.alpha = 0;
-				else if (i.y > visibleRange[1] - 24)
-					i.alpha = 0;
+				if (i.y < visibleRange[0] - 24 || i.y > visibleRange[1] - 24)
+				{
+					if (i.visible)
+						i.visible = false;
+				}
 				else
 				{
-					if (selectedCat.optionObjects.members[selectedOptionIndex].text != i.text)
+					if (!i.visible)
+						i.visible = true;
+
+					if (selectedCat.optionObjects.members[selectedOptionIndex].text != i.text || isInCat)
 						i.alpha = 0.4;
 					else
 						i.alpha = 1;
@@ -443,15 +510,18 @@ class OptionsMenu extends MusicBeatSubstate
 			}
 		}
 
-		try
+		if (isInCat)
 		{
-			if (isInCat)
+			descText.text = "Please select a category";
+
+			descText.color = FlxColor.WHITE;
+			descText.updateHitbox();
+
+			if (selectedOption != null)
 			{
-				descText.text = "Please select a category";
 				if (right)
 				{
 					FlxG.sound.play(Paths.sound('scrollMenu'));
-					selectedCat.optionObjects.members[selectedOptionIndex].text = selectedOption.getValue();
 					selectedCatIndex++;
 
 					if (selectedCatIndex > options.length - 3)
@@ -464,7 +534,6 @@ class OptionsMenu extends MusicBeatSubstate
 				else if (left)
 				{
 					FlxG.sound.play(Paths.sound('scrollMenu'));
-					selectedCat.optionObjects.members[selectedOptionIndex].text = selectedOption.getValue();
 					selectedCatIndex--;
 
 					if (selectedCatIndex > options.length - 3)
@@ -474,250 +543,311 @@ class OptionsMenu extends MusicBeatSubstate
 
 					switchCat(options[selectedCatIndex]);
 				}
+			}
 
+			if (accept)
+			{
+				FlxG.sound.play(Paths.sound('scrollMenu'));
+				selectedOptionIndex = 0;
+				isInCat = false;
+				selectOption(selectedCat.options[0]);
+			}
+
+			if (escape)
+			{
+				if (!isInPause)
+				{
+					exiting = true;
+					FlxTween.tween(background, {alpha: 0}, 0.5, {ease: FlxEase.smootherStepInOut});
+					for (i in 0...selectedCat.optionObjects.length)
+					{
+						FlxTween.tween(selectedCat.optionObjects.members[i], {alpha: 0}, 0.5, {ease: FlxEase.smootherStepInOut});
+					}
+					for (i in 0...options.length - 1)
+					{
+						FlxTween.tween(options[i].titleObject, {alpha: 0}, 0.5, {ease: FlxEase.smootherStepInOut});
+						FlxTween.tween(options[i], {alpha: 0}, 0.5, {ease: FlxEase.smootherStepInOut});
+					}
+					FlxTween.tween(descText, {alpha: 0}, 0.5, {ease: FlxEase.smootherStepInOut});
+					FlxTween.tween(descBack, {alpha: 0}, 0.5, {
+						ease: FlxEase.smootherStepInOut,
+						onComplete: function(twn:FlxTween)
+						{
+							close();
+
+							MusicBeatState.switchState(new MainMenuState());
+						}
+					});
+				}
+				else
+				{
+					PauseSubState.goBack = true;
+					PlayState.instance.updateSettings();
+					close();
+				}
+			}
+		}
+		else
+		{
+			if (selectedOption != null)
+				if (selectedOption.acceptType)
+				{
+					if (escape && selectedOption.waitingType)
+					{
+						FlxG.sound.play(Paths.sound('scrollMenu'));
+						selectedOption.waitingType = false;
+						var object = selectedCat.optionObjects.members[selectedOptionIndex];
+						object.text = "> " + selectedOption.getValue();
+						object.updateHitbox();
+						Debug.logTrace("New text: " + object.text);
+						return;
+					}
+					else if (any)
+					{
+						var object = selectedCat.optionObjects.members[selectedOptionIndex];
+						selectedOption.onType(gamepad == null ? FlxG.keys.getIsDown()[0].ID.toString() : gamepad.firstJustPressedID());
+						object.text = "> " + selectedOption.getValue();
+						object.updateHitbox();
+						Debug.logTrace("New text: " + object.text);
+					}
+				}
+
+			if (selectedOption.acceptType)
 				if (accept)
 				{
-					FlxG.sound.play(Paths.sound('scrollMenu'));
-					selectedOptionIndex = 0;
-					isInCat = false;
-					selectOption(selectedCat.options[0]);
-				}
+					var prev = selectedOptionIndex;
+					var object = selectedCat.optionObjects.members[selectedOptionIndex];
+					selectedOption.press();
 
-				if (escape || FlxG.mouse.justPressedRight)
-				{
-					if (!isInPause)
+					if (selectedOptionIndex == prev)
 					{
-						MusicBeatState.switchState(new MainMenuState());
-						FlxG.sound.music.stop();
-					}
-					else
-					{
-						PauseSubState.goBack = true;
-						PlayStateChangeables.scrollSpeed = FlxG.save.data.scrollSpeed * PlayState.songMultiplier;
-						close();
-					}
-				}
-			}
-			else
-			{
-				if (selectedOption != null)
-					if (selectedOption.acceptType)
-					{
-						if (escape && selectedOption.waitingType)
-						{
-							FlxG.sound.play(Paths.sound('scrollMenu'));
-							selectedOption.waitingType = false;
-							var object = selectedCat.optionObjects.members[selectedOptionIndex];
-							object.text = "> " + selectedOption.getValue();
-							return;
-						}
-						else if (any)
-						{
-							var object = selectedCat.optionObjects.members[selectedOptionIndex];
-							selectedOption.onType(gamepad == null ? FlxG.keys.getIsDown()[0].ID.toString() : gamepad.firstJustPressedID());
-							object.text = "> " + selectedOption.getValue();
-						}
-					}
-				if (selectedOption.acceptType || !selectedOption.acceptType)
-				{
-					if (accept)
-					{
-						var prev = selectedOptionIndex;
-						var object = selectedCat.optionObjects.members[selectedOptionIndex];
-						selectedOption.press();
-
-						if (selectedOptionIndex == prev)
-						{
-							FlxG.save.flush();
-
-							object.text = "> " + selectedOption.getValue();
-						}
-					}
-
-					#if !mobile
-					if (FlxG.mouse.wheel != 0)
-					{
-						if (FlxG.mouse.wheel < 0)
-							down = true;
-						else if (FlxG.mouse.wheel > 0)
-							up = true;
-					}
-					#end
-
-					if (down)
-					{
-						if (selectedOption.acceptType)
-							selectedOption.waitingType = false;
-						FlxG.sound.play(Paths.sound('scrollMenu'));
-						selectedCat.optionObjects.members[selectedOptionIndex].text = selectedOption.getValue();
-						selectedOptionIndex++;
-
-						// just kinda ignore this math lol
-
-						if (selectedOptionIndex > options[selectedCatIndex].options.length - 1)
-						{
-							for (i in 0...selectedCat.options.length)
-							{
-								var opt = selectedCat.optionObjects.members[i];
-								opt.y = options[4].titleObject.y + 54 + (46 * i);
-							}
-							selectedOptionIndex = 0;
-						}
-
-						if (selectedOptionIndex != 0 && options[selectedCatIndex].options.length > 6)
-						{
-							if (selectedOptionIndex >= (options[selectedCatIndex].options.length - 1) / (2 + options[selectedCatIndex].options.length * 0.1))
-								for (i in selectedCat.optionObjects.members)
-								{
-									i.y -= 46;
-								}
-						}
-
-						selectOption(options[selectedCatIndex].options[selectedOptionIndex]);
-					}
-					else if (up)
-					{
-						if (selectedOption.acceptType)
-							selectedOption.waitingType = false;
-						FlxG.sound.play(Paths.sound('scrollMenu'));
-						selectedCat.optionObjects.members[selectedOptionIndex].text = selectedOption.getValue();
-						selectedOptionIndex--;
-
-						// just kinda ignore this math lol
-
-						if (selectedOptionIndex < 0)
-						{
-							selectedOptionIndex = options[selectedCatIndex].options.length - 1;
-							if (options[selectedCatIndex].options.length > 6)
-							{
-								for (i in 0...selectedCat.options.length)
-								{
-									var opt = selectedCat.optionObjects.members[i];
-									opt.y = options[4].titleObject.y
-										+ 54
-										- (options[selectedCatIndex].options.length * (16 + options[selectedCatIndex].options.length))
-										+ (46 * i);
-								}
-							}
-						}
-
-						if (selectedOptionIndex != 0 && options[selectedCatIndex].options.length > 6)
-						{
-							if (selectedOptionIndex >= (options[selectedCatIndex].options.length - 1) / (2 + options[selectedCatIndex].options.length * 0.1))
-								for (i in selectedCat.optionObjects.members)
-								{
-									i.y += 46;
-								}
-						}
-
-						if (selectedOptionIndex < (options[selectedCatIndex].options.length - 1) / (2 + options[selectedCatIndex].options.length * 0.1))
-						{
-							for (i in 0...selectedCat.options.length)
-							{
-								var opt = selectedCat.optionObjects.members[i];
-								opt.y = options[4].titleObject.y + 54 + (46 * i);
-							}
-						}
-
-						selectOption(options[selectedCatIndex].options[selectedOptionIndex]);
-					}
-
-					if (right)
-					{
-						FlxG.sound.play(Paths.sound('scrollMenu'));
-						var object = selectedCat.optionObjects.members[selectedOptionIndex];
-						selectedOption.right();
-						changedOption = true;
-
-						FlxG.save.flush();
-
 						object.text = "> " + selectedOption.getValue();
-					}
-					else if (left)
-					{
-						FlxG.sound.play(Paths.sound('scrollMenu'));
-						var object = selectedCat.optionObjects.members[selectedOptionIndex];
-						selectedOption.left();
-						changedOption = true;
-
-						FlxG.save.flush();
-
-						object.text = "> " + selectedOption.getValue();
-					}
-
-					if (escape)
-					{
-						FlxG.sound.play(Paths.sound('scrollMenu'));
-
-						if (selectedCatIndex >= 6)
-							selectedCatIndex = 0;
-
-						PlayerSettings.player1.controls.loadKeyBinds();
-
-						Ratings.timingWindows = [
-							FlxG.save.data.shitMs,
-							FlxG.save.data.badMs,
-							FlxG.save.data.goodMs,
-							FlxG.save.data.sickMs
-						];
-
-						for (i in 0...selectedCat.options.length)
-						{
-							var opt = selectedCat.optionObjects.members[i];
-							opt.y = options[4].titleObject.y + 54 + (46 * i);
-						}
-						selectedCat.optionObjects.members[selectedOptionIndex].text = selectedOption.getValue();
-						isInCat = true;
-						if (selectedCat.optionObjects != null)
-							for (i in selectedCat.optionObjects.members)
-							{
-								if (i != null)
-								{
-									if (i.y < visibleRange[0] - 24)
-										i.alpha = 0;
-									else if (i.y > visibleRange[1] - 24)
-										i.alpha = 0;
-									else
-									{
-										i.alpha = 0.4;
-									}
-								}
-							}
-						if (selectedCat.middle)
-							switchCat(options[0]);
+						object.updateHitbox();
 					}
 				}
-			}
+
 			#if !mobile
-			for (i in 0...options.length - 1)
+			if (FlxG.mouse.wheel != 0)
 			{
-				clickedCat = ((FlxG.mouse.overlaps(options[i].titleObject) || FlxG.mouse.overlaps(options[i])) && FlxG.mouse.justPressed);
-				if (clickedCat)
-				{
-					selectedCatIndex = i;
-					switchCat(options[i]);
-					isInCat = false;
-					selectOption(selectedCat.options[0]);
-				}
+				if (FlxG.mouse.wheel < 0)
+					down = true;
+				else if (FlxG.mouse.wheel > 0)
+					up = true;
 			}
 			#end
-		}
-		catch (e)
-		{
-			Debug.logError("Error but no crash men.\n" + e);
-			selectedCatIndex = 0;
-			selectedOptionIndex = 0;
-			FlxG.sound.play(Paths.sound('scrollMenu'));
-			if (selectedCat != null)
+
+			var bullShit:Int = 0;
+
+			for (option in selectedCat.optionObjects.members)
 			{
-				for (i in 0...selectedCat.options.length)
+				if (selectedOptionIndex > 5)
 				{
-					var opt = selectedCat.optionObjects.members[i];
-					opt.y = options[4].titleObject.y + 54 + (46 * i);
+					option.targetY = bullShit - selectedOptionIndex;
+					bullShit++;
 				}
+			}
+
+			if (down)
+			{
+				if (selectedOption.acceptType)
+					selectedOption.waitingType = false;
+				FlxG.sound.play(Paths.sound('scrollMenu'));
 				selectedCat.optionObjects.members[selectedOptionIndex].text = selectedOption.getValue();
-				isInCat = true;
+				selectedOptionIndex++;
+
+				if (selectedOptionIndex < 0)
+				{
+					selectedOptionIndex = options[selectedCatIndex].options.length - 1;
+				}
+				if (selectedOptionIndex > options[selectedCatIndex].options.length - 1)
+				{
+					if (options[selectedCatIndex].options.length >= 6)
+					{
+						for (option in selectedCat.optionObjects.members)
+						{
+							var leY = option.targetY;
+							option.targetY = leY + (selectedOptionIndex - 6);
+						}
+					}
+					selectedOptionIndex = 0;
+					Debug.logTrace('returning');
+				}
+
+				selectOption(options[selectedCatIndex].options[selectedOptionIndex]);
+			}
+			else if (up)
+			{
+				if (selectedOption.acceptType)
+					selectedOption.waitingType = false;
+				FlxG.sound.play(Paths.sound('scrollMenu'));
+				selectedCat.optionObjects.members[selectedOptionIndex].text = selectedOption.getValue();
+				selectedOptionIndex--;
+
+				if (selectedOptionIndex < 0)
+				{
+					selectedOptionIndex = options[selectedCatIndex].options.length - 1;
+				}
+				if (selectedOptionIndex > options[selectedCatIndex].options.length - 1)
+				{
+					selectedOptionIndex = 0;
+				}
+
+				selectOption(options[selectedCatIndex].options[selectedOptionIndex]);
+			}
+			if (!selectedOption.acceptType)
+			{
+				if (right)
+					changeOptionValue(true);
+				else if (left)
+					changeOptionValue(false);
+
+				if (selectedOption.getAccept())
+				{
+					if (rightHold || leftHold)
+						holdTime += elapsed;
+					else
+						resetHoldTime();
+
+					if (holdTime > 0.5)
+					{
+						if (Math.floor(elapsed) % 10 == 0)
+						{
+							if (rightHold)
+								changeOptionValue(true);
+							else if (leftHold)
+								changeOptionValue(false);
+						}
+					}
+				}
+			}
+
+			if (changedOption)
+				updateOptColors();
+
+			if (escape)
+			{
+				FlxG.sound.play(Paths.sound('scrollMenu'));
+
+				PlayerSettings.player1.controls.loadKeyBinds();
+
+				if (selectedCat.middle)
+				{
+					switchCat(options[saveIndex], false, true);
+				}
+				else
+				{
+					if (selectedCat.optionObjects != null)
+						for (i in selectedCat.optionObjects.members)
+						{
+							if (i != null)
+							{
+								if (selectedOptionIndex > 5)
+								{
+									i.targetY += (selectedOptionIndex - 5);
+									i.y = i.rawY;
+								}
+							}
+						}
+
+					for (object in selectedCat.optionObjects.members)
+					{
+						object.text = selectedCat.options[selectedCat.optionObjects.members.indexOf(object)].getValue();
+						object.updateHitbox();
+					}
+					selectedOptionIndex = 0;
+
+					isInCat = true;
+				}
 			}
 		}
+
+		#if !mobile
+		if (!isInPause)
+		{
+			for (i in 0...options.length - 1)
+			{
+				if (i <= 5)
+				{
+					clickedCat = ((FlxG.mouse.overlaps(options[i].titleObject) || FlxG.mouse.overlaps(options[i]))
+						&& FlxG.mouse.justPressed);
+					if (clickedCat)
+					{
+						FlxG.sound.play(Paths.sound('scrollMenu'));
+						selectedCatIndex = i;
+						switchCat(options[i]);
+						selectedOptionIndex = 0;
+						isInCat = false;
+						selectOption(selectedCat.options[0]);
+					}
+				}
+			}
+		}
+		#end
+	}
+
+	override function destroy():Void
+	{
+		instance = null;
+		for (cata in options)
+			if (cata != null)
+				cata.destroy();
+		options.resize(0);
+
+		super.destroy();
+	}
+
+	function resetHoldTime()
+	{
+		holdTime = 0;
+	}
+
+	function changeOptionValue(?right:Bool = false)
+	{
+		var object = selectedCat.optionObjects.members[selectedOptionIndex];
+
+		if (right)
+			selectedOption.right();
+		else
+			selectedOption.left();
+		changedOption = true;
+
+		object.text = "> " + selectedOption.getValue();
+		object.updateHitbox();
+	}
+
+	function updateOptColors():Void
+	{
+		for (i in 0...selectedCat.options.length)
+		{
+			var opt = selectedCat.options[i];
+			var optObject = selectedCat.optionObjects.members[i];
+			opt.updateBlocks();
+
+			if (opt.blocked)
+				optObject.color = FlxColor.YELLOW;
+			else
+				optObject.color = FlxColor.WHITE;
+		}
+	}
+}
+
+class OptionText extends CoolText
+{
+	public var targetY:Float = 0;
+
+	public var rawY:Float = 0;
+
+	public var lerpFinished:Bool = false;
+
+	override function update(elapsed:Float)
+	{
+		super.update(elapsed);
+
+		var optLerp = CoolUtil.boundTo(elapsed * 15, 0, 1);
+
+		rawY = (targetY * 45.75) + 405;
+		y = FlxMath.lerp(y, rawY, optLerp);
+
+		lerpFinished = y == rawY;
 	}
 }
