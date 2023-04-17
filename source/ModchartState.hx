@@ -446,10 +446,11 @@ class ModchartState
 
 		if (result != 0)
 		{
-			if (FlxG.fullscreen)
-				FlxG.fullscreen = !FlxG.fullscreen;
 			Application.current.window.alert("LUA COMPILE ERROR:\n" + Lua.tostring(lua, result), "Kade Engine Modcharts");
+			FlxG.log.warn(["LUA COMPILE ERROR:\n" + Lua.tostring(lua, result)]);
+			lua = null;
 			MusicBeatState.switchState(new FreeplayState());
+			PlayState.instance.clean();
 			return;
 		}
 
@@ -564,7 +565,7 @@ class ModchartState
 
 		Lua_helper.add_callback(lua, "setCamZoom", function(zoomAmount:Float)
 		{
-			FlxG.camera.zoom = zoomAmount;
+			PlayState.instance.zoomForTweens = zoomAmount;
 		});
 
 		Lua_helper.add_callback(lua, "setHudZoom", function(zoomAmount:Float)

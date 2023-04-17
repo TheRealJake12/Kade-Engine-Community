@@ -777,8 +777,6 @@ class PlayState extends MusicBeatState
 					// evilTrail.scrollFactor.set(1.1, 1.1);
 				}
 			}
-			if (FlxG.save.data.background)
-				Stage.update(0);
 
 			if (FlxG.save.data.background)
 			{
@@ -798,26 +796,26 @@ class PlayState extends MusicBeatState
 						}
 					}
 				}
-				for (index => array in Stage.layInFront)
+			}
+
+			for (index => array in Stage.layInFront)
+			{
+				switch (index)
 				{
-					switch (index)
-					{
-						case 0:
-							if (Stage.hasGF)
-								add(gf);
-							gf.scrollFactor.set(0.95, 0.95);
-							for (bg in array)
-								add(bg);
-						case 1:
-							add(dad);
-							for (bg in array)
-								add(bg);
-						case 2:
-							add(boyfriend);
-							for (bg in array)
-								add(bg);
-						case 3:
-					}
+					case 0:
+						if (Stage.hasGF)
+							add(gf);
+						gf.scrollFactor.set(0.95, 0.95);
+						for (bg in array)
+							add(bg);
+					case 1:
+						add(dad);
+						for (bg in array)
+							add(bg);
+					case 2:
+						add(boyfriend);
+						for (bg in array)
+							add(bg);
 				}
 			}
 		}
@@ -2039,6 +2037,18 @@ class PlayState extends MusicBeatState
 
 		data = getKeyFromKeyCode(evt.keyCode);
 
+		switch (evt.keyCode) // arrow keys
+		{
+			case 37:
+				data = 0;
+			case 40:
+				data = 1;
+			case 38:
+				data = 2;
+			case 39:
+				data = 3;
+		}
+
 		if (data == -1)
 			return;
 
@@ -2083,6 +2093,18 @@ class PlayState extends MusicBeatState
 			var data = -1;
 
 			data = getKeyFromKeyCode(evt.keyCode);
+
+			switch (evt.keyCode) // arrow keys
+			{
+				case 37:
+					data = 0;
+				case 40:
+					data = 1;
+				case 38:
+					data = 2;
+				case 39:
+					data = 3;
+			}
 
 			if (data == -1)
 			{
@@ -2427,13 +2449,9 @@ class PlayState extends MusicBeatState
 		Conductor.crochet = ((60 / (SONG.bpm * songMultiplier) * 1000));
 		Conductor.stepCrochet = Conductor.crochet / 4;
 
-		var timingSeg = TimingStruct.getTimingAtBeat(curDecimalBeat);
-		if (timingSeg != null)
-		{
-			fakeCrochet = ((60 / (timingSeg.bpm) * 1000)) / songMultiplier;
+		fakeCrochet = Conductor.crochet;
 
-			fakeNoteStepCrochet = fakeCrochet / 4;
-		}
+		fakeNoteStepCrochet = fakeCrochet / 4;
 
 		notes = new FlxTypedGroup<Note>();
 		add(notes);
@@ -2492,7 +2510,9 @@ class PlayState extends MusicBeatState
 
 				var susLength:Float = swagNote.sustainLength;
 
-				susLength = susLength / Conductor.stepCrochet;
+				var anotherCrochet:Float = Conductor.crochet;
+				var anotherStepCrochet:Float = anotherCrochet / 4;
+				susLength = susLength / anotherStepCrochet;
 
 				unspawnNotes.push(swagNote);
 
@@ -2514,7 +2534,7 @@ class PlayState extends MusicBeatState
 					var sustainNote:Note;
 
 					if (gottaHitNote)
-						sustainNote = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, false,
+						sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true, false,
 							true, null, songNotes[4], daNoteType);
 					else
 						sustainNote = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, false,
@@ -3099,8 +3119,8 @@ class PlayState extends MusicBeatState
 		#if !debug
 		perfectMode = false;
 		#end
-		if (!PlayStateChangeables.Optimize)
-			Stage.update(elapsed);
+		if (FlxG.save.data.background || !PlayStateChangeables.Optimize)
+			Stage.update(0);
 
 		if (!addedBotplay && PlayStateChangeables.botPlay)
 		{
@@ -3960,6 +3980,8 @@ class PlayState extends MusicBeatState
 				var angleDir = strumDirection * Math.PI / 180;
 				daNote.modAngle = strumDirection - 90 + strumAngle;
 				daNote.x = strumX + Math.cos(angleDir) * daNote.distance;
+				var origin = strumY + Note.swagWidth / 2;
+				daNote.y = strumY + Math.sin(angleDir) * daNote.distance;
 
 				if (strumScrollType)
 				{
@@ -3987,21 +4009,19 @@ class PlayState extends MusicBeatState
 					if (daNote.isSustainNote)
 					{
 						var bpmRatio = (SONG.bpm / 100);
-						daNote.y -= daNote.height - (1.85 * stepHeight / SONG.speed * bpmRatio);
+						daNote.y = (strumY + Math.sin(angleDir) * daNote.distance) - (daNote.height - Note.swagWidth);
 
-						if ((PlayStateChangeables.botPlay
-							|| !daNote.mustPress
-							|| daNote.wasGoodHit
-							|| holdArray[Math.floor(Math.abs(daNote.noteData))])
-							&& daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= (strumLine.y + Note.swagWidth / 2))
+						if ((PlayStateChangeables.botPlay|| !daNote.mustPress|| daNote.wasGoodHit|| holdArray[Math.floor(Math.abs(daNote.noteData))])&& daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= (strumLine.y + Note.swagWidth / 2))
 						{
-							var swagRect = new FlxRect(0, 0, daNote.frameWidth * 2, daNote.frameHeight * 2);
-							swagRect.height = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y
-								+ Note.swagWidth / 2
-								- daNote.y) / daNote.scale.y;
-							swagRect.y = daNote.frameHeight - swagRect.height;
+							if (daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= origin)
+							{
+								// Clip to strumline
+								var swagRect = new FlxRect(0, 0, daNote.frameWidth * 2, daNote.frameHeight * 2);
+								swagRect.height = (origin - daNote.y) / daNote.scale.y;
+								swagRect.y = daNote.frameHeight - swagRect.height;
 
-							daNote.clipRect = swagRect;
+								daNote.clipRect = swagRect;
+							}
 						}
 					}
 				}
@@ -4025,11 +4045,15 @@ class PlayState extends MusicBeatState
 							|| holdArray[Math.floor(Math.abs(daNote.noteData))])
 							&& daNote.y + daNote.offset.y * daNote.scale.y <= (strumLine.y + Note.swagWidth / 2))
 						{
-							var swagRect = new FlxRect(0, 0, daNote.width / daNote.scale.x, daNote.height / daNote.scale.y);
-							swagRect.y = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y + Note.swagWidth / 2 - daNote.y) / daNote.scale.y;
-							swagRect.height -= swagRect.y;
+							// Clip to strumline
+							if (daNote.y + daNote.offset.y * daNote.scale.y <= origin)
+							{
+								var swagRect = new FlxRect(0, 0, daNote.width / daNote.scale.x, daNote.height / daNote.scale.y);
+								swagRect.y = (origin - daNote.y) / daNote.scale.y;
+								swagRect.height -= swagRect.y;
 
-							daNote.clipRect = swagRect;
+								daNote.clipRect = swagRect;
+							}
 						}
 					}
 				}
