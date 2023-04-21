@@ -11,6 +11,7 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 import Song.SongData;
+import lime.app.Application;
 import flixel.input.gamepad.FlxGamepad;
 import flash.text.TextField;
 import flixel.FlxState;
@@ -107,6 +108,10 @@ class FreeplayState extends MusicBeatState
 			Main.dumpCache();
 			
 		clean();	
+
+		#if desktop
+		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
+		#end
 
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
@@ -872,7 +877,7 @@ class FreeplayState extends MusicBeatState
 		if (isCharting)
 			LoadingState.loadAndSwitchState(new ChartingState(reloadSong));
 		else
-			LoadingState.loadAndSwitchState(new PlayState());
+			LoadingState.loadAndSwitchState(new PlayState(), true);
 	}
 
 	override function destroy()

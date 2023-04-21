@@ -200,6 +200,7 @@ class PlayState extends MusicBeatState
 	var kadeEngineWatermark:FlxText;
 
 	#if FEATURE_DISCORD
+	// Discord RPC variables
 	var storyDifficultyText:String = "";
 	var iconRPC:String = "";
 	var detailsText:String = "";
@@ -529,11 +530,17 @@ class PlayState extends MusicBeatState
 		if (executeModchart)
 			songMultiplier = 1;
 
+		if (!isSM)
+			storyDifficultyText = CoolUtil.difficultyFromInt(storyDifficulty);
+		else
+			storyDifficultyText = "SM";	
+
 		#if FEATURE_DISCORD
-		storyDifficultyText = CoolUtil.difficultyFromInt(storyDifficulty);
+		// Making difficulty text for Discord Rich Presence.
 
 		iconRPC = SONG.player2;
 
+		// To avoid having duplicate images in Discord assets
 		switch (iconRPC)
 		{
 			case 'senpai-angry':
@@ -544,6 +551,7 @@ class PlayState extends MusicBeatState
 				iconRPC = 'mom';
 		}
 
+		// String that contains the mode defined here so it isn't necessary to call changePresence for each mode
 		if (isStoryMode)
 		{
 			detailsText = "Story Mode: Week " + storyWeek;
@@ -553,6 +561,7 @@ class PlayState extends MusicBeatState
 			detailsText = "Freeplay";
 		}
 
+		// String for when the game is paused
 		detailsPausedText = "Paused - " + detailsText;
 
 		// Updating Discord Rich Presence.
@@ -1315,8 +1324,8 @@ class PlayState extends MusicBeatState
 		// This allow arrow key to be detected by flixel. See https://github.com/HaxeFlixel/flixel/issues/2190
 		FlxG.keys.preventDefaultKeys = [];
 		
-		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, handleInput);
-		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, releaseInput);
+		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, handleInput);
+		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, releaseInput);
 
 		super.create();
 
@@ -2247,7 +2256,10 @@ class PlayState extends MusicBeatState
 		#end
 
 		if (isSM)
+		{
 			FlxG.sound.music.play();
+			songLength = ((FlxG.sound.music.length / songMultiplier) / 1000);
+		}
 		else
 		{
 			inst.play();
@@ -2301,6 +2313,7 @@ class PlayState extends MusicBeatState
 		recalculateAllSectionTimes();
 
 		#if FEATURE_DISCORD
+		// Updating Discord Rich Presence (with Time Left)
 		DiscordClient.changePresence(detailsText
 			+ " "
 			+ SONG.song
@@ -2315,9 +2328,7 @@ class PlayState extends MusicBeatState
 			+ " | Misses: "
 			+ misses, iconRPC);
 		#end
-
-		if (isSM)
-			songLength = ((FlxG.sound.music.length / songMultiplier) / 1000);
+		
 		songPosBG = new FlxSprite(0, FlxG.height - 710).loadGraphic(Paths.image('healthBar', 'shared'));
 
 		if (PlayStateChangeables.useDownscroll)
@@ -2436,6 +2447,7 @@ class PlayState extends MusicBeatState
 				var sound = new Sound();
 				sound.loadCompressedDataFromByteArray(bytes.getData(), bytes.length);
 				FlxG.sound.playMusic(sound);
+				FlxG.sound.music.stop();
 			}
 			#end
 		}
@@ -2927,6 +2939,7 @@ class PlayState extends MusicBeatState
 					if (vocals.playing)
 						vocals.pause();
 			}
+
 			#if FEATURE_DISCORD
 			DiscordClient.changePresence("PAUSED on "
 				+ SONG.song
@@ -2999,7 +3012,8 @@ class PlayState extends MusicBeatState
 				}
 				else
 				{
-					DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy), iconRPC);
+					DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy),
+						iconRPC);
 				}
 				#end
 			}
@@ -3425,8 +3439,6 @@ class PlayState extends MusicBeatState
 			cannotDie = true;
 			MusicBeatState.switchState(new WaveformTestState());
 			PlayState.stageTesting = false;
-			FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleInput);
-			FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, releaseInput);
 			#if FEATURE_LUAMODCHART
 			if (luaModchart != null)
 			{
@@ -3443,8 +3455,6 @@ class PlayState extends MusicBeatState
 
 			MusicBeatState.switchState(new ChartingState());
 			PlayState.stageTesting = false;
-			FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleInput);
-			FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, releaseInput);
 			#if FEATURE_LUAMODCHART
 			if (luaModchart != null)
 			{
@@ -3489,8 +3499,6 @@ class PlayState extends MusicBeatState
 			LoadingState.loadAndSwitchState(new AnimationDebug(dad.curCharacter));
 			PlayState.stageTesting = false;
 			inDaPlay = false;
-			FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleInput);
-			FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, releaseInput);
 			#if FEATURE_LUAMODCHART
 			if (luaModchart != null)
 			{
@@ -3524,8 +3532,6 @@ class PlayState extends MusicBeatState
 					remove(gf);
 				});
 				LoadingState.loadAndSwitchState(new StageDebugState(Stage.curStage, gf.curCharacter, boyfriend.curCharacter, dad.curCharacter));
-				FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleInput);
-				FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, releaseInput);
 				#if FEATURE_LUAMODCHART
 				if (luaModchart != null)
 				{
@@ -3540,8 +3546,6 @@ class PlayState extends MusicBeatState
 			MusicBeatState.switchState(new AnimationDebug(boyfriend.curCharacter));
 			PlayState.stageTesting = false;
 			inDaPlay = false;
-			FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleInput);
-			FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, releaseInput);
 			#if FEATURE_LUAMODCHART
 			if (luaModchart != null)
 			{
@@ -3877,6 +3881,7 @@ class PlayState extends MusicBeatState
 				}
 
 				#if FEATURE_DISCORD
+				// Game Over doesn't get his own variable because it's only used here
 				DiscordClient.changePresence("GAME OVER -- "
 					+ SONG.song
 					+ " ("
@@ -4324,8 +4329,8 @@ class PlayState extends MusicBeatState
 	{
 		camZooming = false;
 		endingSong = true;
-		FlxG.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleInput);
-		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, releaseInput);
+		Lib.current.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleInput);
+		Lib.current.stage.removeEventListener(KeyboardEvent.KEY_UP, releaseInput);
 
 		if (!loadRep)
 			rep.SaveReplay(saveNotes, saveJudge, replayAna);
@@ -5977,6 +5982,9 @@ class PlayState extends MusicBeatState
 		#if FEATURE_HSCRIPT
 		scripts.destroy();
 		#end
+
+		Lib.current.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleInput);
+		Lib.current.stage.removeEventListener(KeyboardEvent.KEY_UP, releaseInput);
 		super.destroy();
 	}
 

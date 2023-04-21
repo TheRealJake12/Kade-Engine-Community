@@ -183,6 +183,7 @@ class ChartingState extends MusicBeatState
 		#if FEATURE_DISCORD
 		DiscordClient.changePresence("Chart Editor", null, null, true);
 		#end
+		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 		speed = PlayState.songMultiplier;
 		curSection = lastSection;
@@ -3600,6 +3601,18 @@ class ChartingState extends MusicBeatState
 				notename = "Must Press";
 		}
 		notetypetext.text = "Note type: " + notename;
+	}
+
+	override function destroy()
+	{
+		curRenderedNotes.clear();
+		curRenderedSustains.clear();
+
+		/*for (sus in unspawnSustains)
+			if (sus != null)
+				sus.destroy(); */
+
+		super.destroy();
 	}
 
 	function autosaveSong2():Void
