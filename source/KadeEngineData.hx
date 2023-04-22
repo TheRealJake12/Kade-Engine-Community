@@ -21,7 +21,7 @@ class KadeEngineData
 
 		if (FlxG.save.data.missSounds == null)
 			FlxG.save.data.missSounds = true;
-		
+
 		if (FlxG.save.data.accuracyDisplay == null)
 			FlxG.save.data.accuracyDisplay = true;
 
@@ -88,7 +88,7 @@ class KadeEngineData
 
 		if (FlxG.save.data.cpuStrums == null)
 			FlxG.save.data.cpuStrums = false;
-		
+
 		if (FlxG.save.data.camzoom == null)
 			FlxG.save.data.camzoom = true;
 
@@ -262,7 +262,7 @@ class KadeEngineData
 
 		if (FlxG.save.data.loadMods == null)
 			FlxG.save.data.loadMods = true;
-		
+
 		if (FlxG.save.data.volume != null)
 		{
 			FlxG.sound.volume = FlxG.save.data.volume;

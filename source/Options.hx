@@ -17,9 +17,12 @@ class Option
 	}
 
 	private var description:String = "";
+
 	public var pauseDesc:String = "This option cannot be toggled in the pause menu.";
+
 	private var display:String;
 	private var acceptValues:Bool = false;
+
 	public var blocked:Bool = false;
 
 	public var acceptType:Bool = false;

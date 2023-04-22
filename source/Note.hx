@@ -438,7 +438,7 @@ class Note extends FlxSprite
 				noteYOff = -stepHeight + swagWidth * 0.5;
 			}
 		}
-		
+
 		if (!isSustainNote)
 		{
 			if (!modifiedByLua)

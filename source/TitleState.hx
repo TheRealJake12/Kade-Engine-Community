@@ -186,7 +186,7 @@ class TitleState extends MusicBeatState
 	{
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;
-		
+
 		var pressedEnter:Bool = controls.ACCEPT;
 
 		#if mobile

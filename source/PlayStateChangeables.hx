@@ -1,4 +1,5 @@
 using StringTools;
+
 class PlayStateChangeables
 {
 	public static var modchart:Bool;
@@ -17,5 +18,4 @@ class PlayStateChangeables
 	public static var Optimize:Bool;
 	public static var zoom:Float;
 	public static var scrollSpeed:Float = 1.0;
-	
 }

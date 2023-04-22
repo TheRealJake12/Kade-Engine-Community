@@ -453,7 +453,6 @@ class ModchartState
 			lua = null;
 		}
 
-
 		// get some fukin globals up in here bois
 
 		setVar("difficulty", PlayState.storyDifficulty);

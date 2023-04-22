@@ -101,13 +101,12 @@ class FreeplayState extends MusicBeatState
 	public static var list:Array<String> = [];
 
 	override function create()
-	{
-		FlxG.mouse.visible = true;
+	{FlxG.mouse.visible = true;
 		instance = this;
 		if (!FlxG.save.data.gpuRender)
 			Main.dumpCache();
-			
-		clean();	
+
+		clean();
 
 		#if desktop
 		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';

@@ -210,7 +210,7 @@ class MainMenuState extends MusicBeatState
 		add(logo);
 
 		changeItem();
-		
+
 		controls.setKeyboardScheme(KeyboardScheme.Duo(true), true);
 
 		tweenColorShit();

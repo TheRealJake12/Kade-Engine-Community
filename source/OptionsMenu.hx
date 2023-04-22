@@ -156,6 +156,7 @@ class OptionsMenu extends MusicBeatSubstate
 
 	public var descText:CoolText;
 	public var descBack:FlxSprite;
+
 	var saveIndex:Int = 0;
 
 	var saveOptIndex:Int = 0;
@@ -188,8 +189,7 @@ class OptionsMenu extends MusicBeatSubstate
 				new NoteskinOption("Change your Noteskin"),
 				new CPUNoteskinOption("Change the CPU Noteskin"),
 				#if desktop
-				new NotesplashOption("Change your Notesplash"), 
-				new CPUNotesplashOption("Change the CPU Notesplash"),
+				new NotesplashOption("Change your Notesplash"), new CPUNotesplashOption("Change the CPU Notesplash"),
 				#end
 				new CPUSplash("Allows The CPU To Do Notesplashes"),
 				new NotesplashesOption("Uses Notesplashes (Only use it on Arrow skins or else theres gonna be some visual bugs(wrong offsets))."),
@@ -327,7 +327,6 @@ class OptionsMenu extends MusicBeatSubstate
 
 		super.create();
 		openCallback = refresh;
-
 	}
 
 	override function create()
@@ -361,7 +360,6 @@ class OptionsMenu extends MusicBeatSubstate
 		switchCat(selectedCat);
 
 		super.create();
-
 	}
 
 	function refresh()
@@ -432,7 +430,7 @@ class OptionsMenu extends MusicBeatSubstate
 		for (i in selectedCat.optionObjects)
 			shownStuff.add(i);
 
-		updateOptColors();	
+		updateOptColors();
 	}
 
 	public function selectOption(option:Option)

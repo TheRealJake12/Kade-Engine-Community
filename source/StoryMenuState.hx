@@ -335,7 +335,6 @@ class StoryMenuState extends MusicBeatState
 					changeWeek(-1);
 				#end
 			}
-
 		}
 
 		if (FlxG.sound.music != null)
