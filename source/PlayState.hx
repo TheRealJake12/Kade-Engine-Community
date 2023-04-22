@@ -530,13 +530,13 @@ class PlayState extends MusicBeatState
 		if (executeModchart)
 			songMultiplier = 1;
 
+		#if FEATURE_DISCORD
+		// Making difficulty text for Discord Rich Presence.
+
 		if (!isSM)
 			storyDifficultyText = CoolUtil.difficultyFromInt(storyDifficulty);
 		else
 			storyDifficultyText = "SM";	
-
-		#if FEATURE_DISCORD
-		// Making difficulty text for Discord Rich Presence.
 
 		iconRPC = SONG.player2;
 

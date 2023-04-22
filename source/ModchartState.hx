@@ -448,11 +448,11 @@ class ModchartState
 		{
 			Application.current.window.alert("LUA COMPILE ERROR:\n" + Lua.tostring(lua, result), "Kade Engine Modcharts");
 			FlxG.log.warn(["LUA COMPILE ERROR:\n" + Lua.tostring(lua, result)]);
-			lua = null;
 			MusicBeatState.switchState(new FreeplayState());
-			PlayState.instance.clean();
 			return;
+			lua = null;
 		}
+
 
 		// get some fukin globals up in here bois
 
