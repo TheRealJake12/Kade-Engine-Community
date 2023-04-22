@@ -491,6 +491,9 @@ class ModchartState
 		setVar("hudWidth", PlayState.instance.camHUD.width);
 		setVar("hudHeight", PlayState.instance.camHUD.height);
 
+		setVar("hudWidth", PlayState.instance.camHUD.width);
+		setVar("hudHeight", PlayState.instance.camHUD.height);
+
 		setVar("mustHit", false);
 
 		setVar("strumLineY", PlayState.instance.strumLine.y);
@@ -570,6 +573,16 @@ class ModchartState
 		Lua_helper.add_callback(lua, "setHudZoom", function(zoomAmount:Float)
 		{
 			PlayState.instance.camHUD.zoom = zoomAmount;
+		});
+
+		Lua_helper.add_callback(lua, "getHudX", function()
+		{
+			return PlayState.instance.camHUD.x;
+		});
+
+		Lua_helper.add_callback(lua, "getHudY", function()
+		{
+			return PlayState.instance.camHUD.y;
 		});
 
 		Lua_helper.add_callback(lua, "setLaneUnderLayPos", function(value:Int)

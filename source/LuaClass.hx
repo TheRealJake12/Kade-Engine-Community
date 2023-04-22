@@ -250,15 +250,6 @@ class LuaNote extends LuaClass
 				},
 				setter: SetNumProperty
 			},
-			"isDead" => {
-				defaultValue: 0,
-				getter: function(l:State, data:Any):Int
-				{
-					Lua.pushboolean(l, !connectedNote.alive);
-					return 1;
-				},
-				setter: SetNumProperty
-			},
 
 			"mustPress" => {
 				defaultValue: 1,
@@ -291,7 +282,7 @@ class LuaNote extends LuaClass
 			},
 
 			"isParent" => {
-				defaultValue: 0,
+				defaultValue: 1,
 				getter: function(l:State, data:Any):Int
 				{
 					Lua.pushboolean(l, connectedNote.isParent);
@@ -318,16 +309,6 @@ class LuaNote extends LuaClass
 				}
 			},
 
-			"yNoteOff" => {
-				defaultValue: 0,
-				getter: function(l:State, data:Any):Int
-				{
-					Lua.pushnumber(l, connectedNote.noteYOff);
-					return 1;
-				},
-				setter: SetNumProperty
-			},
-
 			"getChildren" => {
 				defaultValue: 1,
 				getter: function(l:State, data:Any):Int
@@ -337,7 +318,7 @@ class LuaNote extends LuaClass
 					for (i in 0...connectedNote.children.length)
 					{
 						var note = connectedNote.children[i];
-						Lua.pushstring(l, note.LuaNote.className);
+						Lua.pushstring(l, "note_" + note.luaID);
 						Lua.rawseti(l, -2, i);
 					}
 
@@ -450,7 +431,6 @@ class LuaNote extends LuaClass
 		var xp = LuaL.checknumber(state, 2);
 		var yp = LuaL.checknumber(state, 3);
 		var time = LuaL.checknumber(state, 4);
-		var ease = LuaL.checkstring(state, 5);
 
 		Lua.getfield(state, 1, "strumTime");
 		var time = Lua.tonumber(state, -1);
@@ -465,7 +445,8 @@ class LuaNote extends LuaClass
 			return 0;
 		}
 
-		PlayState.instance.createTween(note, {x: xp, y: yp}, time, {ease: ModchartState.getFlxEaseByString(ease)});
+		FlxTween.tween(note, {x: xp, y: yp}, time);
+
 		return 0;
 	}
 
@@ -476,7 +457,6 @@ class LuaNote extends LuaClass
 		// 3 = time
 		var nangle = LuaL.checknumber(state, 2);
 		var time = LuaL.checknumber(state, 3);
-		var ease = LuaL.checkstring(state, 4);
 
 		Lua.getfield(state, 1, "strumTime");
 		var time = Lua.tonumber(state, -1);
@@ -491,7 +471,7 @@ class LuaNote extends LuaClass
 			return 0;
 		}
 
-		PlayState.instance.createTween(note, {modAngle: nangle}, time, {ease: ModchartState.getFlxEaseByString(ease)});
+		FlxTween.tween(note, {modAngle: nangle}, time);
 
 		return 0;
 	}
@@ -503,7 +483,6 @@ class LuaNote extends LuaClass
 		// 3 = time
 		var nalpha = LuaL.checknumber(state, 2);
 		var time = LuaL.checknumber(state, 3);
-		var ease = LuaL.checkstring(state, 4);
 
 		Lua.getfield(state, 1, "strumTime");
 		var time = Lua.tonumber(state, -1);
@@ -517,7 +496,7 @@ class LuaNote extends LuaClass
 			LuaL.error(state, "Failure to tween (couldn't find note " + time + ")");
 			return 0;
 		}
-		PlayState.instance.createTween(note, {alpha: nalpha}, time, {ease: ModchartState.getFlxEaseByString(ease)});
+		FlxTween.tween(note, {alpha: nalpha}, time);
 
 		return 0;
 	}
@@ -555,36 +534,20 @@ class LuaReceptor extends LuaClass
 
 	public var sprite:StaticArrow;
 
-	var defaultY = 0.0;
-	var defaultX = 0.0;
-	var defaultAngle = 0.0;
-	var defaultScaleX = 0.0;
-	var defaultScaleY = 0.0;
-	var defaultDirection = 0.0;
-	var defaultScrollType = false;
-
-	public static var receptorTween:FlxTween;
-
 	public function new(connectedSprite:StaticArrow, name:String)
 	{
 		super();
-		defaultY = connectedSprite.y;
-		defaultX = connectedSprite.x;
-		defaultAngle = connectedSprite.modAngle;
-		defaultScaleX = connectedSprite.scale.x;
-		defaultScaleY = connectedSprite.scale.y;
-		defaultDirection = connectedSprite.direction;
-		defaultScrollType = connectedSprite.downScroll;
+		var defaultY = connectedSprite.y;
+		var defaultX = connectedSprite.x;
+		var defaultAngle = connectedSprite.angle;
 
 		sprite = connectedSprite;
-
-		connectedSprite.luaObject = this;
 
 		className = name;
 
 		properties = [
 			"alpha" => {
-				defaultValue: FlxG.save.data.alpha,
+				defaultValue: 1,
 				getter: function(l:State, data:Any):Int
 				{
 					Lua.pushnumber(l, connectedSprite.alpha);
@@ -650,36 +613,6 @@ class LuaReceptor extends LuaClass
 				setter: SetNumProperty
 			},
 
-			"direction" => {
-				defaultValue: 90,
-				getter: function(l:State, data:Any):Int
-				{
-					Lua.pushnumber(l, connectedSprite.direction);
-					return 1;
-				},
-				setter: SetNumProperty
-			},
-
-			"defaultDirection" => {
-				defaultValue: 90,
-				getter: function(l:State, data:Any):Int
-				{
-					Lua.pushnumber(l, defaultDirection);
-					return 1;
-				},
-				setter: SetNumProperty
-			},
-
-			"downScroll" => {
-				defaultValue: 0,
-				getter: function(l:State, data:Any):Int
-				{
-					Lua.pushboolean(l, connectedSprite.downScroll);
-					return 1;
-				},
-				setter: SetNumProperty
-			},
-
 			"defaultAngle" => {
 				defaultValue: defaultAngle,
 				getter: function(l:State, data:Any):Int
@@ -728,46 +661,6 @@ class LuaReceptor extends LuaClass
 				}
 			},
 
-			"scaleX" => {
-				defaultValue: 1,
-				getter: function(l:State, data:Any):Int
-				{
-					Lua.pushnumber(l, connectedSprite.scale.x);
-					return 1;
-				},
-				setter: SetNumProperty
-			},
-
-			"scaleY" => {
-				defaultValue: 1,
-				getter: function(l:State, data:Any):Int
-				{
-					Lua.pushnumber(l, connectedSprite.scale.y);
-					return 1;
-				},
-				setter: SetNumProperty
-			},
-
-			"defaultScaleX" => {
-				defaultValue: 1,
-				getter: function(l:State, data:Any):Int
-				{
-					Lua.pushnumber(l, defaultScaleX);
-					return 1;
-				},
-				setter: SetNumProperty
-			},
-
-			"defaultScaleY" => {
-				defaultValue: 1,
-				getter: function(l:State, data:Any):Int
-				{
-					Lua.pushnumber(l, defaultScaleY);
-					return 1;
-				},
-				setter: SetNumProperty
-			},
-
 			"tweenAngle" => {
 				defaultValue: 0,
 				getter: function(l:State, data:Any)
@@ -778,34 +671,6 @@ class LuaReceptor extends LuaClass
 				setter: function(l:State)
 				{
 					LuaL.error(l, "tweenAngle is read-only.");
-					return 0;
-				}
-			},
-
-			"tweenScale" => {
-				defaultValue: 0,
-				getter: function(l:State, data:Any)
-				{
-					Lua.pushcfunction(l, tweenScaleC);
-					return 1;
-				},
-				setter: function(l:State)
-				{
-					LuaL.error(l, "tweenScale is read-only.");
-					return 0;
-				}
-			},
-
-			"tweenDirection" => {
-				defaultValue: 0,
-				getter: function(l:State, data:Any)
-				{
-					Lua.pushcfunction(l, tweenDirectionC);
-					return 1;
-				},
-				setter: function(l:State)
-				{
-					LuaL.error(l, "tweenDirection is read-only.");
 					return 0;
 				}
 			},
@@ -851,47 +716,19 @@ class LuaReceptor extends LuaClass
 		var xp = LuaL.checknumber(state, 2);
 		var yp = LuaL.checknumber(state, 3);
 		var time = LuaL.checknumber(state, 4);
-		var ease = LuaL.checkstring(state, 5);
 
 		Lua.getfield(state, 1, "id");
 		var index = Std.parseInt(Lua.tostring(state, -1).split('_')[1]);
 
 		var receptor = findReceptor(index);
 
-		var luaObject = receptor.luaObject;
-
 		if (receptor == null)
 		{
 			LuaL.error(state, "Failure to tween (couldn't find receptor " + index + ")");
 			return 0;
 		}
-		if (yp == receptor.y)
-		{
-			receptorTween = PlayState.instance.createTween(receptor, {x: xp}, time, {
-				ease: ModchartState.getFlxEaseByString(ease),
-				onUpdate: function(tw)
-				{
-					luaObject.defaultX = receptor.x;
-				},
-				onComplete: function(twn:FlxTween)
-				{
-					receptorTween = null;
-				}
-			});
-		}
-		else
-			receptorTween = PlayState.instance.createTween(receptor, {x: xp, y: yp}, time, {
-				ease: ModchartState.getFlxEaseByString(ease),
-				onUpdate: function(tw)
-				{
-					luaObject.defaultX = receptor.x;
-					luaObject.defaultY = receptor.y;
-				},
-				onComplete: function(twn:FlxTween)
-				{
-					receptorTween = null;
-				}
-			});
+
+		FlxTween.tween(receptor, {x: xp, y: yp}, time);
 
 		return 0;
 	}
@@ -903,7 +740,6 @@ class LuaReceptor extends LuaClass
 		// 3 = time
 		var nangle = LuaL.checknumber(state, 2);
 		var time = LuaL.checknumber(state, 3);
-		var ease = LuaL.checkstring(state, 4);
 
 		Lua.getfield(state, 1, "id");
 		var index = Std.parseInt(Lua.tostring(state, -1).split('_')[1]);
@@ -916,40 +752,7 @@ class LuaReceptor extends LuaClass
 			return 0;
 		}
 
-		PlayState.instance.createTween(receptor, {modAngle: nangle}, time, {ease: ModchartState.getFlxEaseByString(ease)});
-
-		return 0;
-	}
-
-	private static function tweenDirection(l:StatePointer):Int
-	{
-		// 1 = self
-		// 2 = angle
-		// 3 = time
-		var direction = LuaL.checknumber(state, 2);
-		var time = LuaL.checknumber(state, 3);
-		var ease = LuaL.checkstring(state, 4);
-
-		Lua.getfield(state, 1, "id");
-		var index = Std.parseInt(Lua.tostring(state, -1).split('_')[1]);
-
-		var receptor = findReceptor(index);
-
-		var luaObject = receptor.luaObject;
-
-		if (receptor == null)
-		{
-			LuaL.error(state, "Failure to tween (couldn't find receptor " + index + ")");
-			return 0;
-		}
-
-		PlayState.instance.createTween(receptor, {direction: direction}, time, {
-			ease: ModchartState.getFlxEaseByString(ease),
-			onUpdate: function(tw)
-			{
-				luaObject.defaultDirection = receptor.direction;
-			}
-		});
+		FlxTween.tween(receptor, {modAngle: nangle}, time);
 
 		return 0;
 	}
@@ -961,7 +764,6 @@ class LuaReceptor extends LuaClass
 		// 3 = time
 		var nalpha = LuaL.checknumber(state, 2);
 		var time = LuaL.checknumber(state, 3);
-		var ease = LuaL.checkstring(state, 4);
 
 		Lua.getfield(state, 1, "id");
 		var index = Std.parseInt(Lua.tostring(state, -1).split('_')[1]);
@@ -974,45 +776,11 @@ class LuaReceptor extends LuaClass
 			return 0;
 		}
 
-		PlayState.instance.createTween(receptor, {alpha: nalpha}, time, {ease: ModchartState.getFlxEaseByString(ease)});
+		FlxTween.tween(receptor, {alpha: nalpha}, time);
 
 		return 0;
 	}
 
-	private static function tweenScale(l:StatePointer):Int
-	{
-		var nscaleX = LuaL.checknumber(state, 2);
-		var nscaleY = LuaL.checknumber(state, 3);
-		var time = LuaL.checknumber(state, 4);
-		var ease = LuaL.checkstring(state, 5);
-
-		Lua.getfield(state, 1, "id");
-		var index = Std.parseInt(Lua.tostring(state, -1).split('_')[1]);
-
-		var receptor = findReceptor(index);
-
-		var luaObject = receptor.luaObject;
-
-		if (receptor == null)
-		{
-			LuaL.error(state, "Failure to tween (couldn't find receptor " + index + ")");
-			return 0;
-		}
-
-		PlayState.instance.createTween(receptor.scale, {x: nscaleX, y: nscaleY}, time, {
-			ease: ModchartState.getFlxEaseByString(ease),
-			onUpdate: function(twn)
-			{
-				luaObject.defaultScaleX = receptor.scale.x;
-				luaObject.defaultScaleY = receptor.scale.y;
-			}
-		});
-
-		return 0;
-	}
-
-	private static var tweenScaleC:cpp.Callable<StatePointer->Int> = cpp.Callable.fromStaticFunction(tweenScale);
-	private static var tweenDirectionC:cpp.Callable<StatePointer->Int> = cpp.Callable.fromStaticFunction(tweenDirection);
 	private static var tweenPosC:cpp.Callable<StatePointer->Int> = cpp.Callable.fromStaticFunction(tweenPos);
 	private static var tweenAngleC:cpp.Callable<StatePointer->Int> = cpp.Callable.fromStaticFunction(tweenAngle);
 	private static var tweenAlphaC:cpp.Callable<StatePointer->Int> = cpp.Callable.fromStaticFunction(tweenAlpha);
@@ -1072,16 +840,6 @@ class LuaCamera extends LuaClass
 				getter: function(l:State, data:Any):Int
 				{
 					Lua.pushnumber(l, connectedCamera.angle);
-					return 1;
-				},
-				setter: SetNumProperty
-			},
-
-			"zoom" => {
-				defaultValue: connectedCamera.zoom,
-				getter: function(l:State, data:Any):Int
-				{
-					Lua.pushnumber(l, connectedCamera.zoom);
 					return 1;
 				},
 				setter: SetNumProperty
@@ -1172,19 +930,6 @@ class LuaCamera extends LuaClass
 					return 0;
 				}
 			},
-			"shake" => {
-				defaultValue: 0,
-				getter: function(l:State, data:Any)
-				{
-					Lua.pushcfunction(l, shakeC);
-					return 1;
-				},
-				setter: function(l:State)
-				{
-					LuaL.error(l, "Shake is read-only.");
-					return 0;
-				}
-			}
 		];
 
 		LuaStorage.ListOfCameras.push(this);
@@ -1212,7 +957,6 @@ class LuaCamera extends LuaClass
 		// 3 = time
 		var nzoom = LuaL.checknumber(state, 2);
 		var time = LuaL.checknumber(state, 3);
-		var ease = LuaL.checkstring(state, 4);
 
 		Lua.getfield(state, 1, "id");
 		var index = Lua.tostring(state, -1);
@@ -1233,7 +977,7 @@ class LuaCamera extends LuaClass
 			return 0;
 		}
 
-		PlayState.instance.createTween(camera, {zoom: nzoom}, time, {ease: ModchartState.getFlxEaseByString(ease)});
+		FlxTween.tween(camera, {zoom: nzoom}, time);
 
 		return 0;
 	}
@@ -1249,7 +993,6 @@ class LuaCamera extends LuaClass
 		var xp = LuaL.checknumber(state, 2);
 		var yp = LuaL.checknumber(state, 3);
 		var time = LuaL.checknumber(state, 4);
-		var ease = LuaL.checkstring(state, 5);
 
 		Lua.getfield(state, 1, "id");
 		var index = Lua.tostring(state, -1);
@@ -1268,7 +1011,7 @@ class LuaCamera extends LuaClass
 			return 0;
 		}
 
-		PlayState.instance.createTween(camera, {x: xp, y: yp}, time, {ease: ModchartState.getFlxEaseByString(ease)});
+		FlxTween.tween(camera, {x: xp, y: yp}, time);
 
 		return 0;
 	}
@@ -1280,7 +1023,6 @@ class LuaCamera extends LuaClass
 		// 3 = time
 		var nangle = LuaL.checknumber(state, 2);
 		var time = LuaL.checknumber(state, 3);
-		var ease = LuaL.checkstring(state, 4);
 
 		Lua.getfield(state, 1, "id");
 		var index = Lua.tostring(state, -1);
@@ -1299,7 +1041,7 @@ class LuaCamera extends LuaClass
 			return 0;
 		}
 
-		PlayState.instance.createTween(camera, {modAngle: nangle}, time, {ease: ModchartState.getFlxEaseByString(ease)});
+		FlxTween.tween(camera, {modAngle: nangle}, time);
 
 		return 0;
 	}
@@ -1311,7 +1053,6 @@ class LuaCamera extends LuaClass
 		// 3 = time
 		var nalpha = LuaL.checknumber(state, 2);
 		var time = LuaL.checknumber(state, 3);
-		var ease = LuaL.checkstring(state, 4);
 
 		Lua.getfield(state, 1, "id");
 		var index = Lua.tostring(state, -1);
@@ -1330,36 +1071,7 @@ class LuaCamera extends LuaClass
 			return 0;
 		}
 
-		PlayState.instance.createTween(camera, {alpha: nalpha}, time, {ease: ModchartState.getFlxEaseByString(ease)});
-
-		return 0;
-	}
-
-	private static function shake(l:StatePointer):Int
-	{
-		// 1 = self
-		// 2 = alpha
-		// 3 = time
-		var namp = LuaL.checknumber(state, 2);
-
-		Lua.getfield(state, 1, "id");
-		var index = Lua.tostring(state, -1);
-
-		var camera:FlxCamera = null;
-
-		for (i in LuaStorage.ListOfCameras)
-		{
-			if (i.className == index)
-				camera = i.cam;
-		}
-
-		if (camera == null)
-		{
-			LuaL.error(state, "Failure to shake (couldn't find camera " + index + ")");
-			return 0;
-		}
-
-		camera.shake(namp);
+		FlxTween.tween(camera, {alpha: nalpha}, time);
 
 		return 0;
 	}
@@ -1367,7 +1079,6 @@ class LuaCamera extends LuaClass
 	private static var tweenPosC:cpp.Callable<StatePointer->Int> = cpp.Callable.fromStaticFunction(tweenPos);
 	private static var tweenAngleC:cpp.Callable<StatePointer->Int> = cpp.Callable.fromStaticFunction(tweenAngle);
 	private static var tweenAlphaC:cpp.Callable<StatePointer->Int> = cpp.Callable.fromStaticFunction(tweenAlpha);
-	private static var shakeC:cpp.Callable<StatePointer->Int> = cpp.Callable.fromStaticFunction(shake);
 
 	override function Register(l:State)
 	{
@@ -1559,7 +1270,6 @@ class LuaCharacter extends LuaClass
 		var xp = LuaL.checknumber(state, 2);
 		var yp = LuaL.checknumber(state, 3);
 		var time = LuaL.checknumber(state, 4);
-		var ease = LuaL.checkstring(state, 5);
 
 		Lua.getfield(state, 1, "id");
 		var index = Lua.tostring(state, -1);
@@ -1578,7 +1288,7 @@ class LuaCharacter extends LuaClass
 			return 0;
 		}
 
-		PlayState.instance.createTween(char, {x: xp, y: yp}, time, {ease: ModchartState.getFlxEaseByString(ease)});
+		FlxTween.tween(char, {x: xp, y: yp}, time);
 
 		return 0;
 	}
@@ -1590,7 +1300,6 @@ class LuaCharacter extends LuaClass
 		// 3 = time
 		var nangle = LuaL.checknumber(state, 2);
 		var time = LuaL.checknumber(state, 3);
-		var ease = LuaL.checkstring(state, 4);
 
 		Lua.getfield(state, 1, "id");
 		var index = Lua.tostring(state, -1);
@@ -1609,7 +1318,7 @@ class LuaCharacter extends LuaClass
 			return 0;
 		}
 
-		PlayState.instance.createTween(char, {angle: nangle}, time, {ease: ModchartState.getFlxEaseByString(ease)});
+		FlxTween.tween(char, {angle: nangle}, time);
 
 		return 0;
 	}
@@ -1621,7 +1330,6 @@ class LuaCharacter extends LuaClass
 		// 3 = time
 		var nalpha = LuaL.checknumber(state, 2);
 		var time = LuaL.checknumber(state, 3);
-		var ease = LuaL.checkstring(state, 4);
 
 		Lua.getfield(state, 1, "id");
 		var index = Lua.tostring(state, -1);
@@ -1640,7 +1348,7 @@ class LuaCharacter extends LuaClass
 			return 0;
 		}
 
-		PlayState.instance.createTween(char, {alpha: nalpha}, time, {ease: ModchartState.getFlxEaseByString(ease)});
+		FlxTween.tween(char, {alpha: nalpha}, time);
 
 		return 0;
 	}
@@ -1910,7 +1618,6 @@ class LuaSprite extends LuaClass
 		var xp = LuaL.checknumber(state, 2);
 		var yp = LuaL.checknumber(state, 3);
 		var time = LuaL.checknumber(state, 4);
-		var ease = LuaL.checkstring(state, 5);
 
 		Lua.getfield(state, 1, "id");
 		var index = Lua.tostring(state, -1);
@@ -1929,7 +1636,7 @@ class LuaSprite extends LuaClass
 			return 0;
 		}
 
-		PlayState.instance.createTween(sprite, {x: xp, y: yp}, time, {ease: ModchartState.getFlxEaseByString(ease)});
+		FlxTween.tween(sprite, {x: xp, y: yp}, time);
 
 		return 0;
 	}
@@ -1941,7 +1648,6 @@ class LuaSprite extends LuaClass
 		// 3 = time
 		var nangle = LuaL.checknumber(state, 2);
 		var time = LuaL.checknumber(state, 3);
-		var ease = LuaL.checkstring(state, 4);
 
 		Lua.getfield(state, 1, "id");
 		var index = Lua.tostring(state, -1);
@@ -1960,7 +1666,7 @@ class LuaSprite extends LuaClass
 			return 0;
 		}
 
-		PlayState.instance.createTween(sprite, {angle: nangle}, time, {ease: ModchartState.getFlxEaseByString(ease)});
+		FlxTween.tween(sprite, {angle: nangle}, time);
 
 		return 0;
 	}
@@ -1972,7 +1678,6 @@ class LuaSprite extends LuaClass
 		// 3 = time
 		var nalpha = LuaL.checknumber(state, 2);
 		var time = LuaL.checknumber(state, 3);
-		var ease = LuaL.checkstring(state, 4);
 
 		Lua.getfield(state, 1, "id");
 		var index = Lua.tostring(state, -1);
@@ -1991,7 +1696,7 @@ class LuaSprite extends LuaClass
 			return 0;
 		}
 
-		PlayState.instance.createTween(sprite, {alpha: nalpha}, time, {ease: ModchartState.getFlxEaseByString(ease)});
+		FlxTween.tween(sprite, {alpha: nalpha}, time);
 
 		return 0;
 	}
@@ -2054,25 +1759,10 @@ class LuaWindow extends LuaClass
 { // again, stolen from andromeda but improved a lot for better thinking interoperability (I made that up)
 	private static var state:State;
 
-	private function SetNumProperty(l:State)
-	{
-		// 1 = self
-		// 2 = key
-		// 3 = value
-		// 4 = metatable
-		if (Lua.type(l, 3) != Lua.LUA_TNUMBER)
-		{
-			LuaL.error(l, "invalid argument #3 (number expected, got " + Lua.typename(l, Lua.type(l, 3)) + ")");
-			return 0;
-		}
-		Reflect.setProperty(Application.current.window, Lua.tostring(l, 2), Lua.tonumber(l, 3));
-		return 0;
-	}
-
 	public function new()
 	{
 		super();
-		className = "window";
+		className = "Window";
 
 		properties = [
 			"x" => {
@@ -2128,33 +1818,6 @@ class LuaWindow extends LuaClass
 					return 0;
 				},
 			},
-
-			"boundsWidth" => { // TODO: turn into a table w/ bounds.x and bounds.y
-				defaultValue: Lib.application.window.display.bounds.width,
-				getter: function(l:State, data:Any):Int
-				{
-					Lua.pushnumber(l, Lib.application.window.display.bounds.width);
-					return 1;
-				},
-				setter: function(l:State)
-				{
-					LuaL.error(l, "boundsWidth is read-only.");
-					return 0;
-				}
-			},
-			"boundsHeight" => { // TODO: turn into a table w/ bounds.x and bounds.y
-				defaultValue: Lib.application.window.display.bounds.height,
-				getter: function(l:State, data:Any):Int
-				{
-					Lua.pushnumber(l, Lib.application.window.display.bounds.height);
-					return 1;
-				},
-				setter: function(l:State)
-				{
-					LuaL.error(l, "boundsHeight is read-only.");
-					return 0;
-				}
-			}
 		];
 	}
 
@@ -2167,16 +1830,28 @@ class LuaWindow extends LuaClass
 		var xp = LuaL.checknumber(state, 2);
 		var yp = LuaL.checknumber(state, 3);
 		var time = LuaL.checknumber(state, 4);
-		var ease = LuaL.checkstring(state, 5);
 
-		PlayState.instance.createTween(Application.current.window, {x: xp, y: yp}, time, {
-			ease: ModchartState.getFlxEaseByString(ease)
-		});
+		FlxTween.tween(Application.current.window, {x: xp, y: yp}, time);
 
 		return 0;
 	}
 
 	private static var tweenPosC:cpp.Callable<StatePointer->Int> = cpp.Callable.fromStaticFunction(tweenPos);
+
+	private function SetNumProperty(l:State)
+	{
+		// 1 = self
+		// 2 = key
+		// 3 = value
+		// 4 = metatable
+		if (Lua.type(l, 3) != Lua.LUA_TNUMBER)
+		{
+			LuaL.error(l, "invalid argument #3 (number expected, got " + Lua.typename(l, Lua.type(l, 3)) + ")");
+			return 0;
+		}
+		Reflect.setProperty(Application.current.window, Lua.tostring(l, 2), Lua.tonumber(l, 3));
+		return 0;
+	}
 
 	override function Register(l:State)
 	{
