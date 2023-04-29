@@ -276,12 +276,6 @@ class FreeplayState extends MusicBeatState
 		intendedColor = bg.color;
 		lerpSelected = curSelected;
 
-		if (!openMod)
-		{
-			changeSelection();
-			changeDiff();
-		}
-
 		// FlxG.sound.playMusic(Paths.music('title'), 0);
 		// FlxG.sound.music.fadeIn(2, 0, 0.8);
 		selector = new FlxText();
@@ -331,6 +325,12 @@ class FreeplayState extends MusicBeatState
 		#end
 
 		updateTexts();
+
+		if (!openMod)
+		{
+			changeSelection();
+			changeDiff();
+		}
 
 		super.create();
 		Paths.clearUnusedMemory();
@@ -886,16 +886,27 @@ class FreeplayState extends MusicBeatState
 
 	function changeDiff(change:Int = 0)
 	{
-		curDifficulty += change;
+		if (songs[curSelected].diffs.length > 0)
+		{
+			curDifficulty += change;
 
-		if (curDifficulty < 0)
-			curDifficulty = songs[curSelected].diffs.length - 1;
-		if (curDifficulty >= songs[curSelected].diffs.length)
-			curDifficulty = 0;
+			if (curDifficulty < 0)
+				curDifficulty = songs[curSelected].diffs.length - 1;
+			if (curDifficulty > songs[curSelected].diffs.length - 1)
+				curDifficulty = 0;
 
+			diffText.text = 'DIFFICULTY: < ' + songs[curSelected].diffs[curDifficulty] + ' >';
+			diffText.alpha = 1;
+		}
+		else
+		{
+			diffText.text = 'DIFFICULTY: < N/A >';
+			diffText.alpha = 0.5;
+		}
+
+		diffText.updateHitbox();
 		updateScoreText();
 		updateDiffCalc();
-		diffText.text = 'DIFFICULTY: < ' + songs[curSelected].diffs[curDifficulty].toUpperCase() + ' >';
 	}
 
 	function updateScoreText()

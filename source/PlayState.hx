@@ -1381,6 +1381,26 @@ class PlayState extends MusicBeatState
 
 	public var tankIntroEnd:Bool = false;
 
+	function set_scrollSpeed(value:Float):Float // STOLEN FROM PSYCH ENGINE ONLY SPRITE SCALING PART.
+	{
+		speedChanged = true;
+		if (generatedMusic)
+		{
+			var ratio:Float = value / scrollSpeed;
+			for (note in notes)
+			{
+				if (note.animation.curAnim != null)
+					if (note.isSustainNote && !note.animation.curAnim.name.endsWith('end'))
+					{
+						note.scale.y *= ratio;
+						note.updateHitbox();
+					}
+			}
+		}
+		scrollSpeed = value;
+		return value;
+	}
+
 	function tankIntro()
 	{
 		dad.visible = false;
@@ -2036,7 +2056,7 @@ class PlayState extends MusicBeatState
 
 	private function releaseInput(evt:KeyboardEvent):Void // handles releases
 	{
-		if (!isStoryMode && PlayStateChangeables.botPlay)
+		if (PlayStateChangeables.botPlay || loadRep || paused)
 			return;
 
 		@:privateAccess
@@ -2087,7 +2107,7 @@ class PlayState extends MusicBeatState
 	private function handleInput(evt:KeyboardEvent):Void
 	{ // this actually handles press inputs
 
-		if (!isStoryMode && PlayStateChangeables.botPlay || loadRep || paused)
+		if (PlayStateChangeables.botPlay || loadRep || paused)
 			return;
 
 		// first convert it from openfl to a flixel key code
@@ -5846,26 +5866,6 @@ class PlayState extends MusicBeatState
 		scripts.setAll("curBeat", curBeat);
 		scripts.executeAllFunc("beatHit", [beatHit]);
 		#end
-	}
-
-	function set_scrollSpeed(value:Float):Float // STOLEN FROM PSYCH ENGINE ONLY SPRITE SCALING PART.
-	{
-		speedChanged = true;
-		if (generatedMusic)
-		{
-			var ratio:Float = value / scrollSpeed;
-			for (note in notes)
-			{
-				if (note.animation.curAnim != null)
-					if (note.isSustainNote && !note.animation.curAnim.name.endsWith('end'))
-					{
-						note.scale.y *= ratio;
-						note.updateHitbox();
-					}
-			}
-		}
-		scrollSpeed = value;
-		return value;
 	}
 
 	public var cleanedSong:SongData;

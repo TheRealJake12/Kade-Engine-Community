@@ -289,11 +289,11 @@ class OptionsMenu extends MusicBeatSubstate
 		shownStuff = new FlxTypedGroup<OptionText>();
 
 		background = new FlxSprite(50, 40).makeGraphic(1180, 640, FlxColor.BLACK);
-		background.alpha = 0.5;
+		background.alpha = 0.6;
 		background.scrollFactor.set();
 
 		descBack = new FlxSprite(50, 642).makeGraphic(1180, 38, FlxColor.BLACK);
-		descBack.alpha = 0.3;
+		descBack.alpha = 0.4;
 		descBack.scrollFactor.set();
 
 		if (isInPause)
@@ -303,8 +303,8 @@ class OptionsMenu extends MusicBeatSubstate
 			bg.scrollFactor.set();
 			menu.add(bg);
 
-			descBack.alpha = 0.3;
-			background.alpha = 0.5;
+			descBack.alpha = 0.4;
+			background.alpha = 0.6;
 			bg.alpha = 0.6;
 
 			cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
@@ -393,9 +393,9 @@ class OptionsMenu extends MusicBeatSubstate
 			remove(selectedCat.titleObject);
 
 		selectedCat.changeColor(FlxColor.BLACK);
-		selectedCat.alpha = 0.4;
+		selectedCat.alpha = 0.5;
 		selectedCat = cat;
-		selectedCat.alpha = 0.3;
+		selectedCat.alpha = 0.4;
 		selectedCat.changeColor(FlxColor.WHITE);
 
 		if (fromSubCat)
@@ -502,7 +502,7 @@ class OptionsMenu extends MusicBeatSubstate
 						i.visible = true;
 
 					if (selectedCat.optionObjects.members[selectedOptionIndex].text != i.text || isInCat)
-						i.alpha = 0.4;
+						i.alpha = 0.5;
 					else
 						i.alpha = 1;
 				}
@@ -523,6 +523,8 @@ class OptionsMenu extends MusicBeatSubstate
 					FlxG.sound.play(Paths.sound('scrollMenu'));
 					selectedCatIndex++;
 
+					FlxG.save.flush();
+
 					if (selectedCatIndex > options.length - 3)
 						selectedCatIndex = 0;
 					if (selectedCatIndex < 0)
@@ -534,6 +536,8 @@ class OptionsMenu extends MusicBeatSubstate
 				{
 					FlxG.sound.play(Paths.sound('scrollMenu'));
 					selectedCatIndex--;
+
+					FlxG.save.flush();
 
 					if (selectedCatIndex > options.length - 3)
 						selectedCatIndex = 0;
@@ -620,6 +624,7 @@ class OptionsMenu extends MusicBeatSubstate
 
 					if (selectedOptionIndex == prev)
 					{
+						FlxG.save.flush();
 						object.text = "> " + selectedOption.getValue();
 						object.updateHitbox();
 					}

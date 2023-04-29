@@ -137,8 +137,8 @@ class ChartingState extends MusicBeatState
 	var gridBlackLine:FlxSprite;
 	var vocals:FlxSound;
 
-	var player2:Character = new Character(0, 0, "dad");
-	var player1:Boyfriend = new Boyfriend(0, 0, "bf");
+	var player2:Character = new Character(0, 0, _song.player2);
+	var player1:Boyfriend = new Boyfriend(0, 0, _song.player1);
 
 	public static var leftIcon:HealthIcon;
 
@@ -280,8 +280,8 @@ class ChartingState extends MusicBeatState
 		loadSong(_song.songId, reloadOnInit);
 		Conductor.changeBPM(_song.bpm);
 
-		leftIcon = new HealthIcon(_song.player1);
-		rightIcon = new HealthIcon(_song.player2);
+		leftIcon = new HealthIcon(player1.healthIcon);
+		rightIcon = new HealthIcon(player2.healthIcon);
 
 		var index = 0;
 

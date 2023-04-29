@@ -53,6 +53,7 @@ class MusicBeatState extends FlxUIState
 		FlxTransitionableState.skipNextTransOut = false;
 
 		super.create();
+		TimingStruct.clearTimings();
 		(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
 	}
 

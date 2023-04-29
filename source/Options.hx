@@ -85,12 +85,13 @@ class DFJKOption extends Option
 	{
 		super();
 		description = "Edit your keybindings";
+		acceptType = true;
 	}
 
 	public override function press():Bool
 	{
 		OptionsMenu.instance.selectedCatIndex = 6;
-		OptionsMenu.instance.switchCat(OptionsMenu.instance.options[6], false);
+		OptionsMenu.instance.switchCat(OptionsMenu.instance.options[6], true);
 		return false;
 	}
 
