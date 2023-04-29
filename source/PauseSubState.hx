@@ -185,7 +185,6 @@ class PauseSubState extends MusicBeatSubstate
 					FlxTween.tween(PlayState.laneunderlay, {alpha: FlxG.save.data.laneTransparency}, 1);
 					FlxTween.tween(PlayState.laneunderlayOpponent, {alpha: FlxG.save.data.laneTransparency}, 1);
 					PlayStateChangeables.botPlay = FlxG.save.data.botplay;
-					PlayStateChangeables.scrollSpeed = (FlxG.save.data.scrollSpeed == 1 ? PlayState.SONG.speed * PlayState.songMultiplier : FlxG.save.data.scrollSpeed * PlayState.songMultiplier);
 
 				case "Restart Song":
 					PlayState.startTime = 0;

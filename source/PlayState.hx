@@ -1802,6 +1802,8 @@ class PlayState extends MusicBeatState
 			if (PlayState.SONG.songId == 'thorns')
 			{
 				add(red);
+				camStrums.visible = false;
+				camHUD.visible = false;
 			}
 		}
 
@@ -1840,6 +1842,8 @@ class PlayState extends MusicBeatState
 									FlxG.camera.fade(FlxColor.WHITE, 0.01, true, function()
 									{
 										add(dialogueBox);
+										camStrums.visible = true;
+										camHUD.visible = true;
 									}, true);
 								});
 								new FlxTimer().start(3.2, function(deadTime:FlxTimer)
@@ -3000,43 +3004,8 @@ class PlayState extends MusicBeatState
 		else if (paused)
 		{
 			#if FEATURE_HSCRIPT
-			if (!ScriptUtil.hasPause(scripts.executeAllFunc("resume")))
-			{
-				if (inst != null && !startingSong)
-				{
-					resyncVocals();
-				}
-
-				if (!startTimer.finished)
-					startTimer.active = true;
-				paused = false;
-
-				#if FEATURE_DISCORD
-				if (startTimer.finished)
-				{
-					DiscordClient.changePresence(detailsText
-						+ " "
-						+ SONG.song
-						+ " ("
-						+ storyDifficultyText
-						+ ") "
-						+ Ratings.GenerateLetterRank(accuracy),
-						"\nAcc: "
-						+ HelperFunctions.truncateFloat(accuracy, 2)
-						+ "% | Score: "
-						+ songScore
-						+ " | Misses: "
-						+ misses, iconRPC, true,
-						songLength
-						- Conductor.songPosition);
-				}
-				else
-				{
-					DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy), iconRPC);
-				}
-				#end
-			}
-			#else
+			if (!ScriptUtil.hasPause(scripts.executeAllFunc("resume"))){};
+			#end
 			if (inst != null && !startingSong)
 			{
 				resyncVocals();
@@ -3067,9 +3036,8 @@ class PlayState extends MusicBeatState
 			}
 			else
 			{
-				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy), iconRPC);
+				DiscordClient.changePresence(detailsText, SONG.songName + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy), iconRPC);
 			}
-			#end
 			#end
 		}
 
@@ -3127,6 +3095,22 @@ class PlayState extends MusicBeatState
 			#end
 			#end
 		}
+		#end
+
+		#if FEATURE_DISCORD
+		DiscordClient.changePresence(detailsText
+			+ " "
+			+ SONG.song
+			+ " ("
+			+ storyDifficultyText
+			+ ") "
+			+ Ratings.GenerateLetterRank(accuracy),
+			"\nAcc: "
+			+ HelperFunctions.truncateFloat(accuracy, 2)
+			+ "% | Score: "
+			+ songScore
+			+ " | Misses: "
+			+ misses, iconRPC);
 		#end
 	}
 
@@ -5343,6 +5327,23 @@ class PlayState extends MusicBeatState
 		#if FEATURE_HSCRIPT
 		if (ScriptUtil.hasPause(scripts.executeAllFunc("updateAccuracy")))
 			return;
+		#end
+
+		#if FEATURE_DISCORD
+		// Updating Discord Rich Presence (with Time Left)
+		DiscordClient.changePresence(detailsText
+			+ " "
+			+ SONG.song
+			+ " ("
+			+ storyDifficultyText
+			+ ") "
+			+ Ratings.GenerateLetterRank(accuracy),
+			"\nAcc: "
+			+ HelperFunctions.truncateFloat(accuracy, 2)
+			+ "% | Score: "
+			+ songScore
+			+ " | Misses: "
+			+ misses, iconRPC);
 		#end
 
 		judgementCounter.text = 'Marvelous: ${marvs} \nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\nMisses: ${misses}';

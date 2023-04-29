@@ -51,7 +51,7 @@ class DiscordClient
 
 	static function onDisconnected(_code:Int, _message:String)
 	{
-		trace('Disconnected! $_code : $_message');
+		Debug.logWarn('Disconnected! $_code : $_message');
 	}
 
 	public static function initialize()

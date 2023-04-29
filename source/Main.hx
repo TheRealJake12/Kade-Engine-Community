@@ -23,7 +23,6 @@ import lime.app.Application;
 import openfl.events.UncaughtErrorEvent;
 import haxe.CallStack;
 import haxe.io.Path;
-import Discord.DiscordClient;
 import sys.FileSystem;
 import sys.io.File;
 import sys.io.Process;
@@ -165,8 +164,8 @@ class Main extends Sprite
 		});
 
 		#if FEATURE_DISCORD
-		DiscordClient.initialize();
-
+		Discord.DiscordClient.initialize();
+		
 		Application.current.onExit.add(function(exitCode)
 		{
 			DiscordClient.shutdown();
