@@ -1,6 +1,7 @@
 package;
 
 import openfl.utils.Future;
+import CoolUtil.CoolText;
 import openfl.media.Sound;
 import flixel.system.FlxSound;
 #if FEATURE_STEPMANIA
@@ -58,12 +59,13 @@ class FreeplayState extends MusicBeatState
 
 	public static var curDifficulty:Int = 1;
 
-	var scoreText:FlxText;
-	var comboText:FlxText;
-	var diffText:FlxText;
-	var diffCalcText:FlxText;
-	var previewtext:FlxText;
-	var helpText:FlxText;
+	var scoreText:CoolText;
+	var comboText:CoolText;
+	var diffText:CoolText;
+	var diffCalcText:CoolText;
+	var previewtext:CoolText;
+	var helpText:CoolText;
+	var opponentText:CoolText;
 	var lerpScore:Int = 0;
 	var intendedaccuracy:Float = 0.00;
 	var intendedScore:Int = 0;
@@ -77,7 +79,6 @@ class FreeplayState extends MusicBeatState
 	var bg:FlxSprite;
 
 	var Inst:FlxSound;
-	var opponentText:FlxText;
 
 	public static var openMod:Bool = false;
 
@@ -215,10 +216,10 @@ class FreeplayState extends MusicBeatState
 			// songText.screenCenter(X);
 		}
 
-		scoreText = new FlxText(FlxG.width * 0.65, 5, 0, "", 32);
-		// scoreText.autoSize = false;
-		scoreText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
-		// scoreText.alignment = RIGHT;
+		scoreText = new CoolText(FlxG.width * 0.6525, 10, 31, 31, Paths.bitmapFont('fonts/vcr'));
+		scoreText.autoSize = true;
+		scoreText.fieldWidth = FlxG.width;
+		scoreText.antialiasing = FlxG.save.data.antialiasing;
 
 		var bottomBG:FlxSprite = new FlxSprite(0, FlxG.height - 26).makeGraphic(Std.int(FlxG.width), 26, 0xFF000000);
 		bottomBG.alpha = 0.6;
@@ -232,40 +233,57 @@ class FreeplayState extends MusicBeatState
 		+ "ms "
 		+ (FlxG.save.data.optimize ? "/ Optimized" : "");
 
-		var downText:FlxText = new FlxText(bottomBG.x, bottomBG.y + 4, FlxG.width, bottomText, 16);
-		downText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT);
-		downText.scrollFactor.set();
-		add(downText);
-
 		var scoreBG:FlxSprite = new FlxSprite(scoreText.x - 6, 0).makeGraphic(Std.int(FlxG.width * 0.4), 337, 0xFF000000);
 		scoreBG.alpha = 0.6;
 		add(scoreBG);
 
-		opponentText = new FlxText(scoreText.x, scoreText.y + 66, 0, "", 24);
-		opponentText.font = scoreText.font;
-		add(opponentText);
+		var downText:CoolText = new CoolText(bottomBG.x, bottomBG.y + 4, 14.5, 16, Paths.bitmapFont('fonts/vcr'));
+		downText.autoSize = true;
+		downText.antialiasing = FlxG.save.data.antialiasing;
+		downText.scrollFactor.set();
+		downText.text = bottomText;
+		downText.updateHitbox();
+		add(downText);
 
-		comboText = new FlxText(scoreText.x, scoreText.y + 36, 0, "", 24);
-		comboText.font = scoreText.font;
+		comboText = new CoolText(scoreText.x, scoreText.y + 36, 23, 23, Paths.bitmapFont('fonts/vcr'));
+		comboText.autoSize = true;
+
+		comboText.antialiasing = FlxG.save.data.antialiasing;
 		add(comboText);
 
-		diffText = new FlxText(scoreText.x, scoreText.y + 106, 0, "", 24);
-		diffText.font = scoreText.font;
+		opponentText = new CoolText(scoreText.x, scoreText.y + 66, 23, 23, Paths.bitmapFont('fonts/vcr'));
+		opponentText.autoSize = true;
+
+		opponentText.antialiasing = FlxG.save.data.antialiasing;
+		add(opponentText);
+
+		diffText = new CoolText(scoreText.x, scoreText.y + 106, 23, 23, Paths.bitmapFont('fonts/vcr'));
+
+		diffText.antialiasing = FlxG.save.data.antialiasing;
 		add(diffText);
 
-		diffCalcText = new FlxText(scoreText.x, scoreText.y + 136, 0, "", 24);
-		diffCalcText.font = scoreText.font;
+		diffCalcText = new CoolText(scoreText.x, scoreText.y + 136, 23, 23, Paths.bitmapFont('fonts/vcr'));
+		diffCalcText.autoSize = true;
+
+		diffCalcText.antialiasing = FlxG.save.data.antialiasing;
 		add(diffCalcText);
 
-		previewtext = new FlxText(scoreText.x, scoreText.y + 166, 0, "Rate: < " + FlxMath.roundDecimal(rate, 2) + "x >", 24);
-		previewtext.font = scoreText.font;
+		previewtext = new CoolText(scoreText.x, scoreText.y + 166, 23, 23, Paths.bitmapFont('fonts/vcr'));
+		previewtext.text = "Rate: < " + FlxMath.roundDecimal(rate, 2) + "x >";
+		previewtext.autoSize = true;
+
+		previewtext.antialiasing = FlxG.save.data.antialiasing;
+
 		add(previewtext);
 
-		helpText = new FlxText(scoreText.x, scoreText.y + 211, 0, "", 20);
+		helpText = new CoolText(scoreText.x, scoreText.y + 200, 18, 18, Paths.bitmapFont('fonts/vcr'));
+		helpText.autoSize = true;
 		helpText.text = "LEFT-RIGHT to change Difficulty\n\n" + "SHIFT + LEFT-RIGHT to change Rate\n" + "if it's possible\n\n"
 			+ "CTRL to open Gameplay Modifiers\n" + "";
-		helpText.font = scoreText.font;
+
+		helpText.antialiasing = FlxG.save.data.antialiasing;
 		helpText.color = 0xFFfaff96;
+		helpText.updateHitbox();
 		add(helpText);
 
 		add(scoreText);
@@ -522,6 +540,7 @@ class FreeplayState extends MusicBeatState
 			lerpaccuracy = intendedaccuracy;
 
 		scoreText.text = "PERSONAL BEST:" + lerpScore;
+		scoreText.updateHitbox();
 		if (combo == "")
 		{
 			comboText.text = "RANK: N/A";
@@ -532,8 +551,10 @@ class FreeplayState extends MusicBeatState
 			comboText.text = "RANK: " + letter + " | " + combo + " (" + HelperFunctions.truncateFloat(lerpaccuracy, 2) + "%)\n";
 			comboText.alpha = 1;
 		}
+		comboText.updateHitbox();
 
 		opponentText.text = "OPPONENT MODE: " + (FlxG.save.data.opponent ? "ON" : "OFF");
+		opponentText.updateHitbox();
 
 		if (FlxG.sound.music.volume > 0.8)
 		{
@@ -573,6 +594,7 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 		previewtext.text = "Rate: " + FlxMath.roundDecimal(rate, 2) + "x";
+		previewtext.updateHitbox();
 		previewtext.alpha = 1;
 
 		if (FlxG.keys.justPressed.CONTROL && !openMod && !MusicBeatState.switchingState)
@@ -620,6 +642,7 @@ class FreeplayState extends MusicBeatState
 				}
 
 				previewtext.text = "Rate: < " + FlxMath.roundDecimal(rate, 2) + "x >";
+				previewtext.updateHitbox();
 			}
 			else
 			{
@@ -1008,6 +1031,7 @@ class FreeplayState extends MusicBeatState
 			diffText.alpha = 0.5;
 			diffCalcText.text = 'RATING: N/A';
 		}
+		diffCalcText.updateHitbox();
 	}
 
 	var _drawDistance:Int = 4;

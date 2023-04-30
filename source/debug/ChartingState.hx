@@ -137,8 +137,8 @@ class ChartingState extends MusicBeatState
 	var gridBlackLine:FlxSprite;
 	var vocals:FlxSound;
 
-	var player2:Character = new Character(0, 0, _song.player2);
-	var player1:Boyfriend = new Boyfriend(0, 0, _song.player1);
+	var player2:Character = new Character(0, 0, "dad");
+	var player1:Boyfriend = new Boyfriend(0, 0, "bf");
 
 	public static var leftIcon:HealthIcon;
 

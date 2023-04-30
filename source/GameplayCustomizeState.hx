@@ -333,7 +333,6 @@ class GameplayCustomizeState extends MusicBeatState
 
 		if (controls.BACK)
 		{
-			FlxG.mouse.visible = false;
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			MusicBeatState.switchState(new OptionsDirect());
 		}

@@ -602,7 +602,6 @@ class OptionsMenu extends MusicBeatSubstate
 						var object = selectedCat.optionObjects.members[selectedOptionIndex];
 						object.text = "> " + selectedOption.getValue();
 						object.updateHitbox();
-						Debug.logTrace("New text: " + object.text);
 						return;
 					}
 					else if (any)
@@ -611,7 +610,6 @@ class OptionsMenu extends MusicBeatSubstate
 						selectedOption.onType(gamepad == null ? FlxG.keys.getIsDown()[0].ID.toString() : gamepad.firstJustPressedID());
 						object.text = "> " + selectedOption.getValue();
 						object.updateHitbox();
-						Debug.logTrace("New text: " + object.text);
 					}
 				}
 

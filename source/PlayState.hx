@@ -871,8 +871,7 @@ class PlayState extends MusicBeatState
 			FlxG.watch.addQuick('rep rpesses', repPresses);
 			FlxG.watch.addQuick('rep releases', repReleases);
 			// FlxG.watch.addQuick('Queued',inputsQueued);
-
-			PlayStateChangeables.useDownscroll = rep.replay.isDownscroll;
+			
 			PlayStateChangeables.safeFrames = rep.replay.sf;
 			PlayStateChangeables.botPlay = true;
 		}
@@ -3466,10 +3465,15 @@ class PlayState extends MusicBeatState
 			}
 			#end
 		}
+		var mult:Float = FlxMath.lerp(1, iconP1.scale.x, CoolUtil.boundTo(1 - (elapsed * 9 * songMultiplier), 0, 1));
+		var mult2:Float = FlxMath.lerp(1, iconP2.scale.x, CoolUtil.boundTo(1 - (elapsed * 9 * songMultiplier), 0, 1));
 		if (!theMotionThing)
 		{
-			iconP1.setGraphicSize(Std.int(FlxMath.lerp(iconP1.initialWidth, iconP1.width, 0.85)));
-			iconP2.setGraphicSize(Std.int(FlxMath.lerp(iconP2.initialWidth, iconP2.width, 0.85)));
+			iconP1.scale.set(mult, mult);
+			iconP1.updateHitbox();
+
+			iconP2.scale.set(mult2, mult2);
+			iconP2.updateHitbox();
 		}
 
 		iconP1.updateHitbox();
@@ -3479,8 +3483,14 @@ class PlayState extends MusicBeatState
 		if (health >= 2 && !PlayStateChangeables.opponentMode)
 			health = 2;
 
-		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
-		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
+		iconP1.x = healthBar.x
+			+ (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01))
+			+ (150 * iconP1.scale.x - 150) / 2
+			- iconOffset;
+		iconP2.x = healthBar.x
+			+ (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01))
+			- (150 * iconP2.scale.x) / 2
+			- iconOffset * 2;
 
 		if (health > 2)
 			health = 2;
@@ -5731,8 +5741,9 @@ class PlayState extends MusicBeatState
 		{
 			if (curStep % 4 == 0)
 			{
-				iconP1.setGraphicSize(Std.int(iconP1.width + 45 / songMultiplier));
-				iconP2.setGraphicSize(Std.int(iconP2.width + 45 / songMultiplier));
+				iconP1.scale.set(1.1, 1.1);
+				iconP2.scale.set(1.1, 1.1);
+
 				iconP1.updateHitbox();
 				iconP2.updateHitbox();
 			}

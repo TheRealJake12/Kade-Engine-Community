@@ -128,10 +128,12 @@ class StoryMenuState extends MusicBeatState
 
 		scoreText = new CoolText(10, 10, 32, 32, Paths.bitmapFont('fonts/vcr'));
 		scoreText.autoSize = true;
+		scoreText.antialiasing = FlxG.save.data.antialiasing;
 
 		txtWeekTitle = new CoolText(FlxG.width * 0.7, 10, 32, 32, Paths.bitmapFont('fonts/vcr'));
 		txtWeekTitle.autoSize = true;
 		txtWeekTitle.alpha = 0.7;
+		txtWeekTitle.antialiasing = FlxG.save.data.antialiasing;
 
 		var ui_tex = Paths.getSparrowAtlas('campaign_menu_UI_assets');
 		var yellowBG:FlxSprite = new FlxSprite(0, 56).makeGraphic(FlxG.width, 400, 0xFFF9CF51);
@@ -220,6 +222,7 @@ class StoryMenuState extends MusicBeatState
 		txtTracklist.fieldWidth = 500;
 		txtTracklist.alignment = CENTER;
 		txtTracklist.color = 0xFFe55777;
+		txtTracklist.antialiasing = FlxG.save.data.antialiasing;
 		add(txtTracklist);
 
 		add(scoreText);
