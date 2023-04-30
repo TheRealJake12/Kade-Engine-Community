@@ -86,7 +86,7 @@ class OptionCata extends FlxSprite
 			text.borderSize = 2;
 			text.antialiasing = FlxG.save.data.antialiasing;
 			text.targetY = i;
-			text.alpha = 0.4;
+			text.alpha = 0.5;
 			text.ID = i;
 
 			text.text = opt.getValue();

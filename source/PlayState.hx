@@ -3,6 +3,7 @@ package;
 import flixel.group.FlxSpriteGroup;
 import CustomFadeTransition;
 import Shaders;
+import CoolUtil.CoolText;
 import flixel.util.FlxSpriteUtil;
 import openfl.utils.Assets as OpenFlAssets;
 #if FEATURE_LUAMODCHART
@@ -10,7 +11,6 @@ import LuaClass.LuaCamera;
 import LuaClass.LuaCharacter;
 import LuaClass.LuaNote;
 #end
-import openfl.filters.ShaderFilter;
 import openfl.filters.BitmapFilter;
 import lime.media.openal.AL;
 import Song.Event;
@@ -23,25 +23,16 @@ import sys.io.File;
 import Sys;
 import sys.FileSystem;
 #end
-import openfl.ui.KeyLocation;
 import openfl.events.Event;
-import haxe.EnumTools;
 import openfl.ui.Keyboard;
 import openfl.events.KeyboardEvent;
 import Replay.Ana;
 import Replay.Analysis;
 import flixel.input.keyboard.FlxKey;
-import haxe.Exception;
-import openfl.geom.Matrix;
 import openfl.display.BitmapData;
 import openfl.utils.AssetType;
-import lime.graphics.Image;
 import flixel.graphics.FlxGraphic;
-import openfl.utils.AssetManifest;
-import openfl.utils.AssetLibrary;
 import lime.app.Application;
-import lime.media.AudioContext;
-import lime.media.AudioManager;
 import openfl.Lib;
 import Section.SwagSection;
 import Song.SongData;
@@ -54,10 +45,8 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.FlxSubState;
-import flixel.addons.display.FlxGridOverlay;
 import flixel.addons.effects.FlxTrail;
 import flixel.addons.effects.FlxTrailArea;
-import flixel.addons.effects.chainable.FlxEffectSprite;
 import flixel.addons.effects.chainable.FlxWaveEffect;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.graphics.atlas.FlxAtlas;
@@ -71,16 +60,12 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.ui.FlxBar;
-import flixel.util.FlxCollision;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
 import haxe.Json;
-import openfl.display.BlendMode;
-import openfl.display.StageQuality;
 import openfl.filters.ShaderFilter;
-import openfl.display.Shader;
 #if FEATURE_DISCORD
 import Discord.DiscordClient;
 #end
@@ -197,7 +182,7 @@ class PlayState extends MusicBeatState
 	public static var noteBools:Array<Bool> = [false, false, false, false];
 
 	var songLength:Float = 0;
-	var kadeEngineWatermark:FlxText;
+	var kadeEngineWatermark:CoolText;
 
 	#if FEATURE_DISCORD
 	// Discord RPC variables
@@ -322,8 +307,8 @@ class PlayState extends MusicBeatState
 	public var songScore:Int = 0;
 
 	var songScoreDef:Int = 0;
-	var scoreTxt:FlxText;
-	var judgementCounter:FlxText;
+	var scoreTxt:CoolText;
+	var judgementCounter:CoolText;
 	var replayTxt:FlxText;
 
 	var needSkip:Bool = false;
@@ -1133,39 +1118,40 @@ class PlayState extends MusicBeatState
 		// healthBar
 
 		// Add watermark
-		kadeEngineWatermark = new FlxText(4, healthBarBG.y
-			+ 50, 0,
-			PlayState.SONG.song
+		kadeEngineWatermark = new CoolText(-45, healthBarBG.y+ 50, 16, 16,Paths.bitmapFont('fonts/vcr'));
+		kadeEngineWatermark.text = (PlayState.SONG.song
 			+ (FlxMath.roundDecimal(songMultiplier, 2) != 1.00 ? " (" + FlxMath.roundDecimal(songMultiplier, 2) + "x)" : "")
 			+ " - "
-			+ CoolUtil.difficultyFromInt(storyDifficulty),
-			16);
-		kadeEngineWatermark.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			+ CoolUtil.difficultyFromInt(storyDifficulty));
 		kadeEngineWatermark.scrollFactor.set();
+		kadeEngineWatermark.borderQuality = 2;
+		kadeEngineWatermark.autoSize = true;
+		kadeEngineWatermark.antialiasing = FlxG.save.data.antialiasing;
 		add(kadeEngineWatermark);
 
 		if (PlayStateChangeables.useDownscroll)
 			kadeEngineWatermark.y = FlxG.height * 0.9 + 45;
 
-		scoreTxt = new FlxText(FlxG.width / 2 - 235, healthBarBG.y + 50, 0, "", 16);
+		scoreTxt = new CoolText(FlxG.width / 2 - 235, healthBarBG.y + 50, 16, 16, Paths.bitmapFont('fonts/vcr'));
 		scoreTxt.screenCenter(X);
 		scoreTxt.scrollFactor.set();
 		scoreTxt.borderQuality = 2;
-		scoreTxt.antialiasing = true; // Should use the save data but its too annoying.
-		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		scoreTxt.autoSize = true;
+		scoreTxt.updateHitbox();
+		scoreTxt.antialiasing = true; // Should use the save data but its too annoying / buggy looking text sometimes.
 		scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS, accuracy);
 		if (!FlxG.save.data.healthBar)
 			scoreTxt.y = healthBarBG.y;
 
 		add(scoreTxt);
 
-		judgementCounter = new FlxText(20, 0, 0, "", 20);
-		judgementCounter.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		judgementCounter.borderSize = 2;
+		judgementCounter = new CoolText(-30, 0, 20, 20, Paths.bitmapFont('fonts/vcr'));
 		judgementCounter.borderQuality = 2;
 		judgementCounter.scrollFactor.set();
 		judgementCounter.cameras = [camHUD];
 		judgementCounter.screenCenter(Y);
+		judgementCounter.autoSize = true;
+		judgementCounter.antialiasing = FlxG.save.data.antialiasing;
 		judgementCounter.text = 'Marvelous: ${marvs}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\nMisses: ${misses}';
 		if (FlxG.save.data.judgementCounter)
 		{
@@ -3415,6 +3401,7 @@ class PlayState extends MusicBeatState
 			iconP1.swapOldIcon();
 
 		scoreTxt.screenCenter(X);
+		scoreTxt.updateHitbox();
 
 		var pauseBind = FlxKey.fromString(FlxG.save.data.pauseBind);
 		var gppauseBind = FlxKey.fromString(FlxG.save.data.gppauseBind);
@@ -5363,6 +5350,7 @@ class PlayState extends MusicBeatState
 	{
 		scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS,
 			(FlxG.save.data.roundAccuracy ? FlxMath.roundDecimal(accuracy, 0) : accuracy));
+		scoreTxt.updateHitbox();	
 	}
 
 	function receptorTween()

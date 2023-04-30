@@ -2518,16 +2518,11 @@ class RatingStack extends Option
 	public function new(desc:String)
 	{
 		super();
-		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
-		else
-			description = desc;
+		description = desc;
 	}
 
 	public override function left():Bool
 	{
-		if (OptionsMenu.isInPause)
-			return false;
 		FlxG.save.data.rateStack = !FlxG.save.data.rateStack;
 		display = updateDisplay();
 		return true;
