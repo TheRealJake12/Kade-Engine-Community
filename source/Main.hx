@@ -18,17 +18,16 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 #if desktop
-	// crash handler stuff
-	import lime.app.Application;
-	import openfl.events.UncaughtErrorEvent;
-	import haxe.CallStack;
-	import haxe.io.Path;
-	import Discord.DiscordClient;
-	import sys.FileSystem;
-	import sys.io.File;
-	import sys.io.Process;
-	import openfl.system.System;
-	import cpp.vm.Gc;
+// crash handler stuff
+import lime.app.Application;
+import openfl.events.UncaughtErrorEvent;
+import haxe.CallStack;
+import haxe.io.Path;
+import sys.FileSystem;
+import sys.io.File;
+import sys.io.Process;
+import openfl.system.System;
+import cpp.vm.Gc;
 #end
 import openfl.utils.AssetCache;
 #if hl
@@ -166,8 +165,8 @@ class Main extends Sprite
 		});
 
 		#if FEATURE_DISCORD
-		DiscordClient.initialize();
-
+		Discord.DiscordClient.initialize();
+		
 		Application.current.onExit.add(function(exitCode)
 		{
 			DiscordClient.shutdown();

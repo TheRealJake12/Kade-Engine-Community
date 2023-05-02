@@ -17,9 +17,12 @@ class Option
 	}
 
 	private var description:String = "";
+
 	public var pauseDesc:String = "This option cannot be toggled in the pause menu.";
+
 	private var display:String;
 	private var acceptValues:Bool = false;
+
 	public var blocked:Bool = false;
 
 	public var acceptType:Bool = false;
@@ -82,12 +85,13 @@ class DFJKOption extends Option
 	{
 		super();
 		description = "Edit your keybindings";
+		acceptType = true;
 	}
 
 	public override function press():Bool
 	{
 		OptionsMenu.instance.selectedCatIndex = 6;
-		OptionsMenu.instance.switchCat(OptionsMenu.instance.options[6], false);
+		OptionsMenu.instance.switchCat(OptionsMenu.instance.options[6], true);
 		return false;
 	}
 
@@ -913,6 +917,7 @@ class Judgement extends Option
 		else
 			description = desc;
 		acceptValues = true;
+		acceptType = true;
 	}
 
 	public override function press():Bool
@@ -920,7 +925,7 @@ class Judgement extends Option
 		if (OptionsMenu.isInPause)
 			return false;
 		OptionsMenu.instance.selectedCatIndex = 7;
-		OptionsMenu.instance.switchCat(OptionsMenu.instance.options[7], false);
+		OptionsMenu.instance.switchCat(OptionsMenu.instance.options[7], true);
 		return true;
 	}
 
@@ -936,21 +941,23 @@ class MarvMSOption extends Option
 	{
 		super();
 		description = desc + " (Press R to reset)";
-		acceptType = true;
+		acceptValues = true;
 	}
 
 	public override function left():Bool
 	{
-		FlxG.save.data.marvMs--;
+		FlxG.save.data.marvMs -= 0.1;
 		if (FlxG.save.data.marvMs < 0)
-			FlxG.save.data.marvs = 0;
+			FlxG.save.data.marvMs = 0;
+		FlxG.save.data.marvMs = HelperFunctions.truncateFloat(FlxG.save.data.marvMs, 1);
 		display = updateDisplay();
 		return true;
 	}
 
 	public override function right():Bool
 	{
-		FlxG.save.data.marvMs++;
+		FlxG.save.data.marvMs += 0.1;
+		FlxG.save.data.marvMs = HelperFunctions.truncateFloat(FlxG.save.data.marvMs, 1);
 		display = updateDisplay();
 		return true;
 	}
@@ -973,21 +980,23 @@ class SickMSOption extends Option
 	{
 		super();
 		description = desc + " (Press R to reset)";
-		acceptType = true;
+		acceptValues = true;
 	}
 
 	public override function left():Bool
 	{
-		FlxG.save.data.sickMs--;
+		FlxG.save.data.sickMs -= 0.1;
 		if (FlxG.save.data.sickMs < 0)
 			FlxG.save.data.sickMs = 0;
+		FlxG.save.data.sickMs = HelperFunctions.truncateFloat(FlxG.save.data.sickMs, 1);
 		display = updateDisplay();
 		return true;
 	}
 
 	public override function right():Bool
 	{
-		FlxG.save.data.sickMs++;
+		FlxG.save.data.sickMs += 0.1;
+		FlxG.save.data.sickMs = HelperFunctions.truncateFloat(FlxG.save.data.sickMs, 1);
 		display = updateDisplay();
 		return true;
 	}
@@ -1011,6 +1020,7 @@ class GoodMsOption extends Option
 		super();
 		description = desc + " (Press R to reset)";
 		acceptType = true;
+		acceptValues = true;
 	}
 
 	public override function left():Bool
@@ -1047,21 +1057,23 @@ class BadMsOption extends Option
 	{
 		super();
 		description = desc + " (Press R to reset)";
-		acceptType = true;
+		acceptValues = true;
 	}
 
 	public override function left():Bool
 	{
-		FlxG.save.data.badMs--;
+		FlxG.save.data.badMs -= 0.1;
 		if (FlxG.save.data.badMs < 0)
 			FlxG.save.data.badMs = 0;
+		FlxG.save.data.badMs = HelperFunctions.truncateFloat(FlxG.save.data.badMs, 1);
 		display = updateDisplay();
 		return true;
 	}
 
 	public override function right():Bool
 	{
-		FlxG.save.data.badMs++;
+		FlxG.save.data.badMs += 0.1;
+		FlxG.save.data.badMs = HelperFunctions.truncateFloat(FlxG.save.data.badMs, 1);
 		display = updateDisplay();
 		return true;
 	}
@@ -1069,7 +1081,7 @@ class BadMsOption extends Option
 	public override function onType(char:String)
 	{
 		if (char.toLowerCase() == "r")
-			FlxG.save.data.badMs = 110;
+			FlxG.save.data.badMs = 135;
 	}
 
 	private override function updateDisplay():String
@@ -1084,14 +1096,15 @@ class ShitMsOption extends Option
 	{
 		super();
 		description = desc + " (Press R to reset)";
-		acceptType = true;
+		acceptValues = true;
 	}
 
 	public override function left():Bool
 	{
-		FlxG.save.data.shitMs--;
+		FlxG.save.data.shitMs -= 0.1;
 		if (FlxG.save.data.shitMs < 0)
 			FlxG.save.data.shitMs = 0;
+		FlxG.save.data.shitMs = HelperFunctions.truncateFloat(FlxG.save.data.shitMs, 1);
 		display = updateDisplay();
 		return true;
 	}
@@ -1099,12 +1112,13 @@ class ShitMsOption extends Option
 	public override function onType(char:String)
 	{
 		if (char.toLowerCase() == "r")
-			FlxG.save.data.shitMs = 135;
+			FlxG.save.data.shitMs = 180;
 	}
 
 	public override function right():Bool
 	{
-		FlxG.save.data.shitMs++;
+		FlxG.save.data.shitMs += 0.1;
+		FlxG.save.data.shitMs = HelperFunctions.truncateFloat(FlxG.save.data.shitMs, 1);
 		display = updateDisplay();
 		return true;
 	}
@@ -1332,6 +1346,7 @@ class ReplayOption extends Option
 	{
 		super();
 		description = desc;
+		acceptType = true;
 	}
 
 	public override function press():Bool
@@ -1383,6 +1398,7 @@ class CustomizeGameplay extends Option
 	public function new(desc:String)
 	{
 		super();
+		acceptType = true;
 		if (OptionsMenu.isInPause)
 		{
 			blocked = true;
@@ -1446,6 +1462,7 @@ class OffsetMenu extends Option
 	{
 		super();
 		description = desc;
+		acceptType = true;
 	}
 
 	public override function press():Bool
@@ -1840,11 +1857,12 @@ class DebugMode extends Option
 	{
 		description = desc;
 		super();
+		acceptType = true;
 	}
 
 	public override function press():Bool
 	{
-		FlxG.switchState(new AnimationDebug());
+		MusicBeatState.switchState(new AnimationDebug());
 		return false;
 	}
 
@@ -1861,8 +1879,9 @@ class LockWeeksOption extends Option
 	public function new(desc:String)
 	{
 		super();
+		acceptType = true;
 		if (OptionsMenu.isInPause)
-			description = pauseDesc;
+			description = "This option cannot be toggled in the pause menu.";
 		else
 			description = desc;
 	}
@@ -1892,41 +1911,6 @@ class LockWeeksOption extends Option
 }
 
 #if FEATURE_FILESYSTEM
-class DeleteYourPC extends Option
-{
-	var confirm:Bool = false;
-
-	public function new(desc:String)
-	{
-		super();
-		if (OptionsMenu.isInPause)
-			description = "This option cannot be used in the pause menu.";
-		else
-			description = desc;
-	}
-
-	public override function press():Bool
-	{
-		if (OptionsMenu.isInPause)
-			return false;
-		if (!confirm)
-		{
-			confirm = true;
-			display = updateDisplay();
-			return true;
-		}
-		LoadReplayState.deleteTheReplays();
-		Debug.logTrace('Replays Deleted.');
-		display = updateDisplay();
-		return true;
-	}
-
-	private override function updateDisplay():String
-	{
-		return confirm ? "Confirm Replays Delete." : "Delete Replays?";
-	}
-}
-
 class SaveReplayOption extends Option
 {
 	public function new(desc:String)
@@ -1991,6 +1975,7 @@ class ResetScoreOption extends Option
 	public function new(desc:String)
 	{
 		super();
+		acceptType = true;
 		if (OptionsMenu.isInPause)
 			description = "This option cannot be toggled in the pause menu.";
 		else
@@ -2533,16 +2518,11 @@ class RatingStack extends Option
 	public function new(desc:String)
 	{
 		super();
-		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
-		else
-			description = desc;
+		description = desc;
 	}
 
 	public override function left():Bool
 	{
-		if (OptionsMenu.isInPause)
-			return false;
 		FlxG.save.data.rateStack = !FlxG.save.data.rateStack;
 		display = updateDisplay();
 		return true;
@@ -2774,6 +2754,7 @@ class Resolution extends Option
 		super();
 		description = desc;
 		acceptValues = true;
+		acceptType = true;
 	}
 
 	public override function press():Bool
@@ -2928,6 +2909,7 @@ class ResetSettings extends Option
 	public function new(desc:String)
 	{
 		super();
+		acceptType = true;
 		if (OptionsMenu.isInPause)
 			description = "This option cannot be toggled in the pause menu.";
 		else
@@ -2995,6 +2977,8 @@ class ResetSettings extends Option
 		FlxG.save.data.strumHit = null;
 		FlxG.save.data.cpuSplash = null;
 		FlxG.save.data.showState = null;
+		FlxG.save.data.loadMods = null;
+		FlxG.save.data.saveReplays = null;
 
 		AlleyEngineData.initSave();
 		confirm = false;

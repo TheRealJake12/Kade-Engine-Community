@@ -81,7 +81,7 @@ class CoolUtil
 
 		return daList;
 	}
-	
+
 	public static function getSuffixFromDiff(diff:String):String
 	{
 		var suffix = '';

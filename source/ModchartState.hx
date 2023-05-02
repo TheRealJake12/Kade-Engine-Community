@@ -450,11 +450,11 @@ class ModchartState
 
 		if (result != 0)
 		{
-			if (FlxG.fullscreen)
-				FlxG.fullscreen = !FlxG.fullscreen;
 			Application.current.window.alert("LUA COMPILE ERROR:\n" + Lua.tostring(lua, result), "Kade Engine Modcharts");
+			FlxG.log.warn(["LUA COMPILE ERROR:\n" + Lua.tostring(lua, result)]);
 			MusicBeatState.switchState(new FreeplayState());
 			return;
+			lua = null;
 		}
 
 		// get some fukin globals up in here bois
@@ -492,6 +492,9 @@ class ModchartState
 		setVar("screenHeight", FlxG.height);
 		setVar("windowWidth", FlxG.width);
 		setVar("windowHeight", FlxG.height);
+		setVar("hudWidth", PlayState.instance.camHUD.width);
+		setVar("hudHeight", PlayState.instance.camHUD.height);
+
 		setVar("hudWidth", PlayState.instance.camHUD.width);
 		setVar("hudHeight", PlayState.instance.camHUD.height);
 
@@ -568,12 +571,22 @@ class ModchartState
 
 		Lua_helper.add_callback(lua, "setCamZoom", function(zoomAmount:Float)
 		{
-			FlxG.camera.zoom = zoomAmount;
+			PlayState.instance.zoomForTweens = zoomAmount;
 		});
 
 		Lua_helper.add_callback(lua, "setHudZoom", function(zoomAmount:Float)
 		{
 			PlayState.instance.camHUD.zoom = zoomAmount;
+		});
+
+		Lua_helper.add_callback(lua, "getHudX", function()
+		{
+			return PlayState.instance.camHUD.x;
+		});
+
+		Lua_helper.add_callback(lua, "getHudY", function()
+		{
+			return PlayState.instance.camHUD.y;
 		});
 
 		Lua_helper.add_callback(lua, "setLaneUnderLayPos", function(value:Int)

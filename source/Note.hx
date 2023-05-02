@@ -425,6 +425,7 @@ class Note extends FlxSprite
 
 	override function update(elapsed:Float)
 	{
+		// This updates hold notes height to current scroll Speed in case of scroll Speed changes.
 		super.update(elapsed);
 		var newStepHeight = (((0.45 * PlayState.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayState.instance.scrollSpeed == 1 ? PlayState.SONG.speed : PlayState.instance.scrollSpeed,
 			2));
@@ -437,6 +438,7 @@ class Note extends FlxSprite
 				noteYOff = -stepHeight + swagWidth * 0.5;
 			}
 		}
+
 		if (!isSustainNote)
 		{
 			if (!modifiedByLua)
