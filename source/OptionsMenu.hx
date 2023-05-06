@@ -56,7 +56,7 @@ class OptionCata extends FlxSprite
 
 		if (!middleType)
 			loadGraphic(graphics[0].graphic);
-		alpha = 0.4;
+		alpha = 0.5;
 
 		options = _options;
 
@@ -80,7 +80,7 @@ class OptionCata extends FlxSprite
 		for (i in 0...options.length)
 		{
 			var opt = options[i];
-			text = new OptionText(middleType ? 0 : 75, (46 * i) + 175, 35, 35, Paths.bitmapFont('fonts/vcr'));
+			text = new OptionText(middleType ? 0 : 75, (45 * i) + 175, 35, 35, Paths.bitmapFont('fonts/vcr'));
 			text.autoSize = true;
 			text.borderStyle = FlxTextBorderStyle.OUTLINE;
 			text.borderSize = 2;
@@ -90,10 +90,11 @@ class OptionCata extends FlxSprite
 			text.ID = i;
 
 			text.text = opt.getValue();
-			text.updateHitbox();
 
 			if (middleType)
 				text.alignment = FlxTextAlign.RIGHT;
+
+			text.updateHitbox();	
 
 			text.scrollFactor.set();
 
@@ -258,7 +259,7 @@ class OptionsMenu extends MusicBeatSubstate
 
 			]),
 			new OptionCata(345, 104, "Experimental", [
-				new OldCharter("Uses Kade Engine 1.5.4 Chart System.(HIGH CHANCES OF CRASHING!)"),
+				new OpenGLStatsOption("In The FPS Display, It Will Display The Draw Calls For The Game."),
 
 			]),
 			new OptionCata(-1, 155, "Editing Keybinds", [
@@ -443,6 +444,7 @@ class OptionsMenu extends MusicBeatSubstate
 		{
 			object.text = "> " + option.getValue();
 			updateOptColors();
+			object.updateHitbox();
 
 			descText.text = option.getDescription();
 		}
@@ -829,6 +831,8 @@ class OptionsMenu extends MusicBeatSubstate
 				optObject.color = FlxColor.YELLOW;
 			else
 				optObject.color = FlxColor.WHITE;
+
+			optObject.updateHitbox();	
 		}
 	}
 }

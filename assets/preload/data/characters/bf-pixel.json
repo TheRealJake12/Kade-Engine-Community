@@ -4,6 +4,7 @@
   "barColor": "#31B0D1",
   "scale": 6,
   "antialiasing": false,
+  "camPos": [-300, -300],
   "healthicon" : "bf-pixel",
   "startingAnim": "idle",
   "flipX": true,

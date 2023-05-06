@@ -5,8 +5,7 @@
   "scale": 6,
   "antialiasing": false,
   "startingAnim": "idle",
-  "camPos": [300, 0],
-  "camFollow": [-250, -330],
+  "camPos": [-100, -400],
   "healthicon" : "senpai",
   "animations": [
     {

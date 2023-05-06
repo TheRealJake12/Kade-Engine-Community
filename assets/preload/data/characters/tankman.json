@@ -4,8 +4,7 @@
   "barColor": "#e1e1e1",
   "startingAnim": "idle",
   "holdLength": 4,
-  "camPos":[0,0],
-  "charPos":[0,0],
+  "camPos":[200,-100],
   "flipX":true,
   "healthicon" : "tankman",
   "animations": [

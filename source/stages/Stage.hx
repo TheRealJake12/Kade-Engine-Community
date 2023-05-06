@@ -484,7 +484,7 @@ class Stage extends MusicBeatState
 						swagBacks['smokeRight'] = smokeRight;
 						toAdd.push(smokeRight);
 
-						var tankWatchTower:FlxSprite = new FlxSprite(100, 50);
+						var tankWatchTower:FlxSprite = new FlxSprite(0, 50);
 						tankWatchTower.antialiasing = FlxG.save.data.antialiasing;
 						tankWatchTower.scrollFactor.set(0.5, 0.5);
 						tankWatchTower.frames = Paths.getSparrowAtlas('tankWatchtower', 'week7');

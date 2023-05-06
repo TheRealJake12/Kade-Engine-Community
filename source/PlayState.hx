@@ -1,9 +1,7 @@
 package;
 
 import flixel.group.FlxSpriteGroup;
-import CustomFadeTransition;
 import Shaders;
-import CoolUtil.CoolText;
 import flixel.util.FlxSpriteUtil;
 import openfl.utils.Assets as OpenFlAssets;
 #if FEATURE_LUAMODCHART
@@ -182,7 +180,7 @@ class PlayState extends MusicBeatState
 	public static var noteBools:Array<Bool> = [false, false, false, false];
 
 	var songLength:Float = 0;
-	var kadeEngineWatermark:CoolText;
+	var kadeEngineWatermark:FlxText;
 
 	#if FEATURE_DISCORD
 	// Discord RPC variables
@@ -307,8 +305,8 @@ class PlayState extends MusicBeatState
 	public var songScore:Int = 0;
 
 	var songScoreDef:Int = 0;
-	var scoreTxt:CoolText;
-	var judgementCounter:CoolText;
+	var scoreTxt:FlxText;
+	var judgementCounter:FlxText;
 	var replayTxt:FlxText;
 
 	var needSkip:Bool = false;
@@ -373,9 +371,6 @@ class PlayState extends MusicBeatState
 	public static var startTime = 0.0;
 
 	public var msTiming:Float;
-
-	public var doNoteSplash:Bool = FlxG.save.data.notesplashes;
-	public var cpuDoNoteSplash:Bool = FlxG.save.data.cpuSplash;
 
 	// Array that should make some notes easier to hit
 	public static var lowPriorityNotes:Array<String> = ["hurt", "mustpress"];
@@ -831,7 +826,7 @@ class PlayState extends MusicBeatState
 				case 'mallEvil':
 					camPos = new FlxPoint(boyfriend.getMidpoint().x - 100 + boyfriend.camPos[0], boyfriend.getMidpoint().y - 100 + boyfriend.camPos[1]);
 				default:
-					camPos = new FlxPoint(dad.getGraphicMidpoint().x + dad.camPos[0], dad.getGraphicMidpoint().y + dad.camPos[1]);
+					camPos = new FlxPoint(dad.getMidpoint().x + dad.camPos[0], dad.getMidpoint().y + dad.camPos[1]);
 			}
 		}
 		else
@@ -1118,40 +1113,39 @@ class PlayState extends MusicBeatState
 		// healthBar
 
 		// Add watermark
-		kadeEngineWatermark = new CoolText(-45, healthBarBG.y+ 50, 16, 16,Paths.bitmapFont('fonts/vcr'));
-		kadeEngineWatermark.text = (PlayState.SONG.song
+		kadeEngineWatermark = new FlxText(4, healthBarBG.y
+			+ 50, 0,
+			PlayState.SONG.song
 			+ (FlxMath.roundDecimal(songMultiplier, 2) != 1.00 ? " (" + FlxMath.roundDecimal(songMultiplier, 2) + "x)" : "")
 			+ " - "
-			+ CoolUtil.difficultyFromInt(storyDifficulty));
+			+ CoolUtil.difficultyFromInt(storyDifficulty),
+			16);
+		kadeEngineWatermark.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		kadeEngineWatermark.scrollFactor.set();
-		kadeEngineWatermark.borderQuality = 2;
-		kadeEngineWatermark.autoSize = true;
-		kadeEngineWatermark.antialiasing = FlxG.save.data.antialiasing;
 		add(kadeEngineWatermark);
 
 		if (PlayStateChangeables.useDownscroll)
 			kadeEngineWatermark.y = FlxG.height * 0.9 + 45;
 
-		scoreTxt = new CoolText(FlxG.width / 2 - 235, healthBarBG.y + 50, 16, 16, Paths.bitmapFont('fonts/vcr'));
+		scoreTxt = new FlxText(FlxG.width / 2 - 235, healthBarBG.y + 50, 0, "", 16);
 		scoreTxt.screenCenter(X);
 		scoreTxt.scrollFactor.set();
 		scoreTxt.borderQuality = 2;
-		scoreTxt.autoSize = true;
-		scoreTxt.updateHitbox();
-		scoreTxt.antialiasing = true; // Should use the save data but its too annoying / buggy looking text sometimes.
+		scoreTxt.antialiasing = true; // Should use the save data but its too annoying.
+		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS, accuracy);
 		if (!FlxG.save.data.healthBar)
 			scoreTxt.y = healthBarBG.y;
 
 		add(scoreTxt);
 
-		judgementCounter = new CoolText(-30, 0, 20, 20, Paths.bitmapFont('fonts/vcr'));
+		judgementCounter = new FlxText(20, 0, 0, "", 20);
+		judgementCounter.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		judgementCounter.borderSize = 2;
 		judgementCounter.borderQuality = 2;
 		judgementCounter.scrollFactor.set();
 		judgementCounter.cameras = [camHUD];
 		judgementCounter.screenCenter(Y);
-		judgementCounter.autoSize = true;
-		judgementCounter.antialiasing = FlxG.save.data.antialiasing;
 		judgementCounter.text = 'Marvelous: ${marvs}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\nMisses: ${misses}';
 		if (FlxG.save.data.judgementCounter)
 		{
@@ -3769,7 +3763,7 @@ class PlayState extends MusicBeatState
 				luaModchart.setVar("mustHit", currentSection.mustHitSection);
 			#end
 
-			if (camFollow.x != dad.getMidpoint().x + 150 && !currentSection.mustHitSection)
+			if (camFollow.x != dad.camPos[0] && !currentSection.mustHitSection)
 			{
 				var offsetX = 0;
 				var offsetY = 0;
@@ -3780,7 +3774,7 @@ class PlayState extends MusicBeatState
 					offsetY = luaModchart.getVar("followYOffset", "float");
 				}
 				#end
-				camFollow.setPosition(dad.getMidpoint().x + 150 + offsetX, dad.getMidpoint().y - 100 + offsetY);
+				camFollow.setPosition(dad.getMidpoint().x + dad.camPos[0] + offsetX, dad.getMidpoint().y + dad.camPos[1] + offsetY);
 				#if FEATURE_LUAMODCHART
 				if (luaModchart != null)
 					luaModchart.executeState('playerTwoTurn', []);
@@ -3795,13 +3789,10 @@ class PlayState extends MusicBeatState
 				{
 					case 'mom' | 'mom-car':
 						camFollow.y = dad.getMidpoint().y;
-					case 'senpai' | 'senpai-angry':
-						camFollow.y = dad.getMidpoint().y - 430;
-						camFollow.x = dad.getMidpoint().x - 100;
 				}
 			}
 
-			if (currentSection.mustHitSection && camFollow.x != boyfriend.getMidpoint().x - 100)
+			if (currentSection.mustHitSection && camFollow.x != boyfriend.camPos[0])
 			{
 				var offsetX = 0;
 				var offsetY = 0;
@@ -3812,7 +3803,7 @@ class PlayState extends MusicBeatState
 					offsetY = luaModchart.getVar("followYOffset", "float");
 				}
 				#end
-				camFollow.setPosition(boyfriend.getMidpoint().x - 100 + offsetX, boyfriend.getMidpoint().y - 100 + offsetY);
+				camFollow.setPosition(boyfriend.getMidpoint().x + boyfriend.camPos[0] + offsetX, boyfriend.getMidpoint().y + boyfriend.camPos[1] + offsetY);
 
 				#if FEATURE_LUAMODCHART
 				if (luaModchart != null)
@@ -3828,12 +3819,6 @@ class PlayState extends MusicBeatState
 						case 'limo':
 							camFollow.x = boyfriend.getMidpoint().x - 300;
 						case 'mall':
-							camFollow.y = boyfriend.getMidpoint().y - 200;
-						case 'school':
-							camFollow.x = boyfriend.getMidpoint().x - 200;
-							camFollow.y = boyfriend.getMidpoint().y - 200;
-						case 'schoolEvil':
-							camFollow.x = boyfriend.getMidpoint().x - 200;
 							camFollow.y = boyfriend.getMidpoint().y - 200;
 					}
 			}
@@ -5350,7 +5335,7 @@ class PlayState extends MusicBeatState
 	{
 		scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS,
 			(FlxG.save.data.roundAccuracy ? FlxMath.roundDecimal(accuracy, 0) : accuracy));
-		scoreTxt.updateHitbox();	
+		scoreTxt.updateHitbox();
 	}
 
 	function receptorTween()
@@ -5509,7 +5494,7 @@ class PlayState extends MusicBeatState
 					pressArrow(spr, spr.ID, daNote);
 				});
 
-				if (cpuDoNoteSplash && daNote.canNoteSplash && !FlxG.save.data.middleScroll)
+				if (FlxG.save.data.cpuSplash && daNote.canNoteSplash && !FlxG.save.data.middleScroll)
 				{
 					NoteSplashesSpawnDad(daNote);
 				}

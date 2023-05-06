@@ -8,7 +8,7 @@
 	<SubTexture name="green alone0000" x="257" y="0" width="157" height="154"/>
 	<SubTexture name="green hold0000" x="157" y="0" width="50" height="44"/>
 	<SubTexture name="green tail0000" x="207" y="0" width="50" height="64"/>
-	<SubTexture name="pruple tail0000" x="207" y="0" width="50" height="64"/>
+	<SubTexture name="purple tail0000" x="207" y="0" width="50" height="64"/>
 	<SubTexture name="purple alone0000" x="0" y="154" width="154" height="157"/>
 	<SubTexture name="purple hold0000" x="157" y="0" width="50" height="44"/>
 	<SubTexture name="red alone0000" x="154" y="154" width="154" height="157"/>

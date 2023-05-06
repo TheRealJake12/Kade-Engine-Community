@@ -131,6 +131,8 @@ class ModCore
 		// Perform an action based on the error code.
 		switch (error.code)
 		{
+			case MISSING_ICON:
+				
 			default:
 				// Log the message based on its severity.
 				switch (error.severity)

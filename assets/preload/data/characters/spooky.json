@@ -5,6 +5,7 @@
   "startingAnim": "danceRight",
   "isDancing": true,
   "holdLength": 4.1,
+  "camPos": [50, -50],
   "healthicon" : "spooky",
   "animations": [
     {

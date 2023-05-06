@@ -2540,6 +2540,33 @@ class RatingStack extends Option
 	}
 }
 
+class OpenGLStatsOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function left():Bool
+	{
+		FlxG.save.data.glDebug = !FlxG.save.data.glDebug;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "OpenGL Debug Information : < " + (!FlxG.save.data.glDebug ? "off" : "on") + " >";
+	}
+}
+
 class OldCharter extends Option
 {
 	public function new(desc:String)
@@ -2979,6 +3006,7 @@ class ResetSettings extends Option
 		FlxG.save.data.showState = null;
 		FlxG.save.data.loadMods = null;
 		FlxG.save.data.saveReplays = null;
+		FlxG.save.data.glDebug = null;
 
 		KadeEngineData.initSave();
 		confirm = false;

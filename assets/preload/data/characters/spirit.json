@@ -6,7 +6,7 @@
   "antialiasing": false,
   "AtlasType": "PackerAtlas",
   "startingAnim": "idle",
-  "camPos": [300, 0],
+  "camPos": [0, 0],
   "hasTrail": true,
   "healthicon" : "spirit",
   "animations": [

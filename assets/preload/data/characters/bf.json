@@ -3,6 +3,7 @@
   "asset": "characters/BOYFRIEND",
   "barColor": "#31B0D1",
   "startingAnim": "idle",
+  "camPos": [-100, -100],
   "flipX": true,
   "healthicon" : "bf",
   "animations": [

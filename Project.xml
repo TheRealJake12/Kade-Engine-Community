@@ -223,4 +223,6 @@
   <haxedef name="POLYMOD_SCRIPT_LIBRARY" value="scripts" />
   <haxedef name="POLYMOD_ROOT_PATH" value="scripts/" />
 
+   <haxedef name="gl_stats" if="desktop" />
+
 </project>

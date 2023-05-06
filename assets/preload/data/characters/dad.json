@@ -4,7 +4,7 @@
   "barColor": "#AF66CE",
   "startingAnim": "idle",
   "holdLength": 6.1,
-  "camPos": [400, 0],
+  "camPos": [150, -100],
   "healthicon" : "dad",
   "animations": [
     {

@@ -4,7 +4,7 @@
   "barColor": "#B7D855",
   "startingAnim": "idle",
   "flipX":true,
-  "camPos": [600, 0],
+  "camPos": [150, -100],
   "healthicon" : "pico",
   "animations": [
     {
