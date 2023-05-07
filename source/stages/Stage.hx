@@ -731,6 +731,7 @@ class Stage extends MusicBeatState
 							trainFrameTiming = 0;
 						}
 					}
+
 				// phillyCityLights.members[curLight].alpha -= (Conductor.crochet / 1000) * FlxG.elapsed;
 				case 'tank':
 					moveTank();
@@ -842,6 +843,7 @@ class Stage extends MusicBeatState
 						{
 							trainCooldown = FlxG.random.int(-4, 0);
 							trainStart();
+							trace('train');
 						}
 					}
 			}

@@ -9,6 +9,8 @@ import openfl.Lib;
 import flixel.math.FlxMath;
 import haxe.Int64;
 import openfl.system.System;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
 #if gl_stats
 import openfl.display._internal.stats.Context3DStats;
 import openfl.display._internal.stats.DrawCallContext;
@@ -23,6 +25,7 @@ class KadeEngineFPS extends TextField
 	public var memoryUsage:String = '';
 	public var displayFPS:String;
 	private var cacheCount:Int;
+	public var bitmap:Bitmap;
 
 	public function new(inX:Float = 10.0, inY:Float = 10.0, inCol:Int = 0x000000)
 	{
@@ -131,6 +134,22 @@ class KadeEngineFPS extends TextField
 			}
 			#end
 			
+		}
+
+		if (FlxG.save.data.fpsBorder)
+		{
+			visible = true;
+			Main.instance.removeChild(bitmap);
+
+			bitmap = ImageOutline.renderImage(this, 2, 0x000000, 1);
+
+			Main.instance.addChild(bitmap);
+		}
+		else
+		{
+			visible = true;
+			if (Main.instance.contains(bitmap))
+				Main.instance.removeChild(bitmap);
 		}
 
 		cacheCount = currentCount;
