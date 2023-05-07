@@ -118,6 +118,9 @@ class Song
 			trace('SONG DATA IS ${songData.songFile} BLABLABLA');
 		}
 
+		if (notes[5] == null|| notes[5] == 'true'|| notes[5] == 'false'|| notes[5] == 0|| notes[5] == 0.0|| Math.isNaN(notes[3]))
+			notes[5] = 'normal';
+
 		if (songData.validScore == null)
 			songData.validScore = true;
 

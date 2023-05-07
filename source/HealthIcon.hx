@@ -36,6 +36,7 @@ class HealthIcon extends FlxSprite
 	{
 		(isOldIcon = !isOldIcon) ? changeIcon("bf-old") : changeIcon(char);
 	}
+	private var iconOffsets:Array<Float> = [0, 0];
 
 	public function changeIcon(char:String)
 	{
@@ -51,12 +52,22 @@ class HealthIcon extends FlxSprite
 			antialiasing = false
 		else
 			antialiasing = FlxG.save.data.antialiasing;
+		iconOffsets[0] = (width - 150) / 2;
+		iconOffsets[1] = (width - 150) / 2;	
+		updateHitbox();	
 
 		animation.add(char, [0, 1], 0, false, isPlayer);
 		animation.play(char);
 
 		initialWidth = width;
 		initialHeight = height;
+	}
+
+	override function updateHitbox()
+	{
+		super.updateHitbox();
+		offset.x = iconOffsets[0];
+		offset.y = iconOffsets[1];
 	}
 
 	override function update(elapsed:Float)

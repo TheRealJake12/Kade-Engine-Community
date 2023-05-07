@@ -991,4 +991,52 @@ class Stage extends MusicBeatState
 		swagBacks['tankGround'].x = tankX + 1500 * FlxMath.fastCos(FlxAngle.asRadians(tankAngle + 180));
 		swagBacks['tankGround'].y = 1300 + 1100 * FlxMath.fastSin(FlxAngle.asRadians(tankAngle + 180));
 	}
+
+	override function destroy()
+	{
+		super.destroy();
+		for (sprite in swagBacks.keys())
+		{
+			if (swagBacks[sprite] != null)
+				swagBacks[sprite].destroy();
+		}
+
+		swagBacks.clear();
+
+		while (toAdd.length > 0)
+		{
+			toAdd.remove(toAdd[0]);
+			if (toAdd[0] != null)
+				toAdd[0].destroy();
+		}
+
+		while (animatedBacks.length > 0)
+		{
+			animatedBacks.remove(animatedBacks[0]);
+			if (animatedBacks[0] != null)
+				animatedBacks[0].destroy();
+		}
+
+		for (array in layInFront)
+		{
+			for (sprite in array)
+			{
+				if (sprite != null)
+					sprite.destroy();
+				array.remove(sprite);
+			}
+		}
+
+		for (swag in swagGroup.keys())
+		{
+			if (swagGroup[swag].members != null)
+				for (member in swagGroup[swag].members)
+				{
+					swagGroup[swag].members.remove(member);
+					member.destroy();
+				}
+		}
+
+		swagGroup.clear();
+	}
 }

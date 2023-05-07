@@ -5,9 +5,7 @@ import Shaders;
 import flixel.util.FlxSpriteUtil;
 import openfl.utils.Assets as OpenFlAssets;
 #if FEATURE_LUAMODCHART
-import LuaClass.LuaCamera;
-import LuaClass.LuaCharacter;
-import LuaClass.LuaNote;
+import LuaClass;
 #end
 import openfl.filters.BitmapFilter;
 import lime.media.openal.AL;
@@ -3440,17 +3438,11 @@ class PlayState extends MusicBeatState
 
 			MusicBeatState.switchState(new ChartingState());
 			PlayState.stageTesting = false;
-			#if FEATURE_LUAMODCHART
-			if (luaModchart != null)
-			{
-				luaModchart.die();
-				luaModchart = null;
-			}
-			#end
 		}
 		var mult:Float = FlxMath.lerp(1, iconP1.scale.x, CoolUtil.boundTo(1 - (elapsed * 9 * songMultiplier), 0, 1));
 		var mult2:Float = FlxMath.lerp(1, iconP2.scale.x, CoolUtil.boundTo(1 - (elapsed * 9 * songMultiplier), 0, 1));
-		if (!theMotionThing)
+		
+		if (!FlxG.save.data.motion)
 		{
 			iconP1.scale.set(mult, mult);
 			iconP1.updateHitbox();
@@ -3459,21 +3451,17 @@ class PlayState extends MusicBeatState
 			iconP2.updateHitbox();
 		}
 
-		iconP1.updateHitbox();
-		iconP2.updateHitbox();
-
 		var iconOffset:Int = 26;
 		if (health >= 2 && !PlayStateChangeables.opponentMode)
 			health = 2;
 
 		iconP1.x = healthBar.x
-			+ (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01))
-			+ (150 * iconP1.scale.x - 150) / 2
-			- iconOffset;
+			+ (healthBar.width * (FlxMath.remapToRange(PlayStateChangeables.opponentMode ? 100 - healthBar.percent : healthBar.percent, 0, 100, 100, 0) * 0.01)
+				- iconOffset);
 		iconP2.x = healthBar.x
-			+ (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01))
-			- (150 * iconP2.scale.x) / 2
-			- iconOffset * 2;
+			+ (healthBar.width * (FlxMath.remapToRange(PlayStateChangeables.opponentMode ? 100 - healthBar.percent : healthBar.percent, 0, 100, 100,
+				0) * 0.01))
+			- (iconP2.width - iconOffset);
 
 		if (health > 2)
 			health = 2;
@@ -5712,7 +5700,7 @@ class PlayState extends MusicBeatState
 		scripts.executeAllFunc("stepHit", [curStep]);
 		#end
 
-		if (!theMotionThing && !paused)
+		if (!FlxG.save.data.motion && !paused)
 		{
 			if (curStep % 4 == 0)
 			{
@@ -5961,10 +5949,33 @@ class PlayState extends MusicBeatState
 	{
 		#if FEATURE_HSCRIPT
 		scripts.destroy();
+		scripts = null;
 		#end
 
 		Lib.current.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleInput);
 		Lib.current.stage.removeEventListener(KeyboardEvent.KEY_UP, releaseInput);
+
+		#if FEATURE_LUAMODCHART
+		if (luaModchart != null)
+		{
+			luaModchart.die();
+			luaModchart = null;
+		}
+		
+		noteskinSprite = null;
+		cpuNoteskinSprite = null;
+
+		LuaStorage.ListOfCameras.resize(0);
+
+		LuaStorage.objectProperties.clear();
+
+		LuaStorage.objects.clear();
+		#end
+
+		cleanPlayObjects();
+
+		//instance = null;
+
 		super.destroy();
 	}
 
@@ -6567,6 +6578,51 @@ class PlayState extends MusicBeatState
 		notes.remove(daNote, true);
 		daNote.graphic = null;
 		daNote.destroy();
+	}
+
+	private function cleanPlayObjects()
+	{
+		timerManager.clear();
+
+		tweenManager.clear();
+		
+		while (unspawnNotes.length > 0)
+		{
+			var note = unspawnNotes[0];
+			unspawnNotes.remove(note);
+
+			if (!note.isParent && !note.isSustainNote)
+			{
+				#if FEATURE_LUAMODCHART
+				note.LuaNote = null;
+				#end
+
+				note = null;
+
+				return;
+			}
+
+			if (note.isSustainNote)
+			{
+				for (susDef in note.parent.children)
+				{
+					#if FEATURE_LUAMODCHART
+					susDef.LuaNote = null;
+					#end
+					susDef = null;
+				}
+				#if FEATURE_LUAMODCHART
+				note.parent.LuaNote = null;
+				#end
+				note.parent = null;
+
+				return;
+			}
+		}
+		
+
+		Stage.destroy();
+		Stage = null;
 	}
 
 	function playCutscene(name:String, ?atend:Bool)
