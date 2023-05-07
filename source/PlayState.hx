@@ -851,7 +851,7 @@ class PlayState extends MusicBeatState
 			FlxG.watch.addQuick('rep rpesses', repPresses);
 			FlxG.watch.addQuick('rep releases', repReleases);
 			// FlxG.watch.addQuick('Queued',inputsQueued);
-			
+
 			PlayStateChangeables.safeFrames = rep.replay.sf;
 			PlayStateChangeables.botPlay = true;
 		}
@@ -2983,7 +2983,9 @@ class PlayState extends MusicBeatState
 		else if (paused)
 		{
 			#if FEATURE_HSCRIPT
-			if (!ScriptUtil.hasPause(scripts.executeAllFunc("resume"))){};
+			if (!ScriptUtil.hasPause(scripts.executeAllFunc("resume")))
+			{
+			};
 			#end
 			if (inst != null && !startingSong)
 			{

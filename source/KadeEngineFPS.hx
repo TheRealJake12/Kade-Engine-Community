@@ -19,12 +19,16 @@ import openfl.display._internal.stats.DrawCallContext;
 class KadeEngineFPS extends TextField
 {
 	public var currentFPS(default, null):Int;
+
 	private var times:Array<Float>;
+
 	public var memoryMegas:Dynamic = 0;
 	public var taskMemoryMegas:Dynamic = 0;
 	public var memoryUsage:String = '';
 	public var displayFPS:String;
+
 	private var cacheCount:Int;
+
 	public var bitmap:Bitmap;
 
 	public function new(inX:Float = 10.0, inY:Float = 10.0, inCol:Int = 0x000000)
@@ -109,7 +113,7 @@ class KadeEngineFPS extends TextField
 			{
 				#if windows
 				if (taskMemoryMegas >= 0x40000000)
-					memoryUsage +=  (Math.round(cast(taskMemoryMegas, Float) / 0x400 / 0x400 / 0x400 * 1000) / 1000) + " GB";
+					memoryUsage += (Math.round(cast(taskMemoryMegas, Float) / 0x400 / 0x400 / 0x400 * 1000) / 1000) + " GB";
 				else if (taskMemoryMegas >= 0x100000)
 					memoryUsage += (Math.round(cast(taskMemoryMegas, Float) / 0x400 / 0x400 * 1000) / 1000) + " MB";
 				else if (taskMemoryMegas >= 0x400)
@@ -118,7 +122,6 @@ class KadeEngineFPS extends TextField
 					memoryUsage += taskMemoryMegas + " B)";
 				#end
 			}
-			
 			#else
 			memoryMegas = HelperFunctions.truncateFloat((MemoryUtil.getMemoryfromProcess() / (1024 * 1024)) * 10, 3);
 			memoryUsage += memoryMegas + " MB";
@@ -127,13 +130,13 @@ class KadeEngineFPS extends TextField
 			text = ('${displayFPS}\n' + '$memoryUsage\n' + stateText + lmao);
 
 			#if (gl_stats && !disable_cffi && (!html5 || !canvas))
-			if (FlxG.save.data.glDebug){
+			if (FlxG.save.data.glDebug)
+			{
 				text += "\nTotal Draw Cells: " + Context3DStats.totalDrawCalls();
 				text += "\nStage Draw Cells: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE);
-				//text += "\nStage3D Draw Cells: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE3D);
+				// text += "\nStage3D Draw Cells: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE3D);
 			}
 			#end
-			
 		}
 
 		if (FlxG.save.data.fpsBorder)

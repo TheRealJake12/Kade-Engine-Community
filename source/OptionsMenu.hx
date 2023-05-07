@@ -94,7 +94,7 @@ class OptionCata extends FlxSprite
 			if (middleType)
 				text.alignment = FlxTextAlign.RIGHT;
 
-			text.updateHitbox();	
+			text.updateHitbox();
 
 			text.scrollFactor.set();
 
@@ -832,7 +832,7 @@ class OptionsMenu extends MusicBeatSubstate
 			else
 				optObject.color = FlxColor.WHITE;
 
-			optObject.updateHitbox();	
+			optObject.updateHitbox();
 		}
 	}
 }
