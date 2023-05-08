@@ -3761,6 +3761,7 @@ class PlayState extends MusicBeatState
 
 		FlxG.watch.addQuick("curBPM", Conductor.bpm);
 		FlxG.watch.addQuick("beatShit", curBeat);
+		FlxG.watch.addQuick("secShit", curSection);
 		FlxG.watch.addQuick("stepShit", curStep);
 
 		if ((health <= 0 && !cannotDie && !PlayStateChangeables.practiceMode && !PlayStateChangeables.opponentMode)
@@ -5721,6 +5722,11 @@ class PlayState extends MusicBeatState
 				luaModchart.setVar("mustHit", currentSection.mustHitSection);
 		#end
 
+		#if FEATURE_HSCRIPT
+			scripts.setAll("curSection", curSection);
+			scripts.executeAllFunc("sectionHit", [curSection]);
+		#end
+
 		changeCameraFocus();
 	}
 
@@ -6181,6 +6187,10 @@ class PlayState extends MusicBeatState
 		{
 		});
 
+		script.set("sectionHit", function(?section:Int)
+		{
+		});
+
 		script.set("playVid", function(path:String)
 		{
 		});
@@ -6257,6 +6267,7 @@ class PlayState extends MusicBeatState
 		// VARIABLES
 
 		script.set("curStep", 0);
+		script.set("curSection", 0);
 		script.set("curBeat", 0);
 		script.set("bpm", Conductor.bpm);
 
