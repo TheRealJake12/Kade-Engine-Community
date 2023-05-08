@@ -6,6 +6,7 @@ import haxe.Exception;
 import lime.app.Application;
 import Section.SwagSection;
 import haxe.Json;
+import openfl.Lib;
 
 class SMFile
 {
@@ -124,6 +125,8 @@ class SMFile
 
 		var song = {
 			song: header.TITLE,
+			songId: header.TITLE,
+			songName: header.TITLE,
 			notes: [],
 			eventObjects: [],
 			bpm: header.getBPM(0),
@@ -133,7 +136,7 @@ class SMFile
 			gfVersion: 'gf',
 			noteStyle: 'normal',
 			stage: 'stage',
-			speed: 2.8,
+			speed: 2.9,
 			validScore: false,
 			chartVersion: "",
 		};
@@ -236,7 +239,7 @@ class SMFile
 					}
 
 					// get the lane and note type
-					var lane = index;
+					var lane = index + 4;
 					var numba = Std.parseInt(i);
 
 					// switch through the type and add the note

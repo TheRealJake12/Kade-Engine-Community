@@ -2,14 +2,14 @@ package;
 
 typedef SwagSection =
 {
-	var startTime:Float;
-	var endTime:Float;
+	var ?startTime:Null<Float>;
+	var ?endTime:Null<Float>;
 	var sectionNotes:Array<Array<Dynamic>>;
-	var lengthInSteps:Int;
-	var typeOfSection:Int;
+	var lengthInSteps:Null<Int>;
+	var ?typeOfSection:Int;
 	var mustHitSection:Bool;
-	var bpm:Float;
-	var changeBPM:Bool;
+	var ?bpm:Float;
+	var ?changeBPM:Bool;
 	var altAnim:Bool;
 	var CPUAltAnim:Bool;
 	var playerAltAnim:Bool;

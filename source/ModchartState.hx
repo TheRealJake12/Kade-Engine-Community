@@ -472,7 +472,7 @@ class ModchartState
 		setVar("safeZoneOffset", Conductor.safeZoneOffset);
 
 		setVar("hudZoom", PlayState.instance.camHUD.zoom);
-		setVar("cameraZoom", FlxG.camera.zoom);
+		setVar("cameraZoom", PlayState.instance.zoomForTweens);
 
 		setVar("cameraAngle", FlxG.camera.angle);
 		setVar("camHudAngle", PlayState.instance.camHUD.angle);

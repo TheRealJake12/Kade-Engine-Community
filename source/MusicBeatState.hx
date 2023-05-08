@@ -17,6 +17,8 @@ import openfl.Lib;
 import flixel.FlxBasic;
 import lime.app.Application;
 import flixel.input.keyboard.FlxKey;
+import Section.SwagSection;
+import Song.SongData;
 
 class MusicBeatState extends FlxUIState
 {
@@ -25,8 +27,20 @@ class MusicBeatState extends FlxUIState
 
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
+	var step = 0.0;
+	var startInMS = 0.0;
+	var activeSong:SongData = null;
+
+	var oldStep:Int = -1;
+
+	private var curSection:Int = 0;
+
+	private var currentSection:SwagSection = null;
 
 	private var curDecimalBeat:Float = 0;
+
+	private var oldSection:Int = -1;
+	private var curTiming:TimingStruct = null;
 
 	public static var currentColor = 0;
 	public static var switchingState:Bool = false;
@@ -129,8 +143,6 @@ class MusicBeatState extends FlxUIState
 		return result;
 	}
 
-	var oldStep:Int = 0;
-
 	override function update(elapsed:Float)
 	{
 		if (curDecimalBeat < 0)
@@ -140,26 +152,69 @@ class MusicBeatState extends FlxUIState
 			curDecimalBeat = 0;
 		else
 		{
-			var data = null;
-
-			data = TimingStruct.getTimingAtTimestamp(Conductor.songPosition);
-
-			if (data != null)
+			if (curTiming == null)
 			{
-				FlxG.watch.addQuick("Current Conductor Timing Seg", data.bpm);
+				setFirstTiming();
+			}
+			if (curTiming != null)
+			{
+				/* Not necessary to get a timing every frame if it's the same one. Instead if the current timing endBeat is equal or greater
+					than the current Beat meaning that the timing ended the game will check for a new timing (for bpm change events basically), 
+					and also to get a lil more of performance */
 
-				curDecimalBeat = data.startBeat + ((((Conductor.songPosition / 1000)) - data.startTime) * (data.bpm / 60));
+				if (curDecimalBeat > curTiming.endBeat)
+				{
+					Debug.logTrace('Current Timing ended, checking for next Timing...');
+					curTiming = TimingStruct.getTimingAtTimestamp(Conductor.songPosition);
+					step = ((60 / curTiming.bpm) * 1000) / 4;
+					startInMS = (curTiming.startTime * 1000);
+				}
+
+				#if debug
+				FlxG.watch.addQuick("Current Conductor Timing Seg", curTiming.bpm);
+				#end
+
+				curDecimalBeat = TimingStruct.getBeatFromTime(Conductor.songPosition);
 
 				curBeat = Math.floor(curDecimalBeat);
 				curStep = Math.floor(curDecimalBeat * 4);
+
+				// Bromita uwu
+				try
+				{
+					if (currentSection == null)
+					{
+						currentSection = getSectionByTime(Conductor.songPosition);
+						if (activeSong != null)
+							curSection = activeSong.notes.indexOf(currentSection);
+					}
+
+					if (currentSection != null)
+					{
+						if (Conductor.songPosition >= currentSection.endTime || Conductor.songPosition < currentSection.startTime)
+						{
+							currentSection = getSectionByTime(Conductor.songPosition);
+							if (activeSong != null)
+								curSection = activeSong.notes.indexOf(currentSection);
+						}
+					}
+				}
+				catch (e)
+				{
+					// Debug.logError('Section is null you fucking dumbass uninstall Flixel and kys');
+				}
+
+				if (oldSection != curSection)
+				{
+					sectionHit();
+					oldSection = curSection;
+				}
 
 				if (oldStep != curStep)
 				{
 					stepHit();
 					oldStep = curStep;
 				}
-
-				Conductor.crochet = ((60 / data.bpm) * 1000) / PlayState.songMultiplier;
 			}
 			else
 			{
@@ -168,15 +223,43 @@ class MusicBeatState extends FlxUIState
 				curBeat = Math.floor(curDecimalBeat);
 				curStep = Math.floor(curDecimalBeat * 4);
 
+				// Bromita uwu
+				try
+				{
+					if (currentSection == null)
+					{
+						currentSection = getSectionByTime(0);
+						curSection = 0;
+					}
+
+					if (currentSection != null)
+					{
+						if (Conductor.songPosition >= currentSection.endTime || Conductor.songPosition < currentSection.startTime)
+						{
+							currentSection = getSectionByTime(Conductor.songPosition);
+
+							curSection = activeSong.notes.indexOf(currentSection);
+						}
+					}
+				}
+				catch (e)
+				{
+					// Debug.logError('Section is null you fucking dumbass uninstall Flixel and kys');
+				}
+
+				if (oldSection != curSection)
+				{
+					sectionHit();
+					oldSection = curSection;
+				}
+
 				if (oldStep != curStep)
 				{
 					stepHit();
 					oldStep = curStep;
 				}
-
-				Conductor.crochet = ((60 / Conductor.bpm) * 1000) / PlayState.songMultiplier;
 			}
-		}
+		}	
 
 		if (FlxG.keys.anyJustPressed([fullscreenBind]))
 		{
@@ -193,6 +276,64 @@ class MusicBeatState extends FlxUIState
 	}
 
 	public function beatHit():Void
+	{
+		// do literally nothing dumbass
+	}
+
+	function getSectionByTime(ms:Float):SwagSection
+	{
+		if (activeSong == null)
+			return null;
+
+		if (activeSong.notes == null)
+			return null;
+
+		for (i in activeSong.notes)
+		{
+			if (ms >= i.startTime && ms < i.endTime)
+			{
+				return i;
+			}
+		}
+		return null;
+	}
+
+	function recalculateAllSectionTimes(startIndex:Int = 0)
+	{
+		if (activeSong == null)
+			return;
+
+		for (i in startIndex...activeSong.notes.length) // loops through sections
+		{
+			var section:SwagSection = activeSong.notes[i];
+
+			var currentBeat:Float = 0.0;
+
+			currentBeat = (section.lengthInSteps / 4) * (i + 1);
+
+			for (k in 0...i)
+				currentBeat -= ((section.lengthInSteps / 4) - (activeSong.notes[k].lengthInSteps / 4));
+
+			section.endTime = TimingStruct.getTimeFromBeat(currentBeat);
+
+			if (i != 0)
+				section.startTime = activeSong.notes[i - 1].endTime;
+			else
+				section.startTime = 0;
+		}
+	}
+
+	private function setFirstTiming()
+	{
+		curTiming = TimingStruct.getTimingAtTimestamp(Conductor.songPosition);
+		if (curTiming != null)
+		{
+			step = ((60 / curTiming.bpm) * 1000) / 4;
+			startInMS = (curTiming.startTime * 1000);
+		}
+	}
+
+	public function sectionHit():Void
 	{
 		// do literally nothing dumbass
 	}

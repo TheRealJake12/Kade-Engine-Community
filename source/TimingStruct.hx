@@ -9,6 +9,7 @@ class TimingStruct
 	public var startBeat:Float = 0; // BEATS
 	public var startStep:Int = 0; // BAD MEASUREMENTS
 	public var endBeat:Float = Math.POSITIVE_INFINITY; // BEATS
+
 	public var startTime:Float = 0; // SECONDS
 
 	public var length:Float = Math.POSITIVE_INFINITY; // in beats
@@ -33,6 +34,17 @@ class TimingStruct
 			beat = seg.startBeat + (((time / 1000) - seg.startTime) * (seg.bpm / 60));
 
 		return beat;
+	}
+
+	public static function getTimeFromLastTimingAtBeat(lastBeat:Float, curBeat:Float)
+	{
+		var time = -1.0;
+
+		var seg = TimingStruct.getTimingAtBeat(lastBeat);
+		if (seg != null)
+			time = seg.startTime + ((curBeat - seg.startBeat) / (seg.bpm / 60));
+
+		return time * 1000;
 	}
 
 	public static function getTimeFromBeat(beat:Float)

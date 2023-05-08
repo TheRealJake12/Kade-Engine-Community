@@ -65,7 +65,7 @@ typedef SongMeta =
 
 class Song
 {
-	public static var latestChart:String = MainMenuState.kecVer;
+	public static var latestChart:String = "KEC 1.7.2";
 
 	public static function loadFromJsonRAW(rawJson:String)
 	{
@@ -117,9 +117,6 @@ class Song
 		{
 			trace('SONG DATA IS ${songData.songFile} BLABLABLA');
 		}
-
-		if (notes[5] == null|| notes[5] == 'true'|| notes[5] == 'false'|| notes[5] == 0|| notes[5] == 0.0|| Math.isNaN(notes[3]))
-			notes[5] = 'normal';
 
 		if (songData.validScore == null)
 			songData.validScore = true;
@@ -209,14 +206,49 @@ class Song
 				{
 					var data = TimingStruct.AllTimings[currentIndex - 1];
 					data.endBeat = beat;
-					data.length = (data.endBeat - data.startBeat) / (data.bpm / 60);
+					data.length = ((data.endBeat - data.startBeat) / (data.bpm / 60));
 					var step = ((60 / data.bpm) * 1000) / 4;
-					TimingStruct.AllTimings[currentIndex].startStep = Math.floor(((data.endBeat / (data.bpm / 60)) * 1000) / step);
+					TimingStruct.AllTimings[currentIndex].startStep = Math.floor((((data.endBeat / (data.bpm / 60)) * 1000) / step));
 					TimingStruct.AllTimings[currentIndex].startTime = data.startTime + data.length;
 				}
 
 				currentIndex++;
 			}
+		}
+
+		if (song.notes == null)
+		{
+			song.notes = [];
+
+			song.notes.push(newSection(song));
+		}
+
+		if (song.notes.length == 0)
+			song.notes.push(newSection(song));
+
+		for (section in song.notes)
+		{
+			for (notes in section.sectionNotes)
+			{
+				if (section.mustHitSection)
+				{
+					var bool = false;
+					if (notes[1] <= 3)
+					{
+						notes[1] += 4;
+						bool = true;
+					}
+					if (notes[1] > 3)
+						if (!bool)
+							notes[1] -= 4;
+				}
+
+				if (notes[2] == -1) // REMOVE EVENT NOTES FROM OTHER ENGINES
+					section.sectionNotes.remove(notes);
+			}
+
+			if (section.lengthInSteps == null)
+				section.lengthInSteps = 16;
 		}
 
 		for (i in song.notes)
@@ -312,5 +344,49 @@ class Song
 		var swagShit:SongData = cast Json.parse(rawJson).song;
 		swagShit.validScore = true;
 		return swagShit;
+	}
+
+	private static function newSection(song:SongData, lengthInSteps:Int = 16, mustHitSection:Bool = false, CPUAltAnim:Bool = true,
+			playerAltAnim:Bool = true):SwagSection
+	{
+		var sec:SwagSection = {
+			lengthInSteps: lengthInSteps,
+			bpm: song.bpm,
+			changeBPM: false,
+			mustHitSection: mustHitSection,
+			sectionNotes: [],
+			typeOfSection: 0,
+			altAnim: false,
+			CPUAltAnim: CPUAltAnim,
+			playerAltAnim: playerAltAnim
+		};
+
+		return sec;
+	}
+
+	public static function sortSectionNotes(song:SongData)
+	{
+		var newNotes:Array<Array<Dynamic>> = [];
+
+		for (section in song.notes)
+		{
+			if (section.sectionNotes != null)
+			{
+				for (songNotes in section.sectionNotes)
+				{
+					newNotes.push(songNotes);
+				}
+			}
+			section.sectionNotes.resize(0);
+		}
+
+		for (section in song.notes)
+		{
+			for (sortedNote in newNotes)
+			{
+				if (sortedNote[0] >= section.startTime && sortedNote[0] < section.endTime)
+					section.sectionNotes.push(sortedNote);
+			}
+		}
 	}
 }
