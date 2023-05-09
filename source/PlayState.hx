@@ -2485,12 +2485,15 @@ class PlayState extends MusicBeatState
 				var daNoteData:Int = Std.int(songNotes[1] % 4);
 				var daNoteType:String = songNotes[5];
 
-				var gottaHitNote:Bool = section.mustHitSection;
+				var gottaHitNote:Bool = false;
 
-				if (songNotes[1] > 3 && !PlayStateChangeables.opponentMode)
-					gottaHitNote = !section.mustHitSection;
-				else if (songNotes[1] <= 3 && PlayStateChangeables.opponentMode)
-					gottaHitNote = !section.mustHitSection;
+				if (songNotes[1] > 3)
+					gottaHitNote = true;
+				else if (songNotes[1] <= 3)
+					gottaHitNote = false;
+
+				if (PlayStateChangeables.opponentMode)
+					gottaHitNote = !gottaHitNote;
 
 				var oldNote:Note;
 				if (unspawnNotes.length > 0)

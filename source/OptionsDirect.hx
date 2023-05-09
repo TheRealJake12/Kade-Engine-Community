@@ -15,11 +15,11 @@ class OptionsDirect extends MusicBeatState
 
 		if (FlxG.sound.music.playing)
 		{
-			FlxG.sound.playMusic(Paths.music('optionsmenu'));
+			FlxG.sound.playMusic(Paths.music('options'));
 		}
 		else if (!FlxG.sound.music.playing)
 		{
-			FlxG.sound.playMusic(Paths.music('optionsmenu'));
+			FlxG.sound.playMusic(Paths.music('options'));
 		}
 
 		persistentUpdate = false;

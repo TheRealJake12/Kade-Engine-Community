@@ -198,7 +198,7 @@ class MainMenuState extends MusicBeatState
 		logo.antialiasing = FlxG.save.data.antialiasing;
 		logo.updateHitbox();
 
-		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, keVer + (Main.watermarks ? "/ " + kecVer + "" : ""), 12);
+		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, keVer + (Main.watermarks ? " / " + kecVer + "" : ""), 12);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 		add(versionShit);

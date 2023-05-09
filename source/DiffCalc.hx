@@ -21,7 +21,7 @@ class DiffCalc
 	public static var lastDiffHandOne:Array<Float> = [];
 	public static var lastDiffHandTwo:Array<Float> = [];
 
-	public static function CalculateDiff(song:SongData, ?accuracy:Float = .93)
+	public static function CalculateDiff(song:SongData, opponentMode:Bool = false, ?accuracy:Float = .93)
 	{
 		// cleaned notes
 		var cleanedNotes:Array<SmallNote> = [];
@@ -37,22 +37,31 @@ class DiffCalc
 		{
 			for (ii in i.sectionNotes) // notes
 			{
-				var gottaHitNote:Bool = i.mustHitSection;
+				var gottaHitNote:Bool = false;
+				gottaHitNote = ii[1] > 3;
 
-				if (ii[1] >= 3 && gottaHitNote)
-					cleanedNotes.push(new SmallNote(ii[0] / FreeplayState.rate, Math.floor(Math.abs(ii[1]))));
-				if (ii[1] <= 4 && !gottaHitNote)
-					cleanedNotes.push(new SmallNote(ii[0] / FreeplayState.rate, Math.floor(Math.abs(ii[1]))));
+				var data = ii[1] % 4;
+
+				if (gottaHitNote && !opponentMode)
+				{
+					cleanedNotes.push(new SmallNote(ii[0], Math.floor(Math.abs(data))));
+				}
+				else if (!gottaHitNote && opponentMode)
+				{
+					cleanedNotes.push(new SmallNote(ii[0], Math.floor(Math.abs(data))));
+				}
 			}
 		}
+
+		if (cleanedNotes.length == 0)
+			return 0.0;
+
+		trace('calcuilafjwaf ' + cleanedNotes.length);
 
 		var handOne:Array<SmallNote> = [];
 		var handTwo:Array<SmallNote> = [];
 
 		cleanedNotes.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
-
-		if (cleanedNotes.length == 0)
-			return 90000000000000000;
 
 		var firstNoteTime = cleanedNotes[0].strumTime;
 

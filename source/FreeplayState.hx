@@ -97,7 +97,7 @@ class FreeplayState extends MusicBeatState
 	public static var instance:FreeplayState;
 
 	public static function loadDiff(diff:Int, songId:String, array:Array<SongData>)
-		array.push(Song.conversionChecks(Song.loadFromJson(songId, CoolUtil.suffixDiffsArray[diff])));
+		array.push(Song.loadFromJson(songId, CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[diff])));
 
 	public static var list:Array<String> = [];
 
@@ -128,42 +128,34 @@ class FreeplayState extends MusicBeatState
 		PlayState.currentSong = "bruh";
 
 		#if !FEATURE_STEPMANIA
-		if (FlxG.save.data.gen)
-			Debug.logTrace("FEATURE_STEPMANIA was not specified during build, sm file loading is disabled.");
+		trace("FEATURE_STEPMANIA was not specified during build, sm file loading is disabled.");
 		#elseif FEATURE_STEPMANIA
 		// TODO: Refactor this to use OpenFlAssets.
-		if (FlxG.save.data.gen)
-			trace("tryin to load sm files");
 		for (i in FileSystem.readDirectory("assets/sm/"))
 		{
 			if (FileSystem.isDirectory("assets/sm/" + i))
 			{
-				trace("Reading SM file dir " + i);
 				for (file in FileSystem.readDirectory("assets/sm/" + i))
 				{
 					if (file.contains(" "))
 						FileSystem.rename("assets/sm/" + i + "/" + file, "assets/sm/" + i + "/" + file.replace(" ", "_"));
 					if (file.endsWith(".sm") && !FileSystem.exists("assets/sm/" + i + "/converted.json"))
 					{
-						trace("reading " + file);
 						var file:SMFile = SMFile.loadFile("assets/sm/" + i + "/" + file.replace(" ", "_"));
-						trace("Converting " + file.header.TITLE);
 						var data = file.convertToFNF("assets/sm/" + i + "/converted.json");
-						var meta = new FreeplaySongMetadata(file.header.TITLE, 0, "sm", file, "assets/sm/" + i);
+						var meta = new FreeplaySongMetadata(file.header.TITLE, 0, "sm", FlxColor.fromString("#9a9b9c"), file, "assets/sm/" + i);
 						songs.push(meta);
 						var song = Song.loadFromJsonRAW(data);
 						songData.set(file.header.TITLE, [song, song, song]);
 					}
 					else if (FileSystem.exists("assets/sm/" + i + "/converted.json") && file.endsWith(".sm"))
 					{
-						trace("reading " + file);
 						var file:SMFile = SMFile.loadFile("assets/sm/" + i + "/" + file.replace(" ", "_"));
-						trace("Converting " + file.header.TITLE);
+
 						var data = file.convertToFNF("assets/sm/" + i + "/converted.json");
-						var meta = new FreeplaySongMetadata(file.header.TITLE, 0, "sm", file, "assets/sm/" + i);
+						var meta = new FreeplaySongMetadata(file.header.TITLE, 0, "sm", FlxColor.fromString("#9a9b9c"), file, "assets/sm/" + i);
 						songs.push(meta);
 						var song = Song.loadFromJsonRAW(File.getContent("assets/sm/" + i + "/converted.json"));
-						trace("got content lol");
 						songData.set(file.header.TITLE, [song, song, song]);
 					}
 				}
@@ -856,10 +848,8 @@ class FreeplayState extends MusicBeatState
 	public static function loadSongInFreePlay(songName:String, difficulty:Int, isCharting:Bool, reloadSong:Bool = false)
 	{
 		// Make sure song data is initialized first.
-		if (songData == null || Lambda.count(songData) == 0)
-			populateSongData();
+		var currentSongData:SongData = null;
 
-		var currentSongData;
 		try
 		{
 			if (songData.get(songName) == null)
@@ -895,6 +885,7 @@ class FreeplayState extends MusicBeatState
 		#end
 
 		PlayState.songMultiplier = rate;
+		PlayState.inDaPlay = true;
 
 		if (isCharting)
 			LoadingState.loadAndSwitchState(new ChartingState(reloadSong));
