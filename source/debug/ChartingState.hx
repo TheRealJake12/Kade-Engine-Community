@@ -66,7 +66,7 @@ using StringTools;
 @:access(openfl.media.Sound.__buffer)
 class ChartingState extends MusicBeatState
 {
-	public static var instance:ChartingState;
+	public static var instance:ChartingState = null;
 
 	public var notename:String = "";
 
@@ -177,6 +177,7 @@ class ChartingState extends MusicBeatState
 	override function create()
 	{
 		ignoreWarnings = FlxG.save.data.ignoreWarnings;
+		instance = this;
 		if (FlxG.save.data.autoSaveChart)
 			Lib.setInterval(autosaveSong2, 5 * 60 * 1000); // <arubz> * 60 * 1000
 
@@ -193,8 +194,6 @@ class ChartingState extends MusicBeatState
 		FlxG.mouse.visible = true;
 
 		PlayState.inDaPlay = false;
-
-		instance = this;
 
 		deezNuts.set(4, 1);
 		deezNuts.set(8, 2);
@@ -223,8 +222,7 @@ class ChartingState extends MusicBeatState
 			}
 			else
 			{
-				var diff:String = CoolUtil.suffixDiffsArray[PlayState.storyDifficulty];
-				_song = Song.conversionChecks(Song.loadFromJson(PlayState.SONG.songId, diff));
+				_song = PlayState.SONG;
 			}
 		}
 		else
@@ -459,6 +457,7 @@ class ChartingState extends MusicBeatState
 		add(snapText);
 		updateBpmText();
 		updateNotetypeText();
+		Paths.clearUnusedMemory();
 		super.create();
 	}
 

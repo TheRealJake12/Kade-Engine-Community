@@ -73,7 +73,7 @@ class MusicBeatSubstate extends FlxSubState
 			{
 				Debug.logTrace("Lost Focus");
 				PlayState.instance.openSubState(new PauseSubState());
-				PlayState.boyfriend.stunned = true;
+				PlayState.instance.boyfriend.stunned = true;
 
 				PlayState.instance.persistentUpdate = false;
 				PlayState.instance.persistentDraw = true;

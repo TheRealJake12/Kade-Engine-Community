@@ -201,9 +201,9 @@ class PlayState extends MusicBeatState
 	public var zoomForHUDTweens:Float = 1;
 	public var zoomMultiplier:Float = 1;
 
-	public static var dad:Character;
-	public static var gf:Character;
-	public static var boyfriend:Boyfriend;
+	public var dad:Character;
+	public var gf:Character;
+	public var boyfriend:Boyfriend;
 
 	public var notes:FlxTypedGroup<Note>;
 
@@ -761,7 +761,7 @@ class PlayState extends MusicBeatState
 				}
 			}
 
-			if (FlxG.save.data.background)
+			if (FlxG.save.data.background && !PlayStateChangeables.Optimize)
 			{
 				for (i in Stage.toAdd)
 				{
@@ -810,7 +810,7 @@ class PlayState extends MusicBeatState
 			switch (Stage.curStage)
 			{
 				case 'halloween':
-					camPos = new FlxPoint(gf.getMidpoint().x + dad.camPos[0], gf.getMidpoint().y + dad.camPos[1]);
+					camPos = new FlxPoint(gf.getMidpoint().x, gf.getMidpoint().y);
 				case 'tank':
 					if (SONG.player2 == 'tankman')
 						camPos = new FlxPoint(436.5, 534.5);
@@ -837,8 +837,6 @@ class PlayState extends MusicBeatState
 			camPos.x += 600;
 			tweenCamIn();
 		}
-
-		Stage.update(0);
 
 		if (loadRep)
 		{
@@ -3113,7 +3111,7 @@ class PlayState extends MusicBeatState
 		#if !debug
 		perfectMode = false;
 		#end
-		if (FlxG.save.data.background || !PlayStateChangeables.Optimize)
+		if (FlxG.save.data.background)
 			Stage.update(0);
 
 		if (!addedBotplay && PlayStateChangeables.botPlay)
@@ -3412,21 +3410,6 @@ class PlayState extends MusicBeatState
 			}
 			else
 				openSubState(new PauseSubState());
-		}
-
-		if (FlxG.keys.justPressed.FIVE && songStarted)
-		{
-			songMultiplier = 1;
-			cannotDie = true;
-			MusicBeatState.switchState(new WaveformTestState());
-			PlayState.stageTesting = false;
-			#if FEATURE_LUAMODCHART
-			if (luaModchart != null)
-			{
-				luaModchart.die();
-				luaModchart = null;
-			}
-			#end
 		}
 
 		if (FlxG.keys.justPressed.SEVEN && songStarted)
@@ -4531,7 +4514,7 @@ class PlayState extends MusicBeatState
 			rating.loadGraphic(Paths.image(pixelShitPart1 + daRating + pixelShitPart2, pixelShitPart3));
 			rating.screenCenter();
 			rating.y -= 50;
-			if (!FlxG.save.data.middleScroll || PlayStateChangeables.Optimize || !FlxG.save.data.popup)
+			if (!FlxG.save.data.middleScroll || PlayStateChangeables.Optimize)
 				rating.x = (coolText.x - 125)
 			else
 				rating.x = (coolText.x + 200);
@@ -4621,9 +4604,10 @@ class PlayState extends MusicBeatState
 				currentTimingShown.x = comboSpr.x + 100;
 			else
 			{
-				currentTimingShown.x = rating.x + 30;
+				currentTimingShown.x = rating.x + 100;
 				currentTimingShown.alignment = FlxTextAlign.RIGHT;
 			}
+			currentTimingShown.y = rating.y + 85;
 
 			if (SONG.noteStyle == 'pixel')
 			{
@@ -5956,7 +5940,7 @@ class PlayState extends MusicBeatState
 
 		cleanPlayObjects();
 
-		//instance = null;
+		instance = null;
 
 		super.destroy();
 	}
@@ -6306,14 +6290,14 @@ class PlayState extends MusicBeatState
 				}
 				else
 				{
-					var position:Int = PlayState.instance.members.indexOf(PlayState.gf);
-					if (PlayState.instance.members.indexOf(PlayState.boyfriend) < position)
+					var position:Int = PlayState.instance.members.indexOf(PlayState.instance.gf);
+					if (PlayState.instance.members.indexOf(PlayState.instance.boyfriend) < position)
 					{
-						position = PlayState.instance.members.indexOf(PlayState.boyfriend);
+						position = PlayState.instance.members.indexOf(PlayState.instance.boyfriend);
 					}
-					else if (PlayState.instance.members.indexOf(PlayState.dad) < position)
+					else if (PlayState.instance.members.indexOf(PlayState.instance.dad) < position)
 					{
-						position = PlayState.instance.members.indexOf(PlayState.dad);
+						position = PlayState.instance.members.indexOf(PlayState.instance.dad);
 					}
 					PlayState.instance.insert(position, obj);
 				}

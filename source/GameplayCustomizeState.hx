@@ -22,6 +22,7 @@ class GameplayCustomizeState extends MusicBeatState
 
 	var text:FlxText;
 	var blackBorder:FlxSprite;
+	public static var instance:GameplayCustomizeState = null;
 
 	var laneunderlay:FlxSprite;
 	var laneunderlayOpponent:FlxSprite;
@@ -50,9 +51,9 @@ class GameplayCustomizeState extends MusicBeatState
 	private var dataSuffix:Array<String> = ['LEFT', 'DOWN', 'UP', 'RIGHT'];
 	private var dataColor:Array<String> = ['purple', 'blue', 'green', 'red'];
 
-	public static var dad:Character;
-	public static var gf:Character;
-	public static var boyfriend:Boyfriend;
+	public var dad:Character;
+	public var gf:Character;
+	public var boyfriend:Boyfriend;
 	public static var Stage:Stage;
 	public static var freeplayBf:String = 'bf';
 	public static var freeplayDad:String = 'dad';
@@ -70,6 +71,8 @@ class GameplayCustomizeState extends MusicBeatState
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("Customizing Gameplay Modules", null);
 		#end
+
+		instance = this;
 
 		sick = new FlxSprite().loadGraphic(Paths.image('sick', 'shared'));
 		sick.antialiasing = FlxG.save.data.antialiasing;

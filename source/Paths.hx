@@ -294,7 +294,7 @@ class Paths
 		return file;
 	}
 
-	inline static public function voices(song:String):Any
+	inline static public function voices(song:String, ?returnString:Bool = false):Any
 	{
 		var songLowercase = StringTools.replace(song, " ", "-").toLowerCase() + '/Voices';
 		switch (songLowercase)
@@ -307,16 +307,19 @@ class Paths
 				songLowercase = 'milf';
 		}
 
-		var file;
+		var file:Dynamic;
 		#if PRELOAD_ALL
-		file = loadSound('songs', songLowercase);
+		if (!returnString)
+			file = loadSound('songs', songLowercase);
+		else
+			file = 'songs:assets/songs/$songLowercase.$SOUND_EXT';
 		#else
 		file = 'songs:assets/songs/$songLowercase.$SOUND_EXT';
 		#end
 		return file;
 	}
 
-	inline static public function inst(song:String):Any
+	inline static public function inst(song:String, ?returnString:Bool = false):Any
 	{
 		var songLowercase = StringTools.replace(song, " ", "-").toLowerCase() + '/Inst';
 		switch (songLowercase)
@@ -328,9 +331,12 @@ class Paths
 			case 'm.i.l.f':
 				songLowercase = 'milf';
 		}
-		var file;
+		var file:Dynamic;
 		#if PRELOAD_ALL
-		file = loadSound('songs', songLowercase);
+		if (!returnString)
+			file = loadSound('songs', songLowercase);
+		else
+			file = 'songs:assets/songs/$songLowercase.$SOUND_EXT';
 		#else
 		file = 'songs:assets/songs/$songLowercase.$SOUND_EXT';
 		#end

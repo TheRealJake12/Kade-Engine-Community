@@ -73,7 +73,7 @@ class Stage extends MusicBeatState
 		this.curStage = daStage;
 		camZoom = 1.05; // Don't change zoom here, unless you want to change zoom of every stage that doesn't have custom one
 
-		if (!FlxG.save.data.optimize && FlxG.save.data.background)
+		if (FlxG.save.data.background)
 		{
 			switch (daStage)
 			{
@@ -104,6 +104,7 @@ class Stage extends MusicBeatState
 					}
 				case 'philly':
 					{
+						camZoom = 0.9;
 						var bg:FlxSprite = new FlxSprite(-100).loadGraphic(Paths.image('philly/sky', 'week3'));
 						bg.scrollFactor.set(0.1, 0.1);
 						bg.antialiasing = FlxG.save.data.antialiasing;
@@ -141,8 +142,7 @@ class Stage extends MusicBeatState
 						swagBacks['streetBehind'] = streetBehind;
 						toAdd.push(streetBehind);
 
-						var phillyTrain = new FlxSprite(2000, 360).loadGraphic(Paths.image('philly/train', 'week3'));
-						phillyTrain.antialiasing = FlxG.save.data.antialiasing;
+						var phillyTrain = new FlxSprite(2000, 360).loadGraphic(Paths.loadImage('philly/train', 'week3'));
 						if (FlxG.save.data.distractions)
 						{
 							swagBacks['phillyTrain'] = phillyTrain;
@@ -558,7 +558,7 @@ class Stage extends MusicBeatState
 						switch (PlayState.SONG.songId)
 						{
 							case 'ugh':
-								tankman.setPosition(10, PlayState.dad.y + 110);
+								tankman.setPosition(10, PlayState.instance.dad.y + 110);
 							case 'guns':
 								tankman.setPosition(50, 230);
 							case 'stress':
@@ -716,7 +716,7 @@ class Stage extends MusicBeatState
 
 	override public function update(elapsed:Float)
 	{
-		if (!FlxG.save.data.optimize && FlxG.save.data.background)
+		if (FlxG.save.data.background)
 		{
 			switch (curStage)
 			{
@@ -731,7 +731,6 @@ class Stage extends MusicBeatState
 							trainFrameTiming = 0;
 						}
 					}
-
 				// phillyCityLights.members[curLight].alpha -= (Conductor.crochet / 1000) * FlxG.elapsed;
 				case 'tank':
 					moveTank();
@@ -788,7 +787,7 @@ class Stage extends MusicBeatState
 				bg.animation.play('idle', true);
 		}
 
-		if (!PlayStateChangeables.Optimize && FlxG.save.data.background)
+		if (FlxG.save.data.distractions && FlxG.save.data.background)
 		{
 			switch (curStage)
 			{
@@ -843,7 +842,7 @@ class Stage extends MusicBeatState
 						{
 							trainCooldown = FlxG.random.int(-4, 0);
 							trainStart();
-							trace('train');
+							Debug.logTrace('train');
 						}
 					}
 			}
@@ -863,15 +862,15 @@ class Stage extends MusicBeatState
 		lightningStrikeBeat = curBeat;
 		lightningOffset = FlxG.random.int(8, 24);
 
-		if (PlayState.boyfriend != null)
+		if (PlayState.instance.boyfriend != null)
 		{
-			PlayState.boyfriend.playAnim('scared', true);
-			PlayState.gf.playAnim('scared', true);
+			PlayState.instance.boyfriend.playAnim('scared', true);
+			PlayState.instance.gf.playAnim('scared', true);
 		}
 		else
 		{
-			GameplayCustomizeState.boyfriend.playAnim('scared', true);
-			GameplayCustomizeState.gf.playAnim('scared', true);
+			GameplayCustomizeState.instance.boyfriend.playAnim('scared', true);
+			GameplayCustomizeState.instance.gf.playAnim('scared', true);
 		}
 	}
 
@@ -885,7 +884,7 @@ class Stage extends MusicBeatState
 
 	function trainStart():Void
 	{
-		if (FlxG.save.data.distractions)
+		if (FlxG.save.data.distractions && FlxG.save.data.background)
 		{
 			trainMoving = true;
 			trainSound.play(true);
@@ -902,10 +901,10 @@ class Stage extends MusicBeatState
 			{
 				startedMoving = true;
 
-				if (PlayState.gf != null)
-					PlayState.gf.playAnim('hairBlow');
+				if (PlayState.instance.gf != null)
+					PlayState.instance.gf.playAnim('hairBlow');
 				else
-					GameplayCustomizeState.gf.playAnim('hairBlow');
+					GameplayCustomizeState.instance.gf.playAnim('hairBlow');
 			}
 
 			if (startedMoving)
@@ -932,10 +931,10 @@ class Stage extends MusicBeatState
 	{
 		if (FlxG.save.data.distractions)
 		{
-			if (PlayState.gf != null)
-				PlayState.gf.playAnim('hairFall');
+			if (PlayState.instance.gf != null)
+				PlayState.instance.gf.playAnim('hairFall');
 			else
-				GameplayCustomizeState.gf.playAnim('hairFall');
+				GameplayCustomizeState.instance.gf.playAnim('hairFall');
 
 			swagBacks['phillyTrain'].x = FlxG.width + 200;
 			trainMoving = false;

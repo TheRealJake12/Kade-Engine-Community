@@ -1382,17 +1382,17 @@ class LuaCharacter extends LuaClass
 
 		if (char == null)
 		{
-			LuaL.error(state, "Failure to tween (couldn't find character " + index + ")");
+			LuaL.error(state, "Failure to get (couldn't find character " + index + ")");
 			return 0;
 		}
 
 		PlayState.instance.remove(char);
 
-		PlayState.dad = new Character(x, y, newName, char.isPlayer);
+		PlayState.instance.dad = new Character(x, y, newName, char.isPlayer);
 
-		property.char = PlayState.dad;
+		property.char = PlayState.instance.dad;
 
-		PlayState.instance.add(PlayState.dad);
+		PlayState.instance.add(PlayState.instance.dad);
 
 		return 0;
 	}

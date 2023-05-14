@@ -72,7 +72,7 @@ class MainMenuState extends MusicBeatState
 
 	public static var myBalls:FlxText;
 
-	private var camGame:SwagCamera;
+	private var camGame:FlxCamera;
 
 	#if !switch
 	var optionShit:Array<String> = ['story mode', 'freeplay', 'donate', 'discord', 'options'];
@@ -114,7 +114,7 @@ class MainMenuState extends MusicBeatState
 
 		if (!FlxG.save.data.watermark)
 			optionShit.remove('discord');
-		camGame = new SwagCamera();
+		camGame = new FlxCamera();
 
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
@@ -134,8 +134,8 @@ class MainMenuState extends MusicBeatState
 		// add(camFollow);
 		// add(camFollowPos);
 
-		FlxG.cameras.reset(new SwagCamera());
-		// FlxG.camera.follow(camFollow, null, 0.06);
+		FlxG.cameras.reset(camGame);
+		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 
 		magenta = new FlxBackdrop(Paths.image('menuDesat'), X, 0, 0);
 		magenta.setGraphicSize(Std.int(magenta.width * 1.175));

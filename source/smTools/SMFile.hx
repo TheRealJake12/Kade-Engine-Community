@@ -6,12 +6,15 @@ import haxe.Exception;
 import lime.app.Application;
 import Section.SwagSection;
 import haxe.Json;
+import openfl.Lib;
 
 class SMFile
 {
 	public static function loadFile(path):SMFile
 	{
-		return new SMFile(File.getContent(path).split('\n'));
+		var stepFile = new SMFile(File.getContent(path).split('\n'));
+
+		return stepFile;
 	}
 
 	private var _fileData:Array<String>;
@@ -24,6 +27,8 @@ class SMFile
 
 	public var header:SMHeader;
 	public var measures:Array<SMMeasure>;
+
+	public var jsonPath:String = '';
 
 	public function new(data:Array<String>)
 	{
@@ -124,6 +129,8 @@ class SMFile
 
 		var song = {
 			song: header.TITLE,
+			songId: header.TITLE,
+			songName: header.TITLE,
 			notes: [],
 			eventObjects: [],
 			bpm: header.getBPM(0),
@@ -133,7 +140,7 @@ class SMFile
 			gfVersion: 'gf',
 			noteStyle: 'normal',
 			stage: 'stage',
-			speed: 2.8,
+			speed: 1.0,
 			validScore: false,
 			chartVersion: "",
 		};
@@ -244,16 +251,16 @@ class SMFile
 					switch (numba)
 					{
 						case 1: // normal
-							section.sectionNotes.push([rowTime, lane, 0, 0, currentBeat]);
+							section.sectionNotes.push([rowTime, lane, 0, 0, 1.0]);
 						case 2: // held head
-							heldNotes[lane] = [rowTime, lane, 0, 0, currentBeat];
+							heldNotes[lane] = [rowTime, lane, 0, 0, 1.0];
 						case 3: // held tail
 							var data = heldNotes[lane];
 							var timeDiff = rowTime - data[0];
 							section.sectionNotes.push([data[0], lane, timeDiff, 0, data[4]]);
 							heldNotes[index] = [];
 						case 4: // roll head
-							heldNotes[lane] = [rowTime, lane, 0, 0, currentBeat];
+							heldNotes[lane] = [rowTime, lane, 0, 0, 1.0];
 					}
 					index++;
 				}

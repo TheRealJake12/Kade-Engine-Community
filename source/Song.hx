@@ -74,9 +74,10 @@ class Song
 			rawJson = rawJson.substr(0, rawJson.length - 1);
 			// LOL GOING THROUGH THE BULLSHIT TO CLEAN IDK WHATS STRANGE
 		}
+
 		var jsonData = Json.parse(rawJson);
 
-		return parseJSONshit("rawsong", jsonData, ["name" => jsonData.name]);
+		return parseJSONshit('rawsong', jsonData, 'rawname');
 	}
 
 	public static function loadFromJson(songId:String, diffSuffix:String):SongData
