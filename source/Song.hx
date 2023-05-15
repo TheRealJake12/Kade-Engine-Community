@@ -79,19 +79,15 @@ class Song
 
 		return parseJSONshit('rawsong', jsonData, 'rawname');
 	}
-
-	public static function loadFromJson(songId:String, diffSuffix:String):SongData
+	
+	public static function loadFromJson(songId:String, difficulty:String):SongData
 	{
-		var songFile = '$songId/$songId$diffSuffix';
-
-		// Debug.logInfo('Loading song JSON: $songFile');
+		var songFile = '$songId/$songId$difficulty';
 
 		var rawJson = Paths.loadJSON('songs/$songFile');
-
-		var songData:SongData = cast rawJson.song;
 		var metaData:SongMeta = loadMetadata(songId);
 
-		return parseJSONData(songId, songData, metaData);
+		return parseJSONshit(songId, rawJson, metaData);
 	}
 
 	public static function parseJSONData(songId:String, jsonData:Dynamic, jsonMetaData:Dynamic):SongData
@@ -286,7 +282,11 @@ class Song
 	{
 		var songData:SongData = cast jsonData.song;
 
-		songData.songId = songId;
+		if (songData.songId == null)
+			songData.songId = songId;
+
+		if (songData.songName == null)
+			songData.songName = songId;
 
 		// Enforce default values for optional fields.
 		if (songData.validScore == null)
@@ -294,46 +294,24 @@ class Song
 
 		// Inject info from _meta.json.
 		var songMetaData:SongMeta = cast jsonMetaData;
-		if (songMetaData.name != null)
+		if (songMetaData != null)
 		{
-			songData.songName = songMetaData.name;
+			if (songMetaData.name != null)
+			{
+				songData.songName = songMetaData.name;
+			}
+			else
+			{
+				songData.songName = songData.songName.split('-').join(' ');
+			}
+
+			songData.offset = songMetaData.offset != null ? songMetaData.offset : 0;
 		}
 		else
 		{
-			songData.songName = songId.split('-').join(' ');
+			songData.songName = songData.songName.split('-').join(' ');
 		}
-
-		songData.offset = songMetaData.offset != null ? songMetaData.offset : 0;
 
 		return Song.conversionChecks(songData);
-	}
-
-	public static function loadJson(jsonInput:String, ?folder:String):SongData
-	{
-		// pre lowercasing the song name (update)
-		var folderLowercase = StringTools.replace(folder, " ", "-").toLowerCase();
-		switch (folderLowercase)
-		{
-			case 'dad-battle':
-				folderLowercase = 'dadbattle';
-			case 'philly-nice':
-				folderLowercase = 'philly';
-		}
-
-		var rawJson = Assets.getText(Paths.json('songs' + '/' + folderLowercase + '/' + jsonInput.toLowerCase())).trim();
-
-		while (!rawJson.endsWith("}"))
-		{
-			rawJson = rawJson.substr(0, rawJson.length - 1);
-		}
-
-		return parseJSON(rawJson);
-	}
-
-	public static function parseJSON(rawJson:String):SongData
-	{
-		var swagShit:SongData = cast Json.parse(rawJson).song;
-		swagShit.validScore = true;
-		return swagShit;
 	}
 }

@@ -21,8 +21,9 @@ class CoolUtil
 {
 	public static var defaultDifficulties:Array<String> = ['Easy', "Normal", "Hard"];
 
-	public static var difficultyArray:Array<String> = defaultDifficulties.copy();
-	public static var suffixDiffsArray:Array<String> = ['-easy', "", "-hard"];
+	public static var customDifficulties:Array<String> = [];
+
+	public static var difficultyArray:Array<String> = getGlobalDiffs();
 	public static var defaultDifficulty:String = 'Normal'; // The chart that has no suffix and starting difficulty on Freeplay/Story Mode
 
 	public static var difficulties:Array<String> = [];
@@ -52,6 +53,20 @@ class CoolUtil
 	public static function difficultyString():String
 	{
 		return difficulties[PlayState.storyDifficulty].toUpperCase();
+	}
+
+	static function getGlobalDiffs():Array<String>
+	{
+		var returnArray:Array<String> = [];
+		if (defaultDifficulties.length > 0)
+			for (el in defaultDifficulties)
+				returnArray.push(el);
+
+		if (customDifficulties.length > 0)
+			for (el2 in customDifficulties)
+				returnArray.push(el2);
+
+		return returnArray;
 	}
 
 	inline public static function boundTo(value:Float, min:Float, max:Float):Float

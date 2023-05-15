@@ -104,7 +104,6 @@ class Stage extends MusicBeatState
 					}
 				case 'philly':
 					{
-						camZoom = 0.9;
 						var bg:FlxSprite = new FlxSprite(-100).loadGraphic(Paths.image('philly/sky', 'week3'));
 						bg.scrollFactor.set(0.1, 0.1);
 						bg.antialiasing = FlxG.save.data.antialiasing;

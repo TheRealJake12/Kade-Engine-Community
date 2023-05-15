@@ -125,10 +125,10 @@ class Highscore
 	{
 		var daSong:String = song;
 
-		for (i in 0...CoolUtil.suffixDiffsArray.length - 1)
+		for (i in 0...CoolUtil.difficultyArray.length)
 		{
 			if (diff == i)
-				daSong += CoolUtil.suffixDiffsArray[i] + '-${rate}x';
+				daSong += CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[i]) + '-${rate}x';
 		}
 
 		return daSong;

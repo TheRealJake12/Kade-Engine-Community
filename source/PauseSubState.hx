@@ -26,7 +26,7 @@ class PauseSubState extends MusicBeatSubstate
 	public static var goBack:Bool = false;
 
 	var pauseOG:Array<String> = ['Resume', 'Restart Song', 'Change Difficulty', 'Options', 'Exit to menu'];
-	var difficultyChoices:Array<String> = ['EASY', 'NORMAL', 'HARD', 'BACK'];
+	var difficultyChoices = [];
 
 	var menuItems:Array<String> = [];
 
@@ -48,6 +48,9 @@ class PauseSubState extends MusicBeatSubstate
 		Paths.clearUnusedMemory();
 		super();
 
+		if (CoolUtil.difficultyArray.length < 2)
+			pauseOG.remove('Change Difficulty'); // No need to change difficulty if there is only one!
+
 		if (FlxG.sound.music.playing)
 			FlxG.sound.music.pause();
 
@@ -58,6 +61,13 @@ class PauseSubState extends MusicBeatSubstate
 		}
 
 		menuItems = pauseOG;
+
+		for (i in 0...CoolUtil.difficultyArray.length)
+		{
+			var diff:String = '' + CoolUtil.difficultyArray[i];
+			difficultyChoices.push(diff);
+		}
+		difficultyChoices.push('BACK');
 
 		if (!playingPause)
 		{
@@ -170,6 +180,21 @@ class PauseSubState extends MusicBeatSubstate
 		{
 			var daSelected:String = menuItems[curSelected];
 
+			if (menuItems == difficultyChoices)
+			{
+				if (menuItems.length - 1 != curSelected && difficultyChoices.contains(daSelected))
+				{
+					PlayState.SONG = Song.loadFromJson(PlayState.SONG.songId.toLowerCase(), CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[PlayState.storyDifficulty]));
+					PlayState.storyDifficulty = curSelected;
+					PlayState.startTime = 0;
+					MusicBeatState.resetState();
+					return;
+				}
+
+				menuItems = pauseOG;
+				regenMenu();
+			}
+
 			switch (daSelected)
 			{
 				case "Resume":
@@ -192,11 +217,6 @@ class PauseSubState extends MusicBeatSubstate
 				case 'Change Difficulty':
 					menuItems = difficultyChoices;
 					regenMenu();
-				case "EASY" | 'NORMAL' | "HARD":
-					PlayState.SONG = Song.loadFromJson(PlayState.SONG.songId.toLowerCase(), CoolUtil.suffixDiffsArray[curSelected]);
-					PlayState.storyDifficulty = curSelected;
-					PlayState.startTime = 0;
-					MusicBeatState.resetState();
 				case "Options":
 					goToOptions = true;
 					close();

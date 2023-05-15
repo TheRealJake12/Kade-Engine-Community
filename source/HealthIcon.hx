@@ -1,73 +1,61 @@
 package;
 
-import flixel.FlxG;
 import flixel.FlxSprite;
-import openfl.utils.Assets as OpenFlAssets;
+import flixel.FlxG;
 
 using StringTools;
 
 class HealthIcon extends FlxSprite
 {
-	public var char:String = '';
-	public var isPlayer:Bool = false;
-	public var isOldIcon:Bool = false;
-	public var initialWidth:Float = 0;
-	public var initialHeight:Float = 0;
-
 	/**
 	 * Used for FreeplayState! If you use it elsewhere, prob gonna annoying
 	 */
 	public var sprTracker:FlxSprite;
 
-	public function new(?char:String = "bf", ?isPlayer:Bool = false)
+	var char:String = '';
+	var isPlayer:Bool = false;
+
+	public function new(char:String = 'bf', isPlayer:Bool = false)
 	{
 		super();
 
-		this.char = char;
 		this.isPlayer = isPlayer;
-
-		isPlayer = isOldIcon = false;
 
 		changeIcon(char);
 		scrollFactor.set();
 	}
 
-	public function swapOldIcon()
+	public var isOldIcon:Bool = false;
+
+	public function swapOldIcon():Void
 	{
-		(isOldIcon = !isOldIcon) ? changeIcon("bf-old") : changeIcon(char);
-	}
-	private var iconOffsets:Array<Float> = [0, 0];
+		isOldIcon = !isOldIcon;
 
-	public function changeIcon(char:String)
-	{
-		if (char != 'bf-pixel' && char != 'bf-old')
-			char = char.split("-")[0];
-
-		if (!Paths.fileExists('images/icons/icon-' + char + ".png", IMAGE))
-			char = 'face';
-
-		loadGraphic(Paths.image('icons/icon-' + char), true, 150, 150);
-
-		if (char.endsWith('-pixel') || char.startsWith('senpai') || char.startsWith('spirit'))
-			antialiasing = false
+		if (isOldIcon)
+			changeIcon('bf-old');
 		else
-			antialiasing = FlxG.save.data.antialiasing;
-		iconOffsets[0] = (width - 150) / 2;
-		iconOffsets[1] = (width - 150) / 2;	
-		updateHitbox();	
-
-		animation.add(char, [0, 1], 0, false, isPlayer);
-		animation.play(char);
-
-		initialWidth = width;
-		initialHeight = height;
+			changeIcon(PlayState.SONG.player1);
 	}
 
-	override function updateHitbox()
+	public function changeIcon(newChar:String):Void
 	{
-		super.updateHitbox();
-		offset.x = iconOffsets[0];
-		offset.y = iconOffsets[1];
+		if (newChar != 'bf-pixel' && newChar != 'bf-old')
+			newChar = newChar.split('-')[0].trim();
+
+		if (newChar != char)
+		{
+			if (animation.getByName(newChar) == null)
+			{
+				loadGraphic(Paths.image('icons/icon-' + newChar), true, 150, 150);
+				animation.add(newChar, [0, 1], 0, false, isPlayer);
+			}
+			if (char.endsWith('-pixel') || char.startsWith('senpai') || char.startsWith('spirit'))
+				antialiasing = false
+			else
+				antialiasing = FlxG.save.data.antialiasing;
+			animation.play(newChar);
+			char = newChar;
+		}
 	}
 
 	override function update(elapsed:Float)

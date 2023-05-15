@@ -1611,7 +1611,7 @@ class ChartingState extends MusicBeatState
 		}
 		if (reloadFromFile)
 		{
-			var diff:String = CoolUtil.suffixDiffsArray[PlayState.storyDifficulty];
+			var diff:String = CoolUtil.difficultyArray[PlayState.storyDifficulty];
 			_song = Song.conversionChecks(Song.loadFromJson(PlayState.SONG.songId, diff));
 		}
 		else
@@ -3474,7 +3474,7 @@ class ChartingState extends MusicBeatState
 
 	function loadJson(songId:String):Void
 	{
-		PlayState.SONG = Song.loadFromJson(songId, CoolUtil.suffixDiffsArray[PlayState.storyDifficulty]);
+		PlayState.SONG = Song.loadFromJson(songId, CoolUtil.difficultyArray[PlayState.storyDifficulty]);
 
 		while (curRenderedNotes.members.length > 0)
 		{
@@ -3672,7 +3672,7 @@ class ChartingState extends MusicBeatState
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);
 			_file.addEventListener(Event.CANCEL, onSaveCancel);
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-			_file.save(data.trim(), _song.songId.toLowerCase() + CoolUtil.suffixDiffsArray[PlayState.storyDifficulty] + ".json");
+			_file.save(data.trim(), _song.songId.toLowerCase() + CoolUtil.difficultyArray[PlayState.storyDifficulty] + ".json");
 		}
 	}
 

@@ -430,14 +430,18 @@ class FreeplayState extends MusicBeatState
 						var song = Song.loadFromJsonRAW(data);
 						instance.songData.set(file.header.TITLE, [song]);
 
-						for (diff in songData.get(song.song))
+						if (songData.get(song.songId) != null)
 						{
-							if (!songRating.exists(song.song))
-								songRating.set(Highscore.formatSong(song.song, songData.get(song.song).indexOf(diff), 1), DiffCalc.CalculateDiff(song));
+							for (diff in songData.get(song.songId))
+							{
+								if (!songRating.exists(song.songId))
+									songRating.set(Highscore.formatSong(song.songId, songData.get(song.songId).indexOf(diff), 1),
+										DiffCalc.CalculateDiff(song));
 
-							if (!songRatingOp.exists(song.song))
-								songRatingOp.set(Highscore.formatSong(song.song, songData.get(song.songId).indexOf(diff), 1),
-									DiffCalc.CalculateDiff(song, true));
+								if (!songRatingOp.exists(song.songId))
+									songRatingOp.set(Highscore.formatSong(song.songId, songData.get(song.songId).indexOf(diff), 1),
+										DiffCalc.CalculateDiff(song, true));
+							}
 						}
 					}
 					else if (FileSystem.exists("assets/sm/" + i + "/converted.json") && file.endsWith(".sm"))
@@ -456,14 +460,18 @@ class FreeplayState extends MusicBeatState
 
 						instance.songData.set(file.header.TITLE, [song]);
 
-						for (diff in songData.get(song.songId))
+						if (songData.get(song.songId) != null)
 						{
-							if (!songRating.exists(song.songId))
-								songRating.set(Highscore.formatSong(song.songId, songData.get(song.songId).indexOf(diff), 1), DiffCalc.CalculateDiff(song));
+							for (diff in songData.get(song.songId))
+							{
+								if (!songRating.exists(song.songId))
+									songRating.set(Highscore.formatSong(song.songId, songData.get(song.songId).indexOf(diff), 1),
+										DiffCalc.CalculateDiff(song));
 
-							if (!songRatingOp.exists(song.songId))
-								songRatingOp.set(Highscore.formatSong(song.songId, songData.get(song.songId).indexOf(diff), 1),
-									DiffCalc.CalculateDiff(song, true));
+								if (!songRatingOp.exists(song.songId))
+									songRatingOp.set(Highscore.formatSong(song.songId, songData.get(song.songId).indexOf(diff), 1),
+										DiffCalc.CalculateDiff(song, true));
+							}
 						}
 					}
 				}
@@ -859,10 +867,9 @@ class FreeplayState extends MusicBeatState
 		{
 			FlxG.sound.music.stop();
 
-			playinSong = Song.loadFromJson(songs[curSelected].songName,
-				CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[CoolUtil.difficultyArray.indexOf(songs[curSelected].diffs[curDifficulty])]));
+			//playinSong = Song.loadFromJson(songs[curSelected].songName,CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[CoolUtil.difficultyArray.indexOf(songs[curSelected].diffs[curDifficulty])]));
 
-			activeSong = playinSong;
+			//activeSong = playinSong;
 			
 
 			if (currentSongPlaying != songs[curSelected].songName)
@@ -876,6 +883,8 @@ class FreeplayState extends MusicBeatState
 
 				FlxG.sound.playMusic(songPath, 0.7, true);
 
+				Debug.logTrace(songPath);
+
 				songPath = null;
 			}
 			
@@ -886,34 +895,6 @@ class FreeplayState extends MusicBeatState
 			curTiming = null;
 
 			var currentIndex = 0;
-			var hmm = songData.get(songs[curPlayed].songName)[curDifficulty];
-			if (hmm != null && hmm.eventObjects != null)
-			{
-				for (i in hmm.eventObjects)
-				{
-					if (i.type == "BPM Change")
-					{
-						var beat:Float = i.position * rate;
-
-						var endBeat:Float = Math.POSITIVE_INFINITY;
-
-						var bpm = i.value * rate;
-
-						TimingStruct.addTiming(beat, bpm, endBeat, 0); // offset in this case = start time since we don't have a offset
-						if (currentIndex != 0)
-						{
-							var data = TimingStruct.AllTimings[currentIndex - 1];
-							data.endBeat = beat;
-							data.length = ((data.endBeat - data.startBeat) / (data.bpm / 60)) / rate;
-							var step = (((60 / data.bpm) * 1000) / rate) / 4;
-
-							TimingStruct.AllTimings[currentIndex].startStep = Math.floor((((data.endBeat / (data.bpm / 60)) * 1000) / step) / rate);
-							TimingStruct.AllTimings[currentIndex].startTime = data.startTime + data.length / rate;
-						}
-						currentIndex++;
-					}
-				}
-			}
 			rate = lastRate;
 
 			currentSongPlaying = songs[curSelected].songName;
@@ -958,27 +939,22 @@ class FreeplayState extends MusicBeatState
 	{
 		// Make sure song data is initialized first.
 		var currentSongData:SongData = null;
-		#if FEAUTRE_STEPMANIA	
-		if (instance.songs[curSelected].songCharacter == "sm")
-		{
-			
-			currentSongData = Song.loadFromJsonRAW(File.getContent(instance.songs[curSelected].sm.jsonPath));
-		}
-		else
-		{
-			currentSongData = Song.loadFromJson(instance.songs[curSelected].songName,
-				CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[CoolUtil.difficultyArray.indexOf(instance.songs[curSelected].diffs[difficulty])]));
-		}
-		#else
 		try
 		{
-			currentSongData = Song.loadFromJson(instance.songs[curSelected].songName,
-				CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[CoolUtil.difficultyArray.indexOf(instance.songs[curSelected].diffs[difficulty])]));
+			if (instance.songs[curSelected].songCharacter == "sm")
+			{
+				currentSongData = Song.loadFromJsonRAW(File.getContent(instance.songs[curSelected].sm.jsonPath));
+			}
+			else
+			{
+				currentSongData = Song.loadFromJson(instance.songs[curSelected].songName,
+					CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[CoolUtil.difficultyArray.indexOf(instance.songs[curSelected].diffs[difficulty])]));
+			}
 		}
-		#end
 		catch (ex)
 		{
 			Debug.logError(ex);
+			return;
 		}
 
 		PlayState.SONG = currentSongData;

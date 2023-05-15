@@ -261,7 +261,7 @@ class PlayState extends MusicBeatState
 	public var camSustains:FlxCamera;
 	public var camNotes:FlxCamera;
 
-	private var camGame:SwagCamera;
+	private var camGame:FlxCamera;
 
 	public var camOther:FlxCamera;
 
@@ -4300,7 +4300,7 @@ class PlayState extends MusicBeatState
 				}
 				else
 				{
-					var diff:String = CoolUtil.suffixDiffsArray[storyDifficulty];
+					var diff:String = CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[storyDifficulty]);
 
 					FlxTransitionableState.skipNextTransIn = true;
 					FlxTransitionableState.skipNextTransOut = true;
@@ -5940,7 +5940,7 @@ class PlayState extends MusicBeatState
 
 		cleanPlayObjects();
 
-		instance = null;
+		// instance = null; // crashes charting state cuz notes ??
 
 		super.destroy();
 	}
@@ -6614,7 +6614,7 @@ class PlayState extends MusicBeatState
 		#if VIDEOS
 		inCutscene = true;
 
-		var diff:String = CoolUtil.suffixDiffsArray[storyDifficulty];
+		var diff:String = CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[storyDifficulty]);
 
 		var video:VideoHandler = new VideoHandler();
 		inst.stop();
