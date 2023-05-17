@@ -259,7 +259,7 @@ class MusicBeatState extends FlxUIState
 					oldStep = curStep;
 				}
 			}
-		}	
+		}
 
 		if (FlxG.keys.anyJustPressed([fullscreenBind]))
 		{

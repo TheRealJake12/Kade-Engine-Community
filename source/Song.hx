@@ -79,7 +79,7 @@ class Song
 
 		return parseJSONshit('rawsong', jsonData, 'rawname');
 	}
-	
+
 	public static function loadFromJson(songId:String, difficulty:String):SongData
 	{
 		var songFile = '$songId/$songId$difficulty';

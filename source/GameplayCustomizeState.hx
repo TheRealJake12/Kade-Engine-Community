@@ -22,6 +22,7 @@ class GameplayCustomizeState extends MusicBeatState
 
 	var text:FlxText;
 	var blackBorder:FlxSprite;
+
 	public static var instance:GameplayCustomizeState = null;
 
 	var laneunderlay:FlxSprite;
@@ -54,6 +55,7 @@ class GameplayCustomizeState extends MusicBeatState
 	public var dad:Character;
 	public var gf:Character;
 	public var boyfriend:Boyfriend;
+
 	public static var Stage:Stage;
 	public static var freeplayBf:String = 'bf';
 	public static var freeplayDad:String = 'dad';

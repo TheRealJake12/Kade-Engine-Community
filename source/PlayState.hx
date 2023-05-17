@@ -2305,7 +2305,7 @@ class PlayState extends MusicBeatState
 			vocals.time = startTime;
 		Conductor.songPosition = startTime;
 		startTime = 0;
-		
+
 		recalculateAllSectionTimes();
 
 		#if FEATURE_DISCORD
@@ -2449,7 +2449,7 @@ class PlayState extends MusicBeatState
 			}
 			#end
 		}
-		
+
 		recalculateAllSectionTimes();
 		checkforSections();
 
@@ -2546,8 +2546,8 @@ class PlayState extends MusicBeatState
 						sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true, false, true,
 							null, songNotes[4], daNoteType);
 					else
-						sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true, false,
-							false, null, songNotes[4], daNoteType);
+						sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true, false, false,
+							null, songNotes[4], daNoteType);
 
 					sustainNote.scrollFactor.set();
 					unspawnNotes.push(sustainNote);
@@ -3423,7 +3423,7 @@ class PlayState extends MusicBeatState
 		}
 		var mult:Float = FlxMath.lerp(1, iconP1.scale.x, CoolUtil.boundTo(1 - (elapsed * 9 * songMultiplier), 0, 1));
 		var mult2:Float = FlxMath.lerp(1, iconP2.scale.x, CoolUtil.boundTo(1 - (elapsed * 9 * songMultiplier), 0, 1));
-		
+
 		if (!FlxG.save.data.motion)
 		{
 			iconP1.scale.set(mult, mult);
@@ -3728,7 +3728,6 @@ class PlayState extends MusicBeatState
 					}
 				}
 			}
-
 		}
 
 		if (camZooming)
@@ -5710,8 +5709,8 @@ class PlayState extends MusicBeatState
 		#end
 
 		#if FEATURE_HSCRIPT
-			scripts.setAll("curSection", curSection);
-			scripts.executeAllFunc("sectionHit", [curSection]);
+		scripts.setAll("curSection", curSection);
+		scripts.executeAllFunc("sectionHit", [curSection]);
 		#end
 
 		changeCameraFocus();
@@ -5721,71 +5720,71 @@ class PlayState extends MusicBeatState
 	{
 		try
 		{
-				if (currentSection != null)
+			if (currentSection != null)
+			{
+				if (!currentSection.mustHitSection)
 				{
-					if (!currentSection.mustHitSection)
+					var offsetX = 0;
+					var offsetY = 0;
+					#if FEATURE_LUAMODCHART
+					if (luaModchart != null)
 					{
-						var offsetX = 0;
-						var offsetY = 0;
-						#if FEATURE_LUAMODCHART
-						if (luaModchart != null)
-						{
-							offsetX = luaModchart.getVar("followXOffset", "float");
-							offsetY = luaModchart.getVar("followYOffset", "float");
-						}
-						#end
-						camFollow.setPosition(dad.getMidpoint().x + dad.camPos[0] + offsetX, dad.getMidpoint().y + dad.camPos[1] + offsetY);
-						#if FEATURE_LUAMODCHART
-						if (luaModchart != null)
-							luaModchart.executeState('playerTwoTurn', []);
-						#end
+						offsetX = luaModchart.getVar("followXOffset", "float");
+						offsetY = luaModchart.getVar("followYOffset", "float");
+					}
+					#end
+					camFollow.setPosition(dad.getMidpoint().x + dad.camPos[0] + offsetX, dad.getMidpoint().y + dad.camPos[1] + offsetY);
+					#if FEATURE_LUAMODCHART
+					if (luaModchart != null)
+						luaModchart.executeState('playerTwoTurn', []);
+					#end
 
-						#if FEATURE_HSCRIPT
-						scripts.executeAllFunc("playerTwoTurn");
-						#end
-						// camFollow.setPosition(lucky.getMidpoint().x - 120, lucky.getMidpoint().y + 210);
+					#if FEATURE_HSCRIPT
+					scripts.executeAllFunc("playerTwoTurn");
+					#end
+					// camFollow.setPosition(lucky.getMidpoint().x - 120, lucky.getMidpoint().y + 210);
 
-						switch (dad.curCharacter)
+					switch (dad.curCharacter)
+					{
+						case 'mom' | 'mom-car':
+							camFollow.y = dad.getMidpoint().y;
+					}
+				}
+
+				if (currentSection.mustHitSection)
+				{
+					var offsetX = 0;
+					var offsetY = 0;
+					#if FEATURE_LUAMODCHART
+					if (luaModchart != null)
+					{
+						offsetX = luaModchart.getVar("followXOffset", "float");
+						offsetY = luaModchart.getVar("followYOffset", "float");
+					}
+					#end
+					camFollow.setPosition(boyfriend.getMidpoint().x + boyfriend.camPos[0] + offsetX,
+						boyfriend.getMidpoint().y + boyfriend.camPos[1] + offsetY);
+
+					#if FEATURE_LUAMODCHART
+					if (luaModchart != null)
+						luaModchart.executeState('playerOneTurn', []);
+					#end
+
+					#if FEATURE_HSCRIPT
+					scripts.executeAllFunc("playerOneTurn");
+					#end
+					if (!PlayStateChangeables.Optimize)
+					{
+						switch (Stage.curStage)
 						{
-							case 'mom' | 'mom-car':
-								camFollow.y = dad.getMidpoint().y;
+							case 'limo':
+								camFollow.x = boyfriend.getMidpoint().x - 300;
+							case 'mall':
+								camFollow.y = boyfriend.getMidpoint().y - 200;
 						}
 					}
-
-					if (currentSection.mustHitSection)
-					{
-						var offsetX = 0;
-						var offsetY = 0;
-						#if FEATURE_LUAMODCHART
-						if (luaModchart != null)
-						{
-							offsetX = luaModchart.getVar("followXOffset", "float");
-							offsetY = luaModchart.getVar("followYOffset", "float");
-						}
-						#end
-						camFollow.setPosition(boyfriend.getMidpoint().x + boyfriend.camPos[0] + offsetX,
-							boyfriend.getMidpoint().y + boyfriend.camPos[1] + offsetY);
-
-						#if FEATURE_LUAMODCHART
-						if (luaModchart != null)
-							luaModchart.executeState('playerOneTurn', []);
-						#end
-
-						#if FEATURE_HSCRIPT
-						scripts.executeAllFunc("playerOneTurn");
-						#end
-						if (!PlayStateChangeables.Optimize)
-						{
-							switch (Stage.curStage)
-							{
-								case 'limo':
-									camFollow.x = boyfriend.getMidpoint().x - 300;
-								case 'mall':
-									camFollow.y = boyfriend.getMidpoint().y - 200;
-							}
-						}
-					}
-				}	
+				}
+			}
 		}
 		catch (e)
 		{
@@ -5808,7 +5807,6 @@ class PlayState extends MusicBeatState
 				boyfriend = new Boyfriend(x, y, value);
 				add(boyfriend);
 				boyfriend.alpha = 1;
-
 		}
 	}
 
@@ -5947,7 +5945,7 @@ class PlayState extends MusicBeatState
 			luaModchart.die();
 			luaModchart = null;
 		}
-		
+
 		noteskinSprite = null;
 		cpuNoteskinSprite = null;
 
@@ -6535,7 +6533,7 @@ class PlayState extends MusicBeatState
 
 		while (lastSecBeat < totalBeats)
 		{
-			//Debug.logTrace('LastBeat: $lastSecBeat | totalBeats: $totalBeats ');
+			// Debug.logTrace('LastBeat: $lastSecBeat | totalBeats: $totalBeats ');
 			SONG.notes.push(newSection(SONG.notes[SONG.notes.length - 1].lengthInSteps, true, false, false));
 			recalculateAllSectionTimes(SONG.notes.length - 1);
 			lastSecBeat = TimingStruct.getBeatFromTime(SONG.notes[SONG.notes.length - 1].endTime);
@@ -6589,7 +6587,7 @@ class PlayState extends MusicBeatState
 		timerManager.clear();
 
 		tweenManager.clear();
-		
+
 		while (unspawnNotes.length > 0)
 		{
 			var note = unspawnNotes[0];
@@ -6623,7 +6621,6 @@ class PlayState extends MusicBeatState
 				return;
 			}
 		}
-		
 
 		Stage.destroy();
 		Stage = null;

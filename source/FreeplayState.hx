@@ -111,7 +111,6 @@ class FreeplayState extends MusicBeatState
 
 	override function create()
 	{
-
 		instance = this;
 		PlayState.SONG = null;
 		FlxG.mouse.visible = true;
@@ -195,10 +194,7 @@ class FreeplayState extends MusicBeatState
 		var bottomText:String = #if !mobile #if PRELOAD_ALL "  Press SPACE to listen to the Song Instrumental / Click and scroll through the songs with your MOUSE /"
 			+ #else "  Click and scroll through the songs with your MOUSE /"
 			+ #end #end
-		" Your offset is "
-		+ FlxG.save.data.offset
-		+ "ms "
-		+ (FlxG.save.data.optimize ? "/ Optimized" : "");
+		" Your offset is " + FlxG.save.data.offset + "ms " + (FlxG.save.data.optimize ? "/ Optimized" : "");
 
 		var scoreBG:FlxSprite = new FlxSprite(scoreText.x - 6, 0).makeGraphic(Std.int(FlxG.width * 0.4), 337, 0xFF000000);
 		scoreBG.alpha = 0.6;
@@ -867,10 +863,9 @@ class FreeplayState extends MusicBeatState
 		{
 			FlxG.sound.music.stop();
 
-			//playinSong = Song.loadFromJson(songs[curSelected].songName,CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[CoolUtil.difficultyArray.indexOf(songs[curSelected].diffs[curDifficulty])]));
+			// playinSong = Song.loadFromJson(songs[curSelected].songName,CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[CoolUtil.difficultyArray.indexOf(songs[curSelected].diffs[curDifficulty])]));
 
-			//activeSong = playinSong;
-			
+			// activeSong = playinSong;
 
 			if (currentSongPlaying != songs[curSelected].songName)
 			{
@@ -887,7 +882,7 @@ class FreeplayState extends MusicBeatState
 
 				songPath = null;
 			}
-			
+
 			MainMenuState.freakyPlaying = false;
 
 			TimingStruct.clearTimings();
@@ -962,7 +957,7 @@ class FreeplayState extends MusicBeatState
 		PlayState.storyWeek = instance.songs[curSelected].week;
 		PlayState.isStoryMode = false;
 
-		//Debug.logInfo('Loading song ${PlayState.SONG.songId} from week ${PlayState.storyWeek} into Free Play...');
+		// Debug.logInfo('Loading song ${PlayState.SONG.songId} from week ${PlayState.storyWeek} into Free Play...');
 		#if FEATURE_STEPMANIA
 		if (instance.songs[curSelected].songCharacter == "sm")
 		{
