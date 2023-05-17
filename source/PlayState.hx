@@ -5792,6 +5792,26 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	function changeChar(type:Int, value:String, x:Float, y:Float)
+	{
+		switch (type)
+		{
+			case 0:
+				dad.alpha = 0.0001;
+				remove(dad);
+				dad = new Character(x, y, value, false);
+				add(dad);
+				dad.alpha = 1;
+			case 1:
+				boyfriend.alpha = 0.0001;
+				remove(boyfriend);
+				boyfriend = new Boyfriend(x, y, value);
+				add(boyfriend);
+				boyfriend.alpha = 1;
+
+		}
+	}
+
 	private function newSection(lengthInSteps:Int = 16, mustHitSection:Bool = false, CPUAltAnim:Bool = true, playerAltAnim:Bool = true):SwagSection
 	{
 		var sec:SwagSection = {

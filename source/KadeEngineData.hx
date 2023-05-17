@@ -275,6 +275,11 @@ class KadeEngineData
 			FlxG.sound.muted = FlxG.save.data.mute;
 		}
 
+		if (FlxG.save.data.fpsBorder = true)
+		{
+			FlxG.save.data.fpsBorder = false;
+		}
+
 		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
 
 		KeyBinds.gamepad = gamepad != null;

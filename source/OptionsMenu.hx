@@ -240,7 +240,6 @@ class OptionsMenu extends MusicBeatSubstate
 				#end
 				new ShowState("Shows The Current Game State. Makes Debugging Easier."),
 				new GPURendering("Makes All Sprites Load Into VRAM, Reducing Normal RAM Usage. (Not Recommended For ~3GB VRAM)"), // Ill come back to this. I'm tired asf
-				new BorderFps("Adds A Border To Make The FPS Display Easier To See. (Uses A Ton Of CPU And A Little GPU)"),
 				new WaterMarkFPS("Shows What Version Of The Game You Are Running In The FPS Counter."),
 				new RainbowFPSOption("Make the FPS Counter flicker through rainbow colors."),
 				#if desktop
@@ -699,6 +698,32 @@ class OptionsMenu extends MusicBeatSubstate
 				selectOption(options[selectedCatIndex].options[selectedOptionIndex]);
 			}
 			if (!selectedOption.acceptType)
+			{
+				if (right)
+					changeOptionValue(true);
+				else if (left)
+					changeOptionValue(false);
+
+				if (selectedOption.getAccept())
+				{
+					if (rightHold || leftHold)
+						holdTime += elapsed;
+					else
+						resetHoldTime();
+
+					if (holdTime > 0.5)
+					{
+						if (Math.floor(elapsed) % 10 == 0)
+						{
+							if (rightHold)
+								changeOptionValue(true);
+							else if (leftHold)
+								changeOptionValue(false);
+						}
+					}
+				}
+			}
+			else
 			{
 				if (right)
 					changeOptionValue(true);

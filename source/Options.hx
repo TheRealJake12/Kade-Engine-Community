@@ -1485,33 +1485,6 @@ class OffsetMenu extends Option
 	}
 }
 
-class BorderFps extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		description = desc;
-	}
-
-	public override function left():Bool
-	{
-		FlxG.save.data.fpsBorder = !FlxG.save.data.fpsBorder;
-		display = updateDisplay();
-		return true;
-	}
-
-	public override function right():Bool
-	{
-		left();
-		return true;
-	}
-
-	private override function updateDisplay():String
-	{
-		return "FPS Border: < " + (!FlxG.save.data.fpsBorder ? "off" : "on") + " >";
-	}
-}
-
 class OffsetThing extends Option
 {
 	public function new(desc:String)
