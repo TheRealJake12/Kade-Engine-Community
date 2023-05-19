@@ -838,6 +838,8 @@ class PlayState extends MusicBeatState
 			tweenCamIn();
 		}
 
+		Stage.update(0);
+
 		if (loadRep)
 		{
 			FlxG.watch.addQuick('rep rpesses', repPresses);

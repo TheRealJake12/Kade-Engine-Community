@@ -2,7 +2,7 @@
 	"name": "Boyfriend holding GF",
 	"asset": "characters/bfAndGF",
 	"barColor": "#31B0D1",
-	"camPos": [0,0],
+	"camPos": [-100, -100],
 	"scale": 1,
 	"healthicon" : "bf",
 	"startingAnim": "idle",

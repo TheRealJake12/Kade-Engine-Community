@@ -4,6 +4,7 @@
   "barColor": "#F3FF6E",
   "startingAnim": "idle",
   "healthicon" : "monster",
+  "camPos":[150, -100],
   "animations": [
     {
       "name": "idle",
