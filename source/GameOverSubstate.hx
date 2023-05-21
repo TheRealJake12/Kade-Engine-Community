@@ -27,7 +27,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	public function new(x:Float, y:Float)
 	{
-		var daStage = PlayState.Stage.curStage;
+		var daStage = PlayState.instance.Stage.curStage;
 		var daBf:String = '';
 		switch (PlayState.instance.boyfriend.curCharacter)
 		{

@@ -151,7 +151,7 @@ class Note extends FlxSprite
 				causesMisses = true;
 		}
 
-		var daStage:String = ((PlayState.instance != null && !PlayStateChangeables.Optimize) ? PlayState.Stage.curStage : 'stage');
+		var daStage:String = ((PlayState.instance != null && !PlayStateChangeables.Optimize) ? PlayState.instance.Stage.curStage : 'stage');
 
 		// defaults if no noteStyle was found in chart
 		var noteTypeCheck:String = 'normal';

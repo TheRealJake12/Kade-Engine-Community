@@ -141,7 +141,7 @@ class Stage extends MusicBeatState
 						swagBacks['streetBehind'] = streetBehind;
 						toAdd.push(streetBehind);
 
-						var phillyTrain = new FlxSprite(2000, 360).loadGraphic(Paths.loadImage('philly/train', 'week3'));
+						var phillyTrain = new FlxSprite(2000, 360).loadGraphic(Paths.image('philly/train', 'week3'));
 						if (FlxG.save.data.distractions)
 						{
 							swagBacks['phillyTrain'] = phillyTrain;

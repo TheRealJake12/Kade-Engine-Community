@@ -325,7 +325,7 @@ class PlayState extends MusicBeatState
 
 	public var randomVar = false;
 
-	public static var Stage:Stage;
+	public var Stage:Stage = null;
 
 	public static var repPresses:Int = 0;
 	public static var repReleases:Int = 0;
@@ -652,14 +652,14 @@ class PlayState extends MusicBeatState
 					{
 						stageCheck = 'school';
 					}
-				case 7:
-					stageCheck = 'tank';
+					// i should check if its stage (but this is when none is found in chart anyway)
 			}
 		}
 		else
 		{
 			stageCheck = SONG.stage;
 		}
+		Stage = new Stage(SONG.stage);
 
 		if (isStoryMode)
 			songMultiplier = 1;
@@ -745,22 +745,6 @@ class PlayState extends MusicBeatState
 			boyfriend.x += boyfriend.charPos[0];
 			boyfriend.y += boyfriend.charPos[1];
 
-			if (dad.hasTrail)
-			{
-				if (FlxG.save.data.distractions)
-				{
-					// trailArea.scrollFactor.set();
-					if (!FlxG.save.data.optimize)
-					{
-						var evilTrail = new FlxTrail(dad, null, 4, 24, 0.3, 0.069);
-						// evilTrail.changeValuesEnabled(false, false, false, false);
-						// evilTrail.changeGraphic()
-						add(evilTrail);
-					}
-					// evilTrail.scrollFactor.set(1.1, 1.1);
-				}
-			}
-
 			if (FlxG.save.data.background && !PlayStateChangeables.Optimize)
 			{
 				for (i in Stage.toAdd)
@@ -800,6 +784,22 @@ class PlayState extends MusicBeatState
 						for (bg in array)
 							add(bg);
 				}
+			}
+		}
+
+		if (dad.hasTrail)
+		{
+			if (FlxG.save.data.distractions)
+			{
+				// trailArea.scrollFactor.set();
+				if (!FlxG.save.data.optimize)
+				{
+					var evilTrail = new FlxTrail(dad, null, 4, 24, 0.3, 0.069);
+					// evilTrail.changeValuesEnabled(false, false, false, false);
+					// evilTrail.changeGraphic()
+					add(evilTrail);
+				}
+				// evilTrail.scrollFactor.set(1.1, 1.1);
 			}
 		}
 
@@ -3114,7 +3114,7 @@ class PlayState extends MusicBeatState
 		perfectMode = false;
 		#end
 		if (FlxG.save.data.background)
-			Stage.update(0);
+			Stage.update(elapsed);
 
 		if (!addedBotplay && PlayStateChangeables.botPlay)
 		{

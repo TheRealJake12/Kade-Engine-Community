@@ -59,7 +59,7 @@ class StageDebugState extends MusicBeatState
 		FlxG.sound.music.stop();
 		FlxG.mouse.visible = true;
 
-		Stage = PlayState.Stage;
+		Stage = PlayState.instance.Stage;
 
 		gf = PlayState.instance.gf;
 		boyfriend = PlayState.instance.boyfriend;

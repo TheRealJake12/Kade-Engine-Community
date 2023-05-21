@@ -1916,14 +1916,14 @@ class LuaGame extends LuaClass
 		// 2 = stage
 		var stageName = LuaL.checkstring(state, 2);
 
-		for (i in PlayState.Stage.toAdd)
+		for (i in PlayState.instance.Stage.toAdd)
 		{
 			PlayState.instance.remove(i);
 		}
 
-		PlayState.Stage = new Stage(stageName);
+		PlayState.instance.Stage = new Stage(stageName);
 
-		for (i in PlayState.Stage.toAdd)
+		for (i in PlayState.instance.Stage.toAdd)
 		{
 			PlayState.instance.add(i);
 		}
