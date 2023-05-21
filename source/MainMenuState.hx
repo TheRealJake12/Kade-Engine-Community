@@ -28,10 +28,10 @@ using StringTools;
 class MainMenuState extends MusicBeatState
 {
 	public static var nightly:String = "";
-	public static var kecVer:String = 'Kade Engine Community 1.8';
+	public static var kecVer:String = 'Kade Engine Community 1.8.1';
 	public static var keVer:String = "Kade Engine 1.8.1";
 	public static var curSelected:Int = 0;
-	public static var freakyPlaying:Bool;
+	public static var freakyPlaying:Bool = true;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	var colorArray:Array<FlxColor> = [
@@ -95,7 +95,6 @@ class MainMenuState extends MusicBeatState
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
-		Conductor.changeBPM(102, false);
 
 		#if FEATURE_MODCORE
 		if (FlxG.save.data.loadMods)
@@ -107,12 +106,12 @@ class MainMenuState extends MusicBeatState
 		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
 		#end
 
-		if (!FlxG.sound.music.playing)
+		if (!freakyPlaying)
 		{
 			FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
 			freakyPlaying = true;
+			Conductor.changeBPM(102, false);
 		}
-		Conductor.changeBPM(102);
 
 		if (!FlxG.save.data.watermark)
 			optionShit.remove('discord');

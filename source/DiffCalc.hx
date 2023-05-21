@@ -56,8 +56,6 @@ class DiffCalc
 		if (cleanedNotes.length == 0)
 			return 0.0;
 
-		trace('calcuilafjwaf ' + cleanedNotes.length);
-
 		var handOne:Array<SmallNote> = [];
 		var handTwo:Array<SmallNote> = [];
 
@@ -241,12 +239,6 @@ class DiffCalc
 			smoothBrainTwo(hand_diffOne);
 			smoothBrainTwo(hand_diffTwo);
 		}
-
-		// trace(hand_diffOne);
-		// trace(hand_diffTwo);
-
-		// trace(hand_npsOne);
-		// trace(hand_npsTwo);
 
 		var point_npsOne:Array<Float> = new Array<Float>();
 		var point_npsTwo:Array<Float> = new Array<Float>();
