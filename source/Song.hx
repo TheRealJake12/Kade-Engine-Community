@@ -273,8 +273,6 @@ class Song
 				section.lengthInSteps = 16;
 		}
 
-		Debug.logTrace("Run Conversion Checks On : " + song.songId);
-
 		song.chartVersion = latestChart;
 
 		return song;

@@ -838,8 +838,6 @@ class PlayState extends MusicBeatState
 			tweenCamIn();
 		}
 
-		Stage.update(0);
-
 		if (loadRep)
 		{
 			FlxG.watch.addQuick('rep rpesses', repPresses);
@@ -4471,6 +4469,7 @@ class PlayState extends MusicBeatState
 					totalNotesHit += 1;
 				sicks++;
 			case 'marv':
+				score = 500;
 				if (!PlayStateChangeables.opponentMode && health < 2)
 				{
 					health += 0.06 * PlayStateChangeables.healthGain;

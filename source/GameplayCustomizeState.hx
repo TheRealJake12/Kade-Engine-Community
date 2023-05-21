@@ -30,7 +30,7 @@ class GameplayCustomizeState extends MusicBeatState
 
 	var strumLine:FlxSprite;
 	var strumLineNotes:FlxTypedGroup<FlxSprite>;
-	var playerStrums:FlxTypedGroup<FlxSprite>;
+	var playerStrums:FlxTypedGroup<StaticArrow>;
 	var cpuStrums:FlxTypedGroup<StaticArrow>;
 
 	var camPos:FlxPoint;
@@ -46,8 +46,8 @@ class GameplayCustomizeState extends MusicBeatState
 	var pixelShitPart3:String = 'shared';
 	var pixelShitPart4:String = null;
 
-	private var camHUD:FlxCamera;
-	private var camGame:FlxCamera;
+	private var camHUD:SwagCamera;
+	private var camGame:SwagCamera;
 	private var camFollow:FlxObject;
 	private var dataSuffix:Array<String> = ['LEFT', 'DOWN', 'UP', 'RIGHT'];
 	private var dataColor:Array<String> = ['purple', 'blue', 'green', 'red'];
@@ -79,6 +79,7 @@ class GameplayCustomizeState extends MusicBeatState
 		sick = new FlxSprite().loadGraphic(Paths.image('sick', 'shared'));
 		sick.antialiasing = FlxG.save.data.antialiasing;
 		sick.scrollFactor.set();
+		sick.setGraphicSize(Std.int(sick.width * 0.7));
 		background = new FlxSprite(-1000, -200).loadGraphic(Paths.image('stageback', 'shared'));
 		curt = new FlxSprite(-500, -300).loadGraphic(Paths.image('stagecurtains', 'shared'));
 		front = new FlxSprite(-650, 600).loadGraphic(Paths.image('stagefront', 'shared'));
@@ -93,36 +94,11 @@ class GameplayCustomizeState extends MusicBeatState
 
 		super.create();
 
-		camHUD = new FlxCamera();
+		camHUD = new SwagCamera();
 		camHUD.bgColor.alpha = 0;
 		FlxG.cameras.add(camHUD);
 
 		camHUD.zoom = FlxG.save.data.zoom;
-
-		if (freeplayStage == null)
-		{
-			switch (freeplayWeek)
-			{
-				case 2:
-					stageCheck = 'halloween';
-				case 3:
-					stageCheck = 'philly';
-				case 4:
-					stageCheck = 'limo';
-				case 5:
-					if (freeplaySong == 'winter-horrorland')
-						stageCheck = 'mallEvil';
-					else
-						stageCheck = 'mall';
-				case 6:
-					if (freeplaySong == 'thorns')
-						stageCheck = 'schoolEvil';
-					else
-						stageCheck = 'school';
-			}
-		}
-		else
-			stageCheck = freeplayStage;
 
 		var camFollow = new FlxObject(0, 0, 1, 1);
 
@@ -225,7 +201,7 @@ class GameplayCustomizeState extends MusicBeatState
 		FlxG.camera.zoom = 0.9;
 		FlxG.camera.focusOn(camFollow.getPosition());
 
-		strumLine = new FlxSprite(0, FlxG.save.data.strumline).makeGraphic(FlxG.width, 14);
+		strumLine = new FlxSprite(0, 50).makeGraphic(FlxG.width, 10);
 		strumLine.scrollFactor.set();
 		strumLine.alpha = 0.4;
 
@@ -237,11 +213,13 @@ class GameplayCustomizeState extends MusicBeatState
 		strumLineNotes = new FlxTypedGroup<FlxSprite>();
 		add(strumLineNotes);
 
-		playerStrums = new FlxTypedGroup<FlxSprite>();
+		playerStrums = new FlxTypedGroup<StaticArrow>();
+		cpuStrums = new FlxTypedGroup<StaticArrow>();
 
 		sick.cameras = [camHUD];
 		strumLine.cameras = [camHUD];
 		playerStrums.cameras = [camHUD];
+		cpuStrums.cameras = [camHUD];
 
 		generateStaticArrows(0);
 		generateStaticArrows(1);
@@ -277,6 +255,7 @@ class GameplayCustomizeState extends MusicBeatState
 		sick.y = FlxG.save.data.changedHitY;
 
 		FlxG.mouse.visible = true;
+		Paths.clearUnusedMemory();
 	}
 
 	override function update(elapsed:Float)
@@ -300,11 +279,6 @@ class GameplayCustomizeState extends MusicBeatState
 			sick.x = (FlxG.mouse.x - sick.width / 2) - 60;
 			sick.y = (FlxG.mouse.y - sick.height) - 60;
 		}
-
-		for (i in playerStrums)
-			i.y = strumLine.y;
-		for (i in strumLineNotes)
-			i.y = strumLine.y;
 
 		if (FlxG.keys.justPressed.Q)
 		{
@@ -356,42 +330,37 @@ class GameplayCustomizeState extends MusicBeatState
 			dad.dance();
 
 		gf.dance();
-		FlxG.camera.zoom += 0.015;
-		camHUD.zoom += 0.010;
 
 		trace('beat');
 	}
 
 	// ripped from play state cuz im lazy
 
-	private function generateStaticArrows(player:Int):Void
+	private function generateStaticArrows(player:Int, ?tween:Bool = true):Void
 	{
 		for (i in 0...4)
 		{
 			var babyArrow:StaticArrow = new StaticArrow(-10, strumLine.y);
 
-			// defaults if no noteStyle was found in chart
 			var noteTypeCheck:String = 'normal';
+			babyArrow.downScroll = FlxG.save.data.downscroll;
 
-			if (freeplayNoteStyle == null && FlxG.save.data.overrideNoteskins)
-			{
-				switch (freeplayWeek)
-				{
-					case 6:
-						noteTypeCheck = 'pixel';
-				}
-			}
-			else
-				noteTypeCheck = freeplayNoteStyle;
+			// if (PlayStateChangeables.Optimize && player == 0)
+			// continue;
 
 			switch (noteTypeCheck)
 			{
 				case 'pixel':
-					babyArrow.loadGraphic(Paths.image('weeb/pixelUI/arrows-pixels', 'week6'), true, 17, 17);
+					#if html5
+					babyArrow.loadGraphic(Paths.image('noteskins/Arrows-pixel', 'shared'), true, 12, 17);
+					#else
+					babyArrow.loadGraphic(PlayState.noteskinPixelSprite, true, 17, 17);
+					#end
+
 					babyArrow.animation.add('green', [6]);
 					babyArrow.animation.add('red', [7]);
 					babyArrow.animation.add('blue', [5]);
-					babyArrow.animation.add('purplel', [4]);
+					babyArrow.animation.add('purple', [4]);
 
 					babyArrow.setGraphicSize(Std.int(babyArrow.width * CoolUtil.daPixelZoom));
 					babyArrow.updateHitbox();
@@ -400,15 +369,18 @@ class GameplayCustomizeState extends MusicBeatState
 					babyArrow.x += Note.swagWidth * i;
 					babyArrow.animation.add('static', [i]);
 					babyArrow.animation.add('pressed', [4 + i, 8 + i], 12, false);
-					babyArrow.animation.add('confirm', [12 + i, 16 + i], 24, false);
+					babyArrow.animation.add('confirm', [12 + i, 16 + i], 12, false);
 
 					for (j in 0...4)
 					{
-						babyArrow.animation.add('dirCon' + j, [12 + j, 16 + j], 24, false);
+						babyArrow.animation.add('dirCon' + j, [12 + j, 16 + j], 12, false);
 					}
 
 				default:
-					babyArrow.frames = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.noteskin);
+					if (player == 0)
+						babyArrow.frames = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.cpuNoteskin);
+					else
+						babyArrow.frames = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.noteskin);
 					for (j in 0...4)
 					{
 						babyArrow.animation.addByPrefix(dataColor[j], 'arrow' + dataSuffix[j]);
@@ -421,6 +393,27 @@ class GameplayCustomizeState extends MusicBeatState
 					babyArrow.animation.addByPrefix('pressed', lowerDir + ' press', 24, false);
 					babyArrow.animation.addByPrefix('confirm', lowerDir + ' confirm', 24, false);
 
+					babyArrow.animation.addByPrefix('green', 'arrow static instance 1');
+					babyArrow.animation.addByPrefix('blue', 'arrow static instance 2');
+					babyArrow.animation.addByPrefix('purple', 'arrow static instance 3');
+					babyArrow.animation.addByPrefix('red', 'arrow static instance 4');
+
+					babyArrow.animation.addByPrefix('static', 'arrow static instance 1');
+					babyArrow.animation.addByPrefix('pressed', 'left press instance 1', 24, false);
+					babyArrow.animation.addByPrefix('confirm', 'left confirm instance 1', 24, false);
+
+					babyArrow.animation.addByPrefix('static', 'arrow static instance 2');
+					babyArrow.animation.addByPrefix('pressed', 'down press instance 1', 24, false);
+					babyArrow.animation.addByPrefix('confirm', 'down confirm instance 1', 24, false);
+
+					babyArrow.animation.addByPrefix('static', 'arrow static instance 4');
+					babyArrow.animation.addByPrefix('pressed', 'up press instance 1', 24, false);
+					babyArrow.animation.addByPrefix('confirm', 'up confirm instance 1', 24, false);
+
+					babyArrow.animation.addByPrefix('static', 'arrow static instance 3');
+					babyArrow.animation.addByPrefix('pressed', 'right press instance 1', 24, false);
+					babyArrow.animation.addByPrefix('confirm', 'right confirm instance 1', 24, false);
+
 					babyArrow.x += Note.swagWidth * i;
 
 					babyArrow.antialiasing = FlxG.save.data.antialiasing;
@@ -430,16 +423,37 @@ class GameplayCustomizeState extends MusicBeatState
 			babyArrow.updateHitbox();
 			babyArrow.scrollFactor.set();
 
+			if (tween)
+			{
+				babyArrow.y -= 10;
+				babyArrow.alpha = 0;
+				FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
+			}
+			else
+				babyArrow.alpha = 1;
+
 			babyArrow.ID = i;
 
-			playerStrums.add(babyArrow);
+			switch (player)
+			{
+				case 0:
+					babyArrow.x += 20;
+					playerStrums.add(babyArrow);
+				case 1:
+					babyArrow.x -= 20;
+					cpuStrums.add(babyArrow);
+			}
 
 			babyArrow.playAnim('static');
-			babyArrow.x += 110;
+			babyArrow.x += 98.5; // Tryna make it not offset because it was pissing me off + Psych Engine has it somewhat like this.
 			babyArrow.x += ((FlxG.width / 2) * player);
 
-			if (FlxG.save.data.middleScroll)
-				babyArrow.x -= 300;
+			if (FlxG.save.data.middleScroll || FlxG.save.data.optimize)
+			{
+				babyArrow.x -= 303.5;
+				if (player == 0)
+					babyArrow.x -= 275 / Math.pow(FlxG.save.data.zoom, 3);
+			}
 
 			strumLineNotes.add(babyArrow);
 		}

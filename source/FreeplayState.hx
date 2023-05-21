@@ -748,17 +748,19 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 
-		if (FlxG.sound.music.playing && !MainMenuState.freakyPlaying)
+		if (FlxG.sound.music != null && !MainMenuState.freakyPlaying)
 		{
-			var timingSeg = TimingStruct.getTimingAtBeat(curDecimalBeat);
-
-			if (timingSeg != null)
+			if (FlxG.sound.music.playing)
 			{
-				var timingSegBpm = timingSeg.bpm;
-
-				if (timingSegBpm != Conductor.bpm)
+				if (curTiming != null)
 				{
-					Conductor.changeBPM(timingSegBpm, false);
+					var curBPM = curTiming.bpm;
+
+					if (curBPM != Conductor.bpm)
+					{
+						Debug.logInfo("BPM CHANGE to " + curBPM);
+						Conductor.changeBPM(curBPM, false);
+					}
 				}
 			}
 		}
@@ -865,7 +867,7 @@ class FreeplayState extends MusicBeatState
 
 			// playinSong = Song.loadFromJson(songs[curSelected].songName,CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[CoolUtil.difficultyArray.indexOf(songs[curSelected].diffs[curDifficulty])]));
 
-			// activeSong = playinSong;
+			activeSong = playinSong;
 
 			if (currentSongPlaying != songs[curSelected].songName)
 			{
@@ -878,7 +880,9 @@ class FreeplayState extends MusicBeatState
 
 				FlxG.sound.playMusic(songPath, 0.7, true);
 
-				Debug.logTrace(songPath);
+				//Conductor.changeBPM();
+
+				//Debug.logTrace(songPath);
 
 				songPath = null;
 			}
@@ -1064,7 +1068,16 @@ class FreeplayState extends MusicBeatState
 		{
 			hmm = songData.get(songs[curSelected].songName)[curDifficulty];
 			if (hmm != null)
+			{
+				Conductor.changeBPM(hmm.bpm, false);
+				GameplayCustomizeState.freeplayBf = hmm.player1;
+				GameplayCustomizeState.freeplayDad = hmm.player2;
+				GameplayCustomizeState.freeplayGf = hmm.gfVersion;
 				GameplayCustomizeState.freeplayNoteStyle = hmm.noteStyle;
+				GameplayCustomizeState.freeplayStage = hmm.stage;
+				GameplayCustomizeState.freeplaySong = hmm.songId;
+				GameplayCustomizeState.freeplayWeek = songs[curSelected].week;
+			}
 		}
 		catch (ex)
 		{
