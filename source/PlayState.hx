@@ -3663,7 +3663,7 @@ class PlayState extends MusicBeatState
 									{
 										if (!triggeredAlready)
 										{
-											gf.playAnim('cheer');
+											gf.playAnim('cheer', true);
 											triggeredAlready = true;
 										}
 									}
@@ -3681,7 +3681,7 @@ class PlayState extends MusicBeatState
 										{
 											if (!triggeredAlready)
 											{
-												gf.playAnim('cheer');
+												gf.playAnim('cheer', true);
 												triggeredAlready = true;
 											}
 										}
@@ -3700,7 +3700,7 @@ class PlayState extends MusicBeatState
 										{
 											if (!triggeredAlready)
 											{
-												gf.playAnim('cheer');
+												gf.playAnim('cheer', true);
 												triggeredAlready = true;
 											}
 										}
@@ -3717,7 +3717,7 @@ class PlayState extends MusicBeatState
 									{
 										if (!triggeredAlready)
 										{
-											gf.playAnim('cheer');
+											gf.playAnim('cheer', true);
 											triggeredAlready = true;
 										}
 									}
@@ -5605,10 +5605,12 @@ class PlayState extends MusicBeatState
 		if (curStep % 32 == 28 #if cpp && curStep != 316 #end && SONG.songId == 'bopeebo')
 		{
 			boyfriend.playAnim('hey', true);
+			gf.playAnim('cheer', true);
 		}
 		if ((curStep == 190 * songMultiplier || curStep == 446 * songMultiplier) && SONG.songId == 'bopeebo')
 		{
 			boyfriend.playAnim('hey', true);
+			gf.playAnim('cheer', true);
 		}
 
 		if (curSong == 'ugh')
