@@ -539,7 +539,7 @@ class Paths
 				}
 			}
 
-			#if PRELOAD_ALL
+			#if NO_PRELOAD_ALL
 			// clear all sounds that are cached
 			var counterSound:Int = 0;
 			for (key in currentTrackedSounds.keys())

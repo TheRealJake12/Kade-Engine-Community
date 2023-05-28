@@ -942,7 +942,12 @@ class FreeplayState extends MusicBeatState
 		{
 			if (instance.songs[curSelected].songCharacter == "sm")
 			{
-				currentSongData = Song.loadFromJsonRAW(File.getContent(instance.songs[curSelected].sm.jsonPath));
+				currentSongData = Song.loadFromJsonRAW(
+					#if FEATURE_FILESYSTEM
+					File.getContent(instance.songs[curSelected].sm.jsonPath)
+					#else
+					OpenFlAssets.getText(instance.songs[curSelected].songName)
+					#end);
 			}
 			else
 			{
