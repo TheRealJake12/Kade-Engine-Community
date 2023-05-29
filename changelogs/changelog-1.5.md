@@ -1,4 +1,4 @@
-#Changelog For Update 1.5.
+# Changelog For Update 1.5.
 
 - Week 7
 - Redone Fade Transition. Now Works With Lower FPS.
