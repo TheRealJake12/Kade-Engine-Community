@@ -1,4 +1,4 @@
-# Changelog For Update 1.7.1
+# Changelog For Update 1.7.1.
 
 - Partial Controller Support Added Back.
 - StepMania Format Now Functions Again.

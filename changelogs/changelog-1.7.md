@@ -1,4 +1,4 @@
-# Changelog For Update 1.7
+# Changelog For Update 1.7.
 
 - ModCore. Simplest of Modsupport.
 - Characters Use JSONS Because of ModCore.

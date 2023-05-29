@@ -1,4 +1,4 @@
-# Changelog For Update 1.5.1
+# Changelog For Update 1.5.1.
 
 - Added The Option To Turn Off Rating Popup.
 - Added The Rest Of Week 7.

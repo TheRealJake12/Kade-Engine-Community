@@ -1,4 +1,4 @@
-# Changelog For Update 1.8
+# Changelog For Update 1.8.
 
 - Main Menu Design Rework.
 - HTML5 Builds Are Currently No Longer Officially Supported.

@@ -1,4 +1,4 @@
-# Changelog For Update 1.5.2
+# Changelog For Update 1.5.2.
 
 - Debugging Now Gives More Information.
 - Crash Handler (Thanks sqirra-rng!)

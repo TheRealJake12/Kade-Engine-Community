@@ -1,4 +1,4 @@
-# Changelog For Update 1.6
+# Changelog For Update 1.6.
 
 - More Customizable Notesplashes For The Player.
 - Note Types. There Are 2 Types Available. Hurt And Must Press.
