@@ -2,7 +2,7 @@
 
 - [Most Recent Version](https://github.com/TheRealJake12/Kade-Engine-Community/releases/latest) (Most Recent Version)
 
-- [1.8.1](changelog-1.8.1)
+- [1.8.1](changelog-1.8.1.md)
 - [1.8](changelog-1.8)
 - [1.7.1](changelog-1.7.1)
 - [1.7](changelog-1.7)
