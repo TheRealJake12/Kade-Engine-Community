@@ -106,7 +106,7 @@ class PlayState extends MusicBeatState
 	// Fake crochet for Sustain Notes
 	public var fakeCrochet:Float = 0;
 
-	public static var fakeNoteStepCrochet:Float;
+	public var fakeNoteStepCrochet:Float;
 
 	// I shit my pants
 	public static var SONG:SongData;
@@ -280,7 +280,7 @@ class PlayState extends MusicBeatState
 
 	public var isSMFile:Bool = false;
 
-	var notesHitArray:Array<Date> = [];
+	var notesHitArray:Array<Float> = [];
 
 	public var dialogue:Array<String> = ['dad:blah blah blah', 'bf:coolswag'];
 
@@ -1352,26 +1352,6 @@ class PlayState extends MusicBeatState
 
 	public var tankIntroEnd:Bool = false;
 
-	function set_scrollSpeed(value:Float):Float // STOLEN FROM PSYCH ENGINE ONLY SPRITE SCALING PART.
-	{
-		speedChanged = true;
-		if (generatedMusic)
-		{
-			var ratio:Float = value / scrollSpeed;
-			for (note in notes)
-			{
-				if (note.animation.curAnim != null)
-					if (note.isSustainNote && !note.animation.curAnim.name.endsWith('end'))
-					{
-						note.scale.y *= ratio;
-						note.updateHitbox();
-					}
-			}
-		}
-		scrollSpeed = value;
-		return value;
-	}
-
 	function tankIntro()
 	{
 		dad.visible = false;
@@ -1844,6 +1824,35 @@ class PlayState extends MusicBeatState
 	#if FEATURE_LUAMODCHART
 	public static var luaModchart:ModchartState = null;
 	#end
+
+	function set_scrollSpeed(value:Float):Float // STOLEN FROM PSYCH ENGINE ONLY SPRITE SCALING PART.
+	{
+		speedChanged = true;
+		if (generatedMusic)
+		{
+			var ratio:Float = value / scrollSpeed;
+			for (note in notes)
+			{
+				if (note.animation.curAnim != null)
+					if (note.isSustainNote && !note.animation.curAnim.name.endsWith('end'))
+					{
+						note.scale.y *= ratio;
+						note.updateHitbox();
+					}
+			}
+			for (note in unspawnNotes)
+			{
+				if (note.animation.curAnim != null)
+					if (note.isSustainNote && !note.animation.curAnim.name.endsWith('end'))
+					{
+						note.scale.y *= ratio;
+						note.updateHitbox();
+					}
+			}
+		}
+		scrollSpeed = value;
+		return value;
+	}
 
 	function startCountdown():Void
 	{
@@ -3373,19 +3382,24 @@ class PlayState extends MusicBeatState
 		// reverse iterate to remove oldest notes first and not invalidate the iteration
 		// stop iteration as soon as a note is not removed
 		// all notes should be kept in the correct order and this is optimal, safe to do every frame/update
-		var balls = notesHitArray.length - 1;
-		while (balls >= 0)
+		if (notesHitArray.length > 0)
 		{
-			var cock:Date = notesHitArray[balls];
-			if (cock != null && cock.getTime() + 1000 < Date.now().getTime())
-				notesHitArray.remove(cock);
-			else
-				balls = 0;
-			balls--;
+			var data = Date.now().getTime();
+			var balls = notesHitArray.length - 1;
+			while (balls >= 0)
+			{
+				var cock:Float = notesHitArray[balls];
+
+				if (cock + 1000 < data)
+					notesHitArray.remove(cock);
+				else
+					break;
+				balls--;
+			}
+			nps = notesHitArray.length;
+			if (nps > maxNPS)
+				maxNPS = nps;
 		}
-		nps = notesHitArray.length;
-		if (nps > maxNPS)
-			maxNPS = nps;
 
 		if (FlxG.keys.justPressed.NINE)
 			iconP1.swapOldIcon();
@@ -3869,25 +3883,40 @@ class PlayState extends MusicBeatState
 				};
 				#end
 
-				var strumX = strum.members[daNote.noteData].x;
 				var strumY = strum.members[daNote.noteData].y;
+
+				var strumX = strum.members[daNote.noteData].x;
+
 				var strumAngle = strum.members[daNote.noteData].modAngle;
-				var strumDirection = strum.members[daNote.noteData].direction;
+
 				var strumScrollType = strum.members[daNote.noteData].downScroll;
+
+				var strumDirection = strum.members[daNote.noteData].direction;
+
 				var angleDir = strumDirection * Math.PI / 180;
-				daNote.modAngle = strumDirection - 90 + strumAngle;
-				daNote.x = strumX + Math.cos(angleDir) * daNote.distance;
+
 				var origin = strumY + Note.swagWidth / 2;
+
+				if (daNote.isSustainNote)
+					daNote.x = (strumX + Math.cos(angleDir) * daNote.distance) + (Note.swagWidth / 3);
+				else
+					daNote.x = strumX + Math.cos(angleDir) * daNote.distance;
+
 				daNote.y = strumY + Math.sin(angleDir) * daNote.distance;
 
-				if (strumScrollType)
+				if (!daNote.overrideDistance)
 				{
-					daNote.distance = (0.45 * ((Conductor.songPosition - daNote.strumTime) / songMultiplier) * (FlxMath.roundDecimal(leSpeed, 2)))
-						- daNote.noteYOff;
+					if (PlayStateChangeables.useDownscroll)
+					{
+						daNote.distance = (0.45 * ((Conductor.songPosition - daNote.strumTime)) * (FlxMath.roundDecimal(leSpeed,
+							2)) * daNote.speedMultiplier)
+							- daNote.noteYOff;
+					}
+					else
+						daNote.distance = (-0.45 * ((Conductor.songPosition - daNote.strumTime)) * (FlxMath.roundDecimal(leSpeed,
+							2)) * daNote.speedMultiplier)
+							+ daNote.noteYOff;
 				}
-				else
-					daNote.distance = (-0.45 * ((Conductor.songPosition - daNote.strumTime) / songMultiplier) * (FlxMath.roundDecimal(leSpeed, 2)))
-						+ daNote.noteYOff;
 
 				if (strumScrollType)
 				{
@@ -3977,13 +4006,6 @@ class PlayState extends MusicBeatState
 
 				if (!daNote.mustPress && FlxG.save.data.middleScroll && !executeModchart)
 					daNote.visible = false;
-
-				if (daNote.isSustainNote)
-				{
-					daNote.x += 36.5;
-					if (SONG.noteStyle == 'pixel')
-						daNote.x -= 5;
-				}
 
 				if (daNote.isSustainNote && daNote.wasGoodHit && Conductor.songPosition >= daNote.strumTime)
 				{
@@ -5398,7 +5420,10 @@ class PlayState extends MusicBeatState
 		// the oldest notes are at the end and are removed first
 
 		if (!note.isSustainNote)
-			notesHitArray.unshift(Date.now());
+		{
+			var noteDate:Date = Date.now();
+			notesHitArray.unshift(noteDate.getTime());
+		}
 
 		if (!resetMashViolation && mashViolations >= 1)
 			mashViolations--;

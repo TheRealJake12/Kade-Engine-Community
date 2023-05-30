@@ -79,19 +79,25 @@ class Note extends FlxSprite
 	public var stepHeight:Float = 0;
 
 	public var distance:Float = 2000;
+	public var speedMultiplier:Float = 1.0;
+	public var overrideDistance:Bool = false; // Set this to true if you know what are you doing.
 
 	#if FEATURE_LUAMODCHART
 	public var LuaNote:LuaNote;
 	#end
 
 	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inCharter:Bool = false, ?isPlayer:Bool = false,
-			?isAlt:Bool = false, ?bet:Float = 0, ?noteShit:String = 'normal')
+			?isAlt:Bool = false, ?bet:Float = 0, ?noteShit:String = 'normal', ?speedMultiplier:Float = 1.0)
 	{
 		super();
+
+		if (noteShit == null || noteShit == '0' || noteShit == 'false' || noteShit == 'true')
+			noteShit = 'normal';
 		this.noteShit = noteShit; // FFFFFFFFFFFFFFFFFFFFFFUUUUUUUUUUUUUUUUUUUUUUUUUUUU
 		if (prevNote == null)
 			prevNote = this;
 
+		this.speedMultiplier = speedMultiplier;
 		beat = bet;
 		this.isAlt = isAlt;
 
@@ -184,25 +190,18 @@ class Note extends FlxSprite
 						for (i in 0...4)
 						{
 							animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
+							animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + '0'); // Normal notes old
+
 							animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
+							animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold piece'); // Hold old
+
 							animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
+							animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' hold end'); // Tails old
+
+							animation.addByPrefix('purpleholdend', 'pruple end hold'); // ?
+
+							// For Legacy Noteskins.
 						}
-						animation.addByPrefix('greenScroll', 'green0');
-						animation.addByPrefix('redScroll', 'red0');
-						animation.addByPrefix('blueScroll', 'blue0');
-						animation.addByPrefix('purpleScroll', 'purple0');
-
-						animation.addByPrefix('purpleholdend', 'pruple end hold');
-						animation.addByPrefix('greenholdend', 'green hold end');
-						animation.addByPrefix('redholdend', 'red hold end');
-						animation.addByPrefix('blueholdend', 'blue hold end');
-
-						animation.addByPrefix('purplehold', 'purple hold piece');
-						animation.addByPrefix('greenhold', 'green hold piece');
-						animation.addByPrefix('redhold', 'red hold piece');
-						animation.addByPrefix('bluehold', 'blue hold piece');
-
-						// For Legacy Noteskins.
 					}
 			}
 
@@ -307,25 +306,18 @@ class Note extends FlxSprite
 								for (i in 0...4)
 								{
 									animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
+									animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + '0'); // Normal notes old
+
 									animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
+									animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold piece'); // Hold old
+
 									animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
+									animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' hold end'); // Tails old
+
+									animation.addByPrefix('purpleholdend', 'pruple end hold'); // ?
+
+									// For Legacy Noteskins.
 								}
-								animation.addByPrefix('greenScroll', 'green0');
-								animation.addByPrefix('redScroll', 'red0');
-								animation.addByPrefix('blueScroll', 'blue0');
-								animation.addByPrefix('purpleScroll', 'purple0');
-
-								animation.addByPrefix('purpleholdend', 'pruple end hold');
-								animation.addByPrefix('greenholdend', 'green hold end');
-								animation.addByPrefix('redholdend', 'red hold end');
-								animation.addByPrefix('blueholdend', 'blue hold end');
-
-								animation.addByPrefix('purplehold', 'purple hold piece');
-								animation.addByPrefix('greenhold', 'green hold piece');
-								animation.addByPrefix('redhold', 'red hold piece');
-								animation.addByPrefix('bluehold', 'blue hold piece');
-
-								// For Legacy Noteskins.
 							}
 					}
 
@@ -372,11 +364,10 @@ class Note extends FlxSprite
 			}
 		}
 
-		stepHeight = (((0.45 * PlayState.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayState.instance.scrollSpeed == 1 ? PlayState.SONG.speed : PlayState.instance.scrollSpeed,
-			2));
-
 		if (isSustainNote && prevNote != null)
 		{
+			stepHeight = (((0.45 * PlayState.instance.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayState.instance.scrollSpeed == 1 ? PlayState.SONG.speed : PlayState.instance.scrollSpeed,
+				2) * speedMultiplier);
 			noteYOff = -stepHeight + swagWidth * 0.5;
 
 			noteScore * 0.2;
@@ -427,8 +418,9 @@ class Note extends FlxSprite
 	{
 		// This updates hold notes height to current scroll Speed in case of scroll Speed changes.
 		super.update(elapsed);
-		var newStepHeight = (((0.45 * PlayState.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayState.instance.scrollSpeed == 1 ? PlayState.SONG.speed : PlayState.instance.scrollSpeed,
-			2));
+
+		var newStepHeight = (((0.45 * PlayState.instance.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayState.instance.scrollSpeed == 1 ? PlayState.SONG.speed : PlayState.instance.scrollSpeed,
+			2) * speedMultiplier);
 
 		if (stepHeight != newStepHeight)
 		{

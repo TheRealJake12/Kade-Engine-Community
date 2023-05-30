@@ -37,6 +37,8 @@ New And Improved Freeplay By BoloVEVO.
 
 A goal I want is this to be well documented so if someone doesn't understand something, they can look in docs!
 
+**Feel free to use this code for your own projects. Steal it. Borrow it. I don't care. As long as you improve, thats totally ok!. Hope you learn something**
+
 ### How To Build From Source
 
 This is a not to in-depth guide to build the game and get your mod going or to contribute to the engine

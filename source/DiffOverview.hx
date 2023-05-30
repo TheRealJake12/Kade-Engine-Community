@@ -29,7 +29,7 @@ import flixel.input.FlxKeyManager;
 
 using StringTools;
 
-class DiffOverview extends FlxSubState
+class DiffOverview extends MusicBeatSubstate
 {
 	var blackBox:FlxSprite;
 
@@ -47,7 +47,7 @@ class DiffOverview extends FlxSubState
 	private var dataSuffix:Array<String> = ['LEFT', 'DOWN', 'UP', 'RIGHT'];
 	private var dataColor:Array<String> = ['purple', 'blue', 'green', 'red'];
 
-	public static var playerStrums:FlxTypedGroup<FlxSprite> = null;
+	public static var playerStrums:FlxTypedGroup<StaticArrow> = null;
 
 	override function create()
 	{
@@ -60,30 +60,47 @@ class DiffOverview extends FlxSubState
 
 		FlxG.cameras.add(camGame);
 
-		FlxG.cameras.add(camHUD);
+		FlxG.cameras.add(camHUD, false);
 
 		FlxCamera.defaultCameras = [camGame];
 
-		playerStrums = new FlxTypedGroup<FlxSprite>();
+		playerStrums = new FlxTypedGroup<StaticArrow>();
 
-		SONG = FreeplayState.songData.get(FreeplayState.songs[FreeplayState.curSelected].songName)[FreeplayState.curDifficulty];
+		var currentSongData:SongData = null;
+		try
+		{
+			currentSongData = Song.loadFromJson(FreeplayState.instance.songs[FreeplayState.curSelected].songName, CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[
+				CoolUtil.difficultyArray.indexOf(FreeplayState.instance.songs[FreeplayState.curSelected].diffs[FreeplayState.curDifficulty])]));
+		}
+		catch (ex)
+		{
+			Debug.logError(ex);
+			return;
+		}
+
+		PlayState.noteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.noteskin);
+
+		SONG = currentSongData;
 
 		strumLine = new FlxSprite(0, (FlxG.height / 2) - 295).makeGraphic(FlxG.width, 10);
 		strumLine.scrollFactor.set();
+		add(strumLine);
 
 		blackBox = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		blackBox.alpha = 0;
+		blackBox.screenCenter();
 		add(blackBox);
 
 		handOne = DiffCalc.lastDiffHandOne;
 		handTwo = DiffCalc.lastDiffHandTwo;
 
-		generateStaticArrows();
+		generateStaticArrows(0);
 
 		add(playerStrums);
+		
+		generateSong(SONG.songId);
 
-		generateSong("assItch");
-
+		strumLine.cameras = [camHUD];
 		playerStrums.cameras = [camHUD];
 		notes.cameras = [camHUD];
 		blackBox.cameras = [camHUD];
@@ -92,12 +109,9 @@ class DiffOverview extends FlxSubState
 		blackBox.y = strumLine.y;
 
 		camHUD.zoom = 0.6;
-		camHUD.alpha = 0;
-		camHUD.height = 5000;
 		blackBox.height = camHUD.height;
 
 		camHUD.x += 280;
-
 		blackBox.y -= 100;
 		blackBox.x -= 100;
 
@@ -109,9 +123,9 @@ class DiffOverview extends FlxSubState
 		offset.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 4, 1);
 		offset.color = FlxColor.WHITE;
 		offset.scrollFactor.set();
-		// add(offset);
+		add(offset);
 
-		FlxTween.tween(blackBox, {alpha: 0.5}, 1, {ease: FlxEase.expoInOut});
+		FlxTween.tween(blackBox, {alpha: 0.9}, 1, {ease: FlxEase.expoInOut});
 		FlxTween.tween(camHUD, {alpha: 1}, 0.5, {ease: FlxEase.expoInOut});
 		FlxTween.tween(offset, {alpha: 1}, 0.5, {ease: FlxEase.expoInOut});
 
@@ -120,43 +134,110 @@ class DiffOverview extends FlxSubState
 		super.create();
 	}
 
-	function generateStaticArrows()
+	function generateStaticArrows(player:Int, ?tween:Bool = true):Void
 	{
 		for (i in 0...4)
 		{
-			// FlxG.log.add(i);
 			var babyArrow:StaticArrow = new StaticArrow(-10, strumLine.y);
-			babyArrow.frames = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.noteskin);
-			for (j in 0...4)
+
+			var noteTypeCheck:String = 'normal';
+			babyArrow.downScroll = FlxG.save.data.downscroll;
+
+			// if (PlayStateChangeables.Optimize && player == 0)
+			// continue;
+
+			switch (noteTypeCheck)
 			{
-				babyArrow.animation.addByPrefix(dataColor[j], 'arrow' + dataSuffix[j]);
-				babyArrow.animation.addByPrefix('dirCon' + j, dataSuffix[j].toLowerCase() + ' confirm', 24, false);
+				case 'pixel':
+					#if html5
+					babyArrow.loadGraphic(Paths.image('noteskins/Arrows-pixel', 'shared'), true, 12, 17);
+					#else
+					babyArrow.loadGraphic(PlayState.noteskinPixelSprite, true, 17, 17);
+					#end
+
+					babyArrow.animation.add('green', [6]);
+					babyArrow.animation.add('red', [7]);
+					babyArrow.animation.add('blue', [5]);
+					babyArrow.animation.add('purple', [4]);
+
+					babyArrow.setGraphicSize(Std.int(babyArrow.width * CoolUtil.daPixelZoom));
+					babyArrow.updateHitbox();
+					babyArrow.antialiasing = false;
+
+					babyArrow.x += Note.swagWidth * i;
+					babyArrow.animation.add('static', [i]);
+					babyArrow.animation.add('pressed', [4 + i, 8 + i], 12, false);
+					babyArrow.animation.add('confirm', [12 + i, 16 + i], 12, false);
+
+					for (j in 0...4)
+					{
+						babyArrow.animation.add('dirCon' + j, [12 + j, 16 + j], 12, false);
+					}
+
+				default:
+					if (player == 0)
+						babyArrow.frames = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.cpuNoteskin);
+					else
+						babyArrow.frames = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.noteskin);
+					for (j in 0...4)
+					{
+						babyArrow.animation.addByPrefix(dataColor[j], 'arrow' + dataSuffix[j]);
+						babyArrow.animation.addByPrefix('dirCon' + j, dataSuffix[j].toLowerCase() + ' confirm', 24, false);
+					}
+
+					var lowerDir:String = dataSuffix[i].toLowerCase();
+
+					babyArrow.animation.addByPrefix('static', 'arrow' + dataSuffix[i]);
+					babyArrow.animation.addByPrefix('pressed', lowerDir + ' press', 24, false);
+					babyArrow.animation.addByPrefix('confirm', lowerDir + ' confirm', 24, false);
+
+					babyArrow.animation.addByPrefix('green', 'arrow static instance 1');
+					babyArrow.animation.addByPrefix('blue', 'arrow static instance 2');
+					babyArrow.animation.addByPrefix('purple', 'arrow static instance 3');
+					babyArrow.animation.addByPrefix('red', 'arrow static instance 4');
+
+					babyArrow.animation.addByPrefix('static', 'arrow static instance 1');
+					babyArrow.animation.addByPrefix('pressed', 'left press instance 1', 24, false);
+					babyArrow.animation.addByPrefix('confirm', 'left confirm instance 1', 24, false);
+
+					babyArrow.animation.addByPrefix('static', 'arrow static instance 2');
+					babyArrow.animation.addByPrefix('pressed', 'down press instance 1', 24, false);
+					babyArrow.animation.addByPrefix('confirm', 'down confirm instance 1', 24, false);
+
+					babyArrow.animation.addByPrefix('static', 'arrow static instance 4');
+					babyArrow.animation.addByPrefix('pressed', 'up press instance 1', 24, false);
+					babyArrow.animation.addByPrefix('confirm', 'up confirm instance 1', 24, false);
+
+					babyArrow.animation.addByPrefix('static', 'arrow static instance 3');
+					babyArrow.animation.addByPrefix('pressed', 'right press instance 1', 24, false);
+					babyArrow.animation.addByPrefix('confirm', 'right confirm instance 1', 24, false);
+
+					babyArrow.x += Note.swagWidth * i;
+
+					babyArrow.antialiasing = FlxG.save.data.antialiasing;
+					babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
 			}
-
-			var lowerDir:String = dataSuffix[i].toLowerCase();
-
-			babyArrow.animation.addByPrefix('static', 'arrow' + dataSuffix[i]);
-			babyArrow.animation.addByPrefix('pressed', lowerDir + ' press', 24, false);
-			babyArrow.animation.addByPrefix('confirm', lowerDir + ' confirm', 24, false);
-
-			babyArrow.x += Note.swagWidth * i;
-
-			babyArrow.antialiasing = FlxG.save.data.antialiasing;
-			babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
 
 			babyArrow.updateHitbox();
 			babyArrow.scrollFactor.set();
 
-			babyArrow.y -= 10;
-			babyArrow.alpha = 1;
+			if (tween)
+			{
+				babyArrow.y -= 10;
+				babyArrow.alpha = 0;
+				FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
+			}
+			else
+				babyArrow.alpha = 1;
 
 			babyArrow.ID = i;
-
+			
+			babyArrow.x += 20;
 			playerStrums.add(babyArrow);
 
-			babyArrow.animation.play('static');
-			babyArrow.x += 50;
-			babyArrow.x += ((FlxG.width / 2));
+			babyArrow.playAnim('static');
+			babyArrow.x += 98.5; // Tryna make it not offset because it was pissing me off + Psych Engine has it somewhat like this.
+			babyArrow.x += ((FlxG.width / 2) * player);
 		}
 	}
 
@@ -177,18 +258,15 @@ class DiffOverview extends FlxSubState
 	}
 
 	public var stopDoingShit = false;
+	
 
-	public var currentStep = 0;
-	public var oldStep = 0;
-
-	function stepHit()
+	override function stepHit()
 	{
 		if (FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
 		{
 			trace("resync");
 			resyncVocals();
 		}
-		oldStep = currentStep;
 	}
 
 	function offsetChange()
@@ -216,10 +294,7 @@ class DiffOverview extends FlxSubState
 		if (stopDoingShit)
 			return;
 
-		if (oldStep != currentStep && currentStep > 0)
-			stepHit();
-
-		if (FlxG.keys.pressed.SPACE)
+		if (FlxG.keys.pressed.O)
 		{
 			stopDoingShit = true;
 			quit();
@@ -346,7 +421,15 @@ class DiffOverview extends FlxSubState
 		FlxTween.tween(camHUD, {alpha: 0}, 1, {ease: FlxEase.expoInOut});
 		FlxTween.tween(offset, {alpha: 0}, 1, {ease: FlxEase.expoInOut});
 
+		FreeplayState.openedPreview = false;
+
 		vocals.fadeOut();
+		FlxG.sound.music.fadeOut(1, 0, function(twn:FlxTween)
+		{
+			FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
+			MainMenuState.freakyPlaying = true;
+			closeSubState();
+		});
 	}
 
 	var vocals:FlxSound;
@@ -358,7 +441,7 @@ class DiffOverview extends FlxSubState
 	{
 		// FlxG.log.add(ChartParser.parse());
 
-		var songData = FreeplayState.songData.get(FreeplayState.songs[FreeplayState.curSelected].songName)[FreeplayState.curDifficulty];
+		var songData = SONG;
 		Conductor.changeBPM(songData.bpm);
 
 		if (SONG.needsVoices)
@@ -369,6 +452,8 @@ class DiffOverview extends FlxSubState
 		trace('loaded vocals');
 
 		FlxG.sound.list.add(vocals);
+
+		//recalculateAllSectionTimes();
 
 		notes = new FlxTypedGroup<Note>();
 		add(notes);
@@ -391,13 +476,17 @@ class DiffOverview extends FlxSubState
 				if (daStrumTime < 0)
 					daStrumTime = 0;
 				var daNoteData:Int = Std.int(songNotes[1] % 4);
+				var daNoteType:String = songNotes[5];
 
-				var gottaHitNote:Bool = section.mustHitSection;
+				var gottaHitNote:Bool = false;
 
 				if (songNotes[1] > 3)
-				{
-					gottaHitNote = !section.mustHitSection;
-				}
+					gottaHitNote = true;
+				else if (songNotes[1] <= 3)
+					gottaHitNote = false;
+
+				if (PlayStateChangeables.opponentMode)
+					gottaHitNote = !gottaHitNote;
 
 				var oldNote:Note;
 				if (unspawnNotes.length > 0)
@@ -405,11 +494,8 @@ class DiffOverview extends FlxSubState
 				else
 					oldNote = null;
 
-				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, true);
-
-				if (!gottaHitNote)
-					continue;
-
+				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, true, true, null, songNotes[4], daNoteType);
+				
 				swagNote.baseStrum = Math.round(songNotes[0]);
 
 				swagNote.sustainLength = songNotes[2];
@@ -424,7 +510,7 @@ class DiffOverview extends FlxSubState
 				{
 					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
-					var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, true);
+					var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, true, true, null, songNotes[4], daNoteType);
 					sustainNote.scrollFactor.set();
 					unspawnNotes.push(sustainNote);
 

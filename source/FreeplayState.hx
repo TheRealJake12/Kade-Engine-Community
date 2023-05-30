@@ -44,7 +44,7 @@ using StringTools;
 
 class FreeplayState extends MusicBeatState
 {
-	var songs:Array<FreeplaySongMetadata> = [];
+	public var songs:Array<FreeplaySongMetadata> = [];
 
 	private var camGame:SwagCamera;
 	var lerpSelected:Float = 0;
@@ -83,6 +83,7 @@ class FreeplayState extends MusicBeatState
 	var inst:FlxSound = null;
 
 	public static var openMod:Bool = false;
+	public static var openedPreview = false;
 
 	private var grpSongs:FlxTypedGroup<Alphabet>;
 
@@ -94,7 +95,7 @@ class FreeplayState extends MusicBeatState
 
 	public static var icon:HealthIcon;
 
-	var songData:Map<String, Array<SongData>> = [];
+	public var songData:Map<String, Array<SongData>> = [];
 
 	public static var instance:FreeplayState = null;
 
@@ -672,6 +673,12 @@ class FreeplayState extends MusicBeatState
 			if (downP || controls.DOWN_P)
 			{
 				changeSelection(1);
+			}
+
+			if (FlxG.keys.justPressed.O && !openedPreview){
+				openSubState(new DiffOverview());
+				openedPreview = true;
+
 			}
 		}
 		previewtext.text = "Rate: " + FlxMath.roundDecimal(rate, 2) + "x";
