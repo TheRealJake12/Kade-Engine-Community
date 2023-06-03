@@ -183,7 +183,7 @@
 	<haxedef name="no-deprecation-warnings" />
 
 	<haxeflag name="-D no-traces" unless="debug" />
-	<haxeflag name="--dce full" if="release" />
+	<haxedef name="queue_experimental_optimization"/>
 
 	<!-- _________________________________ Custom _______________________________ -->
 

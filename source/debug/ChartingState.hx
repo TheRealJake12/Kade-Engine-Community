@@ -173,6 +173,7 @@ class ChartingState extends MusicBeatState
 	public var ignoreWarnings = false;
 
 	var autosaveIndicator:FlxSprite;
+	var curDiff:String = "";
 
 	override function create()
 	{
@@ -194,6 +195,8 @@ class ChartingState extends MusicBeatState
 		FlxG.mouse.visible = true;
 
 		PlayState.inDaPlay = false;
+
+		curDiff = CoolUtil.difficultyArray[PlayState.storyDifficulty];
 
 		deezNuts.set(4, 1);
 		deezNuts.set(8, 2);
@@ -961,7 +964,7 @@ class ChartingState extends MusicBeatState
 
 		var reloadSong:FlxButton = new FlxButton(saveButton.x + saveButton.width + 10, saveButton.y, "Reload Audio", function()
 		{
-			loadSong(_song.songId, true);
+			loadSong(_song.songId.toLowerCase(), true);
 		});
 
 		var reloadSongJson:FlxButton = new FlxButton(reloadSong.x, saveButton.y + 30, "Reload JSON", function()
@@ -1612,7 +1615,7 @@ class ChartingState extends MusicBeatState
 		if (reloadFromFile)
 		{
 			var diff:String = CoolUtil.difficultyArray[PlayState.storyDifficulty];
-			_song = Song.conversionChecks(Song.loadFromJson(PlayState.SONG.songId, diff));
+			_song = Song.loadFromJson(PlayState.SONG.songId, diff);
 		}
 		else
 		{
@@ -3474,7 +3477,8 @@ class ChartingState extends MusicBeatState
 
 	function loadJson(songId:String):Void
 	{
-		PlayState.SONG = Song.loadFromJson(songId, CoolUtil.difficultyArray[PlayState.storyDifficulty]);
+		PlayState.storyDifficulty = CoolUtil.difficultyArray.indexOf(curDiff);
+		PlayState.SONG = Song.loadFromJson(songId, CoolUtil.getSuffixFromDiff(curDiff));
 
 		while (curRenderedNotes.members.length > 0)
 		{
@@ -3672,7 +3676,7 @@ class ChartingState extends MusicBeatState
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);
 			_file.addEventListener(Event.CANCEL, onSaveCancel);
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-			_file.save(data.trim(), _song.songId.toLowerCase() + CoolUtil.difficultyArray[PlayState.storyDifficulty] + ".json");
+			_file.save(data.trim(), _song.songId.toLowerCase() + CoolUtil.getSuffixFromDiff(curDiff) + ".json");
 		}
 	}
 

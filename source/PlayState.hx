@@ -3299,7 +3299,7 @@ class PlayState extends MusicBeatState
 						if (i.position <= curDecimalBeat && !pastScrollChanges.contains(i))
 						{
 							pastScrollChanges.push(i);
-							trace("SCROLL SPEED CHANGE to " + i.value);
+							Debug.logTrace("SCROLL SPEED CHANGE to " + i.value);
 							newScroll = i.value;
 						}
 				}
@@ -3902,6 +3902,9 @@ class PlayState extends MusicBeatState
 				else
 					daNote.x = strumX + Math.cos(angleDir) * daNote.distance;
 
+				if (SONG.noteStyle == 'pixel' && daNote.isSustainNote)
+					daNote.x -= 5;	
+
 				daNote.y = strumY + Math.sin(angleDir) * daNote.distance;
 
 				if (!daNote.overrideDistance)
@@ -4056,7 +4059,6 @@ class PlayState extends MusicBeatState
 
 									for (i in daNote.children)
 									{
-										i.alpha = 0.3;
 										i.sustainActive = false;
 									}
 								}
@@ -4121,7 +4123,6 @@ class PlayState extends MusicBeatState
 								health -= 0.15; // give a health punishment for failing a LN
 								for (i in daNote.children)
 								{
-									i.alpha = 0.3;
 									i.sustainActive = false;
 								}
 							}
@@ -4136,7 +4137,6 @@ class PlayState extends MusicBeatState
 									// health -= 0.05; // give a health punishment for failing a LN
 									for (i in daNote.parent.children)
 									{
-										i.alpha = 0.3;
 										i.sustainActive = false;
 									}
 									if (daNote.parent.wasGoodHit)
@@ -6604,12 +6604,15 @@ class PlayState extends MusicBeatState
 
 	private function destroyNote(daNote:Note)
 	{
+		if (daNote == null)
+			return;
+
 		daNote.active = false;
-		daNote.alive = false;
+		daNote.visible = false;
 		daNote.kill();
 		notes.remove(daNote, true);
-		daNote.graphic = null;
 		daNote.destroy();
+		daNote = null;
 	}
 
 	private function cleanPlayObjects()

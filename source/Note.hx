@@ -1,11 +1,8 @@
 package;
 
-import flixel.addons.effects.FlxSkewedSprite;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxMath;
-import flixel.util.FlxColor;
 import PlayState;
 import LuaClass;
 import flixel.math.FlxRect;
@@ -54,10 +51,10 @@ class Note extends FlxSprite
 	public var beat:Float = 0;
 
 	public static var swagWidth:Float = 160 * 0.7;
-	public static var PURP_NOTE:Int = 0;
-	public static var GREEN_NOTE:Int = 2;
-	public static var BLUE_NOTE:Int = 1;
-	public static var RED_NOTE:Int = 3;
+	public static final PURP_NOTE:Int = 0;
+	public static final GREEN_NOTE:Int = 2;
+	public static final BLUE_NOTE:Int = 1;
+	public static final RED_NOTE:Int = 3;
 
 	public var rating:String = "shit";
 
@@ -65,9 +62,9 @@ class Note extends FlxSprite
 	public var localAngle:Float = 0; // The angle to be edited inside Note.hx
 	public var originAngle:Float = 0; // The angle the OG note of the sus note had (?)
 
-	public var dataColor:Array<String> = ['purple', 'blue', 'green', 'red'];
-	public var quantityColor:Array<Int> = [RED_NOTE, 2, BLUE_NOTE, 2, PURP_NOTE, 2, GREEN_NOTE, 2];
-	public var arrowAngles:Array<Int> = [180, 90, 270, 0];
+	public static final dataColor:Array<String> = ['purple', 'blue', 'green', 'red'];
+	public static final quantityColor:Array<Int> = [RED_NOTE, 2, BLUE_NOTE, 2, PURP_NOTE, 2, GREEN_NOTE, 2];
+	public static final arrowAngles:Array<Int> = [180, 90, 270, 0];
 
 	public var isParent:Bool = false;
 	public var parent:Note = null;
@@ -81,6 +78,8 @@ class Note extends FlxSprite
 	public var distance:Float = 2000;
 	public var speedMultiplier:Float = 1.0;
 	public var overrideDistance:Bool = false; // Set this to true if you know what are you doing.
+
+	var modAlpha:Float = 1;
 
 	#if FEATURE_LUAMODCHART
 	public var LuaNote:LuaNote;
@@ -156,8 +155,6 @@ class Note extends FlxSprite
 				canNoteSplash = true;
 				causesMisses = true;
 		}
-
-		var daStage:String = ((PlayState.instance != null && !PlayStateChangeables.Optimize) ? PlayState.instance.Stage.curStage : 'stage');
 
 		// defaults if no noteStyle was found in chart
 		var noteTypeCheck:String = 'normal';
@@ -371,9 +368,8 @@ class Note extends FlxSprite
 			noteYOff = -stepHeight + swagWidth * 0.5;
 
 			noteScore * 0.2;
-			alpha = FlxG.save.data.alpha;
 
-			if (FlxG.save.data.downscroll)
+			if (PlayStateChangeables.useDownscroll)
 				flipY = true;
 
 			x += width / 2;
@@ -439,14 +435,6 @@ class Note extends FlxSprite
 				angle = modAngle;
 		}
 
-		if (!modifiedByLua)
-		{
-			if (!sustainActive)
-			{
-				alpha = FlxG.save.data.alpha - 0.3;
-			}
-		}
-
 		if (mustPress)
 		{
 			switch (noteShit)
@@ -471,18 +459,16 @@ class Note extends FlxSprite
 			/*if (strumTime - Conductor.songPosition < (-166 * Conductor.timeScale) && !wasGoodHit)
 				tooLate = true; */
 		}
-		else
-		{
-			canBeHit = false;
-			// if (strumTime <= Conductor.songPosition)
-			//	wasGoodHit = true;
-		}
 
-		if (tooLate && !wasGoodHit)
-		{
-			if (alpha > 0.3)
-				alpha = 0.3;
-		}
+		if (isSustainNote)
+			{
+				alpha = !sustainActive&& (parent.tooLate || parent.wasGoodHit) ? (modAlpha * FlxG.save.data.alpha) / 2 : modAlpha * FlxG.save.data.alpha; // This is the correct way
+			}
+			else if (tooLate && !wasGoodHit)
+			{
+				if (alpha > modAlpha * 0.3)
+					alpha = modAlpha * 0.3;
+			}
 	}
 
 	@:noCompletion
@@ -495,4 +481,5 @@ class Note extends FlxSprite
 
 		return rect;
 	}
+
 }

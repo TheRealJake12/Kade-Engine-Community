@@ -20,6 +20,7 @@ using StringTools;
 class CoolUtil
 {
 	public static var defaultDifficulties:Array<String> = ['Easy', "Normal", "Hard"];
+	public static var suffixDiffsArray:Array<String> = ['-easy', "", "-hard"];
 
 	public static var customDifficulties:Array<String> = [];
 
