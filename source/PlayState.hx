@@ -1223,7 +1223,7 @@ class PlayState extends MusicBeatState
 						{
 							camHUD.visible = true;
 							remove(blackScreen);
-							FlxTween.tween(FlxG.camera, {zoom: Stage.camZoom}, 2.5, {
+							createTween(FlxG.camera, {zoom: Stage.camZoom}, 2.5, {
 								ease: FlxEase.quadInOut,
 								onComplete: function(twn:FlxTween)
 								{
@@ -1835,9 +1835,9 @@ class PlayState extends MusicBeatState
 	{
 		if (inCinematic || inCutscene)
 		{
-			FlxTween.tween(laneunderlay, {alpha: FlxG.save.data.laneTransparency}, 0.75);
+			createTween(laneunderlay, {alpha: FlxG.save.data.laneTransparency}, 0.75);
 			if (!FlxG.save.data.middleScroll)
-				FlxTween.tween(laneunderlayOpponent, {alpha: FlxG.save.data.laneTransparency}, 0.75);
+				createTween(laneunderlayOpponent, {alpha: FlxG.save.data.laneTransparency}, 0.75);
 
 			if (!arrowsGenerated)
 			{
@@ -3211,12 +3211,12 @@ class PlayState extends MusicBeatState
 						Debug.logTrace("we're fuckin ending the song ");
 					if (FlxG.save.data.songPosition)
 					{
-						FlxTween.tween(judgementCounter, {alpha: 0}, 1, {ease: FlxEase.circIn});
-						FlxTween.tween(scoreTxt, {alpha: 0}, 1, {ease: FlxEase.circIn});
-						FlxTween.tween(kadeEngineWatermark, {alpha: 0}, 1, {ease: FlxEase.circIn});
-						FlxTween.tween(songName, {alpha: 0}, 1, {ease: FlxEase.circIn});
-						FlxTween.tween(songPosBar, {alpha: 0}, 1, {ease: FlxEase.circIn});
-						FlxTween.tween(bar, {alpha: 0}, 1, {ease: FlxEase.circIn});
+						createTween(judgementCounter, {alpha: 0}, 1, {ease: FlxEase.circIn});
+						createTween(scoreTxt, {alpha: 0}, 1, {ease: FlxEase.circIn});
+						createTween(kadeEngineWatermark, {alpha: 0}, 1, {ease: FlxEase.circIn});
+						createTween(songName, {alpha: 0}, 1, {ease: FlxEase.circIn});
+						createTween(songPosBar, {alpha: 0}, 1, {ease: FlxEase.circIn});
+						createTween(bar, {alpha: 0}, 1, {ease: FlxEase.circIn});
 					}
 					endingSong = true;
 					endSong();
@@ -3230,12 +3230,12 @@ class PlayState extends MusicBeatState
 						Debug.logTrace("we're fuckin ending the song ");
 					if (FlxG.save.data.songPosition)
 					{
-						FlxTween.tween(judgementCounter, {alpha: 0}, 1, {ease: FlxEase.circIn});
-						FlxTween.tween(scoreTxt, {alpha: 0}, 1, {ease: FlxEase.circIn});
-						FlxTween.tween(kadeEngineWatermark, {alpha: 0}, 1, {ease: FlxEase.circIn});
-						FlxTween.tween(songName, {alpha: 0}, 1, {ease: FlxEase.circIn});
-						FlxTween.tween(songPosBar, {alpha: 0}, 1, {ease: FlxEase.circIn});
-						FlxTween.tween(bar, {alpha: 0}, 1, {ease: FlxEase.circIn});
+						createTween(judgementCounter, {alpha: 0}, 1, {ease: FlxEase.circIn});
+						createTween(scoreTxt, {alpha: 0}, 1, {ease: FlxEase.circIn});
+						createTween(kadeEngineWatermark, {alpha: 0}, 1, {ease: FlxEase.circIn});
+						createTween(songName, {alpha: 0}, 1, {ease: FlxEase.circIn});
+						createTween(songPosBar, {alpha: 0}, 1, {ease: FlxEase.circIn});
+						createTween(bar, {alpha: 0}, 1, {ease: FlxEase.circIn});
 					}
 					endingSong = true;
 					endSong();
@@ -3525,7 +3525,7 @@ class PlayState extends MusicBeatState
 				vocals.time = Conductor.songPosition;
 				vocals.resume();
 			}
-			FlxTween.tween(skipText, {alpha: 0}, 0.2, {
+			createTween(skipText, {alpha: 0}, 0.2, {
 				onComplete: function(tw)
 				{
 					remove(skipText);
@@ -4701,21 +4701,7 @@ class PlayState extends MusicBeatState
 				if (FlxG.save.data.rateStack)
 				{
 					createTween(numScore, {alpha: 0}, 0.2, {
-						onComplete: function(tween:FlxTween)
-						{
-							visibleCombos.remove(numScore);
-							numScore.kill();
-						},
-						onUpdate: function(tween:FlxTween)
-						{
-							if (!visibleCombos.contains(numScore))
-							{
-								tween.cancel();
-								numScore.destroy();
-							}
-						},
-						startDelay: Conductor.crochet * 0.002 * Math.pow(songMultiplier, 2)
-					});
+					onComplete: function(tween:FlxTween){remove(numScore);numScore.destroy();},startDelay: Conductor.crochet * 0.002});
 				}
 				else
 				{
@@ -6065,7 +6051,7 @@ class PlayState extends MusicBeatState
 
 	function ttweenCamIn():Void
 	{
-		FlxTween.tween(FlxG.camera, {zoom: 2}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.elasticInOut});
+		createTween(FlxG.camera, {zoom: 2}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.elasticInOut});
 	}
 
 	#if FEATURE_HSCRIPT
