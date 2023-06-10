@@ -68,7 +68,7 @@ class MusicBeatState extends FlxUIState
 
 		super.create();
 		TimingStruct.clearTimings();
-		(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
+		Main.gameContainer.setFPSCap(FlxG.save.data.fpsCap);
 	}
 
 	override function remove(Object:FlxBasic, Splice:Bool = false):FlxBasic

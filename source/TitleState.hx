@@ -34,9 +34,6 @@ import openfl.Lib;
 #if FEATURE_MULTITHREADING
 import sys.thread.Mutex;
 #end
-#if cpp
-import cpp.CPPInterface;
-#end
 
 using StringTools;
 

@@ -53,7 +53,7 @@ class Main extends Sprite
 	};
 
 	public static var mainClassState:Class<FlxState> = Init; // yoshubs jumpscare (I am aware of *the incident*)
-	public static var instance:Main;
+	public static var gameContainer:Main = null; // Main instance to access when needed.
 	public static var bitmapFPS:Bitmap;
 	public static var focusMusicTween:FlxTween;
 	public static var focused:Bool = true;
@@ -74,8 +74,6 @@ class Main extends Sprite
 
 	public function new()
 	{
-		instance = this;
-
 		super();
 
 		if (stage != null)
@@ -112,9 +110,10 @@ class Main extends Sprite
 			game.height = Math.ceil(stageHeight / game.zoom);
 		}
 
-		#if !cpp
-		game.framerate = 60;
-		#end
+		game.framerate = Application.current.window.displayMode.refreshRate;
+
+		gameContainer = this;
+
 
 		// Run this first so we can see logs.
 		Debug.onInitProgram();
@@ -322,7 +321,7 @@ class Main extends Sprite
 			// Bring framerate back when focused
 			FlxG.drawFramerate = FlxG.save.data.fpsCap;
 		}
-		(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
+		gameContainer.setFPSCap(FlxG.save.data.fpsCap);
 	}
 	#end
 
@@ -338,20 +337,10 @@ class Main extends Sprite
 		fpsCounter.textColor = color;
 	}
 
-	public function setFPSCap(cap:Float)
+	public function setFPSCap(cap:Int)
 	{
-		var framerate = Std.int(cap);
-		openfl.Lib.current.stage.frameRate = cap;
-		if (framerate > FlxG.drawFramerate)
-		{
-			FlxG.updateFramerate = framerate;
-			FlxG.drawFramerate = framerate;
-		}
-		else
-		{
-			FlxG.drawFramerate = framerate;
-			FlxG.updateFramerate = framerate;
-		}
+		FlxG.updateFramerate = cap;
+		FlxG.drawFramerate = FlxG.updateFramerate;
 	}
 
 	public function getFPSCap():Float

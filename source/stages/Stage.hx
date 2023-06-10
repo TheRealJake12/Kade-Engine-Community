@@ -553,17 +553,6 @@ class Stage extends MusicBeatState
 						}
 
 						var tankman:FlxSprite = new FlxSprite();
-
-						switch (PlayState.SONG.songId)
-						{
-							case 'ugh':
-								tankman.setPosition(10, PlayState.instance.dad.y + 110);
-							case 'guns':
-								tankman.setPosition(50, 230);
-							case 'stress':
-								tankman.setPosition(-77, 307);
-						}
-
 						tankman.frames = Paths.getSparrowAtlas('cutscenes/' + PlayState.SONG.songId, 'week7');
 						tankman.antialiasing = FlxG.save.data.antialiasing;
 						swagBacks['tankman'] = tankman;

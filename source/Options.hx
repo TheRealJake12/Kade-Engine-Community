@@ -1140,7 +1140,7 @@ class FPSOption extends Option
 	public override function left():Bool
 	{
 		FlxG.save.data.fps = !FlxG.save.data.fps;
-		(cast(Lib.current.getChildAt(0), Main)).toggleFPS(FlxG.save.data.fps);
+		Main.gameContainer.toggleFPS(FlxG.save.data.fps);
 		display = updateDisplay();
 		return true;
 	}
@@ -1205,27 +1205,33 @@ class FPSCapOption extends Option
 
 	override function right():Bool
 	{
-		if (FlxG.save.data.fpsCap >= 420)
+		#if html5
+		return false;
+		#end
+		if (FlxG.save.data.fpsCap >= 900)
 		{
-			FlxG.save.data.fpsCap = 420;
-			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(420);
+			FlxG.save.data.fpsCap = 900;
+			Main.gameContainer.setFPSCap(900);
 		}
 		else
-			FlxG.save.data.fpsCap = FlxG.save.data.fpsCap + 10;
-		(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
+			FlxG.save.data.fpsCap++;
+		Main.gameContainer.setFPSCap(FlxG.save.data.fpsCap);
 
 		return true;
 	}
 
 	override function left():Bool
 	{
-		if (FlxG.save.data.fpsCap > 420)
-			FlxG.save.data.fpsCap = 420;
+		#if html5
+		return false;
+		#end
+		if (FlxG.save.data.fpsCap > 900)
+			FlxG.save.data.fpsCap = 900;
 		else if (FlxG.save.data.fpsCap < 60)
-			FlxG.save.data.fpsCap = Application.current.window.displayMode.refreshRate;
+			FlxG.save.data.fpsCap = 60;
 		else
-			FlxG.save.data.fpsCap = FlxG.save.data.fpsCap - 10;
-				(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
+			FlxG.save.data.fpsCap--;
+		Main.gameContainer.setFPSCap(FlxG.save.data.fpsCap);
 		return true;
 	}
 
@@ -1296,7 +1302,7 @@ class RainbowFPSOption extends Option
 	public override function left():Bool
 	{
 		FlxG.save.data.fpsRain = !FlxG.save.data.fpsRain;
-		(cast(Lib.current.getChildAt(0), Main)).changeFPSColor(FlxColor.WHITE);
+		Main.gameContainer.changeFPSColor(FlxColor.WHITE);
 		display = updateDisplay();
 		return true;
 	}

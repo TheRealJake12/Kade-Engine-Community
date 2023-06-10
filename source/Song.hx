@@ -213,6 +213,17 @@ class Song
 			}
 		}
 
+		// If the song has null sections.
+		if (song.notes == null)
+		{
+			song.notes = [];
+
+			song.notes.push(newSection(song));
+		}
+
+		if (song.notes.length == 0)
+			song.notes.push(newSection(song));
+
 		for (i in song.notes)
 		{
 			if (i.altAnim)
@@ -313,5 +324,50 @@ class Song
 		}
 
 		return Song.conversionChecks(songData);
+	}
+
+	private static function newSection(song:SongData, lengthInSteps:Int = 16, mustHitSection:Bool = false, CPUAltAnim:Bool = true,
+			playerAltAnim:Bool = true):SwagSection
+	{
+		var sec:SwagSection = {
+			lengthInSteps: lengthInSteps,
+			bpm: song.bpm,
+			changeBPM: false,
+			mustHitSection: mustHitSection,
+			sectionNotes: [],
+			typeOfSection: 0,
+			altAnim: false,
+			CPUAltAnim: CPUAltAnim,
+			playerAltAnim: playerAltAnim
+		};
+
+		return sec;
+	}
+
+	public static function sortSectionNotes(song:SongData)
+	{
+		var newNotes:Array<Array<Dynamic>> = [];
+
+		for (section in song.notes)
+		{
+			if (section.sectionNotes != null)
+			{
+				for (songNotes in section.sectionNotes)
+				{
+					newNotes.push(songNotes);
+				}
+			}
+			section.sectionNotes.resize(0);
+		}
+
+		for (section in song.notes)
+		{
+			for (sortedNote in newNotes)
+			{
+				if (sortedNote[0] / PlayState.songMultiplier >= section.startTime
+					&& sortedNote[0] / PlayState.songMultiplier < section.endTime)
+					section.sectionNotes.push(sortedNote);
+			}
+		}
 	}
 }

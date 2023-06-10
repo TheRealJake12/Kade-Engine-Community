@@ -41,10 +41,7 @@ class KadeEngineData
 			FlxG.save.data.changedHit = false;
 		}
 
-		if (FlxG.save.data.fpsCap == null)
-			FlxG.save.data.fpsCap = 60;
-
-		if (FlxG.save.data.fpsCap > 420 || FlxG.save.data.fpsCap < 60)
+		if (FlxG.save.data.fpsCap == null || FlxG.save.data.fpsCap < 60)
 			FlxG.save.data.fpsCap = Application.current.window.displayMode.refreshRate;
 
 		if (FlxG.save.data.scrollSpeed == null)
@@ -289,7 +286,5 @@ class KadeEngineData
 		PlayerSettings.player1.controls.loadKeyBinds();
 
 		Main.watermarks = FlxG.save.data.watermark;
-
-		(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
 	}
 }

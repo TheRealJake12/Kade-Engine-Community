@@ -1,6 +1,7 @@
 package debug;
 
 import openfl.net.FileFilter;
+import flixel.system.FlxAssets;
 import Song.SongMeta;
 import openfl.system.System;
 import lime.app.Application;
@@ -188,7 +189,8 @@ class ChartingState extends MusicBeatState
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 		speed = PlayState.songMultiplier;
-		cureSection = lastSection;
+
+		//activeSong = _song;
 
 		PlayState.noteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.noteskin);
 
@@ -215,18 +217,12 @@ class ChartingState extends MusicBeatState
 
 		TimingStruct.clearTimings();
 
+		cureSection = lastSection;
+
 		if (PlayState.SONG != null)
 		{
-			if (PlayState.isSM)
-			{
-				#if FEATURE_STEPMANIA
-				_song = Song.conversionChecks(Song.loadFromJsonRAW(File.getContent(PlayState.pathToSm + "/converted.json")));
-				#end
-			}
-			else
-			{
-				_song = PlayState.SONG;
-			}
+			var diff:String = CoolUtil.getSuffixFromDiff(curDiff);
+			_song = Song.conversionChecks(Song.loadFromJson(PlayState.SONG.songId, diff));
 		}
 		else
 		{
@@ -244,7 +240,7 @@ class ChartingState extends MusicBeatState
 				noteStyle: 'normal',
 				stage: 'stage',
 				speed: 1,
-				validScore: false
+				validScore: true
 			};
 		}
 
@@ -1000,14 +996,7 @@ class ChartingState extends MusicBeatState
 		stepperSpeedLabel.font = Paths.font("vcr.ttf");
 
 		var stepperVocalVol:FlxUINumericStepper = new FlxUINumericStepper(10, 95, 0.1, 1, 0.1, 10, 1);
-		#if FEATURE_STEPMANIA
-		if (!PlayState.isSM)
-			stepperVocalVol.value = vocals.volume;
-		else
-			stepperVocalVol.value = 1;
-		#else
 		stepperVocalVol.value = vocals.volume;
-		#end
 		stepperVocalVol.name = 'song_vocalvol';
 
 		var stepperVocalVolLabel = new FlxText(74, 95, 0, "Vocal Volume", 12);
@@ -1087,6 +1076,8 @@ class ChartingState extends MusicBeatState
 
 		var noteStyleLabel = new FlxText(10, 280, 0, 'Note Skin', 14);
 		noteStyleLabel.font = Paths.font("vcr.ttf");
+
+		Typeables.push(UI_songTitle);
 
 		var tab_group_song = new FlxUI(null, UI_box);
 		tab_group_song.name = "Song";
@@ -1289,8 +1280,7 @@ class ChartingState extends MusicBeatState
 		{
 			PlayState.SONG = _song;
 			inst.stop();
-			if (!PlayState.isSM)
-				vocals.stop();
+			vocals.stop();
 			PlayState.startTime = _song.notes[cureSection].startTime;
 			while (curRenderedNotes.members.length > 0)
 			{
@@ -1402,8 +1392,7 @@ class ChartingState extends MusicBeatState
 			return;
 
 		inst.time = (data.startTime + ((beat - data.startBeat) / (data.bpm / 60))) * 1000;
-		if (!PlayState.isSM)
-			vocals.time = inst.time;
+		vocals.time = inst.time;
 		cureSection = section;
 		if (inst.time < 0)
 			inst.time = 0;
@@ -1614,37 +1603,26 @@ class ChartingState extends MusicBeatState
 		}
 		if (reloadFromFile)
 		{
-			var diff:String = CoolUtil.difficultyArray[PlayState.storyDifficulty];
-			_song = Song.loadFromJson(PlayState.SONG.songId, diff);
+			var diff:String = CoolUtil.getSuffixFromDiff(curDiff);
+			_song = Song.conversionChecks(Song.loadFromJson(PlayState.SONG.songId, diff));
 		}
 		else
 		{
 			_song = PlayState.SONG;
 		}
 		// WONT WORK FOR TUTORIAL OR TEST SONG!!! REDO LATER
-
-		#if FEATURE_STEPMANIA
-		if (PlayState.isSM)
-			vocals = null;
-		else
-			vocals = new FlxSound().loadEmbedded(Paths.voices(daSong));
-		#else
+		
 		vocals = new FlxSound().loadEmbedded(Paths.voices(daSong));
-		#end
 		FlxG.sound.list.add(inst);
 		FlxG.sound.list.add(vocals);
 
 		inst.pause();
-		if (!PlayState.isSM)
-			vocals.pause();
+		vocals.pause();
 
 		inst.onComplete = function()
 		{
-			if (!PlayState.isSM)
-			{
-				vocals.pause();
-				vocals.time = 0;
-			}
+			vocals.pause();
+			vocals.time = 0;
 			inst.pause();
 			inst.time = 0;
 		};
@@ -1772,7 +1750,6 @@ class ChartingState extends MusicBeatState
 				case 'song_vocalvol':
 					if (nums.value <= 0.1)
 						nums.value = 0.1;
-					if (!PlayState.isSM)
 						vocals.volume = nums.value;
 
 				case 'song_instvol':
@@ -1992,11 +1969,8 @@ class ChartingState extends MusicBeatState
 				{
 					inst.pause();
 					inst.time = inst.length - 85;
-					if (!PlayState.isSM)
-					{
-						vocals.pause();
-						vocals.time = vocals.length - 85;
-					}
+					vocals.pause();
+					vocals.time = vocals.length - 85;
 				}
 
 			#if debug
@@ -2133,9 +2107,8 @@ class ChartingState extends MusicBeatState
 				if (FlxG.mouse.wheel != 0)
 				{
 					inst.pause();
-
-					if (!PlayState.isSM)
-						vocals.pause();
+					
+					vocals.pause();
 					claps.splice(0, claps.length);
 
 					if (FlxG.keys.pressed.CONTROL && !waitingForRelease)
@@ -2203,9 +2176,8 @@ class ChartingState extends MusicBeatState
 							updateBpmText();
 							inst.time -= (FlxG.mouse.wheel * Conductor.stepCrochet * 0.4);
 						}
-
-						if (!PlayState.isSM)
-							vocals.time = inst.time;
+						
+						vocals.time = inst.time;
 					}
 				}
 
@@ -2464,6 +2436,7 @@ class ChartingState extends MusicBeatState
 					}
 					index--;
 				}
+				updateBpmText();
 			}
 			if (FlxG.keys.justPressed.LEFT && FlxG.keys.pressed.CONTROL)
 			{
@@ -2481,6 +2454,7 @@ class ChartingState extends MusicBeatState
 					}
 					index--;
 				}
+				updateBpmText();
 			}
 
 			if (FlxG.keys.justPressed.SHIFT)
@@ -2490,6 +2464,7 @@ class ChartingState extends MusicBeatState
 			if (FlxG.keys.pressed.SHIFT)
 			{
 				doSnapShit = !defaultSnap;
+				updateBpmText();
 			}
 
 			check_snap.checked = doSnapShit;
@@ -2649,8 +2624,7 @@ class ChartingState extends MusicBeatState
 
 					PlayState.SONG = _song;
 					inst.stop();
-					if (!PlayState.isSM)
-						vocals.stop();
+					vocals.stop();
 
 					while (curRenderedNotes.members.length > 0)
 					{
@@ -2768,14 +2742,12 @@ class ChartingState extends MusicBeatState
 						if (inst.playing)
 						{
 							inst.pause();
-							if (!PlayState.isSM)
-								vocals.pause();
+							vocals.pause();
 							claps.splice(0, claps.length);
 						}
 						else
 						{
-							if (!PlayState.isSM)
-								vocals.play();
+							vocals.play();
 							inst.play();
 						}
 					}
@@ -2788,8 +2760,7 @@ class ChartingState extends MusicBeatState
 						if (FlxG.keys.pressed.W || FlxG.keys.pressed.S)
 						{
 							inst.pause();
-							if (!PlayState.isSM)
-								vocals.pause();
+							vocals.pause();
 							claps.splice(0, claps.length);
 
 							var daTime:Float = 700 * FlxG.elapsed;
@@ -2800,9 +2771,8 @@ class ChartingState extends MusicBeatState
 							}
 							else
 								inst.time += daTime;
-
-							if (!PlayState.isSM)
-								vocals.time = inst.time;
+							
+							vocals.time = inst.time;
 						}
 					}
 					else
@@ -2810,8 +2780,7 @@ class ChartingState extends MusicBeatState
 						if (FlxG.keys.justPressed.W || FlxG.keys.justPressed.S)
 						{
 							inst.pause();
-							if (!PlayState.isSM)
-								vocals.pause();
+							vocals.pause();
 
 							var daTime:Float = Conductor.stepCrochet * 2;
 
@@ -2821,9 +2790,8 @@ class ChartingState extends MusicBeatState
 							}
 							else
 								inst.time += daTime;
-
-							if (!PlayState.isSM)
-								vocals.time = inst.time;
+							
+							vocals.time = inst.time;
 						}
 					}
 				}
@@ -2835,6 +2803,14 @@ class ChartingState extends MusicBeatState
 			Debug.logError("Error\n" + e);
 		}
 		super.update(elapsed);
+	}
+
+	override function beatHit()
+	{
+		super.beatHit();
+
+		if (metronome.checked)
+			FlxG.sound.play(Paths.sound('Metronome_Tick'));
 	}
 
 	function changeNoteSustain(value:Float):Void
@@ -2867,14 +2843,12 @@ class ChartingState extends MusicBeatState
 	function resetSection(songBeginning:Bool = false):Void
 	{
 		inst.pause();
-		if (!PlayState.isSM)
-			vocals.pause();
+		vocals.pause();
 
 		// Basically old shit from changeSection???
 		inst.time = 0;
-
-		if (!PlayState.isSM)
-			vocals.time = inst.time;
+		
+		vocals.time = inst.time;
 
 		updateGrid();
 		if (!songBeginning)
@@ -2892,12 +2866,10 @@ class ChartingState extends MusicBeatState
 			if (updateMusic)
 			{
 				inst.pause();
-				if (!PlayState.isSM)
-					vocals.pause();
+				vocals.pause();
 
 				inst.time = sectionStartTime();
-				if (!PlayState.isSM)
-					vocals.time = inst.time;
+				vocals.time = inst.time;
 			}
 
 			updateGrid();
@@ -3204,25 +3176,7 @@ class ChartingState extends MusicBeatState
 
 	private function newSection(lengthInSteps:Int = 16, mustHitSection:Bool = false, CPUAltAnim:Bool = true, playerAltAnim:Bool = true):SwagSection
 	{
-		var daPos:Float = 0;
-
-		var currentSeg = TimingStruct.AllTimings[TimingStruct.AllTimings.length - 1];
-
-		var currentBeat = 4;
-
-		for (i in _song.notes)
-			currentBeat += 4;
-
-		if (currentSeg == null)
-			return null;
-
-		var start:Float = (currentBeat - currentSeg.startBeat) / (currentSeg.bpm / 60);
-
-		daPos = (currentSeg.startTime + start) * 1000;
-
 		var sec:SwagSection = {
-			startTime: daPos,
-			endTime: Math.POSITIVE_INFINITY,
 			lengthInSteps: lengthInSteps,
 			bpm: _song.bpm,
 			changeBPM: false,
@@ -3382,7 +3336,7 @@ class ChartingState extends MusicBeatState
 
 		if (n == null)
 		{
-			var note:Note = new Note(noteStrum, noteData % 4, null, false, true, TimingStruct.getBeatFromTime(noteStrum), noteShit);
+			var note:Note = new Note(noteStrum, noteData % 4, null, false, true, null, null, TimingStruct.getBeatFromTime(noteStrum), noteShit);
 			note.rawNoteData = noteData;
 			note.sustainLength = noteSus;
 			note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));
@@ -3610,6 +3564,13 @@ class ChartingState extends MusicBeatState
 	{
 		curRenderedNotes.clear();
 		curRenderedSustains.clear();
+
+		for (i in curRenderedNotes)
+		{
+			i.kill();
+			i.destroy();
+			i = null;
+		}
 
 		/*for (sus in unspawnSustains)
 			if (sus != null)

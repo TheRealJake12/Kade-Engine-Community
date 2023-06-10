@@ -9,27 +9,27 @@
   "animations": [
     {
       "name": "idle",
-      "prefix": "BF idle dance",
+      "prefix": "BF idle dance0",
       "offsets": [-5, 0]
     },
     {
       "name": "singUP",
-      "prefix": "BF NOTE UP instance",
+      "prefix": "BF NOTE UP0",
       "offsets": [-29, 27]
     },
     {
       "name": "singLEFT",
-      "prefix": "BF NOTE LEFT instance",
+      "prefix": "BF NOTE LEFT0",
       "offsets": [12, -6]
     },
     {
       "name": "singRIGHT",
-      "prefix": "BF NOTE RIGHT instance",
+      "prefix": "BF NOTE RIGHT0",
       "offsets": [-38, -7]
     },
     {
       "name": "singDOWN",
-      "prefix": "BF NOTE DOWN instance",
+      "prefix": "BF NOTE DOWN0",
       "offsets": [-10, -50]
     },
     {
@@ -62,6 +62,20 @@
       "prefix": "BF idle shaking",
       "offsets": [-4, 0],
       "looped": true
+    },
+    {
+      "name": "hurt",
+      "prefix": "BF hit",
+      "offsets": [14,18],
+      "interrupt" : false
+    },
+    {
+      "name": "dodge",
+      "prefix": "boyfriend dodge",
+      "offsets": [-10,-16],
+      "nextAnim": "idle",
+      "interrupt" : false
     }
+
   ]
 }

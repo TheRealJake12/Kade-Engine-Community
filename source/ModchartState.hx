@@ -511,16 +511,6 @@ class ModchartState
 
 		// sprites
 
-		Lua_helper.add_callback(lua, "setNoteWiggle", function(wiggleId)
-		{
-			PlayState.instance.camNotes.setFilters([new ShaderFilter(luaWiggles.get(wiggleId).shader)]);
-		});
-
-		Lua_helper.add_callback(lua, "setSustainWiggle", function(wiggleId)
-		{
-			PlayState.instance.camSustains.setFilters([new ShaderFilter(luaWiggles.get(wiggleId).shader)]);
-		});
-
 		Lua_helper.add_callback(lua, "createWiggle", function(freq:Float, amplitude:Float, speed:Float)
 		{
 			var wiggle = new WiggleEffect();

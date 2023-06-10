@@ -258,8 +258,6 @@ class PlayState extends MusicBeatState
 	public var iconP1:HealthIcon;
 	public var iconP2:HealthIcon;
 	public var camHUD:FlxCamera;
-	public var camSustains:FlxCamera;
-	public var camNotes:FlxCamera;
 
 	private var camGame:FlxCamera;
 
@@ -267,7 +265,6 @@ class PlayState extends MusicBeatState
 
 	public var camHUDShaders:Array<ShaderEffect> = [];
 	public var camGameShaders:Array<ShaderEffect> = [];
-	public var camNotesShaders:Array<ShaderEffect> = [];
 	public var shaderUpdates:Array<Float->Void> = [];
 	public var camStrumsShaders:Array<ShaderEffect> = [];
 	public var overlayShaders:Array<ShaderEffect> = [];
@@ -557,15 +554,9 @@ class PlayState extends MusicBeatState
 		camGame = new SwagCamera();
 		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
-		camSustains = new FlxCamera();
-		camSustains.height = 1300;
-		camSustains.bgColor.alpha = 0;
 		camStrums = new FlxCamera();
 		camStrums.height = 1300;
 		camStrums.bgColor.alpha = 0;
-		camNotes = new FlxCamera();
-		camNotes.height = 1300;
-		camNotes.bgColor.alpha = 0;
 		overlayCam = new FlxCamera();
 		overlayCam.bgColor.alpha = 0;
 
@@ -577,12 +568,6 @@ class PlayState extends MusicBeatState
 
 		// StrumLine Camera
 		FlxG.cameras.add(camStrums);
-
-		// Long Notes camera
-		FlxG.cameras.add(camSustains);
-
-		// Single Notes camera
-		FlxG.cameras.add(camNotes);
 
 		FlxG.cameras.add(overlayCam);
 
@@ -1040,8 +1025,6 @@ class PlayState extends MusicBeatState
 		{
 			new LuaCamera(camGame, "camGame").Register(ModchartState.lua);
 			new LuaCamera(camHUD, "camHUD").Register(ModchartState.lua);
-			new LuaCamera(camSustains, "camSustains").Register(ModchartState.lua);
-			new LuaCamera(camSustains, "camNotes").Register(ModchartState.lua);
 			new LuaCamera(camStrums, "camStrums").Register(ModchartState.lua);
 			new LuaCharacter(dad, "dad").Register(ModchartState.lua);
 			new LuaCharacter(gf, "gf").Register(ModchartState.lua);
@@ -1187,7 +1170,7 @@ class PlayState extends MusicBeatState
 		}
 
 		strumLineNotes.cameras = [camHUD];
-		notes.cameras = [camNotes];
+		notes.cameras = [camHUD];
 		healthBar.cameras = [camHUD];
 		healthBarBG.cameras = [camHUD];
 		iconP1.cameras = [camHUD];
@@ -1689,12 +1672,6 @@ class PlayState extends MusicBeatState
 				for (i in camGameShaders)
 					newCamEffects.push(new ShaderFilter(i.shader));
 				camGame.setFilters(newCamEffects);
-			case 'camnotes' | 'notes':
-				camNotesShaders.push(effect);
-				var newCamEffects:Array<BitmapFilter> = [];
-				for (i in camNotesShaders)
-					newCamEffects.push(new ShaderFilter(i.shader));
-				camNotes.setFilters(newCamEffects);
 			case 'camstrums' | 'strums':
 				camStrumsShaders.push(effect);
 				var newCamEffects:Array<BitmapFilter> = [];
@@ -3367,15 +3344,6 @@ class PlayState extends MusicBeatState
 				if (i <= playerStrums.length)
 					playerStrums.members[i].visible = p2;
 			}
-
-			camNotes.zoom = camHUD.zoom;
-			camNotes.x = camHUD.x;
-			camNotes.y = camHUD.y;
-			camNotes.angle = camHUD.angle;
-			camSustains.zoom = camHUD.zoom;
-			camSustains.x = camHUD.x;
-			camSustains.y = camHUD.y;
-			camSustains.angle = camHUD.angle;
 		}
 		#end
 
@@ -3435,41 +3403,6 @@ class PlayState extends MusicBeatState
 			MusicBeatState.switchState(new ChartingState());
 			PlayState.stageTesting = false;
 		}
-		var mult:Float = FlxMath.lerp(1, iconP1.scale.x, CoolUtil.boundTo(1 - (elapsed * 9 * songMultiplier), 0, 1));
-		var mult2:Float = FlxMath.lerp(1, iconP2.scale.x, CoolUtil.boundTo(1 - (elapsed * 9 * songMultiplier), 0, 1));
-
-		if (!FlxG.save.data.motion)
-		{
-			iconP1.scale.set(mult, mult);
-			iconP1.updateHitbox();
-
-			iconP2.scale.set(mult2, mult2);
-			iconP2.updateHitbox();
-		}
-
-		var iconOffset:Int = 26;
-		if (health >= 2 && !PlayStateChangeables.opponentMode)
-			health = 2;
-
-		iconP1.x = healthBar.x
-			+ (healthBar.width * (FlxMath.remapToRange(PlayStateChangeables.opponentMode ? 100 - healthBar.percent : healthBar.percent, 0, 100, 100, 0) * 0.01)
-				- iconOffset);
-		iconP2.x = healthBar.x
-			+ (healthBar.width * (FlxMath.remapToRange(PlayStateChangeables.opponentMode ? 100 - healthBar.percent : healthBar.percent, 0, 100, 100,
-				0) * 0.01))
-			- (iconP2.width - iconOffset);
-
-		if (health > 2)
-			health = 2;
-		if (healthBar.percent < 20)
-			iconP1.animation.curAnim.curFrame = 1;
-		else
-			iconP1.animation.curAnim.curFrame = 0;
-
-		if (healthBar.percent > 80)
-			iconP2.animation.curAnim.curFrame = 1;
-		else
-			iconP2.animation.curAnim.curFrame = 0;
 
 		/* if (FlxG.keys.justPressed.NINE)
 			FlxG.switchState(new Charting()); */
@@ -3744,112 +3677,6 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (camZooming)
-		{
-			var bpmRatio = Conductor.bpm / 100;
-
-			// this motherfucker fucks me so much.
-			FlxG.camera.zoom = FlxMath.lerp(zoomForTweens, FlxG.camera.zoom,
-				CoolUtil.boundTo(1 - (elapsed * 3.125 * bpmRatio * songMultiplier * zoomMultiplier), 0, 1));
-			camHUD.zoom = FlxMath.lerp(zoomForHUDTweens, camHUD.zoom,
-				CoolUtil.boundTo(1 - (elapsed * 3.125 * bpmRatio * songMultiplier * zoomMultiplier), 0, 1));
-			camNotes.zoom = camHUD.zoom;
-			camSustains.zoom = camHUD.zoom;
-			camStrums.zoom = camHUD.zoom;
-		}
-
-		FlxG.watch.addQuick("curBPM", Conductor.bpm);
-		FlxG.watch.addQuick("beatShit", curBeat);
-		FlxG.watch.addQuick("secShit", curSection);
-		FlxG.watch.addQuick("stepShit", curStep);
-
-		if ((health <= 0 && !cannotDie && !PlayStateChangeables.practiceMode && !PlayStateChangeables.opponentMode)
-			|| (health > 2 && !cannotDie && !PlayStateChangeables.practiceMode && PlayStateChangeables.opponentMode))
-		{
-			if (!usedTimeTravel)
-			{
-				boyfriend.stunned = true;
-				persistentUpdate = false;
-				persistentDraw = false;
-				paused = true;
-				vocals.stop();
-				inst.stop();
-				if (FlxG.save.data.InstantRespawn || (PlayStateChangeables.opponentMode) || PlayStateChangeables.Optimize)
-				{
-					MusicBeatState.resetState();
-				}
-				else
-				{
-					if (!PlayStateChangeables.opponentMode)
-					{
-						openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
-					}
-				}
-
-				#if FEATURE_DISCORD
-				// Game Over doesn't get his own variable because it's only used here
-				DiscordClient.changePresence("GAME OVER -- "
-					+ SONG.song
-					+ " ("
-					+ storyDifficultyText
-					+ ") "
-					+ Ratings.GenerateLetterRank(accuracy),
-					"\nAcc: "
-					+ HelperFunctions.truncateFloat(accuracy, 2)
-					+ "% | Score: "
-					+ songScore
-					+ " | Misses: "
-					+ misses, iconRPC);
-				#end
-			}
-			else
-				health = 1;
-		}
-		if (!inCutscene && FlxG.save.data.resetButton)
-		{
-			var resetBind = FlxKey.fromString(FlxG.save.data.resetBind);
-
-			if ((FlxG.keys.anyJustPressed([resetBind])))
-			{
-				boyfriend.stunned = true;
-				persistentUpdate = false;
-				persistentDraw = false;
-				paused = true;
-				vocals.stop();
-				inst.stop();
-				if (FlxG.save.data.InstantRespawn
-					|| FlxG.save.data.optimize
-					|| (PlayStateChangeables.opponentMode && !dad.animOffsets.exists('firstDeath')))
-				{
-					MusicBeatState.resetState();
-				}
-				else
-				{
-					if (!PlayStateChangeables.opponentMode)
-						openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
-					else
-						openSubState(new GameOverSubstate(dad.getScreenPosition().x, dad.getScreenPosition().y));
-				}
-
-				isDead = true;
-
-				#if FEATURE_DISCORD
-				DiscordClient.changePresence("GAME OVER -- "
-					+ SONG.song
-					+ " ("
-					+ storyDifficultyText
-					+ ") "
-					+ Ratings.GenerateLetterRank(accuracy),
-					"\nAcc: "
-					+ HelperFunctions.truncateFloat(accuracy, 2)
-					+ "% | Score: "
-					+ songScore
-					+ " | Misses: "
-					+ misses, iconRPC);
-				#end
-			}
-		}
-
 		if (generatedMusic && !(inCutscene || inCinematic))
 		{
 			var holdArray:Array<Bool> = [controls.LEFT, controls.DOWN, controls.UP, controls.RIGHT];
@@ -3903,7 +3730,7 @@ class PlayState extends MusicBeatState
 					daNote.x = strumX + Math.cos(angleDir) * daNote.distance;
 
 				if (SONG.noteStyle == 'pixel' && daNote.isSustainNote)
-					daNote.x -= 5;	
+					daNote.x -= 5;
 
 				daNote.y = strumY + Math.sin(angleDir) * daNote.distance;
 
@@ -3911,13 +3738,11 @@ class PlayState extends MusicBeatState
 				{
 					if (PlayStateChangeables.useDownscroll)
 					{
-						daNote.distance = (0.45 * ((Conductor.songPosition - daNote.strumTime)) * (FlxMath.roundDecimal(leSpeed,
-							2)) * daNote.speedMultiplier)
+						daNote.distance = (0.45 * ((Conductor.songPosition - daNote.strumTime)) * (FlxMath.roundDecimal(leSpeed, 2)) * daNote.speedMultiplier)
 							- daNote.noteYOff;
 					}
 					else
-						daNote.distance = (-0.45 * ((Conductor.songPosition - daNote.strumTime)) * (FlxMath.roundDecimal(leSpeed,
-							2)) * daNote.speedMultiplier)
+						daNote.distance = (-0.45 * ((Conductor.songPosition - daNote.strumTime)) * (FlxMath.roundDecimal(leSpeed, 2)) * daNote.speedMultiplier)
 							+ daNote.noteYOff;
 				}
 
@@ -4174,6 +3999,143 @@ class PlayState extends MusicBeatState
 			});
 		}
 
+		super.update(elapsed);
+
+		var mult:Float = FlxMath.lerp(1, iconP1.scale.x, CoolUtil.boundTo(1 - (elapsed * 9 * songMultiplier), 0, 1));
+		if (!FlxG.save.data.motion)
+			iconP1.scale.set(mult, mult);
+		iconP1.updateHitbox();
+
+		var mult:Float = FlxMath.lerp(1, iconP2.scale.x, CoolUtil.boundTo(1 - (elapsed * 9 * songMultiplier), 0, 1));
+		if (!FlxG.save.data.motion)
+			iconP2.scale.set(mult, mult);
+		iconP2.updateHitbox();
+
+		var iconOffset:Int = 26;
+		if (health >= 2 && !PlayStateChangeables.opponentMode)
+			health = 2;
+
+		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
+		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
+
+		if (healthBar.percent < 20)
+			iconP1.animation.curAnim.curFrame = 1;
+		else if (healthBar.percent > 80 && iconP1.hasWinningIcon)
+			iconP1.animation.curAnim.curFrame = 2;
+		else
+			iconP1.animation.curAnim.curFrame = 0;
+
+		if (healthBar.percent > 80)
+			iconP2.animation.curAnim.curFrame = 1;
+		else if (healthBar.percent < 20 && iconP2.hasWinningIcon)
+			iconP2.animation.curAnim.curFrame = 2;
+		else
+			iconP2.animation.curAnim.curFrame = 0;
+
+		if (camZooming)
+		{
+			var bpmRatio = Conductor.bpm / 100;
+
+			// this motherfucker fucks me so much.
+			FlxG.camera.zoom = FlxMath.lerp(zoomForTweens, FlxG.camera.zoom,
+				CoolUtil.boundTo(1 - (elapsed * 3.125 * bpmRatio * songMultiplier * zoomMultiplier), 0, 1));
+			camHUD.zoom = FlxMath.lerp(zoomForHUDTweens, camHUD.zoom,
+				CoolUtil.boundTo(1 - (elapsed * 3.125 * bpmRatio * songMultiplier * zoomMultiplier), 0, 1));
+			camStrums.zoom = camHUD.zoom;
+		}
+
+		FlxG.watch.addQuick("curBPM", Conductor.bpm);
+		FlxG.watch.addQuick("beatShit", curBeat);
+		FlxG.watch.addQuick("secShit", curSection);
+		FlxG.watch.addQuick("stepShit", curStep);
+
+		if ((health <= 0 && !cannotDie && !PlayStateChangeables.practiceMode && !PlayStateChangeables.opponentMode)
+			|| (health > 2 && !cannotDie && !PlayStateChangeables.practiceMode && PlayStateChangeables.opponentMode))
+		{
+			if (!usedTimeTravel)
+			{
+				boyfriend.stunned = true;
+				persistentUpdate = false;
+				persistentDraw = false;
+				paused = true;
+				vocals.stop();
+				inst.stop();
+				if (FlxG.save.data.InstantRespawn || (PlayStateChangeables.opponentMode) || PlayStateChangeables.Optimize)
+				{
+					MusicBeatState.resetState();
+				}
+				else
+				{
+					if (!PlayStateChangeables.opponentMode)
+					{
+						openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+					}
+				}
+
+				#if FEATURE_DISCORD
+				// Game Over doesn't get his own variable because it's only used here
+				DiscordClient.changePresence("GAME OVER -- "
+					+ SONG.song
+					+ " ("
+					+ storyDifficultyText
+					+ ") "
+					+ Ratings.GenerateLetterRank(accuracy),
+					"\nAcc: "
+					+ HelperFunctions.truncateFloat(accuracy, 2)
+					+ "% | Score: "
+					+ songScore
+					+ " | Misses: "
+					+ misses, iconRPC);
+				#end
+			}
+			else
+				health = 1;
+		}
+		if (!inCutscene && FlxG.save.data.resetButton)
+		{
+			var resetBind = FlxKey.fromString(FlxG.save.data.resetBind);
+
+			if ((FlxG.keys.anyJustPressed([resetBind])))
+			{
+				boyfriend.stunned = true;
+				persistentUpdate = false;
+				persistentDraw = false;
+				paused = true;
+				vocals.stop();
+				inst.stop();
+				if (FlxG.save.data.InstantRespawn
+					|| FlxG.save.data.optimize
+					|| (PlayStateChangeables.opponentMode && !dad.animOffsets.exists('firstDeath')))
+				{
+					MusicBeatState.resetState();
+				}
+				else
+				{
+					if (!PlayStateChangeables.opponentMode)
+						openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+					else
+						openSubState(new GameOverSubstate(dad.getScreenPosition().x, dad.getScreenPosition().y));
+				}
+
+				isDead = true;
+
+				#if FEATURE_DISCORD
+				DiscordClient.changePresence("GAME OVER -- "
+					+ SONG.song
+					+ " ("
+					+ storyDifficultyText
+					+ ") "
+					+ Ratings.GenerateLetterRank(accuracy),
+					"\nAcc: "
+					+ HelperFunctions.truncateFloat(accuracy, 2)
+					+ "% | Score: "
+					+ songScore
+					+ " | Misses: "
+					+ misses, iconRPC);
+				#end
+			}
+		}
+
 		if (FlxG.save.data.cpuStrums)
 		{
 			cpuStrums.forEach(function(spr:StaticArrow)
@@ -4190,7 +4152,6 @@ class PlayState extends MusicBeatState
 			keyShit();
 		if (FlxG.keys.justPressed.ONE)
 			endSong();
-		super.update(elapsed);
 		for (i in shaderUpdates)
 			i(elapsed);
 		#if FEATURE_HSCRIPT
@@ -5602,8 +5563,8 @@ class PlayState extends MusicBeatState
 		{
 			if (curStep % 4 == 0)
 			{
-				iconP1.scale.set(1.1, 1.1);
-				iconP2.scale.set(1.1, 1.1);
+				iconP1.scale.set(1.15, 1.15);
+				iconP2.scale.set(1.15, 1.15);
 
 				iconP1.updateHitbox();
 				iconP2.updateHitbox();

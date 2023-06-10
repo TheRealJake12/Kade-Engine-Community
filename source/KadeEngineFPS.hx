@@ -139,22 +139,6 @@ class KadeEngineFPS extends TextField
 			#end
 		}
 
-		if (FlxG.save.data.fpsBorder)
-		{
-			visible = true;
-			Main.instance.removeChild(bitmap);
-
-			bitmap = ImageOutline.renderImage(this, 2, 0x000000, 1);
-
-			Main.instance.addChild(bitmap);
-		}
-		else
-		{
-			visible = true;
-			if (Main.instance.contains(bitmap))
-				Main.instance.removeChild(bitmap);
-		}
-
 		cacheCount = currentCount;
 	}
 }

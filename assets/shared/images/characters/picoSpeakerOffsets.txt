@@ -1,8 +1,0 @@
-shoot1 0 0
-shoot2 -1 -128
-shoot3 412 -64
-shoot4 439 -19
-shoot1L 0 0
-shoot2L -1 -128
-shoot3L 412 -64
-shoot4L 439 -19
