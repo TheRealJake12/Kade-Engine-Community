@@ -2,6 +2,7 @@ import lime.app.Application;
 import flixel.input.gamepad.FlxGamepad;
 import openfl.Lib;
 import flixel.FlxG;
+import flixel.FlxSprite;
 
 class KadeEngineData
 {
@@ -276,6 +277,8 @@ class KadeEngineData
 		{
 			FlxG.save.data.fpsBorder = false;
 		}
+
+		FlxSprite.defaultAntialiasing = FlxG.save.data.antialiasing;
 
 		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
 

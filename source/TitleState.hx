@@ -196,6 +196,8 @@ class TitleState extends MusicBeatState
 		}
 		#end
 
+		super.update(elapsed);
+
 		if (pressedEnter && !transitioning && skippedIntro || FlxG.mouse.justPressed && !transitioning && skippedIntro)
 		{
 			if (FlxG.save.data.flashing)
@@ -257,8 +259,6 @@ class TitleState extends MusicBeatState
 		{
 			skipIntro();
 		}
-
-		super.update(elapsed);
 	}
 
 	function createCoolText(textArray:Array<String>)

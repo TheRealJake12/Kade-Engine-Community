@@ -2291,7 +2291,7 @@ class PlayState extends MusicBeatState
 			vocals.time = startTime;
 		Conductor.songPosition = startTime;
 		startTime = 0;
-
+		
 		recalculateAllSectionTimes();
 
 		#if FEATURE_DISCORD
@@ -2435,13 +2435,16 @@ class PlayState extends MusicBeatState
 			}
 			#end
 		}
-
+		
 		recalculateAllSectionTimes();
 		checkforSections();
 
 		Conductor.changeBPM(SONG.bpm * songMultiplier);
 
 		Conductor.bpm = SONG.bpm * songMultiplier;
+
+		Conductor.crochet = ((60 / (SONG.bpm * songMultiplier) * 1000));
+		Conductor.stepCrochet = Conductor.crochet / 4;
 
 		fakeCrochet = Conductor.crochet;
 
@@ -3552,6 +3555,7 @@ class PlayState extends MusicBeatState
 			Conductor.rawPosition = inst.time;
 
 			songPositionBar = (Conductor.songPosition - songLength) / 1000;
+			//currentSection = getSectionByTime(Conductor.songPosition / songMultiplier);
 			if (!paused)
 			{
 				// Interpolation type beat
@@ -5693,6 +5697,24 @@ class PlayState extends MusicBeatState
 		changeCameraFocus();
 	}
 
+	/*
+	public function getSectionByTime(ms:Float):SwagSection
+	{
+		for (i in SONG.notes)
+		{
+			var start = TimingStruct.getTimeFromBeat((TimingStruct.getBeatFromTime(i.startTime)));
+			var end = TimingStruct.getTimeFromBeat((TimingStruct.getBeatFromTime(i.endTime)));
+
+			if (ms >= start && ms < end)
+			{
+				return i;
+			}
+		}
+
+		return null;
+	}
+	*/
+
 	function changeCameraFocus()
 	{
 		try
@@ -5944,19 +5966,9 @@ class PlayState extends MusicBeatState
 	{
 		scoreTxt.y = healthBarBG.y;
 		if (FlxG.save.data.colour)
-		{
-			if (!PlayStateChangeables.opponentMode)
-				healthBar.createFilledBar(dad.barColor, boyfriend.barColor);
-			else
-				healthBar.createFilledBar(boyfriend.barColor, dad.barColor);
-		}
+			healthBar.createFilledBar(dad.barColor, boyfriend.barColor);
 		else
-		{
-			if (!PlayStateChangeables.opponentMode)
-				healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
-			else
-				healthBar.createFilledBar(0xFF66FF33, 0xFFFF0000);
-		}
+			healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
 		healthBar.updateBar();
 
 		if (!isStoryMode)
@@ -6512,10 +6524,35 @@ class PlayState extends MusicBeatState
 		{
 			// Debug.logTrace('LastBeat: $lastSecBeat | totalBeats: $totalBeats ');
 			SONG.notes.push(newSection(SONG.notes[SONG.notes.length - 1].lengthInSteps, true, false, false));
-			recalculateAllSectionTimes(SONG.notes.length - 1);
+			recalculateAllSectionTimes();
 			lastSecBeat = TimingStruct.getBeatFromTime(SONG.notes[SONG.notes.length - 1].endTime);
 		}
 	}
+
+	/*
+	function recalculateAllSectionTimes()
+	{
+		for (i in 0...SONG.notes.length) // loops through sections
+		{
+			var section = SONG.notes[i];
+
+			var currentBeat = 4 * i;
+
+			var currentSeg = TimingStruct.getTimingAtBeat(currentBeat);
+
+			if (currentSeg == null)
+				return;
+
+			var start:Float = ((currentBeat - currentSeg.startBeat) / ((currentSeg.bpm) / 60));
+
+			section.startTime = (((currentSeg.startTime + start)) * 1000);
+
+			if (i != 0)
+				SONG.notes[i - 1].endTime = section.startTime;
+			section.endTime = Math.POSITIVE_INFINITY;
+		}
+	}
+	*/
 
 	private function addSongTiming()
 	{
@@ -6547,6 +6584,7 @@ class PlayState extends MusicBeatState
 				currentIndex++;
 			}
 		}
+		recalculateAllSectionTimes();
 	}
 
 	private function destroyNote(daNote:Note)

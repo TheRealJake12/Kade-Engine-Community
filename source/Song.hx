@@ -203,9 +203,9 @@ class Song
 				{
 					var data = TimingStruct.AllTimings[currentIndex - 1];
 					data.endBeat = beat;
-					data.length = ((data.endBeat - data.startBeat) / (data.bpm / 60));
+					data.length = (data.endBeat - data.startBeat) / (data.bpm / 60);
 					var step = ((60 / data.bpm) * 1000) / 4;
-					TimingStruct.AllTimings[currentIndex].startStep = Math.floor((((data.endBeat / (data.bpm / 60)) * 1000) / step));
+					TimingStruct.AllTimings[currentIndex].startStep = Math.floor(((data.endBeat / (data.bpm / 60)) * 1000) / step);
 					TimingStruct.AllTimings[currentIndex].startTime = data.startTime + data.length;
 				}
 
@@ -244,25 +244,14 @@ class Song
 				song.eventObjects.push(new Song.Event("FNF BPM Change " + index, beat, i.bpm, "BPM Change"));
 			}
 
-			for (ii in i.sectionNotes)
-			{
-				if (song.chartVersion == null)
-				{
-					ii[3] = false;
-					ii[4] = TimingStruct.getBeatFromTime(ii[0]);
-				}
-
-				if (ii[3] == 0)
-					ii[3] == false;
-			}
-
 			index++;
 		}
-
+		// this fucks up everything. every. thing.
 		for (section in song.notes)
 		{
 			for (notes in section.sectionNotes)
 			{
+				
 				if (section.mustHitSection)
 				{
 					var bool = false;
@@ -275,6 +264,7 @@ class Song
 						if (!bool)
 							notes[1] -= 4;
 				}
+				
 
 				if (notes[2] == -1) // REMOVE EVENT NOTES FROM OTHER ENGINES
 					section.sectionNotes.remove(notes);

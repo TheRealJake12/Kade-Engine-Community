@@ -335,7 +335,7 @@ class MusicBeatState extends FlxUIState
 
 	public function sectionHit():Void
 	{
-		// do literally nothing dumbass
+		Debug.logTrace("Section Hit (MusicBeat)");
 	}
 
 	public static function switchState(nextState:FlxState)

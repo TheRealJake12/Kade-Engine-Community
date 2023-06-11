@@ -26,9 +26,6 @@ class Init extends MusicBeatState
 			sys.FileSystem.createDirectory(Sys.getCwd() + "/assets/replays");
 		#end
 
-		if (FlxG.save.data.fpsCap > 420)
-			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(420);
-
 		FlxG.mouse.load(Paths.oldImage('curser'));
 
 		FlxG.save.bind('kec' #if (flixel < "5.0.0"), 'therealjake12' #end);
