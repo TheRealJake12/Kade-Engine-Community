@@ -3288,7 +3288,7 @@ class PlayState extends MusicBeatState
 				scrollSpeed *= newScroll;
 		}
 
-		if (PlayStateChangeables.botPlay && FlxG.keys.justPressed.ONE)
+		if (PlayStateChangeables.botPlay && FlxG.keys.justPressed.F1)
 			camHUD.visible = !camHUD.visible;
 
 		#if FEATURE_LUAMODCHART

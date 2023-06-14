@@ -2990,10 +2990,12 @@ class ChartingState extends MusicBeatState
 					var daStrumTime = i[0];
 					var daSus = i[2];
 					var daShit = i[5];
+					var daBeat = TimingStruct.getBeatFromTime(daStrumTime);
 
-					var note:Note = new Note(daStrumTime, daNoteInfo % 4, null, false, true, false, i[3], i[4], daShit);
+					var note:Note = new Note(daStrumTime, daNoteInfo % 4, null, false, true, false, i[3], daBeat, daShit);
 					note.rawNoteData = daNoteInfo;
 					note.sustainLength = daSus;
+					note.strumTime = daStrumTime;
 					note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));
 					note.updateHitbox();
 					note.x = Math.floor(daNoteInfo * GRID_SIZE);
