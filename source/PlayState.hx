@@ -2435,9 +2435,8 @@ class PlayState extends MusicBeatState
 			}
 			#end
 		}
-		
-		recalculateAllSectionTimes();
-		checkforSections();
+
+		addSongTiming();
 
 		Conductor.changeBPM(SONG.bpm * songMultiplier);
 
@@ -2464,6 +2463,8 @@ class PlayState extends MusicBeatState
 
 		for (section in noteData)
 		{
+			var coolSection:Int = Std.int(section.lengthInSteps / 4);
+
 			for (songNotes in section.sectionNotes)
 			{
 				var daStrumTime:Float = (songNotes[0] - FlxG.save.data.offset - SONG.offset) / songMultiplier;
@@ -2472,15 +2473,12 @@ class PlayState extends MusicBeatState
 				var daNoteData:Int = Std.int(songNotes[1] % 4);
 				var daNoteType:String = songNotes[5];
 
-				var gottaHitNote:Bool = false;
+				var gottaHitNote:Bool = section.mustHitSection;
 
-				if (songNotes[1] > 3)
-					gottaHitNote = true;
-				else if (songNotes[1] <= 3)
-					gottaHitNote = false;
-
-				if (PlayStateChangeables.opponentMode)
-					gottaHitNote = !gottaHitNote;
+				if (songNotes[1] > 3 && !PlayStateChangeables.opponentMode)
+					gottaHitNote = !section.mustHitSection;
+				else if (songNotes[1] <= 3 && PlayStateChangeables.opponentMode)
+					gottaHitNote = !section.mustHitSection;
 
 				var oldNote:Note;
 				if (unspawnNotes.length > 0)
@@ -2535,8 +2533,8 @@ class PlayState extends MusicBeatState
 						sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true, false, true,
 							null, songNotes[4], daNoteType);
 					else
-						sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true, false, false,
-							null, songNotes[4], daNoteType);
+						sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, false,
+							false, null, songNotes[4], daNoteType);
 
 					sustainNote.scrollFactor.set();
 					unspawnNotes.push(sustainNote);

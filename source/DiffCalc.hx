@@ -38,7 +38,7 @@ class DiffCalc
 			for (ii in i.sectionNotes) // notes
 			{
 				var gottaHitNote:Bool = false;
-				gottaHitNote = ii[1] > 3;
+				gottaHitNote = ii[0] > 3;
 
 				var data = ii[1] % 4;
 

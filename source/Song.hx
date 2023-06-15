@@ -213,17 +213,6 @@ class Song
 			}
 		}
 
-		// If the song has null sections.
-		if (song.notes == null)
-		{
-			song.notes = [];
-
-			song.notes.push(newSection(song));
-		}
-
-		if (song.notes.length == 0)
-			song.notes.push(newSection(song));
-
 		for (i in song.notes)
 		{
 			if (i.altAnim)
@@ -244,34 +233,19 @@ class Song
 				song.eventObjects.push(new Song.Event("FNF BPM Change " + index, beat, i.bpm, "BPM Change"));
 			}
 
-			index++;
-		}
-		// this fucks up everything. every. thing.
-		for (section in song.notes)
-		{
-			for (notes in section.sectionNotes)
+			for (ii in i.sectionNotes)
 			{
-				
-				if (section.mustHitSection)
+				if (song.chartVersion == null)
 				{
-					var bool = false;
-					if (notes[1] <= 3)
-					{
-						notes[1] += 4;
-						bool = true;
-					}
-					if (notes[1] > 3)
-						if (!bool)
-							notes[1] -= 4;
+					ii[3] = false;
+					ii[4] = TimingStruct.getBeatFromTime(ii[0]);
 				}
-				
 
-				if (notes[2] == -1) // REMOVE EVENT NOTES FROM OTHER ENGINES
-					section.sectionNotes.remove(notes);
+				if (ii[3] == 0)
+					ii[3] == false;
 			}
 
-			if (section.lengthInSteps == null)
-				section.lengthInSteps = 16;
+			index++;
 		}
 
 		song.chartVersion = latestChart;

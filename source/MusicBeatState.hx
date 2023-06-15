@@ -118,6 +118,22 @@ class MusicBeatState extends FlxUIState
 	override function destroy()
 	{
 		super.destroy();
+
+		if (!PlayState.inDaPlay)
+		{
+			for (rateData in FreeplayState.songRating.keys())
+				rateData = null;
+
+			for (opRateData in FreeplayState.songRatingOp.keys())
+				opRateData = null;
+
+			FreeplayState.songRating.clear();
+			FreeplayState.songRatingOp.clear();
+
+			FreeplayState.loadedSongData = false;
+		}
+
+		curTiming = null;
 	}
 
 	public function fancyOpenURL(schmancy:String)
@@ -237,7 +253,6 @@ class MusicBeatState extends FlxUIState
 						if (Conductor.songPosition >= currentSection.endTime || Conductor.songPosition < currentSection.startTime)
 						{
 							currentSection = getSectionByTime(Conductor.songPosition);
-
 							curSection = activeSong.notes.indexOf(currentSection);
 						}
 					}
@@ -335,7 +350,7 @@ class MusicBeatState extends FlxUIState
 
 	public function sectionHit():Void
 	{
-		// Do nothing
+		
 	}
 
 	public static function switchState(nextState:FlxState)
