@@ -644,7 +644,7 @@ class PlayState extends MusicBeatState
 		{
 			stageCheck = SONG.stage;
 		}
-		Stage = new Stage(SONG.stage);
+		Stage = new Stage(stageCheck);
 
 		if (isStoryMode)
 			songMultiplier = 1;
