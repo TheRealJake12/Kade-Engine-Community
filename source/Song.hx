@@ -233,6 +233,9 @@ class Song
 				song.eventObjects.push(new Song.Event("FNF BPM Change " + index, beat, i.bpm, "BPM Change"));
 			}
 
+			if (i.lengthInSteps == null)
+				i.lengthInSteps = 16;
+
 			for (ii in i.sectionNotes)
 			{
 				if (song.chartVersion == null)
@@ -262,6 +265,9 @@ class Song
 
 		if (songData.songName == null)
 			songData.songName = songId;
+
+		if (songData.song == null)
+			songData.song = songId;		
 
 		// Enforce default values for optional fields.
 		if (songData.validScore == null)

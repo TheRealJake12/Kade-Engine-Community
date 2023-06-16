@@ -3,7 +3,6 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxTimer;
-import perf.Destroyer;
 
 class Load extends MusicBeatState
 {
@@ -11,8 +10,6 @@ class Load extends MusicBeatState
 
 	override public function create()
 	{
-		Destroyer.clearStoredMemory();
-		Destroyer.clearUnusedMemory();
 		load.loadGraphic(Paths.image('funkay'));
 		load.screenCenter();
 		load.scale.set(0.76, 0.67);

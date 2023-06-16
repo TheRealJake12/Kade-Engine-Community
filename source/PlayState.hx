@@ -5695,24 +5695,6 @@ class PlayState extends MusicBeatState
 		changeCameraFocus();
 	}
 
-	/*
-	public function getSectionByTime(ms:Float):SwagSection
-	{
-		for (i in SONG.notes)
-		{
-			var start = TimingStruct.getTimeFromBeat((TimingStruct.getBeatFromTime(i.startTime)));
-			var end = TimingStruct.getTimeFromBeat((TimingStruct.getBeatFromTime(i.endTime)));
-
-			if (ms >= start && ms < end)
-			{
-				return i;
-			}
-		}
-
-		return null;
-	}
-	*/
-
 	function changeCameraFocus()
 	{
 		try
@@ -6511,46 +6493,6 @@ class PlayState extends MusicBeatState
 			arrowsGenerated = false;
 		}
 	}
-
-	private function checkforSections()
-	{
-		var totalBeats = TimingStruct.getBeatFromTime(inst.length / songMultiplier);
-
-		var lastSecBeat = TimingStruct.getBeatFromTime(SONG.notes[SONG.notes.length - 1].endTime);
-
-		while (lastSecBeat < totalBeats)
-		{
-			// Debug.logTrace('LastBeat: $lastSecBeat | totalBeats: $totalBeats ');
-			SONG.notes.push(newSection(SONG.notes[SONG.notes.length - 1].lengthInSteps, true, false, false));
-			recalculateAllSectionTimes();
-			lastSecBeat = TimingStruct.getBeatFromTime(SONG.notes[SONG.notes.length - 1].endTime);
-		}
-	}
-
-	/*
-	function recalculateAllSectionTimes()
-	{
-		for (i in 0...SONG.notes.length) // loops through sections
-		{
-			var section = SONG.notes[i];
-
-			var currentBeat = 4 * i;
-
-			var currentSeg = TimingStruct.getTimingAtBeat(currentBeat);
-
-			if (currentSeg == null)
-				return;
-
-			var start:Float = ((currentBeat - currentSeg.startBeat) / ((currentSeg.bpm) / 60));
-
-			section.startTime = (((currentSeg.startTime + start)) * 1000);
-
-			if (i != 0)
-				SONG.notes[i - 1].endTime = section.startTime;
-			section.endTime = Math.POSITIVE_INFINITY;
-		}
-	}
-	*/
 
 	private function addSongTiming()
 	{
