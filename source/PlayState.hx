@@ -90,7 +90,7 @@ class PlayState extends MusicBeatState
 	public static var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
 
 	// SONG MULTIPLIER STUFF
-	var speedChanged:Bool = false;
+	public var speedChanged:Bool = false;
 
 	public var previousRate:Float = songMultiplier;
 
@@ -1804,7 +1804,7 @@ class PlayState extends MusicBeatState
 
 	function set_scrollSpeed(value:Float):Float // STOLEN FROM PSYCH ENGINE ONLY SPRITE SCALING PART.
 	{
-		speedChanged = true;
+		// speedChanged = true;
 		if (generatedMusic)
 		{
 			var ratio:Float = value / scrollSpeed;
@@ -2291,7 +2291,7 @@ class PlayState extends MusicBeatState
 			vocals.time = startTime;
 		Conductor.songPosition = startTime;
 		startTime = 0;
-		
+
 		recalculateAllSectionTimes();
 
 		#if FEATURE_DISCORD
@@ -2533,8 +2533,8 @@ class PlayState extends MusicBeatState
 						sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true, false, true,
 							null, songNotes[4], daNoteType);
 					else
-						sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, false,
-							false, null, songNotes[4], daNoteType);
+						sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, false, false,
+							null, songNotes[4], daNoteType);
 
 					sustainNote.scrollFactor.set();
 					unspawnNotes.push(sustainNote);
@@ -3277,13 +3277,16 @@ class PlayState extends MusicBeatState
 						if (i.position <= curDecimalBeat && !pastScrollChanges.contains(i))
 						{
 							pastScrollChanges.push(i);
-							Debug.logTrace("SCROLL SPEED CHANGE to " + i.value);
 							newScroll = i.value;
+							Debug.logTrace("SCROLL SPEED CHANGE to " + scrollSpeed + newScroll);
+
+							if (newScroll != 0)
+								changeScrollSpeed(newScroll, 0.4, FlxEase.linear);
 						}
+						speedChanged = true;
+						
 				}
 			}
-			if (newScroll != 0)
-				scrollSpeed *= newScroll;
 		}
 
 		if (PlayStateChangeables.botPlay && FlxG.keys.justPressed.F1)
@@ -3553,7 +3556,7 @@ class PlayState extends MusicBeatState
 			Conductor.rawPosition = inst.time;
 
 			songPositionBar = (Conductor.songPosition - songLength) / 1000;
-			//currentSection = getSectionByTime(Conductor.songPosition / songMultiplier);
+			// currentSection = getSectionByTime(Conductor.songPosition / songMultiplier);
 			if (!paused)
 			{
 				// Interpolation type beat
@@ -4703,7 +4706,13 @@ class PlayState extends MusicBeatState
 				if (FlxG.save.data.rateStack)
 				{
 					createTween(numScore, {alpha: 0}, 0.2, {
-					onComplete: function(tween:FlxTween){remove(numScore);numScore.destroy();},startDelay: Conductor.crochet * 0.002});
+						onComplete: function(tween:FlxTween)
+						{
+							remove(numScore);
+							numScore.destroy();
+						},
+						startDelay: Conductor.crochet * 0.002
+					});
 				}
 				else
 				{
@@ -5023,7 +5032,7 @@ class PlayState extends MusicBeatState
 
 	public function changeScrollSpeed(mult:Float, time:Float, ease):Void
 	{
-		var newSpeed = FlxG.save.data.scrollSpeed * mult;
+		var newSpeed = 1 * mult;
 		if (time <= 0)
 		{
 			scrollSpeed = newSpeed;
@@ -5043,6 +5052,8 @@ class PlayState extends MusicBeatState
 				}
 			});
 		}
+
+		speedChanged = true;
 
 		scrollMult = mult;
 	}

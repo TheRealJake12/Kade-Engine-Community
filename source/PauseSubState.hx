@@ -207,7 +207,8 @@ class PauseSubState extends MusicBeatSubstate
 						FlxG.save.data.sickMs,
 						FlxG.save.data.marvMs
 					];
-					PlayState.instance.scrollSpeed = (FlxG.save.data.scrollSpeed == 1 ? PlayState.SONG.speed : FlxG.save.data.scrollSpeed) * PlayState.instance.scrollMult;
+					if (!PlayState.instance.speedChanged)	
+						PlayState.instance.scrollSpeed = (FlxG.save.data.scrollSpeed == 1 ? PlayState.SONG.speed : FlxG.save.data.scrollSpeed) * PlayState.instance.scrollMult;
 					FlxTween.tween(PlayState.laneunderlay, {alpha: FlxG.save.data.laneTransparency}, 1);
 					FlxTween.tween(PlayState.laneunderlayOpponent, {alpha: FlxG.save.data.laneTransparency}, 1);
 					PlayStateChangeables.botPlay = FlxG.save.data.botplay;
