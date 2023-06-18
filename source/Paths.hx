@@ -512,7 +512,7 @@ class Paths
 					}
 				}
 			}
-			Main.gc();
+			runGC();
 			// to be safe that NO gc memory is left.
 		}
 	}
@@ -583,6 +583,17 @@ class Paths
 		}
 		// idk if this does anything.
 		// THANK YOU MALICIOUS BUNNY!!
+	}
+
+	public static function runGC()
+	{
+		#if cpp
+		cpp.vm.Gc.run(false);
+
+		cpp.vm.Gc.compact();
+		#else
+		System.gc();
+		#end
 	}
 
 	static public function getSparrowAtlas(key:String, ?library:String, ?isCharacter:Bool = false, ?gpuRender:Bool)

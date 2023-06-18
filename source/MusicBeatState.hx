@@ -350,7 +350,6 @@ class MusicBeatState extends FlxUIState
 
 	public function sectionHit():Void
 	{
-		
 	}
 
 	public static function switchState(nextState:FlxState)

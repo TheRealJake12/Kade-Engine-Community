@@ -1363,7 +1363,7 @@ class PlayState extends MusicBeatState
 				char.destroy();
 			}
 			Paths.clearUnusedMemory();
-			Main.gc();
+			Paths.runGC();
 		}
 
 		switch (SONG.songId)
@@ -3284,7 +3284,6 @@ class PlayState extends MusicBeatState
 								changeScrollSpeed(newScroll, 0.4, FlxEase.linear);
 						}
 						speedChanged = true;
-						
 				}
 			}
 		}

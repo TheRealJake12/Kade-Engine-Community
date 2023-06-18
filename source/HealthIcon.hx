@@ -14,6 +14,7 @@ class HealthIcon extends FlxSprite
 
 	var char:String = '';
 	var isPlayer:Bool = false;
+
 	public var hasWinningIcon:Bool = false;
 	public var initialWidth:Float = 0;
 	public var initialHeight:Float = 0;
@@ -51,16 +52,16 @@ class HealthIcon extends FlxSprite
 			{
 				var name:String = 'icons/icon-' + newChar;
 				var file:Dynamic = Paths.image(name);
-				loadGraphic(file); //Load stupidly first for getting the file size
+				loadGraphic(file); // Load stupidly first for getting the file size
 				if (width == 450)
-					hasWinningIcon = true;	
-				loadGraphic(file, true, 150, 150); //Then load it fr
+					hasWinningIcon = true;
+				loadGraphic(file, true, 150, 150); // Then load it fr
 				updateHitbox();
 
 				if (!hasWinningIcon)
 					animation.add(newChar, [0, 1], 0, false, isPlayer);
 				else
-					animation.add(newChar, [0, 1, 2], 0, false, isPlayer);	
+					animation.add(newChar, [0, 1, 2], 0, false, isPlayer);
 			}
 			if (char.endsWith('-pixel') || char.startsWith('senpai') || char.startsWith('spirit'))
 				antialiasing = false
@@ -69,7 +70,7 @@ class HealthIcon extends FlxSprite
 			animation.play(newChar);
 			char = newChar;
 		}
-		
+
 		initialWidth = width;
 		initialHeight = height;
 	}

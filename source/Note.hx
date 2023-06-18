@@ -461,14 +461,15 @@ class Note extends FlxSprite
 		}
 
 		if (isSustainNote)
-			{
-				alpha = !sustainActive&& (parent.tooLate || parent.wasGoodHit) ? (modAlpha * FlxG.save.data.alpha) / 2 : modAlpha * FlxG.save.data.alpha; // This is the correct way
-			}
-			else if (tooLate && !wasGoodHit)
-			{
-				if (alpha > modAlpha * 0.3)
-					alpha = modAlpha * 0.3;
-			}
+		{
+			alpha = !sustainActive
+				&& (parent.tooLate || parent.wasGoodHit) ? (modAlpha * FlxG.save.data.alpha) / 2 : modAlpha * FlxG.save.data.alpha; // This is the correct way
+		}
+		else if (tooLate && !wasGoodHit)
+		{
+			if (alpha > modAlpha * 0.3)
+				alpha = modAlpha * 0.3;
+		}
 	}
 
 	@:noCompletion
@@ -481,5 +482,4 @@ class Note extends FlxSprite
 
 		return rect;
 	}
-
 }

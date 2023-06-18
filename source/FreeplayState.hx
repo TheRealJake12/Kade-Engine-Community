@@ -689,10 +689,10 @@ class FreeplayState extends MusicBeatState
 				changeSelection(1);
 			}
 
-			if (FlxG.keys.justPressed.O && !openedPreview){
+			if (FlxG.keys.justPressed.O && !openedPreview)
+			{
 				openSubState(new DiffOverview());
 				openedPreview = true;
-
 			}
 		}
 		previewtext.text = "Rate: " + FlxMath.roundDecimal(rate, 2) + "x";
@@ -901,9 +901,9 @@ class FreeplayState extends MusicBeatState
 
 				FlxG.sound.playMusic(songPath, 0.7, true);
 
-				//Conductor.changeBPM();
+				// Conductor.changeBPM();
 
-				//Debug.logTrace(songPath);
+				// Debug.logTrace(songPath);
 
 				songPath = null;
 			}
@@ -963,12 +963,7 @@ class FreeplayState extends MusicBeatState
 		{
 			if (instance.songs[curSelected].songCharacter == "sm")
 			{
-				currentSongData = Song.loadFromJsonRAW(
-					#if FEATURE_FILESYSTEM
-					File.getContent(instance.songs[curSelected].sm.jsonPath)
-					#else
-					OpenFlAssets.getText(instance.songs[curSelected].songName)
-					#end);
+				currentSongData = Song.loadFromJsonRAW(#if FEATURE_FILESYSTEM File.getContent(instance.songs[curSelected].sm.jsonPath) #else OpenFlAssets.getText(instance.songs[curSelected].songName) #end);
 			}
 			else
 			{

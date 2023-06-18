@@ -27,16 +27,8 @@ import sys.FileSystem;
 import sys.io.File;
 import sys.io.Process;
 import openfl.system.System;
-import cpp.vm.Gc;
 #end
 import openfl.utils.AssetCache;
-#if hl
-import hl.Gc;
-#elseif java
-import java.vm.Gc;
-#elseif neko
-import neko.vm.Gc;
-#end
 
 using StringTools;
 
@@ -114,7 +106,6 @@ class Main extends Sprite
 
 		gameContainer = this;
 
-
 		// Run this first so we can see logs.
 		Debug.onInitProgram();
 
@@ -125,10 +116,6 @@ class Main extends Sprite
 		#end
 
 		// FlxTransitionableState.skipNextTransIn = true;
-
-		#if cpp
-		Gc.enable(true);
-		#end
 
 		addChild(new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate,
 			game.skipSplash, game.startFullscreen));
@@ -150,15 +137,13 @@ class Main extends Sprite
 				for (key => sound in cache.sound)
 					cache.removeSound(key);
 			}
-			if (FlxG.save.data.unload)
-				gc();
 		});
 		FlxG.signals.postStateSwitch.add(function()
 		{
 			if (FlxG.save.data.unload)
 			{
 				Paths.clearUnusedMemory();
-				gc();
+				Paths.runGC();
 			}
 		});
 
@@ -351,14 +336,5 @@ class Main extends Sprite
 	public function getFPS():Float
 	{
 		return fpsCounter.currentFPS;
-	}
-
-	public static function gc()
-	{
-		#if cpp
-		Gc.run(true);
-		#else
-		openfl.system.System.gc();
-		#end
 	}
 }

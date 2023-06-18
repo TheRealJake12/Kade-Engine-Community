@@ -160,7 +160,7 @@ class ModCoreBackend extends OpenFLBackend
 
 	public override function clearCache()
 	{
-		Main.gc();
+		Paths.runGC();
 		super.clearCache();
 		// Debug.logInfo('Custom asset cache has been cleared.');
 	}

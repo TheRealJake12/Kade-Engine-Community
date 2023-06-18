@@ -69,8 +69,10 @@ class DiffOverview extends MusicBeatSubstate
 		var currentSongData:SongData = null;
 		try
 		{
-			currentSongData = Song.loadFromJson(FreeplayState.instance.songs[FreeplayState.curSelected].songName, CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[
-				CoolUtil.difficultyArray.indexOf(FreeplayState.instance.songs[FreeplayState.curSelected].diffs[FreeplayState.curDifficulty])]));
+			currentSongData = Song.loadFromJson(FreeplayState.instance.songs[FreeplayState.curSelected].songName,
+				CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[
+					CoolUtil.difficultyArray.indexOf(FreeplayState.instance.songs[FreeplayState.curSelected].diffs[FreeplayState.curDifficulty])
+				]));
 		}
 		catch (ex)
 		{
@@ -97,7 +99,7 @@ class DiffOverview extends MusicBeatSubstate
 		generateStaticArrows(0);
 
 		add(playerStrums);
-		
+
 		generateSong(SONG.songId);
 
 		strumLine.cameras = [camHUD];
@@ -231,7 +233,7 @@ class DiffOverview extends MusicBeatSubstate
 				babyArrow.alpha = 1;
 
 			babyArrow.ID = i;
-			
+
 			babyArrow.x += 20;
 			playerStrums.add(babyArrow);
 
@@ -258,7 +260,6 @@ class DiffOverview extends MusicBeatSubstate
 	}
 
 	public var stopDoingShit = false;
-	
 
 	override function stepHit()
 	{
@@ -453,7 +454,7 @@ class DiffOverview extends MusicBeatSubstate
 
 		FlxG.sound.list.add(vocals);
 
-		//recalculateAllSectionTimes();
+		// recalculateAllSectionTimes();
 
 		notes = new FlxTypedGroup<Note>();
 		add(notes);
@@ -495,7 +496,7 @@ class DiffOverview extends MusicBeatSubstate
 					oldNote = null;
 
 				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, true, true, null, songNotes[4], daNoteType);
-				
+
 				swagNote.baseStrum = Math.round(songNotes[0]);
 
 				swagNote.sustainLength = songNotes[2];
@@ -510,7 +511,8 @@ class DiffOverview extends MusicBeatSubstate
 				{
 					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
-					var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, true, true, null, songNotes[4], daNoteType);
+					var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, true,
+						true, null, songNotes[4], daNoteType);
 					sustainNote.scrollFactor.set();
 					unspawnNotes.push(sustainNote);
 

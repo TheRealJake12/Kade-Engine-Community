@@ -98,8 +98,7 @@ class ChartingState extends MusicBeatState
 	 * Array of notes showing when each section STARTS in STEPS
 	 * Usually rounded up??
 	 */
-	//var curSection:Int = 0;
-
+	// var curSection:Int = 0;
 	public static var lastSection:Int = 0;
 
 	var bpmTxt:FlxText;
@@ -174,6 +173,7 @@ class ChartingState extends MusicBeatState
 
 	var autosaveIndicator:FlxSprite;
 	var curDiff:String = "";
+
 	public static var mustCleanMem:Bool = true;
 
 	override function create()
@@ -190,14 +190,14 @@ class ChartingState extends MusicBeatState
 			Debug.logTrace("Cleared Memory");
 		}
 		speed = PlayState.songMultiplier;
-		//curSection = lastSection;
+		// curSection = lastSection;
 
 		PlayState.noteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.noteskin);
 
 		FlxG.mouse.visible = true;
 
 		PlayState.inDaPlay = false;
-		
+
 		curDiff = CoolUtil.difficultyArray[PlayState.storyDifficulty];
 
 		deezNuts.set(4, 1);
@@ -1610,7 +1610,7 @@ class ChartingState extends MusicBeatState
 		vocals = new FlxSound().loadEmbedded(Paths.voices(daSong));
 		if (vocals != null)
 			vocals.stop();
-			
+
 		FlxG.sound.list.add(inst);
 		FlxG.sound.list.add(vocals);
 
@@ -2105,7 +2105,7 @@ class ChartingState extends MusicBeatState
 				if (FlxG.mouse.wheel != 0)
 				{
 					inst.pause();
-					
+
 					vocals.pause();
 					claps.splice(0, claps.length);
 
@@ -2174,7 +2174,7 @@ class ChartingState extends MusicBeatState
 							updateBpmText();
 							inst.time -= (FlxG.mouse.wheel * Conductor.stepCrochet * 0.4);
 						}
-						
+
 						vocals.time = inst.time;
 					}
 				}
@@ -2761,7 +2761,7 @@ class ChartingState extends MusicBeatState
 							}
 							else
 								inst.time += daTime;
-								vocals.time = inst.time;
+							vocals.time = inst.time;
 						}
 					}
 					else
@@ -2779,7 +2779,7 @@ class ChartingState extends MusicBeatState
 							}
 							else
 								inst.time += daTime;
-								vocals.time = inst.time;
+							vocals.time = inst.time;
 						}
 					}
 				}
@@ -2831,7 +2831,7 @@ class ChartingState extends MusicBeatState
 	function resetSection(songBeginning:Bool = false):Void
 	{
 		inst.pause();
-			vocals.pause();
+		vocals.pause();
 
 		// Basically old shit from changeSection???
 		inst.time = 0;
@@ -3199,32 +3199,31 @@ class ChartingState extends MusicBeatState
 	}
 
 	/*
-	function recalculateAllSectionTimes()
-	{
-		var savedNotes:Array<Dynamic> = [];
-
-		for (i in 0..._song.notes.length) // loops through sections
+		function recalculateAllSectionTimes()
 		{
-			var section = _song.notes[i];
+			var savedNotes:Array<Dynamic> = [];
 
-			var currentBeat = 4 * i;
+			for (i in 0..._song.notes.length) // loops through sections
+			{
+				var section = _song.notes[i];
 
-			var currentSeg = TimingStruct.getTimingAtBeat(currentBeat);
+				var currentBeat = 4 * i;
 
-			if (currentSeg == null)
-				return;
+				var currentSeg = TimingStruct.getTimingAtBeat(currentBeat);
 
-			var start:Float = (currentBeat - currentSeg.startBeat) / (currentSeg.bpm / 60);
+				if (currentSeg == null)
+					return;
 
-			section.startTime = (currentSeg.startTime + start) * 1000;
+				var start:Float = (currentBeat - currentSeg.startBeat) / (currentSeg.bpm / 60);
 
-			if (i != 0)
-				_song.notes[i - 1].endTime = section.startTime;
-			section.endTime = Math.POSITIVE_INFINITY;
+				section.startTime = (currentSeg.startTime + start) * 1000;
+
+				if (i != 0)
+					_song.notes[i - 1].endTime = section.startTime;
+				section.endTime = Math.POSITIVE_INFINITY;
+			}
 		}
-	}
-	*/
-
+	 */
 	function shiftNotes(measure:Int = 0, step:Int = 0, ms:Int = 0):Void
 	{
 		var newSong = [];
@@ -3272,25 +3271,24 @@ class ChartingState extends MusicBeatState
 	}
 
 	/*
-	public function getSectionByTime(ms:Float, ?changeCurSectionIndex:Bool = false):SwagSection
-	{
-		var index = 0;
-
-		for (i in _song.notes)
+		public function getSectionByTime(ms:Float, ?changeCurSectionIndex:Bool = false):SwagSection
 		{
-			if (ms >= i.startTime && ms < i.endTime)
+			var index = 0;
+
+			for (i in _song.notes)
 			{
-				if (changeCurSectionIndex)
-					curSection = index;
-				return i;
+				if (ms >= i.startTime && ms < i.endTime)
+				{
+					if (changeCurSectionIndex)
+						curSection = index;
+					return i;
+				}
+				index++;
 			}
-			index++;
+
+			return null;
 		}
-
-		return null;
-	}
-	*/
-
+	 */
 	public function getNoteByTime(ms:Float)
 	{
 		for (i in _song.notes)
