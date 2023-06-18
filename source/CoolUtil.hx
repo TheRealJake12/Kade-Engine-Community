@@ -6,7 +6,7 @@ import flixel.math.FlxMath;
 import flixel.graphics.frames.FlxBitmapFont;
 import flixel.text.FlxBitmapText;
 #if VIDEOS
-import hxcodec.VideoHandler;
+import hxcodec.flixel.FlxVideo as VideoHandler;
 #end
 #if FEATURE_FILESYSTEM
 import sys.io.File;
@@ -178,15 +178,15 @@ class CoolUtil
 			{
 				loadingVideos.push(name);
 				var cache:VideoHandler = new VideoHandler();
-				cache.canUseSound = false;
-				cache.playVideo(Paths.video(name));
-				cache.onOpening = function()
+				cache.mute = true;
+				cache.play(Paths.video(name));
+				cache.onOpening.add(function()
 				{
 					cache.stop();
 					cache.dispose();
 					loadedVideos.push(name);
 					loadingVideos.remove(name);
-				}
+				});
 				FlxG.log.add('Video file has been cached: ' + name);
 			}
 			else

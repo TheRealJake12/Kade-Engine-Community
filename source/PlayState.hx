@@ -75,8 +75,8 @@ import debug.StageDebugState;
 import debug.AnimationDebug;
 import debug.ChartingState;
 #if VIDEOS
-import hxcodec.VideoHandler;
-import hxcodec.VideoSprite;
+import hxcodec.flixel.FlxVideo as VideoHandler;
+import hxcodec.flixel.FlxVideoSprite as VideoSprite;
 #end
 import stages.Stage;
 import stages.TankmenBG;
@@ -6584,7 +6584,7 @@ class PlayState extends MusicBeatState
 
 		var video:VideoHandler = new VideoHandler();
 		inst.stop();
-		video.finishCallback = function()
+		video.onEndReached.add(function()
 		{
 			if (atend == true)
 			{
@@ -6598,8 +6598,10 @@ class PlayState extends MusicBeatState
 			}
 			else
 				startCountdown();
-		}
-		video.playVideo(Paths.video(name));
+
+			video.dispose();	
+		});
+		video.play(Paths.video(name));
 		#else
 		FlxG.log.warn("Platform Not Supported.");
 		#end
@@ -6609,11 +6611,11 @@ class PlayState extends MusicBeatState
 	{
 		#if VIDEOS
 		var vid:VideoHandler = new VideoHandler();
-		vid.playVideo(Paths.video(name));
-		vid.finishCallback = function()
+		vid.play(Paths.video(name));
+		vid.onEndReached.add(function()
 		{
 			vid.dispose();
-		}
+		});
 		#if FEATURE_HSCRIPT
 		if (scripts != null)
 			scripts.executeAllFunc("playVid", [name]);
@@ -6631,7 +6633,7 @@ class PlayState extends MusicBeatState
 		vid.y = y;
 		vid.scale.x = scaleX;
 		vid.scale.y = scaleY;
-		vid.playVideo(Paths.video(name));
+		vid.play(Paths.video(name));
 		#if FEATURE_HSCRIPT
 		if (scripts != null)
 			scripts.executeAllFunc("playVideoSprite", [x, y, scaleX, scaleY, path]);
