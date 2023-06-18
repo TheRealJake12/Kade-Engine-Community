@@ -1848,7 +1848,7 @@ class PlayState extends MusicBeatState
 		}
 
 		#if FEATURE_HSCRIPT
-		if (ScriptUtil.hasPause(scripts.executeAllFunc("countdown")))
+		if (ScriptUtil.hasPause(scripts.executeAllFunc("startCountdown")))
 			return;
 		#end
 
@@ -6108,30 +6108,6 @@ class PlayState extends MusicBeatState
 				scripts.getScriptByTag(scriptName).error("Duplacite Script Error!", '$scriptName: Duplicate Script');
 			}
 		}
-	}
-
-	private var eventsPushed:Array<Dynamic> = [];
-
-	public function initSongEvents()
-	{
-		if (!FileSystem.exists("assets/scripts/events"))
-			return;
-
-		var hxFiles:Map<String, String> = [];
-
-		for (scriptName => hxData in hxFiles)
-		{
-			if (scripts.getScriptByTag(scriptName) == null)
-				scripts.addScript(scriptName).executeString(hxData);
-			else
-			{
-				scripts.getScriptByTag(scriptName).error("Duplacite Script Error!", '$scriptName: Duplicate Script');
-			}
-		}
-	}
-
-	function initEventScript(name:String)
-	{
 	}
 
 	function onAddScript(script:Script)
