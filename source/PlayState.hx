@@ -4003,6 +4003,11 @@ class PlayState extends MusicBeatState
 			});
 		}
 
+		#if FEATURE_HSCRIPT
+		if (scripts != null)
+			scripts.executeAllFunc("update", [elapsed]);
+		#end
+
 		super.update(elapsed);
 
 		var mult:Float = FlxMath.lerp(1, iconP1.scale.x, CoolUtil.boundTo(1 - (elapsed * 9 * songMultiplier), 0, 1));
