@@ -2472,6 +2472,7 @@ class PlayState extends MusicBeatState
 					daStrumTime = 0;
 				var daNoteData:Int = Std.int(songNotes[1] % 4);
 				var daNoteType:String = songNotes[5];
+				var daBeat = TimingStruct.getBeatFromTime(daStrumTime);
 
 				var gottaHitNote:Bool = section.mustHitSection;
 
@@ -2489,9 +2490,9 @@ class PlayState extends MusicBeatState
 				var swagNote:Note;
 
 				if (gottaHitNote)
-					swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, true, null, songNotes[4], daNoteType);
+					swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, true, null, daBeat, daNoteType);
 				else
-					swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, false, null, songNotes[4], daNoteType);
+					swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, false, null, daBeat, daNoteType);
 
 				if (PlayStateChangeables.holds)
 				{
@@ -2531,10 +2532,10 @@ class PlayState extends MusicBeatState
 
 					if (gottaHitNote)
 						sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true, false, true,
-							null, songNotes[4], daNoteType);
+							null, 0, daNoteType);
 					else
 						sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, false, false,
-							null, songNotes[4], daNoteType);
+							null, 0, daNoteType);
 
 					sustainNote.scrollFactor.set();
 					unspawnNotes.push(sustainNote);

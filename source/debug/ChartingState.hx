@@ -227,7 +227,7 @@ class ChartingState extends MusicBeatState
 				chartVersion: latestChartVersion,
 				songId: 'test',
 				songName: 'Test',
-				notes: [newSection(16, true, false, false)],
+				notes: [],
 				eventObjects: [],
 				bpm: 150,
 				needsVoices: true,
@@ -2763,6 +2763,7 @@ class ChartingState extends MusicBeatState
 							else
 								inst.time += daTime;
 							vocals.time = inst.time;
+							updateBpmText();
 						}
 					}
 					else
@@ -2781,6 +2782,7 @@ class ChartingState extends MusicBeatState
 							else
 								inst.time += daTime;
 							vocals.time = inst.time;
+							updateBpmText();
 						}
 					}
 				}
