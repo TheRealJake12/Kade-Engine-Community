@@ -37,19 +37,13 @@ class DiffCalc
 		{
 			for (ii in i.sectionNotes) // notes
 			{
-				var gottaHitNote:Bool = false;
-				gottaHitNote = ii[0] > 3;
-
+				var gottaHitNote:Bool = i.mustHitSection;
 				var data = ii[1] % 4;
 
+				if (!gottaHitNote && opponentMode)
+					cleanedNotes.push(new SmallNote(ii[0], Math.floor(Math.abs(data))));
 				if (gottaHitNote && !opponentMode)
-				{
 					cleanedNotes.push(new SmallNote(ii[0], Math.floor(Math.abs(data))));
-				}
-				else if (!gottaHitNote && opponentMode)
-				{
-					cleanedNotes.push(new SmallNote(ii[0], Math.floor(Math.abs(data))));
-				}
 			}
 		}
 
@@ -239,7 +233,7 @@ class DiffCalc
 			smoothBrainTwo(hand_diffOne);
 			smoothBrainTwo(hand_diffTwo);
 		}
-
+		
 		var point_npsOne:Array<Float> = new Array<Float>();
 		var point_npsTwo:Array<Float> = new Array<Float>();
 

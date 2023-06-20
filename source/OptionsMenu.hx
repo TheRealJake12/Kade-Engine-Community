@@ -752,6 +752,7 @@ class OptionsMenu extends MusicBeatSubstate
 						}
 					}
 				}
+			}	
 
 			if (changedOption)
 				updateOptColors();
@@ -780,6 +781,7 @@ class OptionsMenu extends MusicBeatSubstate
 								}
 							}
 						}
+
 
 					for (object in selectedCat.optionObjects.members)
 					{
