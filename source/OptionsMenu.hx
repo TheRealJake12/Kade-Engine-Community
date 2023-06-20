@@ -442,10 +442,15 @@ class OptionsMenu extends MusicBeatSubstate
 		if (!isInCat)
 		{
 			object.text = "> " + option.getValue();
-			updateOptColors();
-			object.updateHitbox();
-
 			descText.text = option.getDescription();
+			updateOptColors();
+
+			if (selectedOption.blocked)
+				descText.color = FlxColor.YELLOW;
+			else
+				descText.color = FlxColor.WHITE;
+
+			descText.updateHitbox();
 		}
 	}
 
@@ -623,7 +628,6 @@ class OptionsMenu extends MusicBeatSubstate
 
 					if (selectedOptionIndex == prev)
 					{
-						FlxG.save.flush();
 						object.text = "> " + selectedOption.getValue();
 						object.updateHitbox();
 					}
@@ -643,7 +647,7 @@ class OptionsMenu extends MusicBeatSubstate
 
 			for (option in selectedCat.optionObjects.members)
 			{
-				if (selectedOptionIndex > 5)
+				if (selectedOptionIndex > 4)
 				{
 					option.targetY = bullShit - selectedOptionIndex;
 					bullShit++;
@@ -748,7 +752,6 @@ class OptionsMenu extends MusicBeatSubstate
 						}
 					}
 				}
-			}
 
 			if (changedOption)
 				updateOptColors();
@@ -770,7 +773,7 @@ class OptionsMenu extends MusicBeatSubstate
 						{
 							if (i != null)
 							{
-								if (selectedOptionIndex > 5)
+								if (selectedOptionIndex > 4)
 								{
 									i.targetY += (selectedOptionIndex - 5);
 									i.y = i.rawY;

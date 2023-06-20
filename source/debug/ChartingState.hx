@@ -227,7 +227,7 @@ class ChartingState extends MusicBeatState
 				chartVersion: latestChartVersion,
 				songId: 'test',
 				songName: 'Test',
-				notes: [],
+				notes: [newSection(16, true, false, false)],
 				eventObjects: [],
 				bpm: 150,
 				needsVoices: true,
@@ -326,6 +326,7 @@ class ChartingState extends MusicBeatState
 			if (i == TimingStruct.AllTimings.length - 1)
 				lastSeg = seg;
 		}
+
 		recalculateAllSectionTimes();
 
 		for (i in 0...9000000) // REALLY HIGH BEATS just cuz like ig this is the upper limit, I mean ur chart is probably going to run like ass anyways
@@ -1188,7 +1189,7 @@ class ChartingState extends MusicBeatState
 
 	override function sectionHit()
 	{
-		curSection++;
+		curSection + 1;
 	}
 
 	var stepperLength:FlxUINumericStepper;
@@ -1383,7 +1384,7 @@ class ChartingState extends MusicBeatState
 	function goToSection(section:Int)
 	{
 		var beat = section * 4;
-		var data = TimingStruct.getTimingAtBeat(beat);
+		var data = TimingStruct.getTimingAtTimestamp(beat);
 
 		if (data == null)
 			return;
@@ -1397,6 +1398,8 @@ class ChartingState extends MusicBeatState
 			inst.time = inst.length;
 
 		claps.splice(0, claps.length);
+
+		updateBpmText();
 	}
 
 	public var check_naltAnim:FlxUICheckBox;
@@ -2202,12 +2205,10 @@ class ChartingState extends MusicBeatState
 					if (FlxG.keys.justPressed.RIGHT && !FlxG.keys.pressed.CONTROL)
 					{
 						goToSection(curSection + 1);
-						updateBpmText();
 					}
 					else if (FlxG.keys.justPressed.LEFT && !FlxG.keys.pressed.CONTROL)
 					{
 						goToSection(curSection - 1);
-						updateBpmText();
 					}
 				}
 
