@@ -44,7 +44,7 @@ class DiffCalc
 				else if (ii[1] <= 3 && opponentMode)
 					gottaHitNote = !i.mustHitSection;
 
-				var data = ii[1] % 4;	
+				var data = ii[1] % 4;
 
 				if (gottaHitNote)
 					cleanedNotes.push(new SmallNote(ii[0], Math.floor(Math.abs(data))));
@@ -237,7 +237,7 @@ class DiffCalc
 			smoothBrainTwo(hand_diffOne);
 			smoothBrainTwo(hand_diffTwo);
 		}
-		
+
 		var point_npsOne:Array<Float> = new Array<Float>();
 		var point_npsTwo:Array<Float> = new Array<Float>();
 

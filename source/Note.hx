@@ -79,7 +79,7 @@ class Note extends FlxSprite
 	public var speedMultiplier:Float = 1.0;
 	public var overrideDistance:Bool = false; // Set this to true if you know what are you doing.
 
-	var modAlpha:Float = 1;
+	public var modAlpha:Float = 1;
 
 	#if FEATURE_LUAMODCHART
 	public var LuaNote:LuaNote;
@@ -267,6 +267,7 @@ class Note extends FlxSprite
 								animation.add(dataColor[i] + 'hold', [i]); // Holds
 								animation.add(dataColor[i] + 'holdend', [i + 4]); // Tails
 							}
+							antialiasing = false;
 
 							setGraphicSize(Std.int(width * CoolUtil.daPixelZoom));
 							updateHitbox();

@@ -337,6 +337,7 @@ class Stage extends MusicBeatState
 
 						var bgSky = new FlxSprite().loadGraphic(Paths.image('weeb/weebSky', 'week6'));
 						bgSky.scrollFactor.set(0.1, 0.1);
+						bgSky.antialiasing = false;
 						swagBacks['bgSky'] = bgSky;
 						toAdd.push(bgSky);
 
@@ -344,16 +345,19 @@ class Stage extends MusicBeatState
 
 						var bgSchool:FlxSprite = new FlxSprite(repositionShit, 0).loadGraphic(Paths.image('weeb/weebSchool', 'week6'));
 						bgSchool.scrollFactor.set(0.6, 0.90);
+						bgSchool.antialiasing = false;
 						swagBacks['bgSchool'] = bgSchool;
 						toAdd.push(bgSchool);
 
 						var bgStreet:FlxSprite = new FlxSprite(repositionShit).loadGraphic(Paths.image('weeb/weebStreet', 'week6'));
 						bgStreet.scrollFactor.set(0.95, 0.95);
+						bgStreet.antialiasing = false;
 						swagBacks['bgStreet'] = bgStreet;
 						toAdd.push(bgStreet);
 
 						var fgTrees:FlxSprite = new FlxSprite(repositionShit + 170, 130).loadGraphic(Paths.image('weeb/weebTreesBack', 'week6'));
 						fgTrees.scrollFactor.set(0.9, 0.9);
+						fgTrees.antialiasing = false;
 						swagBacks['fgTrees'] = fgTrees;
 						toAdd.push(fgTrees);
 
@@ -363,6 +367,7 @@ class Stage extends MusicBeatState
 						bgTrees.animation.add('treeLoop', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
 							Std.int(12 * PlayState.songMultiplier));
 						bgTrees.animation.play('treeLoop');
+						bgTrees.antialiasing = false;
 						bgTrees.scrollFactor.set(0.85, 0.85);
 						swagBacks['bgTrees'] = bgTrees;
 						toAdd.push(bgTrees);
@@ -371,6 +376,7 @@ class Stage extends MusicBeatState
 						treeLeaves.frames = Paths.getSparrowAtlas('weeb/petals', 'week6');
 						treeLeaves.animation.addByPrefix('leaves', 'PETALS ALL', Std.int(24 * PlayState.songMultiplier), true);
 						treeLeaves.animation.play('leaves');
+						treeLeaves.antialiasing = false;
 						treeLeaves.scrollFactor.set(0.85, 0.85);
 						swagBacks['treeLeaves'] = treeLeaves;
 						toAdd.push(treeLeaves);
@@ -400,6 +406,7 @@ class Stage extends MusicBeatState
 								bgGirls.getScared();
 							bgGirls.updateHitbox();
 							swagBacks['bgGirls'] = bgGirls;
+							bgGirls.antialiasing = false;
 							toAdd.push(bgGirls);
 						}
 					}
@@ -417,6 +424,7 @@ class Stage extends MusicBeatState
 						bg.animation.play('idle');
 						bg.scrollFactor.set(0.8, 0.9);
 						bg.scale.set(6, 6);
+						bg.antialiasing = false;
 						swagBacks['bg'] = bg;
 						toAdd.push(bg);
 					}

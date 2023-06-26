@@ -229,6 +229,7 @@ class PlayState extends MusicBeatState
 	private var gfSpeed:Int = 1;
 
 	public var health:Float = 1;
+	public var shownHealth:Float = 1;
 
 	private var combo:Int = 0;
 
@@ -259,7 +260,7 @@ class PlayState extends MusicBeatState
 	public var iconP2:HealthIcon;
 	public var camHUD:FlxCamera;
 
-	private var camGame:FlxCamera;
+	public var camGame:FlxCamera;
 
 	public var camOther:FlxCamera;
 
@@ -393,14 +394,6 @@ class PlayState extends MusicBeatState
 		timerManager = new FlxTimerManager();
 
 		PlayerSettings.player1.controls.loadKeyBinds();
-
-		Ratings.timingWindows = [
-			FlxG.save.data.shitMs,
-			FlxG.save.data.badMs,
-			FlxG.save.data.goodMs,
-			FlxG.save.data.sickMs,
-			FlxG.save.data.marvMs
-		];
 
 		Application.current.window.title = '${MainMenuState.kecVer}: ' + SONG.song + ' ' + CoolUtil.difficultyArray[storyDifficulty];
 
@@ -918,7 +911,7 @@ class PlayState extends MusicBeatState
 		Conductor.songPosition = -5000;
 		Conductor.rawPosition = Conductor.songPosition;
 
-		strumLine = new FlxSprite(0, 50).makeGraphic(FlxG.width, 10);
+		strumLine = new FlxSprite(0, 50).makeGraphic(FlxG.width + 50, 10, FlxColor.WHITE);
 		strumLine.scrollFactor.set();
 
 		if (PlayStateChangeables.useDownscroll)
@@ -1083,7 +1076,7 @@ class PlayState extends MusicBeatState
 		healthBarBG.scrollFactor.set();
 
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
-			'health', 0, 2);
+			'shownHealth', 0, 2);
 		healthBar.scrollFactor.set();
 		// healthBar
 
@@ -3824,6 +3817,7 @@ class PlayState extends MusicBeatState
 				{
 					daNote.visible = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].visible;
 					daNote.alpha = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].alpha;
+					daNote.modAlpha = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].alpha;
 					if (!daNote.isSustainNote)
 						daNote.modAngle = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
 				}
@@ -3831,6 +3825,7 @@ class PlayState extends MusicBeatState
 				{
 					daNote.visible = strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].visible;
 					daNote.alpha = strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].alpha;
+					daNote.modAlpha = strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].alpha;
 					if (!daNote.isSustainNote)
 						daNote.modAngle = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
 				}
@@ -4010,6 +4005,11 @@ class PlayState extends MusicBeatState
 		#end
 
 		super.update(elapsed);
+
+		if (FlxG.save.data.smoothHealthbar)
+			shownHealth = FlxMath.lerp(shownHealth, health, CoolUtil.boundTo(elapsed * 15 * songMultiplier, 0, 1));
+		else
+			shownHealth = health;	
 
 		var mult:Float = FlxMath.lerp(1, iconP1.scale.x, CoolUtil.boundTo(1 - (elapsed * 9 * songMultiplier), 0, 1));
 		if (!FlxG.save.data.motion)
@@ -6600,7 +6600,7 @@ class PlayState extends MusicBeatState
 			else
 				startCountdown();
 
-			video.dispose();	
+			video.dispose();
 		});
 		video.play(Paths.video(name));
 		#else

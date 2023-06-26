@@ -21,7 +21,9 @@ import flixel.util.FlxColor;
 import lime.app.Application;
 import flixel.input.keyboard.FlxKey;
 import flixel.addons.display.FlxBackdrop;
-import ModCore;
+#if FEATURE_MODCORE
+import polymod.Polymod;
+#end
 
 using StringTools;
 
@@ -98,7 +100,7 @@ class MainMenuState extends MusicBeatState
 
 		#if FEATURE_MODCORE
 		if (FlxG.save.data.loadMods)
-			ModCore.initialize();
+			Polymod.reload();
 		#end
 
 		FlxG.mouse.visible = true;

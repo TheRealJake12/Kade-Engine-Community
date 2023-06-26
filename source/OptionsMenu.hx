@@ -196,6 +196,7 @@ class OptionsMenu extends MusicBeatSubstate
 				new NotesplashesOption("Uses Notesplashes (Only use it on Arrow skins or else theres gonna be some visual bugs(wrong offsets))."),
 				new RotateSpritesOption("Should the game rotate the sprites to do color quantization (turn off for bar skins)"),
 				new LowMotion("Makes The Icons Not Bump On The Healthbar."),
+				new SmoothHealthOption("Should The Healthbar Change Smoothly (Costmetic Only)"),
 				#if desktop
 				new BorderlessWindow("Turns Off The Window Border."),
 				#end
@@ -752,7 +753,7 @@ class OptionsMenu extends MusicBeatSubstate
 						}
 					}
 				}
-			}	
+			}
 
 			if (changedOption)
 				updateOptColors();
@@ -781,7 +782,6 @@ class OptionsMenu extends MusicBeatSubstate
 								}
 							}
 						}
-
 
 					for (object in selectedCat.optionObjects.members)
 					{

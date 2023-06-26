@@ -78,6 +78,7 @@ class DialogueBox extends FlxSpriteGroup
 				box.frames = Paths.getSparrowAtlas('weeb/pixelUI/dialogueBox-pixel');
 				box.animation.addByPrefix('normalOpen', 'Text Box Appear', 24, false);
 				box.animation.addByIndices('normal', 'Text Box Appear', [4], "", 24);
+				box.antialiasing = false;
 			case 'roses':
 				hasDialog = true;
 				FlxG.sound.play(Paths.sound('ANGRY_TEXT_BOX'));
@@ -85,15 +86,18 @@ class DialogueBox extends FlxSpriteGroup
 				box.frames = Paths.getSparrowAtlas('weeb/pixelUI/dialogueBox-senpaiMad');
 				box.animation.addByPrefix('normalOpen', 'SENPAI ANGRY IMPACT SPEECH', 24, false);
 				box.animation.addByIndices('normal', 'SENPAI ANGRY IMPACT SPEECH', [4], "", 24);
+				box.antialiasing = false;
 
 			case 'thorns':
 				hasDialog = true;
 				box.frames = Paths.getSparrowAtlas('weeb/pixelUI/dialogueBox-evil');
 				box.animation.addByPrefix('normalOpen', 'Spirit Textbox spawn', 24, false);
 				box.animation.addByIndices('normal', 'Spirit Textbox spawn', [11], "", 24);
+				box.antialiasing = false;
 
 				var face:FlxSprite = new FlxSprite(320, 170).loadGraphic(Paths.image('weeb/spiritFaceForward'));
 				face.setGraphicSize(Std.int(face.width * 6));
+				face.antialiasing = false;
 				add(face);
 		}
 
@@ -107,6 +111,7 @@ class DialogueBox extends FlxSpriteGroup
 		portraitLeft.animation.addByPrefix('enter', 'Senpai Portrait Enter', 24, false);
 		portraitLeft.setGraphicSize(Std.int(portraitLeft.width * CoolUtil.daPixelZoom * 0.9));
 		portraitLeft.updateHitbox();
+		portraitLeft.antialiasing = false;
 		portraitLeft.scrollFactor.set();
 		add(portraitLeft);
 		portraitLeft.visible = false;
@@ -116,6 +121,7 @@ class DialogueBox extends FlxSpriteGroup
 		portraitRight.animation.addByPrefix('enter', 'Boyfriend portrait enter', 24, false);
 		portraitRight.setGraphicSize(Std.int(portraitRight.width * CoolUtil.daPixelZoom * 0.9));
 		portraitRight.updateHitbox();
+		portraitRight.antialiasing = false;
 		portraitRight.scrollFactor.set();
 		add(portraitRight);
 		portraitRight.visible = false;
@@ -129,11 +135,13 @@ class DialogueBox extends FlxSpriteGroup
 		portraitLeft.screenCenter(X);
 		skipText = new FlxText(10, 10, Std.int(FlxG.width * 0.6), "", 24);
 		skipText.font = Paths.font("vcr.ttf");
+		skipText.antialiasing = true;
 		skipText.color = 0x000000;
 		skipText.text = 'Press Backspace To Skip.';
 		skipText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 		add(skipText);
 		handSelect = new FlxSprite(FlxG.width * 0.9, FlxG.height * 0.9).loadGraphic(Paths.image('weeb/pixelUI/hand_textbox'));
+		handSelect.antialiasing = false;
 		add(handSelect);
 
 		if (!talkingRight)

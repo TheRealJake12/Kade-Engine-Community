@@ -13,6 +13,7 @@ import sys.io.File;
 import Sys;
 import sys.FileSystem;
 #end
+import flixel.util.FlxColor;
 import haxe.io.Path;
 
 using StringTools;
@@ -164,6 +165,19 @@ class CoolUtil
 			dumbArray.push(i);
 		}
 		return dumbArray;
+	}
+
+	inline public static function colorFromString(color:String):FlxColor
+	{
+		var hideChars = ~/[\t\n\r]/;
+		var color:String = hideChars.split(color).join('').trim();
+		if (color.startsWith('0x'))
+			color = color.substr(4);
+
+		var colorNum:Null<FlxColor> = FlxColor.fromString(color);
+		if (colorNum == null)
+			colorNum = FlxColor.fromString('#$color');
+		return colorNum != null ? colorNum : FlxColor.WHITE;
 	}
 
 	public static var loadingVideos:Array<String> = [];

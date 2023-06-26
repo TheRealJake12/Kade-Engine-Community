@@ -112,7 +112,7 @@ class GameplayCustomizeState extends MusicBeatState
 			dad = new Character(100, 100, 'dad');
 		}
 
-		boyfriend = new Boyfriend(770, 450, freeplayBf);
+		boyfriend = new Boyfriend(770, 450, 'bf');
 
 		if (boyfriend.frames == null)
 		{
@@ -124,22 +124,7 @@ class GameplayCustomizeState extends MusicBeatState
 
 		var gfCheck:String = 'gf';
 
-		if (freeplayGf == null)
-		{
-			switch (freeplayWeek)
-			{
-				case 4:
-					gfCheck = 'gf-car';
-				case 5:
-					gfCheck = 'gf-christmas';
-				case 6:
-					gfCheck = 'gf-pixel';
-			}
-		}
-		else
-			gfCheck = freeplayGf;
-
-		gf = new Character(400, 130, gfCheck);
+		gf = new Character(400, 130, 'gf');
 
 		if (gf.frames == null)
 		{

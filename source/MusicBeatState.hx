@@ -68,6 +68,18 @@ class MusicBeatState extends FlxUIState
 
 		super.create();
 		TimingStruct.clearTimings();
+
+		CustomNoteHelpers.Skin.updateNoteskins();
+		CustomNoteHelpers.Splash.updateNotesplashes();
+
+		Ratings.timingWindows = [
+			FlxG.save.data.shitMs,
+			FlxG.save.data.badMs,
+			FlxG.save.data.goodMs,
+			FlxG.save.data.sickMs,
+			FlxG.save.data.marvMs
+		];
+
 		Main.gameContainer.setFPSCap(FlxG.save.data.fpsCap);
 	}
 

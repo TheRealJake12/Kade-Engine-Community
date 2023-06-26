@@ -2908,6 +2908,34 @@ class GPURendering extends Option
 	}
 }
 
+class SmoothHealthOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function left():Bool
+	{
+		FlxG.save.data.smoothHealthbar = !FlxG.save.data.smoothHealthbar;
+
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Smooth Healthbar: < " + (FlxG.save.data.smoothHealthbar ? "On" : "Off") + " >";
+	}
+}
+
 class ResetSettings extends Option
 {
 	var confirm:Bool = false;
@@ -2957,6 +2985,7 @@ class ResetSettings extends Option
 		FlxG.save.data.botplay = null;
 		FlxG.save.data.roundAccuracy = null;
 		FlxG.save.data.cpuStrums = null;
+		FlxG.save.data.smoothHealthbar = null;
 		FlxG.save.data.camzoom = null;
 		FlxG.save.data.scoreScreen = null;
 		FlxG.save.data.inputShow = null;

@@ -104,7 +104,7 @@ class OutdatedSubState extends MusicBeatState
 	{
 		if (FlxG.keys.justPressed.SPACE && MainMenuState.nightly == "")
 		{
-			fancyOpenURL("https://therealjake12.github.io/Kade-Engine-Community/changelogs/");
+			fancyOpenURL("https://therealjake12.github.io/Kade-Engine-Community/changelogs/changelog-" + needVer);
 		}
 		else if (controls.ACCEPT)
 		{

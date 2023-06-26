@@ -271,19 +271,19 @@ class ModchartState
 		{
 			if (Std.parseInt(id) == null)
 				return Reflect.getProperty(PlayState.instance, id);
-			return PlayState.PlayState.strumLineNotes.members[Std.parseInt(id)];
+			return PlayState.strumLineNotes.members[Std.parseInt(id)];
 		}
 		return luaSprites.get(id);
 	}
 
-	function getPropertyByName(id:String)
+	function getPropertyByName(leClass:String, id:String)
 	{
-		return Reflect.field(PlayState.instance, id);
+		return Reflect.field(Type.resolveClass(leClass), id);
 	}
 
-	function setPropertyByName(id:String, value:Dynamic)
+	function setPropertyByName(leClass:String, id:String, value:Dynamic)
 	{
-		return Reflect.setProperty(PlayState.instance, id, value);
+		return Reflect.setProperty(Type.resolveClass(leClass), id, value);
 	}
 
 	public static var luaSprites:Map<String, FlxSprite> = [];
@@ -469,9 +469,8 @@ class ModchartState
 		setVar("curStep", 0);
 		setVar("curBeat", 0);
 		setVar("crochet", Conductor.stepCrochet);
-		setVar("safeZoneOffset", Conductor.safeZoneOffset);
 
-		setVar("hudZoom", PlayState.instance.camHUD.zoom);
+		setVar("hudZoom", PlayState.instance.zoomForHUDTweens);
 		setVar("cameraZoom", PlayState.instance.zoomForTweens);
 
 		setVar("cameraAngle", FlxG.camera.angle);
@@ -491,9 +490,6 @@ class ModchartState
 		setVar("hudWidth", PlayState.instance.camHUD.width);
 		setVar("hudHeight", PlayState.instance.camHUD.height);
 
-		setVar("hudWidth", PlayState.instance.camHUD.width);
-		setVar("hudHeight", PlayState.instance.camHUD.height);
-
 		setVar("mustHit", false);
 
 		setVar("strumLineY", PlayState.instance.strumLine.y);
@@ -508,6 +504,11 @@ class ModchartState
 		Lua_helper.add_callback(lua, "getProperty", getPropertyByName);
 		Lua_helper.add_callback(lua, "setProperty", setPropertyByName);
 		Lua_helper.add_callback(lua, "makeSprite", makeLuaSprite);
+
+		Lua_helper.add_callback(lua, "cameraFlash", function(camera:String, color:String, duration:Float, forced:Bool)
+		{
+			cameraFromString(camera).flash(CoolUtil.colorFromString(color), duration, null, forced);
+		});
 
 		// sprites
 
@@ -595,36 +596,26 @@ class ModchartState
 			PlayState.laneunderlayOpponent.alpha = value;
 		});
 
-		// SHADER SHIT (Thanks old psych engine)
-
-		Lua_helper.add_callback(lua, "addChromaticAbberationEffect", function(camera:String, chromeOffset:Float = 0.005)
+		Lua_helper.add_callback(lua, "getNotes", function(y:Float)
 		{
-			PlayState.instance.addShaderToCamera(camera, new ChromaticAberrationEffect(chromeOffset));
+			Lua.newtable(lua);
+
+			for (i in 0...PlayState.instance.notes.members.length)
+			{
+				var note = PlayState.instance.notes.members[i];
+				Lua.pushstring(lua, note.LuaNote.className);
+				Lua.rawseti(lua, -2, i);
+			}
 		});
 
-		Lua_helper.add_callback(lua, "addVignetteEffect", function(camera:String, radius:Float = 0.5, smoothness:Float = 0.5)
+		Lua_helper.add_callback(lua, "setScrollSpeed", function(value:Float)
 		{
-			PlayState.instance.addShaderToCamera(camera, new VignetteEffect(radius, smoothness));
+			PlayState.instance.scrollSpeed = value;
 		});
 
-		Lua_helper.add_callback(lua, "addGameboyEffect", function(camera:String, brightness:Float = 1.0)
+		Lua_helper.add_callback(lua, "changeScrollSpeed", function(mult:Float, time:Float, ?ease:String)
 		{
-			PlayState.instance.addShaderToCamera(camera, new GameboyEffect(brightness));
-		});
-
-		Lua_helper.add_callback(lua, "addCRTEffect", function(camera:String, curved:Bool = true)
-		{
-			PlayState.instance.addShaderToCamera(camera, new CRTEffect(curved));
-		});
-
-		Lua_helper.add_callback(lua, "addGlitchEffect", function(camera:String, waveSpeed:Float = 0, waveFrq:Float = 0, waveAmp:Float = 0)
-		{
-			PlayState.instance.addShaderToCamera(camera, new GlitchEffect(waveSpeed, waveFrq, waveAmp));
-		});
-
-		Lua_helper.add_callback(lua, "clearEffects", function(camera:String)
-		{
-			PlayState.instance.clearShaderFromCamera(camera);
+			PlayState.instance.changeScrollSpeed(mult, time, getFlxEaseByString(ease));
 		});
 
 		for (i in 0...PlayState.strumLineNotes.length)
@@ -646,6 +637,20 @@ class ModchartState
 	public static function createModchartState():ModchartState
 	{
 		return new ModchartState();
+	}
+
+	public static function cameraFromString(cam:String):FlxCamera
+	{
+		switch (cam.toLowerCase())
+		{
+			case 'camhud' | 'hud':
+				return PlayState.instance.camHUD;
+			case 'camStrums' | 'strums':
+				return PlayState.instance.camStrums;
+			case 'camGame' | 'game':
+				return PlayState.instance.camGame;
+		}
+		return PlayState.instance.camGame;
 	}
 
 	public static function getFlxEaseByString(?ease:String = '')
