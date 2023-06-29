@@ -547,6 +547,7 @@ class PlayState extends MusicBeatState
 		camGame = new SwagCamera();
 		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
+		camHUD.pixelPerfectRender = true;
 		camStrums = new FlxCamera();
 		camStrums.height = 1300;
 		camStrums.bgColor.alpha = 0;
@@ -1074,10 +1075,12 @@ class PlayState extends MusicBeatState
 			healthBarBG.y = 50;
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
+		healthBarBG.antialiasing = FlxG.save.data.antialiasing;
 
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
 			'shownHealth', 0, 2);
 		healthBar.scrollFactor.set();
+		healthBar.antialiasing = FlxG.save.data.antialiasing;
 		// healthBar
 
 		// Add watermark

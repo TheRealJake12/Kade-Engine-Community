@@ -64,6 +64,13 @@ class StageDebugState extends MusicBeatState
 		gf = PlayState.instance.gf;
 		boyfriend = PlayState.instance.boyfriend;
 		dad = PlayState.instance.dad;
+
+		dad.moves = true;
+		dad.active = true;
+		boyfriend.active = true;
+		boyfriend.moves = true;
+		gf.active = true;
+		gf.moves = true;
 		curChars = [dad, boyfriend, gf];
 		if (!gf.visible) // for when gf is an opponent
 			curChars.pop();
@@ -184,7 +191,7 @@ class StageDebugState extends MusicBeatState
 		}
 
 		if (FlxG.mouse.pressed
-			&& FlxCollision.pixelPerfectPointCheck(Math.floor(FlxG.mouse.x), Math.floor(FlxG.mouse.y), curChar)
+			&& FlxG.mouse.overlaps(curChar)
 			&& !dragging)
 		{
 			dragging = true;
