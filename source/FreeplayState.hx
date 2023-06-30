@@ -135,7 +135,6 @@ class FreeplayState extends MusicBeatState
 			songs[i].diffs.reverse(); */
 
 		populateSongData();
-		PlayState.inDaPlay = false;
 		PlayState.currentSong = "bruh";
 
 		#if FEATURE_DISCORD

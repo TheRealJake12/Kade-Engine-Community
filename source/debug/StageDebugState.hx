@@ -35,6 +35,10 @@ class StageDebugState extends MusicBeatState
 	public var daGf:String;
 	public var opponent:String;
 
+	private var camEditor:FlxCamera;
+	private var camHUD:FlxCamera;
+	private var camMenu:FlxCamera;
+
 	var _file:FileReference;
 
 	var gf:Character;
@@ -52,13 +56,12 @@ class StageDebugState extends MusicBeatState
 	var dragging:Bool = false;
 	var oldMousePosX:Int;
 	var oldMousePosY:Int;
-	var camHUD:FlxCamera;
-	var camGame:FlxCamera;
 	var charMode:Bool = true;
 	var usedObjects:Array<FlxSprite> = [];
 
 	var UI_box:FlxUITabMenu;
 	var UI_options:FlxUITabMenu;
+	var stageDropDown:FlxUIDropDownMenu;
 
 	var stageList:Array<String>;
 	var newStage:String = 'stage';
@@ -106,15 +109,18 @@ class StageDebugState extends MusicBeatState
 		camFollow.screenCenter();
 		add(camFollow);
 
+		camEditor = new FlxCamera();
 		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
-		camGame = new FlxCamera();
-		camGame.zoom = Stage.camZoom;
-		FlxG.cameras.add(camGame);
-		FlxG.cameras.add(camHUD);
-		FlxCamera.defaultCameras = [camGame];
-		FlxG.camera = camGame;
-		camGame.follow(camFollow);
+		camMenu = new FlxCamera();
+		camMenu.bgColor.alpha = 0;
+
+		FlxG.cameras.reset(camEditor);
+		FlxG.cameras.add(camHUD, false);
+		FlxG.cameras.add(camMenu, false);
+
+		FlxG.cameras.setDefaultDrawTarget(camEditor, true);
+		FlxG.camera.follow(camFollow);
 
 		reloadStage(Stage.curStage);
 
@@ -125,13 +131,12 @@ class StageDebugState extends MusicBeatState
 		// var opt_tabs = [{name: "test", label: 'test'}];
 
 		UI_options = new FlxUITabMenu(null, tabs, true);
+		UI_options.cameras = [camMenu];
 
 		UI_options.scrollFactor.set();
-		UI_options.selected_tab = 1;
 		UI_options.resize(300, 200);
 		UI_options.x = FlxG.width - UI_options.width - 20;
 		UI_options.y = FlxG.height - 300;
-		UI_options.cameras = [camHUD];
 		add(UI_options);
 
 		posText = new FlxText(0, 690);
@@ -148,38 +153,51 @@ class StageDebugState extends MusicBeatState
 		add(posText);
 
 		addHelpText();
-
 		addEditorUI();
+		UI_options.selected_tab_id = 'Stage';
 	}
 
 	function addEditorUI():Void
 	{
-		var stageDropDown = new FlxUIDropDownMenu(10, 50, FlxUIDropDownMenu.makeStrIdLabelArray(stageList, true), function(stage:String)
+		var tab_group = new FlxUI(null, UI_options);
+		tab_group.name = "Stage";
+		stageDropDown = new FlxUIDropDownMenu(10, 50, FlxUIDropDownMenu.makeStrIdLabelArray(stageList, true), function(stage:String)
 		{
-			newStage = stage;
+			newStage = stageList[Std.parseInt(stage)];
+			Debug.logTrace('Selected Stage : ${newStage}');
 		});
 
-		var tab_group_assets = new FlxUI(null, UI_options);
+		stageDropDown.selectedLabel = stageList[Std.parseInt(newStage)];
+		tab_group.add(stageDropDown);
 
-		stageDropDown.selectedLabel = 'Select Stage';
-		tab_group_assets.camera = camHUD;
-		tab_group_assets.add(stageDropDown);
-
-		UI_options.add(tab_group_assets);
+		UI_options.addGroup(tab_group);
 	}
 
 	function reloadStage(leStage:String)
 	{
+		Debug.logTrace('Reloading Stage...');
 		for (i in Stage.toAdd)
 		{
 			remove(i);
+		}
+
+		for (i => array in Stage.layInFront)
+		{
+			for (bg in array)
+				remove(bg);
 		}
 
 		remove(dad);
 		remove(boyfriend);
 		remove(gf);
 
+		if (FlxG.save.data.gen)
+			Debug.logTrace('Removing Characters...');
+
 		Stage = new Stage(leStage);
+
+		if (FlxG.save.data.gen)
+			Debug.logTrace('Initalize New Stage Data...');
 
 		for (i in Stage.toAdd)
 		{
@@ -205,14 +223,21 @@ class StageDebugState extends MusicBeatState
 			}
 		}
 
+		if (FlxG.save.data.gen)
+			Debug.logTrace('Add Characters And Stage Sprites...');
+
 		Paths.clearUnusedMemory();
+
+		Debug.logTrace('Stage Loaded.');
+
+		// Idk why I felt like I had to add traces. Feels more cooler than it should be.
 	}
 
 	var helpText:FlxText;
 
 	function addHelpText():Void
 	{
-		var helpTextValue = "Help:\nQ/E : Zoom in and out\nW/ASK/D : Pan Camera\nSpace : Cycle Object\nShift : Switch Mode (Char/Stage)\nClick and Drag : Move Active Object\nZ/X : Rotate Object\nR : Reset Rotation\nCTRL-S : Save Offsets to File\nESC : Return to Stage\nPress F1 to hide/show this!\n";
+		var helpTextValue = "Help:\nQ/E : Zoom in and out\nW/ASK/D : Pan Camera\nSpace : Cycle Object\nShift : Switch Mode (Char/Stage)\nClick and Drag : Move Active Object\nZ/X : Rotate Object\nR : Reset Rotation\nCTRL-S : Save Offsets to File\nESC : Return to Stage\nEnter : Reload Selected Stage\nPress F1 to hide/show this!\n";
 		helpText = new FlxText(1200, 10, 0, helpTextValue, 18);
 		helpText.setFormat(Paths.font('vcr.ttf'), 18, FlxColor.WHITE, FlxTextAlign.RIGHT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 		helpText.scrollFactor.set();
@@ -221,7 +246,7 @@ class StageDebugState extends MusicBeatState
 		helpText.alpha = 0;
 		FlxTween.tween(helpText, {x: 885, alpha : 1}, 1.2);
 
-		helpBg = new FlxSprite(2000, 0).makeGraphic(450, 205, FlxColor.BLACK);
+		helpBg = new FlxSprite(2000, 0).makeGraphic(450, 215, FlxColor.BLACK);
 		helpBg.scrollFactor.set();
 		helpBg.cameras = [camHUD];
 		helpBg.alpha = 0;
@@ -233,20 +258,18 @@ class StageDebugState extends MusicBeatState
 
 	override public function update(elapsed:Float)
 	{
-		if (FlxG.keys.justPressed.E)
-			camGame.zoom += 0.05;
-		if (FlxG.keys.justPressed.Q)
-		{
-			if (camGame.zoom > 0.15) // me when floating point error
-				camGame.zoom -= 0.05;
-		}
-
 		if (FlxG.keys.justReleased.ENTER)
 			reloadStage(newStage);
+			
+		if (FlxG.keys.justPressed.E)
+			FlxG.camera.zoom += 0.05;
+		if (FlxG.keys.justPressed.Q)
+		{
+			if (FlxG.camera.zoom > 0.15) // me when floating point error
+				FlxG.camera.zoom -= 0.05;
+		}
 
-		if (FlxG.keys.justReleased.H)
-			reloadStage('tank');
-		FlxG.watch.addQuick('Camera Zoom', camGame.zoom);
+		FlxG.watch.addQuick('Camera Zoom', FlxG.camera.zoom);
 
 		if (FlxG.keys.justPressed.SHIFT)
 		{
@@ -258,25 +281,21 @@ class StageDebugState extends MusicBeatState
 				getNextObject();
 		}
 
-		if (FlxG.keys.pressed.W || FlxG.keys.pressed.A || FlxG.keys.pressed.S || FlxG.keys.pressed.D)
+		if (FlxG.keys.pressed.I || FlxG.keys.pressed.J || FlxG.keys.pressed.K || FlxG.keys.pressed.L)
 		{
-			if (FlxG.keys.pressed.W)
-				camFollow.velocity.y = -200;
-			else if (FlxG.keys.pressed.S)
-				camFollow.velocity.y = 200;
-			else
-				camFollow.velocity.y = 0;
+			var addToCam:Float = 500 * elapsed;
+			if (FlxG.keys.pressed.CONTROL)
+				addToCam *= 4;
 
-			if (FlxG.keys.pressed.A)
-				camFollow.velocity.x = -200;
-			else if (FlxG.keys.pressed.D)
-				camFollow.velocity.x = 200;
-			else
-				camFollow.velocity.x = 0;
-		}
-		else
-		{
-			camFollow.velocity.set();
+			if (FlxG.keys.pressed.I)
+				camFollow.y -= addToCam;
+			else if (FlxG.keys.pressed.K)
+				camFollow.y += addToCam;
+
+			if (FlxG.keys.pressed.J)
+				camFollow.x -= addToCam;
+			else if (FlxG.keys.pressed.L)
+				camFollow.x += addToCam;
 		}
 
 		if (FlxG.keys.justPressed.SPACE)
@@ -416,7 +435,7 @@ class StageDebugState extends MusicBeatState
 			++curCharIndex;
 		}
 
-		result += 'Camera Zoom: ' + camGame.zoom;
+		result += 'Camera Zoom: ' + FlxG.camera.zoom;
 
 		if ((result != null) && (result.length > 0))
 		{
