@@ -449,7 +449,6 @@ class Stage extends MusicBeatState
 						tankMountains.setGraphicSize(Std.int(1.2 * tankMountains.width));
 						tankMountains.scrollFactor.set(0.2, 0.2);
 						tankMountains.updateHitbox();
-
 						swagBacks['tankMountains'] = tankMountains;
 						toAdd.push(tankMountains);
 
@@ -521,55 +520,6 @@ class Stage extends MusicBeatState
 					swagBacks['tankField'] = tankField;
 					toAdd.push(tankField);
 
-					if (PlayState.isStoryMode)
-					{
-						if (PlayState.SONG.songId == 'stress' && !FlxG.save.data.stressMP4)
-						{
-							var dummyGf:FlxSprite = new FlxSprite(200, 105);
-							dummyGf.antialiasing = FlxG.save.data.antialiasing;
-							dummyGf.frames = Paths.getSparrowAtlas('characters/gfTankmen', 'shared');
-							dummyGf.animation.addByPrefix('idle', 'GF Dancing at Gunpoint', 24, false);
-							dummyGf.animation.play('idle');
-							swagBacks['dummyGf'] = dummyGf;
-							layInFront[2].push(dummyGf);
-
-							var gfCutscene:FlxSprite = new FlxSprite(200, 85);
-							gfCutscene.antialiasing = FlxG.save.data.antialiasing;
-							gfCutscene.frames = Paths.getSparrowAtlas('cutscenes/stressGF', 'week7');
-							gfCutscene.animation.addByPrefix('dieBitch', 'GF STARTS TO TURN PART 1', 24, false);
-							gfCutscene.animation.addByPrefix('getRektLmao', 'GF STARTS TO TURN PART 2', 24, false);
-							gfCutscene.visible = false;
-							swagBacks['gfCutscene'] = gfCutscene;
-							layInFront[2].push(gfCutscene);
-
-							var picoCutscene:FlxSprite = new FlxSprite(-552, -298);
-							picoCutscene.antialiasing = FlxG.save.data.antialiasing;
-							swagBacks['picoCutscene'] = picoCutscene;
-							picoCutscene.frames = Paths.getTextureAtlas('cutscenes/stressPico', 'week7');
-							picoCutscene.animation.addByPrefix('anim', 'Pico Badass', 24, false);
-							picoCutscene.visible = false;
-
-							toAdd.push(picoCutscene);
-
-							var bfCutscene:FlxSprite = new FlxSprite(815, 500);
-							bfCutscene.antialiasing = FlxG.save.data.antialiasing;
-							bfCutscene.frames = Paths.getSparrowAtlas('characters/BOYFRIEND', 'shared');
-							bfCutscene.animation.addByPrefix('idle', 'BF idle dance', 24, false);
-							bfCutscene.animation.play('idle', true);
-							swagBacks['bfCutscene'] = bfCutscene;
-							layInFront[2].push(bfCutscene);
-						}
-
-						var tankman:FlxSprite = new FlxSprite();
-						tankman.frames = Paths.getSparrowAtlas('cutscenes/' + PlayState.SONG.songId, 'week7');
-						tankman.antialiasing = FlxG.save.data.antialiasing;
-						swagBacks['tankman'] = tankman;
-						if (!FlxG.save.data.stressMP4)
-						{
-							layInFront[2].push(tankman);
-						}
-					}
-
 					var foreGround0 = new FlxSprite(-500, 600);
 					foreGround0.scrollFactor.set(1.7, 1.5);
 					foreGround0.antialiasing = FlxG.save.data.antialiasing;
@@ -624,7 +574,7 @@ class Stage extends MusicBeatState
 					if (FlxG.save.data.distractions)
 					{
 						var foreGround5 = new FlxSprite(1400, 1290);
-						foreGround5.scrollFactor.set(3.5, 2.5);
+						foreGround5.scrollFactor.set(1.5,1.5);
 						foreGround5.antialiasing = FlxG.save.data.antialiasing;
 						foreGround5.frames = Paths.getSparrowAtlas('tank3', 'week7');
 						foreGround5.animation.addByPrefix('idle', 'fg tankhead 4 instance ', Std.int(24 * PlayState.songMultiplier));

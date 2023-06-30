@@ -13,6 +13,18 @@ import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import openfl.net.FileReference;
 import stages.Stage;
+import flixel.tweens.FlxTween;
+
+import flixel.addons.ui.FlxInputText;
+import flixel.addons.ui.FlxUI9SliceSprite;
+import flixel.addons.ui.FlxUI;
+import flixel.addons.ui.FlxUIState;
+import flixel.addons.ui.FlxUICheckBox;
+import flixel.addons.ui.FlxUIDropDownMenu;
+import flixel.addons.ui.FlxUIInputText;
+import flixel.addons.ui.FlxUINumericStepper;
+import flixel.addons.ui.FlxUITabMenu;
+import flixel.addons.ui.FlxUITooltip.FlxUITooltipStyle;
 
 using StringTools;
 
@@ -31,6 +43,8 @@ class StageDebugState extends MusicBeatState
 	var Stage:Stage;
 	var camFollow:FlxObject;
 	var posText:FlxText;
+	var helpBg:FlxSprite;
+	var bgPos:FlxSprite;
 	var curChar:FlxSprite;
 	var curCharIndex:Int = 0;
 	var curCharString:String;
@@ -43,6 +57,12 @@ class StageDebugState extends MusicBeatState
 	var charMode:Bool = true;
 	var usedObjects:Array<FlxSprite> = [];
 
+	var UI_box:FlxUITabMenu;
+	var UI_options:FlxUITabMenu;
+
+	var stageList:Array<String>;
+	var newStage:String = 'stage';
+
 	public function new(daStage:String = 'stage', daGf:String = 'gf', daBf:String = 'bf', opponent:String = 'dad')
 	{
 		super();
@@ -50,13 +70,15 @@ class StageDebugState extends MusicBeatState
 		this.daGf = daGf;
 		this.daBf = daBf;
 		this.opponent = opponent;
-		curCharString = daGf;
+		curCharString = opponent;
 	}
 
 	override function create()
 	{
-		// perf.Destroyer.clearStoredMemory();
+		Paths.clearUnusedMemory();
 		FlxG.sound.music.stop();
+		FlxG.sound.playMusic(Paths.music('breakfast', 'shared'));
+		FlxG.sound.music.fadeIn(3, 0, 0.5);
 		FlxG.mouse.visible = true;
 
 		Stage = PlayState.instance.Stage;
@@ -65,16 +87,99 @@ class StageDebugState extends MusicBeatState
 		boyfriend = PlayState.instance.boyfriend;
 		dad = PlayState.instance.dad;
 
+		/*
 		dad.moves = true;
 		dad.active = true;
 		boyfriend.active = true;
 		boyfriend.moves = true;
 		gf.active = true;
 		gf.moves = true;
+		*/
+
+		PlayState.inDaPlay = false;
 		curChars = [dad, boyfriend, gf];
 		if (!gf.visible) // for when gf is an opponent
 			curChars.pop();
 		curChar = curChars[curCharIndex];
+
+		camFollow = new FlxObject(0, 0, 2, 2);
+		camFollow.screenCenter();
+		add(camFollow);
+
+		camHUD = new FlxCamera();
+		camHUD.bgColor.alpha = 0;
+		camGame = new FlxCamera();
+		camGame.zoom = Stage.camZoom;
+		FlxG.cameras.add(camGame);
+		FlxG.cameras.add(camHUD);
+		FlxCamera.defaultCameras = [camGame];
+		FlxG.camera = camGame;
+		camGame.follow(camFollow);
+
+		reloadStage(Stage.curStage);
+
+		stageList = CoolUtil.coolTextFile(Paths.txt('data/stageList'));
+
+		var tabs = [{name: "Stage", label: 'Select Stage'}];
+
+		// var opt_tabs = [{name: "test", label: 'test'}];
+
+		UI_options = new FlxUITabMenu(null, tabs, true);
+
+		UI_options.scrollFactor.set();
+		UI_options.selected_tab = 1;
+		UI_options.resize(300, 200);
+		UI_options.x = FlxG.width - UI_options.width - 20;
+		UI_options.y = FlxG.height - 300;
+		UI_options.cameras = [camHUD];
+		add(UI_options);
+
+		posText = new FlxText(0, 690);
+		posText.setFormat(Paths.font('vcr.ttf'), 26, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
+		posText.scrollFactor.set();
+		posText.cameras = [camHUD];
+
+		bgPos = new FlxSprite(0,900).makeGraphic(1280, 120, FlxColor.BLACK);
+		bgPos.scrollFactor.set();
+		bgPos.cameras = [camHUD];
+		bgPos.alpha = 0;
+		FlxTween.tween(bgPos, {alpha: 0.8, y: posText.y}, 1.2);
+		add(bgPos);
+		add(posText);
+
+		addHelpText();
+
+		addEditorUI();
+	}
+
+	function addEditorUI():Void
+	{
+		var stageDropDown = new FlxUIDropDownMenu(10, 50, FlxUIDropDownMenu.makeStrIdLabelArray(stageList, true), function(stage:String)
+		{
+			newStage = stage;
+		});
+
+		var tab_group_assets = new FlxUI(null, UI_options);
+
+		stageDropDown.selectedLabel = 'Select Stage';
+		tab_group_assets.camera = camHUD;
+		tab_group_assets.add(stageDropDown);
+
+		UI_options.add(tab_group_assets);
+	}
+
+	function reloadStage(leStage:String)
+	{
+		for (i in Stage.toAdd)
+		{
+			remove(i);
+		}
+
+		remove(dad);
+		remove(boyfriend);
+		remove(gf);
+
+		Stage = new Stage(leStage);
 
 		for (i in Stage.toAdd)
 		{
@@ -100,51 +205,47 @@ class StageDebugState extends MusicBeatState
 			}
 		}
 
-		camFollow = new FlxObject(0, 0, 2, 2);
-		camFollow.screenCenter();
-		add(camFollow);
-
-		camHUD = new FlxCamera();
-		camHUD.bgColor.alpha = 0;
-		camGame = new FlxCamera();
-		camGame.zoom = 0.7;
-		FlxG.cameras.add(camGame);
-		FlxG.cameras.add(camHUD);
-		FlxCamera.defaultCameras = [camGame];
-		FlxG.camera = camGame;
-		camGame.follow(camFollow);
-
-		posText = new FlxText(0, 0);
-		posText.size = 26;
-		posText.scrollFactor.set();
-		posText.cameras = [camHUD];
-		add(posText);
-
-		addHelpText();
+		Paths.clearUnusedMemory();
 	}
 
 	var helpText:FlxText;
 
 	function addHelpText():Void
 	{
-		var helpTextValue = "Help:\nQ/E : Zoom in and out\nI/J/K/L : Pan Camera\nSpace : Cycle Object\nShift : Switch Mode (Char/Stage)\nClick and Drag : Move Active Object\nZ/X : Rotate Object\nR : Reset Rotation\nCTRL-S : Save Offsets to File\nESC : Return to Stage\nPress F1 to hide/show this!\n";
-		helpText = new FlxText(940, 0, 0, helpTextValue, 15);
+		var helpTextValue = "Help:\nQ/E : Zoom in and out\nW/ASK/D : Pan Camera\nSpace : Cycle Object\nShift : Switch Mode (Char/Stage)\nClick and Drag : Move Active Object\nZ/X : Rotate Object\nR : Reset Rotation\nCTRL-S : Save Offsets to File\nESC : Return to Stage\nPress F1 to hide/show this!\n";
+		helpText = new FlxText(1200, 10, 0, helpTextValue, 18);
+		helpText.setFormat(Paths.font('vcr.ttf'), 18, FlxColor.WHITE, FlxTextAlign.RIGHT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 		helpText.scrollFactor.set();
 		helpText.cameras = [camHUD];
 		helpText.color = FlxColor.WHITE;
+		helpText.alpha = 0;
+		FlxTween.tween(helpText, {x: 885, alpha : 1}, 1.2);
 
+		helpBg = new FlxSprite(2000, 0).makeGraphic(450, 205, FlxColor.BLACK);
+		helpBg.scrollFactor.set();
+		helpBg.cameras = [camHUD];
+		helpBg.alpha = 0;
+		FlxTween.tween(helpBg, {alpha: 0.65, x: 875}, 1.2);
+		
+		add(helpBg);
 		add(helpText);
 	}
 
 	override public function update(elapsed:Float)
 	{
 		if (FlxG.keys.justPressed.E)
-			camGame.zoom += 0.1;
+			camGame.zoom += 0.05;
 		if (FlxG.keys.justPressed.Q)
 		{
-			if (camGame.zoom > 0.11) // me when floating point error
-				camGame.zoom -= 0.1;
+			if (camGame.zoom > 0.15) // me when floating point error
+				camGame.zoom -= 0.05;
 		}
+
+		if (FlxG.keys.justReleased.ENTER)
+			reloadStage(newStage);
+
+		if (FlxG.keys.justReleased.H)
+			reloadStage('tank');
 		FlxG.watch.addQuick('Camera Zoom', camGame.zoom);
 
 		if (FlxG.keys.justPressed.SHIFT)
@@ -157,19 +258,19 @@ class StageDebugState extends MusicBeatState
 				getNextObject();
 		}
 
-		if (FlxG.keys.pressed.I || FlxG.keys.pressed.J || FlxG.keys.pressed.K || FlxG.keys.pressed.L)
+		if (FlxG.keys.pressed.W || FlxG.keys.pressed.A || FlxG.keys.pressed.S || FlxG.keys.pressed.D)
 		{
-			if (FlxG.keys.pressed.I)
-				camFollow.velocity.y = -90;
-			else if (FlxG.keys.pressed.K)
-				camFollow.velocity.y = 90;
+			if (FlxG.keys.pressed.W)
+				camFollow.velocity.y = -200;
+			else if (FlxG.keys.pressed.S)
+				camFollow.velocity.y = 200;
 			else
 				camFollow.velocity.y = 0;
 
-			if (FlxG.keys.pressed.J)
-				camFollow.velocity.x = -90;
-			else if (FlxG.keys.pressed.L)
-				camFollow.velocity.x = 90;
+			if (FlxG.keys.pressed.A)
+				camFollow.velocity.x = -200;
+			else if (FlxG.keys.pressed.D)
+				camFollow.velocity.x = 200;
 			else
 				camFollow.velocity.x = 0;
 		}
@@ -214,10 +315,22 @@ class StageDebugState extends MusicBeatState
 		else if (FlxG.keys.pressed.R)
 			curChar.angle = 0;
 
-		posText.text = (curCharString + " X: " + curChar.x + " Y: " + curChar.y + " Rotation: " + curChar.angle);
+		posText.text = (curCharString.toUpperCase()
+			+ " X: "
+			+ curChar.x
+			+ " Y: "
+			+ curChar.y
+			+ " Rotation: "
+			+ curChar.angle
+			+ " Camera Zoom "
+			+ FlxG.camera.zoom);
 
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
+			FlxG.sound.music.stop();
+			FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
+			MainMenuState.freakyPlaying = true;
+			Conductor.changeBPM(102, false);
 			MusicBeatState.switchState(new FreeplayState());
 		}
 
@@ -226,8 +339,9 @@ class StageDebugState extends MusicBeatState
 
 		if (FlxG.keys.justPressed.F1)
 			FlxG.save.data.showHelp = !FlxG.save.data.showHelp;
-
+		
 		helpText.visible = FlxG.save.data.showHelp;
+		helpBg.visible = FlxG.save.data.showHelp;
 
 		super.update(elapsed);
 	}
@@ -256,7 +370,7 @@ class StageDebugState extends MusicBeatState
 
 	function getNextChar()
 	{
-		++curCharIndex;
+		curCharIndex += 1;
 		if (curCharIndex >= curChars.length)
 		{
 			curChar = curChars[0];
@@ -267,9 +381,9 @@ class StageDebugState extends MusicBeatState
 		switch (curCharIndex)
 		{
 			case 0:
-				curCharString = daBf;
-			case 1:
 				curCharString = opponent;
+			case 1:
+				curCharString = daBf;
 			case 2:
 				curCharString = daGf;
 		}
@@ -286,20 +400,23 @@ class StageDebugState extends MusicBeatState
 		}
 		var curCharIndex:Int = 0;
 		var char:String = '';
+
 		for (sprite in curChars)
 		{
 			switch (curCharIndex)
 			{
 				case 0:
-					char = daGf;
+					char = opponent;
 				case 1:
 					char = daBf;
 				case 2:
-					char = opponent;
+					char = daGf;
 			}
 			result += char + ' X: ' + curChars[curCharIndex].x + " Y: " + curChars[curCharIndex].y + " Rotation: " + curChars[curCharIndex].angle + "\n";
 			++curCharIndex;
 		}
+
+		result += 'Camera Zoom: ' + camGame.zoom;
 
 		if ((result != null) && (result.length > 0))
 		{
