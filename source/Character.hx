@@ -32,6 +32,7 @@ class Character extends FlxSprite
 	public var camPos:Array<Int>;
 	public var camFollow:Array<Int>;
 	public var healthIcon:String = 'face';
+	public var rgbColorArray:Array<Int> = [255, 0, 0];
 
 	public static var animationNotes:Array<Note> = [];
 
@@ -155,6 +156,8 @@ class Character extends FlxSprite
 			this.holdLength = data.holdLength == null ? 4 : data.holdLength;
 			this.healthIcon = data.healthicon == null ? "face" : data.healthicon;
 
+			this.rgbColorArray = data.rgbArray == null ? [255, 0, 0] : data.rgbArray;	
+
 			flipX = data.flipX == null ? false : data.flipX;
 
 			if (data.scale != null)
@@ -169,7 +172,7 @@ class Character extends FlxSprite
 		}
 
 		if (data.barType == 'rgb')
-			barColor = FlxColor.fromRGB(data.red, data.green, data.blue);
+			barColor = FlxColor.fromRGB(data.rgbArray[0], data.rgbArray[1], data.rgbArray[2]);
 		else
 			barColor = FlxColor.fromString(data.barColor);
 	}
@@ -392,9 +395,7 @@ typedef CharacterData =
 	 */
 	var ?barColor:String;
 
-	var ?red:Int;
-	var ?green:Int;
-	var ?blue:Int;
+	var rgbArray:Array<Int>; // Better way of doing the rgb stuff
 
 	/**
 	 * Whether we use HEX or RGB for coloring.

@@ -1916,6 +1916,7 @@ class PlayState extends MusicBeatState
 				introAlts = introAssets.get('pixel');
 				altSuffix = '-pixel';
 				week6Bullshit = 'week6';
+				
 			}
 
 			switch (swagCounter)
@@ -1931,7 +1932,10 @@ class PlayState extends MusicBeatState
 					ready.updateHitbox();
 
 					if (SONG.noteStyle == 'pixel')
+					{
 						ready.setGraphicSize(Std.int(ready.width * CoolUtil.daPixelZoom));
+						ready.antialiasing = false;
+					}
 
 					ready.screenCenter();
 					add(ready);
@@ -1948,7 +1952,10 @@ class PlayState extends MusicBeatState
 					set.scrollFactor.set();
 					set.scale.set(0.7, 0.7);
 					if (SONG.noteStyle == 'pixel')
+					{
 						set.setGraphicSize(Std.int(set.width * CoolUtil.daPixelZoom));
+						set.antialiasing = false;
+					}
 					set.cameras = [camHUD];
 					set.screenCenter();
 					add(set);
@@ -1966,7 +1973,10 @@ class PlayState extends MusicBeatState
 					go.scale.set(0.7, 0.7);
 					go.cameras = [camHUD];
 					if (SONG.noteStyle == 'pixel')
+					{
 						go.setGraphicSize(Std.int(go.width * CoolUtil.daPixelZoom));
+						go.antialiasing = false;
+					}
 
 					go.updateHitbox();
 
