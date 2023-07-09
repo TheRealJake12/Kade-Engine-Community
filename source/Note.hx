@@ -394,17 +394,12 @@ class Note extends FlxSprite
 				prevNote.animation.play(dataColor[prevNote.originColor] + 'hold');
 				prevNote.updateHitbox();
 
-				prevNote.scale.y *= stepHeight / prevNote.height;
+				prevNote.scale.y *= (stepHeight / prevNote.height);
 				prevNote.updateHitbox();
 
 				if (antialiasing)
-					switch (FlxG.save.data.noteskin)
-					{
-						case 0:
-							prevNote.scale.y *= 1.0064 + (1.0 / prevNote.frameHeight);
-						default:
-							prevNote.scale.y *= 0.995 + (1.0 / prevNote.frameHeight);
-					}
+					prevNote.scale.y *= 1.0 + (1.0 / prevNote.frameHeight);
+
 				prevNote.updateHitbox();
 				updateHitbox();
 			}
@@ -416,15 +411,18 @@ class Note extends FlxSprite
 		// This updates hold notes height to current scroll Speed in case of scroll Speed changes.
 		super.update(elapsed);
 
-		var newStepHeight = (((0.45 * PlayState.instance.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayState.instance.scrollSpeed == 1 ? PlayState.SONG.speed : PlayState.instance.scrollSpeed,
-			2) * speedMultiplier);
-
-		if (stepHeight != newStepHeight)
+		if (isSustainNote)
 		{
-			stepHeight = newStepHeight;
-			if (isSustainNote)
+			var newStepHeight = (((0.45 * PlayState.instance.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayState.instance.scrollSpeed == 1 ? PlayState.SONG.speed : PlayState.instance.scrollSpeed,
+				2) * speedMultiplier);
+
+			if (stepHeight != newStepHeight)
 			{
-				noteYOff = -stepHeight + swagWidth * 0.5;
+				stepHeight = newStepHeight;
+				if (isSustainNote)
+				{
+					noteYOff = -stepHeight + swagWidth * 0.5;
+				}
 			}
 		}
 

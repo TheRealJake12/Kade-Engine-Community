@@ -197,6 +197,8 @@ class PlayState extends MusicBeatState
 	public static var pathToSm:String;
 	#end
 
+	private var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
+
 	public var zoomForTweens:Float = 0;
 	public var zoomForHUDTweens:Float = 1;
 	public var zoomMultiplier:Float = 1;
@@ -567,6 +569,8 @@ class PlayState extends MusicBeatState
 
 		camHUD.zoom = PlayStateChangeables.zoom;
 		camStrums.zoom = camHUD.zoom;
+
+		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
 
 		FlxCamera.defaultCameras = [camGame];
 
@@ -1165,7 +1169,12 @@ class PlayState extends MusicBeatState
 				healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
 		}
 
+		var splash:NoteSplash = new NoteSplash(100, 100, 0);
+		grpNoteSplashes.add(splash);
+		splash.alpha = 0;
+
 		strumLineNotes.cameras = [camHUD];
+		grpNoteSplashes.cameras = [camHUD];
 		notes.cameras = [camHUD];
 		healthBar.cameras = [camHUD];
 		healthBarBG.cameras = [camHUD];
@@ -2455,6 +2464,8 @@ class PlayState extends MusicBeatState
 
 		fakeNoteStepCrochet = fakeCrochet / 4;
 
+		add(grpNoteSplashes);
+
 		notes = new FlxTypedGroup<Note>();
 		add(notes);
 
@@ -2586,6 +2597,39 @@ class PlayState extends MusicBeatState
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
 	}
 
+	public function spawnNoteSplash(x:Float, y:Float, data:Int)
+	{
+		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
+		splash.setupNoteSplash(x, y, data);
+		grpNoteSplashes.add(splash);
+	}
+
+	public function spawnNoteSplashDad(x:Float, y:Float, data:Int)
+	{
+		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
+		splash.setupNoteSplash2(x, y, data);
+		grpNoteSplashes.add(splash);
+	}
+
+	function spawnNoteSplashOnNote(note:Note)
+	{
+		var strum:StaticArrow = playerStrums.members[note.noteData];
+		if (strum != null)
+		{
+			spawnNoteSplash(strum.x + 10.5, strum.y, note.noteData);
+		}
+	}
+
+	function spawnNoteSplashOnNoteDad(note:Note)
+	{	
+		var strum:StaticArrow = cpuStrums.members[note.noteData];
+		if (strum != null)
+		{
+			spawnNoteSplashDad(strum.x + 10.5, strum.y, note.noteData);
+		}
+	}
+
+	/*
 	// I wanna softcode but I suck ass :(((
 	var name:String;
 	var nameTwo:String;
@@ -2618,6 +2662,8 @@ class PlayState extends MusicBeatState
 					sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.noteData);
 				else
 					sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.originColor);
+
+				sploosh.animation.curAnim.frameRate += FlxG.random.int(0, 2);	
 				sploosh.alpha = 0.6;
 				sploosh.offset.x += 90;
 				sploosh.offset.y += 80;
@@ -2634,7 +2680,7 @@ class PlayState extends MusicBeatState
 				}
 
 				var rawJson = Paths.loadData('images/splashes/' + name);
-				var data:SplashData = cast rawJson;
+				var data:NoteSplash.SplashData = cast rawJson;
 
 				if (FlxG.save.data.notesplashes)
 				{
@@ -2643,12 +2689,18 @@ class PlayState extends MusicBeatState
 					sploosh.animation.addByPrefix('splash 0 1', 'note splash 1 blue', data.fps, false);
 					sploosh.animation.addByPrefix('splash 0 2', 'note splash 1 green', data.fps, false);
 					sploosh.animation.addByPrefix('splash 0 3', 'note splash 1 red', data.fps, false);
+
+					sploosh.animation.addByPrefix('splash 1 0', 'note splash 2 purple', data.fps, false);
+					sploosh.animation.addByPrefix('splash 1 1', 'note splash 2 blue', data.fps, false);
+					sploosh.animation.addByPrefix('splash 1 2', 'note splash 2 green', data.fps, false);
+					sploosh.animation.addByPrefix('splash 1 3', 'note splash 2 red', data.fps, false);
 					add(sploosh);
 					sploosh.cameras = [camStrums];
 					if (!FlxG.save.data.stepMania)
-						sploosh.animation.play('splash 0 ' + daNote.noteData);
+						sploosh.animation.play('splash ${FlxG.random.int(0, 1)} ' + daNote.noteData);
 					else
-						sploosh.animation.play('splash 0 ' + daNote.originColor);
+						sploosh.animation.play('splash ${FlxG.random.int(0, 1)} ' + daNote.originColor);
+					sploosh.animation.curAnim.frameRate += FlxG.random.int(0, 2);	
 					sploosh.alpha = data.alpha;
 					sploosh.offset.x += data.xOffset;
 					sploosh.offset.y += data.yOffset; // lets stick to eight not nine
@@ -2684,6 +2736,7 @@ class PlayState extends MusicBeatState
 					sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.noteData);
 				else
 					sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.originColor);
+				sploosh.animation.curAnim.frameRate += FlxG.random.int(0, 2);	
 				sploosh.alpha = 0.6;
 				sploosh.offset.x += 90;
 				sploosh.offset.y += 80;
@@ -2700,7 +2753,7 @@ class PlayState extends MusicBeatState
 				}
 
 				var rawJson = Paths.loadData('images/splashes/' + nameTwo);
-				var data:SplashData = cast rawJson;
+				var data:NoteSplash.SplashData = cast rawJson;
 
 				if (FlxG.save.data.cpuSplash)
 				{
@@ -2709,12 +2762,19 @@ class PlayState extends MusicBeatState
 					sploosh.animation.addByPrefix('splash 0 1', 'note splash 1 blue', data.fps, false);
 					sploosh.animation.addByPrefix('splash 0 2', 'note splash 1 green', data.fps, false);
 					sploosh.animation.addByPrefix('splash 0 3', 'note splash 1 red', data.fps, false);
+
+					sploosh.animation.addByPrefix('splash 1 0', 'note splash 2 purple', data.fps, false);
+					sploosh.animation.addByPrefix('splash 1 1', 'note splash 2 blue', data.fps, false);
+					sploosh.animation.addByPrefix('splash 1 2', 'note splash 2 green', data.fps, false);
+					sploosh.animation.addByPrefix('splash 1 3', 'note splash 2 red', data.fps, false);
+					
 					add(sploosh);
 					sploosh.cameras = [camStrums];
 					if (!FlxG.save.data.stepMania)
-						sploosh.animation.play('splash 0 ' + daNote.noteData);
+						sploosh.animation.play('splash ${FlxG.random.int(0, 1)} ' + daNote.noteData);
 					else
-						sploosh.animation.play('splash 0 ' + daNote.originColor);
+						sploosh.animation.play('splash ${FlxG.random.int(0, 1)} ' + daNote.originColor);
+					sploosh.animation.curAnim.frameRate += FlxG.random.int(0, 2);	
 					sploosh.alpha = data.alpha;
 					sploosh.offset.x += data.xOffset;
 					sploosh.offset.y += data.yOffset; // lets stick to eight not nine
@@ -2722,6 +2782,7 @@ class PlayState extends MusicBeatState
 				}
 		}
 	}
+	*/
 
 	private function generateStaticArrows(player:Int, ?tween:Bool = true):Void
 	{
@@ -3749,11 +3810,12 @@ class PlayState extends MusicBeatState
 				{
 					if (PlayStateChangeables.useDownscroll)
 					{
-						daNote.distance = (0.45 * ((Conductor.songPosition - daNote.strumTime)) * (FlxMath.roundDecimal(leSpeed, 2)) * daNote.speedMultiplier)
+						daNote.distance = (0.45 * ((Conductor.songPosition - daNote.strumTime)) * (FlxMath.roundDecimal(leSpeed,2)) * daNote.speedMultiplier)
 							- daNote.noteYOff;
 					}
 					else
-						daNote.distance = (-0.45 * ((Conductor.songPosition - daNote.strumTime)) * (FlxMath.roundDecimal(leSpeed, 2)) * daNote.speedMultiplier)
+						daNote.distance = (-0.45 * ((Conductor.songPosition - daNote.strumTime)) * (FlxMath.roundDecimal(leSpeed,
+							2)) * daNote.speedMultiplier)
 							+ daNote.noteYOff;
 				}
 
@@ -3820,6 +3882,7 @@ class PlayState extends MusicBeatState
 						}
 					}
 				}
+
 				if (!daNote.mustPress)
 				{
 					if (Conductor.songPosition >= daNote.strumTime && daNote.canPlayAnims)
@@ -4496,7 +4559,7 @@ class PlayState extends MusicBeatState
 
 		if ((daRating == 'sick' && daNote.canNoteSplash || daRating == 'marv' && daNote.canNoteSplash) && FlxG.save.data.notesplashes)
 		{
-			NoteSplashesSpawn(daNote);
+			spawnNoteSplashOnNote(daNote);
 		}
 
 		if (songMultiplier >= 1.05)
@@ -5365,7 +5428,7 @@ class PlayState extends MusicBeatState
 
 				if (FlxG.save.data.cpuSplash && daNote.canNoteSplash && !FlxG.save.data.middleScroll)
 				{
-					NoteSplashesSpawnDad(daNote);
+					spawnNoteSplashOnNoteDad(daNote);
 				}
 			}
 			#if FEATURE_LUAMODCHART
@@ -6647,7 +6710,7 @@ class PlayState extends MusicBeatState
 		vid.y = y;
 		vid.scale.x = scaleX;
 		vid.scale.y = scaleY;
-		vid.play(Paths.video(name));
+		vid.play(Paths.video(path));
 		#if FEATURE_HSCRIPT
 		if (scripts != null)
 			scripts.executeAllFunc("playVideoSprite", [x, y, scaleX, scaleY, path]);
@@ -6656,38 +6719,4 @@ class PlayState extends MusicBeatState
 		FlxG.log.warn("Platform Not Supported.");
 		#end
 	}
-}
-
-typedef SplashData =
-{
-	/**
-	 * The name of this animation.
-	 */
-	var name:String;
-
-	/**
-	 * The frame rate of this animation.
-	 		* @default 24
-	 */
-	var fps:Int;
-
-	/**
-	 * The transparency of the notesplashes.
-	 		* @default 24
-	 */
-	var alpha:Int;
-
-	/**
-	 * The X Offset so it can be centered better.
-	 		* @default 90
-	 */
-	var xOffset:Int;
-
-	/**
-	 * The Y Offset so it can be centered better.
-	 		* @default 80
-	 */
-	var yOffset:Int;
-
-	// theres gonna be more but the fps fucks me so much rn
 }
