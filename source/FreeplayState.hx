@@ -978,7 +978,6 @@ class FreeplayState extends MusicBeatState
 
 		PlayState.songMultiplier = rate;
 		lastRate = rate;
-		PlayState.inDaPlay = true;
 
 		if (isCharting)
 			LoadingState.loadAndSwitchState(new ChartingState(reloadSong));

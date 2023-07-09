@@ -235,6 +235,7 @@ class PauseSubState extends MusicBeatSubstate
 					}
 					PlayState.loadRep = false;
 					PlayState.stageTesting = false;
+					PlayState.inDaPlay = false;
 					#if FEATURE_LUAMODCHART
 					if (PlayState.luaModchart != null)
 					{
