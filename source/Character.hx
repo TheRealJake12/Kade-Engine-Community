@@ -156,7 +156,7 @@ class Character extends FlxSprite
 			this.holdLength = data.holdLength == null ? 4 : data.holdLength;
 			this.healthIcon = data.healthicon == null ? "face" : data.healthicon;
 
-			this.rgbColorArray = data.rgbArray == null ? [255, 0, 0] : data.rgbArray;	
+			this.rgbColorArray = data.rgbArray == null ? [255, 0, 0] : data.rgbArray;
 
 			flipX = data.flipX == null ? false : data.flipX;
 

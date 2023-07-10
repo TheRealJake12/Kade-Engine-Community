@@ -56,9 +56,10 @@ class HealthIcon extends FlxSprite
 				var file:FlxGraphic = Paths.image(name); // Since the image function returns FlxGraphic.
 				if (file.width == 450)
 					hasWinningIcon = true;
-				loadGraphic(file, true, 150, Math.floor(file.height)); // FlxGraphic has width and height properties of the cached BitmapData (aka. health icon).
+				loadGraphic(file, true, 150,
+					Math.floor(file.height)); // FlxGraphic has width and height properties of the cached BitmapData (aka. health icon).
 				updateHitbox();
-				
+
 				if (!hasWinningIcon)
 					animation.add(newChar, [0, 1], 0, false, isPlayer);
 				else

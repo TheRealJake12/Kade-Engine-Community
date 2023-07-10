@@ -190,8 +190,7 @@ class OptionsMenu extends MusicBeatSubstate
 				new NoteskinOption("Change your Noteskin"),
 				new CPUNoteskinOption("Change the CPU Noteskin"),
 				#if desktop
-				new NotesplashOption("Change your Notesplash"), 
-				//new CPUNotesplashOption("Change the CPU Notesplash"),
+				new NotesplashOption("Change your Notesplash"), // new CPUNotesplashOption("Change the CPU Notesplash"),
 				#end
 				new CPUSplash("Allows The CPU To Do Notesplashes"),
 				new NotesplashesOption("Uses Notesplashes (Only use it on Arrow skins or else theres gonna be some visual bugs(wrong offsets))."),

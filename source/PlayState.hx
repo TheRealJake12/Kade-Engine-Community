@@ -1927,7 +1927,6 @@ class PlayState extends MusicBeatState
 				introAlts = introAssets.get('pixel');
 				altSuffix = '-pixel';
 				week6Bullshit = 'week6';
-				
 			}
 
 			switch (swagCounter)
@@ -2623,7 +2622,7 @@ class PlayState extends MusicBeatState
 	}
 
 	function spawnNoteSplashOnNoteDad(note:Note)
-	{	
+	{
 		var strum:StaticArrow = cpuStrums.members[note.noteData];
 		if (strum != null)
 		{
@@ -2632,160 +2631,159 @@ class PlayState extends MusicBeatState
 	}
 
 	/*
-	// I wanna softcode but I suck ass :(((
-	var name:String;
-	var nameTwo:String;
+		// I wanna softcode but I suck ass :(((
+		var name:String;
+		var nameTwo:String;
 
-	// for cpu splashes not syncing with player ones
+		// for cpu splashes not syncing with player ones
 
-	public function NoteSplashesSpawn(daNote:Note, ?name:String = 'Default')
-	{
-		this.name = name;
-		var sploosh:FlxSprite = new FlxSprite(playerStrums.members[daNote.noteData].x + 10.5, playerStrums.members[daNote.noteData].y - 20);
-		sploosh.antialiasing = FlxG.save.data.antialiasing;
-		switch (SONG.noteStyle)
+		public function NoteSplashesSpawn(daNote:Note, ?name:String = 'Default')
 		{
-			case 'pixel':
-				var tex:flixel.graphics.frames.FlxAtlasFrames = Paths.getSparrowAtlas('weeb/pixelUI/noteSplashes-pixels', 'week6');
-				sploosh.frames = tex;
-				sploosh.animation.addByPrefix('splash 0 0', 'note splash 1 purple', 24, false);
-				sploosh.animation.addByPrefix('splash 0 1', 'note splash 1  blue', 24, false);
-				sploosh.animation.addByPrefix('splash 0 2', 'note splash 1 green', 24, false);
-				sploosh.animation.addByPrefix('splash 0 3', 'note splash 1 red', 24, false);
-				sploosh.animation.addByPrefix('splash 1 0', 'note splash 2 purple', 24, false);
-				sploosh.animation.addByPrefix('splash 1 1', 'note splash 2 blue', 24, false);
-				sploosh.animation.addByPrefix('splash 1 2', 'note splash 2 green', 24, false);
-				sploosh.animation.addByPrefix('splash 1 3', 'note splash 2 red', 24, false);
+			this.name = name;
+			var sploosh:FlxSprite = new FlxSprite(playerStrums.members[daNote.noteData].x + 10.5, playerStrums.members[daNote.noteData].y - 20);
+			sploosh.antialiasing = FlxG.save.data.antialiasing;
+			switch (SONG.noteStyle)
+			{
+				case 'pixel':
+					var tex:flixel.graphics.frames.FlxAtlasFrames = Paths.getSparrowAtlas('weeb/pixelUI/noteSplashes-pixels', 'week6');
+					sploosh.frames = tex;
+					sploosh.animation.addByPrefix('splash 0 0', 'note splash 1 purple', 24, false);
+					sploosh.animation.addByPrefix('splash 0 1', 'note splash 1  blue', 24, false);
+					sploosh.animation.addByPrefix('splash 0 2', 'note splash 1 green', 24, false);
+					sploosh.animation.addByPrefix('splash 0 3', 'note splash 1 red', 24, false);
+					sploosh.animation.addByPrefix('splash 1 0', 'note splash 2 purple', 24, false);
+					sploosh.animation.addByPrefix('splash 1 1', 'note splash 2 blue', 24, false);
+					sploosh.animation.addByPrefix('splash 1 2', 'note splash 2 green', 24, false);
+					sploosh.animation.addByPrefix('splash 1 3', 'note splash 2 red', 24, false);
 
-				add(sploosh);
-				sploosh.cameras = [camStrums];
-
-				if (!FlxG.save.data.stepMania)
-					sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.noteData);
-				else
-					sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.originColor);
-
-				sploosh.animation.curAnim.frameRate += FlxG.random.int(0, 2);	
-				sploosh.alpha = 0.6;
-				sploosh.offset.x += 90;
-				sploosh.offset.y += 80;
-				sploosh.animation.finishCallback = function(name) sploosh.kill();
-
-				sploosh.update(0);
-			default:
-				switch (FlxG.save.data.notesplash)
-				{
-					case 0:
-						name = 'Default';
-					case 1:
-						name = 'Week7';
-				}
-
-				var rawJson = Paths.loadData('images/splashes/' + name);
-				var data:NoteSplash.SplashData = cast rawJson;
-
-				if (FlxG.save.data.notesplashes)
-				{
-					sploosh.frames = PlayState.notesplashSprite;
-					sploosh.animation.addByPrefix('splash 0 0', 'note splash 1 purple', data.fps, false);
-					sploosh.animation.addByPrefix('splash 0 1', 'note splash 1 blue', data.fps, false);
-					sploosh.animation.addByPrefix('splash 0 2', 'note splash 1 green', data.fps, false);
-					sploosh.animation.addByPrefix('splash 0 3', 'note splash 1 red', data.fps, false);
-
-					sploosh.animation.addByPrefix('splash 1 0', 'note splash 2 purple', data.fps, false);
-					sploosh.animation.addByPrefix('splash 1 1', 'note splash 2 blue', data.fps, false);
-					sploosh.animation.addByPrefix('splash 1 2', 'note splash 2 green', data.fps, false);
-					sploosh.animation.addByPrefix('splash 1 3', 'note splash 2 red', data.fps, false);
 					add(sploosh);
 					sploosh.cameras = [camStrums];
+
 					if (!FlxG.save.data.stepMania)
-						sploosh.animation.play('splash ${FlxG.random.int(0, 1)} ' + daNote.noteData);
+						sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.noteData);
 					else
-						sploosh.animation.play('splash ${FlxG.random.int(0, 1)} ' + daNote.originColor);
+						sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.originColor);
+
 					sploosh.animation.curAnim.frameRate += FlxG.random.int(0, 2);	
-					sploosh.alpha = data.alpha;
-					sploosh.offset.x += data.xOffset;
-					sploosh.offset.y += data.yOffset; // lets stick to eight not nine
+					sploosh.alpha = 0.6;
+					sploosh.offset.x += 90;
+					sploosh.offset.y += 80;
 					sploosh.animation.finishCallback = function(name) sploosh.kill();
-				}
+
+					sploosh.update(0);
+				default:
+					switch (FlxG.save.data.notesplash)
+					{
+						case 0:
+							name = 'Default';
+						case 1:
+							name = 'Week7';
+					}
+
+					var rawJson = Paths.loadData('images/splashes/' + name);
+					var data:NoteSplash.SplashData = cast rawJson;
+
+					if (FlxG.save.data.notesplashes)
+					{
+						sploosh.frames = PlayState.notesplashSprite;
+						sploosh.animation.addByPrefix('splash 0 0', 'note splash 1 purple', data.fps, false);
+						sploosh.animation.addByPrefix('splash 0 1', 'note splash 1 blue', data.fps, false);
+						sploosh.animation.addByPrefix('splash 0 2', 'note splash 1 green', data.fps, false);
+						sploosh.animation.addByPrefix('splash 0 3', 'note splash 1 red', data.fps, false);
+
+						sploosh.animation.addByPrefix('splash 1 0', 'note splash 2 purple', data.fps, false);
+						sploosh.animation.addByPrefix('splash 1 1', 'note splash 2 blue', data.fps, false);
+						sploosh.animation.addByPrefix('splash 1 2', 'note splash 2 green', data.fps, false);
+						sploosh.animation.addByPrefix('splash 1 3', 'note splash 2 red', data.fps, false);
+						add(sploosh);
+						sploosh.cameras = [camStrums];
+						if (!FlxG.save.data.stepMania)
+							sploosh.animation.play('splash ${FlxG.random.int(0, 1)} ' + daNote.noteData);
+						else
+							sploosh.animation.play('splash ${FlxG.random.int(0, 1)} ' + daNote.originColor);
+						sploosh.animation.curAnim.frameRate += FlxG.random.int(0, 2);	
+						sploosh.alpha = data.alpha;
+						sploosh.offset.x += data.xOffset;
+						sploosh.offset.y += data.yOffset; // lets stick to eight not nine
+						sploosh.animation.finishCallback = function(name) sploosh.kill();
+					}
+			}
 		}
-	}
 
-	public function NoteSplashesSpawnDad(daNote:Note, ?nameTwo:String = 'Default')
-	{
-		this.nameTwo = nameTwo;
-		var sploosh:FlxSprite = new FlxSprite(cpuStrums.members[daNote.noteData].x + 10.5, cpuStrums.members[daNote.noteData].y - 20);
-		sploosh.antialiasing = FlxG.save.data.antialiasing;
-		switch (SONG.noteStyle)
+		public function NoteSplashesSpawnDad(daNote:Note, ?nameTwo:String = 'Default')
 		{
-			case 'pixel':
-				var tex:flixel.graphics.frames.FlxAtlasFrames = Paths.getSparrowAtlas('weeb/pixelUI/noteSplashes-pixels', 'week6');
-				sploosh.frames = tex;
-				sploosh.animation.addByPrefix('splash 0 0', 'note splash 1 purple', 24, false);
-				sploosh.animation.addByPrefix('splash 0 ' + daNote.noteData, 'note splash 1 purple', 24, false);
-				sploosh.animation.addByPrefix('splash 0 1', 'note splash 1  blue', 24, false);
-				sploosh.animation.addByPrefix('splash 0 2', 'note splash 1 green', 24, false);
-				sploosh.animation.addByPrefix('splash 0 3', 'note splash 1 red', 24, false);
-				sploosh.animation.addByPrefix('splash 1 0', 'note splash 2 purple', 24, false);
-				sploosh.animation.addByPrefix('splash 1 1', 'note splash 2 blue', 24, false);
-				sploosh.animation.addByPrefix('splash 1 2', 'note splash 2 green', 24, false);
-				sploosh.animation.addByPrefix('splash 1 3', 'note splash 2 red', 24, false);
+			this.nameTwo = nameTwo;
+			var sploosh:FlxSprite = new FlxSprite(cpuStrums.members[daNote.noteData].x + 10.5, cpuStrums.members[daNote.noteData].y - 20);
+			sploosh.antialiasing = FlxG.save.data.antialiasing;
+			switch (SONG.noteStyle)
+			{
+				case 'pixel':
+					var tex:flixel.graphics.frames.FlxAtlasFrames = Paths.getSparrowAtlas('weeb/pixelUI/noteSplashes-pixels', 'week6');
+					sploosh.frames = tex;
+					sploosh.animation.addByPrefix('splash 0 0', 'note splash 1 purple', 24, false);
+					sploosh.animation.addByPrefix('splash 0 ' + daNote.noteData, 'note splash 1 purple', 24, false);
+					sploosh.animation.addByPrefix('splash 0 1', 'note splash 1  blue', 24, false);
+					sploosh.animation.addByPrefix('splash 0 2', 'note splash 1 green', 24, false);
+					sploosh.animation.addByPrefix('splash 0 3', 'note splash 1 red', 24, false);
+					sploosh.animation.addByPrefix('splash 1 0', 'note splash 2 purple', 24, false);
+					sploosh.animation.addByPrefix('splash 1 1', 'note splash 2 blue', 24, false);
+					sploosh.animation.addByPrefix('splash 1 2', 'note splash 2 green', 24, false);
+					sploosh.animation.addByPrefix('splash 1 3', 'note splash 2 red', 24, false);
 
-				add(sploosh);
-				sploosh.cameras = [camStrums];
-
-				if (!FlxG.save.data.stepMania)
-					sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.noteData);
-				else
-					sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.originColor);
-				sploosh.animation.curAnim.frameRate += FlxG.random.int(0, 2);	
-				sploosh.alpha = 0.6;
-				sploosh.offset.x += 90;
-				sploosh.offset.y += 80;
-				sploosh.animation.finishCallback = function(name) sploosh.kill();
-
-				sploosh.update(0);
-			default:
-				switch (FlxG.save.data.cpuNotesplash)
-				{
-					case 0:
-						nameTwo = 'Default';
-					case 1:
-						nameTwo = 'Week7';
-				}
-
-				var rawJson = Paths.loadData('images/splashes/' + nameTwo);
-				var data:NoteSplash.SplashData = cast rawJson;
-
-				if (FlxG.save.data.cpuSplash)
-				{
-					sploosh.frames = PlayState.cpuNotesplashSprite;
-					sploosh.animation.addByPrefix('splash 0 0', 'note splash 1 purple', data.fps, false);
-					sploosh.animation.addByPrefix('splash 0 1', 'note splash 1 blue', data.fps, false);
-					sploosh.animation.addByPrefix('splash 0 2', 'note splash 1 green', data.fps, false);
-					sploosh.animation.addByPrefix('splash 0 3', 'note splash 1 red', data.fps, false);
-
-					sploosh.animation.addByPrefix('splash 1 0', 'note splash 2 purple', data.fps, false);
-					sploosh.animation.addByPrefix('splash 1 1', 'note splash 2 blue', data.fps, false);
-					sploosh.animation.addByPrefix('splash 1 2', 'note splash 2 green', data.fps, false);
-					sploosh.animation.addByPrefix('splash 1 3', 'note splash 2 red', data.fps, false);
-					
 					add(sploosh);
 					sploosh.cameras = [camStrums];
-					if (!FlxG.save.data.stepMania)
-						sploosh.animation.play('splash ${FlxG.random.int(0, 1)} ' + daNote.noteData);
-					else
-						sploosh.animation.play('splash ${FlxG.random.int(0, 1)} ' + daNote.originColor);
-					sploosh.animation.curAnim.frameRate += FlxG.random.int(0, 2);	
-					sploosh.alpha = data.alpha;
-					sploosh.offset.x += data.xOffset;
-					sploosh.offset.y += data.yOffset; // lets stick to eight not nine
-					sploosh.animation.finishCallback = function(name) sploosh.kill();
-				}
-		}
-	}
-	*/
 
+					if (!FlxG.save.data.stepMania)
+						sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.noteData);
+					else
+						sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.originColor);
+					sploosh.animation.curAnim.frameRate += FlxG.random.int(0, 2);	
+					sploosh.alpha = 0.6;
+					sploosh.offset.x += 90;
+					sploosh.offset.y += 80;
+					sploosh.animation.finishCallback = function(name) sploosh.kill();
+
+					sploosh.update(0);
+				default:
+					switch (FlxG.save.data.cpuNotesplash)
+					{
+						case 0:
+							nameTwo = 'Default';
+						case 1:
+							nameTwo = 'Week7';
+					}
+
+					var rawJson = Paths.loadData('images/splashes/' + nameTwo);
+					var data:NoteSplash.SplashData = cast rawJson;
+
+					if (FlxG.save.data.cpuSplash)
+					{
+						sploosh.frames = PlayState.cpuNotesplashSprite;
+						sploosh.animation.addByPrefix('splash 0 0', 'note splash 1 purple', data.fps, false);
+						sploosh.animation.addByPrefix('splash 0 1', 'note splash 1 blue', data.fps, false);
+						sploosh.animation.addByPrefix('splash 0 2', 'note splash 1 green', data.fps, false);
+						sploosh.animation.addByPrefix('splash 0 3', 'note splash 1 red', data.fps, false);
+
+						sploosh.animation.addByPrefix('splash 1 0', 'note splash 2 purple', data.fps, false);
+						sploosh.animation.addByPrefix('splash 1 1', 'note splash 2 blue', data.fps, false);
+						sploosh.animation.addByPrefix('splash 1 2', 'note splash 2 green', data.fps, false);
+						sploosh.animation.addByPrefix('splash 1 3', 'note splash 2 red', data.fps, false);
+						
+						add(sploosh);
+						sploosh.cameras = [camStrums];
+						if (!FlxG.save.data.stepMania)
+							sploosh.animation.play('splash ${FlxG.random.int(0, 1)} ' + daNote.noteData);
+						else
+							sploosh.animation.play('splash ${FlxG.random.int(0, 1)} ' + daNote.originColor);
+						sploosh.animation.curAnim.frameRate += FlxG.random.int(0, 2);	
+						sploosh.alpha = data.alpha;
+						sploosh.offset.x += data.xOffset;
+						sploosh.offset.y += data.yOffset; // lets stick to eight not nine
+						sploosh.animation.finishCallback = function(name) sploosh.kill();
+					}
+			}
+		}
+	 */
 	private function generateStaticArrows(player:Int, ?tween:Bool = true):Void
 	{
 		for (i in 0...4)
@@ -3812,12 +3810,11 @@ class PlayState extends MusicBeatState
 				{
 					if (PlayStateChangeables.useDownscroll)
 					{
-						daNote.distance = (0.45 * ((Conductor.songPosition - daNote.strumTime)) * (FlxMath.roundDecimal(leSpeed,2)) * daNote.speedMultiplier)
+						daNote.distance = (0.45 * ((Conductor.songPosition - daNote.strumTime)) * (FlxMath.roundDecimal(leSpeed, 2)) * daNote.speedMultiplier)
 							- daNote.noteYOff;
 					}
 					else
-						daNote.distance = (-0.45 * ((Conductor.songPosition - daNote.strumTime)) * (FlxMath.roundDecimal(leSpeed,
-							2)) * daNote.speedMultiplier)
+						daNote.distance = (-0.45 * ((Conductor.songPosition - daNote.strumTime)) * (FlxMath.roundDecimal(leSpeed, 2)) * daNote.speedMultiplier)
 							+ daNote.noteYOff;
 				}
 
@@ -4087,7 +4084,7 @@ class PlayState extends MusicBeatState
 		if (FlxG.save.data.smoothHealthbar)
 			shownHealth = FlxMath.lerp(shownHealth, health, CoolUtil.boundTo(elapsed * 15 * songMultiplier, 0, 1));
 		else
-			shownHealth = health;	
+			shownHealth = health;
 
 		var mult:Float = FlxMath.lerp(1, iconP1.scale.x, CoolUtil.boundTo(1 - (elapsed * 9 * songMultiplier), 0, 1));
 		if (!FlxG.save.data.motion)

@@ -88,7 +88,7 @@ class KadeEngineData
 			FlxG.save.data.cpuStrums = false;
 
 		if (FlxG.save.data.smoothHealthbar == null)
-			FlxG.save.data.smoothHealthbar = true;	
+			FlxG.save.data.smoothHealthbar = true;
 
 		if (FlxG.save.data.camzoom == null)
 			FlxG.save.data.camzoom = true;

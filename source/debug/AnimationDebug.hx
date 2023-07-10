@@ -122,8 +122,6 @@ class AnimationDebug extends MusicBeatState
 		UI_box.x = FlxG.width - UI_box.width - 20;
 		UI_box.y = 20;
 
-		
-
 		// var opt_tabs = [{name: "test", label: 'test'}];
 
 		// UI_options = new FlxUITabMenu(null, opt_tabs, true);

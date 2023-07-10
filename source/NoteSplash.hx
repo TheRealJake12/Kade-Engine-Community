@@ -43,6 +43,7 @@ class NoteSplash extends FlxSprite
 	public static var scales:Array<Float> = [0.7, 0.6, 0.55, 0.46];
 	public static var swidths:Array<Float> = [160, 120, 110, 90];
 	public static var posRest:Array<Int> = [0, 35, 50, 70];
+
 	var name:String;
 
 	public static var anims:Array<String> = ['purple', 'blue', 'green', 'red'];
@@ -75,8 +76,8 @@ class NoteSplash extends FlxSprite
 		var data:SplashData = cast rawJson;
 		for (i in 0...4)
 		{
-			animation.addByPrefix('splash 0 '+ i, 'note splash 1 ' + anims[i], data.fps, false);
-			animation.addByPrefix('splash 1 '+ i, 'note splash 2 ' + anims[i], data.fps, false);
+			animation.addByPrefix('splash 0 ' + i, 'note splash 1 ' + anims[i], data.fps, false);
+			animation.addByPrefix('splash 1 ' + i, 'note splash 2 ' + anims[i], data.fps, false);
 		}
 		alpha = data.alpha;
 		offset.set(data.xOffset, data.yOffset);
@@ -95,7 +96,7 @@ class NoteSplash extends FlxSprite
 			kill();
 		}
 	}
-	
+
 	override function update(elapsed:Float)
 	{
 		if (animation.curAnim != null)

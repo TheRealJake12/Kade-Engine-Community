@@ -14,7 +14,6 @@ import openfl.events.IOErrorEvent;
 import openfl.net.FileReference;
 import stages.Stage;
 import flixel.tweens.FlxTween;
-
 import flixel.addons.ui.FlxInputText;
 import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUI;
@@ -91,13 +90,13 @@ class StageDebugState extends MusicBeatState
 		dad = PlayState.instance.dad;
 
 		/*
-		dad.moves = true;
-		dad.active = true;
-		boyfriend.active = true;
-		boyfriend.moves = true;
-		gf.active = true;
-		gf.moves = true;
-		*/
+			dad.moves = true;
+			dad.active = true;
+			boyfriend.active = true;
+			boyfriend.moves = true;
+			gf.active = true;
+			gf.moves = true;
+		 */
 
 		PlayState.inDaPlay = false;
 		curChars = [dad, boyfriend, gf];
@@ -144,7 +143,7 @@ class StageDebugState extends MusicBeatState
 		posText.scrollFactor.set();
 		posText.cameras = [camHUD];
 
-		bgPos = new FlxSprite(0,900).makeGraphic(1280, 120, FlxColor.BLACK);
+		bgPos = new FlxSprite(0, 900).makeGraphic(1280, 120, FlxColor.BLACK);
 		bgPos.scrollFactor.set();
 		bgPos.cameras = [camHUD];
 		bgPos.alpha = 0;
@@ -244,14 +243,14 @@ class StageDebugState extends MusicBeatState
 		helpText.cameras = [camHUD];
 		helpText.color = FlxColor.WHITE;
 		helpText.alpha = 0;
-		FlxTween.tween(helpText, {x: 885, alpha : 1}, 1.2);
+		FlxTween.tween(helpText, {x: 885, alpha: 1}, 1.2);
 
 		helpBg = new FlxSprite(2000, 0).makeGraphic(450, 215, FlxColor.BLACK);
 		helpBg.scrollFactor.set();
 		helpBg.cameras = [camHUD];
 		helpBg.alpha = 0;
 		FlxTween.tween(helpBg, {alpha: 0.65, x: 875}, 1.2);
-		
+
 		add(helpBg);
 		add(helpText);
 	}
@@ -260,7 +259,7 @@ class StageDebugState extends MusicBeatState
 	{
 		if (FlxG.keys.justReleased.ENTER)
 			reloadStage(newStage);
-			
+
 		if (FlxG.keys.justPressed.E)
 			FlxG.camera.zoom += 0.05;
 		if (FlxG.keys.justPressed.Q)
@@ -310,9 +309,7 @@ class StageDebugState extends MusicBeatState
 			}
 		}
 
-		if (FlxG.mouse.pressed
-			&& FlxG.mouse.overlaps(curChar)
-			&& !dragging)
+		if (FlxG.mouse.pressed && FlxG.mouse.overlaps(curChar) && !dragging)
 		{
 			dragging = true;
 			updateMousePos();
@@ -334,14 +331,7 @@ class StageDebugState extends MusicBeatState
 		else if (FlxG.keys.pressed.R)
 			curChar.angle = 0;
 
-		posText.text = (curCharString.toUpperCase()
-			+ " X: "
-			+ curChar.x
-			+ " Y: "
-			+ curChar.y
-			+ " Rotation: "
-			+ curChar.angle
-			+ " Camera Zoom "
+		posText.text = (curCharString.toUpperCase() + " X: " + curChar.x + " Y: " + curChar.y + " Rotation: " + curChar.angle + " Camera Zoom "
 			+ FlxG.camera.zoom);
 
 		if (FlxG.keys.justPressed.ESCAPE)
@@ -358,7 +348,7 @@ class StageDebugState extends MusicBeatState
 
 		if (FlxG.keys.justPressed.F1)
 			FlxG.save.data.showHelp = !FlxG.save.data.showHelp;
-		
+
 		helpText.visible = FlxG.save.data.showHelp;
 		helpBg.visible = FlxG.save.data.showHelp;
 
