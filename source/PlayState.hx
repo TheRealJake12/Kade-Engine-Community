@@ -960,7 +960,9 @@ class PlayState extends MusicBeatState
 		cpuNoteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.cpuNoteskin);
 
 		notesplashSprite = CustomNoteHelpers.Splash.generateNotesplashSprite(FlxG.save.data.notesplash);
-		cpuNotesplashSprite = CustomNoteHelpers.Splash.generateNotesplashSprite(FlxG.save.data.cpuNotesplash);
+		// cpuNotesplashSprite = CustomNoteHelpers.Splash.generateNotesplashSprite(FlxG.save.data.cpuNotesplash);
+
+		// goes unused due to the way we do notesplashes now. If anyone can get this back, please do! - TheRealJake_12
 
 		var tweenBoolshit = !isStoryMode || storyPlaylist.length >= 3 || SONG.songId == 'tutorial';
 
@@ -2597,17 +2599,17 @@ class PlayState extends MusicBeatState
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
 	}
 
-	public function spawnNoteSplash(x:Float, y:Float, data:Int)
+	public function spawnNoteSplash(x:Float, y:Float, note:Note)
 	{
 		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
-		splash.setupNoteSplash(x, y, data);
+		splash.setupNoteSplash(x, y, note);
 		grpNoteSplashes.add(splash);
 	}
 
-	public function spawnNoteSplashDad(x:Float, y:Float, data:Int)
+	public function spawnNoteSplashDad(x:Float, y:Float, note:Note)
 	{
 		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
-		splash.setupNoteSplash2(x, y, data);
+		splash.setupNoteSplash(x, y, note);
 		grpNoteSplashes.add(splash);
 	}
 
@@ -2616,7 +2618,7 @@ class PlayState extends MusicBeatState
 		var strum:StaticArrow = playerStrums.members[note.noteData];
 		if (strum != null)
 		{
-			spawnNoteSplash(strum.x + 10.5, strum.y, note.noteData);
+			spawnNoteSplash(strum.x + 10.5, strum.y, note);
 		}
 	}
 
@@ -2625,7 +2627,7 @@ class PlayState extends MusicBeatState
 		var strum:StaticArrow = cpuStrums.members[note.noteData];
 		if (strum != null)
 		{
-			spawnNoteSplashDad(strum.x + 10.5, strum.y, note.noteData);
+			spawnNoteSplashDad(strum.x + 10.5, strum.y, note);
 		}
 	}
 

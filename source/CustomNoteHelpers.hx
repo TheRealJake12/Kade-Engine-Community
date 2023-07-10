@@ -137,7 +137,7 @@ class Splash
 
 		return FlxAtlasFrames.fromSparrow(FlxGraphic.fromBitmapData(data), xmlData[id]);
 		#else
-		return Paths.getSparrowAtlas('splashes/Week7', "shared");
+		return Paths.getSparrowAtlas('splashes/Default', "shared");
 		#end
 	}
 }

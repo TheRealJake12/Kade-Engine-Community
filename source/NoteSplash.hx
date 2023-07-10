@@ -44,7 +44,6 @@ class NoteSplash extends FlxSprite
 	public static var swidths:Array<Float> = [160, 120, 110, 90];
 	public static var posRest:Array<Int> = [0, 35, 50, 70];
 	var name:String;
-	var nameTwo:String;
 
 	public static var anims:Array<String> = ['purple', 'blue', 'green', 'red'];
 
@@ -53,94 +52,42 @@ class NoteSplash extends FlxSprite
 		super(x, y);
 
 		antialiasing = FlxG.save.data.antialiasing;
-		loadSplashFrames1();
-		loadSplashFrames2();
 	}
 
-	public function setupNoteSplash(x:Float, y:Float, noteData:Int)
+	public function setupNoteSplash(x:Float, y:Float, note:Note)
 	{
 		visible = true;
-		setPosition(x - Note.swagWidth * 0.95, y - Note.swagWidth);
-		var animNum:Int = FlxG.random.int(0, 1);
-
-		animation.play('splash ' + animNum + " " + noteData);
-
-		//animation.curAnim.frameRate += FlxG.random.int(0, 2);
-
-		animation.finishCallback = function(name:String)
-		{
-			visible = false;
-			kill();
-		}
-	}
-
-	function loadSplashFrames1()
-	{
 		frames = PlayState.notesplashSprite;
+
+		setPosition(x - Note.swagWidth * 0.95, y - Note.swagWidth);
 
 		switch (FlxG.save.data.notesplash)
 		{
 			case 0:
 				name = 'Default';
 			case 1:
+				name = 'Psych';
+			case 2:
 				name = 'Week7';
 		}
 
 		var rawJson = Paths.loadData('images/splashes/' + name, 'shared');
 		var data:SplashData = cast rawJson;
-		
-		animation.addByPrefix('splash 0 0', 'note splash 1 purple', data.fps, false);
-		animation.addByPrefix('splash 0 1', 'note splash 1 blue', data.fps, false);
-		animation.addByPrefix('splash 0 2', 'note splash 1 green', data.fps, false);
-		animation.addByPrefix('splash 0 3', 'note splash 1 red', data.fps, false);
-
-		animation.addByPrefix('splash 1 0', 'note splash 2 purple', data.fps, false);
-		animation.addByPrefix('splash 1 1', 'note splash 2 blue', data.fps, false);
-		animation.addByPrefix('splash 1 2', 'note splash 2 green', data.fps, false);
-		animation.addByPrefix('splash 1 3', 'note splash 2 red', data.fps, false);
-		alpha = data.alpha;
-		x += data.xOffset;
-		y += data.yOffset; // lets stick to eight not nine
-	}
-
-	function loadSplashFrames2()
-	{
-		frames = PlayState.cpuNotesplashSprite;
-
-		switch (FlxG.save.data.cpuNotesplash)
+		for (i in 0...4)
 		{
-			case 0:
-				nameTwo = 'Default';
-			case 1:
-				nameTwo = 'Week7';
+			animation.addByPrefix('splash 0 '+ i, 'note splash 1 ' + anims[i], data.fps, false);
+			animation.addByPrefix('splash 1 '+ i, 'note splash 2 ' + anims[i], data.fps, false);
 		}
-
-		var rawJson = Paths.loadData('images/splashes/' + nameTwo, 'shared');
-		var data2:SplashData = cast rawJson;
-
-		animation.addByPrefix('splash 0 0', 'note splash 1 purple', data2.fps, false);
-		animation.addByPrefix('splash 0 1', 'note splash 1 blue', data2.fps, false);
-		animation.addByPrefix('splash 0 2', 'note splash 1 green', data2.fps, false);
-		animation.addByPrefix('splash 0 3', 'note splash 1 red', data2.fps, false);
-
-		animation.addByPrefix('splash 1 0', 'note splash 2 purple', data2.fps, false);
-		animation.addByPrefix('splash 1 1', 'note splash 2 blue', data2.fps, false);
-		animation.addByPrefix('splash 1 2', 'note splash 2 green', data2.fps, false);
-		animation.addByPrefix('splash 1 3', 'note splash 2 red', data2.fps, false);
-		alpha = data2.alpha;
-		x += data2.xOffset;
-		y += data2.yOffset; // lets stick to eight not nine
-	}
-
-	public function setupNoteSplash2(x:Float, y:Float, noteData:Int)
-	{
-		visible = true;
-		setPosition(x - Note.swagWidth * 0.95, y - Note.swagWidth);
+		alpha = data.alpha;
+		offset.set(data.xOffset, data.yOffset);
 		var animNum:Int = FlxG.random.int(0, 1);
 
-		animation.play('splash ' + animNum + " " + noteData);
+		if (!FlxG.save.data.stepMania)
+			animation.play('splash ' + animNum + " " + note.noteData);
+		else
+			animation.play('splash ' + animNum + " " + note.originColor);
 
-		//animation.curAnim.frameRate += FlxG.random.int(0, 2);
+		animation.curAnim.frameRate += FlxG.random.int(0, 2);
 
 		animation.finishCallback = function(name:String)
 		{
@@ -148,7 +95,7 @@ class NoteSplash extends FlxSprite
 			kill();
 		}
 	}
-
+	
 	override function update(elapsed:Float)
 	{
 		if (animation.curAnim != null)
