@@ -4249,6 +4249,7 @@ class PlayState extends MusicBeatState
 	{
 		camZooming = false;
 		endingSong = true;
+		inDaPlay = false;
 		Lib.current.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleInput);
 		Lib.current.stage.removeEventListener(KeyboardEvent.KEY_UP, releaseInput);
 
@@ -4389,7 +4390,7 @@ class PlayState extends MusicBeatState
 				}
 			}
 			else
-			{
+			{	
 				paused = true;
 				if (isSM)
 					FlxG.sound.music.stop();

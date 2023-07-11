@@ -133,21 +133,19 @@ class Ratings
 			+ maxNPS
 			+ ")"
 			+ (!PlayStateChangeables.botPlay || PlayState.loadRep ? " | " : "") : "") + // 	NPS
-			(!PlayStateChangeables.botPlay
-				|| PlayState.loadRep ? "Score:" + (Conductor.safeFrames != 10 ? score + " (" + scoreDef + ")" : "" + score) + // Score
-					(FlxG.save.data.accuracyDisplay ? // Accuracy Toggle
-						" | Combo Breaks:"
-						+ PlayState.misses // 	Misses/Combo Breaks
-						+ (!FlxG.save.data.healthBar ? " | Health:"
-							+ (!PlayStateChangeables.opponentMode ? Math.round(PlayState.instance.health * 50) : Math.round(100
-								- (PlayState.instance.health * 50)))
-							+ "%" : "")
-						+ " | Accuracy:"
-						+ (PlayStateChangeables.botPlay && !PlayState.loadRep ? "N/A" : HelperFunctions.truncateFloat(accuracy, 2) + " %")
-						+ // 	Accuracy
-						" | "
-						+ GenerateComboRank(accuracy)
-						+ " "
-						+ (!PlayStateChangeables.practiceMode ? GenerateLetterRank(accuracy) : 'PRACTICE') : "") : ""); // 	Letter Rank
+			(!PlayStateChangeables.botPlay || PlayState.loadRep ? "Score:" + score + // Score
+				(FlxG.save.data.accuracyDisplay ? // Accuracy Toggle
+					" | Combo Breaks:"
+					+ PlayState.misses // 	Misses/Combo Breaks
+					+ (!FlxG.save.data.healthBar ? " | Health:"
+						+ (!PlayStateChangeables.opponentMode ? Math.round(PlayState.instance.health * 50) : Math.round(100 - (PlayState.instance.health * 50)))
+						+ "%" : "")
+					+ " | Accuracy:"
+					+ (PlayStateChangeables.botPlay && !PlayState.loadRep ? "N/A" : HelperFunctions.truncateFloat(accuracy, 2) + " %")
+					+ // 	Accuracy
+					" | "
+					+ GenerateComboRank(accuracy)
+					+ " "
+					+ (!PlayStateChangeables.practiceMode ? GenerateLetterRank(accuracy) : 'PRACTICE') : "") : ""); // 	Letter Rank
 	}
 }
