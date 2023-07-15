@@ -2102,76 +2102,93 @@ class ChartingState extends MusicBeatState
 				if (FlxG.mouse.wheel != 0)
 				{
 					inst.pause();
-
 					vocals.pause();
-					claps.splice(0, claps.length);
-
-					if (FlxG.keys.pressed.CONTROL && !waitingForRelease)
+					if (!doSnapShit)
 					{
-						var amount = FlxG.mouse.wheel;
+						var leWheel = FlxG.mouse.wheel;
 
-						if (amount > 0)
-							amount = 0;
+						inst.time -= Std.int(leWheel * 25);
 
-						var increase:Float = 0;
-
-						if (amount < 0)
-							increase = -0.02;
-						else
-							increase = 0.02;
-
-						zoomFactor += increase;
-
-						if (zoomFactor > 2)
-							zoomFactor = 2;
-
-						if (zoomFactor < 0.1)
-							zoomFactor = 0.1;
-						resizeEverything();
+						if (inst.time < 0)
+							inst.time = 0;
 					}
-					else
+
+					if (doSnapShit)
 					{
-						var amount = FlxG.mouse.wheel;
+						var beat:Float = TimingStruct.getBeatFromTime(Conductor.songPosition);
+						var snap:Float = deezNuts.get(snap);
+						var increase:Float = 1 / snap;
+						var wheelShit = FlxG.mouse.wheel>0;
 
-						if (amount > 0 && strumLine.y < 0)
-							amount = 0;
-
-						if (doSnapShit)
+						if (wheelShit)
 						{
-							var increase:Float = 0;
-							var beats:Float = 0;
+							var fuck:Float = (Math.fround(beat * snap) / snap) - increase;
+							if (fuck < 0)
+								fuck = 0;
+							var data = TimingStruct.getTimingAtBeat(fuck);
+							var lastDataIndex = TimingStruct.AllTimings.indexOf(data) - 1;
+							if (lastDataIndex < 0)
+								lastDataIndex = 0;
 
-							if (amount < 0)
+							var lastData = TimingStruct.AllTimings[lastDataIndex];
+
+							var pog = 0.0;
+							var shitPosition = 0.0;
+
+							if (beat < data.startBeat)
 							{
-								increase = 1 / deezNuts.get(snap);
-								beats = (Math.floor((curDecimalBeat * deezNuts.get(snap)) + 0.001) / deezNuts.get(snap)) + increase;
+								pog = (fuck - lastData.startBeat) / (lastData.bpm / 60);
+								shitPosition = (lastData.startTime + pog) * 1000;
+							}
+							else if (beat > data.startBeat)
+							{
+								pog = (fuck - data.startBeat) / (data.bpm / 60);
+								shitPosition = (data.startTime + pog) * 1000;
 							}
 							else
 							{
-								increase = -1 / deezNuts.get(snap);
-								beats = ((Math.ceil(curDecimalBeat * deezNuts.get(snap)) - 0.001) / deezNuts.get(snap)) + increase;
+								pog = fuck / (Conductor.bpm / 60);
+								shitPosition = pog * 1000;
 							}
 
-							Debug.logTrace("SNAP - " + snap + " INCREASE - " + increase + " - GO TO BEAT " + beats);
-
-							var data = TimingStruct.getTimingAtBeat(beats);
-
-							if (beats <= 0)
-								inst.time = 0;
-
-							var bpm = data != null ? data.bpm : _song.bpm;
-
-							if (data != null)
-							{
-								inst.time = (data.startTime + ((beats - data.startBeat) / (bpm / 60))) * 1000;
-							}
+							inst.time = shitPosition;
 						}
 						else
-							inst.time -= (FlxG.mouse.wheel * Conductor.stepCrochet * 0.4);
-						
-							vocals.time = inst.time;
+						{
+							var fuck:Float = (Math.fround(beat * snap) / snap) + increase;
+							if (fuck < 0)
+								fuck = 0;
+							var data = TimingStruct.getTimingAtBeat(fuck);
+							var lastDataIndex = TimingStruct.AllTimings.indexOf(data) - 1;
+							if (lastDataIndex < 0)
+								lastDataIndex = 0;
+
+							var lastData = TimingStruct.AllTimings[lastDataIndex];
+
+							var pog = 0.0;
+							var shitPosition = 0.0;
+							if (beat < data.startBeat)
+							{
+								pog = (fuck - lastData.startBeat) / (lastData.bpm / 60);
+								shitPosition = (lastData.startTime + pog) * 1000;
+							}
+							else if (beat > data.startBeat)
+							{
+								pog = (fuck - data.startBeat) / (data.bpm / 60);
+								shitPosition = (data.startTime + pog) * 1000;
+							}
+							else
+							{
+								pog = fuck / (Conductor.bpm / 60);
+								shitPosition = pog * 1000;
+							}
+
+							inst.time = shitPosition;
+						}
 					}
 					updateBpmText();
+					if (!(vocals.length < inst.time))
+						vocals.time = inst.time;
 				}
 
 				if (FlxG.keys.pressed.SHIFT)
