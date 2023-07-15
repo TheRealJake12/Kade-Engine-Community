@@ -83,7 +83,7 @@ class TitleState extends MusicBeatState
 
 	function startIntro()
 	{
-		persistentUpdate = false;
+		persistentUpdate = true;
 
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		bg.antialiasing = FlxG.save.data.antialiasing;

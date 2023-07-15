@@ -185,6 +185,13 @@
 	<haxeflag name="-D no-traces" unless="debug" />
 	<haxedef name="queue_experimental_optimization"/>
 
+	<haxedef name="HXCPP_COMPILE_CACHE" value="c:/hxcpp/cache" />
+	<haxedef name="HXCPP_CACHE_MB" value="4000" />
+
+	<cache value="true" project="openfl" asLibrary="true" />
+	<cache value="true" project="lime" asLibrary="true" />
+	<cache value="true" project="flixel" asLibrary="true" />
+
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->

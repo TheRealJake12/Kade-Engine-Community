@@ -15,9 +15,6 @@ class Init extends MusicBeatState
 {
 	override function create()
 	{
-		#if FEATURE_MULTITHREADING
-		MasterObjectLoader.mutex = new Mutex();
-		#end
 		#if windows
 		CPPInterface.darkMode();
 		#end
@@ -68,9 +65,6 @@ class Init extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		if (FlxG.save.data.fpsCap > 420)
-			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(420);
-
 		if (FlxG.save.data.borderless)
 		{
 			FlxG.stage.window.borderless = true;
@@ -105,8 +99,8 @@ class Init extends MusicBeatState
 				FlxG.resizeGame(1920, 1080);
 		}
 
-		(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
-
 		FlxG.switchState(new TitleState());
+
+		// Main.gameContainer.setFPSCap(FlxG.save.data.fpsCap);
 	}
 }

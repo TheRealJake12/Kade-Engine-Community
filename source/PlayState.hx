@@ -345,7 +345,6 @@ class PlayState extends MusicBeatState
 
 	var newLerp:Float = 0;
 
-	// var camLerp = #if !html5 0.04 * (30 / (cast(Lib.current.getChildAt(0), Main)).getFPS()) * songMultiplier; #else 0.09 * (30 / (cast(Lib.current.getChildAt(0), Main)).getFPS()) * songMultiplier; #end
 	// BotPlay text
 	private var botPlayState:FlxText;
 	// Replay shit
@@ -412,9 +411,6 @@ class PlayState extends MusicBeatState
 
 		if (previousRate < 1.00)
 			previousRate = 1;
-
-		if (FlxG.save.data.fpsCap > 420)
-			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(420);
 
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
@@ -1316,6 +1312,14 @@ class PlayState extends MusicBeatState
 					}
 				}
 			}
+		}
+		
+		if (PlayStateChangeables.skillIssue)
+		{
+			var redVignette:FlxSprite = new FlxSprite().loadGraphic(Paths.image('nomisses_vignette', 'shared'));
+			redVignette.screenCenter();
+			redVignette.cameras = [overlayCam];
+			add(redVignette);
 		}
 
 		if (!isStoryMode)
@@ -2426,14 +2430,6 @@ class PlayState extends MusicBeatState
 		FlxG.sound.list.add(inst);
 		FlxG.sound.list.add(vocals);
 
-		if (PlayStateChangeables.skillIssue)
-		{
-			var redVignette:FlxSprite = new FlxSprite().loadGraphic(Paths.image('nomisses_vignette', 'shared'));
-			redVignette.screenCenter();
-			redVignette.cameras = [overlayCam];
-			add(redVignette);
-		}
-
 		#if FEATURE_HSCRIPT
 		scripts.setAll("bpm", Conductor.bpm);
 		#end
@@ -3471,6 +3467,7 @@ class PlayState extends MusicBeatState
 			cannotDie = true;
 
 			persistentUpdate = false;
+			ChartingState.mustCleanMem = true;
 			MusicBeatState.switchState(new ChartingState());
 			PlayState.stageTesting = false;
 		}
@@ -4264,9 +4261,6 @@ class PlayState extends MusicBeatState
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
 
-		if (FlxG.save.data.fpsCap > 420)
-			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(420);
-
 		#if FEATURE_LUAMODCHART
 		if (luaModchart != null)
 		{
@@ -4390,7 +4384,7 @@ class PlayState extends MusicBeatState
 				}
 			}
 			else
-			{	
+			{
 				paused = true;
 				if (isSM)
 					FlxG.sound.music.stop();
@@ -4580,6 +4574,7 @@ class PlayState extends MusicBeatState
 				pixelShitPart2 = '-pixel';
 				pixelShitPart3 = 'week6';
 				pixelShitPart4 = 'week6';
+				rating.antialiasing = false;
 			}
 
 			rating.loadGraphic(Paths.image(pixelShitPart1 + daRating + pixelShitPart2, pixelShitPart3));
@@ -4766,6 +4761,7 @@ class PlayState extends MusicBeatState
 				else
 				{
 					numScore.setGraphicSize(Std.int(numScore.width * CoolUtil.daPixelZoom));
+					numScore.antialiasing = false;
 				}
 
 				numScore.updateHitbox();

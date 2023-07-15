@@ -58,7 +58,6 @@ class NoteSplash extends FlxSprite
 	public function setupNoteSplash(x:Float, y:Float, note:Note)
 	{
 		visible = true;
-		frames = PlayState.notesplashSprite;
 
 		setPosition(x - Note.swagWidth * 0.95, y - Note.swagWidth);
 
@@ -74,11 +73,24 @@ class NoteSplash extends FlxSprite
 
 		var rawJson = Paths.loadData('images/splashes/' + name, 'shared');
 		var data:SplashData = cast rawJson;
-		for (i in 0...4)
+		switch (PlayState.SONG.noteStyle)
 		{
-			animation.addByPrefix('splash 0 ' + i, 'note splash 1 ' + anims[i], data.fps, false);
-			animation.addByPrefix('splash 1 ' + i, 'note splash 2 ' + anims[i], data.fps, false);
+			case 'pixel':
+				frames = Paths.getSparrowAtlas('weeb/pixelUI/noteSplashes-pixels', 'week6');
+				for (i in 0...4)
+				{
+					animation.addByPrefix('splash 0 ' + i, 'note splash 1 ' + anims[i], 24, false);
+					animation.addByPrefix('splash 1 ' + i, 'note splash 2 ' + anims[i], 24, false);
+				}
+			default:
+				frames = PlayState.notesplashSprite;
+				for (i in 0...4)
+				{
+					animation.addByPrefix('splash 0 ' + i, 'note splash 1 ' + anims[i], data.fps, false);
+					animation.addByPrefix('splash 1 ' + i, 'note splash 2 ' + anims[i], data.fps, false);
+				}
 		}
+		
 		alpha = data.alpha;
 		offset.set(data.xOffset, data.yOffset);
 		var animNum:Int = FlxG.random.int(0, 1);

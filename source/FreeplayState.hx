@@ -816,13 +816,13 @@ class FreeplayState extends MusicBeatState
 					loadSong();
 					break;
 				}
-			#if debug
 			// Going to charting state via Freeplay is only enable in debug builds.
+			// Liar
 			else if (charting)
 				loadSong(true);
 
 			// AnimationDebug and StageDebug are only enabled in debug builds.
-
+			// Liar
 			if (dadDebug)
 			{
 				loadAnimDebug(true);
@@ -831,7 +831,6 @@ class FreeplayState extends MusicBeatState
 			{
 				loadAnimDebug(false);
 			}
-			#end
 		}
 
 		if (openMod)
@@ -980,7 +979,7 @@ class FreeplayState extends MusicBeatState
 		lastRate = rate;
 
 		if (isCharting)
-			LoadingState.loadAndSwitchState(new ChartingState(reloadSong));
+			LoadingState.loadAndSwitchState(new ChartingState(reloadSong), true);
 		else
 			LoadingState.loadAndSwitchState(new PlayState(), true);
 	}

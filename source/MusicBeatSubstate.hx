@@ -1,10 +1,10 @@
 package;
 
-import lime.app.Application;
-import openfl.Lib;
 import flixel.text.FlxText;
+import flixel.input.gamepad.FlxGamepad;
 import flixel.FlxG;
 import flixel.FlxSubState;
+import flixel.input.keyboard.FlxKey;
 
 class MusicBeatSubstate extends FlxSubState
 {
@@ -15,29 +15,33 @@ class MusicBeatSubstate extends FlxSubState
 
 	override function destroy()
 	{
-		Application.current.window.onFocusIn.remove(onWindowFocusOut);
-		Application.current.window.onFocusIn.remove(onWindowFocusIn);
+		#if desktop
+		/*Application.current.window.onFocusIn.remove(onWindowFocusOut);
+			Application.current.window.onFocusIn.remove(onWindowFocusIn); */
+		#end
 		super.destroy();
 	}
 
 	override function create()
 	{
+		FlxG.mouse.enabled = true;
 		super.create();
+		#if desktop
+		/*Application.current.window.onFocusIn.add(onWindowFocusIn);
+			Application.current.window.onFocusOut.add(onWindowFocusOut); */
+		#end
 	}
-
-	private var lastBeat:Float = 0;
 
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
-
-	var curDecimalBeat:Float = 0;
-
-	var oldStep:Int = 0;
-
 	private var controls(get, never):Controls;
 
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;
+
+	var oldStep:Int = 0;
+
+	var curDecimalBeat:Float = 0;
 
 	override function update(elapsed:Float)
 	{
@@ -51,7 +55,20 @@ class MusicBeatSubstate extends FlxSubState
 			oldStep = curStep;
 		}
 
+		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
+		if (gamepad != null)
+			KeyBinds.gamepad = true;
+		else
+			KeyBinds.gamepad = false;
+
 		super.update(elapsed);
+
+		var fullscreenBind = FlxKey.fromString(FlxG.save.data.fullscreenBind);
+
+		if (FlxG.keys.anyJustPressed([fullscreenBind]))
+		{
+			FlxG.fullscreen = !FlxG.fullscreen;
+		}
 	}
 
 	public function stepHit():Void
@@ -63,39 +80,5 @@ class MusicBeatSubstate extends FlxSubState
 	public function beatHit():Void
 	{
 		// do literally nothing dumbass
-	}
-
-	function onWindowFocusOut():Void
-	{
-		if (PlayState.inDaPlay)
-		{
-			if (!PlayState.instance.paused && !PlayState.instance.endingSong && PlayState.instance.songStarted)
-			{
-				Debug.logTrace("Lost Focus");
-				PlayState.instance.openSubState(new PauseSubState());
-				PlayState.instance.boyfriend.stunned = true;
-
-				PlayState.instance.persistentUpdate = false;
-				PlayState.instance.persistentDraw = true;
-				PlayState.instance.paused = true;
-
-				PlayState.instance.vocals.pause();
-				FlxG.sound.music.pause();
-			}
-		}
-	}
-
-	function onWindowFocusIn():Void
-	{
-		if (PlayState.inDaPlay)
-		{
-			if (FlxG.save.data.gen)
-				Debug.logTrace("Gained Focus");
-
-			(cast(Lib.current.getChildAt(0), Main)).setFPSCap(FlxG.save.data.fpsCap);
-
-			PlayState.instance.vocals.play();
-			FlxG.sound.music.play();
-		}
 	}
 }

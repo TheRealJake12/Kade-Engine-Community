@@ -182,13 +182,8 @@ class ChartingState extends MusicBeatState
 		#if FEATURE_DISCORD
 		DiscordClient.changePresence("Chart Editor", null, null, true);
 		#end
-		if (mustCleanMem)
-		{
-			Paths.clearStoredMemory();
-			Paths.clearUnusedMemory();
-			mustCleanMem = false;
-			Debug.logTrace("Cleared Memory");
-		}
+		Paths.clearStoredMemory();
+		Paths.clearUnusedMemory();
 		speed = PlayState.songMultiplier;
 		// curSection = lastSection;
 
@@ -1484,7 +1479,6 @@ class ChartingState extends MusicBeatState
 					var thing = ii.sectionNotes[ii.sectionNotes.length - 1];
 
 					var note:Note = new Note(strum, Math.floor(i[1] % 4), null, false, true, i[3], i[4], 0, i[5]);
-					note.rawNoteData = i[1];
 					note.sustainLength = i[2];
 					note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));
 					note.updateHitbox();
@@ -1540,7 +1534,7 @@ class ChartingState extends MusicBeatState
 					// alright we're in this section lets paste the note here.
 					var newData:Array<Dynamic> = [
 						strum,
-						originalNote.rawNoteData,
+						originalNote.noteData,
 						originalNote.sustainLength,
 						originalNote.isAlt,
 						originalNote.beat
@@ -1551,11 +1545,11 @@ class ChartingState extends MusicBeatState
 
 					var note:Note = new Note(strum, originalNote.noteData, originalNote.prevNote, originalNote.isSustainNote, true, originalNote.isAlt,
 						originalNote.beat, originalNote.noteShit);
-					note.rawNoteData = originalNote.rawNoteData;
+					note.noteData = originalNote.noteData;
 					note.sustainLength = originalNote.sustainLength;
 					note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));
 					note.updateHitbox();
-					note.x = Math.floor(originalNote.rawNoteData * GRID_SIZE);
+					note.x = Math.floor(originalNote.noteData * GRID_SIZE);
 
 					note.charterSelected = true;
 
@@ -2133,7 +2127,6 @@ class ChartingState extends MusicBeatState
 
 						if (zoomFactor < 0.1)
 							zoomFactor = 0.1;
-						updateBpmText();
 						resizeEverything();
 					}
 					else
@@ -2159,6 +2152,8 @@ class ChartingState extends MusicBeatState
 								beats = ((Math.ceil(curDecimalBeat * deezNuts.get(snap)) - 0.001) / deezNuts.get(snap)) + increase;
 							}
 
+							Debug.logTrace("SNAP - " + snap + " INCREASE - " + increase + " - GO TO BEAT " + beats);
+
 							var data = TimingStruct.getTimingAtBeat(beats);
 
 							if (beats <= 0)
@@ -2170,16 +2165,13 @@ class ChartingState extends MusicBeatState
 							{
 								inst.time = (data.startTime + ((beats - data.startBeat) / (bpm / 60))) * 1000;
 							}
-							updateBpmText();
 						}
 						else
-						{
-							updateBpmText();
 							inst.time -= (FlxG.mouse.wheel * Conductor.stepCrochet * 0.4);
-						}
-
-						vocals.time = inst.time;
+						
+							vocals.time = inst.time;
 					}
+					updateBpmText();
 				}
 
 				if (FlxG.keys.pressed.SHIFT)
@@ -2269,7 +2261,7 @@ class ChartingState extends MusicBeatState
 					{
 						deletedNotes.push([
 							selectedBoxes.members[i].connectedNote.strumTime,
-							selectedBoxes.members[i].connectedNote.rawNoteData,
+							selectedBoxes.members[i].connectedNote.noteData,
 							selectedBoxes.members[i].connectedNote.sustainLength
 						]);
 						notesToBeDeleted.push(selectedBoxes.members[i].connectedNote);
@@ -2290,7 +2282,7 @@ class ChartingState extends MusicBeatState
 					{
 						deletedNotes.push([
 							selectedBoxes.members[i].connectedNote.strumTime,
-							selectedBoxes.members[i].connectedNote.rawNoteData,
+							selectedBoxes.members[i].connectedNote.noteData,
 							selectedBoxes.members[i].connectedNote.sustainLength
 						]);
 						notesToBeDeleted.push(selectedBoxes.members[i].connectedNote);
@@ -2324,7 +2316,7 @@ class ChartingState extends MusicBeatState
 						for (i in selectedBoxes.members)
 							copiedNotes.push([
 								i.connectedNote.strumTime,
-								i.connectedNote.rawNoteData,
+								i.connectedNote.noteData,
 								i.connectedNote.sustainLength,
 								i.connectedNote.isAlt,
 								i.connectedNote.beat
@@ -2531,7 +2523,7 @@ class ChartingState extends MusicBeatState
 			{
 				curRenderedNotes.forEach(function(note:Note)
 				{
-					if (strumLine.overlaps(note) && pressArray[Math.floor(Math.abs(note.rawNoteData))])
+					if (strumLine.overlaps(note) && pressArray[Math.floor(Math.abs(note.noteData))])
 					{
 						deleteNote(note);
 						delete = true;
@@ -2644,9 +2636,16 @@ class ChartingState extends MusicBeatState
 						if (i.startTime > inst.length)
 							_song.notes.remove(i);
 					}
-					Main.dumpCache();
 
 					MusicBeatState.switchState(new PlayState());
+					clean();
+				}
+
+				if (FlxG.keys.justPressed.ESCAPE)
+				{
+					Main.dumpCache();
+
+					MusicBeatState.switchState(new FreeplayState());
 					clean();
 				}
 
@@ -2996,7 +2995,7 @@ class ChartingState extends MusicBeatState
 					var daBeat = TimingStruct.getBeatFromTime(daStrumTime);
 
 					var note:Note = new Note(daStrumTime, daNoteInfo % 4, null, false, true, false, i[3], daBeat, daShit);
-					note.rawNoteData = daNoteInfo;
+					note.noteData = daNoteInfo;
 					note.sustainLength = daSus;
 					note.strumTime = daStrumTime;
 					note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));
@@ -3079,7 +3078,7 @@ class ChartingState extends MusicBeatState
 			if (sec != null)
 				for (i in sec.sectionNotes)
 				{
-					if (i[0] == note.strumTime && i[1] == note.rawNoteData)
+					if (i[0] == note.strumTime && i[1] == note.noteData)
 					{
 						curSelectedNote = sec.sectionNotes[swagNum];
 						if (curSelectedNoteObject != null)
@@ -3114,7 +3113,7 @@ class ChartingState extends MusicBeatState
 		{
 			for (i in section.sectionNotes)
 			{
-				if (i[0] == note.strumTime && i[1] == note.rawNoteData)
+				if (i[0] == note.strumTime && i[1] == note.noteData)
 				{
 					section.sectionNotes.remove(i);
 					found = true;
@@ -3127,7 +3126,7 @@ class ChartingState extends MusicBeatState
 			for (i in _song.notes)
 			{
 				for (n in i.sectionNotes)
-					if (n[0] == note.strumTime && n[1] == note.rawNoteData)
+					if (n[0] == note.strumTime && n[1] == note.noteData)
 						i.sectionNotes.remove(n);
 			}
 		}
@@ -3349,7 +3348,7 @@ class ChartingState extends MusicBeatState
 		if (n == null)
 		{
 			var note:Note = new Note(noteStrum, noteData % 4, null, false, true, null, null, TimingStruct.getBeatFromTime(noteStrum), noteShit);
-			note.rawNoteData = noteData;
+			note.noteData = noteData;
 			note.sustainLength = noteSus;
 			note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));
 			note.updateHitbox();
@@ -3380,7 +3379,7 @@ class ChartingState extends MusicBeatState
 		{
 			var note:Note = new Note(n.strumTime, n.noteData % 4, null, false, true, false, n.isAlt, TimingStruct.getBeatFromTime(n.strumTime), noteShit);
 			note.beat = TimingStruct.getBeatFromTime(n.strumTime);
-			note.rawNoteData = n.noteData;
+			note.noteData = n.noteData;
 			note.sustainLength = noteSus;
 			note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));
 			note.updateHitbox();

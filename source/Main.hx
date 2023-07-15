@@ -102,8 +102,6 @@ class Main extends Sprite
 			game.height = Math.ceil(stageHeight / game.zoom);
 		}
 
-		game.framerate = Application.current.window.displayMode.refreshRate;
-
 		gameContainer = this;
 
 		// Run this first so we can see logs.
@@ -116,6 +114,8 @@ class Main extends Sprite
 		#end
 
 		// FlxTransitionableState.skipNextTransIn = true;
+
+		game.framerate = Application.current.window.displayMode.refreshRate;
 
 		addChild(new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate,
 			game.skipSplash, game.startFullscreen));
@@ -306,7 +306,7 @@ class Main extends Sprite
 			// Bring framerate back when focused
 			FlxG.drawFramerate = FlxG.save.data.fpsCap;
 		}
-		gameContainer.setFPSCap(FlxG.save.data.fpsCap);
+		setFPSCap(FlxG.save.data.fpsCap);
 	}
 	#end
 
