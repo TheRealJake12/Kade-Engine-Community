@@ -186,11 +186,6 @@
 	<haxedef name="queue_experimental_optimization"/>
 
 	<haxedef name="HXCPP_COMPILE_CACHE" value="c:/hxcpp/cache" unless="linux" />
-	<haxedef name="HXCPP_CACHE_MB" value="4000" />
-
-	<cache value="true" project="openfl" asLibrary="true" unless="linux" />
-	<cache value="true" project="lime" asLibrary="true" unless="linux"/>
-	<cache value="true" project="flixel" asLibrary="true" unless="linux"/>
 
 	<!-- _________________________________ Custom _______________________________ -->
 
