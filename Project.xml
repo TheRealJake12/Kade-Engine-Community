@@ -185,8 +185,6 @@
 	<haxeflag name="-D no-traces" unless="debug" />
 	<haxedef name="queue_experimental_optimization"/>
 
-	<haxedef name="HXCPP_COMPILE_CACHE" value="c:/hxcpp/cache" unless="linux" />
-
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
