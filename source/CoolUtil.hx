@@ -197,7 +197,6 @@ class CoolUtil
 				cache.onOpening.add(function()
 				{
 					cache.stop();
-					cache.dispose();
 					loadedVideos.push(name);
 					loadingVideos.remove(name);
 				});
