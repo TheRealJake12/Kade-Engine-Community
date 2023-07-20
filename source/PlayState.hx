@@ -1169,7 +1169,7 @@ class PlayState extends MusicBeatState
 
 		var splash:NoteSplash = new NoteSplash(100, 100, 0);
 		grpNoteSplashes.add(splash);
-		splash.alpha = 0;
+		splash.alpha = 0.000001;
 
 		strumLineNotes.cameras = [camHUD];
 		grpNoteSplashes.cameras = [camHUD];
@@ -5470,6 +5470,14 @@ class PlayState extends MusicBeatState
 
 		var noteDiff:Float = (note.strumTime - Conductor.songPosition);
 
+		if (loadRep)
+		{
+			noteDiff = findByTime(note.strumTime)[3];
+			note.rating = rep.replay.songJudgements[findByTimeIndex(note.strumTime)];
+		}
+		else
+			note.rating = Ratings.judgeNote(noteDiff);
+
 		if (!loadRep && note.mustPress)
 		{
 			var array = [note.strumTime, note.sustainLength, note.noteData, noteDiff];
@@ -5478,8 +5486,6 @@ class PlayState extends MusicBeatState
 			saveNotes.push(array);
 			saveJudge.push(note.rating);
 		}
-
-		note.rating = Ratings.judgeNote(noteDiff);
 
 		if (note.rating == "miss")
 			return;

@@ -221,7 +221,7 @@ class HitGraph extends Sprite
 			switch (judge)
 			{
 				case "marv":
-					gfx.beginFill(0x54E600);
+					gfx.beginFill(0x5EFF00);
 				case "sick":
 					gfx.beginFill(0x00FFFF);
 				case "good":
