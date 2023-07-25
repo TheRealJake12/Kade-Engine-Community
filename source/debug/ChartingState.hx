@@ -449,7 +449,6 @@ class ChartingState extends MusicBeatState
 		add(selectedBoxes);
 		// add(blackBorder);
 		add(snapText);
-		updateBpmText();
 		updateNotetypeText();
 		Paths.clearUnusedMemory();
 		super.create();
@@ -1393,8 +1392,6 @@ class ChartingState extends MusicBeatState
 			inst.time = inst.length;
 
 		claps.splice(0, claps.length);
-
-		updateBpmText();
 	}
 
 	public var check_naltAnim:FlxUICheckBox;
@@ -2186,7 +2183,6 @@ class ChartingState extends MusicBeatState
 							inst.time = shitPosition;
 						}
 					}
-					updateBpmText();
 					if (!(vocals.length < inst.time))
 						vocals.time = inst.time;
 				}
@@ -2196,12 +2192,10 @@ class ChartingState extends MusicBeatState
 					if (FlxG.keys.justPressed.RIGHT)
 					{
 						speed += 0.1;
-						updateBpmText();
 					}
 					else if (FlxG.keys.justPressed.LEFT)
 					{
 						speed -= 0.1;
-						updateBpmText();
 					}
 
 					if (speed > 3)
@@ -2444,7 +2438,6 @@ class ChartingState extends MusicBeatState
 					}
 					index--;
 				}
-				updateBpmText();
 			}
 			if (FlxG.keys.justPressed.LEFT && FlxG.keys.pressed.CONTROL)
 			{
@@ -2462,7 +2455,6 @@ class ChartingState extends MusicBeatState
 					}
 					index--;
 				}
-				updateBpmText();
 			}
 
 			if (FlxG.keys.justPressed.SHIFT)
@@ -2524,14 +2516,11 @@ class ChartingState extends MusicBeatState
 			var downO = FlxG.keys.justPressed.SIX;
 			var upO = FlxG.keys.justPressed.SEVEN;
 			var rightO = FlxG.keys.justPressed.EIGHT;
-
-			if (inst.playing)
-				updateBpmText();
+		
 
 			if (FlxG.keys.justPressed.F1)
 			{
 				FlxG.save.data.showHelp = !FlxG.save.data.showHelp;
-				updateBpmText();
 			}
 
 			var pressArray = [left, down, up, right, leftO, downO, upO, rightO];
@@ -2779,7 +2768,6 @@ class ChartingState extends MusicBeatState
 							else
 								inst.time += daTime;
 							vocals.time = inst.time;
-							updateBpmText();
 						}
 					}
 					else
@@ -2798,7 +2786,6 @@ class ChartingState extends MusicBeatState
 							else
 								inst.time += daTime;
 							vocals.time = inst.time;
-							updateBpmText();
 						}
 					}
 				}
@@ -2809,6 +2796,27 @@ class ChartingState extends MusicBeatState
 		{
 			Debug.logError("Error\n" + e);
 		}
+
+		bpmTxt.text = Std.string(FlxMath.roundDecimal(Conductor.songPosition / 1000, 2))
+			+ " / "
+			+ Std.string(FlxMath.roundDecimal(inst.length / 1000, 2))
+			+ "\nCur Section: "
+			+ curSection
+			+ "\nCurBeat: "
+			+ HelperFunctions.truncateFloat(curDecimalBeat, 3)
+			+ "\nCurStep: "
+			+ curStep
+			+ "\nZoom: "
+			+ HelperFunctions.truncateFloat(zoomFactor, 2)
+			+ "\nSpeed: "
+			+ HelperFunctions.truncateFloat(speed, 1)
+			+ "\n\nSnap: "
+			+ snap
+			+ "\n"
+			+ (doSnapShit ? "Snap enabled" : "Snap disabled")
+			+
+			(FlxG.save.data.showHelp ? "\n\nHelp:\nCtrl-MWheel : Zoom in/out\nShift-Left/Right :\nChange playback speed\nCtrl-Drag Click : Select notes\nCtrl-C : Copy notes\nCtrl-V : Paste notes\nCtrl-Z : Undo\nDelete : Delete selection\nCTRL-Left/Right :\n  Change Snap\nHold Shift : Disable Snap\nClick or 1/2/3/4/5/6/7/8 :\n  Place notes\nUp/Down :\n  Move selected notes 1 step\nShift-Up/Down :\n  Move selected notes 1 beat\nSpace: Play Music\nEnter : Preview\n Z/X Change Notetype.\nPress F1 to hide/show this!" : "");
+
 		super.update(elapsed);
 	}
 
@@ -3519,29 +3527,6 @@ class ChartingState extends MusicBeatState
 		}
 		MusicBeatState.switchState(new ChartingState());
 		clean();
-	}
-
-	function updateBpmText()
-	{
-		bpmTxt.text = Std.string(FlxMath.roundDecimal(Conductor.songPosition / 1000, 2))
-			+ " / "
-			+ Std.string(FlxMath.roundDecimal(inst.length / 1000, 2))
-			+ "\nCur Section: "
-			+ curSection
-			+ "\nCurBeat: "
-			+ HelperFunctions.truncateFloat(curDecimalBeat, 3)
-			+ "\nCurStep: "
-			+ curStep
-			+ "\nZoom: "
-			+ HelperFunctions.truncateFloat(zoomFactor, 2)
-			+ "\nSpeed: "
-			+ HelperFunctions.truncateFloat(speed, 1)
-			+ "\n\nSnap: "
-			+ snap
-			+ "\n"
-			+ (doSnapShit ? "Snap enabled" : "Snap disabled")
-			+
-			(FlxG.save.data.showHelp ? "\n\nHelp:\nCtrl-MWheel : Zoom in/out\nShift-Left/Right :\nChange playback speed\nCtrl-Drag Click : Select notes\nCtrl-C : Copy notes\nCtrl-V : Paste notes\nCtrl-Z : Undo\nDelete : Delete selection\nCTRL-Left/Right :\n  Change Snap\nHold Shift : Disable Snap\nClick or 1/2/3/4/5/6/7/8 :\n  Place notes\nUp/Down :\n  Move selected notes 1 step\nShift-Up/Down :\n  Move selected notes 1 beat\nSpace: Play Music\nEnter : Preview\n Z/X Change Notetype.\nPress F1 to hide/show this!" : "");
 	}
 
 	function updateNotetypeText()
