@@ -171,17 +171,17 @@ class OptionsMenu extends MusicBeatSubstate
 		options = [
 			new OptionCata(50, 40, "Gameplay", [
 				new DownscrollOption("Toggle making the notes scroll down rather than up."),
-				new CamZoomOption("Toggle the camera zoom in-game."),
-				new GhostTapOption("Toggle counting pressing a directional input when no arrow is there as a miss."),
-				new AccuracyDOption("Change how accuracy is calculated. (Accurate = Simple, Complex = Milisecond Based)"),
 				new ScrollSpeedOption("Change your scroll speed. (1 = Chart dependent)"),
 				new OffsetThing("Change the note visual offset (how many milliseconds a note looks like it is offset in a chart)"),
+				new GhostTapOption("Toggle counting pressing a directional input when no arrow is there as a miss."),
+				new BotPlay("A bot plays for you!"),
+				new AccuracyDOption("Change how accuracy is calculated. (Accurate = Simple, Complex = Milisecond Based)"),
 				new HitSoundOption("Toogle hitsound every time you hit a Strum Note."),
 				new HitSoundVolume("Set hitsound volume."),
 				new HitSoundMode("Set at what condition you want the hitsound to play."),
-				new BotPlay("A bot plays for you!"),
 				new ResetButtonOption("Toggle pressing R to gameover."),
 				new InstantRespawn("Toggle if you instantly respawn after dying."),
+				new CamZoomOption("Toggle the camera zoom in-game."),
 				new DFJKOption(),
 				new Judgement("Create a custom judgement preset"),
 				new CustomizeGameplay("Drag and drop gameplay modules to your prefered positions!")
@@ -194,26 +194,23 @@ class OptionsMenu extends MusicBeatSubstate
 				#end
 				new CPUSplash("Allows The CPU To Do Notesplashes"),
 				new NotesplashesOption("Uses Notesplashes (Only use it on Arrow skins or else theres gonna be some visual bugs(wrong offsets))."),
-				new RotateSpritesOption("Should the game rotate the sprites to do color quantization (turn off for bar skins)"),
-				new LowMotion("Makes The Icons Not Bump On The Healthbar."),
-				new SmoothHealthOption("Should The Healthbar Change Smoothly (Costmetic Only)"),
-				#if desktop
-				new BorderlessWindow("Turns Off The Window Border."),
-				#end
-				new ScrollAlpha("Changes the Transparancy of the Hold Notes."),
-				new MiddleScrollOption("Put your lane in the center or on the right."),
-				new HealthBarOption("Toggles health bar visibility"),
-				new JudgementCounter("Show your judgements that you've gotten in the song"),
-				new LaneUnderlayOption("How transparent your lane is, higher = more visible."),
 				new StepManiaOption("Sets the colors of the arrows depending on quantization instead of direction."),
+				new RotateSpritesOption("Should the game rotate the arrows to do color quantization (turn off for bar skins)"),
+				new ScrollAlpha("Changes the Transparancy of the Hold Notes."),
+				new CpuStrums("Toggle the CPU's strumline lighting up when it hits a note."),
+				new MiddleScrollOption("Put your lane in the center or on the right."),
+				new LaneUnderlayOption("How transparent your lane is, higher = more visible."),
+				new SongPositionOption("Show the song's current position as a scrolling bar."),
+				new HealthBarOption("Toggles health bar visibility"),
+				new Colour("The Healthbar Color For Each Character."),
+				new SmoothHealthOption("Should The Healthbar Change Smoothly (Cosmetic Only)"),
+				new LowMotion("Makes The Icons Not Bump On The Healthbar."),
+				new JudgementCounter("Show your judgements that you've gotten in the song"),
 				new AccuracyOption("Display accuracy information on the info bar."),
 				new RoundAccuracy("Round your accuracy to the nearest whole number for the score text (cosmetic only)."),
-				new SongPositionOption("Show the song's current position as a scrolling bar."),
-				new Colour("The Healthbar Color For Each Character."),
 				new NPSDisplayOption("Shows your current Notes Per Second on the info bar."),
 				new RatingPopup("Toggle Ratings (SICK!, MARV!) From Showing Up Ingame."),
 				new RatingStack("Allows Ratings To Stack And Look Cooler But Is More Distracting."),
-				new CpuStrums("Toggle the CPU's strumline lighting up when it hits a note."),
 			]),
 			new OptionCata(640, 40, "Misc", [
 				new FlashingLightsOption("Toggle flashing lights that can cause epileptic seizures and strain."),
@@ -225,8 +222,12 @@ class OptionsMenu extends MusicBeatSubstate
 				#if FEATURE_MODCORE
 				new CanLoadMods("Allows Modcore To Detect Mods In The Mods Folder"),
 				#end
+				#if desktop
+				new BorderlessWindow("Turns Off The Window Border."),
+				#end
 			]),
 			new OptionCata(935, 40, "Saves", [
+				new General("Traces things in the debug console or logs."),
 				#if !web
 				new ReplayOption("Watch Replays"), new SaveReplayOption("Allows Replays To Be Saved When A Song Ends."),
 				#end
@@ -239,28 +240,24 @@ class OptionsMenu extends MusicBeatSubstate
 				#if desktop
 				new FPSCapOption("Change your FPS Cap."), new Memory("Toggle the Memory Counter"),
 				#end
-				new ShowState("Shows The Current Game State. Makes Debugging Easier."),
-				new GPURendering("Makes All Sprites Load Into VRAM, Reducing Normal RAM Usage. (Not Recommended For ~3GB VRAM)"), // Ill come back to this. I'm tired asf
+				new ShowState("Shows The Current Game State In The FPS Counter. Makes Debugging Easier."),
 				new WaterMarkFPS("Shows What Version Of The Game You Are Running In The FPS Counter."),
 				new RainbowFPSOption("Make the FPS Counter flicker through rainbow colors."),
 				#if desktop
 				new Resolution("Change The Resolution The Game Plays In. (Press Enter To Apply.)"),
 				#end
-				new BackgroundsOption("Toggles Backrounds From Being Visible. (Good Performance Booster.)"),
-				new General("Traces things in the debug console or logs. Affects performance in debug builds."),
-				new EditorRes("Not showing the editor grid will greatly increase editor performance"),
-				new DistractionsAndEffectsOption("Turns On Extra Images That Reduce Your FPS Significantly(Week 5 and 7 esp)"),
-				new Optimization("Nothing but Your Strumline is visible. Best Performance."),
 				new AntialiasingOption("Toggle antialiasing, improving graphics quality at a slight performance penalty."),
-				// new FXAAOption("Enable FXAA Antialiasing. (EXTREME PERFORMANCE IMPACT! ONLY ENABLE IF YOUR PC HAS LIKE AN RTX CARD!)"),
+				new BackgroundsOption("Toggles Backrounds From Being Visible. (Good Performance Booster.)"),
+				new DistractionsAndEffectsOption("Toggles Extra Assets Be Loaded To Improve Quality At The Cost Of Performance"),
+				new Optimization("Nothing But Your Strumline Is Visible. Best Performance."),
+				new EditorRes("Not showing the editor grid will greatly increase editor performance"),
 				#if desktop
-				new UnloadSongs("Unload Songs And Characters"), new UnloadNow("Clears All Cache We Can Remove"),
+				new UnloadSongs("Toggles If Assets Get Unloaded Or Not."), new UnloadNow("Clears All Cache We Can Remove."),
 				#end
 
 			]),
 			new OptionCata(345, 104, "Experimental", [
 				new OpenGLStatsOption("In The FPS Display, It Will Display The Draw Calls For The Game."),
-
 			]),
 			new OptionCata(-1, 155, "Editing Keybinds", [
 				new LeftKeybind("The left note's keybind"),

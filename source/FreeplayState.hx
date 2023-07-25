@@ -816,10 +816,10 @@ class FreeplayState extends MusicBeatState
 					loadSong();
 					break;
 				}
-			// Going to charting state via Freeplay is only enable in debug builds.
-			// Liar
-			else if (charting)
-				loadSong(true);
+					// Going to charting state via Freeplay is only enable in debug builds.
+				// Liar
+				else if (charting)
+					loadSong(true);
 
 			// AnimationDebug and StageDebug are only enabled in debug builds.
 			// Liar

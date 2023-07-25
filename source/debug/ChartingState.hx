@@ -2118,7 +2118,7 @@ class ChartingState extends MusicBeatState
 						var beat:Float = TimingStruct.getBeatFromTime(Conductor.songPosition);
 						var snap:Float = deezNuts.get(snap);
 						var increase:Float = 1 / snap;
-						var wheelShit = FlxG.mouse.wheel>0;
+						var wheelShit = FlxG.mouse.wheel > 0;
 
 						if (wheelShit)
 						{

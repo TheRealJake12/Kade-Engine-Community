@@ -1313,7 +1313,7 @@ class PlayState extends MusicBeatState
 				}
 			}
 		}
-		
+
 		if (PlayStateChangeables.skillIssue)
 		{
 			var redVignette:FlxSprite = new FlxSprite().loadGraphic(Paths.image('nomisses_vignette', 'shared'));
@@ -1425,7 +1425,6 @@ class PlayState extends MusicBeatState
 						Stage.swagBacks['tankman'].animation.play('killYou', true);
 						FlxG.sound.play(Paths.sound('killYou'));
 
-						// We should just kill you but... what the hell, it's been a boring day... let's see what you've got!
 						createTimer(6.1, function(tmr:FlxTimer)
 						{
 							tankManEnd();
@@ -2626,160 +2625,6 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	/*
-		// I wanna softcode but I suck ass :(((
-		var name:String;
-		var nameTwo:String;
-
-		// for cpu splashes not syncing with player ones
-
-		public function NoteSplashesSpawn(daNote:Note, ?name:String = 'Default')
-		{
-			this.name = name;
-			var sploosh:FlxSprite = new FlxSprite(playerStrums.members[daNote.noteData].x + 10.5, playerStrums.members[daNote.noteData].y - 20);
-			sploosh.antialiasing = FlxG.save.data.antialiasing;
-			switch (SONG.noteStyle)
-			{
-				case 'pixel':
-					var tex:flixel.graphics.frames.FlxAtlasFrames = Paths.getSparrowAtlas('weeb/pixelUI/noteSplashes-pixels', 'week6');
-					sploosh.frames = tex;
-					sploosh.animation.addByPrefix('splash 0 0', 'note splash 1 purple', 24, false);
-					sploosh.animation.addByPrefix('splash 0 1', 'note splash 1  blue', 24, false);
-					sploosh.animation.addByPrefix('splash 0 2', 'note splash 1 green', 24, false);
-					sploosh.animation.addByPrefix('splash 0 3', 'note splash 1 red', 24, false);
-					sploosh.animation.addByPrefix('splash 1 0', 'note splash 2 purple', 24, false);
-					sploosh.animation.addByPrefix('splash 1 1', 'note splash 2 blue', 24, false);
-					sploosh.animation.addByPrefix('splash 1 2', 'note splash 2 green', 24, false);
-					sploosh.animation.addByPrefix('splash 1 3', 'note splash 2 red', 24, false);
-
-					add(sploosh);
-					sploosh.cameras = [camStrums];
-
-					if (!FlxG.save.data.stepMania)
-						sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.noteData);
-					else
-						sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.originColor);
-
-					sploosh.animation.curAnim.frameRate += FlxG.random.int(0, 2);	
-					sploosh.alpha = 0.6;
-					sploosh.offset.x += 90;
-					sploosh.offset.y += 80;
-					sploosh.animation.finishCallback = function(name) sploosh.kill();
-
-					sploosh.update(0);
-				default:
-					switch (FlxG.save.data.notesplash)
-					{
-						case 0:
-							name = 'Default';
-						case 1:
-							name = 'Week7';
-					}
-
-					var rawJson = Paths.loadData('images/splashes/' + name);
-					var data:NoteSplash.SplashData = cast rawJson;
-
-					if (FlxG.save.data.notesplashes)
-					{
-						sploosh.frames = PlayState.notesplashSprite;
-						sploosh.animation.addByPrefix('splash 0 0', 'note splash 1 purple', data.fps, false);
-						sploosh.animation.addByPrefix('splash 0 1', 'note splash 1 blue', data.fps, false);
-						sploosh.animation.addByPrefix('splash 0 2', 'note splash 1 green', data.fps, false);
-						sploosh.animation.addByPrefix('splash 0 3', 'note splash 1 red', data.fps, false);
-
-						sploosh.animation.addByPrefix('splash 1 0', 'note splash 2 purple', data.fps, false);
-						sploosh.animation.addByPrefix('splash 1 1', 'note splash 2 blue', data.fps, false);
-						sploosh.animation.addByPrefix('splash 1 2', 'note splash 2 green', data.fps, false);
-						sploosh.animation.addByPrefix('splash 1 3', 'note splash 2 red', data.fps, false);
-						add(sploosh);
-						sploosh.cameras = [camStrums];
-						if (!FlxG.save.data.stepMania)
-							sploosh.animation.play('splash ${FlxG.random.int(0, 1)} ' + daNote.noteData);
-						else
-							sploosh.animation.play('splash ${FlxG.random.int(0, 1)} ' + daNote.originColor);
-						sploosh.animation.curAnim.frameRate += FlxG.random.int(0, 2);	
-						sploosh.alpha = data.alpha;
-						sploosh.offset.x += data.xOffset;
-						sploosh.offset.y += data.yOffset; // lets stick to eight not nine
-						sploosh.animation.finishCallback = function(name) sploosh.kill();
-					}
-			}
-		}
-
-		public function NoteSplashesSpawnDad(daNote:Note, ?nameTwo:String = 'Default')
-		{
-			this.nameTwo = nameTwo;
-			var sploosh:FlxSprite = new FlxSprite(cpuStrums.members[daNote.noteData].x + 10.5, cpuStrums.members[daNote.noteData].y - 20);
-			sploosh.antialiasing = FlxG.save.data.antialiasing;
-			switch (SONG.noteStyle)
-			{
-				case 'pixel':
-					var tex:flixel.graphics.frames.FlxAtlasFrames = Paths.getSparrowAtlas('weeb/pixelUI/noteSplashes-pixels', 'week6');
-					sploosh.frames = tex;
-					sploosh.animation.addByPrefix('splash 0 0', 'note splash 1 purple', 24, false);
-					sploosh.animation.addByPrefix('splash 0 ' + daNote.noteData, 'note splash 1 purple', 24, false);
-					sploosh.animation.addByPrefix('splash 0 1', 'note splash 1  blue', 24, false);
-					sploosh.animation.addByPrefix('splash 0 2', 'note splash 1 green', 24, false);
-					sploosh.animation.addByPrefix('splash 0 3', 'note splash 1 red', 24, false);
-					sploosh.animation.addByPrefix('splash 1 0', 'note splash 2 purple', 24, false);
-					sploosh.animation.addByPrefix('splash 1 1', 'note splash 2 blue', 24, false);
-					sploosh.animation.addByPrefix('splash 1 2', 'note splash 2 green', 24, false);
-					sploosh.animation.addByPrefix('splash 1 3', 'note splash 2 red', 24, false);
-
-					add(sploosh);
-					sploosh.cameras = [camStrums];
-
-					if (!FlxG.save.data.stepMania)
-						sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.noteData);
-					else
-						sploosh.animation.play('splash ' + FlxG.random.int(0, 1) + " " + daNote.originColor);
-					sploosh.animation.curAnim.frameRate += FlxG.random.int(0, 2);	
-					sploosh.alpha = 0.6;
-					sploosh.offset.x += 90;
-					sploosh.offset.y += 80;
-					sploosh.animation.finishCallback = function(name) sploosh.kill();
-
-					sploosh.update(0);
-				default:
-					switch (FlxG.save.data.cpuNotesplash)
-					{
-						case 0:
-							nameTwo = 'Default';
-						case 1:
-							nameTwo = 'Week7';
-					}
-
-					var rawJson = Paths.loadData('images/splashes/' + nameTwo);
-					var data:NoteSplash.SplashData = cast rawJson;
-
-					if (FlxG.save.data.cpuSplash)
-					{
-						sploosh.frames = PlayState.cpuNotesplashSprite;
-						sploosh.animation.addByPrefix('splash 0 0', 'note splash 1 purple', data.fps, false);
-						sploosh.animation.addByPrefix('splash 0 1', 'note splash 1 blue', data.fps, false);
-						sploosh.animation.addByPrefix('splash 0 2', 'note splash 1 green', data.fps, false);
-						sploosh.animation.addByPrefix('splash 0 3', 'note splash 1 red', data.fps, false);
-
-						sploosh.animation.addByPrefix('splash 1 0', 'note splash 2 purple', data.fps, false);
-						sploosh.animation.addByPrefix('splash 1 1', 'note splash 2 blue', data.fps, false);
-						sploosh.animation.addByPrefix('splash 1 2', 'note splash 2 green', data.fps, false);
-						sploosh.animation.addByPrefix('splash 1 3', 'note splash 2 red', data.fps, false);
-						
-						add(sploosh);
-						sploosh.cameras = [camStrums];
-						if (!FlxG.save.data.stepMania)
-							sploosh.animation.play('splash ${FlxG.random.int(0, 1)} ' + daNote.noteData);
-						else
-							sploosh.animation.play('splash ${FlxG.random.int(0, 1)} ' + daNote.originColor);
-						sploosh.animation.curAnim.frameRate += FlxG.random.int(0, 2);	
-						sploosh.alpha = data.alpha;
-						sploosh.offset.x += data.xOffset;
-						sploosh.offset.y += data.yOffset; // lets stick to eight not nine
-						sploosh.animation.finishCallback = function(name) sploosh.kill();
-					}
-			}
-		}
-	 */
 	private function generateStaticArrows(player:Int, ?tween:Bool = true):Void
 	{
 		for (i in 0...4)
@@ -3802,7 +3647,6 @@ class PlayState extends MusicBeatState
 					daNote.x -= 5;
 
 				daNote.y = strumY + Math.sin(angleDir) * daNote.distance;
-
 				if (!daNote.overrideDistance)
 				{
 					if (PlayStateChangeables.useDownscroll)
@@ -3814,6 +3658,10 @@ class PlayState extends MusicBeatState
 						daNote.distance = (-0.45 * ((Conductor.songPosition - daNote.strumTime)) * (FlxMath.roundDecimal(leSpeed, 2)) * daNote.speedMultiplier)
 							+ daNote.noteYOff;
 				}
+
+				var swagRect:FlxRect = daNote.clipRect;
+				if (swagRect == null)
+					swagRect = new FlxRect(0, 0, daNote.frameWidth, daNote.frameHeight);
 
 				if (strumScrollType)
 				{
@@ -3839,10 +3687,9 @@ class PlayState extends MusicBeatState
 							if (daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= origin)
 							{
 								// Clip to strumline
-								var swagRect = new FlxRect(0, 0, daNote.frameWidth * 2, daNote.frameHeight * 2);
+								swagRect.width = daNote.frameWidth;
 								swagRect.height = (origin - daNote.y) / daNote.scale.y;
 								swagRect.y = daNote.frameHeight - swagRect.height;
-
 								daNote.clipRect = swagRect;
 							}
 						}
@@ -3869,9 +3716,9 @@ class PlayState extends MusicBeatState
 							// Clip to strumline
 							if (daNote.y + daNote.offset.y * daNote.scale.y <= origin)
 							{
-								var swagRect = new FlxRect(0, 0, daNote.width / daNote.scale.x, daNote.height / daNote.scale.y);
 								swagRect.y = (origin - daNote.y) / daNote.scale.y;
-								swagRect.height -= swagRect.y;
+								swagRect.width = daNote.width / daNote.scale.x;
+								swagRect.height = (daNote.height / daNote.scale.y) - swagRect.y;
 
 								daNote.clipRect = swagRect;
 							}
@@ -5057,21 +4904,13 @@ class PlayState extends MusicBeatState
 
 		playerStrums.forEach(function(spr:StaticArrow)
 		{
-			if (!PlayStateChangeables.botPlay)
-			{
-				if (keys[spr.ID]
-					&& spr.animation.curAnim.name != 'confirm'
-					&& spr.animation.curAnim.name != 'pressed'
-					&& !spr.animation.curAnim.name.startsWith('dirCon'))
-					spr.playAnim('pressed', false);
-				if (!keys[spr.ID])
-					spr.playAnim('static', false);
-			}
-			else if (FlxG.save.data.cpuStrums || (PlayStateChangeables.botPlay))
-			{
-				if (spr.animation.finished)
-					spr.playAnim('static');
-			}
+			if (keys[spr.ID]
+				&& spr.animation.curAnim.name != 'confirm'
+				&& spr.animation.curAnim.name != 'pressed'
+				&& !spr.animation.curAnim.name.startsWith('dirCon'))
+				spr.playAnim('pressed', false);
+			if (!keys[spr.ID])
+				spr.playAnim('static', false);
 		});
 	}
 
@@ -5552,13 +5391,10 @@ class PlayState extends MusicBeatState
 			scripts.executeAllFunc("goodNoteHit", [note]);
 			#end
 
-			if (!PlayStateChangeables.botPlay || FlxG.save.data.cpuStrums)
+			playerStrums.forEach(function(spr:StaticArrow)
 			{
-				playerStrums.forEach(function(spr:StaticArrow)
-				{
-					pressArrow(spr, spr.ID, note);
-				});
-			}
+				pressArrow(spr, spr.ID, note);
+			});
 
 			if (!note.isSustainNote)
 			{
@@ -6426,7 +6262,7 @@ class PlayState extends MusicBeatState
 			pixelShitPart4 = 'week6';
 		}
 
-		var things:Array<String> = ['sick', 'good', 'bad', 'shit', 'combo'];
+		var things:Array<String> = ['marv', 'sick', 'good', 'bad', 'shit', 'combo'];
 		for (precaching in things)
 			Paths.image(pixelShitPart1 + precaching + pixelShitPart2, pixelShitPart3);
 
@@ -6681,42 +6517,6 @@ class PlayState extends MusicBeatState
 			video.dispose();
 		});
 		video.play(Paths.video(name));
-		#else
-		FlxG.log.warn("Platform Not Supported.");
-		#end
-	}
-
-	function playVid(name:String)
-	{
-		#if VIDEOS
-		var vid:VideoHandler = new VideoHandler();
-		vid.play(Paths.video(name));
-		vid.onEndReached.add(function()
-		{
-			vid.dispose();
-		});
-		#if FEATURE_HSCRIPT
-		if (scripts != null)
-			scripts.executeAllFunc("playVid", [name]);
-		#end
-		#else
-		FlxG.log.warn("Platform Not Supported.");
-		#end
-	}
-
-	function playVideoSprite(x:Float, y:Float, scaleX:Float, scaleY:Float, path:String)
-	{
-		#if VIDEOS
-		var vid:VideoSprite = new VideoSprite();
-		vid.x = x;
-		vid.y = y;
-		vid.scale.x = scaleX;
-		vid.scale.y = scaleY;
-		vid.play(Paths.video(path));
-		#if FEATURE_HSCRIPT
-		if (scripts != null)
-			scripts.executeAllFunc("playVideoSprite", [x, y, scaleX, scaleY, path]);
-		#end
 		#else
 		FlxG.log.warn("Platform Not Supported.");
 		#end

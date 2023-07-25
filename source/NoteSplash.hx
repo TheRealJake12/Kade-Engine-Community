@@ -90,7 +90,7 @@ class NoteSplash extends FlxSprite
 					animation.addByPrefix('splash 1 ' + i, 'note splash 2 ' + anims[i], data.fps, false);
 				}
 		}
-		
+
 		alpha = data.alpha;
 		offset.set(data.xOffset, data.yOffset);
 		var animNum:Int = FlxG.random.int(0, 1);

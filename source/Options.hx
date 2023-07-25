@@ -1676,7 +1676,7 @@ class RotateSpritesOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Rotate Sprites: < " + (FlxG.save.data.rotateSprites ? "Disabled" : "Enabled") + " >";
+		return "Rotate Notes: < " + (FlxG.save.data.rotateSprites ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -2251,7 +2251,7 @@ class UnloadSongs extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "Unload Songs And Characters";
+			description = "Unload Assets";
 		else
 			description = desc;
 	}
@@ -2271,7 +2271,7 @@ class UnloadSongs extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Unload Songs And Characters: < " + (!FlxG.save.data.unload ? "off" : "on") + " >";
+		return "Unload Assets: < " + (!FlxG.save.data.unload ? "off" : "on") + " >";
 	}
 }
 

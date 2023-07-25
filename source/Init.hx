@@ -65,15 +65,6 @@ class Init extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		if (FlxG.save.data.borderless)
-		{
-			FlxG.stage.window.borderless = true;
-		}
-		else
-		{
-			FlxG.stage.window.borderless = false;
-		}
-
 		switch (FlxG.save.data.resolution)
 		{
 			case 0:

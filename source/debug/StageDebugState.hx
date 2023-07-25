@@ -260,7 +260,7 @@ class StageDebugState extends MusicBeatState
 		if (FlxG.keys.justReleased.ENTER)
 			reloadStage(newStage);
 
-		Stage.update(elapsed);	
+		Stage.update(elapsed);
 
 		if (FlxG.keys.justPressed.E)
 			FlxG.camera.zoom += 0.05;

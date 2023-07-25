@@ -10,7 +10,7 @@ haxelib install openfl
 haxelib install flixel
 haxelib install flixel-tools
 haxelib install flixel-ui
-haxelib install hscript
+haxelib install SScript
 haxelib install flixel-addons
 haxelib install hxcpp-debug-server
 haxelib install polymod

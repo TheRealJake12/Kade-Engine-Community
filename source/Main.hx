@@ -120,6 +120,8 @@ class Main extends Sprite
 		addChild(new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate,
 			game.skipSplash, game.startFullscreen));
 
+		FlxG.fixedTimestep = false;
+
 		FlxGraphic.defaultPersist = false;
 
 		FlxG.signals.preStateSwitch.add(function()
