@@ -373,9 +373,6 @@ class StoryMenuState extends MusicBeatState
 
 			var diffString = weeksLoaded[curWeek].difficulties[curDifficulty];
 
-			for (k in weeksLoaded[curWeek].difficulties)
-				Debug.logInfo(k);
-
 			PlayState.storyDifficulty = CoolUtil.difficultyArray.indexOf(diffString);
 
 			var diff:String = CoolUtil.getSuffixFromDiff(diffString);

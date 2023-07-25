@@ -368,44 +368,34 @@ class MusicBeatState extends FlxUIState
 	{
 	}
 
-	#if (flixel > "5.3.0")
-	override function startOutro(onOutroComplete:Void->Void)
+	public static function switchState(nextState:FlxState)
 	{
+		MusicBeatState.switchingState = true;
 		// Custom made Trans in
+		Main.mainClassState = Type.getClass(nextState);
 		var curState:Dynamic = FlxG.state;
 		var leState:MusicBeatState = curState;
 		if (!FlxTransitionableState.skipNextTransIn)
 		{
-			leState.openSubState(new CustomFadeTransition(0.4, false));
-			CustomFadeTransition.finishCallback = onOutroComplete;
+			leState.openSubState(new CustomFadeTransition(0.35, false));
+			if (nextState == FlxG.state)
+			{
+				CustomFadeTransition.finishCallback = function()
+				{
+					resetState();
+				};
+			}
+			else
+			{
+				CustomFadeTransition.finishCallback = function()
+				{
+					MusicBeatState.switchingState = false;
+					FlxG.switchState(nextState);
+				};
+			}
 			return;
 		}
 		FlxTransitionableState.skipNextTransIn = false;
-		super.startOutro(onOutroComplete);
-	}
-	#else
-	override function switchTo(nextState:FlxState)
-	{
-		// Custom made Trans in
-		var curState:Dynamic = FlxG.state;
-		var leState:MusicBeatState = curState;
-		if (!FlxTransitionableState.skipNextTransIn)
-		{
-			leState.openSubState(new CustomFadeTransition(0.4, false));
-			var finished:Bool = false;
-			CustomFadeTransition.finishCallback = function()
-			{
-				finished = true;
-			};
-			return finished;
-		}
-		FlxTransitionableState.skipNextTransIn = false;
-		return super.switchTo(nextState);
-	}
-	#end
-
-	public static function switchState(nextState:FlxState)
-	{
 		FlxG.switchState(nextState);
 	}
 

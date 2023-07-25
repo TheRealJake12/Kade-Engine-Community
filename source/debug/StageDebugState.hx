@@ -79,7 +79,7 @@ class StageDebugState extends MusicBeatState
 	{
 		Paths.clearUnusedMemory();
 		FlxG.sound.music.stop();
-		FlxG.sound.playMusic(Paths.music('breakfast', 'shared'));
+		FlxG.sound.playMusic(Paths.inst(PlayState.SONG.songId));
 		FlxG.sound.music.fadeIn(3, 0, 0.5);
 		FlxG.mouse.visible = true;
 
@@ -88,6 +88,11 @@ class StageDebugState extends MusicBeatState
 		gf = PlayState.instance.gf;
 		boyfriend = PlayState.instance.boyfriend;
 		dad = PlayState.instance.dad;
+
+		dad.dance();
+		boyfriend.dance();
+		if (!Stage.hasGF)
+			gf.dance();
 
 		/*
 			dad.moves = true;
@@ -153,7 +158,9 @@ class StageDebugState extends MusicBeatState
 
 		addHelpText();
 		addEditorUI();
-		UI_options.selected_tab_id = 'Stage';
+		//UI_options.selected_tab_id = Stage.curStage;
+
+		Conductor.changeBPM(PlayState.SONG.bpm);
 	}
 
 	function addEditorUI():Void
@@ -262,6 +269,9 @@ class StageDebugState extends MusicBeatState
 
 		Stage.update(elapsed);
 
+		if (FlxG.sound.music != null)
+			Conductor.songPosition = FlxG.sound.music.time;
+
 		if (FlxG.keys.justPressed.E)
 			FlxG.camera.zoom += 0.05;
 		if (FlxG.keys.justPressed.Q)
@@ -271,7 +281,7 @@ class StageDebugState extends MusicBeatState
 		}
 
 		FlxG.watch.addQuick('Camera Zoom', FlxG.camera.zoom);
-
+		
 		if (FlxG.keys.justPressed.SHIFT)
 		{
 			charMode = !charMode;
@@ -436,6 +446,19 @@ class StageDebugState extends MusicBeatState
 			_file.addEventListener(Event.CANCEL, onSaveCancel);
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 			_file.save(result.trim(), daStage + "Positions.txt");
+		}
+	}
+
+	override function beatHit()
+	{
+		super.beatHit();
+		
+		if (curBeat % 2 == 0)
+		{
+			dad.dance(true);
+			boyfriend.dance(true);
+			if (Stage.hasGF)
+				gf.dance(true);
 		}
 	}
 
