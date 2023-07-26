@@ -247,6 +247,7 @@ class OptionsMenu extends MusicBeatSubstate
 				new Resolution("Change The Resolution The Game Plays In. (Press Enter To Apply.)"),
 				#end
 				new AntialiasingOption("Toggle antialiasing, improving graphics quality at a slight performance penalty."),
+				new GPURendering("Makes All Sprites Load Into VRAM, Reducing Normal RAM Usage. (Not Recommended For ~3GB VRAM)"), // Ill come back to this. I'm tired asf
 				new BackgroundsOption("Toggles Backrounds From Being Visible. (Good Performance Booster.)"),
 				new DistractionsAndEffectsOption("Toggles Extra Assets Be Loaded To Improve Quality At The Cost Of Performance"),
 				new Optimization("Nothing But Your Strumline Is Visible. Best Performance."),

@@ -94,6 +94,17 @@ class StageDebugState extends MusicBeatState
 		if (!Stage.hasGF)
 			gf.dance();
 
+		reloadStage(Stage.curStage);	
+
+		var positions = Stage.positions[Stage.curStage];
+		if (positions != null)
+		{
+			for (char => pos in positions)
+				for (person in [boyfriend, gf, dad])
+					if (person.curCharacter == char)
+						person.setPosition(pos[0], pos[1]);
+		}	
+
 		/*
 			dad.moves = true;
 			dad.active = true;
@@ -126,8 +137,6 @@ class StageDebugState extends MusicBeatState
 		FlxG.cameras.setDefaultDrawTarget(camEditor, true);
 		FlxG.camera.follow(camFollow);
 
-		reloadStage(Stage.curStage);
-
 		stageList = CoolUtil.coolTextFile(Paths.txt('data/stageList'));
 
 		var tabs = [{name: "Stage", label: 'Select Stage'}];
@@ -158,7 +167,6 @@ class StageDebugState extends MusicBeatState
 
 		addHelpText();
 		addEditorUI();
-		//UI_options.selected_tab_id = Stage.curStage;
 
 		Conductor.changeBPM(PlayState.SONG.bpm);
 	}
@@ -172,8 +180,7 @@ class StageDebugState extends MusicBeatState
 			newStage = stageList[Std.parseInt(stage)];
 			Debug.logTrace('Selected Stage : ${newStage}');
 		});
-
-		stageDropDown.selectedLabel = stageList[Std.parseInt(newStage)];
+		stageDropDown.selectedLabel = newStage;
 		tab_group.add(stageDropDown);
 
 		UI_options.addGroup(tab_group);
