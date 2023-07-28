@@ -21,6 +21,7 @@ import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUITabMenu;
 import flixel.addons.ui.FlxUITooltip.FlxUITooltipStyle;
+import flixel.FlxCamera;
 
 /**
 	*DEBUG MODE
@@ -41,6 +42,9 @@ class AnimationDebug extends MusicBeatState
 	var daAnim:String = 'spooky';
 	var camFollow:FlxObject;
 
+	private var camEditor:FlxCamera;
+	private var camHUD:FlxCamera;
+
 	var background:FlxSprite;
 	var curt:FlxSprite;
 	var front:FlxSprite;
@@ -60,6 +64,8 @@ class AnimationDebug extends MusicBeatState
 
 	override function create()
 	{
+		Paths.clearStoredMemory();
+
 		// FlxG.sound.music.stop();
 
 		// var gridBG:FlxSprite = FlxGridOverlay.create(10, 10);
@@ -67,6 +73,20 @@ class AnimationDebug extends MusicBeatState
 		// add(gridBG);
 
 		FlxG.mouse.visible = true;
+
+		camFollow = new FlxObject(0, 0, 2, 2);
+		camFollow.screenCenter();
+		add(camFollow);
+
+		camEditor = new FlxCamera();
+		camHUD = new FlxCamera();
+		camHUD.bgColor.alpha = 0;
+
+		FlxG.cameras.reset(camEditor);
+		FlxG.cameras.add(camHUD, false);
+
+		FlxG.cameras.setDefaultDrawTarget(camEditor, true);
+		FlxG.camera.follow(camFollow);
 
 		background = new FlxSprite(-600, -525).loadGraphic(Paths.image('stageback', 'shared'));
 		front = new FlxSprite(-650, 325).loadGraphic(Paths.image('stagefront', 'shared'));
@@ -100,9 +120,11 @@ class AnimationDebug extends MusicBeatState
 
 		dumbTexts = new FlxTypedGroup<FlxText>();
 		add(dumbTexts);
+		dumbTexts.camera = camHUD;
 
 		textAnim = new FlxText(300, 16);
 		textAnim.size = 26;
+		textAnim.camera = camHUD;
 		textAnim.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		textAnim.scrollFactor.set();
 		add(textAnim);
@@ -119,6 +141,7 @@ class AnimationDebug extends MusicBeatState
 
 		UI_box.scrollFactor.set();
 		UI_box.resize(150, 200);
+		UI_box.camera = camHUD;
 		UI_box.x = FlxG.width - UI_box.width - 20;
 		UI_box.y = 20;
 
@@ -136,14 +159,8 @@ class AnimationDebug extends MusicBeatState
 		add(UI_box);
 
 		addOffsetUI();
-
-		camFollow = new FlxObject(0, 0, 2, 2);
-		camFollow.screenCenter();
-		add(camFollow);
-
-		FlxG.camera.follow(camFollow);
-
 		super.create();
+		Paths.clearUnusedMemory();
 	}
 
 	function addOffsetUI():Void
@@ -161,7 +178,7 @@ class AnimationDebug extends MusicBeatState
 			char = dad;
 
 			dumbTexts.clear();
-			genBoyOffsets(true, true);
+			genBoyOffsets(true, false);
 			updateTexts();
 		});
 
@@ -204,7 +221,7 @@ class AnimationDebug extends MusicBeatState
 
 		for (anim => offsets in char.animOffsets)
 		{
-			var text:FlxText = new FlxText(10, 20 + (18 * daLoop), 0, anim + ": " + offsets, 15);
+			var text:FlxText = new FlxText(10, 50 + (18 * daLoop), 0, anim + ": " + offsets, 15);
 			text.scrollFactor.set();
 			text.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 			text.color = FlxColor.WHITE;
@@ -279,6 +296,7 @@ class AnimationDebug extends MusicBeatState
 
 		dumbTexts.forEach(function(text:FlxText)
 		{
+			dumbTexts.clear();
 			text.kill();
 			dumbTexts.remove(text, true);
 		});
@@ -294,6 +312,7 @@ class AnimationDebug extends MusicBeatState
 		helpText.y = FlxG.height - helpText.height - 20;
 		helpText.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		helpText.color = FlxColor.WHITE;
+		helpText.camera = camHUD;
 
 		add(helpText);
 	}
@@ -324,18 +343,6 @@ class AnimationDebug extends MusicBeatState
 	{
 		textAnim.text = char.animation.curAnim.name;
 
-		if (FlxG.mouse.overlaps(char) && FlxG.mouse.pressed)
-		{
-			// HOW THE FUCK DO I CONVERT THIS
-			char.animOffsets.get(animList[curAnim])[0] = -Math.round(FlxG.mouse.x - char.frameWidth * 1.5);
-			char.animOffsets.get(animList[curAnim])[1] = -Math.round(FlxG.mouse.y - char.frameHeight / 2);
-
-			updateTexts();
-			genBoyOffsets(false);
-			char.playAnim(animList[curAnim]);
-			// TO MOUSE MOVEMENT?????????
-		}
-
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
 			FlxG.mouse.visible = false;
@@ -343,32 +350,28 @@ class AnimationDebug extends MusicBeatState
 		}
 
 		if (FlxG.keys.justPressed.E)
-			FlxG.camera.zoom += 0.25;
+			FlxG.camera.zoom += 0.05;
 		if (FlxG.keys.justPressed.Q)
-			FlxG.camera.zoom -= 0.25;
+			FlxG.camera.zoom -= 0.05;
 
 		if (FlxG.keys.justPressed.F)
 			char.flipX = !char.flipX;
 
 		if (FlxG.keys.pressed.I || FlxG.keys.pressed.J || FlxG.keys.pressed.K || FlxG.keys.pressed.L)
 		{
+			var addToCam:Float = 500 * elapsed;
+			if (FlxG.keys.pressed.CONTROL)
+				addToCam *= 4;
+
 			if (FlxG.keys.pressed.I)
-				camFollow.velocity.y = -90;
+				camFollow.y -= addToCam;
 			else if (FlxG.keys.pressed.K)
-				camFollow.velocity.y = 90;
-			else
-				camFollow.velocity.y = 0;
+				camFollow.y += addToCam;
 
 			if (FlxG.keys.pressed.J)
-				camFollow.velocity.x = -90;
+				camFollow.x -= addToCam;
 			else if (FlxG.keys.pressed.L)
-				camFollow.velocity.x = 90;
-			else
-				camFollow.velocity.x = 0;
-		}
-		else
-		{
-			camFollow.velocity.set();
+				camFollow.x += addToCam;
 		}
 
 		if (FlxG.keys.justPressed.W)

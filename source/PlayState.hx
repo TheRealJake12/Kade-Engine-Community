@@ -5841,8 +5841,14 @@ class PlayState extends MusicBeatState
 	override function destroy()
 	{
 		#if FEATURE_HSCRIPT
-		scripts.destroy();
-		scripts = null;
+		if(scripts != null)
+		{
+			scripts.active = false;
+			#if (SScript >= "3.0.3")
+			scripts.destroy();
+			#end
+			scripts = null;
+		}
 		#end
 
 		Lib.current.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleInput);

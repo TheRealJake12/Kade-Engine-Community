@@ -6,9 +6,12 @@ import openfl.utils.Assets as OpenFlAssets;
 import haxe.CallStack;
 import haxe.Json;
 import haxe.Log;
-import hscript.Expr;
-import hscript.Interp;
-import hscript.Parser;
+#if FEATURE_HSCRIPT
+import tea.SScript;
+import ex.InterpEx as Interp;	
+import ex.ParserEx as Parser;	
+import hscriptBase.Expr;	
+#end
 import openfl.Lib;
 #if FEATURE_FILESYSTEM
 import sys.FileSystem;
