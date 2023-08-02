@@ -126,6 +126,9 @@ class KadeEngineData
 		if (FlxG.save.data.cpuNotesplash == null)
 			FlxG.save.data.cpuNotesplash = 0;
 
+		if (FlxG.save.data.notesplash == null)
+			FlxG.save.data.notesplash = 0;	
+
 		if (FlxG.save.data.zoom == null)
 			FlxG.save.data.zoom = 1;
 
@@ -143,13 +146,6 @@ class KadeEngineData
 
 		if (FlxG.save.data.marvMs == null)
 			FlxG.save.data.marvMs = 20.0;
-
-		Ratings.timingWindows = [
-			FlxG.save.data.shitMs,
-			FlxG.save.data.badMs,
-			FlxG.save.data.goodMs,
-			FlxG.save.data.sickMs
-		];
 
 		// custom shit
 

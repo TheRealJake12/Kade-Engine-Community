@@ -42,17 +42,21 @@ class AnimationDebug extends MusicBeatState
 	var daAnim:String = 'spooky';
 	var camFollow:FlxObject;
 
-	private var camEditor:FlxCamera;
-	private var camHUD:FlxCamera;
-
 	var background:FlxSprite;
 	var curt:FlxSprite;
 	var front:FlxSprite;
 
 	var UI_box:FlxUITabMenu;
+	var UI_note:FlxUITabMenu;
 	var UI_options:FlxUITabMenu;
+
+	var UI_noteSettings:FlxUITabMenu;
+
 	var offsetX:FlxUINumericStepper;
 	var offsetY:FlxUINumericStepper;
+
+	private var camEditor:FlxCamera;
+	private var camHUD:FlxCamera;
 
 	var characters:Array<String>;
 
@@ -64,8 +68,6 @@ class AnimationDebug extends MusicBeatState
 
 	override function create()
 	{
-		Paths.clearStoredMemory();
-
 		// FlxG.sound.music.stop();
 
 		// var gridBG:FlxSprite = FlxGridOverlay.create(10, 10);
@@ -124,9 +126,9 @@ class AnimationDebug extends MusicBeatState
 
 		textAnim = new FlxText(300, 16);
 		textAnim.size = 26;
-		textAnim.camera = camHUD;
-		textAnim.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
+		textAnim.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 		textAnim.scrollFactor.set();
+		textAnim.camera = camHUD;
 		add(textAnim);
 
 		genBoyOffsets();
@@ -159,8 +161,14 @@ class AnimationDebug extends MusicBeatState
 		add(UI_box);
 
 		addOffsetUI();
+
+		camFollow = new FlxObject(0, 0, 2, 2);
+		camFollow.screenCenter();
+		add(camFollow);
+
+		FlxG.camera.follow(camFollow);
+
 		super.create();
-		Paths.clearUnusedMemory();
 	}
 
 	function addOffsetUI():Void
@@ -178,7 +186,7 @@ class AnimationDebug extends MusicBeatState
 			char = dad;
 
 			dumbTexts.clear();
-			genBoyOffsets(true, false);
+			genBoyOffsets(true, true);
 			updateTexts();
 		});
 
@@ -221,9 +229,9 @@ class AnimationDebug extends MusicBeatState
 
 		for (anim => offsets in char.animOffsets)
 		{
-			var text:FlxText = new FlxText(10, 50 + (18 * daLoop), 0, anim + ": " + offsets, 15);
+			var text:FlxText = new FlxText(10, 55 + (18 * daLoop), 0, anim + ": " + offsets, 15);
 			text.scrollFactor.set();
-			text.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
+			text.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
 			text.color = FlxColor.WHITE;
 			dumbTexts.add(text);
 
@@ -296,7 +304,6 @@ class AnimationDebug extends MusicBeatState
 
 		dumbTexts.forEach(function(text:FlxText)
 		{
-			dumbTexts.clear();
 			text.kill();
 			dumbTexts.remove(text, true);
 		});
@@ -329,19 +336,22 @@ class AnimationDebug extends MusicBeatState
 					char.animOffsets.get(animList[curAnim])[0] = offset.value;
 					updateTexts();
 					genBoyOffsets(false);
-					char.playAnim(animList[curAnim]);
+					if (animList[curAnim] != null)
+						char.playAnim(animList[curAnim]);
 				case 'offset_y':
 					char.animOffsets.get(animList[curAnim])[1] = offset.value;
 					updateTexts();
 					genBoyOffsets(false);
-					char.playAnim(animList[curAnim]);
+					if (animList[curAnim] != null)
+						char.playAnim(animList[curAnim]);
 			}
 		}
 	}
 
 	override function update(elapsed:Float)
 	{
-		textAnim.text = char.animation.curAnim.name;
+		if (char.animation.curAnim.name != null)
+			textAnim.text = char.animation.curAnim.name;
 
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
