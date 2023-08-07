@@ -275,8 +275,15 @@ class Main extends Sprite
 
 				if (PlayState.isSM)
 				{
-					PlayState.instance.vocals.pause();
-					PlayState.instance.inst.pause();
+					if (!PlayState.SONG.splitVoiceTracks)
+						PlayState.vocals.pause();
+					else
+					{
+						PlayState.vocalsPlayer.pause();
+						PlayState.vocalsEnemy.pause();
+					}	
+					PlayState.inst.pause();
+
 				}
 				else
 				{

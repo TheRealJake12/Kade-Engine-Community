@@ -13,10 +13,10 @@ class Event
 {
 	public var name:String;
 	public var position:Float;
-	public var value:Float;
+	public var value:Dynamic;
 	public var type:String;
 
-	public function new(name:String, pos:Float, value:Float, type:String)
+	public function new(name:String, pos:Float, value:Dynamic, type:String)
 	{
 		this.name = name;
 		this.position = pos;
@@ -55,6 +55,8 @@ typedef SongData =
 	var stage:String;
 	var ?validScore:Bool;
 	var ?offset:Int;
+	var ?splitVoiceTracks:Bool;
+	var ?audioFile:String;
 }
 
 typedef SongMeta =
@@ -106,13 +108,9 @@ class Song
 		if (songData.noteStyle == null)
 			songData.noteStyle = "normal";
 
-		if (songData.songFile == null)
+		if (songData.audioFile == null)
 		{
-			songData.songFile = songId;
-		}
-		else
-		{
-			trace('SONG DATA IS ${songData.songFile} BLABLABLA');
+			songData.audioFile = songId;
 		}
 
 		if (songData.validScore == null)
@@ -187,6 +185,9 @@ class Song
 			song.gfVersion = "gf";
 
 		TimingStruct.clearTimings();
+
+		if (song.splitVoiceTracks == null)
+			song.splitVoiceTracks = false;
 
 		var currentIndex = 0;
 		for (i in song.eventObjects)
@@ -268,6 +269,9 @@ class Song
 
 		if (songData.song == null)
 			songData.song = songId;
+
+		if (songData.audioFile == null)
+			songData.audioFile = songId;	
 
 		// Enforce default values for optional fields.
 		if (songData.validScore == null)

@@ -294,9 +294,9 @@ class Paths
 		return file;
 	}
 
-	inline static public function voices(song:String, ?returnString:Bool = false):Any
+	inline static public function voices(song:String, ?char:String = '', ?returnString:Bool = false):Any
 	{
-		var songLowercase = StringTools.replace(song, " ", "-").toLowerCase() + '/Voices';
+		var songLowercase = StringTools.replace(song, " ", "-").toLowerCase() + '/Voices$char';
 		switch (songLowercase)
 		{
 			case 'dad-battle':
@@ -314,7 +314,7 @@ class Paths
 		else
 			file = 'songs:assets/songs/$songLowercase.$SOUND_EXT';
 		#else
-		file = 'songs:assets/songs/$songLowercase.$SOUND_EXT';
+		file = 'songs:assets/songs/$songLowercase$num.$SOUND_EXT';
 		#end
 		return file;
 	}

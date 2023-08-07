@@ -2,7 +2,6 @@ package;
 
 import flixel.FlxSprite;
 import flixel.FlxG;
-import flixel.graphics.FlxGraphic;
 
 using StringTools;
 
@@ -13,20 +12,26 @@ class HealthIcon extends FlxSprite
 	 */
 	public var sprTracker:FlxSprite;
 
+	public var animOffsets:Map<String, Array<Dynamic>>;
+
 	var char:String = '';
 	var isPlayer:Bool = false;
 
+	public var isAnimated:Bool = false;
 	public var hasWinningIcon:Bool = false;
 	public var initialWidth:Float = 0;
 	public var initialHeight:Float = 0;
 
-	public function new(char:String = 'bf', isPlayer:Bool = false)
+	public function new(char:String = 'bf', isAnimated:Bool = false, isPlayer:Bool = false)
 	{
 		super();
 
 		this.isPlayer = isPlayer;
+		this.isAnimated = isAnimated;
 
-		changeIcon(char);
+		animOffsets = new Map<String, Array<Dynamic>>();
+
+		changeIcon(char, isAnimated);
 		scrollFactor.set();
 	}
 
@@ -42,35 +47,54 @@ class HealthIcon extends FlxSprite
 			changeIcon(PlayState.SONG.player1);
 	}
 
-	public function changeIcon(newChar:String):Void
+	public function changeIcon(newChar:String, isAnimated:Bool = false):Void
 	{
 		if (newChar != 'bf-pixel' && newChar != 'bf-old')
 			newChar = newChar.split('-')[0].trim();
 
 		if (newChar != char)
 		{
-			if (animation.getByName(newChar) == null)
+			if (isAnimated == true)
 			{
-				var name:String = 'icons/icon-' + newChar;
+				offset.set(0, 0);
 
-				var file:FlxGraphic = Paths.image(name); // Since the image function returns FlxGraphic.
-				if (file.width == 450)
-					hasWinningIcon = true;
-				loadGraphic(file, true, 150,
-					Math.floor(file.height)); // FlxGraphic has width and height properties of the cached BitmapData (aka. health icon).
-				updateHitbox();
+				frames = Paths.getSparrowAtlas('icons/animated/${newChar}');
+				animation.addByPrefix('Idle', 'idle', 24, true, isPlayer);
+				animation.addByPrefix('Lose', 'lose', 24, true, isPlayer);
 
-				if (!hasWinningIcon)
-					animation.add(newChar, [0, 1], 0, false, isPlayer);
-				else
-					animation.add(newChar, [0, 1, 2], 0, false, isPlayer);
+				addOffset('Idle', 0, 0);
+				addOffset('Lose', 0, 0);
+
+				playAnim('Idle', true);
 			}
+			else
+			{
+				if (animation.getByName(newChar) == null)
+				{
+					var name:String = 'icons/icon-' + newChar;
+					var file:Dynamic = Paths.image(name);
+					loadGraphic(file); // Load stupidly first for getting the file size
+					if (width == 450)
+						hasWinningIcon = true;
+					loadGraphic(file, true, 150, 150); // Then load it fr
+					updateHitbox();
+
+					if (!hasWinningIcon)
+						animation.add(newChar, [0, 1], 0, false, isPlayer);
+					else
+						animation.add(newChar, [0, 1, 2], 0, false, isPlayer);
+				}
+				animation.play(newChar);
+			}
+
 			if (char.endsWith('-pixel') || char.startsWith('senpai') || char.startsWith('spirit'))
 				antialiasing = false
 			else
 				antialiasing = FlxG.save.data.antialiasing;
-			animation.play(newChar);
-			char = newChar;
+
+			char = newChar;	
+
+			scrollFactor.set();
 		}
 
 		initialWidth = width;
@@ -83,5 +107,26 @@ class HealthIcon extends FlxSprite
 
 		if (sprTracker != null)
 			setPosition(sprTracker.x + sprTracker.width + 10, sprTracker.y - 30);
+	}
+
+	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
+	{
+		animation.play(AnimName, Force, Reversed, Frame);
+
+		var daOffset = animOffsets.get(AnimName);
+
+		if (animOffsets.exists(AnimName))
+		{
+			offset.set(daOffset[0], daOffset[1]);
+		}
+		else
+		{
+			offset.set(0, 0);
+		}
+	}
+
+	public function addOffset(name:String, x:Float = 0, y:Float = 0)
+	{
+		animOffsets[name] = [x, y];
 	}
 }

@@ -33,6 +33,7 @@ class Character extends FlxSprite
 	public var camFollow:Array<Int>;
 	public var healthIcon:String = 'face';
 	public var rgbColorArray:Array<Int> = [255, 0, 0];
+	public var iconAnimated:Bool = false;
 
 	public static var animationNotes:Array<Note> = [];
 
@@ -154,7 +155,8 @@ class Character extends FlxSprite
 			this.camPos = data.camPos == null ? [0, 0] : data.camPos;
 			this.camFollow = data.camFollow == null ? [0, 0] : data.camFollow;
 			this.holdLength = data.holdLength == null ? 4 : data.holdLength;
-			this.healthIcon = data.healthicon == null ? "face" : data.healthicon;
+			this.healthIcon = data.healthicon == null ? curCharacter : data.healthicon;
+			this.iconAnimated = data.iconAnimated == null ? false : data.iconAnimated;
 
 			this.rgbColorArray = data.rgbArray == null ? [255, 0, 0] : data.rgbArray;
 
@@ -385,6 +387,7 @@ typedef CharacterData =
 	var startingAnim:String;
 
 	var ?healthicon:String;
+	var ?iconAnimated:Bool;
 	var ?charPos:Array<Int>;
 	var ?camPos:Array<Int>;
 	var ?camFollow:Array<Int>;
