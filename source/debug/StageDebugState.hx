@@ -91,8 +91,7 @@ class StageDebugState extends MusicBeatState
 
 		dad.dance();
 		boyfriend.dance();
-		if (!Stage.hasGF)
-			gf.dance();
+		gf.dance();
 
 		reloadStage(Stage.curStage);	
 

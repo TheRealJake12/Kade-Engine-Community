@@ -71,7 +71,7 @@ class Script extends FlxBasic
 
 		set("trace", Reflect.makeVarArgs(function(_)
 		{
-			Log.trace(Std.string(_.shift()), {
+			Debug.logTrace(Std.string(_.shift()), {
 				lineNumber: _interp.posInfos() != null ? _interp.posInfos().lineNumber : -1,
 				className: name,
 				fileName: name,

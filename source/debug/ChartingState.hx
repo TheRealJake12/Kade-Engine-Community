@@ -186,14 +186,17 @@ class ChartingState extends MusicBeatState
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 
-		PlayState.inst.stop();
-		if (PlayState.SONG.splitVoiceTracks)
+		if (PlayState.inst != null)
 		{
-			PlayState.vocalsEnemy.stop();
-			PlayState.vocalsPlayer.stop();
+			PlayState.inst.stop();
+			if (PlayState.SONG.splitVoiceTracks)
+			{
+				PlayState.vocalsEnemy.stop();
+				PlayState.vocalsPlayer.stop();
+			}
+			else
+				PlayState.vocals.stop();
 		}
-		else
-			PlayState.vocals.stop();
 
 		speed = PlayState.songMultiplier;
 		// curSection = lastSection;
@@ -1687,13 +1690,24 @@ class ChartingState extends MusicBeatState
 		// WONT WORK FOR TUTORIAL OR TEST SONG!!! REDO LATER
 		if (!_song.splitVoiceTracks)
 		{
-			vocals = new FlxSound().loadEmbedded(Paths.voices(_song.audioFile));
+			if (_song.needsVoices)
+				vocals = new FlxSound().loadEmbedded(Paths.voices(_song.audioFile));
+			else
+				vocals = new FlxSound();	
 			FlxG.sound.list.add(vocals);
 		}
 		else
 		{
-			vocalsPlayer = new FlxSound().loadEmbedded(Paths.voices(_song.audioFile, 'P'));
-			vocalsEnemy = new FlxSound().loadEmbedded(Paths.voices(_song.audioFile, 'E'));
+			if (_song.needsVoices)
+			{
+				vocalsPlayer = new FlxSound().loadEmbedded(Paths.voices(_song.audioFile, 'P'));
+				vocalsEnemy = new FlxSound().loadEmbedded(Paths.voices(_song.audioFile, 'E'));
+			}
+			else
+			{
+				vocalsPlayer = new FlxSound();
+				vocalsEnemy = new FlxSound();
+			}
 			FlxG.sound.list.add(vocalsPlayer);
 			FlxG.sound.list.add(vocalsEnemy);
 		}

@@ -373,6 +373,11 @@ class PlayState extends MusicBeatState
 	// Array that should make some notes easier to hit
 	public static var lowPriorityNotes:Array<String> = ["hurt", "mustpress"];
 
+	// Stores Ratings and Combo Sprites in a group
+	public var comboGroup:FlxSpriteGroup;
+	// Stores HUD Elements in a Group
+	public var uiGroup:FlxSpriteGroup;
+
 	public function addObject(object:FlxBasic)
 	{
 		add(object);
@@ -916,6 +921,9 @@ class PlayState extends MusicBeatState
 				}
 			}
 		}
+		
+		add(uiGroup = new FlxSpriteGroup());
+		add(comboGroup = new FlxSpriteGroup());
 
 		Conductor.songPosition = -5000;
 		Conductor.rawPosition = Conductor.songPosition;
@@ -947,9 +955,9 @@ class PlayState extends MusicBeatState
 
 		if (!FlxG.save.data.middleScroll)
 		{
-			add(laneunderlayOpponent);
+			uiGroup.add(laneunderlayOpponent);
 		}
-		add(laneunderlay);
+		uiGroup.add(laneunderlay);
 
 		strumLineNotes = new FlxTypedGroup<StaticArrow>();
 		add(strumLineNotes);
@@ -1103,7 +1111,7 @@ class PlayState extends MusicBeatState
 			16);
 		kadeEngineWatermark.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		kadeEngineWatermark.scrollFactor.set();
-		add(kadeEngineWatermark);
+		uiGroup.add(kadeEngineWatermark);
 
 		if (PlayStateChangeables.useDownscroll)
 			kadeEngineWatermark.y = FlxG.height * 0.9 + 45;
@@ -1118,7 +1126,7 @@ class PlayState extends MusicBeatState
 		if (!FlxG.save.data.healthBar)
 			scoreTxt.y = healthBarBG.y;
 
-		add(scoreTxt);
+		uiGroup.add(scoreTxt);
 
 		judgementCounter = new FlxText(20, 0, 0, "", 20);
 		judgementCounter.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -1130,7 +1138,7 @@ class PlayState extends MusicBeatState
 		judgementCounter.text = 'Marvelous: ${marvs}\nSicks: ${sicks}\nGoods: ${goods}\nBads: ${bads}\nShits: ${shits}\nMisses: ${misses}';
 		if (FlxG.save.data.judgementCounter)
 		{
-			add(judgementCounter);
+			uiGroup.add(judgementCounter);
 		}
 
 		replayTxt = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 75, healthBarBG.y + (PlayStateChangeables.useDownscroll ? 100 : -100), 0, "REPLAY",
@@ -1142,7 +1150,7 @@ class PlayState extends MusicBeatState
 		replayTxt.cameras = [camHUD];
 		if (loadRep)
 		{
-			add(replayTxt);
+			uiGroup.add(replayTxt);
 		}
 		botPlayState = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 75, healthBarBG.y + (PlayStateChangeables.useDownscroll ? 100 : -100), 0,
 			"BOTPLAY", 20);
@@ -1152,7 +1160,7 @@ class PlayState extends MusicBeatState
 		botPlayState.borderQuality = 2;
 		botPlayState.cameras = [camHUD];
 		if (PlayStateChangeables.botPlay && !loadRep)
-			add(botPlayState);
+			uiGroup.add(botPlayState);
 
 		addedBotplay = PlayStateChangeables.botPlay;
 
@@ -1163,11 +1171,11 @@ class PlayState extends MusicBeatState
 		iconP2.y = healthBar.y - (iconP2.height / 2);
 
 		if (FlxG.save.data.healthBar)
-		{
-			add(healthBarBG);
-			add(healthBar);
-			add(iconP1);
-			add(iconP2);
+		{	
+			uiGroup.add(healthBarBG);
+			uiGroup.add(healthBar);
+			uiGroup.add(iconP1);
+			uiGroup.add(iconP2);
 
 			if (FlxG.save.data.colour)
 				healthBar.createFilledBar(dad.barColor, boyfriend.barColor);
@@ -1200,19 +1208,13 @@ class PlayState extends MusicBeatState
 		strumLineNotes.cameras = [camHUD];
 		grpNoteSplashes.cameras = [camHUD];
 		notes.cameras = [camHUD];
-		healthBar.cameras = [camHUD];
-		healthBarBG.cameras = [camHUD];
-		iconP1.cameras = [camHUD];
-		iconP2.cameras = [camHUD];
-		scoreTxt.cameras = [camHUD];
-		laneunderlay.cameras = [camHUD];
-		laneunderlayOpponent.cameras = [camHUD];
+
+		uiGroup.cameras = [camHUD];
+		comboGroup.cameras = [camHUD];
 		// sfjl
 
 		if (isStoryMode)
 			doof.cameras = [camHUD];
-		kadeEngineWatermark.cameras = [camHUD];
-		currentTimingShown.camera = camHUD;
 
 		startingSong = true;
 		if (!FlxG.save.data.optimize)
@@ -1362,7 +1364,7 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.save.data.popup)
 		{
-			add(currentTimingShown);
+			comboGroup.add(currentTimingShown);
 			currentTimingShown.alpha = 0;
 		}
 
@@ -4664,6 +4666,19 @@ class PlayState extends MusicBeatState
 		var noteDiff:Float = (daNote.strumTime - Conductor.songPosition);
 		var noteDiffAbs = Math.abs(noteDiff);
 
+		if (!FlxG.save.data.rateStack && comboGroup.members.length > 0)
+		{
+			for (spr in comboGroup)
+			{
+				// dumbass fix because the currentTiming ms thing was a Flxtext that shouldn't be destroyed. whatever works lol
+				if (Std.isOfType(spr, FlxSprite))
+				{
+					spr.destroy();
+					comboGroup.remove(spr);
+				}
+			}
+		}
+
 		if (!FlxG.save.data.botplay)
 		{
 			currentTimingShown.alpha = 1;
@@ -4860,26 +4875,8 @@ class PlayState extends MusicBeatState
 			comboSpr.y = rating.y + 100;
 			comboSpr.acceleration.y = 600;
 			comboSpr.velocity.y -= 150;
-
-			if (!FlxG.save.data.rateStack)
-			{
-				if (lastRating != null)
-					lastRating.kill();
-				lastRating = rating;
-			}
-
-			if (lastCombo != null)
-				lastCombo.kill();
-			lastCombo = comboSpr;
-
-			if (lastScore != null)
-			{
-				while (lastScore.length > 0)
-				{
-					lastScore[0].kill();
-					lastScore.remove(lastScore[0]);
-				}
-			}
+			
+			//comboGroup.add(comboSpr);
 
 			currentTimingShown.screenCenter();
 			if (!FlxG.save.data.middleScroll)
@@ -4907,7 +4904,7 @@ class PlayState extends MusicBeatState
 			if (!PlayStateChangeables.botPlay || loadRep)
 			{
 				if (FlxG.save.data.popup)
-					add(rating);
+					comboGroup.add(rating);
 			}
 
 			if (SONG.noteStyle != 'pixel')
@@ -4926,9 +4923,6 @@ class PlayState extends MusicBeatState
 			currentTimingShown.updateHitbox();
 			comboSpr.updateHitbox();
 			rating.updateHitbox();
-
-			comboSpr.camera = camHUD;
-			rating.camera = camHUD;
 
 			var seperatedScore:Array<Int> = [];
 
@@ -4952,13 +4946,6 @@ class PlayState extends MusicBeatState
 				seperatedScore.push(Std.parseInt(str));
 			}
 
-			if (!FlxG.save.data.rateStack)
-			{
-				if (lastCombo != null)
-					lastCombo.kill();
-				lastCombo = comboSpr;
-			}
-
 			var daLoop:Int = 0;
 			for (i in seperatedScore)
 			{
@@ -4967,7 +4954,6 @@ class PlayState extends MusicBeatState
 
 				numScore.x = rating.x + (43 * daLoop) - (16.67 * seperatedScore.length);
 				numScore.y = rating.y + 100;
-				numScore.cameras = [camHUD];
 
 				if (SONG.noteStyle != 'pixel')
 				{
@@ -4987,40 +4973,20 @@ class PlayState extends MusicBeatState
 				numScore.velocity.x = FlxG.random.float(-5, 5);
 
 				if (FlxG.save.data.popup)
-					add(numScore);
+					comboGroup.add(numScore);
 
 				visibleCombos.push(numScore);
 
-				if (!FlxG.save.data.rateStack)
-					lastScore.push(numScore);
-				else
-					visibleCombos.push(numScore);
-
-				if (FlxG.save.data.rateStack)
-				{
-					createTween(numScore, {alpha: 0}, 0.2, {
-						onComplete: function(tween:FlxTween)
-						{
-							remove(numScore);
-							numScore.destroy();
-						},
-						startDelay: Conductor.crochet * 0.002
-					});
-				}
-				else
-				{
-					createTween(numScore, {alpha: 0}, 0.2, {
-						onComplete: function(tween:FlxTween)
-						{
-							lastScore.remove(numScore);
-							numScore.kill();
-							coolText.destroy();
-							comboSpr.destroy();
-							rating.destroy();
-						},
-						startDelay: Conductor.crochet * 0.002 * Math.pow(songMultiplier, 2)
-					});
-				}
+				createTween(numScore, {alpha: 0}, 0.2, {
+					onComplete: function(tween:FlxTween)
+					{
+						numScore.kill();
+						coolText.destroy();
+						comboSpr.destroy();
+						rating.destroy();
+					},
+					startDelay: Conductor.crochet * 0.002 * Math.pow(songMultiplier, 2)
+				});
 
 				if (visibleCombos.length > seperatedScore.length + 20)
 				{
@@ -6661,6 +6627,7 @@ class PlayState extends MusicBeatState
 		var pixelShitPart2:String = '';
 		var pixelShitPart3:String = 'shared';
 		var pixelShitPart4:String = null;
+		
 		if (SONG.noteStyle == 'pixel')
 		{
 			pixelShitPart1 = 'weeb/pixelUI/';
