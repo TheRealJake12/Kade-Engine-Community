@@ -14,13 +14,15 @@ class Event
 	public var name:String;
 	public var position:Float;
 	public var value:Dynamic;
+	public var value2:Dynamic;
 	public var type:String;
 
-	public function new(name:String, pos:Float, value:Dynamic, type:String)
+	public function new(name:String, pos:Float, value:Dynamic, value2:Dynamic, type:String)
 	{
 		this.name = name;
 		this.position = pos;
 		this.value = value;
+		this.value2 = value2;
 		this.type = type;
 	}
 }
@@ -164,7 +166,7 @@ class Song
 		var convertedStuff:Array<Song.Event> = [];
 
 		if (song.eventObjects == null)
-			song.eventObjects = [new Song.Event("Init BPM", 0, song.bpm, "BPM Change")];
+			song.eventObjects = [new Song.Event("Init BPM", 0, song.bpm, "1", "BPM Change")];
 
 		for (i in song.eventObjects)
 		{
@@ -172,8 +174,12 @@ class Song
 			var type = Reflect.field(i, "type");
 			var pos = Reflect.field(i, "position");
 			var value = Reflect.field(i, "value");
+			var value2 = Reflect.field(i, "value2");
 
-			convertedStuff.push(new Song.Event(name, pos, value, type));
+			if (value2 == null)
+				value2 = 1;
+
+			convertedStuff.push(new Song.Event(name, pos, value, value2, type));
 		}
 
 		song.eventObjects = convertedStuff;
@@ -231,7 +237,7 @@ class Song
 			if (i.changeBPM && i.bpm != ba)
 			{
 				ba = i.bpm;
-				song.eventObjects.push(new Song.Event("FNF BPM Change " + index, beat, i.bpm, "BPM Change"));
+				song.eventObjects.push(new Song.Event("FNF BPM Change " + index, beat, i.bpm, "1", "BPM Change"));
 			}
 
 			if (i.lengthInSteps == null)

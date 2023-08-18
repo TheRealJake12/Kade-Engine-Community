@@ -294,10 +294,10 @@ class ChartingState extends MusicBeatState
 		var index = 0;
 
 		if (_song.eventObjects == null)
-			_song.eventObjects = [new Song.Event("Init BPM", 0, _song.bpm, "BPM Change")];
+			_song.eventObjects = [new Song.Event("Init BPM", 0, _song.bpm, "1", "BPM Change")];
 
 		if (_song.eventObjects.length == 0)
-			_song.eventObjects = [new Song.Event("Init BPM", 0, _song.bpm, "BPM Change")];
+			_song.eventObjects = [new Song.Event("Init BPM", 0, _song.bpm, "1", "BPM Change")];
 
 		var currentIndex = 0;
 
@@ -307,6 +307,7 @@ class ChartingState extends MusicBeatState
 			var type = Reflect.field(i, "type");
 			var pos = Reflect.field(i, "position");
 			var value = Reflect.field(i, "value");
+			var value2 = Reflect.field(i, "value2");
 
 			if (type == "BPM Change")
 			{
@@ -507,7 +508,7 @@ class ChartingState extends MusicBeatState
 
 				var type = i.type;
 
-				var text = new FlxText(-190, pos, 0, i.name + "\n" + type + "\n" + i.value, 16);
+				var text = new FlxText(-190, pos, 0, i.name + "\n" + type + "\n" + i.value + "\n" + i.value2, 16);
 				text.borderStyle = OUTLINE_FAST;
 				text.borderColor = FlxColor.BLACK;
 				text.font = Paths.font("vcr.ttf");
@@ -557,6 +558,7 @@ class ChartingState extends MusicBeatState
 	var currentSelectedEventName:String = "";
 	var savedType:String = "BPM Change";
 	var savedValue:String = "100";
+	var savedValue2:String = "1";
 	var currentEventPosition:Float = 0;
 
 	function containsName(name:String, events:Array<Song.Event>):Song.Event
@@ -579,7 +581,7 @@ class ChartingState extends MusicBeatState
 	{
 		if (_song.eventObjects == null)
 		{
-			_song.eventObjects = [new Song.Event("Init BPM", 0, _song.bpm, "BPM Change")];
+			_song.eventObjects = [new Song.Event("Init BPM", 0, _song.bpm, "1", "BPM Change")];
 		}
 
 		var firstEvent = "";
@@ -602,11 +604,19 @@ class ChartingState extends MusicBeatState
 		var eventType = new FlxUIDropDownMenu(10, 60, FlxUIDropDownMenu.makeStrIdLabelArray(eventList, true));
 		var valueLabel = new FlxText(150, 45, 'Event Value');
 		valueLabel.font = Paths.font("vcr.ttf");
+
+		var value2Label = new FlxText(10, 85, 'Event Value 2');
+		value2Label.font = Paths.font("vcr.ttf");
+
 		var eventValue = new FlxUIInputText(150, 60, 80, "");
 		eventValue.font = Paths.font("vcr.ttf");
+
+		var eventValue2 = new FlxUIInputText(10, 100, 80, "");
+		eventValue2.font = Paths.font("vcr.ttf");
+
 		var eventSave = new FlxButton(10, 155, "Save Event", function()
 		{
-			var pog:Song.Event = new Song.Event(currentSelectedEventName, currentEventPosition, Std.string(savedValue), savedType);
+			var pog:Song.Event = new Song.Event(currentSelectedEventName, currentEventPosition, savedValue, savedValue2, savedType);
 
 			var obj = containsName(pog.name, _song.eventObjects);
 
@@ -626,6 +636,7 @@ class ChartingState extends MusicBeatState
 				var type = Reflect.field(i, "type");
 				var pos = Reflect.field(i, "position");
 				var value = Reflect.field(i, "value");
+				var value2 = Reflect.field(i, "value2");
 
 				if (type == "BPM Change")
 				{
@@ -675,7 +686,7 @@ class ChartingState extends MusicBeatState
 		var eventAdd = new FlxButton(95, 155, "Add Event", function()
 		{
 			var pog:Song.Event = new Song.Event("New Event " + HelperFunctions.truncateFloat(curDecimalBeat, 3),
-				HelperFunctions.truncateFloat(curDecimalBeat, 3), _song.bpm, "BPM Change");
+				HelperFunctions.truncateFloat(curDecimalBeat, 3), _song.bpm, "1", "BPM Change");
 
 			var obj = containsName(pog.name, _song.eventObjects);
 
@@ -687,12 +698,14 @@ class ChartingState extends MusicBeatState
 			eventName.text = pog.name;
 			eventType.selectedLabel = pog.type;
 			eventValue.text = pog.value + "";
+			eventValue2.text = pog.value2 + "";
 			eventPos.text = pog.position + "";
 			currentSelectedEventName = pog.name;
 			currentEventPosition = pog.position;
 
 			savedType = pog.type;
 			savedValue = pog.value + "";
+			savedValue2 = pog.value2 + "";
 
 			var listofnames = [];
 
@@ -714,6 +727,7 @@ class ChartingState extends MusicBeatState
 				var type = Reflect.field(i, "type");
 				var pos = Reflect.field(i, "position");
 				var value = Reflect.field(i, "value");
+				var value2 = Reflect.field(i, "value2");
 				if (type == "BPM Change")
 				{
 					var beat:Float = pos;
@@ -753,19 +767,21 @@ class ChartingState extends MusicBeatState
 
 			if (firstEvent == null)
 			{
-				_song.eventObjects.push(new Song.Event("Init BPM", 0, _song.bpm, "BPM Change"));
+				_song.eventObjects.push(new Song.Event("Init BPM", 0, _song.bpm, "1", "BPM Change"));
 				firstEvent = _song.eventObjects[0];
 			}
 
 			eventName.text = firstEvent.name;
 			eventType.selectedLabel = firstEvent.type;
 			eventValue.text = firstEvent.value + "";
+			eventValue2.text = firstEvent.value2 + "";
 			eventPos.text = firstEvent.position + "";
 			currentSelectedEventName = firstEvent.name;
 			currentEventPosition = firstEvent.position;
 
 			savedType = firstEvent.type;
 			savedValue = firstEvent.value + '';
+			savedValue2 = firstEvent.value2 + '';
 
 			var listofnames = [];
 
@@ -787,6 +803,7 @@ class ChartingState extends MusicBeatState
 				var type = Reflect.field(i, "type");
 				var pos = Reflect.field(i, "position");
 				var value = Reflect.field(i, "value");
+				var value2 = Reflect.field(i, "value2");
 
 				if (type == "BPM Change")
 				{
@@ -834,8 +851,9 @@ class ChartingState extends MusicBeatState
 			var type = Reflect.field(event, "type");
 			var pos = Reflect.field(event, "position");
 			var value = Reflect.field(event, "value");
+			var value2 = Reflect.field(event, "value2");
 
-			var eventt = new Song.Event(name, pos, value, type);
+			var eventt = new Song.Event(name, pos, value, value2, type);
 
 			chartEvents.push(eventt);
 			listofnames.push(name);
@@ -854,6 +872,7 @@ class ChartingState extends MusicBeatState
 			eventName.text = firstEventObject.name;
 			eventType.selectedLabel = firstEventObject.type;
 			eventValue.text = firstEventObject.value + "";
+			eventValue2.text = firstEventObject.value2 + "";
 			currentSelectedEventName = firstEventObject.name;
 			currentEventPosition = firstEventObject.position;
 			eventPos.text = currentEventPosition + "";
@@ -868,6 +887,7 @@ class ChartingState extends MusicBeatState
 
 			eventName.text = event.name;
 			eventValue.text = event.value + "";
+			eventValue2.text = event.value2 + "";
 			eventPos.text = event.position + "";
 			eventType.selectedLabel = event.type;
 			currentSelectedEventName = event.name;
@@ -877,6 +897,11 @@ class ChartingState extends MusicBeatState
 		eventValue.callback = function(string:String, string2:String)
 		{
 			savedValue = string;
+		};
+
+		eventValue2.callback = function(string:String, string2:String)
+		{
+			savedValue2 = string;
 		};
 
 		eventType.callback = function(type:String)
@@ -902,17 +927,20 @@ class ChartingState extends MusicBeatState
 
 		Typeables.push(eventPos);
 		Typeables.push(eventValue);
+		Typeables.push(eventValue2);
 		Typeables.push(eventName);
 
 		var tab_events = new FlxUI(null, UI_options);
 		tab_events.name = "Events";
 		tab_events.add(posLabel);
 		tab_events.add(valueLabel);
+		tab_events.add(value2Label);
 		tab_events.add(nameLabel);
 		tab_events.add(listLabel);
 		tab_events.add(typeLabel);
 		tab_events.add(eventName);
 		tab_events.add(eventValue);
+		tab_events.add(eventValue2);
 		tab_events.add(eventSave);
 		tab_events.add(eventAdd);
 		tab_events.add(eventRemove);
@@ -1817,6 +1845,7 @@ class ChartingState extends MusicBeatState
 						var type = Reflect.field(i, "type");
 						var pos = Reflect.field(i, "position");
 						var value = Reflect.field(i, "value");
+						var value2 = Reflect.field(i, "value2");
 
 						if (type == "BPM Change")
 						{

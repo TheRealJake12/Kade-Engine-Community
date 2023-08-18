@@ -3,6 +3,7 @@ import polymod.backends.OpenFLBackend;
 import polymod.backends.PolymodAssets.PolymodAssetType;
 import polymod.format.ParseRules.LinesParseFormat;
 import polymod.format.ParseRules.TextFileFormat;
+import polymod.format.ParseRules;
 import polymod.Polymod;
 #end
 import flixel.FlxG;
@@ -12,96 +13,86 @@ import flixel.FlxG;
  */
 class ModCore
 {
-	/**
-	 * The current API version.
-	 * Must be formatted in Semantic Versioning v2; <MAJOR>.<MINOR>.<PATCH>.
-	 * 
-	 * Remember to increment the major version if you make breaking changes to mods!
-	 */
+	private static final MOD_DIR:String = 'mods';
 	static final API_VERSION = "0.1.0";
 
-	static final MOD_DIRECTORY = "mods";
+	#if FEATURE_MODCORE
+	private static final extensions:Map<String, PolymodAssetType> = [
+		'mp3' => AUDIO_GENERIC, 
+		'ogg' => AUDIO_GENERIC,
+		'png' => IMAGE,
+		'xml' => TEXT,
+		'txt' => TEXT,
+		'ttf' => FONT,
+		'otf' => FONT,
+		'mp4' => VIDEO
+	];
 
-	public static function initialize()
+	public static var trackedMods:Array<ModMetadata> = [];
+	#end
+
+	public static function initialize():Void
 	{
 		#if FEATURE_MODCORE
 		Debug.logInfo("Initializing ModCore...");
-		loadModsById(getModIds());
+		loadMods(getMods());
 		#else
 		Debug.logInfo("ModCore not initialized; not supported on this platform.");
 		#end
 	}
 
 	#if FEATURE_MODCORE
-	public static function loadModsById(ids:Array<String>)
+	public static function loadMods(folders:Array<String>):Void
 	{
-		Debug.logTrace('Attempting to load ${ids.length} mods...');
-		var loadedModList = polymod.Polymod.init({
-			// Root directory for all mods.
-			modRoot: MOD_DIRECTORY,
-			// The directories for one or more mods to load.
-			dirs: ids,
-			// Framework being used to load assets. We're using a CUSTOM one which extends the OpenFL one.
-			framework: CUSTOM,
-			// Call this function any time an error occurs.
-			errorCallback: onPolymodError,
-			// Enforce semantic version patterns for each mod.
-			// modVersions: null,
-			// A map telling Polymod what the asset type is for unfamiliar file extensions.
-			// extensionMap: [],
-
+		Debug.logTrace('Attempting to load ${trackedMods.length} mods...');
+		var loadedModlist:Array<ModMetadata> = Polymod.init({
+			modRoot: MOD_DIR,
+			dirs: folders,
+			framework: OPENFL,
 			frameworkParams: buildFrameworkParams(),
-
-			// Use a custom backend so we can get a picture of what's going on,
-			// or even override behavior ourselves.
-			customBackend: ModCoreBackend,
-
-			// List of filenames to ignore in mods. Use the default list to ignore the metadata file, etc.
-			ignoredFiles: Polymod.getDefaultIgnoreList(),
-
-			// Parsing rules for various data formats.
-			parseRules: buildParseRules(),
+			errorCallback: onPolymodError,
+			parseRules: getParseRules(),
+			extensionMap: extensions,
+			ignoredFiles: Polymod.getDefaultIgnoreList()
 		});
 
-		var fileList = Polymod.listModFiles("IMAGE");
-		for (item in fileList)
-			// Debug.logTrace('  * $item');
+		if (loadedModlist == null) return;
 
-			fileList = Polymod.listModFiles("TEXT");
-		// Debug.logInfo('Installed mods have replaced ${fileList.length} text files.');
-		for (item in fileList)
-			// Debug.logTrace('  * $item');
+		trace('Loading Successful, ${loadedModlist.length} / ${folders.length} new mods.');
 
-			fileList = Polymod.listModFiles("MUSIC");
-		// Debug.logInfo('Installed mods have replaced ${fileList.length} music files.');
-		for (item in fileList)
-			// Debug.logTrace('  * $item');
-
-			fileList = Polymod.listModFiles("SOUND");
-		// Debug.logInfo('Installed mods have replaced ${fileList.length} sound files.');
+		for (mod in loadedModlist)
+			trace('Name: ${mod.title}, [${mod.id}]');
 	}
 
-	public static function getModIds():Array<String>
+	public static function getMods():Array<String>
 	{
-		var modMetadata = Polymod.scan({modRoot: MOD_DIRECTORY});
-		// Debug.logInfo('Found ${modMetadata.length} mods when scanning.');
-		var modIds = [for (i in modMetadata) i.id];
-		return modIds;
+		trackedMods = [];
+
+		var daList:Array<String> = [];
+
+		trace('Searching for Mods...');
+
+		for (i in Polymod.scan({modRoot : MOD_DIR, errorCallback: onPolymodError}))
+		{
+			if (i != null){
+				trackedMods.push(i);
+				daList.push(i.id);
+			}
+		}
+
+		if (daList != null && daList.length > 0)
+			trace('Found ${daList.length} new mods.');
+
+		return daList != null && daList.length > 0 ? daList : [];
 	}
 
-	static function buildParseRules():polymod.format.ParseRules
+	public static function getParseRules():ParseRules
 	{
-		var output = polymod.format.ParseRules.getDefault();
-		// Ensure TXT files have merge support.
+		var output:ParseRules = ParseRules.getDefault();
 		output.addType("txt", TextFileFormat.LINES);
-		output.addType("hx", TextFileFormat.LINES);
-		output.addType("lua", TextFileFormat.LINES);
-
-		// No idea if this actually does anything
-
-		// You can specify the format of a specific file, with file extension.
-		// output.addFile("data/introText.txt", TextFileFormat.LINES)
-		return output;
+		output.addType("hx", TextFileFormat.PLAINTEXT);
+		output.addType("lua", TextFileFormat.PLAINTEXT);
+		return output != null ? output : null;
 	}
 
 	static inline function buildFrameworkParams():polymod.FrameworkParams
