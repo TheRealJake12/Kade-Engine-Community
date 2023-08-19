@@ -3559,6 +3559,8 @@ class PlayState extends MusicBeatState
 
 			persistentUpdate = false;
 			MusicBeatState.switchState(new ChartingState());
+			cleanPlayObjects();
+			Paths.runGC();
 			PlayState.stageTesting = false;
 		}
 
@@ -6251,12 +6253,6 @@ class PlayState extends MusicBeatState
 			uiGroup.remove(i);
 		}	
 
-		if (FlxG.save.data.judgementCounter)
-		{
-			judgementCounter.revive();
-			uiGroup.add(judgementCounter);
-		}
-
 		if (songStarted)
 		{
 			songName.visible = FlxG.save.data.songPosition;
@@ -6297,6 +6293,12 @@ class PlayState extends MusicBeatState
 			}
 		}
 
+		if (FlxG.save.data.judgementCounter)
+		{
+			judgementCounter.revive();
+			uiGroup.add(judgementCounter);
+		}
+
 		if (FlxG.save.data.healthBar)
 		{
 			healthBarBG.revive();
@@ -6309,6 +6311,9 @@ class PlayState extends MusicBeatState
 			uiGroup.add(iconP2);
 			scoreTxt.y = healthBarBG.y + 47;
 		}
+
+		scoreTxt.revive();
+		uiGroup.add(scoreTxt);
 	}
 
 	function HealthDrain():Void
