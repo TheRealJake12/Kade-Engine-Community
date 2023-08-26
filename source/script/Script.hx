@@ -8,8 +8,8 @@ import haxe.Json;
 import haxe.Log;
 #if FEATURE_HSCRIPT
 import tea.SScript;
-import ex.InterpEx as Interp;	
-import ex.ParserEx as Parser;	
+import hscriptBase.Interp;	
+import hscriptBase.Parser;	
 import hscriptBase.Expr;	
 #end
 import openfl.Lib;
