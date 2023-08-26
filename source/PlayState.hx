@@ -3559,7 +3559,6 @@ class PlayState extends MusicBeatState
 
 			persistentUpdate = false;
 			MusicBeatState.switchState(new ChartingState());
-			cleanPlayObjects();
 			Paths.runGC();
 			PlayState.stageTesting = false;
 		}

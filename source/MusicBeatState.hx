@@ -61,7 +61,7 @@ class MusicBeatState extends FlxUIState
 
 		if (!skip)
 		{
-			openSubState(new CustomFadeTransition(0.75, true));
+			openSubState(new CustomFadeTransition(0.6, true));
 		}
 		fullscreenBind = FlxKey.fromString(Std.string(FlxG.save.data.fullscreenBind));
 		FlxTransitionableState.skipNextTransOut = false;
@@ -369,7 +369,7 @@ class MusicBeatState extends FlxUIState
 		var leState:MusicBeatState = curState;
 		if (!FlxTransitionableState.skipNextTransIn)
 		{
-			leState.openSubState(new CustomFadeTransition(0.35, false));
+			leState.openSubState(new CustomFadeTransition(0.3, false));
 			if (nextState == FlxG.state)
 			{
 				CustomFadeTransition.finishCallback = function()
