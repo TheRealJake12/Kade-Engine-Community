@@ -89,6 +89,30 @@ class StageDebugState extends MusicBeatState
 		boyfriend = PlayState.instance.boyfriend;
 		dad = PlayState.instance.dad;
 
+		if (gf.frames == null)
+		{
+			#if debug
+			FlxG.log.warn(["Couldn't load gf. Loading default gf"]);
+			#end
+			gf = new Character(400, 130, 'gf');
+		}
+
+		if (boyfriend.frames == null)
+		{
+			#if debug
+			FlxG.log.warn(["Couldn't load boyfriend. Loading default boyfriend"]);
+			#end
+			boyfriend = new Boyfriend(770, 450, 'bf');
+		}
+
+		if (dad.frames == null)
+		{
+			#if debug
+			FlxG.log.warn(["Couldn't load opponent. Loading default opponent"]);
+			#end
+			dad = new Character(100, 100, 'dad');
+		}
+
 		dad.dance();
 		boyfriend.dance();
 		gf.dance();
