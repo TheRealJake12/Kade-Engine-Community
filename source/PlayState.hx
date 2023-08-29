@@ -2269,7 +2269,12 @@ class PlayState extends MusicBeatState
 			{
 				boyfriend.playAnim('sing' + dataSuffix[direction] + 'miss', true);
 			}
-			vocalsPlayer.volume = 0;
+			if (!SONG.splitVoiceTracks)
+				vocals.volume = 0;
+			else
+			{
+				vocalsPlayer.volume = 0;
+			}
 			updateAccuracy();
 			updateScoreText();
 		}
