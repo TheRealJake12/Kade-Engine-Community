@@ -1721,7 +1721,7 @@ class ChartingState extends MusicBeatState
 			if (_song.needsVoices)
 				vocals = new FlxSound().loadEmbedded(Paths.voices(_song.audioFile));
 			else
-				vocals = new FlxSound();	
+				vocals = new FlxSound();
 			FlxG.sound.list.add(vocals);
 		}
 		else
@@ -2445,8 +2445,6 @@ class ChartingState extends MusicBeatState
 						goToSection(curSection - 1);
 					}
 				}
-
-
 
 				if (FlxG.mouse.pressed && FlxG.keys.pressed.CONTROL)
 				{

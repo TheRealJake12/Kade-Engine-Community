@@ -117,7 +117,7 @@ class StageDebugState extends MusicBeatState
 		boyfriend.dance();
 		gf.dance();
 
-		reloadStage(Stage.curStage);	
+		reloadStage(Stage.curStage);
 
 		var positions = Stage.positions[Stage.curStage];
 		if (positions != null)
@@ -126,7 +126,7 @@ class StageDebugState extends MusicBeatState
 				for (person in [boyfriend, gf, dad])
 					if (person.curCharacter == char)
 						person.setPosition(pos[0], pos[1]);
-		}	
+		}
 
 		/*
 			dad.moves = true;
@@ -311,7 +311,7 @@ class StageDebugState extends MusicBeatState
 		}
 
 		FlxG.watch.addQuick('Camera Zoom', FlxG.camera.zoom);
-		
+
 		if (FlxG.keys.justPressed.SHIFT)
 		{
 			charMode = !charMode;
@@ -482,7 +482,7 @@ class StageDebugState extends MusicBeatState
 	override function beatHit()
 	{
 		super.beatHit();
-		
+
 		if (curBeat % 2 == 0)
 		{
 			dad.dance(true);

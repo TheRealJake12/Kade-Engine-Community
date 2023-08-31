@@ -127,7 +127,7 @@ class KadeEngineData
 			FlxG.save.data.cpuNotesplash = 0;
 
 		if (FlxG.save.data.notesplash == null)
-			FlxG.save.data.notesplash = 0;	
+			FlxG.save.data.notesplash = 0;
 
 		if (FlxG.save.data.zoom == null)
 			FlxG.save.data.zoom = 1;

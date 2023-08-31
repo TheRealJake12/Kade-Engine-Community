@@ -18,7 +18,7 @@ class ModCore
 
 	#if FEATURE_MODCORE
 	private static final extensions:Map<String, PolymodAssetType> = [
-		'mp3' => AUDIO_GENERIC, 
+		'mp3' => AUDIO_GENERIC,
 		'ogg' => AUDIO_GENERIC,
 		'png' => IMAGE,
 		'xml' => TEXT,
@@ -56,7 +56,8 @@ class ModCore
 			ignoredFiles: Polymod.getDefaultIgnoreList()
 		});
 
-		if (loadedModlist == null) return;
+		if (loadedModlist == null)
+			return;
 
 		trace('Loading Successful, ${loadedModlist.length} / ${folders.length} new mods.');
 
@@ -72,9 +73,10 @@ class ModCore
 
 		trace('Searching for Mods...');
 
-		for (i in Polymod.scan({modRoot : MOD_DIR, errorCallback: onPolymodError}))
+		for (i in Polymod.scan({modRoot: MOD_DIR, errorCallback: onPolymodError}))
 		{
-			if (i != null){
+			if (i != null)
+			{
 				trackedMods.push(i);
 				daList.push(i.id);
 			}

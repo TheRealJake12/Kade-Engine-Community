@@ -92,7 +92,7 @@ class HealthIcon extends FlxSprite
 			else
 				antialiasing = FlxG.save.data.antialiasing;
 
-			char = newChar;	
+			char = newChar;
 
 			scrollFactor.set();
 		}

@@ -281,9 +281,8 @@ class Main extends Sprite
 					{
 						PlayState.vocalsPlayer.pause();
 						PlayState.vocalsEnemy.pause();
-					}	
+					}
 					PlayState.inst.pause();
-
 				}
 				else
 				{

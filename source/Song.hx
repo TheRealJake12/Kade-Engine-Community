@@ -277,7 +277,7 @@ class Song
 			songData.song = songId;
 
 		if (songData.audioFile == null)
-			songData.audioFile = songId;	
+			songData.audioFile = songId;
 
 		// Enforce default values for optional fields.
 		if (songData.validScore == null)

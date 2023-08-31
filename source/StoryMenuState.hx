@@ -97,8 +97,6 @@ class StoryMenuState extends MusicBeatState
 
 		weekUnlocked = unlockWeeks();
 
-		PlayState.currentSong = "bruh";
-
 		#if desktop
 		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
 		#end
