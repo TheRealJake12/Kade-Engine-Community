@@ -391,11 +391,12 @@ class PlayState extends MusicBeatState
 	// Self Explainitory.
 	public static var startTime = 0.0;
 
+	// Adding Objects Using Lua
 	public function addObject(object:FlxBasic)
 	{
 		add(object);
 	}
-
+	// Removing Objects Using Lua
 	public function removeObject(object:FlxBasic)
 	{
 		remove(object);
@@ -406,6 +407,7 @@ class PlayState extends MusicBeatState
 		Paths.clearStoredMemory();
 		clean();
 
+		// Initialize The Scripts.
 		#if FEATURE_HSCRIPT
 		scripts = new ScriptGroup();
 		scripts.onAddScript.push(onAddScript);
@@ -414,11 +416,14 @@ class PlayState extends MusicBeatState
 		FlxG.mouse.visible = false;
 		instance = this;
 
+		// Setup The Tween / Timer Manager.
 		tweenManager = new FlxTweenManager();
 		timerManager = new FlxTimerManager();
 
+		// Load User's Keybinds.
 		PlayerSettings.player1.controls.loadKeyBinds();
 
+		// Change The Application Title To The Engine Version, Song Name, And Difficulty.
 		Application.current.window.title = '${MainMenuState.kecVer}: ' + SONG.song + ' ' + CoolUtil.difficultyArray[storyDifficulty];
 
 		// grab variables here too or else its gonna break stuff later on
@@ -435,6 +440,7 @@ class PlayState extends MusicBeatState
 		if (previousRate < 1.00)
 			previousRate = 1;
 
+		// Stop Freeplay / Story Menu Music.
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 
@@ -445,12 +451,13 @@ class PlayState extends MusicBeatState
 			if (!FlxG.save.data.gpuRender)
 				Main.dumpCache();
 		}
+
+		// Set Rating Amounts To 0.
 		marvs = 0;
 		sicks = 0;
 		bads = 0;
 		shits = 0;
 		goods = 0;
-
 		misses = 0;
 
 		highestCombo = 0;
@@ -458,6 +465,7 @@ class PlayState extends MusicBeatState
 		repReleases = 0;
 		inResults = false;
 
+		// Initialize PlayStateChangeables Options For Later.
 		PlayStateChangeables.useDownscroll = FlxG.save.data.downscroll;
 		PlayStateChangeables.safeFrames = FlxG.save.data.frames;
 		if (FlxG.save.data.scrollSpeed == 1)
@@ -492,6 +500,7 @@ class PlayState extends MusicBeatState
 			PlayStateChangeables.skillIssue = false;
 		}
 
+		// Search For Lua Modcharts / Hscripts.
 		#if FEATURE_LUAMODCHART
 		executeModchart = FileSystem.exists(Paths.lua('songs/${PlayState.SONG.songId}/modchart')) && PlayStateChangeables.modchart;
 		if (isSM)
@@ -518,14 +527,12 @@ class PlayState extends MusicBeatState
 
 		#if FEATURE_DISCORD
 		// Making difficulty text for Discord Rich Presence.
-
 		if (!isSM)
 			storyDifficultyText = CoolUtil.difficultyFromInt(storyDifficulty);
 		else
 			storyDifficultyText = "SM";
 
 		iconRPC = SONG.player2;
-
 		// To avoid having duplicate images in Discord assets
 		switch (iconRPC)
 		{
@@ -566,8 +573,7 @@ class PlayState extends MusicBeatState
 			+ misses, iconRPC);
 		#end
 
-		Debug.logTrace(SONG.audioFile);
-
+		// Setup The Cameras.
 		camGame = new SwagCamera();
 		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
@@ -599,13 +605,14 @@ class PlayState extends MusicBeatState
 		persistentUpdate = true;
 		persistentDraw = true;
 
+		// If A Song Doesn't Have Events, It Makes One Automatically.
 		if (SONG.eventObjects == null)
 		{
 			SONG.eventObjects = [new Song.Event("Init BPM", 0, SONG.bpm * songMultiplier, "1", "BPM Change")];
 		}
 
 		if (SONG == null)
-			SONG = Song.loadFromJson('tutorial', '');
+			SONG = Song.loadFromJson('bopeebo', '');
 
 		// if the song has dialogue, so we don't accidentally try to load a nonexistant file and crash the game
 		if (Paths.doesTextAssetExist(Paths.txt('data/songs/${PlayState.SONG.songId}/dialogue')))
@@ -657,6 +664,8 @@ class PlayState extends MusicBeatState
 					{
 						stageCheck = 'school';
 					}
+				case 7:
+					stageCheck = 'tank';	
 					// i should check if its stage (but this is when none is found in chart anyway)
 			}
 		}
@@ -691,6 +700,7 @@ class PlayState extends MusicBeatState
 			gfCheck = SONG.gfVersion;
 		}
 
+		// Load Characters.
 		if (!stageTesting || !FlxG.save.data.optimize)
 		{
 			gf = new Character(400, 130, gfCheck);
@@ -724,12 +734,15 @@ class PlayState extends MusicBeatState
 			}
 		}
 
+		// Initialize Scripts For Real.
+
 		#if FEATURE_HSCRIPT
 		initScripts();
 
 		scripts.executeAllFunc("create");
 		#end
 
+		// Load Stage And Character Posistions.
 		if (!stageTesting)
 			Stage = new Stage(SONG.stage);
 
@@ -808,6 +821,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 
+		// Camera Positioning.
 		if (!FlxG.save.data.optimize)
 		{
 			camPos = new FlxPoint(dad.getGraphicMidpoint().x + dad.camPos[0], dad.getGraphicMidpoint().y + dad.camPos[1]);
