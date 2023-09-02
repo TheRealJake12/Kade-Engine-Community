@@ -3,6 +3,8 @@ package;
 import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.transition.TransitionData;
+import lime.app.Application;
+import Discord.DiscordClient;
 import flixel.FlxBasic;
 #if FEATURE_STEPMANIA
 import smTools.SMFile;
@@ -59,6 +61,20 @@ class TitleState extends MusicBeatState
 		Paths.clearUnusedMemory();
 
 		Main.mainClassState = TitleState;
+
+		Main.gameContainer.checkInternetConnection();
+
+		#if FEATURE_DISCORD
+		if (Main.gameContainer.hasWifi)
+		{
+			Discord.DiscordClient.initialize();
+
+			Application.current.onExit.add(function(exitCode)
+			{
+				DiscordClient.shutdown();
+			});
+		}
+		#end
 
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 		if (FlxG.save.data.gen)
@@ -211,39 +227,46 @@ class TitleState extends MusicBeatState
 			transitioning = true;
 			new FlxTimer().start(2, function(tmr:FlxTimer)
 			{
-				var http = new haxe.Http("https://raw.githubusercontent.com/TheRealJake12/Kade-Engine-Community/master/version.downloadMe");
-				var returnedData:Array<String> = [];
-
-				http.onData = function(data:String)
+				if (Main.gameContainer.hasWifi)
 				{
-					returnedData[0] = data.substring(0, data.indexOf(';'));
-					Debug.logTrace('Github Version : ' + returnedData[0]);
-					returnedData[1] = data.substring(data.indexOf('-'), data.length);
-					if (!MainMenuState.kecVer.contains(returnedData[0].trim()) && !OutdatedSubState.leftState)
-					{
-						Debug.logTrace('The Latest Github Version Is ' + returnedData[0] + ' While Your Version Is ' + MainMenuState.kecVer);
-						OutdatedSubState.needVer = returnedData[0];
-						OutdatedSubState.currChanges = returnedData[1];
-						MusicBeatState.switchState(new OutdatedSubState());
-					}
-					else
-					{
-						MusicBeatState.switchState(new MainMenuState());
-					}
-				}
+					var http = new haxe.Http("https://raw.githubusercontent.com/TheRealJake12/Kade-Engine-Community/master/version.downloadMe");
+					var returnedData:Array<String> = [];
 
-				http.onError = function(error)
-				{
-					Debug.logTrace('Error: $error');
-					new FlxTimer().start(2, function(tmr:FlxTimer)
+					http.onData = function(data:String)
 					{
+						returnedData[0] = data.substring(0, data.indexOf(';'));
+						Debug.logTrace('Github Version : ' + returnedData[0]);
+						returnedData[1] = data.substring(data.indexOf('-'), data.length);
+						if (!MainMenuState.kecVer.contains(returnedData[0].trim()) && !OutdatedSubState.leftState)
+						{
+							Debug.logTrace('The Latest Github Version Is ' + returnedData[0] + ' While Your Version Is ' + MainMenuState.kecVer);
+							OutdatedSubState.needVer = returnedData[0];
+							OutdatedSubState.currChanges = returnedData[1];
+							MusicBeatState.switchState(new OutdatedSubState());
+						}
+						else
 						{
 							MusicBeatState.switchState(new MainMenuState());
 						}
-					});
-				}
+					}
 
-				http.request();
+					http.onError = function(error)
+					{
+						Debug.logTrace('Error: $error');
+						new FlxTimer().start(2, function(tmr:FlxTimer)
+						{
+							{
+								MusicBeatState.switchState(new MainMenuState());
+							}
+						});
+					}
+
+					http.request();
+				}
+				else
+				{
+					MusicBeatState.switchState(new MainMenuState());
+				}
 			});
 
 			Ratings.timingWindows = [

@@ -50,6 +50,8 @@ class Main extends Sprite
 	public static var focusMusicTween:FlxTween;
 	public static var focused:Bool = true;
 
+	public var hasWifi:Bool = true;
+
 	var oldVol:Float = 1.0;
 	var newVol:Float = 0.3;
 
@@ -149,15 +151,6 @@ class Main extends Sprite
 			}
 		});
 
-		#if FEATURE_DISCORD
-		Discord.DiscordClient.initialize();
-
-		Application.current.onExit.add(function(exitCode)
-		{
-			DiscordClient.shutdown();
-		});
-		#end
-
 		#if !mobile
 		addChild(fpsCounter);
 		toggleFPS(FlxG.save.data.fps);
@@ -197,6 +190,32 @@ class Main extends Sprite
 			Assets.cache.clear("songs");
 			#end
 		}
+	}
+
+	public function checkInternetConnection()
+	{
+		Debug.logInfo('Checking Internet connection Through URL: "https://www.google.com".');
+		var http = new haxe.Http("https://www.google.com");
+		http.onStatus = function(status:Int)
+		{
+			switch status
+			{
+				case 200: // success
+					hasWifi = true;
+					Debug.logInfo('Connected.');
+				default: // error
+					hasWifi = false;
+					Debug.logInfo('No Internet Connection.');
+			}
+		};
+
+		http.onError = function(e)
+		{
+			hasWifi = false;
+			Debug.logInfo('No Internet Connection.');
+		}
+
+		http.request();
 	}
 
 	#if desktop

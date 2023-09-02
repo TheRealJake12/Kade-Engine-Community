@@ -287,6 +287,8 @@ class ChartingState extends MusicBeatState
 		leftIcon = new HealthIcon(player1.healthIcon);
 		rightIcon = new HealthIcon(player2.healthIcon);
 
+		Application.current.window.title = '${MainMenuState.kecVer}: In The Chart Editor';
+
 		var index = 0;
 
 		if (_song.eventObjects == null)
@@ -662,9 +664,6 @@ class ChartingState extends MusicBeatState
 				poggers();
 			}
 
-			Debug.logTrace('${savedType} ${savedValue} ${savedValue2}');
-			// dfjk
-
 			updateGrid();
 
 			regenerateLines();
@@ -679,6 +678,8 @@ class ChartingState extends MusicBeatState
 			listOfEvents.setData(FlxUIDropDownMenu.makeStrIdLabelArray(listofnames, true));
 
 			listOfEvents.selectedLabel = pog.name;
+
+			autosaveSong();
 		});
 		var posLabel = new FlxText(150, 85, 'Event Position');
 		posLabel.font = Paths.font("vcr.ttf");
@@ -898,7 +899,7 @@ class ChartingState extends MusicBeatState
 			currentSelectedEventName = event.name;
 			currentEventPosition = event.position;
 
-			Debug.logTrace('${savedType} ${savedValue} ${savedValue2}');
+			Debug.logTrace('Event Type: ${savedType}, Event Value 1: ${savedValue}, Event Value 2: ${savedValue2}.');
 		});
 
 		eventValue.callback = function(string:String, string2:String)
@@ -960,16 +961,29 @@ class ChartingState extends MusicBeatState
 
 	function addOptionsUI()
 	{
-		var hitsounds = new FlxUICheckBox(10, 60, null, null, "Play hitsounds", 100);
+		var hitsounds = new FlxUICheckBox(10, 20, null, null, "Play hitsounds", 100);
 		hitsounds.checked = false;
 		hitsounds.callback = function()
 		{
 			playClaps = hitsounds.checked;
 		};
 
+		var opponentMode = new FlxUICheckBox(10, 50, null, null, "Opponent Mode", 100);
+		opponentMode.checked = FlxG.save.data.opponent;
+		opponentMode.callback = function()
+		{
+			FlxG.save.data.opponent = !FlxG.save.data.opponent;
+		}
+
+		var autosaveBool = new FlxUICheckBox(10, 80, null, null, "Auto Saving", 100);
+		autosaveBool.checked = FlxG.save.data.autoSaving;
+		autosaveBool.callback = function()
+		{
+			FlxG.save.data.autoSaving = !FlxG.save.data.autoSaving;
+		};
+
 		check_snap = new FlxUICheckBox(80, 25, null, null, "Snap to grid", 100);
 		check_snap.checked = defaultSnap;
-		// _song.needsVoices = check_voices.checked;
 		check_snap.callback = function()
 		{
 			defaultSnap = check_snap.checked;
@@ -978,6 +992,8 @@ class ChartingState extends MusicBeatState
 		var tab_options = new FlxUI(null, UI_options);
 		tab_options.name = "Options";
 		tab_options.add(hitsounds);
+		tab_options.add(opponentMode);
+		tab_options.add(autosaveBool);
 		UI_options.addGroup(tab_options);
 	}
 
@@ -1585,7 +1601,7 @@ class ChartingState extends MusicBeatState
 
 					var thing = ii.sectionNotes[ii.sectionNotes.length - 1];
 
-					var note:Note = new Note(strum, Math.floor(i[1] % 4), null, false, true, i[3], i[4], 0, i[5]);
+					var note:Note = new Note(strum, Math.floor(i[1] % 4), null, false, true, true, i[3], i[4], i[5]);
 					note.rawNoteData = i[1];
 					note.sustainLength = i[2];
 					note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));
@@ -1645,13 +1661,16 @@ class ChartingState extends MusicBeatState
 						originalNote.rawNoteData,
 						originalNote.sustainLength,
 						originalNote.isAlt,
-						originalNote.beat
+						originalNote.beat,
+						originalNote.noteShit
 					];
 					ii.sectionNotes.push(newData);
 
 					var thing = ii.sectionNotes[ii.sectionNotes.length - 1];
 
-					var note:Note = new Note(strum, originalNote.noteData, originalNote.prevNote, originalNote.isSustainNote, true, originalNote.isAlt,
+					// dfjk
+
+					var note:Note = new Note(strum, originalNote.noteData, originalNote.prevNote, originalNote.isSustainNote, true, true, originalNote.isAlt,
 						originalNote.beat, originalNote.noteShit);
 					note.rawNoteData = originalNote.rawNoteData;
 					note.sustainLength = originalNote.sustainLength;
@@ -1685,6 +1704,9 @@ class ChartingState extends MusicBeatState
 				}
 			}
 		}
+
+		// updateGrid();
+
 		for (note in toDelete)
 		{
 			deleteNote(note);
@@ -1693,6 +1715,7 @@ class ChartingState extends MusicBeatState
 		{
 			selectedBoxes.add(box);
 		}
+		//
 	}
 
 	function loadSong(daSong:String, reloadFromFile:Bool = false):Void
@@ -2544,6 +2567,11 @@ class ChartingState extends MusicBeatState
 						offset += offsetSeconds;
 
 					offsetSelectedNotes(offset);
+
+					// updateGrid();
+
+					// ok so basically theres a bug with color quant that it doesn't update the color until the grid updates.
+					// when the grid updates, it causes a massive performance drop everytime we offset the notes. :/
 				}
 
 				if (FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.C)
@@ -3281,6 +3309,8 @@ class ChartingState extends MusicBeatState
 			curRenderedSustains.remove(curRenderedSustains.members[0], true);
 		}
 
+		// dfjk
+
 		var currentSection = 0;
 
 		for (section in _song.notes)
@@ -3448,7 +3478,7 @@ class ChartingState extends MusicBeatState
 			}
 		}
 
-		autosaveSong();
+		// updateNoteUI();
 	}
 
 	function clearSection():Void
@@ -3650,7 +3680,7 @@ class ChartingState extends MusicBeatState
 
 		if (n == null)
 		{
-			var note:Note = new Note(noteStrum, noteData % 4, null, false, true, null, null, TimingStruct.getBeatFromTime(noteStrum), noteShit);
+			var note:Note = new Note(noteStrum, noteData % 4, null, false, true, true, null, TimingStruct.getBeatFromTime(noteStrum), noteShit);
 			note.rawNoteData = noteData;
 			note.sustainLength = noteSus;
 			note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));
@@ -3680,7 +3710,7 @@ class ChartingState extends MusicBeatState
 		}
 		else
 		{
-			var note:Note = new Note(n.strumTime, n.noteData % 4, null, false, true, false, n.isAlt, TimingStruct.getBeatFromTime(n.strumTime), noteShit);
+			var note:Note = new Note(n.strumTime, n.noteData % 4, null, false, true, true, n.isAlt, TimingStruct.getBeatFromTime(n.strumTime), noteShit);
 			note.beat = TimingStruct.getBeatFromTime(n.strumTime);
 			note.rawNoteData = n.noteData;
 			note.sustainLength = noteSus;
@@ -3802,12 +3832,19 @@ class ChartingState extends MusicBeatState
 
 	function autosaveSong():Void
 	{
-		FlxG.save.data.autosave = Json.stringify({
-			"song": _song,
-		});
+		if (FlxG.save.data.autoSaving)
+		{
+			FlxG.save.data.autosave = Json.stringify({
+				"song": _song,
+			});
 
-		Debug.logTrace('Chart Saved');
-		FlxG.save.flush();
+			// Debug.logTrace('Chart Saved');
+			FlxG.save.flush();
+		}
+		else
+		{
+			Debug.logTrace('You Have Auto Saving Disabled.');
+		}
 	}
 
 	function loadAutosave():Void
@@ -3828,7 +3865,6 @@ class ChartingState extends MusicBeatState
 			meta = autoSaveData.songMeta != null ? cast autoSaveData.songMeta : {};
 		}
 
-		Debug.logTrace(data.songId);
 		PlayState.SONG = Song.parseJSONshit(data.songId, data, meta);
 
 		while (curRenderedNotes.members.length > 0)

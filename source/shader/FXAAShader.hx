@@ -88,7 +88,6 @@ class FXAAShader extends FlxShader
             
             gl_FragColor = vec4( col, 1. ); 
         } ')
-        
 	public function new()
 	{
 		super();

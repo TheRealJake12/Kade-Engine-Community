@@ -136,6 +136,7 @@ class PlayState extends MusicBeatState
 
 	// The Number Your Combo Is.
 	private var combo:Int = 0;
+
 	// Highest Your Combo Has Been.
 	public static var highestCombo:Int = 0;
 
@@ -159,6 +160,7 @@ class PlayState extends MusicBeatState
 
 	// Current Score
 	public var songScore:Int = 0;
+
 	// Idk.
 	var songScoreDef:Int = 0;
 	// Text For Accuracy, Score, Misses, Etc.
@@ -197,12 +199,14 @@ class PlayState extends MusicBeatState
 
 	// BotPlay text
 	public var addedBotplay:Bool = false;
+
 	private var botPlayState:FlxText;
 
 	// All The Notes
 	public var notes:FlxTypedGroup<Note>;
 	// Non Visible Notes.
 	public var unspawnNotes:Array<Note> = [];
+
 	// MS Timing For Notes?
 	var notesHitArray:Array<Float> = [];
 
@@ -226,11 +230,13 @@ class PlayState extends MusicBeatState
 	public static var rep:Replay;
 	public static var loadRep:Bool = false;
 	public static var inResults:Bool = false;
+
 	var replayTxt:FlxText;
 
 	// Presses, Notes Hit, Etc For Replays.
 	public static var repPresses:Int = 0;
 	public static var repReleases:Int = 0;
+
 	private var saveNotes:Array<Dynamic> = [];
 	private var saveJudge:Array<String> = [];
 	private var replayAna:Analysis = new Analysis(); // replay analysis
@@ -337,8 +343,10 @@ class PlayState extends MusicBeatState
 
 	// Song Position Bar. Self Explainitory.
 	private var songPositionBar:Float = 0;
+
 	public static var songPosBar:FlxBar;
 	public static var songPosBG:FlxSprite;
+
 	// Song Position Song Name.
 	var songName:FlxText;
 
@@ -369,25 +377,32 @@ class PlayState extends MusicBeatState
 
 	// I don't know.
 	public static var offsetTesting:Bool = false;
+
 	// Dialogue For Week 6 And Whatnot.
 	public var dialogue:Array<String> = [];
+
 	// Used For Alt Animations (Up-Alt, etc.)
 	var altSuffix:String = "";
 	// I'm Not Sure Why This Exists.
 	var wiggleShit:WiggleEffect = new WiggleEffect();
-	
+
 	// Kinda The Same Thing.
 	var inCutscene:Bool = false;
+
 	public var inCinematic:Bool = false;
 
 	// From What I Can Tell, It's Just Used For StageDebugState.
 	public static var stageTesting:Bool = false;
+
 	// Will fire once to prevent debug spam messages and broken animations
 	private var triggeredAlready:Bool = false;
+
 	// Per song additive offset
 	public static var songOffset:Float = 0;
+
 	// Self Explainitory.
 	public var isDead:Bool = false; // Don't mess with this on Lua!!!
+
 	// Self Explainitory.
 	public static var startTime = 0.0;
 
@@ -396,6 +411,7 @@ class PlayState extends MusicBeatState
 	{
 		add(object);
 	}
+
 	// Removing Objects Using Lua
 	public function removeObject(object:FlxBasic)
 	{
@@ -665,7 +681,7 @@ class PlayState extends MusicBeatState
 						stageCheck = 'school';
 					}
 				case 7:
-					stageCheck = 'tank';	
+					stageCheck = 'tank';
 					// i should check if its stage (but this is when none is found in chart anyway)
 			}
 		}
@@ -1915,7 +1931,7 @@ class PlayState extends MusicBeatState
 
 		inCinematic = false;
 		inCutscene = false;
-		
+
 		startedCountdown = true;
 		Conductor.songPosition = 0;
 		Conductor.songPosition -= Conductor.crochet * 5;
