@@ -666,6 +666,11 @@ class ChartingState extends MusicBeatState
 				poggers();
 			}
 
+			Debug.logTrace('${savedType} ${savedValue} ${savedValue2}');
+			//dfjk
+
+			updateGrid();
+
 			regenerateLines();
 
 			var listofnames = [];
@@ -779,9 +784,9 @@ class ChartingState extends MusicBeatState
 			currentSelectedEventName = firstEvent.name;
 			currentEventPosition = firstEvent.position;
 
-			savedType = firstEvent.type;
-			savedValue = firstEvent.value + '';
-			savedValue2 = firstEvent.value2 + '';
+			//savedType = firstEvent.type;
+			//savedValue = firstEvent.value + '';
+			//savedValue2 = firstEvent.value2 + '';
 
 			var listofnames = [];
 
@@ -885,13 +890,19 @@ class ChartingState extends MusicBeatState
 			if (event == null)
 				return;
 
+			savedValue = event.value;
+			savedValue2 = event.value2;
+			savedType = event.type;	
+
 			eventName.text = event.name;
-			eventValue.text = event.value + "";
-			eventValue2.text = event.value2 + "";
+			eventValue.text = savedValue + "";
+			eventValue2.text = savedValue2 + "";
 			eventPos.text = event.position + "";
-			eventType.selectedLabel = event.type;
+			eventType.selectedLabel = savedType;
 			currentSelectedEventName = event.name;
 			currentEventPosition = event.position;
+
+			Debug.logTrace('${savedType} ${savedValue} ${savedValue2}');
 		});
 
 		eventValue.callback = function(string:String, string2:String)
@@ -1873,7 +1884,7 @@ class ChartingState extends MusicBeatState
 
 					regenerateLines();
 
-					poggers();
+					//poggers();
 
 				case 'note_susLength':
 					if (curSelectedNote == null)
@@ -3711,8 +3722,9 @@ class ChartingState extends MusicBeatState
 
 			curRenderedNotes.add(note);
 		}
-
+		
 		updateNoteUI();
+		
 
 		autosaveSong();
 	}
@@ -3817,10 +3829,6 @@ class ChartingState extends MusicBeatState
 				notename = "Hurt";
 			case 2:
 				notename = "Must Press";
-			case 3:
-				notename = "Peeker";
-			case 4:
-				notename = "Funbox";
 		}
 		notetypetext.text = "Note type: " + notename;
 	}
@@ -3920,3 +3928,4 @@ class ChartingState extends MusicBeatState
 		FlxG.log.error("Problem saving Level data");
 	}
 }
+w
