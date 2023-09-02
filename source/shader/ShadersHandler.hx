@@ -1,5 +1,6 @@
 package shader;
 
+import openfl.filters.BitmapFilter;
 import openfl.display.Shader;
 import openfl.filters.ShaderFilter;
 import shader.FXAAShader;
