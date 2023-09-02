@@ -171,10 +171,6 @@ class ChartingState extends MusicBeatState
 	}
 
 	var reloadOnInit = false;
-
-	public var ignoreWarnings = false;
-
-	var autosaveIndicator:FlxSprite;
 	var curDiff:String = "";
 
 	override function create()
@@ -667,7 +663,7 @@ class ChartingState extends MusicBeatState
 			}
 
 			Debug.logTrace('${savedType} ${savedValue} ${savedValue2}');
-			//dfjk
+			// dfjk
 
 			updateGrid();
 
@@ -784,9 +780,9 @@ class ChartingState extends MusicBeatState
 			currentSelectedEventName = firstEvent.name;
 			currentEventPosition = firstEvent.position;
 
-			//savedType = firstEvent.type;
-			//savedValue = firstEvent.value + '';
-			//savedValue2 = firstEvent.value2 + '';
+			// savedType = firstEvent.type;
+			// savedValue = firstEvent.value + '';
+			// savedValue2 = firstEvent.value2 + '';
 
 			var listofnames = [];
 
@@ -892,7 +888,7 @@ class ChartingState extends MusicBeatState
 
 			savedValue = event.value;
 			savedValue2 = event.value2;
-			savedType = event.type;	
+			savedType = event.type;
 
 			eventName.text = event.name;
 			eventValue.text = savedValue + "";
@@ -988,7 +984,6 @@ class ChartingState extends MusicBeatState
 	var metronome:FlxUICheckBox;
 	var metronomeStepper:FlxUINumericStepper;
 	var metronomeOffsetStepper:FlxUINumericStepper;
-	var check_warnings:FlxUICheckBox = null;
 
 	function addSongUI():Void
 	{
@@ -997,6 +992,9 @@ class ChartingState extends MusicBeatState
 
 		var UI_audioFile = new FlxUIInputText(10, 200, 70, _song.audioFile, 8);
 		typingShit2 = UI_audioFile;
+		var audioLabel:FlxText = new FlxText(10, 180, 0, "Audio Track");
+		audioLabel.font = Paths.font('vcr.ttf');
+		add(audioLabel);
 
 		var check_voices = new FlxUICheckBox(10, 25, null, null, "Has voice track", 100);
 		check_voices.checked = _song.needsVoices;
@@ -1041,7 +1039,7 @@ class ChartingState extends MusicBeatState
 			resetSection(true);
 		});
 
-		var loadAutosaveBtn:FlxButton = new FlxButton(reloadSongJson.x, reloadSongJson.y + 30, 'load autosave', loadAutosave);
+		var loadAutosaveBtn:FlxButton = new FlxButton(reloadSongJson.x, reloadSongJson.y + 30, 'Load AutoSave', loadAutosave);
 		var stepperBPM:FlxUINumericStepper = new FlxUINumericStepper(10, 65, 0.1, 1, 1.0, 5000.0, 1);
 		stepperBPM.value = Conductor.bpm;
 		stepperBPM.name = 'song_bpm';
@@ -1251,17 +1249,6 @@ class ChartingState extends MusicBeatState
 		metronomeStepper = new FlxUINumericStepper(15, 55, 5, _song.bpm, 1, 1500, 1);
 		metronomeOffsetStepper = new FlxUINumericStepper(metronomeStepper.x + 100, metronomeStepper.y, 25, 0, 0, 1000, 1);
 
-		check_warnings = new FlxUICheckBox(10, 120, null, null, "Ignore Progress Warnings", 100);
-		if (FlxG.save.data.ignoreWarnings == null)
-			FlxG.save.data.ignoreWarnings = false;
-		check_warnings.checked = FlxG.save.data.ignoreWarnings;
-
-		check_warnings.callback = function()
-		{
-			FlxG.save.data.ignoreWarnings = check_warnings.checked;
-			ignoreWarnings = FlxG.save.data.ignoreWarnings;
-		};
-
 		var randomizeNotes:FlxButton = new FlxButton(metronomeOffsetStepper.x + 100, metronomeOffsetStepper.y, "Randomize Notes", function()
 		{
 			for (i in _song.notes)
@@ -1289,7 +1276,6 @@ class ChartingState extends MusicBeatState
 		tab_group_chart.add(randomizeNotes);
 		tab_group_chart.add(metronomeStepper);
 		tab_group_chart.add(metronomeOffsetStepper);
-		tab_group_chart.add(check_warnings);
 
 		UI_box.addGroup(tab_group_chart);
 	}
@@ -1720,7 +1706,6 @@ class ChartingState extends MusicBeatState
 		{
 			var diff:String = CoolUtil.getSuffixFromDiff(curDiff);
 			_song = Song.conversionChecks(Song.loadFromJson(PlayState.SONG.songId, diff));
-			Debug.logTrace(typingShit2.text);
 		}
 		else
 		{
@@ -1884,7 +1869,7 @@ class ChartingState extends MusicBeatState
 
 					regenerateLines();
 
-					//poggers();
+				// poggers();
 
 				case 'note_susLength':
 					if (curSelectedNote == null)
@@ -3462,6 +3447,8 @@ class ChartingState extends MusicBeatState
 				return;
 			}
 		}
+
+		autosaveSong();
 	}
 
 	function clearSection():Void
@@ -3722,11 +3709,10 @@ class ChartingState extends MusicBeatState
 
 			curRenderedNotes.add(note);
 		}
-		
-		updateNoteUI();
-		
 
 		autosaveSong();
+
+		updateNoteUI();
 	}
 
 	function getStrumTime(yPos:Float):Float
@@ -3740,10 +3726,6 @@ class ChartingState extends MusicBeatState
 	}
 
 	private var daSpacing:Float = 0.3;
-
-	function loadLevel():Void
-	{
-	}
 
 	function getNotes():Array<Dynamic>
 	{
@@ -3772,53 +3754,6 @@ class ChartingState extends MusicBeatState
 		}
 	}
 
-	function loadAutosave():Void
-	{
-		while (curRenderedNotes.members.length > 0)
-		{
-			curRenderedNotes.remove(curRenderedNotes.members[0], true);
-		}
-
-		while (curRenderedSustains.members.length > 0)
-		{
-			curRenderedSustains.remove(curRenderedSustains.members[0], true);
-		}
-
-		var autoSaveData = Json.parse(FlxG.save.data.autosave);
-
-		var data:SongData = cast autoSaveData.song;
-		var meta:SongMeta = {};
-		var name:String = data.songId;
-		if (autoSaveData.song != null)
-		{
-			meta = autoSaveData.songMeta != null ? cast autoSaveData.songMeta : {};
-			name = meta.name;
-		}
-		PlayState.SONG = Song.parseJSONshit(name, data, meta);
-
-		while (curRenderedNotes.members.length > 0)
-		{
-			curRenderedNotes.remove(curRenderedNotes.members[0], true);
-		}
-
-		while (curRenderedSustains.members.length > 0)
-		{
-			curRenderedSustains.remove(curRenderedSustains.members[0], true);
-		}
-
-		while (sectionRenderes.members.length > 0)
-		{
-			sectionRenderes.remove(sectionRenderes.members[0], true);
-		}
-		for (i in _song.notes)
-		{
-			if (i.startTime > inst.length)
-				_song.notes.remove(i);
-		}
-		MusicBeatState.switchState(new ChartingState());
-		clean();
-	}
-
 	function updateNotetypeText()
 	{
 		switch (noteShit)
@@ -3839,37 +3774,6 @@ class ChartingState extends MusicBeatState
 		curRenderedSustains.clear();
 
 		super.destroy();
-	}
-
-	function autosaveSong2():Void
-	{
-		FlxG.save.data.autosave = Json.stringify({
-			"song": _song,
-			"songMeta": {
-				"name": _song.songId,
-				"offset": 0,
-			}
-		});
-		trace('Chart saved!');
-		FlxTween.tween(autosaveIndicator, {alpha: 1}, 1, {ease: FlxEase.backInOut, type: ONESHOT});
-
-		new FlxTimer().start(3, function(tmr:FlxTimer)
-		{
-			FlxTween.tween(autosaveIndicator, {alpha: 0}, 1, {ease: FlxEase.backInOut, type: ONESHOT});
-		});
-		FlxG.save.flush();
-	}
-
-	function autosaveSong():Void
-	{
-		FlxG.save.data.autosave = Json.stringify({
-			"song": _song,
-			"songMeta": {
-				"name": _song.songId,
-				"offset": 0,
-			}
-		});
-		FlxG.save.flush();
 	}
 
 	private function saveLevel()
@@ -3894,6 +3798,60 @@ class ChartingState extends MusicBeatState
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 			_file.save(data.trim(), _song.songId.toLowerCase() + CoolUtil.getSuffixFromDiff(curDiff) + ".json");
 		}
+	}
+
+	function autosaveSong():Void
+	{
+		FlxG.save.data.autosave = Json.stringify({
+			"song": _song,
+		});
+
+		Debug.logTrace('Chart Saved');
+		FlxG.save.flush();
+	}
+
+	function loadAutosave():Void
+	{
+		var autoSaveData = Json.parse(FlxG.save.data.autosave);
+
+		var json = {
+			"song": _song
+		};
+
+		var data:String = Json.stringify(json, null, " ");
+
+		var data:SongData = cast autoSaveData;
+		var meta:SongMeta = {};
+		var name:String = data.songId;
+		if (autoSaveData.song != null)
+		{
+			meta = autoSaveData.songMeta != null ? cast autoSaveData.songMeta : {};
+		}
+
+		Debug.logTrace(data.songId);
+		PlayState.SONG = Song.parseJSONshit(data.songId, data, meta);
+
+		while (curRenderedNotes.members.length > 0)
+		{
+			curRenderedNotes.remove(curRenderedNotes.members[0], true);
+		}
+
+		while (curRenderedSustains.members.length > 0)
+		{
+			curRenderedSustains.remove(curRenderedSustains.members[0], true);
+		}
+
+		while (sectionRenderes.members.length > 0)
+		{
+			sectionRenderes.remove(sectionRenderes.members[0], true);
+		}
+		for (i in _song.notes)
+		{
+			if (i.startTime > inst.length)
+				_song.notes.remove(i);
+		}
+		MusicBeatState.switchState(new ChartingState());
+		clean();
 	}
 
 	function onSaveComplete(_):Void
@@ -3928,4 +3886,3 @@ class ChartingState extends MusicBeatState
 		FlxG.log.error("Problem saving Level data");
 	}
 }
-w
