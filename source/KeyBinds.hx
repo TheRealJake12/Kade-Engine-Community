@@ -24,7 +24,7 @@ class KeyBinds
 		FlxG.save.data.muteBind = "NUMPADZERO";
 		FlxG.save.data.volUpBind = "PLUS";
 		FlxG.save.data.volDownBind = "MINUS";
-		FlxG.save.data.fullscreenBind = "F";
+		FlxG.save.data.fullscreenBind = "F4";
 		FlxG.save.data.gpupBind = "DPAD_UP";
 		FlxG.save.data.gpdownBind = "DPAD_DOWN";
 		FlxG.save.data.gpleftBind = "DPAD_LEFT";
@@ -107,7 +107,7 @@ class KeyBinds
 		}
 		if (FlxG.save.data.fullscreenBind == null)
 		{
-			FlxG.save.data.fullscreenBind = "F";
+			FlxG.save.data.fullscreenBind = "F4";
 			trace("No FULLSCREEN");
 		}
 		if (FlxG.save.data.volumeDownKeys == null)

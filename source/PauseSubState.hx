@@ -225,12 +225,6 @@ class PauseSubState extends MusicBeatSubstate
 					regenMenu();
 				case "Exit to menu":
 					PlayState.startTime = 0;
-					if (PlayState.loadRep)
-					{
-						FlxG.save.data.botplay = false;
-						FlxG.save.data.scrollSpeed = 1;
-						FlxG.save.data.downscroll = false;
-					}
 					PlayState.loadRep = false;
 					PlayState.stageTesting = false;
 					PlayState.inDaPlay = false;

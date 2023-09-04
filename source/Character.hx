@@ -84,7 +84,6 @@ class Character extends FlxSprite
 		var jsonData = Paths.loadJSON('characters/${curCharacter}');
 		if (jsonData == null)
 		{
-			Debug.logError('Failed to parse JSON data for character ${curCharacter}. Loading default characters...');
 			if (FlxG.fullscreen)
 				FlxG.fullscreen = !FlxG.fullscreen;
 			if (isPlayer)
@@ -94,12 +93,12 @@ class Character extends FlxSprite
 			}
 			else if (replacesGF)
 			{
-				Debug.logError('Failed to parse JSON data for character  ${curCharacter}. Loading default boyfriend...');
+				Debug.logError('Failed to parse JSON data for character  ${curCharacter}. Loading default gf...');
 				jsonData = Paths.loadJSON('characters/gf');
 			}
 			else
 			{
-				Debug.logError('Failed to parse JSON data for character  ${curCharacter}. Loading default boyfriend...');
+				Debug.logError('Failed to parse JSON data for character  ${curCharacter}. Loading default opponent...');
 				jsonData = Paths.loadJSON('characters/dad');
 			}
 		}

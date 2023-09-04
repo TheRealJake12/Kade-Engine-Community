@@ -165,7 +165,13 @@ class Note extends FlxSprite
 			{
 				case 'hurt':
 					{
-						frames = Paths.getSparrowAtlas("notetypes/type1", 'shared');
+						switch (FlxG.save.data.noteskin)
+						{
+							default:
+								frames = Paths.getSparrowAtlas("notetypes/hurt_Arrows", 'shared');
+							case 1:
+								frames = Paths.getSparrowAtlas("notetypes/hurt_Circles", 'shared');
+						}
 						for (i in 0...4)
 						{
 							animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
@@ -174,7 +180,13 @@ class Note extends FlxSprite
 						}
 					}
 				case 'mustpress':
-					frames = Paths.getSparrowAtlas("notetypes/type2", 'shared');
+					switch (FlxG.save.data.noteskin)
+					{
+						default:
+							frames = Paths.getSparrowAtlas("notetypes/mustpress_Arrows", 'shared');
+						case 1:
+							frames = Paths.getSparrowAtlas("notetypes/mustpress_Circles", 'shared');
+					}
 					for (i in 0...4)
 					{
 						animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
@@ -228,7 +240,13 @@ class Note extends FlxSprite
 					{
 						case 'hurt':
 							{
-								frames = Paths.getSparrowAtlas("notetypes/type1", 'shared');
+								switch (FlxG.save.data.noteskin)
+								{
+									default:
+										frames = Paths.getSparrowAtlas("notetypes/hurt_Arrows", 'shared');
+									case 1:
+										frames = Paths.getSparrowAtlas("notetypes/hurt_Circles", 'shared');
+								}
 								for (i in 0...4)
 								{
 									animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
@@ -241,7 +259,13 @@ class Note extends FlxSprite
 
 						case 'mustpress':
 							{
-								frames = Paths.getSparrowAtlas("notetypes/type2", 'shared');
+								switch (FlxG.save.data.noteskin)
+								{
+									default:
+										frames = Paths.getSparrowAtlas("notetypes/mustpress_Arrows", 'shared');
+									case 1:
+										frames = Paths.getSparrowAtlas("notetypes/mustpress_Circles", 'shared');
+								}
 								for (i in 0...4)
 								{
 									animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
@@ -278,7 +302,13 @@ class Note extends FlxSprite
 					{
 						case 'hurt':
 							{
-								frames = Paths.getSparrowAtlas("notetypes/type1", 'shared');
+								switch (FlxG.save.data.noteskin)
+								{
+									default:
+										frames = Paths.getSparrowAtlas("notetypes/hurt_Arrows", 'shared');
+									case 1:
+										frames = Paths.getSparrowAtlas("notetypes/hurt_Circles", 'shared');
+								}
 								for (i in 0...4)
 								{
 									animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
@@ -288,7 +318,13 @@ class Note extends FlxSprite
 							}
 
 						case 'mustpress':
-							frames = Paths.getSparrowAtlas("notetypes/type2", 'shared');
+							switch (FlxG.save.data.noteskin)
+							{
+								default:
+									frames = Paths.getSparrowAtlas("notetypes/mustpress_Arrows", 'shared');
+								case 1:
+									frames = Paths.getSparrowAtlas("notetypes/mustpress_Circles", 'shared');
+							}
 							for (i in 0...4)
 							{
 								animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes

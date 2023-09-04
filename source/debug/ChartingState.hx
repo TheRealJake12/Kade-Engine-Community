@@ -139,8 +139,8 @@ class ChartingState extends MusicBeatState
 	var vocalsPlayer:FlxSound;
 	var vocalsEnemy:FlxSound;
 
-	var player2:Character = new Character(0, 0, "dad");
-	var player1:Boyfriend = new Boyfriend(0, 0, "bf");
+	var player2:Character;
+	var player1:Boyfriend;
 
 	public static var leftIcon:HealthIcon;
 
@@ -249,6 +249,9 @@ class ChartingState extends MusicBeatState
 			};
 		}
 
+		player2 = new Character(0, 0, _song.player2);
+		player1 = new Boyfriend(0, 0, _song.player1);
+
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.scrollFactor.set();
 		bg.color = 0xFF0C0C0C;
@@ -284,8 +287,8 @@ class ChartingState extends MusicBeatState
 		loadSong(_song.audioFile, reloadOnInit);
 		Conductor.changeBPM(_song.bpm);
 
-		leftIcon = new HealthIcon(player1.healthIcon);
-		rightIcon = new HealthIcon(player2.healthIcon);
+		leftIcon = new HealthIcon(player1.healthIcon, player1.iconAnimated, false);
+		rightIcon = new HealthIcon(player2.healthIcon, player2.iconAnimated, false);
 
 		Application.current.window.title = '${MainMenuState.kecVer}: In The Chart Editor';
 
@@ -371,7 +374,7 @@ class ChartingState extends MusicBeatState
 
 			var down = getYfromStrum(renderer.section.startTime) * zoomFactor;
 
-			var sectionicon = _song.notes[awfgaw].mustHitSection ? new HealthIcon(_song.player1).clone() : new HealthIcon(_song.player2).clone();
+			var sectionicon = _song.notes[awfgaw].mustHitSection ? new HealthIcon(player1.healthIcon).clone() : new HealthIcon(player2.healthIcon).clone();
 			sectionicon.x = -95;
 			sectionicon.y = down - 75;
 			sectionicon.setGraphicSize(0, 45);
@@ -1008,9 +1011,10 @@ class ChartingState extends MusicBeatState
 
 		var UI_audioFile = new FlxUIInputText(10, 200, 70, _song.audioFile, 8);
 		typingShit2 = UI_audioFile;
-		var audioLabel:FlxText = new FlxText(10, 180, 0, "Audio Track");
+		var audioLabel:FlxText = new FlxText(85, 200, 0, "Audio Track", 12);
 		audioLabel.font = Paths.font('vcr.ttf');
-		add(audioLabel);
+
+		// dfjk
 
 		var check_voices = new FlxUICheckBox(10, 25, null, null, "Has voice track", 100);
 		check_voices.checked = _song.needsVoices;
@@ -1225,6 +1229,7 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(shiftNoteDialLabel3);
 		tab_group_song.add(stepperShiftNoteDialms);
 		tab_group_song.add(shiftNoteButton);
+		tab_group_song.add(audioLabel);
 		// tab_group_song.add(hitsounds);
 
 		var tab_group_assets = new FlxUI(null, UI_box);
@@ -1357,7 +1362,7 @@ class ChartingState extends MusicBeatState
 				{
 					var cachedY = i.icon.y;
 					remove(i.icon);
-					var sectionicon = check_mustHitSection.checked ? new HealthIcon(_song.player1).clone() : new HealthIcon(_song.player2).clone();
+					var sectionicon = check_mustHitSection.checked ? new HealthIcon(player1.healthIcon).clone() : new HealthIcon(player2.healthIcon).clone();
 					sectionicon.x = -95;
 					sectionicon.y = cachedY;
 					sectionicon.setGraphicSize(0, 45);
@@ -1667,8 +1672,6 @@ class ChartingState extends MusicBeatState
 					ii.sectionNotes.push(newData);
 
 					var thing = ii.sectionNotes[ii.sectionNotes.length - 1];
-
-					// dfjk
 
 					var note:Note = new Note(strum, originalNote.noteData, originalNote.prevNote, originalNote.isSustainNote, true, true, originalNote.isAlt,
 						originalNote.beat, originalNote.noteShit);
@@ -2910,7 +2913,7 @@ class ChartingState extends MusicBeatState
 					var i = sectionRenderes.members[curSection];
 					var cachedY = i.icon.y;
 					remove(i.icon);
-					var sectionicon = sect.mustHitSection ? new HealthIcon(_song.player1).clone() : new HealthIcon(_song.player2).clone();
+					var sectionicon = sect.mustHitSection ? new HealthIcon(player1.healthIcon).clone() : new HealthIcon(player2.healthIcon).clone();
 					sectionicon.x = -95;
 					sectionicon.y = cachedY;
 					sectionicon.setGraphicSize(0, 45);
@@ -2981,7 +2984,7 @@ class ChartingState extends MusicBeatState
 								vocalsPlayer.pause();
 								vocalsEnemy.pause();
 							}
-							claps.splice(0, claps.length);
+							// claps.splice(0, claps.length);
 						}
 						else
 						{
@@ -3308,8 +3311,6 @@ class ChartingState extends MusicBeatState
 		{
 			curRenderedSustains.remove(curRenderedSustains.members[0], true);
 		}
-
-		// dfjk
 
 		var currentSection = 0;
 

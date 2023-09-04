@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="mustpress_Circles.png">
+	<!-- Created with Adobe Animate version 22.0.2.168 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="blue alone0000" x="0" y="0" width="152" height="152"/>
+	<SubTexture name="blue hold0000" x="157" y="69" width="50" height="44"/>
+	<SubTexture name="blue tail0000" x="157" y="0" width="50" height="64"/>
+	<SubTexture name="green alone0000" x="0" y="0" width="152" height="152"/>
+	<SubTexture name="green hold0000" x="157" y="69" width="50" height="44"/>
+	<SubTexture name="green tail0000" x="157" y="0" width="50" height="64"/>
+	<SubTexture name="purple alone0000" x="0" y="0" width="152" height="152"/>
+	<SubTexture name="purple hold0000" x="157" y="69" width="50" height="44"/>
+	<SubTexture name="purple tail0000" x="157" y="0" width="50" height="64"/>
+	<SubTexture name="red alone0000" x="0" y="0" width="152" height="152"/>
+	<SubTexture name="red hold0000" x="157" y="69" width="50" height="44"/>
+	<SubTexture name="red tail0000" x="157" y="0" width="50" height="64"/>
+</TextureAtlas>

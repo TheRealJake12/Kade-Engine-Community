@@ -211,7 +211,7 @@ class PlayState extends MusicBeatState
 	var notesHitArray:Array<Float> = [];
 
 	// Array that should make some notes easier to hit
-	public static var lowPriorityNotes:Array<String> = ["hurt", "mustpress"];
+	public static var lowPriorityNotes:Array<String> = CoolUtil.noteShitArray;
 
 	// Noteskin And Notesplash Related Stuff.
 	public static var noteskinSprite:FlxAtlasFrames;
