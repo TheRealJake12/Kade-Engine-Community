@@ -1572,7 +1572,7 @@ class ChartingState extends MusicBeatState
 				if (ii.startTime <= strum && ii.endTime > strum)
 				{
 					// alright we're in this section lets paste the note here.
-					var newData = [strum, i[1], i[2], i[3], i[4]];
+					var newData = [strum, i[1], i[2], i[3], i[4], i[5]];
 					ii.sectionNotes.push(newData);
 
 					var thing = ii.sectionNotes[ii.sectionNotes.length - 1];
@@ -2212,7 +2212,7 @@ class ChartingState extends MusicBeatState
 									#end
 								}
 
-								if (vocalsEnemy != null && vocalsPlayer.length > 0)
+								if (vocalsEnemy != null && vocalsEnemy.length > 0)
 								{
 									#if (lime >= "8.0.0")
 									vocalsEnemy._channel.__source.__backend.setPitch(speed);
@@ -3329,9 +3329,9 @@ class ChartingState extends MusicBeatState
 
 	function updateGrid():Void
 	{
-		curRenderedNotes.forEachAlive(function(spr:Note) spr.destroy());
+		//curRenderedNotes.forEachAlive(function(spr:Note) spr.destroy());
 		curRenderedNotes.clear();
-		curRenderedSustains.forEachAlive(function(spr:FlxSprite) spr.destroy());
+		//curRenderedSustains.forEachAlive(function(spr:FlxSprite) spr.destroy());
 		curRenderedSustains.clear();
 
 		var currentSection = 0;
@@ -3853,7 +3853,6 @@ class ChartingState extends MusicBeatState
 		curRenderedNotes.clear();
 		curRenderedSustains.forEachAlive(function(spr:FlxSprite) spr.destroy());
 		curRenderedSustains.clear();
-
 		sectionRenderes.forEachAlive(function(huh:SectionRender) huh.destroy());
 		sectionRenderes.clear();
 
