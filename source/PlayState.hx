@@ -3598,8 +3598,7 @@ class PlayState extends MusicBeatState
 			cannotDie = true;
 
 			persistentUpdate = false;
-			MusicBeatState.switchState(new ChartingState());
-			Paths.runGC();
+			LoadingState.loadAndSwitchState(new ChartingState());
 			PlayState.stageTesting = false;
 		}
 
@@ -3655,7 +3654,7 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.keys.justPressed.NUMPADSEVEN)
 		{
-			MusicBeatState.switchState(new AnimationDebug(boyfriend.curCharacter));
+			LoadingState.loadAndSwitchState(new AnimationDebug(boyfriend.curCharacter));
 			PlayState.stageTesting = false;
 			inDaPlay = false;
 			#if FEATURE_LUAMODCHART
@@ -4650,7 +4649,7 @@ class PlayState extends MusicBeatState
 				}
 				else
 				{
-					MusicBeatState.switchState(new FreeplayState());
+					LoadingState.loadAndSwitchState(new FreeplayState());
 					clean();
 				}
 			}
