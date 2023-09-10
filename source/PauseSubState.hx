@@ -184,9 +184,9 @@ class PauseSubState extends MusicBeatSubstate
 			{
 				if (menuItems.length - 1 != curSelected && difficultyChoices.contains(daSelected))
 				{
+					PlayState.storyDifficulty = curSelected;
 					PlayState.SONG = Song.loadFromJson(PlayState.SONG.songId.toLowerCase(),
 						CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[PlayState.storyDifficulty]));
-					PlayState.storyDifficulty = curSelected;
 					PlayState.startTime = 0;
 					MusicBeatState.resetState();
 					return;
