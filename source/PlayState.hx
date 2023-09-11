@@ -593,7 +593,6 @@ class PlayState extends MusicBeatState
 		camGame = new SwagCamera();
 		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
-		camHUD.pixelPerfectRender = true;
 		camStrums = new FlxCamera();
 		camStrums.height = 1300;
 		camStrums.bgColor.alpha = 0;
@@ -3400,6 +3399,13 @@ class PlayState extends MusicBeatState
 		}
 		#end
 
+		#if FEATURE_HSCRIPT
+		if (scripts != null)
+			scripts.executeAllFunc("update", [elapsed]);
+		#end
+
+		super.update(elapsed);
+
 		if (generatedMusic)
 		{
 			if (songStarted && !endingSong && isSM)
@@ -3991,8 +3997,7 @@ class PlayState extends MusicBeatState
 						if ((PlayStateChangeables.botPlay
 							|| !daNote.mustPress
 							|| daNote.wasGoodHit
-							|| holdArray[Math.floor(Math.abs(daNote.noteData))])
-							&& daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= (strumLine.y + Note.swagWidth / 2))
+							|| holdArray[Math.floor(Math.abs(daNote.noteData))]))
 						{
 							if (daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= origin)
 							{
@@ -4014,14 +4019,13 @@ class PlayState extends MusicBeatState
 					else
 						daNote.y = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y
 							- 0.45 * ((Conductor.songPosition - daNote.strumTime) / songMultiplier) * (FlxMath.roundDecimal(leSpeed, 2)))
-							+ daNote.noteYOff;
+							+ daNote.noteYOff;	
 					if (daNote.isSustainNote)
 					{
 						if ((PlayStateChangeables.botPlay
 							|| !daNote.mustPress
 							|| daNote.wasGoodHit
-							|| holdArray[Math.floor(Math.abs(daNote.noteData))])
-							&& daNote.y + daNote.offset.y * daNote.scale.y <= (strumLine.y + Note.swagWidth / 2))
+							|| holdArray[Math.floor(Math.abs(daNote.noteData))]))
 						{
 							// Clip to strumline
 							if (daNote.y + daNote.offset.y * daNote.scale.y <= origin)
@@ -4236,13 +4240,6 @@ class PlayState extends MusicBeatState
 				}
 			});
 		}
-
-		#if FEATURE_HSCRIPT
-		if (scripts != null)
-			scripts.executeAllFunc("update", [elapsed]);
-		#end
-
-		super.update(elapsed);
 
 		if (FlxG.save.data.smoothHealthbar)
 			shownHealth = FlxMath.lerp(shownHealth, health, CoolUtil.boundTo(elapsed * 15 * songMultiplier, 0, 1));

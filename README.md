@@ -60,7 +60,7 @@ haxelib install flixel
 haxelib install flixel-tools
 haxelib install flixel-ui
 haxelib install hscript
-haxelib install sscript 5.0.0
+haxelib install sscript
 haxelib install flixel-addons
 haxelib install actuate
 haxelib install hxcpp-debug-server
@@ -69,9 +69,6 @@ haxelib run lime setup
 haxelib run lime setup flixel
 haxelib run flixel-tools setup
 ```
-Once you have these installed, 
-HaxeFlixel 4.11.0 Breaks some shader shit or something so I went ahead and made it use a custom file that fixes the issue.
-(FlxDrawQuadsItem or smth)
 When its finished, you will need to download these like you did with the Libraries above.
 ```cmd
 haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
