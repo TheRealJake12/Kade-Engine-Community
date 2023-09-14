@@ -508,16 +508,15 @@ class Note extends FlxSprite
 	}
 
 	/*
-	@:noCompletion
-	override function set_y(value:Float):Float
-	{
-		if (!isSustainNote)
-			if (PlayStateChangeables.useDownscroll)
-				value -= height - swagWidth;
-		return super.set_y(value);
-	}
-	*/
-
+		@:noCompletion
+		override function set_y(value:Float):Float
+		{
+			if (!isSustainNote)
+				if (PlayStateChangeables.useDownscroll)
+					value -= height - swagWidth;
+			return super.set_y(value);
+		}
+	 */
 	@:noCompletion
 	override function set_clipRect(rect:FlxRect):FlxRect
 	{

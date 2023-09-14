@@ -435,7 +435,10 @@ class ChartingState extends MusicBeatState
 		UI_box.x = FlxG.width / 2 + 40;
 		UI_box.y = 20;
 
-		var opt_tabs = [{name: "Options", label: 'Song Options'}, {name: "Events", label: 'Song Events'}];
+		var opt_tabs = [
+			{name: "Options", label: 'Charting Options'},
+			{name: "Events", label: 'Song Events'}
+		];
 
 		UI_options = new FlxUITabMenu(null, opt_tabs, true);
 
@@ -975,8 +978,6 @@ class ChartingState extends MusicBeatState
 			FlxG.save.data.playHitsounds = !FlxG.save.data.playHitsounds;
 		};
 
-		// dfjk
-
 		metronome = new FlxUICheckBox(10, 50, null, null, "Metronome Enabled", 100, function()
 		{
 			FlxG.save.data.chart_metronome = metronome.checked;
@@ -1287,9 +1288,34 @@ class ChartingState extends MusicBeatState
 		var stepperCopyLabel = new FlxText(174, 132, 'sections back');
 		stepperCopyLabel.font = Paths.font("vcr.ttf");
 
-		var copyButton:FlxUIButton = new FlxUIButton(10, 130, "Copy last section", function()
+		var copyButton:FlxUIButton = new FlxUIButton(10, 130, "Copy Section", function()
 		{
-			copySection(Std.int(stepperCopy.value));
+			var secit = _song.notes[curSection];
+
+			if (secit != null)
+			{
+				var secit = _song.notes[curSection];
+
+				if (secit != null)
+				{
+					copySection(secit);
+				}
+			}
+		});
+
+		var pasteButton:FlxUIButton = new FlxUIButton(100, 130, "Paste Copied Notes", function()
+		{
+			while (selectedBoxes.members.length != 0)
+			{
+				selectedBoxes.members[0].connectedNote.charterSelected = false;
+				selectedBoxes.members[0].destroy();
+				selectedBoxes.members.remove(selectedBoxes.members[0]);
+			}
+
+			pasteNotesFromArray(copiedNotes);
+			updateGrid();
+
+			// dfjk
 		});
 
 		var clearSectionButton:FlxUIButton = new FlxUIButton(10, 150, "Clear Section", clearSection);
@@ -1461,6 +1487,7 @@ class ChartingState extends MusicBeatState
 		tab_group_section.add(check_CPUAltAnim);
 		tab_group_section.add(check_playerAltAnim);
 		tab_group_section.add(copyButton);
+		tab_group_section.add(pasteButton);
 		tab_group_section.add(clearSectionButton);
 		tab_group_section.add(swapSection);
 		tab_group_section.add(duetButton);
@@ -1561,53 +1588,60 @@ class ChartingState extends MusicBeatState
 
 	function pasteNotesFromArray(array:Array<Array<Dynamic>>, fromStrum:Bool = true)
 	{
-		for (i in array)
+		if (copiedNotes.length < 0)
 		{
-			var strum:Float = i[0];
-			if (fromStrum)
-				strum += Conductor.songPosition;
-			var section = 0;
-			for (ii in _song.notes)
+			return;
+		}
+		else
+		{
+			for (i in array)
 			{
-				if (ii.startTime <= strum && ii.endTime > strum)
+				var strum:Float = i[0];
+				if (fromStrum)
+					strum += Conductor.songPosition;
+				var section = 0;
+				for (ii in _song.notes)
 				{
-					// alright we're in this section lets paste the note here.
-					var newData = [strum, i[1], i[2], i[3], i[4], i[5]];
-					ii.sectionNotes.push(newData);
-
-					var thing = ii.sectionNotes[ii.sectionNotes.length - 1];
-
-					var note:Note = new Note(strum, Math.floor(i[1] % 4), null, false, true, true, i[3], i[4], i[5]);
-					note.rawNoteData = i[1];
-					note.sustainLength = i[2];
-					note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));
-					note.updateHitbox();
-					note.x = Math.floor(i[1] * GRID_SIZE);
-
-					note.charterSelected = true;
-
-					note.y = Math.floor(getYfromStrum(strum) * zoomFactor);
-
-					var box = new ChartingBox(note.x, note.y, note);
-					box.connectedNoteData = thing;
-					selectedBoxes.add(box);
-
-					curRenderedNotes.add(note);
-
-					pastedNotes.push(note);
-
-					if (note.sustainLength > 0)
+					if (ii.startTime <= strum && ii.endTime > strum)
 					{
-						var sustainVis:FlxSprite = new FlxSprite(note.x + (GRID_SIZE / 2),
-							note.y + GRID_SIZE).makeGraphic(8, Math.floor((getYfromStrum(note.strumTime + note.sustainLength) * zoomFactor) - note.y));
+						// alright we're in this section lets paste the note here.
+						var newData = [strum, i[1], i[2], i[3], i[4], i[5]];
+						ii.sectionNotes.push(newData);
 
-						note.noteCharterObject = sustainVis;
+						var thing = ii.sectionNotes[ii.sectionNotes.length - 1];
 
-						curRenderedSustains.add(sustainVis);
+						var note:Note = new Note(strum, Math.floor(i[1] % 4), null, false, true, true, i[3], i[4], i[5]);
+						note.rawNoteData = i[1];
+						note.sustainLength = i[2];
+						note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));
+						note.updateHitbox();
+						note.x = Math.floor(i[1] * GRID_SIZE);
+
+						note.charterSelected = true;
+
+						note.y = Math.floor(getYfromStrum(strum) * zoomFactor);
+
+						var box = new ChartingBox(note.x, note.y, note);
+						box.connectedNoteData = thing;
+						selectedBoxes.add(box);
+
+						curRenderedNotes.add(note);
+
+						pastedNotes.push(note);
+
+						if (note.sustainLength > 0)
+						{
+							var sustainVis:FlxSprite = new FlxSprite(note.x + (GRID_SIZE / 2),
+								note.y + GRID_SIZE).makeGraphic(8, Math.floor((getYfromStrum(note.strumTime + note.sustainLength) * zoomFactor) - note.y));
+
+							note.noteCharterObject = sustainVis;
+
+							curRenderedSustains.add(sustainVis);
+						}
+						continue;
 					}
-					continue;
+					section++;
 				}
-				section++;
 			}
 		}
 	}
@@ -2036,40 +2070,12 @@ class ChartingState extends MusicBeatState
 
 	function swapSection(secit:SwagSection)
 	{
-		var newSwaps:Array<Array<Dynamic>> = [];
-		// Debug.logTrace(_song.notes[curSection]);
-
-		haxe.ds.ArraySort.sort(secit.sectionNotes, function(a, b)
-		{
-			if (a[0] < b[0])
-				return -1;
-			else if (a[0] > b[0])
-				return 1;
-			else
-				return 0;
-		});
-
+		// dfjk
 		for (i in 0...secit.sectionNotes.length)
 		{
-			var note = secit.sectionNotes[i];
-			var n = [note[0], Std.int(note[1]), note[2], note[3], note[4]];
-			n[1] = (note[1] + 4) % 8;
-			newSwaps.push(n);
-		}
-
-		secit.sectionNotes = newSwaps;
-
-		for (i in shownNotes)
-		{
-			for (ii in secit.sectionNotes)
-				if (i.strumTime == ii[0] && i.noteData == ii[1] % 4)
-				{
-					i.x = Math.floor(ii[1] * GRID_SIZE);
-
-					i.y = Math.floor(getYfromStrum(ii[0]) * zoomFactor);
-					if (i.sustainLength > 0 && i.noteCharterObject != null)
-						i.noteCharterObject.x = i.x + (GRID_SIZE / 2);
-				}
+			var note:Array<Dynamic> = secit.sectionNotes[i];
+			note[1] = (note[1] + 4) % 8;
+			secit.sectionNotes[i] = note;
 		}
 
 		updateGrid();
@@ -2598,7 +2604,8 @@ class ChartingState extends MusicBeatState
 								i.connectedNote.rawNoteData,
 								i.connectedNote.sustainLength,
 								i.connectedNote.isAlt,
-								i.connectedNote.beat
+								i.connectedNote.beat,
+								i.connectedNote.noteShit
 							]);
 
 						var firstNote = copiedNotes[0][0];
@@ -2930,7 +2937,7 @@ class ChartingState extends MusicBeatState
 					}
 				}
 
-				if (FlxG.keys.justPressed.Z && !FlxG.keys.justPressed.CONTROL)
+				if (!FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.Z)
 				{
 					this.noteShit--;
 					if (noteShit < 0)
@@ -2940,7 +2947,7 @@ class ChartingState extends MusicBeatState
 					updateNotetypeText();
 				}
 
-				if (FlxG.keys.justPressed.X && !FlxG.keys.justPressed.CONTROL)
+				if (!FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.X)
 				{
 					this.noteShit++;
 					if (noteShit == shits.length)
@@ -3225,23 +3232,16 @@ class ChartingState extends MusicBeatState
 		}
 	}
 
-	function copySection(?sectionNum:Int = 1)
+	function copySection(sec:SwagSection)
 	{
-		var daSec = FlxMath.maxInt(curSection, sectionNum);
-		var sect = lastUpdatedSection;
-
-		if (sect == null)
-			return;
-
-		for (note in _song.notes[daSec - sectionNum].sectionNotes)
+		for (fuck in 0...sec.sectionNotes.length)
 		{
-			var strum = note[0] + Conductor.stepCrochet * (_song.notes[daSec].lengthInSteps * sectionNum);
-
-			var copiedNote:Array<Dynamic> = [strum, note[1], note[2], note[3]];
-			sect.sectionNotes.push(copiedNote);
+			var note:Array<Dynamic> = sec.sectionNotes[fuck];
+			copiedNotes.push(note);
 		}
 
-		updateGrid();
+		// dfjk
+		Debug.logTrace(copiedNotes);
 	}
 
 	function updateSectionUI():Void
@@ -3329,9 +3329,9 @@ class ChartingState extends MusicBeatState
 
 	function updateGrid():Void
 	{
-		//curRenderedNotes.forEachAlive(function(spr:Note) spr.destroy());
+		// curRenderedNotes.forEachAlive(function(spr:Note) spr.destroy());
 		curRenderedNotes.clear();
-		//curRenderedSustains.forEachAlive(function(spr:FlxSprite) spr.destroy());
+		// curRenderedSustains.forEachAlive(function(spr:FlxSprite) spr.destroy());
 		curRenderedSustains.clear();
 
 		var currentSection = 0;
@@ -3506,6 +3506,13 @@ class ChartingState extends MusicBeatState
 
 	function clearSection():Void
 	{
+		while (selectedBoxes.members.length != 0)
+		{
+			selectedBoxes.members[0].connectedNote.charterSelected = false;
+			selectedBoxes.members[0].destroy();
+			selectedBoxes.members.remove(selectedBoxes.members[0]);
+		}
+
 		_song.notes[curSection].sectionNotes = [];
 		updateGrid();
 		updateNoteUI();

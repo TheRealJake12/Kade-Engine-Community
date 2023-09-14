@@ -4019,7 +4019,7 @@ class PlayState extends MusicBeatState
 					else
 						daNote.y = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y
 							- 0.45 * ((Conductor.songPosition - daNote.strumTime) / songMultiplier) * (FlxMath.roundDecimal(leSpeed, 2)))
-							+ daNote.noteYOff;	
+							+ daNote.noteYOff;
 					if (daNote.isSustainNote)
 					{
 						if ((PlayStateChangeables.botPlay

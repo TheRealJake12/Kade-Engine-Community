@@ -118,7 +118,7 @@ class AnimationDebug extends MusicBeatState
 		add(dad);
 
 		char = dad;
-		dad.flipX = false;
+		// dad.flipX = false;
 
 		dumbTexts = new FlxTypedGroup<FlxText>();
 		add(dumbTexts);
