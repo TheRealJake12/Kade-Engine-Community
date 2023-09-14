@@ -2490,7 +2490,7 @@ class ChartingState extends MusicBeatState
 					{
 						waitingForRelease = true;
 						selectBox = new FlxSprite(FlxG.mouse.x, FlxG.mouse.y);
-						selectBox.makeGraphic(0, 0, FlxColor.fromRGB(173, 216, 230));
+						selectBox.makeGraphic(1,1, FlxColor.fromRGB(173, 216, 230));
 						selectBox.alpha = 0.4;
 
 						selectInitialX = selectBox.x;
@@ -2504,9 +2504,12 @@ class ChartingState extends MusicBeatState
 						{
 							selectBox.x = Math.min(FlxG.mouse.x, selectInitialX);
 							selectBox.y = Math.min(FlxG.mouse.y, selectInitialY);
+							selectBox.scale.x = Math.floor(Math.abs(FlxG.mouse.x - selectInitialX));
+							selectBox.scale.y = Math.floor(Math.abs(FlxG.mouse.y - selectInitialY));
+							selectBox.updateHitbox();
 
-							selectBox.makeGraphic(Math.floor(Math.abs(FlxG.mouse.x - selectInitialX)), Math.floor(Math.abs(FlxG.mouse.y - selectInitialY)),
-								FlxColor.fromRGB(173, 216, 230));
+
+							//selectBox.makeGraphic(Math.floor(Math.abs(FlxG.mouse.x - selectInitialX)), Math.floor(Math.abs(FlxG.mouse.y - selectInitialY)),FlxColor.fromRGB(173, 216, 230));
 						}
 					}
 				}
