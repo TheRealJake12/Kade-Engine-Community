@@ -1049,7 +1049,19 @@ class ChartingState extends MusicBeatState
 
 		var reloadSong:FlxUIButton = new FlxUIButton(saveButton.x + saveButton.width + 10, saveButton.y, "Reload Audio", function()
 		{
+			if (inst.playing)
+			{
+				inst.stop();
+				if (!_song.splitVoiceTracks)
+					vocals.stop();
+				else
+				{
+					vocalsPlayer.stop();
+					vocalsEnemy.stop();
+				}
+			}
 			loadSong(_song.audioFile.toLowerCase(), false);
+			// goofy song overlapping and raping your ears	
 		});
 
 		var reloadSongJson:FlxUIButton = new FlxUIButton(reloadSong.x, saveButton.y + 30, "Reload JSON", function()
@@ -1712,8 +1724,6 @@ class ChartingState extends MusicBeatState
 				}
 			}
 		}
-
-		// updateGrid();
 
 		for (note in toDelete)
 		{
@@ -2589,11 +2599,13 @@ class ChartingState extends MusicBeatState
 						offset += offsetSeconds;
 
 					offsetSelectedNotes(offset);
-
-					// updateGrid();
+					
+					updateGrid();
+					updateNoteUI();
 
 					// ok so basically theres a bug with color quant that it doesn't update the color until the grid updates.
 					// when the grid updates, it causes a massive performance drop everytime we offset the notes. :/
+					// actually its broken either way because theres a ghost note after offsetting sometimes. updateGrid anyway.
 				}
 
 				if (FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.C)
@@ -2930,12 +2942,12 @@ class ChartingState extends MusicBeatState
 					{
 						UI_box.selected_tab -= 1;
 						if (UI_box.selected_tab < 0)
-							UI_box.selected_tab = 2;
+							UI_box.selected_tab = 3;
 					}
 					else
 					{
 						UI_box.selected_tab += 1;
-						if (UI_box.selected_tab >= 3)
+						if (UI_box.selected_tab > 3)
 							UI_box.selected_tab = 0;
 					}
 				}
