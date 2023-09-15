@@ -968,6 +968,7 @@ class ChartingState extends MusicBeatState
 	}
 
 	var metronome:FlxUICheckBox;
+	var hitsoundsVol:FlxUINumericStepper;
 
 	function addOptionsUI()
 	{
@@ -977,6 +978,13 @@ class ChartingState extends MusicBeatState
 		{
 			FlxG.save.data.playHitsounds = !FlxG.save.data.playHitsounds;
 		};
+
+		hitsoundsVol = new FlxUINumericStepper(125, 21, 0.1, 1, 0, 1, 1);
+		hitsoundsVol.value = FlxG.save.data.hitVolume;
+		hitsoundsVol.name = 'options_vol';
+
+		var volLabel = new FlxText(95, 3, 0, 'Hitsound Volume', 14);
+		volLabel.font = Paths.font("vcr.ttf");
 
 		metronome = new FlxUICheckBox(10, 50, null, null, "Metronome Enabled", 100, function()
 		{
@@ -1010,6 +1018,8 @@ class ChartingState extends MusicBeatState
 		var tab_options = new FlxUI(null, UI_options);
 		tab_options.name = "Options";
 		tab_options.add(hitsounds);
+		tab_options.add(hitsoundsVol);
+		tab_options.add(volLabel);
 		tab_options.add(metronome);
 		tab_options.add(opponentMode);
 		tab_options.add(autosaveBool);
@@ -1061,7 +1071,7 @@ class ChartingState extends MusicBeatState
 				}
 			}
 			loadSong(_song.audioFile.toLowerCase(), false);
-			// goofy song overlapping and raping your ears	
+			// goofy song overlapping and raping your ears
 		});
 
 		var reloadSongJson:FlxUIButton = new FlxUIButton(reloadSong.x, saveButton.y + 30, "Reload JSON", function()
@@ -1326,8 +1336,6 @@ class ChartingState extends MusicBeatState
 
 			pasteNotesFromArray(copiedNotes);
 			updateGrid();
-
-			// dfjk
 		});
 
 		var clearSectionButton:FlxUIButton = new FlxUIButton(10, 150, "Clear Section", clearSection);
@@ -1961,6 +1969,11 @@ class ChartingState extends MusicBeatState
 					if (nums.value <= 0.1)
 						nums.value = 0.1;
 					inst.volume = nums.value;
+				case 'options_vol':
+					if (nums.value <= 0.1)
+						nums.value = 0.1;
+					hitsoundsVol.value = nums.value;
+				// dfjk
 
 				case 'divisions':
 					subDivisions = nums.value;
@@ -2080,7 +2093,6 @@ class ChartingState extends MusicBeatState
 
 	function swapSection(secit:SwagSection)
 	{
-		// dfjk
 		for (i in 0...secit.sectionNotes.length)
 		{
 			var note:Array<Dynamic> = secit.sectionNotes[i];
@@ -2500,7 +2512,7 @@ class ChartingState extends MusicBeatState
 					{
 						waitingForRelease = true;
 						selectBox = new FlxSprite(FlxG.mouse.x, FlxG.mouse.y);
-						selectBox.makeGraphic(1,1, FlxColor.fromRGB(173, 216, 230));
+						selectBox.makeGraphic(1, 1, FlxColor.fromRGB(173, 216, 230));
 						selectBox.alpha = 0.4;
 
 						selectInitialX = selectBox.x;
@@ -2518,8 +2530,7 @@ class ChartingState extends MusicBeatState
 							selectBox.scale.y = Math.floor(Math.abs(FlxG.mouse.y - selectInitialY));
 							selectBox.updateHitbox();
 
-
-							//selectBox.makeGraphic(Math.floor(Math.abs(FlxG.mouse.x - selectInitialX)), Math.floor(Math.abs(FlxG.mouse.y - selectInitialY)),FlxColor.fromRGB(173, 216, 230));
+							// selectBox.makeGraphic(Math.floor(Math.abs(FlxG.mouse.x - selectInitialX)), Math.floor(Math.abs(FlxG.mouse.y - selectInitialY)),FlxColor.fromRGB(173, 216, 230));
 						}
 					}
 				}
@@ -2599,7 +2610,7 @@ class ChartingState extends MusicBeatState
 						offset += offsetSeconds;
 
 					offsetSelectedNotes(offset);
-					
+
 					updateGrid();
 					updateNoteUI();
 
@@ -3106,7 +3117,7 @@ class ChartingState extends MusicBeatState
 									.loadEmbedded(Paths.sound('hitsounds/${HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase()}', 'shared'));
 							}
 
-							daHitSound.volume = FlxG.save.data.hitVolume;
+							daHitSound.volume = hitsoundsVol.value;
 							daHitSound.play().pan = note.noteData < 4 ? -0.3 : 0.3;
 							playedSound[data] = true;
 
@@ -3254,9 +3265,6 @@ class ChartingState extends MusicBeatState
 			var note:Array<Dynamic> = sec.sectionNotes[fuck];
 			copiedNotes.push(note);
 		}
-
-		// dfjk
-		Debug.logTrace(copiedNotes);
 	}
 
 	function updateSectionUI():Void
@@ -3696,7 +3704,7 @@ class ChartingState extends MusicBeatState
 		var noteShit = shits[this.noteShit];
 		// you can change this to `var noteShit = noteShitDropDown.selectedLabel;` for using the dropdown but I dont like the dropdown, its faster to press Z and X.
 		if (FlxG.save.data.gen)
-			Debug.logTrace("Adding note with " + strum + " from dummyArrow with data " + noteData + " With A Notetype Of " + noteShit);
+			Debug.logTrace("Adding note with " + Std.int(strum) + " from dummyArrow with data " + noteData + " With A Notetype Of " + noteShit);
 
 		if (n != null)
 			section.sectionNotes.push([

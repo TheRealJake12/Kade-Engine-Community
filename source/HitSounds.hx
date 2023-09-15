@@ -7,6 +7,7 @@ class HitSounds
 		'Quaver',
 		'Osu',
 		'Clap',
+		'Snap',
 		'Camellia',
 		'StepMania',
 		'21st Century Humor',

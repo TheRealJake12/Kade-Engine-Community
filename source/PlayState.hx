@@ -1195,8 +1195,8 @@ class PlayState extends MusicBeatState
 			"BOTPLAY", 20);
 		botPlayState.setFormat(Paths.font("vcr.ttf"), 42, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		botPlayState.scrollFactor.set();
-		botPlayState.borderSize = 4;
-		botPlayState.borderQuality = 2;
+		botPlayState.borderSize = 2;
+		botPlayState.borderQuality = 1;
 		botPlayState.cameras = [camHUD];
 		if (PlayStateChangeables.botPlay && !loadRep)
 			uiGroup.add(botPlayState);
