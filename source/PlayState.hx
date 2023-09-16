@@ -5199,7 +5199,7 @@ class PlayState extends MusicBeatState
 		if (PlayStateChangeables.botPlay)
 			notes.forEachAlive(function(daNote:Note)
 			{
-				if (daNote.mustPress && Conductor.songPosition >= daNote.strumTime && daNote.noteShit != 'hurt')
+				if (daNote.mustPress && Conductor.songPosition >= daNote.strumTime && daNote.botplayHit)
 				{
 					// Force good note hit regardless if it's too late to hit it or not as a fail safe
 					if (loadRep)

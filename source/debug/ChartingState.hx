@@ -1149,7 +1149,7 @@ class ChartingState extends MusicBeatState
 		var stepperEnemyVolLabel = new FlxText(74, 140, 0, "Enemy Vocal Volume", 12);
 		stepperEnemyVolLabel.font = Paths.font("vcr.ttf");
 
-		var stepperSongVol:FlxUINumericStepper = new FlxUINumericStepper(10, 110, 0.1, 1, 0.1, 10, 1);
+		var stepperSongVol:FlxUINumericStepper = new FlxUINumericStepper(10, 110, 0.1, 1, 0, 10, 1);
 		stepperSongVol.value = inst.volume;
 		stepperSongVol.name = 'song_instvol';
 

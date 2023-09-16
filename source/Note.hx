@@ -32,11 +32,13 @@ class Note extends FlxSprite
 	public var isSustainNote:Bool = false;
 	public var originColor:Int = 0; // The sustain note's original note's color
 	public var noteSection:Int = 0;
+	public var isSustainEnd:Bool = false;
 
 	public var noteShit:String = 'normal';
 	public var canPlayAnims:Bool = false; // if a note plays the sing animations
 	public var canNoteSplash:Bool = true; // if a note can notesplash on Sick! and Marv!
 	public var causesMisses:Bool = true; // if a note will do noteMiss or something.
+	public var botplayHit:Bool = true; // if botplay should hit the note.
 
 	public var luaID:Int = 0;
 
@@ -147,13 +149,16 @@ class Note extends FlxSprite
 				canPlayAnims = false;
 				canNoteSplash = false;
 				causesMisses = false;
+				botplayHit = false;
 			case 'mustpress':
 				canPlayAnims = false;
 				canNoteSplash = false;
+				botplayHit = true;
 			default:
 				canPlayAnims = true;
 				canNoteSplash = true;
 				causesMisses = true;
+				botplayHit = true;
 		}
 
 		// defaults if no noteStyle was found in chart
@@ -497,6 +502,7 @@ class Note extends FlxSprite
 
 		if (isSustainNote)
 		{
+			isSustainEnd = spotInLine == parent.children.length - 1;
 			alpha = !sustainActive
 				&& (parent.tooLate || parent.wasGoodHit) ? (modAlpha * FlxG.save.data.alpha) / 2 : modAlpha * FlxG.save.data.alpha; // This is the correct way
 		}
