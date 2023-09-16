@@ -251,7 +251,6 @@ class OptionsMenu extends MusicBeatSubstate
 				new BackgroundsOption("Toggles Backrounds From Being Visible. (Good Performance Booster.)"),
 				new DistractionsAndEffectsOption("Toggles Extra Assets Be Loaded To Improve Quality At The Cost Of Performance"),
 				new Optimization("Nothing But Your Strumline Is Visible. Best Performance."),
-				new EditorRes("Not showing the editor grid will greatly increase editor performance"),
 				#if desktop
 				new UnloadSongs("Toggles If Assets Get Unloaded Or Not."), new UnloadNow("Clears All Cache We Can Remove."),
 				#end

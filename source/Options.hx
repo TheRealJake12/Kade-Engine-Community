@@ -478,34 +478,6 @@ class CpuStrums extends Option
 	}
 }
 
-class EditorRes extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		description = desc;
-	}
-
-	public override function left():Bool
-	{
-		FlxG.save.data.editorBG = !FlxG.save.data.editorBG;
-
-		display = updateDisplay();
-		return true;
-	}
-
-	public override function right():Bool
-	{
-		left();
-		return true;
-	}
-
-	private override function updateDisplay():String
-	{
-		return "Chart Editor Grid: < " + (FlxG.save.data.editorBG ? "Shown" : "Hidden") + " >";
-	}
-}
-
 class DownscrollOption extends Option
 {
 	public function new(desc:String)
@@ -2990,7 +2962,6 @@ class ResetSettings extends Option
 		FlxG.save.data.scoreScreen = null;
 		FlxG.save.data.inputShow = null;
 		FlxG.save.data.optimize = null;
-		FlxG.save.data.editor = null;
 		FlxG.save.data.laneTransparency = 0;
 		// custom shit
 		FlxG.save.data.hitsound = null;

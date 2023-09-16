@@ -33,11 +33,11 @@ Reskinned and optimized chart editor.
 
 New And Improved Freeplay By BoloVEVO.
 
-![Better Documented!](art/readme/deez.png)
+![Gameplay1](art/readme/gameplay1.png)
 
-A goal I want is this to be well documented so if someone doesn't understand something, they can look in docs!
+![Gameplay2](art/readme/gameplay2.png)
 
-**Feel free to use this code for your own projects. Steal it. Borrow it. I don't care. As long as you improve, thats totally ok!. Hope you learn something**
+**Feel free to use this code for your own projects. Steal it. Borrow it. I don't care. As long as you improve, thats totally ok!. Hope you learn something.**
 
 ### How To Build From Source
 
