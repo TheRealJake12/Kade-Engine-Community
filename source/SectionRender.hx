@@ -15,10 +15,10 @@ class SectionRender extends FlxSprite
 	{
 		super(x, y);
 
-		makeGraphic(1,1, 0xFF2F2F2F);
+		makeGraphic(1, 1, 0xFF2F2F2F);
 		scale.set(GRID_SIZE * 8, GRID_SIZE * Height);
 		updateHitbox();
-		antialiasing = false;	
+		antialiasing = false;
 	}
 
 	override function update(elapsed)

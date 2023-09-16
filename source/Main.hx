@@ -292,21 +292,14 @@ class Main extends Sprite
 				PlayState.instance.persistentDraw = true;
 				PlayState.instance.paused = true;
 
-				if (PlayState.isSM)
-				{
-					if (!PlayState.SONG.splitVoiceTracks)
-						PlayState.vocals.pause();
-					else
-					{
-						PlayState.vocalsPlayer.pause();
-						PlayState.vocalsEnemy.pause();
-					}
-					PlayState.inst.pause();
-				}
+				if (!PlayState.SONG.splitVoiceTracks)
+					PlayState.vocals.pause();
 				else
 				{
-					FlxG.sound.music.pause();
+					PlayState.vocalsPlayer.pause();
+					PlayState.vocalsEnemy.pause();
 				}
+				PlayState.inst.pause();
 			}
 
 			// Conserve power by lowering draw framerate when unfocuced
@@ -333,7 +326,7 @@ class Main extends Sprite
 			// Bring framerate back when focused
 			FlxG.drawFramerate = FlxG.save.data.fpsCap;
 		}
-		setFPSCap(FlxG.save.data.fpsCap);
+		gameContainer.setFPSCap(FlxG.save.data.fpsCap);
 	}
 	#end
 
