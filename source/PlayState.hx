@@ -1,5 +1,6 @@
 package;
 
+import lime.utils.Assets as LimeAssets;
 import flixel.group.FlxSpriteGroup;
 import Shaders;
 import flixel.util.FlxSpriteUtil;
@@ -4437,18 +4438,6 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (FlxG.save.data.cpuStrums)
-		{
-			cpuStrums.forEach(function(spr:StaticArrow)
-			{
-				if (spr.animation.finished)
-				{
-					spr.playAnim('static');
-					spr.centerOffsets();
-				}
-			});
-		}
-
 		if (!inCutscene && songStarted)
 			keyShit();
 		if (FlxG.keys.justPressed.ONE)
@@ -5264,14 +5253,16 @@ class PlayState extends MusicBeatState
 					&& spr.animation.curAnim.name != 'confirm'
 					&& spr.animation.curAnim.name != 'pressed'
 					&& !spr.animation.curAnim.name.startsWith('dirCon'))
+				{
 					spr.playAnim('pressed', false);
+					if (spr.animation.curAnim.name == 'pressed' && spr.animation.curAnim.finished)
+						spr.animation.curAnim.pause();
+				}
 				if (!keys[spr.ID])
+				{
 					spr.playAnim('static', false);
-			}
-			else if (FlxG.save.data.cpuStrums)
-			{
-				if (spr.animation.finished)
-					spr.playAnim('static');
+					spr.localAngle = 0;
+				}
 			}
 		});
 	}
@@ -5582,13 +5573,6 @@ class PlayState extends MusicBeatState
 					else
 						dad.playAnim('sing' + dataSuffix[singData] + altAnim, true);
 				}
-				if (FlxG.save.data.cpuStrums)
-				{
-					cpuStrums.forEach(function(spr:StaticArrow)
-					{
-						pressArrow(spr, spr.ID, daNote);
-					});
-				}
 				#if FEATURE_LUAMODCHART
 				if (luaModchart != null)
 					if (!PlayStateChangeables.opponentMode)
@@ -5623,11 +5607,6 @@ class PlayState extends MusicBeatState
 			}
 			if (FlxG.save.data.cpuStrums)
 			{
-				cpuStrums.forEach(function(spr:StaticArrow)
-				{
-					pressArrow(spr, spr.ID, daNote);
-				});
-
 				if (FlxG.save.data.cpuSplash && daNote.canNoteSplash && !FlxG.save.data.middleScroll)
 				{
 					spawnNoteSplashOnNoteDad(daNote);
@@ -5651,6 +5630,14 @@ class PlayState extends MusicBeatState
 				else
 					vocalsEnemy.volume = 1;
 			}
+		}
+
+		if (FlxG.save.data.cpuStrums)
+		{
+			cpuStrums.forEach(function(spr:StaticArrow)
+			{
+				pressArrow(spr, spr.ID, daNote);
+			});
 		}
 
 		destroyNote(daNote);
@@ -5791,11 +5778,54 @@ class PlayState extends MusicBeatState
 			if (!FlxG.save.data.stepMania)
 			{
 				spr.playAnim('confirm', true);
+
+				spr.animation.finishCallback = function(name)
+				{
+					if (daNote.mustPress && PlayStateChangeables.botPlay)
+					{
+						if ((!daNote.isSustainNote && !daNote.isParent) || daNote.isSustainEnd)
+						{
+							spr.playAnim('static', true);
+						}
+					}
+					else if (!daNote.mustPress)
+					{
+						if (FlxG.save.data.cpuStrums)
+						{
+							if ((!daNote.isSustainNote && !daNote.isParent) || daNote.isSustainEnd)
+							{
+								spr.playAnim('static', true);
+							}
+						}
+					}
+				}
 			}
 			else
 			{
-				spr.playAnim('dirCon' + daNote.originColor, true);
 				spr.localAngle = daNote.originAngle;
+				spr.playAnim('dirCon' + daNote.originColor, true);
+				spr.animation.finishCallback = function(name)
+				{
+					if (daNote.mustPress && PlayStateChangeables.botPlay)
+					{
+						if ((!daNote.isSustainNote && !daNote.isParent) || daNote.isSustainEnd)
+						{
+							spr.localAngle = 0;
+							spr.playAnim('static', true);
+						}
+					}
+					else if (!daNote.mustPress)
+					{
+						if (FlxG.save.data.cpuStrums)
+						{
+							if ((!daNote.isSustainNote && !daNote.isParent) || daNote.isSustainEnd)
+							{
+								spr.localAngle = 0;
+								spr.playAnim('static', true);
+							}
+						}
+					}
+				}
 			}
 		}
 	}

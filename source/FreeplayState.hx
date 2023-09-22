@@ -131,6 +131,8 @@ class FreeplayState extends MusicBeatState
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 
+		PlayState.inDaPlay = false;
+
 		/*for (i in 0...songs.length - 1)
 			songs[i].diffs.reverse(); */
 

@@ -1797,11 +1797,17 @@ class ChartingState extends MusicBeatState
 
 		FlxG.sound.list.add(inst);
 
+		inst.play();
 		inst.pause();
 		if (!_song.splitVoiceTracks)
+		{
+			vocals.play();
 			vocals.pause();
+		}
 		else
 		{
+			vocalsPlayer.play();
+			vocalsEnemy.play();
 			vocalsPlayer.pause();
 			vocalsEnemy.pause();
 		}

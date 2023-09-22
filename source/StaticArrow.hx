@@ -48,15 +48,15 @@ class StaticArrow extends FlxSprite
 	{
 		animation.play(AnimName, force);
 
-		if (!AnimName.startsWith('dirCon'))
-		{
-			localAngle = 0;
-		}
 		updateHitbox();
-		offset.set(frameWidth / 2, frameHeight / 2);
 
-		offset.x -= 54;
-		offset.y -= 56;
+		if (frames != null)
+		{
+			offset.set(frameWidth / 2, frameHeight / 2);
+
+			offset.x -= 54;
+			offset.y -= 56;
+		}
 
 		angle = localAngle + modAngle;
 	}
