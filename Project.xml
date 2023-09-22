@@ -136,7 +136,7 @@
 	<haxelib name="hxcpp-debug-server" if="desktop"/>
 	<haxelib name="hxCodec" if="windows || linux || android" />
 	<haxelib name="hscript"/>
-	<haxelib name="SScript"/>
+	<haxelib name="sscript"/>
 	
 	<haxedef name="openflPos" />
 	<haxedef name="hscriptPos" />

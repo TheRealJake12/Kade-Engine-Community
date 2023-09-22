@@ -7,8 +7,9 @@
     },
     {
       "name": "SScript",
-      "type": "haxelib",
-      "version" : null
+      "type": "git",
+      "ref" : "master",
+      "url": "https://github.com/TheRealJake12/SScript.git"
     },
     {
       "name": "hxcpp-debug-server",
