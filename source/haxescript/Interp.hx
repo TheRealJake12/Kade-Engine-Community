@@ -20,13 +20,13 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package hscriptBase;
+package haxescript;
 
 import haxe.ds.*;
 import haxe.PosInfos;
-import hscriptBase.Expr;
+import haxescript.Expr;
 import haxe.Constraints;
-import tea.SScript;
+import brew.BrewScript;
 
 using StringTools;
 
@@ -38,20 +38,21 @@ private enum Stop
 }
 
 @:keepSub
-@:access(tea.SScript)
+@:access(haxescript.Tools)
+@:access(brew.BrewScript)
 class Interp
 {
 	#if haxe3
 	public var variables:Map<String, Dynamic>;
+
 	public var dynamicFuncs:Map<String, Bool> = new Map();
 
-	var locals:Map<String,
-		{
-			r:Dynamic,
-			?isFinal:Bool,
-			?t:CType,
-			?dynamicFunc:Bool
-		}>;
+	var locals:Map<String, {
+		r:Dynamic,
+		?isFinal:Bool,
+		?t:CType,
+		?dynamicFunc:Bool
+	}>;
 	var binops:Map<String, Expr->Expr->Dynamic>;
 	#else
 	public var variables:Hash<Dynamic>;
@@ -62,24 +63,21 @@ class Interp
 
 	var depth:Int;
 	var inTry:Bool;
-	var declared:Array<
-		{
-			n:String,
-			old:
-				{
-					r:Dynamic,
-					?isFinal:Bool,
-					?t:CType,
-					?dynamicFunc:Bool
-				}
-		}>;
+	var declared:Array<{n:String, old:{
+		r:Dynamic,
+		?isFinal:Bool,
+		?t:CType,
+		?dynamicFunc:Bool
+	}}>;
 	var returnValue:Dynamic;
 
 	var typecheck:Bool = true;
 
 	var usingStringTools:Bool = false;
 
-	var script:SScript;
+	var specialObject:{obj:Dynamic, ?includeFunctions:Bool, ?exclusions:Array<String>} = {obj: null, includeFunctions: null, exclusions: null};
+
+	var script:BrewScript;
 
 	#if hscriptPos
 	var curExpr:Expr;
@@ -137,7 +135,7 @@ class Interp
 		if (curExpr != null)
 			return cast {fileName: curExpr.origin, lineNumber: curExpr.line};
 		#end
-		return cast {fileName: "SScript", lineNumber: 0};
+		return cast {fileName: "BrewScript", lineNumber: 0};
 	}
 
 	var inFunc:Bool = false;
@@ -525,6 +523,14 @@ class Interp
 		if (l != null)
 			return l.r;
 		var v = variables.get(id);
+		if (specialObject != null && specialObject.obj != null)
+		{
+			var field = Reflect.getProperty(specialObject.obj, id);
+			if (field != null
+				&& (specialObject.includeFunctions || Type.typeof(field) != TFunction)
+				&& (specialObject.exclusions == null || !specialObject.exclusions.contains(id)))
+				return field;
+		}
 		if (v == null && !variables.exists(id))
 			error(EUnknownVariable(id));
 		return v;
@@ -721,7 +727,7 @@ class Interp
 				}
 				else
 				{
-					var map = macro.Macro.allClassesAvailable;
+					var map = Tools.allClassesAvailable;
 					var cl = new Map<String, Class<Dynamic>>();
 					for (i => k in map)
 					{
@@ -771,7 +777,6 @@ class Interp
 
 				if (p != p.toLowerCase())
 					error(ECustom('Package path cannot have capital letters'));
-				@:privateAccess script.setPackagePath(p);
 				return null;
 			case EFunction(params, fexpr, name, _, d):
 				var capturedLocals = duplicate(locals);
@@ -1175,6 +1180,18 @@ class Interp
 		return Reflect.callMethod(o, f, args);
 	}
 
+	function cnew(cl:String, args:Array<Dynamic>):Dynamic
+	{
+		var c:Dynamic = try resolve(cl)
+		catch (e) null;
+		if (c == null)
+			c = Type.resolveClass(cl);
+		if (c == null)
+			error(EInvalidAccess(cl));
+
+		return Type.createInstance(c, args);
+	}
+
 	function setExistingVar(id:String, val:Dynamic)
 	{
 		if (locals.exists(id))
@@ -1189,18 +1206,6 @@ class Interp
 		{
 			error(EUnknownVariable(id));
 		}
-	}
-
-	function cnew(cl:String, args:Array<Dynamic>):Dynamic
-	{
-		var c:Dynamic = try resolve(cl)
-		catch (e) null;
-		if (c == null)
-			c = Type.resolveClass(cl);
-		if (c == null)
-			error(EInvalidAccess(cl));
-
-		return Type.createInstance(c, args);
 	}
 
 	function stringToolsFunction(o:Dynamic, f:String, args:Array<Dynamic>):Dynamic

@@ -249,8 +249,7 @@ class TweenManager extends FlxTweenManager
 	 * @return	The QuadPath object.
 	 * @since   4.2.0
 	 */
-	public function createQuadPath(Object:FlxObject, Points:Array<FlxPoint>, DurationOrSpeed:Float = 1, UseDuration:Bool = true,
-			?Options:TweenOptions):FlxTween
+	public function createQuadPath(Object:FlxObject, Points:Array<FlxPoint>, DurationOrSpeed:Float = 1, UseDuration:Bool = true, ?Options:TweenOptions):FlxTween
 	{
 		var daTween = this.quadPath(Object, Points, DurationOrSpeed, UseDuration, Options);
 		daTween.manager = this;

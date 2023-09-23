@@ -1181,8 +1181,7 @@ class PlayState extends MusicBeatState
 			uiGroup.add(judgementCounter);
 		}
 
-		replayTxt = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 75, healthBarBG.y + (PlayStateChangeables.useDownscroll ? 100 : -100), 0, "REPLAY",
-			20);
+		replayTxt = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 75, healthBarBG.y + (PlayStateChangeables.useDownscroll ? 100 : -100), 0, "REPLAY", 20);
 		replayTxt.setFormat(Paths.font("vcr.ttf"), 42, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		replayTxt.borderSize = 4;
 		replayTxt.borderQuality = 2;
@@ -6086,8 +6085,8 @@ class PlayState extends MusicBeatState
 						offsetY = luaModchart.getVar("followYOffset", "float");
 					}
 					#end
-					camFollow.setPosition(boyfriend.getMidpoint().x + boyfriend.camPos[0] + offsetX,
-						boyfriend.getMidpoint().y + boyfriend.camPos[1] + offsetY);
+					camFollow.setPosition(boyfriend.getMidpoint()
+						.x + boyfriend.camPos[0] + offsetX, boyfriend.getMidpoint().y + boyfriend.camPos[1] + offsetY);
 
 					#if FEATURE_LUAMODCHART
 					if (luaModchart != null)
@@ -6259,7 +6258,7 @@ class PlayState extends MusicBeatState
 		if (scripts != null)
 		{
 			scripts.active = false;
-			#if (SScript >= "3.0.3")
+			#if (BrewScript)
 			scripts.destroy();
 			#end
 			scripts = null;

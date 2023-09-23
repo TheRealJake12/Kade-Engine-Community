@@ -7,10 +7,10 @@ import haxe.CallStack;
 import haxe.Json;
 import haxe.Log;
 #if FEATURE_HSCRIPT
-import tea.SScript;
-import hscriptBase.Interp;
-import hscriptBase.Parser;
-import hscriptBase.Expr;
+import brew.BrewScript;
+import haxescript.Interp;
+import haxescript.Parser;
+import haxescript.Expr;
 #end
 import openfl.Lib;
 #if FEATURE_FILESYSTEM
@@ -107,7 +107,6 @@ class Script extends FlxBasic
 					var arr = Std.string(clas).split(".");
 					stringName = arr[arr.length - 1];
 				}
-
 				@:privateAccess
 				if (!variables.exists(stringName) && !_interp.locals.exists(stringName))
 				{

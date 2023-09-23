@@ -434,8 +434,8 @@ class FreeplayState extends MusicBeatState
 							for (diff in songData.get(song.songId))
 							{
 								if (!songRating.exists(song.songId))
-									songRating.set(Highscore.formatSong(song.songId, songData.get(song.songId).indexOf(diff), 1),
-										DiffCalc.CalculateDiff(song));
+									songRating.set(Highscore.formatSong(song.songId, songData.get(song.songId)
+										.indexOf(diff), 1), DiffCalc.CalculateDiff(song));
 
 								if (!songRatingOp.exists(song.songId))
 									songRatingOp.set(Highscore.formatSong(song.songId, songData.get(song.songId).indexOf(diff), 1),
@@ -464,8 +464,8 @@ class FreeplayState extends MusicBeatState
 							for (diff in songData.get(song.songId))
 							{
 								if (!songRating.exists(song.songId))
-									songRating.set(Highscore.formatSong(song.songId, songData.get(song.songId).indexOf(diff), 1),
-										DiffCalc.CalculateDiff(song));
+									songRating.set(Highscore.formatSong(song.songId, songData.get(song.songId)
+										.indexOf(diff), 1), DiffCalc.CalculateDiff(song));
 
 								if (!songRatingOp.exists(song.songId))
 									songRatingOp.set(Highscore.formatSong(song.songId, songData.get(song.songId).indexOf(diff), 1),

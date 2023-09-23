@@ -6,10 +6,9 @@
       "version": null
     },
     {
-      "name": "SScript",
-      "type": "git",
-      "ref" : "master",
-      "url": "https://github.com/TheRealJake12/SScript.git"
+      "name": "BrewScript",
+      "type": "haxelib",
+      "version" : null
     },
     {
       "name": "hxcpp-debug-server",
