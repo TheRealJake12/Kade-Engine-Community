@@ -1006,18 +1006,18 @@ class Interp {
 
 	function setExistingVar(id:String, val:Dynamic)
 	{
-			if (locals.exists(id))
-			{
-				locals.get(id).r = val;
-			}
-			else if (variables.exists(id))
-			{
-				variables.set(id, val);
-			}
-			else
-			{
-				error(EUnknownVariable(id));
-			}
+		if (locals.exists(id))
+		{
+			locals.get(id).r = val;
+		}
+		else if (variables.exists(id))
+		{
+			variables.set(id, val);
+		}
+		else
+		{
+			error(EUnknownVariable(id));
+		}
 	}
 
 	function stringToolsFunction( o : Dynamic , f : String , args : Array<Dynamic> ) : Dynamic {

@@ -7,7 +7,7 @@ import haxe.CallStack;
 import haxe.Json;
 import haxe.Log;
 #if FEATURE_HSCRIPT
-import brew.BrewScript;
+import tea.SScript;
 import haxescript.Interp;
 import haxescript.Parser;
 import haxescript.Expr;
