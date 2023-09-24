@@ -125,7 +125,6 @@
 	<!--In case you want to use the addons package-->
 	<haxelib name="flixel-addons" />
 
-
 	<!--In case you want to use the ui package-->
 	<haxelib name="flixel-ui" />
 	<haxelib name="faxe" if='switch'/>
@@ -134,7 +133,7 @@
 	<haxelib name="linc_luajit" if="desktop"/>
 	<haxelib name="hxvm-luajit" if="desktop"/>
 	<haxelib name="hxcpp-debug-server" if="desktop"/>
-	<haxelib name="hxCodec" if="windows || linux || android" />
+	<haxelib name="hxCodec" if="desktop || android" />
 	<haxelib name="BrewScript"/>
 	
 	<haxedef name="openflPos" />

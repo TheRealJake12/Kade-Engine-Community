@@ -77,6 +77,17 @@ haxelib git faxe https://github.com/uhrobots/faxe
 haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
 haxelib git hxCodec https://github.com/TheRealJake12/hxCodec.git
 ```
+
+3.5 (Optional) If you're on Linux, you may be missing some libraries required to compile properly. Run these commands to fix some issues commonly reported.
+```
+sudo apt install build-essential
+sudo apt install luajit
+```
+
+You need to install libvlc for hxCodec to work on Linux.
+```
+sudo apt-get install libvlc-dev libvlccore-dev 
+```
 4. [Read the original FNF source code guide for Visual Studio](https://github.com/ninjamuffin99/Funkin.git)
 Once it is installed you should be able to build your game.
 
