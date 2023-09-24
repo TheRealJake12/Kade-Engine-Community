@@ -15,6 +15,7 @@ class Note extends FlxSprite
 	public var baseStrum:Float = 0;
 	public var lateHitMult:Float = 1.0;
 	public var earlyHitMult:Float = 1.0;
+	public var insideCharter:Bool = false;
 
 	public var charterSelected:Bool = false;
 
@@ -95,6 +96,7 @@ class Note extends FlxSprite
 		if (noteShit == null || noteShit == '0' || noteShit == 'false' || noteShit == 'true')
 			noteShit = 'normal';
 		this.noteShit = noteShit; // FFFFFFFFFFFFFFFFFFFFFFUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+		insideCharter = inCharter;
 		if (prevNote == null)
 			prevNote = this;
 
@@ -452,21 +454,6 @@ class Note extends FlxSprite
 		// This updates hold notes height to current scroll Speed in case of scroll Speed changes.
 		super.update(elapsed);
 
-		if (isSustainNote)
-		{
-			var newStepHeight = (((0.45 * PlayState.instance.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayState.instance.scrollSpeed == 1 ? PlayState.SONG.speed : PlayState.instance.scrollSpeed,
-				2) * speedMultiplier);
-
-			if (stepHeight != newStepHeight)
-			{
-				stepHeight = newStepHeight;
-				if (isSustainNote)
-				{
-					noteYOff = -stepHeight + swagWidth * 0.5;
-				}
-			}
-		}
-
 		if (!isSustainNote)
 		{
 			if (!modifiedByLua)
@@ -475,42 +462,60 @@ class Note extends FlxSprite
 				angle = modAngle;
 		}
 
-		if (mustPress)
+		if (!insideCharter)
 		{
-			switch (noteShit)
+			if (isSustainNote)
 			{
-				case 'hurt':
-					if (strumTime - Conductor.songPosition <= ((Ratings.timingWindows[0]) * 0.2)
-						&& strumTime - Conductor.songPosition >= (-Ratings.timingWindows[0]) * 0.4)
-					{
-						canBeHit = true;
-					}
-					else
-					{
-						canBeHit = false;
-					}
-					if (strumTime - Conductor.songPosition < -Ratings.timingWindows[0] && !wasGoodHit)
-						tooLate = true;
-				default:
-					if (strumTime - Conductor.songPosition <= (((Ratings.timingWindows[0]) * lateHitMult))
-						&& strumTime - Conductor.songPosition >= (((-Ratings.timingWindows[0]) * earlyHitMult)))
-						canBeHit = true;
-			}
-			/*if (strumTime - Conductor.songPosition < (-166 * Conductor.timeScale) && !wasGoodHit)
-				tooLate = true; */
-		}
+				var newStepHeight = (((0.45 * PlayState.instance.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayState.instance.scrollSpeed == 1 ? PlayState.SONG.speed : PlayState.instance.scrollSpeed,
+					2) * speedMultiplier);
 
-		if (isSustainNote)
-		{
-			isSustainEnd = spotInLine == parent.children.length - 1;
-			alpha = !sustainActive
-				&& (parent.tooLate || parent.wasGoodHit) ? (modAlpha * FlxG.save.data.alpha) / 2 : modAlpha * FlxG.save.data.alpha; // This is the correct way
-		}
-		else if (tooLate && !wasGoodHit)
-		{
-			if (alpha > modAlpha * 0.3)
-				alpha = modAlpha * 0.3;
-		}
+				if (stepHeight != newStepHeight)
+				{
+					stepHeight = newStepHeight;
+					if (isSustainNote)
+					{
+						noteYOff = -stepHeight + swagWidth * 0.5;
+					}
+				}
+			}
+
+			if (mustPress)
+			{
+				switch (noteShit)
+				{
+					case 'hurt':
+						if (strumTime - Conductor.songPosition <= ((Ratings.timingWindows[0]) * 0.2)
+							&& strumTime - Conductor.songPosition >= (-Ratings.timingWindows[0]) * 0.4)
+						{
+							canBeHit = true;
+						}
+						else
+						{
+							canBeHit = false;
+						}
+						if (strumTime - Conductor.songPosition < -Ratings.timingWindows[0] && !wasGoodHit)
+							tooLate = true;
+					default:
+						if (strumTime - Conductor.songPosition <= (((Ratings.timingWindows[0]) * lateHitMult))
+							&& strumTime - Conductor.songPosition >= (((-Ratings.timingWindows[0]) * earlyHitMult)))
+							canBeHit = true;
+						if (strumTime - Conductor.songPosition < (-Ratings.timingWindows[0]) && !wasGoodHit)
+							tooLate = true;	
+				}
+			}
+
+			if (isSustainNote)
+			{
+				isSustainEnd = spotInLine == parent.children.length - 1;
+				alpha = !sustainActive
+					&& (parent.tooLate || parent.wasGoodHit) ? (modAlpha * FlxG.save.data.alpha) / 2 : modAlpha * FlxG.save.data.alpha; // This is the correct way
+			}
+			else if (tooLate && !wasGoodHit)
+			{
+				if (alpha > modAlpha * 0.3)
+					alpha = modAlpha * 0.3;
+			}
+		}	
 	}
 
 	/*

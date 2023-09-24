@@ -123,8 +123,8 @@ class KadeEngineData
 		if (FlxG.save.data.noteskin == null)
 			FlxG.save.data.noteskin = 0;
 
-		if (FlxG.save.data.cpuNotesplash == null)
-			FlxG.save.data.cpuNotesplash = 0;
+		if (FlxG.save.data.rotateSprites == null)
+			FlxG.save.data.rotateSprites = true;
 
 		if (FlxG.save.data.notesplash == null)
 			FlxG.save.data.notesplash = 0;

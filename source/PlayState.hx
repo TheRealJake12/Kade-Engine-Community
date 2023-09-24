@@ -4045,23 +4045,6 @@ class PlayState extends MusicBeatState
 						opponentNoteHit(daNote);
 				}
 
-				if (daNote.mustPress && !daNote.modifiedByLua)
-				{
-					daNote.visible = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].visible;
-					daNote.alpha = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].alpha;
-					daNote.modAlpha = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].alpha;
-					if (!daNote.isSustainNote)
-						daNote.modAngle = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
-				}
-				else if (!daNote.wasGoodHit && !daNote.modifiedByLua)
-				{
-					daNote.visible = strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].visible;
-					daNote.alpha = strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].alpha;
-					daNote.modAlpha = strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].alpha;
-					if (!daNote.isSustainNote)
-						daNote.modAngle = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
-				}
-
 				// there was some code idk what it did but it fucked with color quantization shit. ik its a feature not many like but I like it.
 
 				if (!daNote.mustPress && FlxG.save.data.middleScroll && !executeModchart)
@@ -4136,7 +4119,6 @@ class PlayState extends MusicBeatState
 										trace("hold fell over at " + daNote.spotInLine);
 										for (i in daNote.parent.children)
 										{
-											i.alpha = 0.3;
 											i.sustainActive = false;
 										}
 										if (daNote.parent.wasGoodHit)
@@ -5705,7 +5687,7 @@ class PlayState extends MusicBeatState
 				combo += 1;
 				popUpScore(note);
 				/* Enable Sustains to be hit. 
-					//This is to prevent hitting sustains if you hold a strum before the note is coming without hitting the note parent. 
+					// This is to prevent hitting sustains if you hold a strum before the note is coming without hitting the note parent. 
 					(I really hope I made me understand lol.) */
 				if (note.isParent)
 					for (i in note.children)
@@ -5767,6 +5749,11 @@ class PlayState extends MusicBeatState
 			{
 				note.wasGoodHit = true;
 			}
+
+			if (SONG.splitVoiceTracks != true)
+				vocals.volume = 1;
+			else
+				vocalsPlayer.volume = 1;
 		}
 	}
 
@@ -6258,9 +6245,7 @@ class PlayState extends MusicBeatState
 		if (scripts != null)
 		{
 			scripts.active = false;
-			#if (BrewScript)
 			scripts.destroy();
-			#end
 			scripts = null;
 		}
 		#end
@@ -6287,7 +6272,7 @@ class PlayState extends MusicBeatState
 
 		cleanPlayObjects();
 
-		// instance = null; // crashes charting state cuz notes ??
+		instance = null; // crashes charting state cuz notes ??
 
 		super.destroy();
 	}
