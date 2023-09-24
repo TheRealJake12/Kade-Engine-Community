@@ -4,7 +4,9 @@ import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.transition.TransitionData;
 import lime.app.Application;
+#if FEATURE_DISCORD
 import Discord.DiscordClient;
+#end
 import flixel.FlxBasic;
 #if FEATURE_STEPMANIA
 import smTools.SMFile;

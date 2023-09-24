@@ -312,9 +312,9 @@ class Paths
 		if (!returnString)
 			file = loadSound('songs', songLowercase);
 		else
-			file = 'songs:assets/songs/$songLowercase.$SOUND_EXT';
+			file = 'songs:assets/songs/$songLowercase$char.$SOUND_EXT';
 		#else
-		file = 'songs:assets/songs/$songLowercase$num.$SOUND_EXT';
+		file = 'songs:assets/songs/$songLowercase$char.$SOUND_EXT';
 		#end
 		return file;
 	}

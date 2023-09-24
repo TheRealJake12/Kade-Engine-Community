@@ -3163,7 +3163,7 @@ class PlayState extends MusicBeatState
 			}
 			else
 			{
-				if (vocalsPlayer.playing & vocalsEnemy.playing)
+				if (vocalsPlayer.playing && vocalsEnemy.playing)
 				{
 					vocalsPlayer._channel.__source.__backend.setPitch(songMultiplier);
 					vocalsEnemy._channel.__source.__backend.setPitch(songMultiplier);

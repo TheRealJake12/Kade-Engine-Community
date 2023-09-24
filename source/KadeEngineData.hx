@@ -41,9 +41,9 @@ class KadeEngineData
 			FlxG.save.data.changedHitY = -1;
 			FlxG.save.data.changedHit = false;
 		}
-
-		if (FlxG.save.data.fpsCap == null || FlxG.save.data.fpsCap < 60)
-			FlxG.save.data.fpsCap = Application.current.window.displayMode.refreshRate;
+		
+		if (FlxG.save.data.fpsCap == null)
+			FlxG.save.data.fpsCap = 60;
 
 		if (FlxG.save.data.scrollSpeed == null)
 			FlxG.save.data.scrollSpeed = 1;

@@ -17,9 +17,9 @@ import openfl.events.Event;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
+import lime.app.Application;
 #if desktop
 // crash handler stuff
-import lime.app.Application;
 import openfl.events.UncaughtErrorEvent;
 import haxe.CallStack;
 import haxe.io.Path;
@@ -116,12 +116,7 @@ class Main extends Sprite
 		#end
 
 		// FlxTransitionableState.skipNextTransIn = true;
-		#if !linux
-		game.framerate = Application.current.window.displayMode.refreshRate;
-		#else
 		game.framerate = 60;
-		#end
-
 		addChild(new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate,
 			game.skipSplash, game.startFullscreen));
 
