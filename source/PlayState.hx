@@ -4045,6 +4045,31 @@ class PlayState extends MusicBeatState
 						opponentNoteHit(daNote);
 				}
 
+				if (daNote.mustPress && !daNote.modifiedByLua)
+				{
+					daNote.visible = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].visible;
+					if (!daNote.isSustainNote)
+						daNote.modAngle = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
+					if (daNote.sustainActive)
+					{
+						if (executeModchart)
+							daNote.alpha = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].alpha;
+					}
+					daNote.modAngle = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
+				}
+				else if (!daNote.wasGoodHit && !daNote.modifiedByLua)
+				{
+					daNote.visible = cpuStrums.members[Math.floor(Math.abs(daNote.noteData))].visible;
+					if (!daNote.isSustainNote)
+						daNote.modAngle = cpuStrums.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
+					if (daNote.sustainActive)
+					{
+						if (executeModchart)
+							daNote.alpha = cpuStrums.members[Math.floor(Math.abs(daNote.noteData))].alpha;
+					}
+					daNote.modAngle = cpuStrums.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
+				}
+
 				// there was some code idk what it did but it fucked with color quantization shit. ik its a feature not many like but I like it.
 
 				if (!daNote.mustPress && FlxG.save.data.middleScroll && !executeModchart)
