@@ -594,6 +594,7 @@ class PlayState extends MusicBeatState
 		camGame = new SwagCamera();
 		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
+		camHUD.pixelPerfectRender = true;
 		camStrums = new FlxCamera();
 		camStrums.height = 1300;
 		camStrums.bgColor.alpha = 0;
@@ -2190,7 +2191,11 @@ class PlayState extends MusicBeatState
 
 			if (data == -1)
 			{
-				trace("couldn't find a keybind with the code " + key);
+				return;
+			}
+
+			if (keys[data])
+			{
 				return;
 			}
 
@@ -2263,6 +2268,47 @@ class PlayState extends MusicBeatState
 			if (songStarted && !inCutscene && !paused)
 				keyShit();
 		}
+	}
+
+	private function handleHolds(note:Note)
+	{
+		// HOLDS, check for sustain notes
+		if (keys.contains(true) && /*!boyfriend.stunned && */ generatedMusic)
+		{
+			goodNoteHit(note);
+		}
+	}
+
+	private function handleBotplay(note:Note)
+	{
+		notes.forEachAlive(function(daNote:Note)
+		{
+			if (daNote.mustPress && Conductor.songPosition >= daNote.strumTime && daNote.botplayHit)
+			{
+				// Force good note hit regardless if it's too late to hit it or not as a fail safe
+				if (loadRep)
+				{
+					// trace('ReplayNote ' + tmpRepNote.strumtime + ' | ' + tmpRepNote.direction);
+					var n = findByTime(daNote.strumTime);
+					if (n != null)
+					{
+						goodNoteHit(daNote);
+						if (!PlayStateChangeables.opponentMode)
+							boyfriend.holdTimer = 0;
+						else
+							dad.holdTimer = 0;
+					}
+				}
+				else
+				{
+					goodNoteHit(daNote);
+					if (!PlayStateChangeables.opponentMode)
+						boyfriend.holdTimer = 0;
+					else
+						dad.holdTimer = 0;
+				}
+			}
+		});
 	}
 
 	// sadly stolen from Psych. Im sorry :(((
@@ -4044,30 +4090,27 @@ class PlayState extends MusicBeatState
 					if (Conductor.songPosition >= daNote.strumTime && daNote.canPlayAnims)
 						opponentNoteHit(daNote);
 				}
-
-				if (daNote.mustPress && !daNote.modifiedByLua)
+				else
 				{
-					daNote.visible = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].visible;
-					if (!daNote.isSustainNote)
-						daNote.modAngle = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
-					if (daNote.sustainActive)
-					{
-						if (executeModchart)
-							daNote.alpha = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].alpha;
-					}
-					daNote.modAngle = playerStrums.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
+					if (PlayStateChangeables.botPlay)
+						handleBotplay(daNote);
+					else if (!PlayStateChangeables.botPlay && daNote.isSustainNote && daNote.canBeHit && daNote.mustPress
+						&& keys[daNote.noteData] && daNote.sustainActive)
+						handleHolds(daNote);
 				}
-				else if (!daNote.wasGoodHit && !daNote.modifiedByLua)
+
+				if (!daNote.modifiedByLua)
 				{
-					daNote.visible = cpuStrums.members[Math.floor(Math.abs(daNote.noteData))].visible;
+					daNote.visible = strum.members[Math.floor(Math.abs(daNote.noteData))].visible;
 					if (!daNote.isSustainNote)
-						daNote.modAngle = cpuStrums.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
-					if (daNote.sustainActive)
 					{
-						if (executeModchart)
-							daNote.alpha = cpuStrums.members[Math.floor(Math.abs(daNote.noteData))].alpha;
+						daNote.alpha = strum.members[Math.floor(Math.abs(daNote.noteData))].alpha;
+						daNote.modAngle = strum.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
 					}
-					daNote.modAngle = cpuStrums.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
+					if (daNote.isSustainNote && daNote.sustainActive)
+					{
+						daNote.modAlpha = strum.members[Math.floor(Math.abs(daNote.noteData))].alpha;
+					}
 				}
 
 				// there was some code idk what it did but it fucked with color quantization shit. ik its a feature not many like but I like it.
@@ -5089,17 +5132,6 @@ class PlayState extends MusicBeatState
 			if (pressArray[i])
 				anas[i] = new Ana(Conductor.songPosition, null, false, "miss", i);
 
-		if (holdArray.contains(true) && generatedMusic)
-		{
-			notes.forEachAlive(function(daNote:Note)
-			{
-				if (daNote.isSustainNote && daNote.canBeHit && daNote.mustPress && holdArray[daNote.noteData] && daNote.sustainActive)
-				{
-					goodNoteHit(daNote);
-				}
-			});
-		}
-
 		if ((KeyBinds.gamepad && !FlxG.keys.justPressed.ANY))
 		{
 			if (pressArray.contains(true) && generatedMusic)
@@ -5191,35 +5223,6 @@ class PlayState extends MusicBeatState
 					if (i != null)
 						replayAna.anaArray.push(i); // put em all there
 		}
-		if (PlayStateChangeables.botPlay)
-			notes.forEachAlive(function(daNote:Note)
-			{
-				if (daNote.mustPress && Conductor.songPosition >= daNote.strumTime && daNote.botplayHit)
-				{
-					// Force good note hit regardless if it's too late to hit it or not as a fail safe
-					if (loadRep)
-					{
-						// trace('ReplayNote ' + tmpRepNote.strumtime + ' | ' + tmpRepNote.direction);
-						var n = findByTime(daNote.strumTime);
-						if (n != null)
-						{
-							goodNoteHit(daNote);
-							if (!PlayStateChangeables.opponentMode)
-								boyfriend.holdTimer = 0;
-							else
-								dad.holdTimer = 0;
-						}
-					}
-					else
-					{
-						goodNoteHit(daNote);
-						if (!PlayStateChangeables.opponentMode)
-							boyfriend.holdTimer = 0;
-						else
-							dad.holdTimer = 0;
-					}
-				}
-			});
 
 		if (!FlxG.save.data.optimize)
 		{

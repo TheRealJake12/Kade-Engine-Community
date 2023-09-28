@@ -824,7 +824,14 @@ class ChartingState extends MusicBeatState
 				}
 			}
 
-			recalculateAllSectionTimes();
+			if (obj.type == "BPM Change")
+			{
+				recalculateAllSectionTimes();
+			}
+
+			// dfjk
+
+			updateGrid();
 
 			regenerateLines();
 		});
@@ -1314,8 +1321,6 @@ class ChartingState extends MusicBeatState
 					copiedNotes.push(note);
 				}
 			 */
-
-			Debug.logTrace(copiedNotes);
 		});
 
 		var pasteButton:FlxUIButton = new FlxUIButton(100, 130, "Paste Section", function()
@@ -1914,6 +1919,8 @@ class ChartingState extends MusicBeatState
 
 					regenerateLines();
 
+					updateGrid();
+
 				// poggers();
 
 				case 'note_susLength':
@@ -2457,6 +2464,14 @@ class ChartingState extends MusicBeatState
 				{
 					if (!waitingForRelease)
 					{
+						// dfjk	
+						while (selectedBoxes.members.length != 0 && selectBox.width > 10 && selectBox.height > 10)
+						{
+							selectedBoxes.members[0].connectedNote.charterSelected = false;
+							selectedBoxes.members[0].destroy();
+							selectedBoxes.members.remove(selectedBoxes.members[0]);
+							selectedBoxes.clear();
+						}
 						waitingForRelease = true;
 						selectBox = new FlxSprite(FlxG.mouse.x, FlxG.mouse.y);
 						selectBox.makeGraphic(1, 1, FlxColor.fromRGB(173, 216, 230));
@@ -3424,6 +3439,14 @@ class ChartingState extends MusicBeatState
 
 	function deleteNote(note:Note):Void
 	{
+		while (selectedBoxes.members.length != 0)
+		{
+			selectedBoxes.members[0].connectedNote.charterSelected = false;
+			selectedBoxes.members[0].destroy();
+			selectedBoxes.members.remove(selectedBoxes.members[0]);
+			selectedBoxes.clear();
+		}
+
 		lastNote = note;
 
 		var section = getSectionByTime(note.strumTime);
@@ -3637,6 +3660,14 @@ class ChartingState extends MusicBeatState
 
 	private function addNote(?n:Note):Void
 	{
+		while (selectedBoxes.members.length != 0)
+		{
+			selectedBoxes.members[0].connectedNote.charterSelected = false;
+			selectedBoxes.members[0].destroy();
+			selectedBoxes.members.remove(selectedBoxes.members[0]);
+			selectedBoxes.clear();
+		}
+
 		var strum = getStrumTime(dummyArrow.y) / zoomFactor;
 
 		var section = getSectionByTime(strum);
