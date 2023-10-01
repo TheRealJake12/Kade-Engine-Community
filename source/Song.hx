@@ -3,9 +3,6 @@ package;
 import Section.SwagSection;
 import flixel.FlxG;
 import haxe.Json;
-import haxe.format.JsonParser;
-import openfl.utils.Assets as OpenFlAssets;
-import lime.utils.Assets;
 
 using StringTools;
 

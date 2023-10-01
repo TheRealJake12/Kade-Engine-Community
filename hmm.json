@@ -35,19 +35,13 @@
       "name": "linc_luajit",
       "type": "git",
       "ref": "master",
-      "url": "https://github.com/nebulazorua/linc_luajit.git"
+      "url": "https://github.com/superpowers04/linc_luajit"
     },
     {
       "name": "faxe",
       "type": "git",
       "ref": "master",
       "url": "https://github.com/uhrobots/faxe"
-    },
-    {
-      "name": "hxvm-luajit",
-      "type": "git",
-      "ref": "master",
-      "url": "https://github.com/nebulazorua/hxvm-luajit"
     },
     {
       "name": "flixel-ui",

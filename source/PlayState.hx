@@ -273,9 +273,9 @@ class PlayState extends MusicBeatState
 
 	// Stepmania Variables.
 	public static var isSM:Bool = false;
+	public static var pathToSm:String;
 	#if FEATURE_STEPMANIA
 	public static var sm:SMFile;
-	public static var pathToSm:String;
 	#end
 
 	// Notesplashes
@@ -341,6 +341,7 @@ class PlayState extends MusicBeatState
 	// Healthbar Related Stuff. Making Custom Ones Just Means Loading The Image Later In The Code 9/10 Times.
 	private var healthBarBG:FlxSprite;
 	private var healthBar:FlxBar;
+	var barImage:FlxGraphic; // The Actual Image Itself.
 
 	// Song Position Bar. Self Explainitory.
 	private var songPositionBar:Float = 0;
@@ -1129,45 +1130,7 @@ class PlayState extends MusicBeatState
 
 		FlxG.fixedTimestep = false;
 
-		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('healthBar'));
-		if (PlayStateChangeables.useDownscroll)
-			healthBarBG.y = 50;
-		healthBarBG.screenCenter(X);
-		healthBarBG.scrollFactor.set();
-		healthBarBG.antialiasing = FlxG.save.data.antialiasing;
-
-		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
-			'shownHealth', 0, 2);
-		healthBar.scrollFactor.set();
-		healthBar.antialiasing = FlxG.save.data.antialiasing;
-		// healthBar
-
-		// Add watermark
-		kadeEngineWatermark = new FlxText(4, healthBarBG.y
-			+ 50, 0,
-			StringTools.replace(SONG.song, "-", " ")
-			+ (FlxMath.roundDecimal(songMultiplier, 2) != 1.00 ? " (" + FlxMath.roundDecimal(songMultiplier, 2) + "x)" : "")
-			+ " - "
-			+ CoolUtil.difficultyFromInt(storyDifficulty),
-			16);
-		kadeEngineWatermark.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		kadeEngineWatermark.scrollFactor.set();
-		uiGroup.add(kadeEngineWatermark);
-
-		if (PlayStateChangeables.useDownscroll)
-			kadeEngineWatermark.y = FlxG.height * 0.9 + 45;
-
-		scoreTxt = new FlxText(FlxG.width / 2 - 235, healthBarBG.y + 50, 0, "", 16);
-		scoreTxt.screenCenter(X);
-		scoreTxt.scrollFactor.set();
-		scoreTxt.borderQuality = 2;
-		scoreTxt.antialiasing = true; // Should use the save data but its too annoying.
-		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS, accuracy);
-		if (!FlxG.save.data.healthBar)
-			scoreTxt.y = healthBarBG.y;
-
-		uiGroup.add(scoreTxt);
+		createBar();
 
 		judgementCounter = new FlxText(20, 0, 0, "", 20);
 		judgementCounter.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -1198,6 +1161,7 @@ class PlayState extends MusicBeatState
 		botPlayState.scrollFactor.set();
 		botPlayState.borderSize = 2;
 		botPlayState.borderQuality = 1;
+		botPlayState.alpha = 0.5;
 		botPlayState.cameras = [camHUD];
 		if (PlayStateChangeables.botPlay && !loadRep)
 			uiGroup.add(botPlayState);
@@ -1222,6 +1186,18 @@ class PlayState extends MusicBeatState
 			else
 				healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
 		}
+
+		scoreTxt = new FlxText(FlxG.width / 2 - 235, healthBarBG.y + 50, 0, "", 16);
+		scoreTxt.screenCenter(X);
+		scoreTxt.scrollFactor.set();
+		scoreTxt.borderQuality = 2;
+		scoreTxt.antialiasing = true; // Should use the save data but its too annoying.
+		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS, accuracy);
+		if (!FlxG.save.data.healthBar)
+			scoreTxt.y = healthBarBG.y;
+
+		uiGroup.add(scoreTxt);
 
 		if (iconP2.animOffsets.exists('Idle'))
 		{
@@ -1397,6 +1373,20 @@ class PlayState extends MusicBeatState
 
 		cachePopUpScore();
 
+		kadeEngineWatermark = new FlxText(4, healthBarBG.y
+			+ 50, 0,
+			StringTools.replace(SONG.song, "-", " ")
+			+ (FlxMath.roundDecimal(songMultiplier, 2) != 1.00 ? " (" + FlxMath.roundDecimal(songMultiplier, 2) + "x)" : "")
+			+ " - "
+			+ CoolUtil.difficultyFromInt(storyDifficulty),
+			16);
+		kadeEngineWatermark.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		kadeEngineWatermark.scrollFactor.set();
+		uiGroup.add(kadeEngineWatermark);
+
+		if (PlayStateChangeables.useDownscroll)
+			kadeEngineWatermark.y = FlxG.height * 0.9 + 45;
+
 		if (FlxG.save.data.popup)
 		{
 			uiGroup.add(currentTimingShown);
@@ -1408,6 +1398,28 @@ class PlayState extends MusicBeatState
 		#end
 
 		Paths.clearUnusedMemory();
+	}
+
+	function createBar()
+	{
+		barImage = Paths.image('healthBar', 'shared');
+
+		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('healthBar'));
+		if (PlayStateChangeables.useDownscroll)
+			healthBarBG.y = 50;
+		healthBarBG.screenCenter(X);
+		healthBarBG.scrollFactor.set();
+		healthBarBG.antialiasing = FlxG.save.data.antialiasing;
+
+		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
+			'shownHealth', 0, 2);
+		healthBar.scrollFactor.set();
+		healthBar.antialiasing = FlxG.save.data.antialiasing;
+
+		uiGroup.add(healthBarBG);
+		uiGroup.add(healthBar);
+
+		// This Function Makes It Easier To Change HealthBar Styles And Shit.
 	}
 
 	public var tankIntroEnd:Bool = false;
@@ -2505,11 +2517,6 @@ class PlayState extends MusicBeatState
 		songName.visible = FlxG.save.data.songPosition;
 		uiGroup.add(songName);
 
-		songPosBG.cameras = [camHUD];
-		bar.cameras = [camHUD];
-		songPosBar.cameras = [camHUD];
-		songName.cameras = [camHUD];
-
 		songName.screenCenter(X);
 
 		songName.visible = FlxG.save.data.songPosition;
@@ -2879,27 +2886,6 @@ class PlayState extends MusicBeatState
 					babyArrow.animation.addByPrefix('static', 'arrow' + dataSuffix[i]);
 					babyArrow.animation.addByPrefix('pressed', lowerDir + ' press', 24, false);
 					babyArrow.animation.addByPrefix('confirm', lowerDir + ' confirm', 24, false);
-
-					babyArrow.animation.addByPrefix('green', 'arrow static instance 1');
-					babyArrow.animation.addByPrefix('blue', 'arrow static instance 2');
-					babyArrow.animation.addByPrefix('purple', 'arrow static instance 3');
-					babyArrow.animation.addByPrefix('red', 'arrow static instance 4');
-
-					babyArrow.animation.addByPrefix('static', 'arrow static instance 1');
-					babyArrow.animation.addByPrefix('pressed', 'left press instance 1', 24, false);
-					babyArrow.animation.addByPrefix('confirm', 'left confirm instance 1', 24, false);
-
-					babyArrow.animation.addByPrefix('static', 'arrow static instance 2');
-					babyArrow.animation.addByPrefix('pressed', 'down press instance 1', 24, false);
-					babyArrow.animation.addByPrefix('confirm', 'down confirm instance 1', 24, false);
-
-					babyArrow.animation.addByPrefix('static', 'arrow static instance 4');
-					babyArrow.animation.addByPrefix('pressed', 'up press instance 1', 24, false);
-					babyArrow.animation.addByPrefix('confirm', 'up confirm instance 1', 24, false);
-
-					babyArrow.animation.addByPrefix('static', 'arrow static instance 3');
-					babyArrow.animation.addByPrefix('pressed', 'right press instance 1', 24, false);
-					babyArrow.animation.addByPrefix('confirm', 'right confirm instance 1', 24, false);
 
 					babyArrow.x += Note.swagWidth * i;
 
@@ -3299,7 +3285,7 @@ class PlayState extends MusicBeatState
 			FlxG.stage.window.borderless = false;
 		}
 
-		var shit:Float = 2000;
+		var shit:Float = 1400;
 		if (SONG.speed < 1 || scrollSpeed < 1)
 			shit /= scrollSpeed == 1 ? SONG.speed : scrollSpeed;
 		while (unspawnNotes.length > 0 && unspawnNotes[0] != null)
@@ -3577,6 +3563,9 @@ class PlayState extends MusicBeatState
 				iconP1.visible = false;
 				iconP2.visible = false;
 				scoreTxt.visible = false;
+				songName.visible = false;
+				songPosBar.visible = false;
+				bar.visible = false;
 			}
 			else
 			{
@@ -3586,6 +3575,9 @@ class PlayState extends MusicBeatState
 				iconP1.visible = true;
 				iconP2.visible = true;
 				scoreTxt.visible = true;
+				songName.visible = FlxG.save.data.songPosition;
+				songPosBar.visible = FlxG.save.data.songPosition;
+				bar.visible = FlxG.save.data.songPosition;
 			}
 
 			var p1 = luaModchart.getVar("strumLine1Visible", 'bool');
@@ -4094,8 +4086,8 @@ class PlayState extends MusicBeatState
 				{
 					if (PlayStateChangeables.botPlay)
 						handleBotplay(daNote);
-					else if (!PlayStateChangeables.botPlay && daNote.isSustainNote && daNote.canBeHit && daNote.mustPress
-						&& keys[daNote.noteData] && daNote.sustainActive)
+					else if (!PlayStateChangeables.botPlay && daNote.isSustainNote && daNote.canBeHit && daNote.mustPress && keys[daNote.noteData]
+						&& daNote.sustainActive)
 						handleHolds(daNote);
 				}
 
@@ -4238,6 +4230,7 @@ class PlayState extends MusicBeatState
 							if (daNote.isParent && daNote.visible && daNote.causesMisses)
 							{
 								health -= 0.15; // give a health punishment for failing a LN
+								misses += 1;
 								for (i in daNote.children)
 								{
 									i.sustainActive = false;
@@ -6384,6 +6377,11 @@ class PlayState extends MusicBeatState
 
 		scoreTxt.revive();
 		uiGroup.add(scoreTxt);
+		kadeEngineWatermark.revive();
+		uiGroup.add(kadeEngineWatermark);
+		currentTimingShown.revive();
+		uiGroup.add(currentTimingShown);
+		currentTimingShown.alpha = 0;
 	}
 
 	function HealthDrain():Void

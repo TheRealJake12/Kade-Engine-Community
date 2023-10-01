@@ -469,9 +469,9 @@ class OptionsMenu extends MusicBeatSubstate
 		var any = false;
 		var escape = false;
 		var clickedCat = false;
-		var rightHold = FlxG.keys.pressed.RIGHT || (gamepad != null ? gamepad.pressed.DPAD_RIGHT : false);
+		var rightHold = FlxG.keys.pressed.RIGHT || controls.RIGHT || (gamepad != null ? gamepad.pressed.DPAD_RIGHT : false);
 
-		var leftHold = FlxG.keys.pressed.LEFT || (gamepad != null ? gamepad.pressed.DPAD_LEFT : false);
+		var leftHold = FlxG.keys.pressed.LEFT || controls.LEFT || (gamepad != null ? gamepad.pressed.DPAD_LEFT : false);
 
 		changedOption = false;
 

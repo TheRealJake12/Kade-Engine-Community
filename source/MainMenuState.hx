@@ -100,7 +100,7 @@ class MainMenuState extends MusicBeatState
 
 		#if FEATURE_MODCORE
 		if (FlxG.save.data.loadMods)
-			Polymod.reload();
+			ModCore.initialize();
 		#end
 
 		FlxG.mouse.visible = true;

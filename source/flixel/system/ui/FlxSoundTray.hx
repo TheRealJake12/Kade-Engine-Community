@@ -12,34 +12,13 @@ import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 #if flash
-import flash.text.AntiAliasType;
-import flash.text.GridFitType;
-#end
-import openfl.system.System;
-import flixel.math.FlxMath;
-import flixel.util.FlxColor;
-import openfl.Lib;
-import openfl.display.Bitmap;
-import openfl.display.BitmapData;
-import flixel.FlxG;
-import haxe.Timer;
-import openfl.events.Event;
-import openfl.text.TextField;
-import openfl.text.TextFormat;
-import openfl.display3D.Context3D;
-#if gl_stats
-import openfl.display._internal.stats.Context3DStats;
-import openfl.display._internal.stats.DrawCallContext;
-#end
-#if flash
-import openfl.Lib;
-#end
-#if openfl
-import openfl.system.System;
+import openfl.text.AntiAliasType;
+import openfl.text.GridFitType;
 #end
 
 /**
  * The flixel sound tray, the little volume meter that pops down sometimes.
+ * Accessed via `FlxG.game.soundTray` or `FlxG.sound.soundTray`.
  */
 class FlxSoundTray extends Sprite
 {
@@ -67,6 +46,9 @@ class FlxSoundTray extends Sprite
 
 	/**The sound used when increasing the volume.**/
 	public var volumeUpSound:String = "ding";
+
+	/**The sound used when decreasing the volume.**/
+	public var volumeDownSound:String = 'ding';
 
 	/**Whether or not changing the volume should make noise.**/
 	public var silent:Bool = false;
@@ -126,28 +108,33 @@ class FlxSoundTray extends Sprite
 	}
 
 	/**
-	 * This function just updates the soundtray object.
+	 * This function updates the soundtray object.
 	 */
 	public function update(MS:Float):Void
 	{
-		// Animate stupid sound tray thing
+		// Animate sound tray thing
 		if (_timer > 0)
 		{
-			_timer -= MS / 1000;
+			_timer -= (MS / 1000);
 		}
 		else if (y > -height)
 		{
-			y -= (MS / 1000) * FlxG.height * 2;
+			y -= FlxG.height * FlxG.elapsed;
 
 			if (y <= -height)
 			{
 				visible = false;
 				active = false;
 
+				#if FLX_SAVE
 				// Save sound preferences
-				FlxG.save.data.mute = FlxG.sound.muted;
-				FlxG.save.data.volume = FlxG.sound.volume;
-				FlxG.save.flush();
+				if (FlxG.save.isBound)
+				{
+					FlxG.save.data.mute = FlxG.sound.muted;
+					FlxG.save.data.volume = FlxG.sound.volume;
+					FlxG.save.flush();
+				}
+				#end
 			}
 		}
 	}

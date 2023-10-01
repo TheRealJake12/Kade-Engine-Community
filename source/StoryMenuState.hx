@@ -2,24 +2,18 @@ package;
 
 import CoolUtil.CoolText;
 import flixel.graphics.FlxGraphic;
-import flixel.input.gamepad.FlxGamepad;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxGroup;
 import flixel.math.FlxMath;
-import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
-import lime.net.curl.CURLCode;
 import lime.app.Application;
 #if FEATURE_DISCORD
 import Discord.DiscordClient;
 #end
-import lime.utils.Assets as LimeAssets;
 import WeekData;
 
 using StringTools;

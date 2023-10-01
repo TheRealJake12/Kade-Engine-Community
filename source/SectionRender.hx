@@ -2,7 +2,6 @@ import flixel.FlxG;
 import flixel.util.FlxColor;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import Section.SwagSection;
-import flixel.addons.display.FlxGridOverlay;
 import flixel.FlxSprite;
 
 class SectionRender extends FlxSprite
@@ -23,5 +22,12 @@ class SectionRender extends FlxSprite
 
 	override function update(elapsed)
 	{
+	}
+
+	override function destroy()
+	{
+		section = null;
+		icon = null;
+		super.destroy();
 	}
 }

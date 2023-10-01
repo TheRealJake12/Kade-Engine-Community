@@ -3,7 +3,7 @@ function start(song) -- do nothing
 end
 
 function update(elapsed)
-
+    
     if difficulty == 2 and curStep > 400 then
         if spinLength < 32 then
             spinLength = spinLength + 0.2
@@ -25,6 +25,13 @@ function beatHit(beat) -- do nothing
 end
 
 function stepHit(step) -- do nothing
+    if curStep == 63 then
+        showOnlyStrums = true
+    end
+
+    if curStep == 415 then
+        showOnlyStrums = false
+    end    
 
 end
 

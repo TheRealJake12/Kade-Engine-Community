@@ -71,8 +71,7 @@ haxelib run flixel-tools setup
 ```
 When its finished, you will need to download these like you did with the Libraries above.
 ```cmd
-haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
-haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
+haxelib git linc_luajit https://github.com/superpowers04/linc_luajit
 haxelib git faxe https://github.com/uhrobots/faxe
 haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
 haxelib git hxCodec https://github.com/TheRealJake12/hxCodec.git

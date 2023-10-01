@@ -484,7 +484,10 @@ class DownscrollOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
+		{
+			blocked = true;
 			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -516,7 +519,10 @@ class GhostTapOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
+		{
+			blocked = true;
 			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -582,16 +588,11 @@ class SongPositionOption extends Option
 	public function new(desc:String)
 	{
 		super();
-		if (OptionsMenu.isInPause)
-			description = pauseDesc;
-		else
-			description = desc;
+		description = desc;
 	}
 
 	public override function left():Bool
 	{
-		if (OptionsMenu.isInPause)
-			return false;
 		FlxG.save.data.songPosition = !FlxG.save.data.songPosition;
 		display = updateDisplay();
 		return true;
@@ -615,7 +616,10 @@ class DistractionsAndEffectsOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
+		{
+			blocked = true;
 			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -676,7 +680,10 @@ class StepManiaOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
+		{
+			blocked = true;
 			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -762,7 +769,10 @@ class FlashingLightsOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
+		{
+			blocked = true;
 			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -794,7 +804,10 @@ class AntialiasingOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
+		{
+			blocked = true;
 			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -825,16 +838,11 @@ class MissSoundsOption extends Option
 	public function new(desc:String)
 	{
 		super();
-		if (OptionsMenu.isInPause)
-			description = pauseDesc;
-		else
-			description = desc;
+		description = desc;
 	}
 
 	public override function left():Bool
 	{
-		if (OptionsMenu.isInPause)
-			return false;
 		FlxG.save.data.missSounds = !FlxG.save.data.missSounds;
 		display = updateDisplay();
 		return true;
@@ -885,7 +893,10 @@ class Judgement extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
+		{
+			blocked = true;
 			description = pauseDesc;
+		}
 		else
 			description = desc;
 		acceptValues = true;
@@ -1345,7 +1356,10 @@ class AccuracyDOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
+		{
+			blocked = true;
 			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -1407,7 +1421,10 @@ class WatermarkOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
+		{
+			blocked = true;
 			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -1469,7 +1486,10 @@ class OffsetThing extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
+		{
+			blocked = true;
 			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -1561,16 +1581,11 @@ class JudgementCounter extends Option
 	public function new(desc:String)
 	{
 		super();
-		if (OptionsMenu.isInPause)
-			description = pauseDesc;
-		else
-			description = desc;
+		description = desc;
 	}
 
 	public override function left():Bool
 	{
-		if (OptionsMenu.isInPause)
-			return false;
 		FlxG.save.data.judgementCounter = !FlxG.save.data.judgementCounter;
 		display = updateDisplay();
 		return true;
@@ -1594,7 +1609,10 @@ class MiddleScrollOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
+		{
+			blocked = true;
 			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -1626,7 +1644,10 @@ class RotateSpritesOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
+		{
+			blocked = true;
 			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -1658,7 +1679,10 @@ class NoteskinOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
+		{
+			blocked = true;
 			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -1697,7 +1721,10 @@ class CPUNoteskinOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
+		{
+			blocked = true;
 			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -1736,7 +1763,10 @@ class HealthBarOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
+		{
+			blocked = true;
 			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -1832,7 +1862,10 @@ class LockWeeksOption extends Option
 		super();
 		acceptType = true;
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+		{
+			blocked = true;
+			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -1928,7 +1961,10 @@ class ResetScoreOption extends Option
 		super();
 		acceptType = true;
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+		{
+			blocked = true;
+			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -1971,7 +2007,10 @@ class Optimization extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+		{
+			blocked = true;
+			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -2056,10 +2095,7 @@ class General extends Option
 	public function new(desc:String)
 	{
 		super();
-		if (OptionsMenu.isInPause)
-			description = "Gives More Debug Info In The Logs.";
-		else
-			description = desc;
+		description = desc;
 	}
 
 	public override function left():Bool
@@ -2164,7 +2200,10 @@ class FXAAOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+		{
+			blocked = true;
+			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -2222,10 +2261,7 @@ class UnloadSongs extends Option
 	public function new(desc:String)
 	{
 		super();
-		if (OptionsMenu.isInPause)
-			description = "Unload Assets";
-		else
-			description = desc;
+		description = desc;
 	}
 
 	public override function left():Bool
@@ -2253,17 +2289,20 @@ class UnloadNow extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "Clears All Cache We Can Remove.";
+		{
+			blocked = true;
+			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
 
 	public override function press():Bool
 	{
-		if (!OptionsMenu.isInPause)
-		{
-			Paths.clearUnusedMemory();
-		}
+		if (OptionsMenu.isInPause)
+			return false;
+
+		Paths.clearUnusedMemory();
 		return false;
 	}
 
@@ -2333,7 +2372,10 @@ class NotesplashOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+		{
+			blocked = true;
+			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -2372,7 +2414,10 @@ class CPUNotesplashOption extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+		{
+			blocked = true;
+			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -2411,7 +2456,10 @@ class RatingPopup extends Option
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+		{
+			blocked = true;
+			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -2518,77 +2566,16 @@ class OpenGLStatsOption extends Option
 	}
 }
 
-class OldCharter extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		if (OptionsMenu.isInPause)
-			description = "Uses Kade Engine 1.5.4 Charter";
-		else
-			description = desc;
-	}
-
-	public override function left():Bool
-	{
-		if (OptionsMenu.isInPause)
-			return false;
-		FlxG.save.data.oldcharter = !FlxG.save.data.oldcharter;
-		display = updateDisplay();
-		return true;
-	}
-
-	public override function right():Bool
-	{
-		left();
-		return true;
-	}
-
-	private override function updateDisplay():String
-	{
-		return "Old Charter: < " + (!FlxG.save.data.oldcharter ? "off" : "on") + " >";
-	}
-}
-
-class StressMP4 extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
-		else
-			description = desc;
-	}
-
-	public override function left():Bool
-	{
-		if (OptionsMenu.isInPause)
-			return false;
-		FlxG.save.data.stressMP4 = !FlxG.save.data.stressMP4;
-		display = updateDisplay();
-		return true;
-	}
-
-	public override function right():Bool
-	{
-		left();
-		return true;
-	}
-
-	private override function updateDisplay():String
-	{
-		return "Week 7 Videos: < " + (!FlxG.save.data.stressMP4 ? "off" : "on") + " >";
-	}
-}
-
 class BackgroundsOption extends Option
 {
 	public function new(desc:String)
 	{
 		super();
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+		{
+			blocked = true;
+			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}
@@ -2917,7 +2904,10 @@ class ResetSettings extends Option
 		super();
 		acceptType = true;
 		if (OptionsMenu.isInPause)
-			description = "This option cannot be toggled in the pause menu.";
+		{
+			blocked = true;
+			description = pauseDesc;
+		}
 		else
 			description = desc;
 	}

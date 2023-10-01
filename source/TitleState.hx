@@ -1,8 +1,5 @@
 package;
 
-import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.addons.transition.TransitionData;
 import lime.app.Application;
 #if FEATURE_DISCORD
 import Discord.DiscordClient;
@@ -17,24 +14,12 @@ import sys.io.File;
 #end
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.FlxState;
 import openfl.Assets;
-import openfl.utils.AssetCache;
-import flixel.addons.display.FlxGridOverlay;
-import flixel.graphics.FlxGraphic;
-import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxGroup;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRect;
-import flixel.system.FlxSound;
-import flixel.system.ui.FlxSoundTray;
-import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
-import flixel.input.keyboard.FlxKey;
-import openfl.Lib;
 #if FEATURE_MULTITHREADING
 import sys.thread.Mutex;
 #end

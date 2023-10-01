@@ -206,17 +206,8 @@ class Note extends FlxSprite
 						for (i in 0...4)
 						{
 							animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
-							animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + '0'); // Normal notes old
-
 							animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
-							animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold piece'); // Hold old
-
 							animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
-							animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' hold end'); // Tails old
-
-							animation.addByPrefix('purpleholdend', 'pruple end hold'); // ?
-
-							// For Legacy Noteskins.
 						}
 					}
 			}
@@ -347,17 +338,8 @@ class Note extends FlxSprite
 								for (i in 0...4)
 								{
 									animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
-									animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + '0'); // Normal notes old
-
 									animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
-									animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold piece'); // Hold old
-
 									animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
-									animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' hold end'); // Tails old
-
-									animation.addByPrefix('purpleholdend', 'pruple end hold'); // ?
-
-									// For Legacy Noteskins.
 								}
 							}
 					}
@@ -500,7 +482,7 @@ class Note extends FlxSprite
 							&& strumTime - Conductor.songPosition >= (((-Ratings.timingWindows[0]) * earlyHitMult)))
 							canBeHit = true;
 						if (strumTime - Conductor.songPosition < (-Ratings.timingWindows[0]) && !wasGoodHit)
-							tooLate = true;	
+							tooLate = true;
 				}
 			}
 
@@ -515,7 +497,7 @@ class Note extends FlxSprite
 				if (alpha > modAlpha * 0.3)
 					alpha = modAlpha * 0.3;
 			}
-		}	
+		}
 	}
 
 	/*

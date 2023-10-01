@@ -1,62 +1,38 @@
 package debug;
 
-import openfl.net.FileFilter;
 import Song.SongMeta;
-import openfl.system.System;
 import lime.app.Application;
-import flixel.util.FlxCollision;
 #if FEATURE_FILESYSTEM
 import sys.io.File;
 import sys.FileSystem;
 #end
 import flixel.addons.ui.FlxUIButton;
-import flixel.addons.ui.StrNameLabel;
-import flixel.FlxCamera;
 import flixel.FlxObject;
 import flixel.addons.ui.FlxUIText;
-import haxe.zip.Writer;
 import Section.SwagSection;
 import Song.SongData;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.addons.display.FlxGridOverlay;
 import flixel.addons.ui.FlxInputText;
-import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUITabMenu;
-import flixel.addons.ui.FlxUITooltip.FlxUITooltipStyle;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxGroup;
 import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
 import flixel.system.FlxSound;
 import flixel.text.FlxText;
-import flixel.ui.FlxButton;
-import flixel.ui.FlxSpriteButton;
 import flixel.util.FlxColor;
 import haxe.Json;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import openfl.media.Sound;
 import openfl.net.FileReference;
-import openfl.utils.ByteArray;
-import flixel.util.FlxSort;
-import flixel.addons.ui.FlxUI9SliceSprite;
-import flixel.addons.transition.FlxTransitionableState;
-import openfl.Lib;
 #if FEATURE_DISCORD
 import Discord.DiscordClient;
 #end
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
-import flixel.util.FlxTimer;
-import lime.media.AudioBuffer;
-import haxe.io.Bytes;
-import flash.geom.Rectangle;
 #if FEATURE_DISCORD
 import Discord.DiscordClient;
 #end
@@ -125,9 +101,9 @@ class ChartingState extends MusicBeatState
 	var curRenderedNotes:FlxTypedGroup<Note>;
 	var curRenderedSustains:FlxTypedGroup<FlxSprite>;
 
-	var gridBG:FlxSprite;
-
 	public var sectionRenderes:FlxTypedGroup<SectionRender>;
+
+	var gridBG:FlxSprite;
 
 	public static var _song:SongData;
 
@@ -2172,23 +2148,6 @@ class ChartingState extends MusicBeatState
 			FlxG.watch.addQuick("Rendered Notes ", shownNotes.length);
 			#end
 
-			for (i in sectionRenderes)
-			{
-				var diff = i.y - strumLine.y;
-				if (diff < 1900 && diff >= -1900)
-				{
-					i.active = true;
-					i.visible = true;
-				}
-				else
-				{
-					i.active = false;
-					i.visible = false;
-				}
-			}
-
-			shownNotes = [];
-
 			if (inst != null)
 			{
 				if (inst.playing)
@@ -2297,10 +2256,27 @@ class ChartingState extends MusicBeatState
 				}
 			}
 
+			for (i in sectionRenderes)
+			{
+				var diff = i.y - strumLine.y;
+				if (diff < 2200 && diff >= -2200)
+				{
+					i.active = true;
+					i.visible = true;
+				}
+				else
+				{
+					i.active = false;
+					i.visible = false;
+				}
+			}
+
+			shownNotes = [];
+
 			for (note in curRenderedNotes)
 			{
 				var diff = note.strumTime - Conductor.songPosition;
-				if (diff < 8000 && diff >= -8000)
+				if (diff < 1675 && diff >= -3500) // Cutting it really close with rendered notes
 				{
 					shownNotes.push(note);
 					if (note.sustainLength > 0)
@@ -2318,7 +2294,7 @@ class ChartingState extends MusicBeatState
 					if (note.sustainLength > 0)
 					{
 						if (note.noteCharterObject != null)
-							if (note.noteCharterObject.y != note.y + GRID_SIZE)
+							if (note.noteCharterObject.y != note.y)
 							{
 								note.noteCharterObject.active = false;
 								note.noteCharterObject.visible = false;
@@ -2326,6 +2302,10 @@ class ChartingState extends MusicBeatState
 					}
 				}
 			}
+
+			/*
+				note culling code above
+			 */
 
 			for (ii in selectedBoxes.members)
 			{
@@ -2377,8 +2357,8 @@ class ChartingState extends MusicBeatState
 						if (zoomFactor > 2)
 							zoomFactor = 2;
 
-						if (zoomFactor < 0.1)
-							zoomFactor = 0.1;
+						if (zoomFactor < 0.2)
+							zoomFactor = 0.2;
 						resizeEverything();
 					}
 					else
@@ -2464,14 +2444,15 @@ class ChartingState extends MusicBeatState
 				{
 					if (!waitingForRelease)
 					{
-						// dfjk	
-						while (selectedBoxes.members.length != 0 && selectBox.width > 10 && selectBox.height > 10)
+						// dfjk
+						while (selectedBoxes.members.length != 0)
 						{
 							selectedBoxes.members[0].connectedNote.charterSelected = false;
 							selectedBoxes.members[0].destroy();
 							selectedBoxes.members.remove(selectedBoxes.members[0]);
 							selectedBoxes.clear();
 						}
+						
 						waitingForRelease = true;
 						selectBox = new FlxSprite(FlxG.mouse.x, FlxG.mouse.y);
 						selectBox.makeGraphic(1, 1, FlxColor.fromRGB(173, 216, 230));
@@ -2500,19 +2481,11 @@ class ChartingState extends MusicBeatState
 				{
 					waitingForRelease = false;
 
-					while (selectedBoxes.members.length != 0 && selectBox.width > 10 && selectBox.height > 10)
-					{
-						selectedBoxes.members[0].connectedNote.charterSelected = false;
-						selectedBoxes.members[0].destroy();
-						selectedBoxes.members.remove(selectedBoxes.members[0]);
-						selectedBoxes.clear();
-					}
-
 					for (i in curRenderedNotes)
 					{
 						if (i.overlaps(selectBox) && !i.charterSelected)
 						{
-							selectNote(i, false);
+							selectNote(i);
 						}
 					}
 					selectBox.destroy();
@@ -2804,7 +2777,7 @@ class ChartingState extends MusicBeatState
 						{
 							if (FlxG.keys.pressed.CONTROL)
 							{
-								selectNote(note, false);
+								selectNote(note);
 							}
 							else
 							{
@@ -3395,19 +3368,10 @@ class ChartingState extends MusicBeatState
 		_song.notes.push(sec);
 	}
 
-	function selectNote(note:Note, ?deleteAllBoxes:Bool = true):Void
+	function selectNote(note:Note):Void
 	{
 		var swagNum:Int = 0;
-
-		if (deleteAllBoxes)
-			while (selectedBoxes.members.length != 0)
-			{
-				selectedBoxes.members[0].connectedNote.charterSelected = false;
-				selectedBoxes.members[0].destroy();
-				selectedBoxes.members.remove(selectedBoxes.members[0]);
-				selectedBoxes.clear();
-			}
-
+		
 		for (sec in _song.notes)
 		{
 			swagNum = 0;
