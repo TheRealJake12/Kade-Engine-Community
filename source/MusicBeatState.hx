@@ -185,7 +185,7 @@ class MusicBeatState extends FlxUIState
 				}
 
 				#if debug
-				FlxG.watch.addQuick("Current Conductor Timing Seg", curTiming.bpm);
+				FlxG.watch.addQuick("conductorTimingSeg", curTiming.bpm);
 				#end
 
 				curDecimalBeat = TimingStruct.getBeatFromTime(Conductor.songPosition);

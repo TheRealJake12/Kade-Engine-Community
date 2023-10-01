@@ -13,6 +13,7 @@ haxelib install flixel-ui
 haxelib install flixel-addons
 haxelib install hxcpp-debug-server
 haxelib install polymod
+haxelib install SScript
 haxelib run lime setup
 haxelib run lime setup flixel
 haxelib run flixel-tools setup
@@ -28,7 +29,6 @@ haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
 haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
 haxelib git faxe https://github.com/uhrobots/faxe
 haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
-haxelib git SScript https://github.com/TheRealJake12/sscript.git
 haxelib git hxCodec https://github.com/TheRealJake12/hxCodec.git
 cls
 

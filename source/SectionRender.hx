@@ -18,6 +18,7 @@ class SectionRender extends FlxSprite
 		scale.set(GRID_SIZE * 8, GRID_SIZE * Height);
 		updateHitbox();
 		antialiasing = false;
+		moves = false;
 	}
 
 	override function update(elapsed)

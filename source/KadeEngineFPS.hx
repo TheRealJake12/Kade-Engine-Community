@@ -133,7 +133,6 @@ class KadeEngineFPS extends TextField
 			if (FlxG.save.data.glDebug)
 			{
 				text += "\nTotal Draw Cells: " + Context3DStats.totalDrawCalls();
-				text += "\nStage Draw Cells: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE);
 				// text += "\nStage3D Draw Cells: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE3D);
 			}
 			#end

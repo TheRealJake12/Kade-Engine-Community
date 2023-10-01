@@ -3285,7 +3285,7 @@ class PlayState extends MusicBeatState
 			FlxG.stage.window.borderless = false;
 		}
 
-		var shit:Float = 1400;
+		var shit:Float = 1500;
 		if (SONG.speed < 1 || scrollSpeed < 1)
 			shit /= scrollSpeed == 1 ? SONG.speed : scrollSpeed;
 		while (unspawnNotes.length > 0 && unspawnNotes[0] != null)
