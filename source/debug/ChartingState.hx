@@ -222,7 +222,7 @@ class ChartingState extends MusicBeatState
 		player2 = new Character(0, 0, _song.player2);
 		player1 = new Boyfriend(0, 0, _song.player1);
 
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('bg'));
 		bg.scrollFactor.set();
 		bg.color = 0xFF0C0C0C;
 		add(bg);
@@ -395,8 +395,6 @@ class ChartingState extends MusicBeatState
 		];
 
 		UI_box = new FlxUITabMenu(null, tabs, true);
-		UI_box.broadcastToFlxUI = false;
-		UI_box.moves = false;
 
 		UI_box.scrollFactor.set();
 		UI_box.resize(300, 400);
@@ -409,8 +407,6 @@ class ChartingState extends MusicBeatState
 		];
 
 		UI_options = new FlxUITabMenu(null, opt_tabs, true);
-		UI_options.broadcastToFlxUI = false;
-		UI_options.moves = false;
 
 		UI_options.scrollFactor.set();
 		UI_options.selected_tab = 0;
@@ -1026,15 +1022,8 @@ class ChartingState extends MusicBeatState
 		});
 		player1DropDown.selectedLabel = _song.player1;
 
-		player1DropDown.active = false;
-		player1DropDown.moves = false;
-		player1DropDown.broadcastToFlxUI = false;
-
 		var player1Label = new FlxText(10, 80, 0, 'Player 1', 14);
 		player1Label.font = Paths.font("vcr.ttf");
-
-		player1Label.active = false;
-		player1Label.moves = false;
 
 		var player2DropDown = new FlxUIDropDownMenu(140, 100, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true), function(character:String)
 		{
@@ -1042,15 +1031,8 @@ class ChartingState extends MusicBeatState
 		});
 		player2DropDown.selectedLabel = _song.player2;
 
-		player2DropDown.active = false;
-		player2DropDown.moves = false;
-		player2DropDown.broadcastToFlxUI = false;
-
 		var player2Label = new FlxText(140, 80, 0, 'Player 2', 14);
 		player2Label.font = Paths.font("vcr.ttf");
-
-		player2Label.active = false;
-		player2Label.moves = false;
 
 		var gfVersionDropDown = new FlxUIDropDownMenu(10, 200, FlxUIDropDownMenu.makeStrIdLabelArray(gfVersions, true), function(gfVersion:String)
 		{
@@ -1058,15 +1040,8 @@ class ChartingState extends MusicBeatState
 		});
 		gfVersionDropDown.selectedLabel = _song.gfVersion;
 
-		gfVersionDropDown.active = false;
-		gfVersionDropDown.moves = false;
-		gfVersionDropDown.broadcastToFlxUI = false;
-
 		var gfVersionLabel = new FlxText(10, 180, 0, 'Girlfriend', 14);
 		gfVersionLabel.font = Paths.font("vcr.ttf");
-
-		gfVersionLabel.active = false;
-		gfVersionLabel.moves = false;
 
 		var stageDropDown = new FlxUIDropDownMenu(140, 200, FlxUIDropDownMenu.makeStrIdLabelArray(stages, true), function(stage:String)
 		{
@@ -1074,15 +1049,8 @@ class ChartingState extends MusicBeatState
 		});
 		stageDropDown.selectedLabel = _song.stage;
 
-		stageDropDown.active = false;
-		stageDropDown.moves = false;
-		stageDropDown.broadcastToFlxUI = false;
-
 		var stageLabel = new FlxText(140, 180, 64, 'Stage', 14);
 		stageLabel.font = Paths.font("vcr.ttf");
-
-		stageLabel.active = false;
-		stageLabel.moves = false;
 
 		var noteStyleDropDown = new FlxUIDropDownMenu(10, 300, FlxUIDropDownMenu.makeStrIdLabelArray(noteStyles, true), function(noteStyle:String)
 		{
@@ -1090,15 +1058,8 @@ class ChartingState extends MusicBeatState
 		});
 		noteStyleDropDown.selectedLabel = _song.noteStyle;
 
-		noteStyleDropDown.active = false;
-		noteStyleDropDown.moves = false;
-		noteStyleDropDown.broadcastToFlxUI = false;
-
 		var noteStyleLabel = new FlxText(10, 280, 0, 'Note Skin', 14);
 		noteStyleLabel.font = Paths.font("vcr.ttf");
-
-		noteStyleDropDown.active = false;
-		noteStyleDropDown.moves = false;
 
 		var tab_group_assets = new FlxUI(null, UI_box);
 		tab_group_assets.name = "Assets";
@@ -1119,21 +1080,12 @@ class ChartingState extends MusicBeatState
 	function addSongUI():Void
 	{
 		var UI_songTitle = new FlxUIInputText(10, 10, 70, _song.songId, 8);
-		UI_songTitle.active = false;
-		UI_songTitle.moves = false;
-		UI_songTitle.broadcastToFlxUI = false;
 		typingShit = UI_songTitle;
 
 		var UI_audioFile = new FlxUIInputText(10, 200, 70, _song.audioFile, 8);
 		typingShit2 = UI_audioFile;
 		var audioLabel:FlxText = new FlxText(85, 200, 0, "Audio Track", 12);
-		audioLabel.active = false;
-		audioLabel.moves = false;
 		audioLabel.font = Paths.font('vcr.ttf');
-
-		UI_audioFile.active = false;
-		UI_audioFile.moves = false;
-		UI_audioFile.broadcastToFlxUI = false;
 
 		var check_voices = new FlxUICheckBox(10, 25, null, null, "Has voice track", 100);
 		check_voices.checked = _song.needsVoices;
@@ -1142,9 +1094,6 @@ class ChartingState extends MusicBeatState
 		{
 			_song.needsVoices = check_voices.checked;
 		};
-		check_voices.active = false;
-		check_voices.moves = false;
-		check_voices.broadcastToFlxUI = false;
 
 		var check_split = new FlxUICheckBox(10, 40, null, null, "Split Voice Track", 100);
 		check_split.checked = _song.splitVoiceTracks;
@@ -1154,18 +1103,10 @@ class ChartingState extends MusicBeatState
 			_song.splitVoiceTracks = check_split.checked;
 		};
 
-		check_split.active = false;
-		check_split.moves = false;
-		check_split.broadcastToFlxUI = false;
-
 		var saveButton:FlxUIButton = new FlxUIButton(110, 8, "Save", function()
 		{
 			saveLevel();
 		});
-
-		saveButton.active = false;
-		saveButton.moves = false;
-		saveButton.broadcastToFlxUI = false;
 
 		var reloadSong:FlxUIButton = new FlxUIButton(saveButton.x + saveButton.width + 10, saveButton.y, "Reload Audio", function()
 		{
@@ -1184,18 +1125,10 @@ class ChartingState extends MusicBeatState
 			// goofy song overlapping and raping your ears
 		});
 
-		reloadSong.active = false;
-		reloadSong.moves = false;
-		reloadSong.broadcastToFlxUI = false;
-
 		var reloadSongJson:FlxUIButton = new FlxUIButton(reloadSong.x, saveButton.y + 30, "Reload JSON", function()
 		{
 			loadJson(_song.songId.toLowerCase());
 		});
-
-		reloadSongJson.active = false;
-		reloadSongJson.moves = false;
-		reloadSongJson.broadcastToFlxUI = false;
 
 		var restart = new FlxUIButton(10, 170, "Reset Chart", function()
 		{
@@ -1209,42 +1142,20 @@ class ChartingState extends MusicBeatState
 			resetSection(true);
 		});
 
-		restart.active = false;
-		restart.moves = false;
-		restart.broadcastToFlxUI = false;
-
 		var loadAutosaveBtn:FlxUIButton = new FlxUIButton(reloadSongJson.x, reloadSongJson.y + 30, 'Load AutoSave', loadAutosave);
 		var stepperBPM:FlxUINumericStepper = new FlxUINumericStepper(10, 65, 0.1, 1, 1.0, 5000.0, 1);
 		stepperBPM.value = Conductor.bpm;
 		stepperBPM.name = 'song_bpm';
 
-		loadAutosaveBtn.active = false;
-		loadAutosaveBtn.moves = false;
-		loadAutosaveBtn.broadcastToFlxUI = false;
-
-		stepperBPM.active = false;
-		stepperBPM.moves = false;
-		stepperBPM.broadcastToFlxUI = false;
-
 		var stepperBPMLabel = new FlxText(74, 65, 0, 'BPM', 11);
 		stepperBPMLabel.font = Paths.font("vcr.ttf");
-
-		stepperBPMLabel.active = false;
-		stepperBPMLabel.moves = false;
 
 		var stepperSpeed:FlxUINumericStepper = new FlxUINumericStepper(10, 80, 0.1, 1, 0, 10, 1);
 		stepperSpeed.value = _song.speed;
 		stepperSpeed.name = 'song_speed';
 
-		stepperSpeed.active = false;
-		stepperSpeed.moves = false;
-		stepperSpeed.broadcastToFlxUI = false;
-
 		var stepperSpeedLabel = new FlxText(74, 80, 0, 'Scroll Speed', 11);
 		stepperSpeedLabel.font = Paths.font("vcr.ttf");
-
-		stepperSpeedLabel.active = false;
-		stepperSpeedLabel.moves = false;
 
 		var stepperVocalVol:FlxUINumericStepper = new FlxUINumericStepper(10, 95, 0.1, 1, 0, 10, 1);
 		if (!_song.splitVoiceTracks)
@@ -1257,10 +1168,6 @@ class ChartingState extends MusicBeatState
 		}
 		stepperVocalVol.name = 'song_vocalvol';
 
-		stepperVocalVol.active = false;
-		stepperVocalVol.moves = false;
-		stepperVocalVol.broadcastToFlxUI = false;
-
 		var stepperPlayerVol:FlxUINumericStepper = new FlxUINumericStepper(10, 125, 0.1, 1, 0, 10, 1);
 		if (!_song.splitVoiceTracks)
 		{
@@ -1271,10 +1178,6 @@ class ChartingState extends MusicBeatState
 			stepperPlayerVol.value = vocalsPlayer.volume;
 		}
 		stepperPlayerVol.name = 'song_playervol';
-
-		stepperPlayerVol.active = false;
-		stepperPlayerVol.moves = false;
-		stepperPlayerVol.broadcastToFlxUI = false;
 
 		var stepperEnemyVol:FlxUINumericStepper = new FlxUINumericStepper(10, 140, 0.1, 1, 0, 10, 1);
 		if (!_song.splitVoiceTracks)
@@ -1287,40 +1190,21 @@ class ChartingState extends MusicBeatState
 		}
 		stepperEnemyVol.name = 'song_enemyvol';
 
-		stepperEnemyVol.active = false;
-		stepperEnemyVol.moves = false;
-		stepperEnemyVol.broadcastToFlxUI = false;
-
 		var stepperVocalVolLabel = new FlxText(74, 95, 0, "Vocal Volume", 12);
 		stepperVocalVolLabel.font = Paths.font("vcr.ttf");
-
-		stepperVocalVolLabel.active = false;
-		stepperVocalVolLabel.moves = false;
 
 		var stepperPlayerVolLabel = new FlxText(74, 125, 0, "Player Vocal Volume", 12);
 		stepperPlayerVolLabel.font = Paths.font("vcr.ttf");
 
-		stepperPlayerVolLabel.active = false;
-		stepperPlayerVolLabel.moves = false;
-
 		var stepperEnemyVolLabel = new FlxText(74, 140, 0, "Enemy Vocal Volume", 12);
 		stepperEnemyVolLabel.font = Paths.font("vcr.ttf");
-
-		stepperEnemyVolLabel.active = false;
-		stepperEnemyVolLabel.moves = false;
 
 		var stepperSongVol:FlxUINumericStepper = new FlxUINumericStepper(10, 110, 0.1, 1, 0, 10, 1);
 		stepperSongVol.value = inst.volume;
 		stepperSongVol.name = 'song_instvol';
 
-		stepperSongVol.active = false;
-		stepperSongVol.moves = false;
-		stepperSongVol.broadcastToFlxUI = false;
-
 		var stepperSongVolLabel = new FlxText(74, 110, 0, 'Instrumental Volume', 12);
 		stepperSongVolLabel.font = Paths.font("vcr.ttf");
-		stepperSongVol.active = false;
-		stepperSongVol.moves = false;
 
 		var shiftNoteDialLabel = new FlxText(10, 245, 0, 'Shift All Notes by # Sections', 12);
 		shiftNoteDialLabel.font = Paths.font("vcr.ttf");
@@ -1335,35 +1219,10 @@ class ChartingState extends MusicBeatState
 		var stepperShiftNoteDialms:FlxUINumericStepper = new FlxUINumericStepper(10, 320, 1, 0, -1000, 1000, 2);
 		stepperShiftNoteDialms.name = 'song_shiftnotems';
 
-		shiftNoteDialLabel.active = false;
-		shiftNoteDialLabel.moves = false;
-
-		shiftNoteDialLabel2.active = false;
-		shiftNoteDialLabel2.moves = false;
-
-		shiftNoteDialLabel3.active = false;
-		shiftNoteDialLabel3.moves = false;
-
-		stepperShiftNoteDial.active = false;
-		stepperShiftNoteDial.moves = false;
-		stepperShiftNoteDial.broadcastToFlxUI = false;
-
-		stepperShiftNoteDialstep.active = false;
-		stepperShiftNoteDialstep.moves = false;
-		stepperShiftNoteDialstep.broadcastToFlxUI = false;
-
-		stepperShiftNoteDialms.active = false;
-		stepperShiftNoteDialms.moves = false;
-		stepperShiftNoteDialms.broadcastToFlxUI = false;
-
 		var shiftNoteButton:FlxUIButton = new FlxUIButton(10, 335, "Shift", function()
 		{
 			shiftNotes(Std.int(stepperShiftNoteDial.value), Std.int(stepperShiftNoteDialstep.value), Std.int(stepperShiftNoteDialms.value));
 		});
-
-		shiftNoteButton.active = false;
-		shiftNoteButton.moves = false;
-		shiftNoteButton.broadcastToFlxUI = false;
 
 		Typeables.push(UI_songTitle);
 		Typeables.push(UI_audioFile);
@@ -3940,7 +3799,8 @@ class ChartingState extends MusicBeatState
 			case 2:
 				notename = "Must Press";
 		}
-		notetypetext.text = "Note type: " + notename;
+		notename = shits[noteShit];
+		notetypetext.text = "Note Type: " + notename;
 	}
 
 	function cleanObjects()
