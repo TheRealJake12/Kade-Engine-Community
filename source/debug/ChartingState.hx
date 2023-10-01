@@ -3799,7 +3799,6 @@ class ChartingState extends MusicBeatState
 			case 2:
 				notename = "Must Press";
 		}
-		notename = shits[noteShit];
 		notetypetext.text = "Note Type: " + notename;
 	}
 
