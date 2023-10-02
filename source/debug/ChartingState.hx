@@ -170,8 +170,6 @@ class ChartingState extends MusicBeatState
 
 		PlayState.inDaPlay = false;
 
-		curDiff = CoolUtil.difficultyArray[PlayState.storyDifficulty];
-
 		deezNuts.set(4, 1);
 		deezNuts.set(8, 2);
 		deezNuts.set(12, 3);
@@ -222,7 +220,7 @@ class ChartingState extends MusicBeatState
 		player2 = new Character(0, 0, _song.player2);
 		player1 = new Boyfriend(0, 0, _song.player1);
 
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('bg'));
+		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.scrollFactor.set();
 		bg.color = 0xFF0C0C0C;
 		add(bg);
@@ -249,6 +247,8 @@ class ChartingState extends MusicBeatState
 		activeSong = _song;
 
 		// sections = _song.notes;
+
+		curDiff = CoolUtil.difficultyArray[PlayState.storyDifficulty];
 
 		loadSong(_song.audioFile, reloadOnInit);
 		Conductor.changeBPM(_song.bpm);
@@ -423,6 +423,9 @@ class ChartingState extends MusicBeatState
 		addOptionsUI();
 		addEventsUI();
 
+		if (FlxG.save.data.autoSaving)
+			openfl.Lib.setInterval(autosaveSong, 5 * 60 * 1000); // <arubz> * 60 * 1000
+
 		camFollow = new FlxObject(280, 0, 1, 1);
 		add(camFollow);
 
@@ -445,6 +448,7 @@ class ChartingState extends MusicBeatState
 		add(selectedBoxes);
 		// add(blackBorder);
 		add(snapText);
+		
 		Paths.clearUnusedMemory();
 		super.create();
 	}
@@ -998,6 +1002,20 @@ class ChartingState extends MusicBeatState
 			defaultSnap = check_snap.checked;
 		};
 
+		var difficulties:Array<String> = CoolUtil.difficultyArray;
+		var diffDrop = new FlxUIDropDownMenu(120, 75, FlxUIDropDownMenu.makeStrIdLabelArray(difficulties, true), function(diff:String)
+		{
+			if (curDiff != difficulties[Std.parseInt(diff)]){
+				curDiff = difficulties[Std.parseInt(diff)];
+				loadJson(_song.songId, curDiff);
+			}
+			Debug.logTrace("Selected Difficulty : " + curDiff);
+		});
+		diffDrop.selectedLabel = curDiff;
+
+		var diffLabel = new FlxText(100, 50, 0, 'Current Difficulty', 14);
+		diffLabel.font = Paths.font("vcr.ttf");
+
 		var tab_options = new FlxUI(null, UI_options);
 		tab_options.name = "Options";
 		tab_options.add(hitsounds);
@@ -1006,6 +1024,8 @@ class ChartingState extends MusicBeatState
 		tab_options.add(metronome);
 		tab_options.add(opponentMode);
 		tab_options.add(autosaveBool);
+		tab_options.add(diffDrop);
+		tab_options.add(diffLabel);
 		UI_options.addGroup(tab_options);
 	}
 
@@ -1127,7 +1147,7 @@ class ChartingState extends MusicBeatState
 
 		var reloadSongJson:FlxUIButton = new FlxUIButton(reloadSong.x, saveButton.y + 30, "Reload JSON", function()
 		{
-			loadJson(_song.songId.toLowerCase());
+			loadJson(_song.songId.toLowerCase(), curDiff);
 		});
 
 		var restart = new FlxUIButton(10, 170, "Reset Chart", function()
@@ -1143,7 +1163,7 @@ class ChartingState extends MusicBeatState
 		});
 
 		var loadAutosaveBtn:FlxUIButton = new FlxUIButton(reloadSongJson.x, reloadSongJson.y + 30, 'Load AutoSave', loadAutosave);
-		var stepperBPM:FlxUINumericStepper = new FlxUINumericStepper(10, 65, 0.1, 1, 1.0, 5000.0, 1);
+		var stepperBPM:FlxUINumericStepper = new FlxUINumericStepper(10, 65, 0.1, 100, 1.0, 666, 1); // cap the bpm
 		stepperBPM.value = Conductor.bpm;
 		stepperBPM.name = 'song_bpm';
 
@@ -3773,18 +3793,19 @@ class ChartingState extends MusicBeatState
 		return noteData;
 	}
 
-	function loadJson(songId:String):Void
+	function loadJson(songId:String, diff:String):Void
 	{
 		try
 		{
-			PlayState.storyDifficulty = CoolUtil.difficultyArray.indexOf(curDiff);
-			PlayState.SONG = Song.loadFromJson(songId, CoolUtil.getSuffixFromDiff(curDiff));
+			PlayState.storyDifficulty = CoolUtil.difficultyArray.indexOf(diff);
+			PlayState.SONG = Song.loadFromJson(songId, CoolUtil.getSuffixFromDiff(diff));
 
 			MusicBeatState.switchState(new ChartingState());
 		}
 		catch (e)
 		{
-			Debug.logError('Something went wrong... Error: $e');
+			Debug.logError('Make Sure You Have A Valid JSON To Load. Error: $e');
+			return;
 		}
 	}
 
@@ -3876,12 +3897,12 @@ class ChartingState extends MusicBeatState
 				"song": _song,
 			});
 
-			// Debug.logTrace('Chart Saved');
+			trace('Chart Saved');
 			FlxG.save.flush();
 		}
 		else
 		{
-			Debug.logTrace('You Have Auto Saving Disabled.');
+			trace('You Have Auto Saving Disabled.');
 		}
 	}
 
