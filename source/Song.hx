@@ -174,7 +174,7 @@ class Song
 			var value2 = Reflect.field(i, "value2");
 
 			if (value2 == null)
-				value2 = 1;
+				value2 = "1";
 
 			convertedStuff.push(new Song.Event(name, pos, value, value2, type));
 		}
