@@ -825,8 +825,6 @@ class ChartingState extends MusicBeatState
 				recalculateAllSectionTimes();
 			}
 
-			// dfjk
-
 			updateGrid();
 
 			regenerateLines();
@@ -1521,6 +1519,14 @@ class ChartingState extends MusicBeatState
 				// _song.notes[curSec].sectionNotes.push(i);
 			}
 
+			while (selectedBoxes.members.length != 0)
+			{
+				selectedBoxes.members[0].connectedNote.charterSelected = false;
+				selectedBoxes.members[0].destroy();
+				selectedBoxes.members.remove(selectedBoxes.members[0]);
+				selectedBoxes.clear();
+			}
+
 			updateGrid();
 		});
 
@@ -1745,16 +1751,13 @@ class ChartingState extends MusicBeatState
 
 					var thing = ii.sectionNotes[ii.sectionNotes.length - 1];
 
-					var note:Note = new Note(strum, originalNote.noteData, originalNote.prevNote, originalNote.isSustainNote, true, true, originalNote.isAlt,
+					var note:Note = new Note(strum, originalNote.noteData, originalNote.prevNote, false, true, true, originalNote.isAlt,
 						originalNote.beat, originalNote.noteShit);
 					note.rawNoteData = originalNote.rawNoteData;
 					note.sustainLength = originalNote.sustainLength;
 					note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));
 					note.updateHitbox();
 					note.x = Math.floor(originalNote.rawNoteData * GRID_SIZE);
-
-					note.charterSelected = true;
-
 					note.y = Math.floor(getYfromStrum(strum) * zoomFactor);
 
 					var box = new ChartingBox(note.x, note.y, note);
@@ -1775,11 +1778,13 @@ class ChartingState extends MusicBeatState
 
 						curRenderedSustains.add(sustainVis);
 					}
+
+					selectNote(note);
 					continue;
 				}
 			}
 		}
-
+		
 		for (note in toDelete)
 		{
 			deleteNote(note);
@@ -1788,7 +1793,15 @@ class ChartingState extends MusicBeatState
 		{
 			selectedBoxes.add(box);
 		}
-		//
+
+		updateNoteUI();
+
+		updateGrid();
+
+		// ok so basically theres a bug with color quant that it doesn't update the color until the grid updates.
+		// when the grid updates, it causes a massive performance drop everytime we offset the notes. :/
+		// actually its broken either way because theres a ghost note after offsetting sometimes. updateGrid anyway.
+		// now sustains don't get shifted. I don't know.
 	}
 
 	function loadSong(daSong:String, reloadFromFile:Bool = false):Void
@@ -1994,7 +2007,6 @@ class ChartingState extends MusicBeatState
 					if (nums.value <= 0.1)
 						nums.value = 0.1;
 					hitsoundsVol.value = nums.value;
-				// dfjk
 
 				case 'divisions':
 					subDivisions = nums.value;
@@ -2529,13 +2541,11 @@ class ChartingState extends MusicBeatState
 				{
 					if (!waitingForRelease)
 					{
-						// dfjk
 						while (selectedBoxes.members.length != 0)
 						{
 							selectedBoxes.members[0].connectedNote.charterSelected = false;
 							selectedBoxes.members[0].destroy();
 							selectedBoxes.members.remove(selectedBoxes.members[0]);
-							selectedBoxes.clear();
 						}
 
 						waitingForRelease = true;
@@ -2631,13 +2641,6 @@ class ChartingState extends MusicBeatState
 						offset += offsetSeconds;
 
 					offsetSelectedNotes(offset);
-
-					updateGrid();
-					updateNoteUI();
-
-					// ok so basically theres a bug with color quant that it doesn't update the color until the grid updates.
-					// when the grid updates, it causes a massive performance drop everytime we offset the notes. :/
-					// actually its broken either way because theres a ghost note after offsetting sometimes. updateGrid anyway.
 				}
 
 				if (FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.C)
@@ -3193,11 +3196,24 @@ class ChartingState extends MusicBeatState
 			{
 				curSelectedNote[2] += Math.ceil(value);
 				curSelectedNote[2] = Math.max(curSelectedNote[2], 0);
+
+				if (curSelectedNoteObject.noteCharterObject != null)
+					curRenderedSustains.remove(curSelectedNoteObject.noteCharterObject);
+
+				remove(curSelectedNoteObject.noteCharterObject);
+
+				var sustainVis:FlxSprite = new FlxSprite(curSelectedNoteObject.x + (GRID_SIZE * 0.5) - 2,
+					curSelectedNoteObject.y + GRID_SIZE).makeGraphic(8,
+						Math.floor((getYfromStrum(curSelectedNoteObject.strumTime + curSelectedNote[2]) * zoomFactor) - curSelectedNoteObject.y));
+				curSelectedNoteObject.sustainLength = curSelectedNote[2];
+				curSelectedNoteObject.noteCharterObject = sustainVis;
+
+				curRenderedSustains.add(sustainVis);
 			}
 		}
-
-		updateNoteUI();
+		
 		updateGrid();
+		updateNoteUI();
 	}
 
 	function resetSection(songBeginning:Bool = false):Void
@@ -3696,14 +3712,6 @@ class ChartingState extends MusicBeatState
 
 	private function addNote(?n:Note):Void
 	{
-		while (selectedBoxes.members.length != 0)
-		{
-			selectedBoxes.members[0].connectedNote.charterSelected = false;
-			selectedBoxes.members[0].destroy();
-			selectedBoxes.members.remove(selectedBoxes.members[0]);
-			selectedBoxes.clear();
-		}
-
 		var strum = getStrumTime(dummyArrow.y) / zoomFactor;
 
 		var section = getSectionByTime(strum);
@@ -3761,7 +3769,6 @@ class ChartingState extends MusicBeatState
 				selectedBoxes.members[0].connectedNote.charterSelected = false;
 				selectedBoxes.members[0].destroy();
 				selectedBoxes.members.remove(selectedBoxes.members[0]);
-				selectedBoxes.clear();
 			}
 
 			curSelectedNoteObject.charterSelected = true;
@@ -3793,7 +3800,6 @@ class ChartingState extends MusicBeatState
 				selectedBoxes.members[0].connectedNote.charterSelected = false;
 				selectedBoxes.members[0].destroy();
 				selectedBoxes.members.remove(selectedBoxes.members[0]);
-				selectedBoxes.clear();
 			}
 
 			var box = new ChartingBox(note.x, note.y, note);
@@ -3807,9 +3813,9 @@ class ChartingState extends MusicBeatState
 			curRenderedNotes.add(note);
 		}
 
-		autosaveSong();
-
 		updateNoteUI();
+
+		autosaveSong();
 	}
 
 	function getStrumTime(yPos:Float):Float

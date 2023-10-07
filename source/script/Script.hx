@@ -27,6 +27,7 @@ enum ScriptReturn
 	CONTINUE;
 }
 
+@:access(haxescript.Interp)
 class Script extends FlxBasic
 {
 	public var variables(get, null):Map<String, Dynamic>;
@@ -54,7 +55,6 @@ class Script extends FlxBasic
 
 		_parser = new Parser();
 		_parser.allowTypes = true;
-		_parser.allowMetadata = false;
 		_parser.allowJSON = false;
 
 		_interp = new Interp();

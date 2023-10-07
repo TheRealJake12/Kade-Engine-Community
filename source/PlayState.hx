@@ -3686,6 +3686,7 @@ class PlayState extends MusicBeatState
 					remove(dad);
 					remove(gf);
 				});
+				StageDebugState.Stage = Stage;
 				LoadingState.loadAndSwitchState(new StageDebugState(Stage.curStage, gf.curCharacter, boyfriend.curCharacter, dad.curCharacter));
 				#if FEATURE_LUAMODCHART
 				if (luaModchart != null)
@@ -5719,6 +5720,7 @@ class PlayState extends MusicBeatState
 			{
 				case 'hurt':
 					health -= 0.8;
+					boyfriend.playAnim('hurt', true);
 				case 'mustpress':
 					health += 0.8;
 			}
@@ -6292,8 +6294,6 @@ class PlayState extends MusicBeatState
 		#end
 
 		cleanPlayObjects();
-
-		instance = null; // crashes charting state cuz notes ??
 
 		super.destroy();
 	}

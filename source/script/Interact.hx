@@ -60,17 +60,9 @@ class Interact extends FlxBasic
 		{
 			try
 			{
-				if (varsToUpdate.exists(varName))
-				{
-					@:privateAccess
-					parent._interp.setExistingVar(varName, varsToUpdate.get(varName));
-				}
-				else
-				{
-					@:privateAccess
-					var val:Dynamic = parent._interp.resolve(varName);
-					Reflect.setProperty(interactObj, varName, val);
-				}
+				@:privateAccess
+				var val:Dynamic = parent._interp.resolve(varName);
+				Reflect.setProperty(interactObj, varName, val);
 			}
 			catch (e)
 			{

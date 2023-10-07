@@ -43,7 +43,7 @@ class StageDebugState extends MusicBeatState
 	var gf:Character;
 	var boyfriend:Boyfriend;
 	var dad:Character;
-	var Stage:Stage;
+	public static var Stage:Stage;
 	var camFollow:FlxObject;
 	var posText:FlxText;
 	var helpBg:FlxSprite;
@@ -77,41 +77,16 @@ class StageDebugState extends MusicBeatState
 
 	override function create()
 	{
+		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 		FlxG.sound.music.stop();
 		FlxG.sound.playMusic(Paths.inst(PlayState.SONG.songId));
 		FlxG.sound.music.fadeIn(3, 0, 0.5);
 		FlxG.mouse.visible = true;
-
-		Stage = PlayState.instance.Stage;
-
-		gf = PlayState.instance.gf;
-		boyfriend = PlayState.instance.boyfriend;
-		dad = PlayState.instance.dad;
-
-		if (gf.frames == null)
-		{
-			#if debug
-			FlxG.log.warn(["Couldn't load gf. Loading default gf"]);
-			#end
-			gf = new Character(400, 130, 'gf');
-		}
-
-		if (boyfriend.frames == null)
-		{
-			#if debug
-			FlxG.log.warn(["Couldn't load boyfriend. Loading default boyfriend"]);
-			#end
-			boyfriend = new Boyfriend(770, 450, 'bf');
-		}
-
-		if (dad.frames == null)
-		{
-			#if debug
-			FlxG.log.warn(["Couldn't load opponent. Loading default opponent"]);
-			#end
-			dad = new Character(100, 100, 'dad');
-		}
+		
+		gf = new Character(400, 130, PlayState.SONG.gfVersion);
+		boyfriend = new Boyfriend(770, 450, PlayState.SONG.player1);
+		dad = new Character(100, 100, PlayState.SONG.player2);
 
 		dad.dance();
 		boyfriend.dance();
@@ -167,7 +142,7 @@ class StageDebugState extends MusicBeatState
 		// var opt_tabs = [{name: "test", label: 'test'}];
 
 		UI_options = new FlxUITabMenu(null, tabs, true);
-		UI_options.cameras = [camMenu];
+		UI_options.camera = camMenu;
 
 		UI_options.scrollFactor.set();
 		UI_options.resize(300, 200);
@@ -204,6 +179,7 @@ class StageDebugState extends MusicBeatState
 			Debug.logTrace('Selected Stage : ${newStage}');
 		});
 		stageDropDown.selectedLabel = newStage;
+
 		tab_group.add(stageDropDown);
 
 		UI_options.addGroup(tab_group);
@@ -227,6 +203,9 @@ class StageDebugState extends MusicBeatState
 		remove(boyfriend);
 		remove(gf);
 
+		Paths.runGC();
+		Paths.clearUnusedMemory();
+
 		if (FlxG.save.data.gen)
 			Debug.logTrace('Removing Characters...');
 
@@ -245,7 +224,8 @@ class StageDebugState extends MusicBeatState
 			switch (index)
 			{
 				case 0:
-					add(gf);
+					if (Stage.hasGF)
+						add(gf);
 					for (bg in array)
 						add(bg);
 				case 1:
