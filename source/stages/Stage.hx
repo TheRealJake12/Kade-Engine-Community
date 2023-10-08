@@ -4,7 +4,7 @@ import flixel.FlxSprite;
 import flixel.FlxG;
 import flixel.FlxBasic;
 import flixel.group.FlxGroup;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.addons.effects.chainable.FlxWaveEffect;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;

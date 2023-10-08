@@ -26,7 +26,6 @@ class Event
 
 typedef SongData =
 {
-	@:deprecated
 	var ?song:String;
 
 	/**

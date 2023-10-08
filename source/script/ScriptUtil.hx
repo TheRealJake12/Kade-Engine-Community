@@ -10,7 +10,7 @@ import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
 import flixel.input.keyboard.FlxKey;
 import flixel.system.FlxAssets.FlxShader;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;

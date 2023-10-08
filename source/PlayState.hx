@@ -52,7 +52,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -606,19 +606,17 @@ class PlayState extends MusicBeatState
 		FlxG.cameras.reset(camGame);
 
 		// HUD Camera (Health Bar, scoreTxt, etc)
-		FlxG.cameras.add(camHUD);
+		FlxG.cameras.add(camHUD, false);
 
 		// StrumLine Camera
-		FlxG.cameras.add(camStrums);
+		FlxG.cameras.add(camStrums, false);
 
-		FlxG.cameras.add(overlayCam);
+		FlxG.cameras.add(overlayCam, false);
 
 		camHUD.zoom = PlayStateChangeables.zoom;
 		camStrums.zoom = camHUD.zoom;
 
 		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
-
-		FlxCamera.defaultCameras = [camGame];
 
 		persistentUpdate = true;
 		persistentDraw = true;
@@ -5720,7 +5718,7 @@ class PlayState extends MusicBeatState
 			{
 				case 'hurt':
 					health -= 0.8;
-					boyfriend.playAnim('hurt', true);
+					boyfriend.playAnim('hurt');
 				case 'mustpress':
 					health += 0.8;
 			}

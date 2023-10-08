@@ -10,7 +10,7 @@ import sys.io.File;
 #end
 import openfl.geom.Matrix;
 import openfl.display.BitmapData;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.util.FlxAxes;
 import flixel.FlxSubState;
 import Options.Option;

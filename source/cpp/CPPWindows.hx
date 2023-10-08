@@ -106,7 +106,7 @@ class CPPWindows
 }
 
 #if windows
-@:enum abstract WindowColorMode(Int)
+enum abstract WindowColorMode(Int)
 {
 	var DARK:WindowColorMode = 1;
 	var LIGHT:WindowColorMode = 0;
