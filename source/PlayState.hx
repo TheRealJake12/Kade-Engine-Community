@@ -1161,6 +1161,7 @@ class PlayState extends MusicBeatState
 		botPlayState.borderQuality = 1;
 		botPlayState.alpha = 0.5;
 		botPlayState.cameras = [camHUD];
+		
 		if (PlayStateChangeables.botPlay && !loadRep)
 			uiGroup.add(botPlayState);
 
@@ -1174,8 +1175,6 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.save.data.healthBar)
 		{
-			uiGroup.add(healthBarBG);
-			uiGroup.add(healthBar);
 			uiGroup.add(iconP1);
 			uiGroup.add(iconP2);
 
@@ -1414,8 +1413,11 @@ class PlayState extends MusicBeatState
 		healthBar.scrollFactor.set();
 		healthBar.antialiasing = FlxG.save.data.antialiasing;
 
-		uiGroup.add(healthBarBG);
-		uiGroup.add(healthBar);
+		if (FlxG.save.data.healthBar)
+		{
+			uiGroup.add(healthBarBG);
+			uiGroup.add(healthBar);
+		}
 
 		// This Function Makes It Easier To Change HealthBar Styles And Shit.
 	}
@@ -3265,12 +3267,12 @@ class PlayState extends MusicBeatState
 		{
 			PlayStateChangeables.botPlay = true;
 			addedBotplay = true;
-			add(botPlayState);
+			uiGroup.add(botPlayState);
 		}
 
 		if (addedBotplay && PlayStateChangeables.botPlay == false)
 		{
-			remove(botPlayState);
+			uiGroup.remove(botPlayState);
 			addedBotplay = false;
 		}
 
@@ -4131,7 +4133,7 @@ class PlayState extends MusicBeatState
 								totalNotesHit += 1;
 							else
 							{
-								if (daNote.causesMisses)
+								if (daNote.causesMisses && !daNote.isSustainEnd)
 								{
 									if (!SONG.splitVoiceTracks)
 										vocals.volume = 0;
@@ -4172,12 +4174,14 @@ class PlayState extends MusicBeatState
 										&& daNote.isSustainNote
 										&& daNote.sustainActive
 										&& daNote.spotInLine != daNote.parent.children.length
+										&& !daNote.isSustainEnd
 										&& daNote.causesMisses)
 									{
 										// health -= 0.05; // give a health punishment for failing a LN
 										trace("hold fell over at " + daNote.spotInLine);
 										for (i in daNote.parent.children)
 										{
+											i.alpha = 0.3;
 											i.sustainActive = false;
 										}
 										if (daNote.parent.wasGoodHit)
@@ -4208,7 +4212,7 @@ class PlayState extends MusicBeatState
 						}
 						else
 						{
-							if (daNote.causesMisses)
+							if (daNote.causesMisses && !daNote.isSustainEnd)
 							{
 								if (!SONG.splitVoiceTracks)
 									vocals.volume = 0;
@@ -4229,7 +4233,6 @@ class PlayState extends MusicBeatState
 							if (daNote.isParent && daNote.visible && daNote.causesMisses)
 							{
 								health -= 0.15; // give a health punishment for failing a LN
-								misses += 1;
 								for (i in daNote.children)
 								{
 									i.sustainActive = false;
@@ -4241,6 +4244,7 @@ class PlayState extends MusicBeatState
 									&& daNote.isSustainNote
 									&& daNote.sustainActive
 									&& daNote.spotInLine != daNote.parent.children.length
+									&& !daNote.isSustainEnd
 									&& daNote.causesMisses)
 								{
 									// health -= 0.05; // give a health punishment for failing a LN
@@ -4566,6 +4570,7 @@ class PlayState extends MusicBeatState
 				remove(dad);
 				remove(gf);
 			});
+			StageDebugState.Stage = Stage;
 			LoadingState.loadAndSwitchState(new StageDebugState(Stage.curStage));
 		}
 		else
@@ -5752,13 +5757,10 @@ class PlayState extends MusicBeatState
 			scripts.executeAllFunc("goodNoteHit", [note]);
 			#end
 
-			if (!PlayStateChangeables.botPlay || FlxG.save.data.cpuStrums)
+			playerStrums.forEach(function(spr:StaticArrow)
 			{
-				playerStrums.forEach(function(spr:StaticArrow)
-				{
-					pressArrow(spr, spr.ID, note);
-				});
-			}
+				pressArrow(spr, spr.ID, note);
+			});
 
 			if (!note.isSustainNote)
 			{
@@ -6346,7 +6348,7 @@ class PlayState extends MusicBeatState
 		if (!isStoryMode)
 		{
 			botPlayState.kill();
-			remove(botPlayState);
+			uiGroup.remove(botPlayState);
 			if (PlayStateChangeables.botPlay)
 			{
 				botPlayState.revive();
