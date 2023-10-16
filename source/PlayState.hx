@@ -1161,7 +1161,7 @@ class PlayState extends MusicBeatState
 		botPlayState.borderQuality = 1;
 		botPlayState.alpha = 0.5;
 		botPlayState.cameras = [camHUD];
-		
+
 		if (PlayStateChangeables.botPlay && !loadRep)
 			uiGroup.add(botPlayState);
 
@@ -2682,12 +2682,7 @@ class PlayState extends MusicBeatState
 				else
 					oldNote = null;
 
-				var swagNote:Note;
-
-				if (gottaHitNote)
-					swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, true, null, daBeat, daNoteType);
-				else
-					swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, false, null, daBeat, daNoteType);
+				var swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, gottaHitNote, null, daBeat, daNoteType);
 
 				if (PlayStateChangeables.holds)
 				{
@@ -2723,14 +2718,8 @@ class PlayState extends MusicBeatState
 				{
 					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
-					var sustainNote:Note;
-
-					if (gottaHitNote)
-						sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true, false, true,
-							null, 0, daNoteType);
-					else
-						sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, false, false,
-							null, 0, daNoteType);
+					var sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true, false,
+						gottaHitNote, null, 0, daNoteType);
 
 					sustainNote.scrollFactor.set();
 					unspawnNotes.push(sustainNote);

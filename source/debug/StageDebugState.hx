@@ -43,7 +43,9 @@ class StageDebugState extends MusicBeatState
 	var gf:Character;
 	var boyfriend:Boyfriend;
 	var dad:Character;
+
 	public static var Stage:Stage;
+
 	var camFollow:FlxObject;
 	var posText:FlxText;
 	var helpBg:FlxSprite;
@@ -83,7 +85,7 @@ class StageDebugState extends MusicBeatState
 		FlxG.sound.playMusic(Paths.inst(PlayState.SONG.songId));
 		FlxG.sound.music.fadeIn(3, 0, 0.5);
 		FlxG.mouse.visible = true;
-		
+
 		gf = new Character(400, 130, PlayState.SONG.gfVersion);
 		boyfriend = new Boyfriend(770, 450, PlayState.SONG.player1);
 		dad = new Character(100, 100, PlayState.SONG.player2);

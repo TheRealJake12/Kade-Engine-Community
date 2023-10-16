@@ -448,7 +448,7 @@ class ChartingState extends MusicBeatState
 		add(selectedBoxes);
 		// add(blackBorder);
 		add(snapText);
-		
+
 		Paths.clearUnusedMemory();
 		super.create();
 	}
@@ -559,6 +559,7 @@ class ChartingState extends MusicBeatState
 	public var chartEvents:Array<Song.Event> = [];
 
 	public var blockTypes:Array<FlxUIInputText> = [];
+
 	private var blockSteppers:Array<FlxUINumericStepper> = [];
 	private var blockScroll:Array<FlxUIDropDownMenu> = [];
 
@@ -1010,7 +1011,8 @@ class ChartingState extends MusicBeatState
 		var difficulties:Array<String> = CoolUtil.difficultyArray;
 		var diffDrop = new FlxUIDropDownMenu(120, 75, FlxUIDropDownMenu.makeStrIdLabelArray(difficulties, true), function(diff:String)
 		{
-			if (curDiff != difficulties[Std.parseInt(diff)]){
+			if (curDiff != difficulties[Std.parseInt(diff)])
+			{
 				curDiff = difficulties[Std.parseInt(diff)];
 				loadJson(_song.songId, curDiff);
 			}
@@ -1082,7 +1084,7 @@ class ChartingState extends MusicBeatState
 		{
 			_song.noteStyle = noteStyles[Std.parseInt(noteStyle)];
 		});
-		
+
 		noteStyleDropDown.selectedLabel = _song.noteStyle;
 
 		var noteStyleLabel = new FlxText(10, 280, 0, 'Note Skin', 14);
@@ -1751,8 +1753,8 @@ class ChartingState extends MusicBeatState
 
 					var thing = ii.sectionNotes[ii.sectionNotes.length - 1];
 
-					var note:Note = new Note(strum, originalNote.noteData, originalNote.prevNote, false, true, true, originalNote.isAlt,
-						originalNote.beat, originalNote.noteShit);
+					var note:Note = new Note(strum, originalNote.noteData, originalNote.prevNote, false, true, true, originalNote.isAlt, originalNote.beat,
+						originalNote.noteShit);
 					note.rawNoteData = originalNote.rawNoteData;
 					note.sustainLength = originalNote.sustainLength;
 					note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));
@@ -1784,7 +1786,7 @@ class ChartingState extends MusicBeatState
 				}
 			}
 		}
-		
+
 		for (note in toDelete)
 		{
 			deleteNote(note);
@@ -3211,7 +3213,7 @@ class ChartingState extends MusicBeatState
 				curRenderedSustains.add(sustainVis);
 			}
 		}
-		
+
 		updateGrid();
 		updateNoteUI();
 	}
