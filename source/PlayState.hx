@@ -76,8 +76,8 @@ import debug.StageDebugState;
 import debug.AnimationDebug;
 import debug.ChartingState;
 #if VIDEOS
-import hxcodec.flixel.FlxVideo as VideoHandler;
-import hxcodec.flixel.FlxVideoSprite as VideoSprite;
+import hxvlc.flixel.FlxVideo as VideoHandler;
+import hxvlc.flixel.FlxVideoSprite as VideoSprite;
 #end
 import stages.Stage;
 import stages.TankmenBG;
@@ -2714,39 +2714,37 @@ class PlayState extends MusicBeatState
 
 				var type = 0;
 
-				for (susNote in 0...Math.floor(susLength))
+				if (susLength > 0)
 				{
-					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
-
-					var sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true, false,
-						gottaHitNote, null, 0, daNoteType);
-
-					sustainNote.scrollFactor.set();
-					unspawnNotes.push(sustainNote);
-					sustainNote.isAlt = songNotes[3]
-						|| ((section.altAnim || section.CPUAltAnim) && !gottaHitNote)
-						|| (section.playerAltAnim && gottaHitNote)
-						|| (PlayStateChangeables.opponentMode && gottaHitNote && (section.altAnim || section.CPUAltAnim))
-						|| (PlayStateChangeables.opponentMode && !gottaHitNote && section.playerAltAnim);
-
-					sustainNote.mustPress = gottaHitNote;
-
-					if (sustainNote.mustPress)
+					swagNote.isParent = true;
+					for (susNote in 0...Std.int(Math.max(susLength, 2)))
 					{
-						sustainNote.x += FlxG.width / 3; // general offset
-					}
+						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
+						var sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true, false,
+							gottaHitNote, null, 0, daNoteType);
 
-					sustainNote.parent = swagNote;
-					swagNote.children.push(sustainNote);
-					sustainNote.spotInLine = type;
-					type++;
+						sustainNote.scrollFactor.set();
+						unspawnNotes.push(sustainNote);
+						sustainNote.isAlt = songNotes[3]
+							|| ((section.altAnim || section.CPUAltAnim) && !gottaHitNote)
+							|| (section.playerAltAnim && gottaHitNote)
+							|| (PlayStateChangeables.opponentMode && gottaHitNote && (section.altAnim || section.CPUAltAnim))
+							|| (PlayStateChangeables.opponentMode && !gottaHitNote && section.playerAltAnim);
+
+						sustainNote.mustPress = gottaHitNote;
+
+						sustainNote.parent = swagNote;
+						swagNote.children.push(sustainNote);
+						sustainNote.spotInLine = type;
+						type++;
+					}
 				}
 
 				swagNote.mustPress = gottaHitNote;
 
 				if (swagNote.mustPress)
 				{
-					swagNote.x += FlxG.width / 3; // general offset
+					swagNote.x += FlxG.width / 2; // general offset
 				}
 			}
 			daBeats += 1;
@@ -3274,15 +3272,17 @@ class PlayState extends MusicBeatState
 			FlxG.stage.window.borderless = false;
 		}
 
-		var shit:Float = 1500;
-		if (SONG.speed < 1 || scrollSpeed < 1)
-			shit /= scrollSpeed == 1 ? SONG.speed : scrollSpeed;
-		while (unspawnNotes.length > 0 && unspawnNotes[0] != null)
+		if (unspawnNotes[0] != null)
 		{
-			if (unspawnNotes[0].strumTime - Conductor.songPosition < shit)
+			var shit:Float = 1500;
+			if (SONG.speed < 1 || scrollSpeed < 1)
+				shit /= scrollSpeed == 1 ? SONG.speed : scrollSpeed;
+			var time:Float = shit * songMultiplier;
+
+			while (unspawnNotes.length > 0 && unspawnNotes[0].strumTime - Conductor.songPosition < time)
 			{
-				var dunceNote:Note = unspawnNotes.shift(); // perhaps???
-				notes.add(dunceNote);
+				var dunceNote:Note = unspawnNotes[0];
+				notes.insert(0, dunceNote);
 
 				#if FEATURE_LUAMODCHART
 				if (executeModchart)
@@ -3292,14 +3292,9 @@ class PlayState extends MusicBeatState
 				}
 				#end
 
-				dunceNote.cameras = [camHUD]; // Breaks when camera angle is changed or zoom?
 				var index:Int = unspawnNotes.indexOf(dunceNote);
-				// unspawnNotes.splice(index, 1);
+				unspawnNotes.splice(index, 1);
 				currentLuaIndex++;
-			}
-			else
-			{
-				break;
 			}
 		}
 

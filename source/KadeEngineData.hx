@@ -194,6 +194,9 @@ class KadeEngineData
 		if (FlxG.save.data.alpha == null)
 			FlxG.save.data.alpha = 0.6;
 
+		if (FlxG.save.data.alphaSplash == null)
+			FlxG.save.data.alphaSplash = 0.6;
+
 		if (FlxG.save.data.laneTransparency == null)
 			FlxG.save.data.laneTransparency = 0;
 

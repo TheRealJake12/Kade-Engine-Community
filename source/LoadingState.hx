@@ -14,6 +14,8 @@ import haxe.io.Path;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.addons.transition.FlxTransitionableState;
+import MusicBeatState;
+import GameplayCustomizeState;
 
 class LoadingState extends MusicBeatState
 {
@@ -31,6 +33,8 @@ class LoadingState extends MusicBeatState
 	var loadBar:FlxSprite;
 	var targetShit:Float = 0;
 
+	public static var instance:LoadingState = null;
+
 	function new(target:FlxState, stopMusic:Bool)
 	{
 		super();
@@ -42,6 +46,7 @@ class LoadingState extends MusicBeatState
 
 	override function create()
 	{
+		instance = this;
 		logo = new FlxSprite(-150, -100);
 		logo.frames = Paths.getSparrowAtlas('logoBumpin');
 
@@ -77,6 +82,7 @@ class LoadingState extends MusicBeatState
 
 		FlxTransitionableState.skipNextTransOut = false;
 
+		#if NO_PRELOAD_ALL
 		initSongsManifest().onComplete(function(lib)
 		{
 			callbacks = new MultiCallback(onLoad);
@@ -106,6 +112,11 @@ class LoadingState extends MusicBeatState
 			FlxG.camera.fade(FlxG.camera.bgColor, fadeTime, true);
 			new FlxTimer().start(fadeTime + MIN_TIME, function(_) introComplete());
 		});
+		#else
+		onLoad();
+		#end
+
+		super.create();
 	}
 
 	function checkLoadSong(path:String)
@@ -147,19 +158,16 @@ class LoadingState extends MusicBeatState
 		}
 	}
 
-	override function stepHit()
+	override function beatHit()
 	{
-		super.stepHit();
-		if (curStep % 4 == 0)
-		{
-			logo.animation.play('bump');
-			danceLeft = !danceLeft;
+		logo.animation.play('bump');
+		danceLeft = !danceLeft;
 
-			if (danceLeft)
-				gfDance.animation.play('danceRight');
-			else
-				gfDance.animation.play('danceLeft');
-		}
+		if (danceLeft)
+			gfDance.animation.play('danceRight');
+		else
+			gfDance.animation.play('danceLeft');
+		super.beatHit();
 	}
 
 	override function update(elapsed:Float)

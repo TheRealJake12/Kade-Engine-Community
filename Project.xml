@@ -132,7 +132,9 @@
 	<haxelib name="polymod"/>
 	<haxelib name="linc_luajit" if="desktop"/>
 	<haxelib name="hxcpp-debug-server" if="desktop"/>
-	<haxelib name="hxCodec" if="desktop || android" />
+	<section if="cpp">
+		<haxelib name="hxvlc" if="desktop || android" />
+	</section>
 	<haxelib name="SScript"/>
 	
 	<haxedef name="openflPos" />
@@ -214,7 +216,7 @@
   <!-- Defines whether the Thread class can be used. -->
   <haxedef name="FEATURE_MULTITHREADING" if="cpp" />
   <!-- Videos -->
-  <haxedef name="VIDEOS" if="desktop" unless="web"/>
+  <haxedef name="VIDEOS" if="desktop || android"/>
   <!-- Defines if hscript are enabled. Dosen't work in browser -->
   <define name="FEATURE_HSCRIPT" if="desktop" />
   <!-- Defines whether modcore can be used. -->

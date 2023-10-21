@@ -9,6 +9,7 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import haxe.Json;
 import lime.utils.Assets;
 import openfl.system.System;
+import openfl.display3D.textures.RectangleTexture;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.display3D.textures.Texture;
@@ -59,7 +60,7 @@ class Paths
 	}
 
 	// Sprite content caching with GPU based on Forever Engine texture compression.
-	public static function loadImage(key:String, ?library:String, ?gpuRender:Bool)
+	public static function loadImage(key:String, ?library:String, ?gpuRender:Bool):FlxGraphic
 	{
 		var path:String = '';
 
@@ -248,7 +249,7 @@ class Paths
 		return getPath(key + '.json', TEXT, library);
 	}
 
-	static public function sound(key:String, ?library:String):Sound
+	static public function sound(key:String, ?library:String):Any
 	{
 		var sound:Sound = loadSound('sounds', key, library);
 		return sound;
@@ -288,9 +289,13 @@ class Paths
 	}
 	#end
 
-	inline static public function music(key:String, ?library:String):Any
+	inline static public function music(key:String, ?library:String, ?returnString:Bool = false,):Any
 	{
-		var file:Sound = loadSound('music', key, library);
+		var file:Dynamic;
+		if (!returnString)
+			file = loadSound('music', key, library);
+		else
+			file = getPath('music/$key.$SOUND_EXT', SOUND, library);
 		return file;
 	}
 
@@ -312,9 +317,9 @@ class Paths
 		if (!returnString)
 			file = loadSound('songs', songLowercase);
 		else
-			file = 'songs:assets/songs/$songLowercase$char.$SOUND_EXT';
+			file = 'songs:assets/songs/$songLowercase.$SOUND_EXT';
 		#else
-		file = 'songs:assets/songs/$songLowercase$char.$SOUND_EXT';
+		file = 'songs:assets/songs/$songLowercase.$SOUND_EXT';
 		#end
 		return file;
 	}
@@ -365,9 +370,11 @@ class Paths
 		else
 		{
 			Debug.logWarn('Could not find sound at ${folder + gottenPath}');
+			return null;
 		}
 
 		localTrackedAssets.push(gottenPath);
+
 		return currentTrackedSounds.get(gottenPath);
 	}
 
@@ -493,6 +500,13 @@ class Paths
 					@:privateAccess
 					if (obj != null)
 					{
+						obj.persist = false;
+						obj.destroyOnNoUse = true;
+
+						OpenFlAssets.cache.removeBitmapData(key);
+
+						FlxG.bitmap._cache.remove(key);
+						FlxG.bitmap.removeByKey(key);
 						var isTexture:Bool = currentTrackedTextures.exists(key);
 						if (isTexture)
 						{
@@ -505,10 +519,18 @@ class Paths
 						OpenFlAssets.cache.clearBitmapData(key);
 						OpenFlAssets.cache.clear(key);
 						FlxG.bitmap._cache.remove(key);
-						obj.destroy();
+						obj.dump();
+						obj.bitmap.disposeImage();
 						FlxDestroyUtil.dispose(obj.bitmap);
+
+						obj.bitmap = null;
+
+						obj.destroy();
+
+						obj = null;
 						currentTrackedAssets.remove(key);
 						counter++;
+						Debug.logTrace('Cleared $key from RAM');
 					}
 				}
 			}
@@ -547,23 +569,11 @@ class Paths
 				if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && key != null)
 				{
 					// trace('test: ' + dumpExclusions, key);
+					OpenFlAssets.cache.clear(key);
 					OpenFlAssets.cache.removeSound(key);
 					OpenFlAssets.cache.clearSounds(key);
 					currentTrackedSounds.remove(key);
 					counterSound++;
-					// Debug.logTrace('Cleared and removed $counterSound cached sounds.');
-				}
-			}
-
-			// Clear everything everything that's left
-			var counterLeft:Int = 0;
-			for (key in OpenFlAssets.cache.getKeys())
-			{
-				if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && key != null)
-				{
-					OpenFlAssets.cache.clear(key);
-					counterLeft++;
-					// Debug.logTrace('Cleared and removed $counterLeft cached leftover assets.');
 				}
 			}
 

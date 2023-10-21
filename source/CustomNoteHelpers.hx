@@ -111,7 +111,7 @@ class Splash
 			notesplashArray.push(i.replace(".png", ""));
 		}
 		#else
-		notesplashArray = ["Default", "Week7"];
+		notesplashArray = ["Default", "Psych", "Week7"];
 		#end
 
 		return notesplashArray;
@@ -137,7 +137,7 @@ class Splash
 
 		return FlxAtlasFrames.fromSparrow(FlxGraphic.fromBitmapData(data), xmlData[id]);
 		#else
-		return Paths.getSparrowAtlas('splashes/Default', "shared");
+		return Paths.getSparrowAtlas('splashes/' + CustomNoteHelpers.Splash.getNotesplashByID(FlxG.save.data.notesplash), "shared");
 		#end
 	}
 }

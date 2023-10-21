@@ -388,18 +388,4 @@ class TitleState extends MusicBeatState
 			skippedIntro = true;
 		}
 	}
-
-	override function add(Object:FlxBasic):FlxBasic
-	{
-		trackedAssets.insert(trackedAssets.length, Object);
-		return super.add(Object);
-	}
-
-	function unloadAssets():Void
-	{
-		for (asset in trackedAssets)
-		{
-			remove(asset);
-		}
-	}
 }

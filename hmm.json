@@ -21,10 +21,10 @@
       "version" : null
     },
     {
-      "name": "hxCodec",
+      "name": "hxvlc",
       "type": "git",
       "ref": "main",
-      "url": "https://github.com/TheRealJake12/hxCodec.git"
+      "url": "https://github.com/MAJigsaw77/hxvlc.git"
     },
     {
       "name": "polymod",

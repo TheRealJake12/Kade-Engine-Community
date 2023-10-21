@@ -192,11 +192,12 @@ class OptionsMenu extends MusicBeatSubstate
 				#if desktop
 				new NotesplashOption("Change your Notesplash"), // new CPUNotesplashOption("Change the CPU Notesplash"),
 				#end
-				new CPUSplash("Allows The CPU To Do Notesplashes"),
-				new NotesplashesOption("Uses Notesplashes (Only use it on Arrow skins or else theres gonna be some visual bugs(wrong offsets))."),
+				new CPUSplash("Allows The Opponent To Do Notesplashes"),
+				new NotesplashesOption("Uses Notesplashes."),
 				new StepManiaOption("Sets the colors of the arrows depending on quantization instead of direction."),
 				new RotateSpritesOption("Should the game rotate the arrows to do color quantization (turn off for bar skins)"),
-				new ScrollAlpha("Changes the Transparancy of the Hold Notes."),
+				new ScrollAlpha("How Transparent The Sustain Notes Should Be."),
+				new SplashAlpha("How Transparent The Notesplashes Should Be."),
 				new CpuStrums("Toggle the CPU's strumline lighting up when it hits a note."),
 				new MiddleScrollOption("Put your lane in the center or on the right."),
 				new LaneUnderlayOption("How transparent your lane is, higher = more visible."),
@@ -252,7 +253,8 @@ class OptionsMenu extends MusicBeatSubstate
 				new DistractionsAndEffectsOption("Toggles Extra Assets Be Loaded To Improve Quality At The Cost Of Performance"),
 				new Optimization("Nothing But Your Strumline Is Visible. Best Performance."),
 				#if desktop
-				new UnloadSongs("Toggles If Assets Get Unloaded Or Not."), new UnloadNow("Clears All Cache We Can Remove."),
+				new UnloadSongs("Should Assets Be Unloaded To Improve Memory Usage (At The Cost Of Loading Times)."),
+				new UnloadNow("Clears All Cache We Can Remove."),
 				#end
 
 			]),

@@ -1,7 +1,6 @@
 {
     "name": "Default",
     "fps": 48,
-    "alpha": 0.6,
-    "xOffset": -20,
-    "yOffset": -20
+    "xOffset": -28,
+    "yOffset": -28
 }

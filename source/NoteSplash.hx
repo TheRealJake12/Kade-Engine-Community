@@ -18,12 +18,6 @@ typedef SplashData =
 	var fps:Int;
 
 	/**
-	 * The transparency of the notesplashes.
-	 		* @default 24
-	 */
-	var alpha:Int;
-
-	/**
 	 * The X Offset so it can be centered better.
 	 		* @default 90
 	 */
@@ -60,7 +54,28 @@ class NoteSplash extends FlxSprite
 		visible = true;
 
 		setPosition(x - Note.swagWidth * 0.95, y - Note.swagWidth);
+		alpha = FlxG.save.data.alphaSplash;
 
+		loadAnims();
+
+		var animNum:Int = FlxG.random.int(0, 1);
+
+		if (!FlxG.save.data.stepMania)
+			animation.play('splash ' + animNum + " " + note.noteData);
+		else
+			animation.play('splash ' + animNum + " " + note.originColor);
+
+		animation.curAnim.frameRate += FlxG.random.int(0, 2);
+
+		animation.finishCallback = function(name:String)
+		{
+			visible = false;
+			kill();
+		}
+	}
+
+	function loadAnims()
+	{
 		switch (FlxG.save.data.notesplash)
 		{
 			case 0:
@@ -91,22 +106,9 @@ class NoteSplash extends FlxSprite
 				}
 		}
 
-		alpha = data.alpha;
+		Debug.logTrace('loded');
+
 		offset.set(data.xOffset, data.yOffset);
-		var animNum:Int = FlxG.random.int(0, 1);
-
-		if (!FlxG.save.data.stepMania)
-			animation.play('splash ' + animNum + " " + note.noteData);
-		else
-			animation.play('splash ' + animNum + " " + note.originColor);
-
-		animation.curAnim.frameRate += FlxG.random.int(0, 2);
-
-		animation.finishCallback = function(name:String)
-		{
-			visible = false;
-			kill();
-		}
 	}
 
 	override function update(elapsed:Float)

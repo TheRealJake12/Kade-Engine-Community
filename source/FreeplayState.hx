@@ -346,7 +346,8 @@ class FreeplayState extends MusicBeatState
 					var cDiff = customDiffs[i];
 					if (Paths.doesTextAssetExist(Paths.json('songs/$songId/$songId-${cDiff.toLowerCase()}')))
 					{
-						Debug.logTrace('New Difficulties detected for $songId: $cDiff');
+						if (FlxG.save.data.gen)
+							Debug.logTrace('New Difficulties detected for $songId: $cDiff');
 						if (!diffsThatExist.contains(cDiff))
 							diffsThatExist.push(cDiff);
 

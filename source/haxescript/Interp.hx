@@ -47,12 +47,13 @@ class Interp
 
 	public var dynamicFuncs:Map<String, Bool> = new Map();
 
-	var locals:Map<String, {
-		r:Dynamic,
-		?isFinal:Bool,
-		?t:CType,
-		?dynamicFunc:Bool
-	}>;
+	var locals:Map<String,
+		{
+			r:Dynamic,
+			?isFinal:Bool,
+			?t:CType,
+			?dynamicFunc:Bool
+		}>;
 	var binops:Map<String, Expr->Expr->Dynamic>;
 	#else
 	public var variables:Hash<Dynamic>;
@@ -63,12 +64,17 @@ class Interp
 
 	var depth:Int;
 	var inTry:Bool;
-	var declared:Array<{n:String, old:{
-		r:Dynamic,
-		?isFinal:Bool,
-		?t:CType,
-		?dynamicFunc:Bool
-	}}>;
+	var declared:Array<
+		{
+			n:String,
+			old:
+				{
+					r:Dynamic,
+					?isFinal:Bool,
+					?t:CType,
+					?dynamicFunc:Bool
+				}
+		}>;
 	var returnValue:Dynamic;
 
 	var typecheck:Bool = true;

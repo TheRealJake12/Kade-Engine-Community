@@ -64,7 +64,7 @@ haxelib install flixel-addons
 haxelib install actuate
 haxelib install hxcpp-debug-server
 haxelib install polymod 1.7.0
-haxelib install BrewScript
+haxelib install SScript
 haxelib run lime setup
 haxelib run lime setup flixel
 haxelib run flixel-tools setup
@@ -74,7 +74,7 @@ When its finished, you will need to download these like you did with the Librari
 haxelib git linc_luajit https://github.com/superpowers04/linc_luajit
 haxelib git faxe https://github.com/uhrobots/faxe
 haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
-haxelib git hxCodec https://github.com/TheRealJake12/hxCodec.git
+haxelib git hxvlc https://github.com/MAJigsaw77/hxvlc.git
 ```
 
 3.5 (Optional) If you're on Linux, you may be missing some libraries required to compile properly. Run these commands to fix some issues commonly reported.

@@ -6,7 +6,7 @@ import flixel.math.FlxMath;
 import flixel.graphics.frames.FlxBitmapFont;
 import flixel.text.FlxBitmapText;
 #if VIDEOS
-import hxcodec.flixel.FlxVideo as VideoHandler;
+import hxvlc.flixel.FlxVideo as VideoHandler;
 #end
 #if FEATURE_FILESYSTEM
 import sys.io.File;
@@ -275,6 +275,8 @@ class CoolText extends FlxBitmapText
 		x = xPos;
 		y = yPos;
 		scale.set(sizeX / (font.size - 2), sizeY / (font.size - 2));
+		text = '';
+
 		updateHitbox();
 	}
 

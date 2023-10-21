@@ -1,7 +1,6 @@
 {
     "name":"Week7",
     "fps": 24,
-    "alpha": 0.6,
-    "xOffset": 0,
-    "yOffset": 0
+    "xOffset": -10,
+    "yOffset": -10
 }

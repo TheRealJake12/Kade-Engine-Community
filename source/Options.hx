@@ -446,7 +446,7 @@ class RoundAccuracy extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Round Accuracy: < " + (FlxG.save.data.roundAccuracy ? "on" : "off") + " >";
+		return "Round Accuracy: < " + (FlxG.save.data.roundAccuracy ? "Enabled" : "Disabled") + " >";
 	}
 }
 
@@ -579,7 +579,7 @@ class AccuracyOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Accuracy Display < " + (!FlxG.save.data.accuracyDisplay ? "off" : "on") + " >";
+		return "Accuracy Display < " + (!FlxG.save.data.accuracyDisplay ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -606,7 +606,7 @@ class SongPositionOption extends Option
 
 	public override function getValue():String
 	{
-		return "Song Position Bar: < " + (!FlxG.save.data.songPosition ? "off" : "on") + " >";
+		return "Song Position Bar: < " + (!FlxG.save.data.songPosition ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -641,7 +641,7 @@ class DistractionsAndEffectsOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Distractions: < " + (!FlxG.save.data.distractions ? "off" : "on") + " >";
+		return "Distractions: < " + (!FlxG.save.data.distractions ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -705,7 +705,7 @@ class StepManiaOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Color Quantization: < " + (!FlxG.save.data.stepMania ? "off" : "on") + " >";
+		return "Color Quantization: < " + (!FlxG.save.data.stepMania ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -732,7 +732,7 @@ class ResetButtonOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Reset Button: < " + (!FlxG.save.data.resetButton ? "off" : "on") + " >";
+		return "Reset Button: < " + (!FlxG.save.data.resetButton ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -759,7 +759,7 @@ class InstantRespawn extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Instant Respawn: < " + (!FlxG.save.data.InstantRespawn ? "off" : "on") + " >";
+		return "Instant Respawn: < " + (!FlxG.save.data.InstantRespawn ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -794,7 +794,7 @@ class FlashingLightsOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Flashing Lights: < " + (!FlxG.save.data.flashing ? "off" : "on") + " >";
+		return "Flashing Lights: < " + (!FlxG.save.data.flashing ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -829,7 +829,7 @@ class AntialiasingOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Antialiasing: < " + (!FlxG.save.data.antialiasing ? "off" : "on") + " >";
+		return "Antialiasing: < " + (!FlxG.save.data.antialiasing ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -856,7 +856,7 @@ class MissSoundsOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Miss Sounds: < " + (!FlxG.save.data.missSounds ? "off" : "on") + " >";
+		return "Miss Sounds: < " + (!FlxG.save.data.missSounds ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -1136,7 +1136,7 @@ class FPSOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "FPS Counter: < " + (!FlxG.save.data.fps ? "off" : "on") + " >";
+		return "FPS Counter: < " + (!FlxG.save.data.fps ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -1298,7 +1298,7 @@ class RainbowFPSOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "FPS Rainbow : <" + (!FlxG.save.data.fpsRain ? "off" : "on") + " >";
+		return "FPS Rainbow : <" + (!FlxG.save.data.fpsRain ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -1325,7 +1325,7 @@ class NPSDisplayOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "NPS Display: < " + (!FlxG.save.data.npsDisplay ? "off" : "on") + " >";
+		return "NPS Display: < " + (!FlxG.save.data.npsDisplay ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -1447,7 +1447,7 @@ class WatermarkOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Watermarks: < " + (Main.watermarks ? "on" : "off") + " >";
+		return "Watermarks: < " + (Main.watermarks ? "Enabled" : "Disabled") + " >";
 	}
 }
 
@@ -1546,7 +1546,7 @@ class BotPlay extends Option
 	}
 
 	private override function updateDisplay():String
-		return "BotPlay: < " + (FlxG.save.data.botplay ? "on" : "off") + " >";
+		return "BotPlay: < " + (FlxG.save.data.botplay ? "Enabled" : "Disabled") + " >";
 }
 
 class CamZoomOption extends Option
@@ -1572,7 +1572,7 @@ class CamZoomOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Camera Zoom: < " + (!FlxG.save.data.camzoom ? "off" : "on") + " >";
+		return "Camera Zoom: < " + (!FlxG.save.data.camzoom ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -2140,7 +2140,7 @@ class LowMotion extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Icon Bumping: < " + (!FlxG.save.data.motion ? "On" : "Off") + " >";
+		return "Icon Bumping: < " + (!FlxG.save.data.motion ? "Enabled" : "Disabled") + " >";
 	}
 }
 
@@ -2194,6 +2194,56 @@ class ScrollAlpha extends Option
 	}
 }
 
+class SplashAlpha extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+		acceptValues = true;
+	}
+
+	public override function press():Bool
+	{
+		return false;
+	}
+
+	private override function updateDisplay():String
+	{
+		return ("Notesplash Transparency");
+	}
+
+	override function right():Bool
+	{
+		FlxG.save.data.alphaSplash += 0.1;
+
+		if (FlxG.save.data.alphaSplash < 0.1)
+			FlxG.save.data.alphaSplash = 0.1;
+
+		if (FlxG.save.data.alphaSplash > 1)
+			FlxG.save.data.alphaSplash = 1;
+		return true;
+	}
+
+	override function getValue():String
+	{
+		return "Notesplash Transparency: " + HelperFunctions.truncateFloat(FlxG.save.data.alphaSplash, 1);
+	}
+
+	override function left():Bool
+	{
+		FlxG.save.data.alphaSplash -= 0.1;
+
+		if (FlxG.save.data.alphaSplash < 0.1)
+			FlxG.save.data.alphaSplash = 0.1;
+
+		if (FlxG.save.data.alphaSplash > 1)
+			FlxG.save.data.alphaSplash = 1;
+
+		return true;
+	}
+}
+
 class FXAAOption extends Option
 {
 	public function new(desc:String)
@@ -2225,7 +2275,7 @@ class FXAAOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "FXAA Antialiasing: < " + (!FlxG.save.data.fxaa ? "off" : "on") + " >";
+		return "FXAA Antialiasing: < " + (!FlxG.save.data.fxaa ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -2279,7 +2329,7 @@ class UnloadSongs extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Unload Assets: < " + (!FlxG.save.data.unload ? "off" : "on") + " >";
+		return "Persistant Memory: < " + (FlxG.save.data.unload ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -2335,7 +2385,7 @@ class Memory extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Memory Counter: < " + (!FlxG.save.data.mem ? "off" : "on") + " >";
+		return "Memory Counter: < " + (!FlxG.save.data.mem ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -2362,7 +2412,7 @@ class ShowState extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Show The Current Game State: < " + (!FlxG.save.data.showState ? "off" : "on") + " >";
+		return "Show The Current Game State: < " + (!FlxG.save.data.showState ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -2404,7 +2454,7 @@ class NotesplashOption extends Option
 
 	public override function getValue():String
 	{
-		return "Current Player Notesplashes: < " + CustomNoteHelpers.Splash.getNotesplashByID(FlxG.save.data.notesplash) + " >";
+		return "Current Notesplash Skin: < " + CustomNoteHelpers.Splash.getNotesplashByID(FlxG.save.data.notesplash) + " >";
 	}
 }
 
@@ -2481,7 +2531,7 @@ class RatingPopup extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Rating Popup : < " + (!FlxG.save.data.popup ? "off" : "on") + " >";
+		return "Rating Popup : < " + (!FlxG.save.data.popup ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -2508,7 +2558,7 @@ class BorderlessWindow extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Borderless Window : < " + (!FlxG.save.data.borderless ? "off" : "on") + " >";
+		return "Borderless Window : < " + (!FlxG.save.data.borderless ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -2535,7 +2585,7 @@ class RatingStack extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Stack Ratings : < " + (!FlxG.save.data.rateStack ? "off" : "on") + " >";
+		return "Stack Ratings : < " + (!FlxG.save.data.rateStack ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -2562,7 +2612,7 @@ class OpenGLStatsOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "OpenGL Debug Information : < " + (!FlxG.save.data.glDebug ? "off" : "on") + " >";
+		return "OpenGL Debug Information : < " + (!FlxG.save.data.glDebug ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -2597,7 +2647,7 @@ class BackgroundsOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Backgrounds: < " + (!FlxG.save.data.background ? "off" : "on") + " >";
+		return "Backgrounds: < " + (!FlxG.save.data.background ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -2809,7 +2859,7 @@ class AutoPauseOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Auto Pause: < " + (!FlxG.save.data.autoPause ? "off" : "on") + " >";
+		return "Auto Pause: < " + (!FlxG.save.data.autoPause ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -2860,7 +2910,7 @@ class GPURendering extends Option
 	private override function updateDisplay():String
 	{
 		#if !html5
-		return "GPU Rendering: < " + (!FlxG.save.data.gpuRender ? "off" : "on") + " >";
+		return "GPU Rendering: < " + (!FlxG.save.data.gpuRender ? "Disabled" : "Enabled") + " >";
 		#else
 		return "GPU Rendering: < " + "Auto" + " >";
 		#end
@@ -2891,7 +2941,7 @@ class SmoothHealthOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Smooth Healthbar: < " + (FlxG.save.data.smoothHealthbar ? "On" : "Off") + " >";
+		return "Smooth Healthbar: < " + (FlxG.save.data.smoothHealthbar ? "Enabled" : "Disabled") + " >";
 	}
 }
 

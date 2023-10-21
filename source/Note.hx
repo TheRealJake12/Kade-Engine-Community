@@ -429,6 +429,8 @@ class Note extends FlxSprite
 				updateHitbox();
 			}
 		}
+		centerOffsets();
+		centerOrigin();
 	}
 
 	override function update(elapsed:Float)

@@ -29,7 +29,7 @@ haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
 haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
 haxelib git faxe https://github.com/uhrobots/faxe
 haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
-haxelib git hxCodec https://github.com/TheRealJake12/hxCodec.git
+haxelib git hxvlc https://github.com/MAJigsaw77/hxvlc.git
 cls
 
 title KEC Setup - User action required
