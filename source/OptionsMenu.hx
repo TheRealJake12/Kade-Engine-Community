@@ -251,6 +251,7 @@ class OptionsMenu extends MusicBeatSubstate
 				new GPURendering("Makes All Sprites Load Into VRAM, Reducing Normal RAM Usage. (Not Recommended For ~3GB VRAM)"), // Ill come back to this. I'm tired asf
 				new BackgroundsOption("Toggles Backrounds From Being Visible. (Good Performance Booster.)"),
 				new DistractionsAndEffectsOption("Toggles Extra Assets Be Loaded To Improve Quality At The Cost Of Performance"),
+				new Shaders("Should Shaders Be Enabled? (High GPU and CPU Usage.)"),
 				new Optimization("Nothing But Your Strumline Is Visible. Best Performance."),
 				#if desktop
 				new UnloadSongs("Should Assets Be Unloaded To Improve Memory Usage (At The Cost Of Loading Times)."),

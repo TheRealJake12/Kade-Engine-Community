@@ -2863,6 +2863,35 @@ class AutoPauseOption extends Option
 	}
 }
 
+class Shaders extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function left():Bool
+	{
+		if (OptionsMenu.isInPause)
+			return false;
+		FlxG.save.data.shaders = !FlxG.save.data.shaders;
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Shader Effects : < " + (!FlxG.save.data.shaders ? "off" : "on") + " >";
+	}
+}
+
 class GPURendering extends Option
 {
 	public function new(desc:String)
@@ -3026,6 +3055,8 @@ class ResetSettings extends Option
 		FlxG.save.data.loadMods = null;
 		FlxG.save.data.saveReplays = null;
 		FlxG.save.data.glDebug = null;
+		FlxG.save.data.shaders = null;
+		FlxG.save.data.alphaSplash = null;
 
 		KadeEngineData.initSave();
 		confirm = false;

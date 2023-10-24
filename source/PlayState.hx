@@ -2709,9 +2709,6 @@ class PlayState extends MusicBeatState
 					|| (PlayStateChangeables.opponentMode && gottaHitNote && (section.altAnim || section.CPUAltAnim))
 					|| (PlayStateChangeables.opponentMode && !gottaHitNote && section.playerAltAnim);
 
-				if (susLength > 0)
-					swagNote.isParent = true;
-
 				var type = 0;
 
 				if (susLength > 0)
