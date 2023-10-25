@@ -289,7 +289,7 @@ class Paths
 	}
 	#end
 
-	inline static public function music(key:String, ?library:String, ?returnString:Bool = false,):Any
+	inline static public function music(key:String, ?library:String, ?returnString:Bool = false):Any
 	{
 		var file:Dynamic;
 		if (!returnString)
