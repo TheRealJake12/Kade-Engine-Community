@@ -530,7 +530,6 @@ class Paths
 						obj = null;
 						currentTrackedAssets.remove(key);
 						counter++;
-						Debug.logTrace('Cleared $key from RAM');
 					}
 				}
 			}

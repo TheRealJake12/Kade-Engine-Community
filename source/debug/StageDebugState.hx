@@ -79,7 +79,6 @@ class StageDebugState extends MusicBeatState
 
 	override function create()
 	{
-		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 		FlxG.sound.music.stop();
 		FlxG.sound.playMusic(Paths.inst(PlayState.SONG.songId));

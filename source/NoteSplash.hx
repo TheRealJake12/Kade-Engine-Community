@@ -106,8 +106,6 @@ class NoteSplash extends FlxSprite
 				}
 		}
 
-		Debug.logTrace('loded');
-
 		offset.set(data.xOffset, data.yOffset);
 	}
 
