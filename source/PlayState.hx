@@ -311,14 +311,12 @@ class PlayState extends MusicBeatState
 	// I Have No Idea.
 	private static var prevCamFollow:FlxObject;
 
-	// Lane Underlay Stuff.
-	public static var laneunderlay:FlxSprite;
-	public static var laneunderlayOpponent:FlxSprite;
-
 	// Strumline (Static Notes)
 	public static var strumLineNotes:FlxTypedGroup<StaticArrow> = null;
 	public static var playerStrums:FlxTypedGroup<StaticArrow> = null;
 	public static var cpuStrums:FlxTypedGroup<StaticArrow> = null;
+
+	public var arrowLanes:FlxTypedGroup<FlxSprite> = null;
 
 	// When The Camera Zooms On Beat
 	private var camZooming:Bool = false;
@@ -965,6 +963,11 @@ class PlayState extends MusicBeatState
 			}
 		}
 
+		arrowLanes = new FlxTypedGroup<FlxSprite>();
+		arrowLanes.camera = camHUD;
+
+		add(arrowLanes);
+
 		add(uiGroup = new FlxSpriteGroup());
 		add(comboGroup = new FlxSpriteGroup());
 
@@ -976,31 +979,6 @@ class PlayState extends MusicBeatState
 
 		if (PlayStateChangeables.useDownscroll)
 			strumLine.y = FlxG.height - 165;
-
-		laneunderlayOpponent = new FlxSprite(0, 0).makeGraphic(110 * 4 + 50, FlxG.height * 2);
-		laneunderlayOpponent.alpha = FlxG.save.data.laneTransparency;
-		laneunderlayOpponent.color = FlxColor.BLACK;
-		laneunderlayOpponent.scrollFactor.set();
-
-		laneunderlay = new FlxSprite(0, 0).makeGraphic(110 * 4 + 50, FlxG.height * 2);
-		laneunderlay.alpha = FlxG.save.data.laneTransparency;
-		laneunderlay.color = FlxColor.BLACK;
-		laneunderlay.scrollFactor.set();
-
-		if (isStoryMode)
-		{
-			if (inCutscene)
-			{
-				laneunderlayOpponent.alpha = 0;
-				laneunderlay.alpha = 0;
-			}
-		}
-
-		if (!FlxG.save.data.middleScroll)
-		{
-			uiGroup.add(laneunderlayOpponent);
-		}
-		uiGroup.add(laneunderlay);
 
 		strumLineNotes = new FlxTypedGroup<StaticArrow>();
 		add(strumLineNotes);
@@ -1026,9 +1004,6 @@ class PlayState extends MusicBeatState
 		generateStaticArrows(0, tweenBoolshit);
 		generateStaticArrows(1, tweenBoolshit);
 
-		laneunderlay.screenCenter(Y);
-		laneunderlayOpponent.screenCenter(Y);
-
 		if (FlxG.save.data.gen)
 		{
 			if (SONG.songId == null)
@@ -1043,7 +1018,7 @@ class PlayState extends MusicBeatState
 		if (executeModchart)
 		{
 			luaModchart = ModchartState.createModchartState();
-			luaModchart.executeState('start', [PlayState.SONG.songId]);
+			luaModchart.executeState('onCreate', [null]);
 		}
 		#end
 
@@ -1062,20 +1037,6 @@ class PlayState extends MusicBeatState
 				}
 			}
 		}
-
-		// Update lane underlay positions AFTER static arrows :)
-		if (arrowsGenerated)
-		{
-			laneunderlay.x = playerStrums.members[0].x - 25;
-
-			if (!FlxG.save.data.optimize && !FlxG.save.data.middleScroll || executeModchart)
-			{
-				laneunderlayOpponent.x = cpuStrums.members[0].x - 25;
-			}
-		}
-
-		laneunderlay.screenCenter(Y);
-		laneunderlayOpponent.screenCenter(Y);
 
 		#if FEATURE_LUAMODCHART
 		if (executeModchart)
@@ -1394,6 +1355,13 @@ class PlayState extends MusicBeatState
 			uiGroup.add(currentTimingShown);
 			currentTimingShown.alpha = 0;
 		}
+
+		#if FEATURE_LUAMODCHART
+		if (executeModchart)
+		{
+			luaModchart.executeState('onCreatePost', [null]);
+		}
+		#end
 
 		#if FEATURE_HSCRIPT
 		scripts.executeAllFunc("createPost");
@@ -1929,9 +1897,6 @@ class PlayState extends MusicBeatState
 	{
 		if (inCinematic || inCutscene)
 		{
-			createTween(laneunderlay, {alpha: FlxG.save.data.laneTransparency}, 0.75);
-			if (!FlxG.save.data.middleScroll)
-				createTween(laneunderlayOpponent, {alpha: FlxG.save.data.laneTransparency}, 0.75);
 
 			if (!arrowsGenerated)
 			{
@@ -2448,7 +2413,7 @@ class PlayState extends MusicBeatState
 
 		#if FEATURE_LUAMODCHART
 		if (executeModchart)
-			luaModchart.executeState("songStart", [null]);
+			luaModchart.executeState("onSongStart", [null]);
 		#end
 
 		if (inst != null)
@@ -2565,12 +2530,12 @@ class PlayState extends MusicBeatState
 		{
 			#if FEATURE_STEPMANIA
 			if (SONG.needsVoices && !isSM)
-				vocals = new FlxSound().loadEmbedded(Paths.voices(SONG.songId));
+				vocals = new FlxSound().loadEmbedded(Paths.voices(SONG.audioFile));
 			else
 				vocals = new FlxSound();
 			#else
 			if (SONG.needsVoices)
-				vocals = new FlxSound().loadEmbedded(Paths.voices(SONG.songId));
+				vocals = new FlxSound().loadEmbedded(Paths.voices(SONG.audioFile));
 			else
 				vocals = new FlxSound();
 			#end
@@ -2885,6 +2850,10 @@ class PlayState extends MusicBeatState
 			babyArrow.updateHitbox();
 			babyArrow.scrollFactor.set();
 
+			babyArrow.loadLane();
+
+			arrowLanes.add(babyArrow.bgLane);
+
 			if (tween)
 			{
 				babyArrow.y -= 10;
@@ -2895,6 +2864,8 @@ class PlayState extends MusicBeatState
 				babyArrow.alpha = 1;
 
 			babyArrow.ID = i;
+
+			babyArrow.animation.followGlobalSpeed = false;
 
 			switch (player)
 			{
@@ -3514,13 +3485,13 @@ class PlayState extends MusicBeatState
 			camHUD.visible = !camHUD.visible;
 
 		#if FEATURE_LUAMODCHART
-		if (executeModchart && luaModchart != null && songStarted)
+		if (executeModchart && luaModchart != null)
 		{
 			luaModchart.setVar('songPos', Conductor.songPosition);
 			luaModchart.setVar('hudZoom', camHUD.zoom);
 			luaModchart.setVar('curBeat', HelperFunctions.truncateFloat(curDecimalBeat, 3));
 			luaModchart.setVar('cameraZoom', FlxG.camera.zoom);
-			luaModchart.executeState('update', [elapsed]);
+			luaModchart.executeState('onUpdate', [elapsed]);
 
 			for (key => value in luaModchart.luaWiggles)
 			{
@@ -3540,31 +3511,6 @@ class PlayState extends MusicBeatState
 
 			FlxG.camera.angle = luaModchart.getVar('cameraAngle', 'float');
 			camHUD.angle = luaModchart.getVar('camHudAngle', 'float');
-
-			if (luaModchart.getVar("showOnlyStrums", 'bool'))
-			{
-				healthBarBG.visible = false;
-				kadeEngineWatermark.visible = false;
-				healthBar.visible = false;
-				iconP1.visible = false;
-				iconP2.visible = false;
-				scoreTxt.visible = false;
-				songName.visible = false;
-				songPosBar.visible = false;
-				bar.visible = false;
-			}
-			else
-			{
-				healthBarBG.visible = true;
-				kadeEngineWatermark.visible = true;
-				healthBar.visible = true;
-				iconP1.visible = true;
-				iconP2.visible = true;
-				scoreTxt.visible = true;
-				songName.visible = FlxG.save.data.songPosition;
-				songPosBar.visible = FlxG.save.data.songPosition;
-				bar.visible = FlxG.save.data.songPosition;
-			}
 
 			var p1 = luaModchart.getVar("strumLine1Visible", 'bool');
 			var p2 = luaModchart.getVar("strumLine2Visible", 'bool');
@@ -4475,6 +4421,13 @@ class PlayState extends MusicBeatState
 			endSong();
 		for (i in shaderUpdates)
 			i(elapsed);
+
+		#if FEATURE_LUAMODCHART
+		if (executeModchart && luaModchart != null)
+		{
+			luaModchart.executeState('onUpdatePost', [elapsed]);
+		}
+		#end	
 		#if FEATURE_HSCRIPT
 		if (scripts != null)
 			scripts.executeAllFunc("updatePost", [elapsed]);
@@ -5076,7 +5029,7 @@ class PlayState extends MusicBeatState
 			{
 				if (pressArray[i] == true)
 				{
-					luaModchart.executeState('keyPressed', [keynameArray[i]]);
+					luaModchart.executeState('onKeyPressed', [keynameArray[i]]);
 				}
 			};
 
@@ -5084,7 +5037,7 @@ class PlayState extends MusicBeatState
 			{
 				if (releaseArray[i] == true)
 				{
-					luaModchart.executeState('keyReleased', [keynameArray[i]]);
+					luaModchart.executeState('onKeyReleased', [keynameArray[i]]);
 				}
 			};
 		};
@@ -6319,16 +6272,6 @@ class PlayState extends MusicBeatState
 				songPosBar.alpha = 0.85;
 				bar.alpha = 1;
 			}
-
-			laneunderlay.revive();
-			uiGroup.add(laneunderlay);
-			if (!FlxG.save.data.middleScroll)
-			{
-				laneunderlayOpponent.revive();
-				uiGroup.add(laneunderlayOpponent);
-			}
-			createTween(laneunderlay, {alpha: FlxG.save.data.laneTransparency}, 1);
-			createTween(laneunderlayOpponent, {alpha: FlxG.save.data.laneTransparency}, 1);
 		}
 
 		if (!isStoryMode)
@@ -6793,10 +6736,43 @@ class PlayState extends MusicBeatState
 		return FlxEase.linear;
 	}
 
+	public function hideHUD(hidden:Bool)
+	{
+		if (hidden)
+		{
+			healthBarBG.visible = false;
+			kadeEngineWatermark.visible = false;
+			healthBar.visible = false;
+			iconP1.visible = false;
+			iconP2.visible = false;
+			scoreTxt.visible = false;
+			songName.visible = false;
+			songPosBar.visible = false;
+			bar.visible = false;
+		}
+		else
+		{
+			healthBarBG.visible = true;
+			kadeEngineWatermark.visible = true;
+			healthBar.visible = true;
+			iconP1.visible = true;
+			iconP2.visible = true;
+			scoreTxt.visible = true;
+			songName.visible = FlxG.save.data.songPosition;
+			songPosBar.visible = FlxG.save.data.songPosition;
+			bar.visible = FlxG.save.data.songPosition;
+		}
+	}
+
 	function removeStaticArrows(?destroy:Bool = false)
 	{
 		if (arrowsGenerated)
 		{
+			arrowLanes.forEach(function(bgLane:FlxSprite)
+			{
+				arrowLanes.remove(bgLane, true);
+			});
+
 			playerStrums.forEach(function(babyArrow:StaticArrow)
 			{
 				playerStrums.remove(babyArrow);

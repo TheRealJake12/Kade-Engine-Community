@@ -1,14 +1,12 @@
-function start(song) -- do nothing
-    spinLength = 0
+function onCreatePost()
+   spinLength = 0
 end
 
 function update(elapsed)
-    
     if difficulty == 2 and curStep > 400 then
         if spinLength < 32 then
             spinLength = spinLength + 0.2
         end
-
 
         local currentBeat = (songPos / 1000)*(bpm/60)
 		for i=0,7,1 do
@@ -21,16 +19,17 @@ function update(elapsed)
 end
 
 function beatHit(beat) -- do nothing
-
+   
 end
 
 function stepHit(step) -- do nothing
+    
     if curStep == 63 then
-        showOnlyStrums = true
+         hideHUD(true)
     end
 
     if curStep == 415 then
-        showOnlyStrums = false
+        hideHUD(false)
     end    
 
 end

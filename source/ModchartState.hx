@@ -501,13 +501,90 @@ class ModchartState
 
 		// callbacks
 
-		Lua_helper.add_callback(lua, "getProperty", getPropertyByName);
-		Lua_helper.add_callback(lua, "setProperty", setPropertyByName);
+		Lua_helper.add_callback(lua, "getProperty", function(variable:String)
+		{
+			var killMe:Array<String> = variable.split('.');
+			if (killMe.length > 1)
+			{
+				var coverMeInPiss:Dynamic = null;
+				coverMeInPiss = Reflect.getProperty(PlayState, killMe[0]);
+
+				for (i in 1...killMe.length - 1)
+				{
+					coverMeInPiss = Reflect.getProperty(coverMeInPiss, killMe[i]);
+				}
+				Debug.logTrace("getProp");
+				return Reflect.getProperty(coverMeInPiss, killMe[killMe.length - 1]);
+			}
+			Debug.logTrace("getProp");
+			return Reflect.getProperty(PlayState.instance, variable);
+			
+		});
+		Lua_helper.add_callback(lua, "setProperty", function(variable:String, value:Dynamic)
+		{
+			var killMe:Array<String> = variable.split('.');
+			if (killMe.length > 1)
+			{
+				var coverMeInPiss:Dynamic = null;
+				coverMeInPiss = Reflect.getProperty(PlayState.instance, killMe[0]);
+
+				for (i in 1...killMe.length - 1)
+				{
+					coverMeInPiss = Reflect.getProperty(coverMeInPiss, killMe[i]);
+				}
+				Debug.logTrace("setProp");
+				return Reflect.setProperty(coverMeInPiss, killMe[killMe.length - 1], value);
+			}
+			Debug.logTrace("setProp");
+			return Reflect.setProperty(PlayState.instance, variable, value);
+			
+		});
+		Lua_helper.add_callback(lua, "getPropertyFromGroup", function(obj:String, index:Int, variable:Dynamic)
+		{
+			if (Std.isOfType(Reflect.getProperty(PlayState, obj), FlxTypedGroup))
+			{
+				return Reflect.getProperty(Reflect.getProperty(PlayState, obj).members[index], variable);
+			}
+
+			var leArray:Dynamic = Reflect.getProperty(PlayState.instance, obj)[index];
+			if (leArray != null)
+			{
+				if (Type.typeof(variable) == Type.ValueType.TInt)
+				{
+					return leArray[variable];
+				}
+				return Reflect.getProperty(leArray, variable);
+			}
+			Debug.logTrace("Object #" + index + " from group: " + obj + " doesn't exist!");
+			return null;
+		});
+		Lua_helper.add_callback(lua, "setPropertyFromGroup", function(obj:String, index:Int, variable:Dynamic, value:Dynamic)
+		{
+			if (Std.isOfType(Reflect.getProperty(PlayState.instance, obj), FlxTypedGroup))
+			{
+				return Reflect.setProperty(Reflect.getProperty(PlayState.instance, obj).members[index], variable, value);
+			}
+
+			var leArray:Dynamic = Reflect.getProperty(PlayState.instance, obj)[index];
+			if (leArray != null)
+			{
+				if (Type.typeof(variable) == Type.ValueType.TInt)
+				{
+					return leArray[variable] = value;
+				}
+				return Reflect.setProperty(leArray, variable, value);
+			}
+		});
 		Lua_helper.add_callback(lua, "makeSprite", makeLuaSprite);
 
 		Lua_helper.add_callback(lua, "cameraFlash", function(camera:String, color:String, duration:Float, forced:Bool)
 		{
 			cameraFromString(camera).flash(CoolUtil.colorFromString(color), duration, null, forced);
+		});
+
+		Lua_helper.add_callback(lua, "hideHUD", function(hidden:Bool)
+		{
+			hideTheHUD(hidden);
 		});
 
 		// sprites
@@ -576,26 +653,6 @@ class ModchartState
 			return PlayState.instance.camHUD.y;
 		});
 
-		Lua_helper.add_callback(lua, "setLaneUnderLayPos", function(value:Int)
-		{
-			PlayState.laneunderlay.x = value;
-		});
-
-		Lua_helper.add_callback(lua, "setOpponentLaneUnderLayOpponentPos", function(value:Int)
-		{
-			PlayState.laneunderlayOpponent.x = value;
-		});
-
-		Lua_helper.add_callback(lua, "setLaneUnderLayAlpha", function(value:Int)
-		{
-			PlayState.laneunderlay.alpha = value;
-		});
-
-		Lua_helper.add_callback(lua, "setOpponentLaneUnderLayOpponentAlpha", function(value:Int)
-		{
-			PlayState.laneunderlayOpponent.alpha = value;
-		});
-
 		Lua_helper.add_callback(lua, "getNotes", function(y:Float)
 		{
 			Lua.newtable(lua);
@@ -649,8 +706,15 @@ class ModchartState
 				return PlayState.instance.camStrums;
 			case 'camGame' | 'game':
 				return PlayState.instance.camGame;
+			case 'overlayCam' | 'overlay':
+				return PlayState.instance.overlayCam;	
 		}
 		return PlayState.instance.camGame;
+	}
+
+	public function hideTheHUD(hide:Bool)
+	{
+		return PlayState.instance.hideHUD(hide);
 	}
 
 	public static function getFlxEaseByString(?ease:String = '')
