@@ -6885,6 +6885,47 @@ class PlayState extends MusicBeatState
 		Stage = null;
 	}
 
+	public function playVideo(name:String)
+	{
+		#if VIDEOS
+		inCutscene = true;
+
+		var filepath:String = Paths.video(name);
+		#if sys
+		if (!FileSystem.exists(filepath))
+		#else
+		if (!OpenFlAssets.exists(filepath))
+		#end
+		{
+			FlxG.log.warn('Couldnt find video file: ' + name);
+			startAndEnd();
+			return;
+		}
+
+		var video:VideoHandler = new VideoHandler();
+		// Recent versions
+		video.play(filepath);
+		video.onEndReached.add(function()
+		{
+			video.dispose();
+			startAndEnd();
+			return;
+		}, true);
+		#else
+		FlxG.log.warn('Platform not supported!');
+		startAndEnd();
+		return;
+		#end
+	}
+
+	function startAndEnd()
+	{
+		if (endingSong)
+			endSong();
+		else
+			startCountdown();
+	}
+
 	function playCutscene(name:String, ?atend:Bool)
 	{
 		#if VIDEOS

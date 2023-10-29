@@ -456,6 +456,7 @@ class ModchartState
 		// get some fukin globals up in here bois
 
 		setVar("difficulty", PlayState.storyDifficulty);
+		setVar("isStoryMode", PlayState.isStoryMode);
 		setVar("bpm", Conductor.bpm);
 		setVar("scrollspeed", FlxG.save.data.scrollSpeed != 1 ? FlxG.save.data.scrollSpeed : PlayState.SONG.speed);
 		setVar("fpsCap", FlxG.save.data.fpsCap);
@@ -478,8 +479,7 @@ class ModchartState
 
 		setVar("followXOffset", 0);
 		setVar("followYOffset", 0);
-
-		setVar("showOnlyStrums", false);
+		
 		setVar("strumLine1Visible", true);
 		setVar("strumLine2Visible", true);
 
@@ -585,6 +585,32 @@ class ModchartState
 		Lua_helper.add_callback(lua, "hideHUD", function(hidden:Bool)
 		{
 			hideTheHUD(hidden);
+		});
+
+		Lua_helper.add_callback(lua, "playVideo", function(videoFile:String)
+		{
+			#if VIDEOS
+			if (sys.FileSystem.exists(Paths.video(videoFile)))
+			{
+				PlayState.instance.playVideo(videoFile);
+				return true;
+			}
+			else
+			{
+				Debug.logTrace('playVideo: Video file not found: ' + videoFile);
+			}
+			return false;
+			#else
+			if (PlayState.endingSong)
+			{
+				PlayState.endSong();
+			}
+			else
+			{
+				PlayState.startCountdown();
+			}
+			return true;
+			#end
 		});
 
 		// sprites
