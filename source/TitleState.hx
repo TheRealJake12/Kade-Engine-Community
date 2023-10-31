@@ -141,7 +141,7 @@ class TitleState extends MusicBeatState
 
 		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('credshit/meredo'));
 		add(ngSpr);
-		ngSpr.visible = false;
+		ngSpr.alpha = 0;
 		ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));
 		ngSpr.scale.set(0.6, 0.6);
 		ngSpr.updateHitbox();
@@ -271,33 +271,58 @@ class TitleState extends MusicBeatState
 		}
 	}
 
-	function createCoolText(textArray:Array<String>)
+	function createCoolText(textArray:Array<String>, ?offset:Float = 0)
 	{
 		for (i in 0...textArray.length)
 		{
 			var money:Alphabet = new Alphabet(0, 0, textArray[i], true);
 			money.screenCenter(X);
-			money.y += (i * 60) + 200;
-			credGroup.add(money);
-			textGroup.add(money);
+			money.y += (i * 60) + 200 + offset;
+			if (credGroup != null && textGroup != null)
+			{
+				money.alpha = 0;
+				credGroup.add(money);
+				textGroup.add(money);
+				for (object in money.members)
+				{
+					var flxSprite:FlxSprite = cast object;
+					FlxTween.tween(flxSprite, {alpha: 1}, .5, {ease: FlxEase.quadOut});
+				}
+			}
 		}
 	}
 
-	function addMoreText(text:String)
+	function addMoreText(text:String, ?offset:Float = 0)
 	{
-		var coolText:Alphabet = new Alphabet(0, 0, text, true);
-		coolText.screenCenter(X);
-		coolText.y += (textGroup.length * 60) + 200;
-		credGroup.add(coolText);
-		textGroup.add(coolText);
+		if (textGroup != null && credGroup != null)
+		{
+			var coolText:Alphabet = new Alphabet(0, 0, text, true);
+			coolText.screenCenter(X);
+			coolText.y += (textGroup.length * 60) + 200 + offset;
+			coolText.alpha = 0;
+			credGroup.add(coolText);
+			textGroup.add(coolText);
+			for (object in coolText.members)
+			{
+				var flxSprite:FlxSprite = cast object;
+				FlxTween.tween(flxSprite, {alpha: 1}, .5, {ease: FlxEase.quadOut});
+			}
+		}
 	}
 
 	function deleteCoolText()
 	{
-		while (textGroup.members.length > 0)
+		for (object in textGroup.members)
 		{
-			credGroup.remove(textGroup.members[0], true);
-			textGroup.remove(textGroup.members[0], true);
+			var flxSprite:FlxSprite = cast object;
+			FlxTween.tween(flxSprite, {alpha: 0}, .5, {
+				ease: FlxEase.quadOut,
+				onComplete: function(tween:FlxTween)
+				{
+					credGroup.remove(textGroup.members[0], true);
+					textGroup.remove(textGroup.members[0], true);
+				}
+			});
 		}
 	}
 
@@ -331,11 +356,11 @@ class TitleState extends MusicBeatState
 			case 7:
 				{
 					addMoreText('TheRealJake_12');
-					ngSpr.visible = true;
+					FlxTween.tween(ngSpr, {alpha: 1}, .2, {ease: FlxEase.quadOut});
 				}
 			case 8:
 				deleteCoolText();
-				ngSpr.visible = false;
+				FlxTween.tween(ngSpr, {alpha: 0}, 0.5, {ease: FlxEase.quadOut});
 			case 9:
 				createCoolText([curWacky[0]]);
 			case 11:
