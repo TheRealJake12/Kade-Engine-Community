@@ -516,6 +516,8 @@ class PlayState extends MusicBeatState
 			PlayStateChangeables.skillIssue = false;
 		}
 
+		startTime = 0;
+
 		// Search For Lua Modcharts / Hscripts.
 		#if FEATURE_LUAMODCHART
 		executeModchart = FileSystem.exists(Paths.lua('songs/${PlayState.SONG.songId}/modchart')) && PlayStateChangeables.modchart;
@@ -2255,7 +2257,7 @@ class PlayState extends MusicBeatState
 	private function handleHolds(note:Note)
 	{
 		// HOLDS, check for sustain notes
-		if (keys.contains(true) && /*!boyfriend.stunned && */ generatedMusic)
+		if (keys.contains(true) && generatedMusic)
 		{
 			goodNoteHit(note);
 		}
@@ -2265,7 +2267,7 @@ class PlayState extends MusicBeatState
 	{
 		notes.forEachAlive(function(daNote:Note)
 		{
-			if (daNote.mustPress && Conductor.songPosition >= daNote.strumTime && daNote.botplayHit)
+			if (daNote.mustPress && Conductor.songPosition >= daNote.strumTime && daNote.botplayHit && !daNote.isSustainEnd)
 			{
 				// Force good note hit regardless if it's too late to hit it or not as a fail safe
 				if (loadRep)
@@ -2291,6 +2293,40 @@ class PlayState extends MusicBeatState
 				}
 			}
 		});
+	}
+
+	private function charactersDance()
+	{
+		if (!FlxG.save.data.optimize)
+		{
+			if (boyfriend.holdTimer >= Conductor.stepCrochet * 4 * 0.001
+				&& (!keys.contains(true) || PlayStateChangeables.botPlay || PlayStateChangeables.opponentMode))
+			{
+				if (boyfriend.animation.curAnim.name.startsWith('sing')
+					&& !boyfriend.animation.curAnim.name.endsWith('miss')
+					&& (boyfriend.animation.curAnim.curFrame >= 10 || boyfriend.animation.curAnim.finished))
+					boyfriend.dance();
+			}
+		}
+		// Debug.logInfo('dadHoldTimer: ' + dad.holdTimer + ", condition:" + Conductor.stepCrochet * 4 * 0.001 * dad.holdLength);
+
+		if (PlayStateChangeables.opponentMode)
+		{
+			if (!FlxG.save.data.optimize)
+			{
+				if (dad.holdTimer > Conductor.stepCrochet * 4 * 0.001 * dad.holdLength * 0.5
+					&& (!keys.contains(true) || PlayStateChangeables.botPlay))
+				{
+					if (dad.animation.curAnim.name.startsWith('sing')
+
+						&& !dad.animation.curAnim.name.endsWith('miss')
+						&& (boyfriend.animation.curAnim.curFrame >= 10 || dad.animation.curAnim.finished))
+					{
+						dad.dance();
+					}
+				}
+			}
+		}
 	}
 
 	// sadly stolen from Psych. Im sorry :(((
@@ -2581,10 +2617,6 @@ class PlayState extends MusicBeatState
 
 		FlxG.sound.list.add(inst);
 
-		#if FEATURE_HSCRIPT
-		scripts.setAll("bpm", Conductor.bpm);
-		#end
-
 		if (!paused)
 		{
 			#if FEATURE_STEPMANIA
@@ -2611,6 +2643,12 @@ class PlayState extends MusicBeatState
 		fakeCrochet = Conductor.crochet;
 
 		fakeNoteStepCrochet = fakeCrochet / 4;
+
+		#if FEATURE_HSCRIPT
+		scripts.setAll("bpm", Conductor.bpm);
+		#end
+
+		Debug.logTrace(fakeNoteStepCrochet);
 
 		add(grpNoteSplashes);
 
@@ -4043,178 +4081,181 @@ class PlayState extends MusicBeatState
 				if (!daNote.mustPress && FlxG.save.data.middleScroll && !executeModchart)
 					daNote.visible = false;
 
-				if (daNote.isSustainNote && daNote.wasGoodHit && Conductor.songPosition >= daNote.strumTime)
+				if (Conductor.songPosition > Ratings.timingWindows[0] + daNote.strumTime)
 				{
-					destroyNote(daNote);
-				}
-				else if ((daNote.mustPress && !PlayStateChangeables.useDownscroll || daNote.mustPress && PlayStateChangeables.useDownscroll)
-					&& daNote.mustPress
-					&& daNote.strumTime / songMultiplier - Conductor.songPosition / songMultiplier < -(166 * Conductor.timeScale)
-					&& songStarted)
-				{
-					if (daNote.isSustainNote && daNote.wasGoodHit && daNote.causesMisses)
+					if (daNote.isSustainNote && daNote.wasGoodHit && Conductor.songPosition >= daNote.strumTime)
 					{
 						destroyNote(daNote);
 					}
-					else
+
+					if (daNote != null)
 					{
-						if (loadRep && daNote.isSustainNote)
+						if (daNote.mustPress && daNote.tooLate && !daNote.canBeHit && daNote.mustPress)
 						{
-							// im tired and lazy this sucks I know i'm dumb
-							if (findByTime(daNote.strumTime) != null)
-								totalNotesHit += 1;
+							if (daNote.isSustainNote && daNote.wasGoodHit && daNote.causesMisses)
+							{
+								destroyNote(daNote);
+							}
 							else
 							{
-								if (daNote.causesMisses && !daNote.isSustainEnd)
+								if (loadRep && daNote.isSustainNote)
 								{
-									if (!SONG.splitVoiceTracks)
-										vocals.volume = 0;
-									else
-										vocalsPlayer.volume = 0;
-								}
-								if (theFunne && !daNote.isSustainNote && daNote.causesMisses)
-								{
-									noteMiss(daNote.noteData, daNote);
-								}
-								if (daNote.isParent && daNote.causesMisses)
-								{
-									if (daNote.noteShit == 'mustpress')
-									{
-										if (!PlayStateChangeables.opponentMode)
-											health -= (0.8 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
-										else
-											health += (0.8 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
-									}
+									// im tired and lazy this sucks I know i'm dumb
+									if (findByTime(daNote.strumTime) != null)
+										totalNotesHit += 1;
 									else
 									{
-										if (!PlayStateChangeables.opponentMode)
-											health -= (0.08 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
+										if (daNote.causesMisses && !daNote.isSustainEnd)
+										{
+											if (!SONG.splitVoiceTracks)
+												vocals.volume = 0;
+											else
+												vocalsPlayer.volume = 0;
+										}
+										if (theFunne && !daNote.isSustainNote && daNote.causesMisses)
+										{
+											noteMiss(daNote.noteData, daNote);
+										}
+										if (daNote.isParent && daNote.causesMisses)
+										{
+											if (daNote.noteShit == 'mustpress')
+											{
+												if (!PlayStateChangeables.opponentMode)
+													health -= (0.8 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
+												else
+													health += (0.8 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
+											}
+											else
+											{
+												if (!PlayStateChangeables.opponentMode)
+													health -= (0.08 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
+												else
+													health += (0.08 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
+											}
+
+											// wanted to be a little more clean but fuck I hate lag
+
+											for (i in daNote.children)
+											{
+												i.sustainActive = false;
+											}
+										}
 										else
-											health += (0.08 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
-									}
-
-									// wanted to be a little more clean but fuck I hate lag
-
-									for (i in daNote.children)
-									{
-										i.sustainActive = false;
+										{
+											if (!daNote.wasGoodHit
+												&& daNote.isSustainNote
+												&& daNote.sustainActive
+												&& daNote.spotInLine != daNote.parent.children.length
+												&& !daNote.isSustainEnd
+												&& daNote.causesMisses)
+											{
+												// health -= 0.05; // give a health punishment for failing a LN
+												trace("hold fell over at " + daNote.spotInLine);
+												for (i in daNote.parent.children)
+												{
+													i.alpha = 0.3;
+													i.sustainActive = false;
+												}
+												if (daNote.parent.wasGoodHit)
+												{
+													totalNotesHit -= 1;
+												}
+												updateAccuracy();
+											}
+											else if (!daNote.wasGoodHit && !daNote.isSustainNote && daNote.causesMisses)
+											{
+												if (daNote.noteShit == 'mustpress')
+												{
+													if (!PlayStateChangeables.opponentMode)
+														health -= (0.8 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
+													else
+														health += (0.8 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
+												}
+												else
+												{
+													if (!PlayStateChangeables.opponentMode)
+														health -= (0.08 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
+													else
+														health += (0.08 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
+												}
+											}
+										}
 									}
 								}
 								else
 								{
-									if (!daNote.wasGoodHit
-										&& daNote.isSustainNote
-										&& daNote.sustainActive
-										&& daNote.spotInLine != daNote.parent.children.length
-										&& !daNote.isSustainEnd
-										&& daNote.causesMisses)
+									if (daNote.causesMisses && !daNote.isSustainEnd)
 									{
-										// health -= 0.05; // give a health punishment for failing a LN
-										trace("hold fell over at " + daNote.spotInLine);
-										for (i in daNote.parent.children)
+										if (!SONG.splitVoiceTracks)
+											vocals.volume = 0;
+										else
+											vocalsPlayer.volume = 0;
+									}
+									if (theFunne && !daNote.isSustainNote && daNote.causesMisses)
+									{
+										if (PlayStateChangeables.botPlay)
 										{
-											i.alpha = 0.3;
+											daNote.rating = "sick";
+											goodNoteHit(daNote);
+										}
+										else
+											noteMiss(daNote.noteData, daNote);
+									}
+
+									if (daNote.isParent && daNote.visible && daNote.causesMisses)
+									{
+										health -= 0.15; // give a health punishment for failing a LN
+										for (i in daNote.children)
+										{
 											i.sustainActive = false;
 										}
-										if (daNote.parent.wasGoodHit)
-										{
-											totalNotesHit -= 1;
-										}
-										updateAccuracy();
-									}
-									else if (!daNote.wasGoodHit && !daNote.isSustainNote && daNote.causesMisses)
-									{
-										if (daNote.noteShit == 'mustpress')
-										{
-											if (!PlayStateChangeables.opponentMode)
-												health -= (0.8 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
-											else
-												health += (0.8 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
-										}
-										else
-										{
-											if (!PlayStateChangeables.opponentMode)
-												health -= (0.08 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
-											else
-												health += (0.08 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
-										}
-									}
-								}
-							}
-						}
-						else
-						{
-							if (daNote.causesMisses && !daNote.isSustainEnd)
-							{
-								if (!SONG.splitVoiceTracks)
-									vocals.volume = 0;
-								else
-									vocalsPlayer.volume = 0;
-							}
-							if (theFunne && !daNote.isSustainNote && daNote.causesMisses)
-							{
-								if (PlayStateChangeables.botPlay)
-								{
-									daNote.rating = "sick";
-									goodNoteHit(daNote);
-								}
-								else
-									noteMiss(daNote.noteData, daNote);
-							}
-
-							if (daNote.isParent && daNote.visible && daNote.causesMisses)
-							{
-								health -= 0.15; // give a health punishment for failing a LN
-								for (i in daNote.children)
-								{
-									i.sustainActive = false;
-								}
-							}
-							else
-							{
-								if (!daNote.wasGoodHit
-									&& daNote.isSustainNote
-									&& daNote.sustainActive
-									&& daNote.spotInLine != daNote.parent.children.length
-									&& !daNote.isSustainEnd
-									&& daNote.causesMisses)
-								{
-									// health -= 0.05; // give a health punishment for failing a LN
-									for (i in daNote.parent.children)
-									{
-										i.sustainActive = false;
-									}
-									if (daNote.parent.wasGoodHit)
-									{
-										// misses++;
-										totalNotesHit -= 1;
-									}
-									updateAccuracy();
-								}
-								else if (!daNote.wasGoodHit && !daNote.isSustainNote && daNote.causesMisses)
-								{
-									// misses++;
-
-									if (daNote.noteShit == 'mustpress')
-									{
-										if (!PlayStateChangeables.opponentMode)
-											health -= (0.8 * PlayStateChangeables.healthLoss);
-										else
-											health += (0.8 * PlayStateChangeables.healthLoss);
 									}
 									else
 									{
-										if (!PlayStateChangeables.opponentMode)
-											health -= (0.08 * PlayStateChangeables.healthLoss);
-										else
-											health += (0.08 * PlayStateChangeables.healthLoss);
+										if (!daNote.wasGoodHit
+											&& daNote.isSustainNote
+											&& daNote.sustainActive
+											&& daNote.spotInLine != daNote.parent.children.length
+											&& !daNote.isSustainEnd
+											&& daNote.causesMisses)
+										{
+											// health -= 0.05; // give a health punishment for failing a LN
+											for (i in daNote.parent.children)
+											{
+												i.sustainActive = false;
+											}
+											if (daNote.parent.wasGoodHit)
+											{
+												// misses++;
+												totalNotesHit -= 1;
+											}
+											updateAccuracy();
+										}
+										else if (!daNote.wasGoodHit && !daNote.isSustainNote && daNote.causesMisses)
+										{
+											// misses++;
+
+											if (daNote.noteShit == 'mustpress')
+											{
+												if (!PlayStateChangeables.opponentMode)
+													health -= (0.8 * PlayStateChangeables.healthLoss);
+												else
+													health += (0.8 * PlayStateChangeables.healthLoss);
+											}
+											else
+											{
+												if (!PlayStateChangeables.opponentMode)
+													health -= (0.08 * PlayStateChangeables.healthLoss);
+												else
+													health += (0.08 * PlayStateChangeables.healthLoss);
+											}
+										}
 									}
 								}
 							}
+							destroyNote(daNote);
 						}
 					}
-
-					destroyNote(daNote);
 				}
 			});
 		}
@@ -4414,6 +4455,8 @@ class PlayState extends MusicBeatState
 				#end
 			}
 		}
+
+		charactersDance();
 
 		if (!inCutscene && songStarted)
 			keyShit();
@@ -5146,48 +5189,12 @@ class PlayState extends MusicBeatState
 						}
 					}
 				};
-
-				if (boyfriend.holdTimer > Conductor.stepCrochet * 4 * 0.001 && (!holdArray.contains(true) || PlayStateChangeables.botPlay))
-				{
-					if (boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss'))
-						boyfriend.dance();
-				}
 			}
 
 			if (!loadRep)
 				for (i in anas)
 					if (i != null)
 						replayAna.anaArray.push(i); // put em all there
-		}
-
-		if (!FlxG.save.data.optimize)
-		{
-			if (boyfriend.holdTimer >= Conductor.stepCrochet * 4 * 0.001
-				&& (!holdArray.contains(true) || PlayStateChangeables.botPlay || PlayStateChangeables.opponentMode))
-			{
-				if (boyfriend.animation.curAnim.name.startsWith('sing')
-					&& !boyfriend.animation.curAnim.name.endsWith('miss')
-					&& (boyfriend.animation.curAnim.curFrame >= 10 || boyfriend.animation.curAnim.finished))
-					boyfriend.dance();
-			}
-		}
-
-		if (PlayStateChangeables.opponentMode)
-		{
-			if (!FlxG.save.data.optimize)
-			{
-				if (dad.holdTimer > Conductor.stepCrochet * 4 * 0.001 * dad.holdLength * 0.5
-					&& (!holdArray.contains(true) || PlayStateChangeables.botPlay))
-				{
-					if (dad.animation.curAnim.name.startsWith('sing')
-
-						&& !dad.animation.curAnim.name.endsWith('miss')
-						&& (boyfriend.animation.curAnim.curFrame >= 10 || dad.animation.curAnim.finished))
-					{
-						dad.dance();
-					}
-				}
-			}
 		}
 
 		playerStrums.forEach(function(spr:StaticArrow)
@@ -5507,7 +5514,7 @@ class PlayState extends MusicBeatState
 		// Accessing the animation name directly to play it
 		if (!daNote.isParent && daNote.parent != null)
 		{
-			if (daNote.spotInLine != daNote.parent.children.length - 1)
+			if (!daNote.isSustainEnd)
 			{
 				var singData:Int = Std.int(Math.abs(daNote.noteData));
 
@@ -5529,6 +5536,14 @@ class PlayState extends MusicBeatState
 				#if FEATURE_HSCRIPT
 				scripts.executeAllFunc("opponentNoteHit", [daNote]);
 				#end
+
+				if (FlxG.save.data.cpuStrums)
+				{
+					cpuStrums.forEach(function(spr:StaticArrow)
+					{
+						pressArrow(spr, spr.ID, daNote);
+					});
+				}
 
 				if (SONG.needsVoices)
 				{
@@ -5564,6 +5579,15 @@ class PlayState extends MusicBeatState
 				else
 					luaModchart.executeState('playerOneSing', [Math.abs(daNote.noteData), Conductor.songPosition]);
 			#end
+
+			if (FlxG.save.data.cpuStrums)
+			{
+				cpuStrums.forEach(function(spr:StaticArrow)
+				{
+					pressArrow(spr, spr.ID, daNote);
+				});
+			}
+
 			if (!PlayStateChangeables.opponentMode)
 				dad.holdTimer = 0;
 			else
@@ -5575,14 +5599,6 @@ class PlayState extends MusicBeatState
 				else
 					vocalsEnemy.volume = 1;
 			}
-		}
-
-		if (FlxG.save.data.cpuStrums)
-		{
-			cpuStrums.forEach(function(spr:StaticArrow)
-			{
-				pressArrow(spr, spr.ID, daNote);
-			});
 		}
 
 		destroyNote(daNote);
@@ -5731,19 +5747,13 @@ class PlayState extends MusicBeatState
 				{
 					if (daNote.mustPress && PlayStateChangeables.botPlay)
 					{
-						if ((!daNote.isSustainNote && !daNote.isParent) || daNote.isSustainEnd)
-						{
-							spr.playAnim('static', true);
-						}
+						spr.playAnim('static', true);
 					}
 					else if (!daNote.mustPress)
 					{
 						if (FlxG.save.data.cpuStrums)
 						{
-							if ((!daNote.isSustainNote && !daNote.isParent) || daNote.isSustainEnd)
-							{
-								spr.playAnim('static', true);
-							}
+							spr.playAnim('static', true);
 						}
 					}
 				}
@@ -5756,21 +5766,15 @@ class PlayState extends MusicBeatState
 				{
 					if (daNote.mustPress && PlayStateChangeables.botPlay)
 					{
-						if ((!daNote.isSustainNote && !daNote.isParent) || daNote.isSustainEnd)
-						{
-							spr.localAngle = 0;
-							spr.playAnim('static', true);
-						}
+						spr.localAngle = 0;
+						spr.playAnim('static', true);
 					}
 					else if (!daNote.mustPress)
 					{
 						if (FlxG.save.data.cpuStrums)
 						{
-							if ((!daNote.isSustainNote && !daNote.isParent) || daNote.isSustainEnd)
-							{
-								spr.localAngle = 0;
-								spr.playAnim('static', true);
-							}
+							spr.localAngle = 0;
+							spr.playAnim('static', true);
 						}
 					}
 				}

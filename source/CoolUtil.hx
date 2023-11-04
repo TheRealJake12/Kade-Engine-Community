@@ -240,7 +240,7 @@ class CoolUtil
 						}
 					}
 				}
-				else if (deepSearch) // ! YAY !!!! -lunar
+				else if (deepSearch)
 				{
 					var pathsFiles:Array<String> = findFilesInPath(path, extns);
 

@@ -483,6 +483,8 @@ class Note extends FlxSprite
 						if (strumTime - Conductor.songPosition <= (((Ratings.timingWindows[0]) * lateHitMult))
 							&& strumTime - Conductor.songPosition >= (((-Ratings.timingWindows[0]) * earlyHitMult)))
 							canBeHit = true;
+						else
+							canBeHit = false;
 						if (strumTime - Conductor.songPosition < (-Ratings.timingWindows[0]) && !wasGoodHit)
 							tooLate = true;
 				}
