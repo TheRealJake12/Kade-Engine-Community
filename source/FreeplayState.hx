@@ -768,31 +768,10 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 
-		#if cpp
-		@:privateAccess
+		if (FlxG.sound.music.playing && !MainMenuState.freakyPlaying)
 		{
-			if (FlxG.sound.music.playing && !MainMenuState.freakyPlaying)
-			{
-				#if (lime >= "8.0.0")
-				FlxG.sound.music._channel.__source.__backend.setPitch(rate);
-				#else
-				lime.media.openal.AL.sourcef(FlxG.sound.music._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, rate);
-				#end
-			}
+			FlxG.sound.music.pitch = rate;
 		}
-		#elseif html5
-		@:privateAccess
-		{
-			if (FlxG.sound.music.playing && !MainMenuState.freakyPlaying)
-			{
-				#if (lime >= "8.0.0" && lime_howlerjs)
-				FlxG.sound.music._channel.__source.__backend.setPitch(rate);
-				#else
-				FlxG.sound.music._channel.__source.__backend.parent.buffer.__srcHowl.rate(rate);
-				#end
-			}
-		}
-		#end
 
 		#if html5
 		diffCalcText.text = "RATING: N/A";

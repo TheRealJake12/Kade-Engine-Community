@@ -350,6 +350,7 @@ class Character extends FlxSprite
 				var daStrumTime:Float = (songNotes[0] - FlxG.save.data.offset - PlayState.SONG.offset) / PlayState.songMultiplier;
 				if (daStrumTime < 0)
 					daStrumTime = 0;
+				var daBeat = TimingStruct.getBeatFromTime(daStrumTime);
 
 				var daNoteData:Int = Std.int(songNotes[1] % 4);
 
@@ -359,7 +360,7 @@ class Character extends FlxSprite
 					oldNote = PlayState.instance.unspawnNotes[Std.int(PlayState.instance.unspawnNotes.length - 1)];
 				else
 					oldNote = null;
-				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, false, false, songNotes[4]);
+				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, false, false, songNotes[4], daBeat);
 
 				animationNotes.push(swagNote);
 			}

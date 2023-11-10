@@ -846,9 +846,6 @@ class PlayState extends MusicBeatState
 			{
 				case 'halloween':
 					camPos = new FlxPoint(gf.getMidpoint().x, gf.getMidpoint().y);
-				case 'tank':
-					if (SONG.player2 == 'tankman')
-						camPos = new FlxPoint(436.5, 534.5);
 				case 'stage':
 					if (dad.replacesGF)
 						camPos = new FlxPoint(dad.getGraphicMidpoint().x + dad.camPos[0] - 200, dad.getGraphicMidpoint().y + dad.camPos[1]);
@@ -897,9 +894,6 @@ class PlayState extends MusicBeatState
 			case "tank":
 				gf.y += 10;
 				gf.x -= 30;
-				boyfriend.x += 40;
-				boyfriend.y += 0;
-				dad.y += 60;
 				dad.x -= 80;
 
 				if (SONG.gfVersion != 'pico-speaker')
@@ -1871,7 +1865,7 @@ class PlayState extends MusicBeatState
 		// speedChanged = true;
 		if (generatedMusic)
 		{
-			var ratio:Float = value / scrollSpeed;
+			var ratio:Float = value / scrollSpeed / songMultiplier;
 			for (note in notes)
 			{
 				if (note.animation.curAnim != null)
@@ -3148,18 +3142,18 @@ class PlayState extends MusicBeatState
 			@:privateAccess
 		{
 			#if (lime >= "8.0.0")
-			inst._channel.__source.__backend.setPitch(songMultiplier);
+			inst.pitch = songMultiplier;
 			if (!SONG.splitVoiceTracks)
 			{
 				if (vocals.playing)
-					vocals._channel.__source.__backend.setPitch(songMultiplier);
+					vocals.pitch = songMultiplier;
 			}
 			else
 			{
 				if (vocalsPlayer.playing && vocalsEnemy.playing)
 				{
-					vocalsPlayer._channel.__source.__backend.setPitch(songMultiplier);
-					vocalsEnemy._channel.__source.__backend.setPitch(songMultiplier);
+					vocalsPlayer.pitch = songMultiplier;
+					vocalsEnemy.pitch = songMultiplier;
 				}
 			}
 			#else
@@ -3250,6 +3244,7 @@ class PlayState extends MusicBeatState
 	public var updateFrame = 0;
 
 	public var pastScrollChanges:Array<Song.Event> = [];
+	public var pastAnimationPlays:Array<Song.Event> = [];
 
 	var currentLuaIndex = 0;
 
@@ -3332,18 +3327,18 @@ class PlayState extends MusicBeatState
 			@:privateAccess
 		{
 			#if (lime >= "8.0.0")
-			inst._channel.__source.__backend.setPitch(songMultiplier);
+			inst.pitch = songMultiplier;
 			if (!SONG.splitVoiceTracks)
 			{
 				if (vocals.playing)
-					vocals._channel.__source.__backend.setPitch(songMultiplier);
+					vocals.pitch = songMultiplier;
 			}
 			else
 			{
 				if (vocalsPlayer.playing && vocalsEnemy.playing)
 				{
-					vocalsPlayer._channel.__source.__backend.setPitch(songMultiplier);
-					vocalsEnemy._channel.__source.__backend.setPitch(songMultiplier);
+					vocalsPlayer.pitch = songMultiplier;
+					vocalsEnemy.pitch = songMultiplier;
 				}
 			}
 			#elseif html5
@@ -3515,6 +3510,26 @@ class PlayState extends MusicBeatState
 								changeScrollSpeed(newScroll, i.value2, FlxEase.linear);
 						}
 						speedChanged = true;
+					case "Play Animation":
+						if (i.position <= curDecimalBeat && !pastAnimationPlays.contains(i))
+						{
+							pastAnimationPlays.push(i);
+							var char:Character = dad;
+							switch (i.value.toLowerCase())
+							{
+								case 'bf' | 'boyfriend':
+									char = boyfriend;
+								case 'gf' | 'girlfriend':
+									char = gf;
+								default:
+									char = dad;
+							}
+
+							if (char != null)
+							{
+								char.playAnim(i.value2, true);
+							}
+						}	
 				}
 			}
 		}
@@ -4048,20 +4063,6 @@ class PlayState extends MusicBeatState
 					}
 				}
 
-				if (!daNote.mustPress)
-				{
-					if (Conductor.songPosition >= daNote.strumTime && daNote.canPlayAnims)
-						opponentNoteHit(daNote);
-				}
-				else
-				{
-					if (PlayStateChangeables.botPlay)
-						handleBotplay(daNote);
-					else if (!PlayStateChangeables.botPlay && daNote.isSustainNote && daNote.canBeHit && daNote.mustPress && keys[daNote.noteData]
-						&& daNote.sustainActive)
-						handleHolds(daNote);
-				}
-
 				if (!daNote.modifiedByLua)
 				{
 					daNote.visible = strum.members[Math.floor(Math.abs(daNote.noteData))].visible;
@@ -4074,6 +4075,20 @@ class PlayState extends MusicBeatState
 					{
 						daNote.modAlpha = strum.members[Math.floor(Math.abs(daNote.noteData))].alpha;
 					}
+				}
+
+				if (!daNote.mustPress)
+				{
+					if (Conductor.songPosition >= daNote.strumTime && daNote.canPlayAnims)
+						opponentNoteHit(daNote);
+				}
+				else
+				{
+					if (PlayStateChangeables.botPlay)
+						handleBotplay(daNote);
+					else if (!PlayStateChangeables.botPlay && daNote.isSustainNote && daNote.canBeHit && daNote.mustPress && keys[daNote.noteData]
+						&& daNote.sustainActive)
+						handleHolds(daNote);
 				}
 
 				// there was some code idk what it did but it fucked with color quantization shit. ik its a feature not many like but I like it.
@@ -4220,13 +4235,13 @@ class PlayState extends MusicBeatState
 											&& daNote.causesMisses)
 										{
 											// health -= 0.05; // give a health punishment for failing a LN
+											noteMiss(daNote.noteData, daNote);
 											for (i in daNote.parent.children)
 											{
 												i.sustainActive = false;
 											}
 											if (daNote.parent.wasGoodHit)
 											{
-												// misses++;
 												totalNotesHit -= 1;
 											}
 											updateAccuracy();

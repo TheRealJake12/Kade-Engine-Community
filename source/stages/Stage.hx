@@ -439,34 +439,35 @@ class Stage extends MusicBeatState
 					{
 						var tankClouds:FlxSprite = new FlxSprite(FlxG.random.int(-700, -100),
 							FlxG.random.int(-20, 20)).loadGraphic(Paths.image('tankClouds', 'week7'));
+						tankClouds.velocity.x = FlxG.random.float(5, 15);
 						tankClouds.antialiasing = FlxG.save.data.antialiasing;
-						tankClouds.scrollFactor.set(0.9, 0.9);
+						tankClouds.scrollFactor.set(0.1, 0.1);
+
 						swagBacks['tankClouds'] = tankClouds;
 						toAdd.push(tankClouds);
 
 						var tankMountains:FlxSprite = new FlxSprite(-300, -20).loadGraphic(Paths.image('tankMountains', 'week7'));
 						tankMountains.antialiasing = FlxG.save.data.antialiasing;
-						tankMountains.setGraphicSize(Std.int(1.2 * tankMountains.width));
-						tankMountains.scrollFactor.set(0.2, 0.2);
+						tankMountains.setGraphicSize(Std.int(tankMountains.width * 1.2));
 						tankMountains.updateHitbox();
+						tankMountains.scrollFactor.set(0.2, 0.2);
 						swagBacks['tankMountains'] = tankMountains;
 						toAdd.push(tankMountains);
 
 						var tankBuildings:FlxSprite = new FlxSprite(-200, 0).loadGraphic(Paths.image('tankBuildings', 'week7'));
-
-						tankBuildings.setGraphicSize(Std.int(1.1 * tankBuildings.width));
-						tankBuildings.scrollFactor.set(0.3, 0.3);
-						tankBuildings.antialiasing = FlxG.save.data.antialiasing;
+						tankBuildings.setGraphicSize(Std.int(tankBuildings.width * 1.1));
 						tankBuildings.updateHitbox();
+						tankBuildings.scrollFactor.set(0.30, 0.30);
+						tankBuildings.antialiasing = FlxG.save.data.antialiasing;
 						swagBacks['tankBuildings'] = tankBuildings;
 						toAdd.push(tankBuildings);
 					}
 
 					var tankRuins:FlxSprite = new FlxSprite(-200, 0).loadGraphic(Paths.image('tankRuins', 'week7'));
 					tankRuins.setGraphicSize(Std.int(1.1 * tankRuins.width));
+					tankRuins.updateHitbox();
 					tankRuins.antialiasing = FlxG.save.data.antialiasing;
 					tankRuins.scrollFactor.set(0.35, 0.35);
-					tankRuins.updateHitbox();
 					swagBacks['tankRuins'] = tankRuins;
 					toAdd.push(tankRuins);
 
@@ -490,12 +491,12 @@ class Stage extends MusicBeatState
 						swagBacks['smokeRight'] = smokeRight;
 						toAdd.push(smokeRight);
 
-						var tankWatchTower:FlxSprite = new FlxSprite(0, 50);
+						var tankWatchTower:FlxSprite = new FlxSprite(100, 50);
 						tankWatchTower.antialiasing = FlxG.save.data.antialiasing;
-						tankWatchTower.scrollFactor.set(0.5, 0.5);
 						tankWatchTower.frames = Paths.getSparrowAtlas('tankWatchtower', 'week7');
 						tankWatchTower.animation.addByPrefix('idle', 'watchtower gradient color instance ', Std.int(24 * PlayState.songMultiplier));
 						tankWatchTower.animation.play('idle');
+						tankWatchTower.scrollFactor.set(0.5, 0.5);
 						tankWatchTower.active = true;
 						swagBacks['tankWatchTower'] = tankWatchTower;
 						toAdd.push(tankWatchTower);

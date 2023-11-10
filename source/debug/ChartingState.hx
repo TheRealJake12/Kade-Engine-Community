@@ -2227,7 +2227,7 @@ class ChartingState extends MusicBeatState
 						// No more Native restrictions bitches. https://github.com/openfl/lime/pull/1510. WEEK 8 LEAK??
 						#if desktop
 						#if (lime >= "8.0.0")
-						inst._channel.__source.__backend.setPitch(speed);
+						inst.pitch = speed;
 						#else
 						lime.media.openal.AL.sourcef(inst._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, speed);
 						#end
@@ -2241,7 +2241,7 @@ class ChartingState extends MusicBeatState
 								if (vocals != null && vocals.length > 0)
 								{
 									#if (lime >= "8.0.0")
-									vocals._channel.__source.__backend.setPitch(speed);
+									vocals.pitch = speed;
 									#else
 									lime.media.openal.AL.sourcef(vocals._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, speed);
 									#end
@@ -2252,7 +2252,7 @@ class ChartingState extends MusicBeatState
 								if (vocalsPlayer != null && vocalsPlayer.length > 0)
 								{
 									#if (lime >= "8.0.0")
-									vocalsPlayer._channel.__source.__backend.setPitch(speed);
+									vocalsPlayer.pitch = speed;
 									#else
 									lime.media.openal.AL.sourcef(vocalsPlayer._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, speed);
 									#end
@@ -2261,7 +2261,7 @@ class ChartingState extends MusicBeatState
 								if (vocalsEnemy != null && vocalsEnemy.length > 0)
 								{
 									#if (lime >= "8.0.0")
-									vocalsEnemy._channel.__source.__backend.setPitch(speed);
+									vocalsEnemy.pitch = speed;
 									#else
 									lime.media.openal.AL.sourcef(vocalsEnemy._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, speed);
 									#end

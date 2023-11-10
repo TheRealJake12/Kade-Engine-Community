@@ -270,7 +270,7 @@ class KadeEngineData
 			FlxG.save.data.autoSaving = true;
 
 		if (FlxG.save.data.shaders == null)
-			FlxG.save.data.shaders = false;	
+			FlxG.save.data.shaders = false;
 
 		if (FlxG.save.data.volume != null)
 		{

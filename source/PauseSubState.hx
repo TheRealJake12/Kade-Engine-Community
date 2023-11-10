@@ -215,6 +215,7 @@ class PauseSubState extends MusicBeatSubstate
 
 				case "Restart Song":
 					PlayState.startTime = 0;
+					FlxTransitionableState.skipNextTransOut = true;
 					MusicBeatState.resetState();
 				case 'Change Difficulty':
 					menuItems = difficultyChoices;

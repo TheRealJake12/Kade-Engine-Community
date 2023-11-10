@@ -354,8 +354,10 @@ class ModchartState
 
 		var path = Sys.getCwd() + "assets/data/songs/" + PlayState.SONG.songId + '/';
 
+		#if FEATURE_STEPMANIA
 		if (PlayState.isSM)
 			path = PlayState.pathToSm + "/";
+		#end
 
 		var data:BitmapData = BitmapData.fromFile(path + spritePath + ".png");
 
@@ -439,8 +441,10 @@ class ModchartState
 		}
 
 		var path = Paths.lua('songs/${PlayState.SONG.songId}/modchart');
+		#if FEATURE_STEPMANIA
 		if (PlayState.isSM)
 			path = PlayState.pathToSm + "/modchart.lua";
+		#end
 
 		var result = LuaL.dofile(lua, path); // execute le file
 
@@ -449,8 +453,8 @@ class ModchartState
 			Application.current.window.alert("LUA COMPILE ERROR:\n" + Lua.tostring(lua, result), "Kade Engine Modcharts");
 			FlxG.log.warn(["LUA COMPILE ERROR:\n" + Lua.tostring(lua, result)]);
 			MusicBeatState.switchState(new FreeplayState());
-			return;
 			lua = null;
+			return;
 		}
 
 		// get some fukin globals up in here bois
@@ -479,7 +483,7 @@ class ModchartState
 
 		setVar("followXOffset", 0);
 		setVar("followYOffset", 0);
-		
+
 		setVar("strumLine1Visible", true);
 		setVar("strumLine2Visible", true);
 
@@ -518,7 +522,6 @@ class ModchartState
 			}
 			Debug.logTrace("getProp");
 			return Reflect.getProperty(PlayState.instance, variable);
-			
 		});
 		Lua_helper.add_callback(lua, "setProperty", function(variable:String, value:Dynamic)
 		{
@@ -537,7 +540,6 @@ class ModchartState
 			}
 			Debug.logTrace("setProp");
 			return Reflect.setProperty(PlayState.instance, variable, value);
-			
 		});
 		Lua_helper.add_callback(lua, "getPropertyFromGroup", function(obj:String, index:Int, variable:Dynamic)
 		{
@@ -733,7 +735,7 @@ class ModchartState
 			case 'camGame' | 'game':
 				return PlayState.instance.camGame;
 			case 'overlayCam' | 'overlay':
-				return PlayState.instance.overlayCam;	
+				return PlayState.instance.overlayCam;
 		}
 		return PlayState.instance.camGame;
 	}
