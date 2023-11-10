@@ -30,10 +30,10 @@ jobs:
       - name: Building the game
         run: |
           haxelib run lime build windows
-          Y
-          N
-          25
-          Y
+          -Y
+          -N
+          -25
+          -Y
 
       - name: Uploading artifact (entire build)
         uses: actions/upload-artifact@v2
