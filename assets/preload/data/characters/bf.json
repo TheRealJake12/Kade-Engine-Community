@@ -66,6 +66,7 @@
     {
       "name": "hurt",
       "prefix": "BF hit",
+      "nextAnim": "idle",
       "offsets": [14,18],
       "interrupt" : false
     },

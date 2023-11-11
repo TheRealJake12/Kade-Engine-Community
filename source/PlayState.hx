@@ -2642,8 +2642,6 @@ class PlayState extends MusicBeatState
 		scripts.setAll("bpm", Conductor.bpm);
 		#end
 
-		Debug.logTrace(fakeNoteStepCrochet);
-
 		add(grpNoteSplashes);
 
 		notes = new FlxTypedGroup<Note>();
