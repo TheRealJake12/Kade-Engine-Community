@@ -235,7 +235,6 @@ class StoryMenuState extends MusicBeatState
 		}
 
 		PlayStateChangeables.modchart = true;
-		PlayStateChangeables.botPlay = false;
 		PlayStateChangeables.opponentMode = false;
 		PlayStateChangeables.mirrorMode = false;
 		PlayStateChangeables.holds = true;

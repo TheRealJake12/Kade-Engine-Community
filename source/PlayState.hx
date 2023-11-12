@@ -2592,8 +2592,11 @@ class PlayState extends MusicBeatState
 				vocalsEnemy = new FlxSound().loadEmbedded(Paths.voices(SONG.audioFile, 'E'));
 			}
 			else
+			{
+				vocalsEnemy = new FlxSound();
 				vocalsPlayer = new FlxSound();
-			vocalsEnemy = new FlxSound();
+			}
+			
 			#end
 
 			if (FlxG.save.data.gen)
@@ -4347,17 +4350,10 @@ class PlayState extends MusicBeatState
 				iconP2.animation.curAnim.curFrame = 0;
 		}
 
-		if (camZooming)
+		if (songStarted)
 		{
 			var bpmRatio = Conductor.bpm / 100;
 
-			if (PlayStateChangeables.zoom < 0.8)
-				PlayStateChangeables.zoom = 0.8;
-
-			if (PlayStateChangeables.zoom > 1.2)
-				PlayStateChangeables.zoom = 1.2;
-
-			// this motherfucker fucks me so much.
 			FlxG.camera.zoom = FlxMath.lerp(zoomForTweens, FlxG.camera.zoom,
 				CoolUtil.boundTo(1 - (elapsed * 3.125 * bpmRatio * songMultiplier * zoomMultiplier), 0, 1));
 			camHUD.zoom = FlxMath.lerp(PlayStateChangeables.zoom * zoomForHUDTweens, camHUD.zoom,
@@ -5538,17 +5534,6 @@ class PlayState extends MusicBeatState
 					else
 						dad.playAnim('sing' + dataSuffix[singData] + altAnim, true);
 				}
-				#if FEATURE_LUAMODCHART
-				if (luaModchart != null)
-					if (!PlayStateChangeables.opponentMode)
-						luaModchart.executeState('playerTwoSing', [Math.abs(daNote.noteData), Conductor.songPosition]);
-					else
-						luaModchart.executeState('playerOneSing', [Math.abs(daNote.noteData), Conductor.songPosition]);
-				#end
-
-				#if FEATURE_HSCRIPT
-				scripts.executeAllFunc("opponentNoteHit", [daNote]);
-				#end
 
 				if (FlxG.save.data.cpuStrums)
 				{
@@ -5585,13 +5570,7 @@ class PlayState extends MusicBeatState
 					spawnNoteSplashOnNoteDad(daNote);
 				}
 			}
-			#if FEATURE_LUAMODCHART
-			if (luaModchart != null)
-				if (!PlayStateChangeables.opponentMode)
-					luaModchart.executeState('playerTwoSing', [Math.abs(daNote.noteData), Conductor.songPosition]);
-				else
-					luaModchart.executeState('playerOneSing', [Math.abs(daNote.noteData), Conductor.songPosition]);
-			#end
+			
 
 			if (FlxG.save.data.cpuStrums)
 			{
@@ -5613,6 +5592,18 @@ class PlayState extends MusicBeatState
 					vocalsEnemy.volume = 1;
 			}
 		}
+
+		#if FEATURE_LUAMODCHART
+		if (luaModchart != null)
+			if (!PlayStateChangeables.opponentMode)
+				luaModchart.executeState('playerTwoSing', [Math.abs(daNote.noteData), Conductor.songPosition]);
+			else
+				luaModchart.executeState('playerOneSing', [Math.abs(daNote.noteData), Conductor.songPosition]);
+		#end
+
+		#if FEATURE_HSCRIPT
+		scripts.executeAllFunc("opponentNoteHit", [daNote]);
+		#end
 
 		destroyNote(daNote);
 	}
@@ -6262,9 +6253,8 @@ class PlayState extends MusicBeatState
 		else
 			healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
 		healthBar.updateBar();
-
-		if (!isStoryMode)
-			PlayStateChangeables.botPlay = FlxG.save.data.botplay;
+		
+		PlayStateChangeables.botPlay = FlxG.save.data.botplay;
 
 		for (i in uiGroup)
 		{
@@ -6290,9 +6280,7 @@ class PlayState extends MusicBeatState
 				bar.alpha = 1;
 			}
 		}
-
-		if (!isStoryMode)
-		{
+		
 			botPlayState.kill();
 			uiGroup.remove(botPlayState);
 			if (PlayStateChangeables.botPlay)
@@ -6300,7 +6288,6 @@ class PlayState extends MusicBeatState
 				botPlayState.revive();
 				uiGroup.add(botPlayState);
 			}
-		}
 
 		if (FlxG.save.data.judgementCounter)
 		{
@@ -6411,6 +6398,10 @@ class PlayState extends MusicBeatState
 		script.set("health", health);
 		script.set("Stage", Stage);
 		script.set("CoolUtil", CoolUtil);
+		script.set("SONG", SONG);
+		script.set("PlayStateChangeables", PlayStateChangeables);
+		script.set("downScroll", PlayStateChangeables.useDownscroll);
+		script.set("middleScroll", PlayStateChangeables.middleScroll);
 
 		// FUNCTIONS
 
