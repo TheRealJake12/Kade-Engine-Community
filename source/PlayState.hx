@@ -981,7 +981,7 @@ class PlayState extends MusicBeatState
 
 		playerStrums = new FlxTypedGroup<StaticArrow>();
 		cpuStrums = new FlxTypedGroup<StaticArrow>();
-		
+
 		if (SONG.noteStyle == 'pixel')
 		{
 			noteskinPixelSprite = CustomNoteHelpers.Skin.generatePixelSprite(FlxG.save.data.noteskin);
@@ -1893,7 +1893,6 @@ class PlayState extends MusicBeatState
 	{
 		if (inCinematic || inCutscene)
 		{
-
 			if (!arrowsGenerated)
 			{
 				generateStaticArrows(1, true);
@@ -2596,7 +2595,6 @@ class PlayState extends MusicBeatState
 				vocalsEnemy = new FlxSound();
 				vocalsPlayer = new FlxSound();
 			}
-			
 			#end
 
 			if (FlxG.save.data.gen)
@@ -3138,11 +3136,8 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		#if cpp
 		if (inst.playing)
-			@:privateAccess
 		{
-			#if (lime >= "8.0.0")
 			inst.pitch = songMultiplier;
 			if (!SONG.splitVoiceTracks)
 			{
@@ -3157,62 +3152,7 @@ class PlayState extends MusicBeatState
 					vocalsEnemy.pitch = songMultiplier;
 				}
 			}
-			#else
-			lime.media.openal.AL.sourcef(inst._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);
-			if (!SONG.splitVoiceTracks)
-			{
-				if (vocals.playing)
-					lime.media.openal.AL.sourcef(vocals._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);
-			}
-			else
-			{
-				if (vocalsPlayer.playing && vocalsEnemy.playing)
-				{
-					lime.media.openal.AL.sourcef(vocalsPlayer._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);
-					lime.media.openal.AL.sourcef(vocalsEnemy._channel.__source.__backend.handle, lime.media.openal.AL.PITCH, songMultiplier);
-				}
-			}
-			#end
 		}
-		#elseif html5
-		if (inst.playing)
-			@:privateAccess
-		{
-			#if lime_howlerjs
-			#if (lime >= "8.0.0")
-			inst._channel.__source.__backend.setPitch(songMultiplier);
-			if (!SONG.splitVoiceTracks)
-			{
-				if (vocals.playing)
-					vocals._channel.__source.__backend.setPitch(songMultiplier);
-			}
-			else
-			{
-				if (vocalsPlayer.playing && vocalsEnemy.playing)
-				{
-					vocalsPlayer._channel.__source.__backend.setPitch(songMultiplier);
-					vocalsEnemy._channel.__source.__backend.setPitch(songMultiplier);
-				}
-			}
-			#else
-			inst._channel.__source.__backend.parent.buffer.__srcHowl.rate(songMultiplier);
-			if (!SONG.splitVoiceTracks)
-			{
-				if (vocals.playing)
-					vocals._channel.__source.__backend.parent.buffer.__srcHowl.rate(songMultiplier);
-			}
-			else
-			{
-				if (vocalsPlayer.playing & vocalsEnemy.playing)
-				{
-					vocalsPlayer._channel.__source.__backend.parent.buffer.__srcHowl.rate(songMultiplier);
-					vocalsEnemy._channel.__source.__backend.parent.buffer.__srcHowl.rate(songMultiplier);
-				}
-			}
-			#end
-			#end
-		}
-		#end
 
 		#if FEATURE_DISCORD
 		DiscordClient.changePresence(detailsText
@@ -3254,8 +3194,6 @@ class PlayState extends MusicBeatState
 		#if !debug
 		perfectMode = false;
 		#end
-		if (FlxG.save.data.background)
-			Stage.update(elapsed);
 
 		if (!addedBotplay && PlayStateChangeables.botPlay)
 		{
@@ -3323,11 +3261,8 @@ class PlayState extends MusicBeatState
 		if (nps >= 0)
 			updateScoreText();
 
-		#if cpp
 		if (inst.playing)
-			@:privateAccess
 		{
-			#if (lime >= "8.0.0")
 			inst.pitch = songMultiplier;
 			if (!SONG.splitVoiceTracks)
 			{
@@ -3342,85 +3277,7 @@ class PlayState extends MusicBeatState
 					vocalsEnemy.pitch = songMultiplier;
 				}
 			}
-			#elseif html5
-			if (inst.playing)
-				@:privateAccess
-			{
-				#if lime_howlerjs
-				#if (lime >= "8.0.0")
-				inst._channel.__source.__backend.setPitch(songMultiplier);
-				if (!SONG.splitVoiceTracks)
-				{
-					if (vocals.playing)
-						vocals._channel.__source.__backend.setPitch(songMultiplier);
-				}
-				else
-				{
-					if (vocalsPlayer.playing && vocalsEnemy.playing)
-					{
-						vocalsPlayer._channel.__source.__backend.setPitch(songMultiplier);
-						vocalsEnemy._channel.__source.__backend.setPitch(songMultiplier);
-					}
-				}
-				#else
-				inst._channel.__source.__backend.parent.buffer.__srcHowl.rate(songMultiplier);
-				if (!SONG.splitVoiceTracks && vocals.playing)
-				{
-					if (vocals.playing)
-						vocals._channel.__source.__backend.parent.buffer.__srcHowl.rate(songMultiplier);
-				}
-				else
-				{
-					if (vocalsPlayer.playing && vocalsEnemy.playing)
-					{
-						vocalsPlayer._channel.__source.__backend.parent.buffer.__srcHowl.rate(songMultiplier);
-						vocalsEnemy._channel.__source.__backend.parent.buffer.__srcHowl.rate(songMultiplier);
-					}
-				}
-				#end
-				#end
-			}
-			#end
 		}
-		#elseif html5
-		if (inst.playing)
-			@:privateAccess
-		{
-			#if lime_howlerjs
-			#if (lime >= "8.0.0")
-			inst._channel.__source.__backend.setPitch(songMultiplier);
-			if (!SONG.splitVoiceTracks)
-			{
-				if (vocals.playing)
-					vocals._channel.__source.__backend.setPitch(songMultiplier);
-			}
-			else
-			{
-				if (vocalsPlayer.playing && vocalsEnemy.playing)
-				{
-					vocalsPlayer._channel.__source.__backend.setPitch(songMultiplier);
-					vocalsEnemy._channel.__source.__backend.setPitch(songMultiplier);
-				}
-			}
-			#else
-			inst._channel.__source.__backend.parent.buffer.__srcHowl.rate(songMultiplier);
-			if (!SONG.splitVoiceTracks)
-			{
-				if (vocals.playing)
-					vocals._channel.__source.__backend.parent.buffer.__srcHowl.rate(songMultiplier);
-			}
-			else
-			{
-				if (vocalsPlayer.playing && vocalsEnemy.playing)
-				{
-					vocalsPlayer._channel.__source.__backend.parent.buffer.__srcHowl.rate(songMultiplier);
-					vocalsEnemy._channel.__source.__backend.parent.buffer.__srcHowl.rate(songMultiplier);
-				}
-			}
-			#end
-			#end
-		}
-		#end
 
 		#if FEATURE_HSCRIPT
 		if (scripts != null)
@@ -3428,6 +3285,9 @@ class PlayState extends MusicBeatState
 		#end
 
 		super.update(elapsed);
+
+		if (FlxG.save.data.background)
+			Stage.update(elapsed);
 
 		if (generatedMusic)
 		{
@@ -3530,7 +3390,7 @@ class PlayState extends MusicBeatState
 							{
 								char.playAnim(i.value2, true);
 							}
-						}	
+						}
 				}
 			}
 		}
@@ -4479,7 +4339,7 @@ class PlayState extends MusicBeatState
 		{
 			luaModchart.executeState('onUpdatePost', [elapsed]);
 		}
-		#end	
+		#end
 		#if FEATURE_HSCRIPT
 		if (scripts != null)
 			scripts.executeAllFunc("updatePost", [elapsed]);
@@ -5570,7 +5430,6 @@ class PlayState extends MusicBeatState
 					spawnNoteSplashOnNoteDad(daNote);
 				}
 			}
-			
 
 			if (FlxG.save.data.cpuStrums)
 			{
@@ -6253,7 +6112,7 @@ class PlayState extends MusicBeatState
 		else
 			healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
 		healthBar.updateBar();
-		
+
 		PlayStateChangeables.botPlay = FlxG.save.data.botplay;
 
 		for (i in uiGroup)
@@ -6280,14 +6139,14 @@ class PlayState extends MusicBeatState
 				bar.alpha = 1;
 			}
 		}
-		
-			botPlayState.kill();
-			uiGroup.remove(botPlayState);
-			if (PlayStateChangeables.botPlay)
-			{
-				botPlayState.revive();
-				uiGroup.add(botPlayState);
-			}
+
+		botPlayState.kill();
+		uiGroup.remove(botPlayState);
+		if (PlayStateChangeables.botPlay)
+		{
+			botPlayState.revive();
+			uiGroup.add(botPlayState);
+		}
 
 		if (FlxG.save.data.judgementCounter)
 		{
