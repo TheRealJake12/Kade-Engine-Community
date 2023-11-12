@@ -172,13 +172,10 @@ class Note extends FlxSprite
 			{
 				case 'hurt':
 					{
-						switch (FlxG.save.data.noteskin)
-						{
-							default:
-								frames = Paths.getSparrowAtlas("notetypes/hurt_Arrows", 'shared');
-							case 1:
-								frames = Paths.getSparrowAtlas("notetypes/hurt_Circles", 'shared');
-						}
+						if (CustomNoteHelpers.Skin.getNoteskinByID(FlxG.save.data.noteskin).contains("Circles"))
+							frames = Paths.getSparrowAtlas("notetypes/hurt_Circles", 'shared');
+						else
+							frames = Paths.getSparrowAtlas("notetypes/hurt_Arrows", 'shared');
 						for (i in 0...4)
 						{
 							animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
@@ -187,13 +184,10 @@ class Note extends FlxSprite
 						}
 					}
 				case 'mustpress':
-					switch (FlxG.save.data.noteskin)
-					{
-						default:
-							frames = Paths.getSparrowAtlas("notetypes/mustpress_Arrows", 'shared');
-						case 1:
-							frames = Paths.getSparrowAtlas("notetypes/mustpress_Circles", 'shared');
-					}
+					if (CustomNoteHelpers.Skin.getNoteskinByID(FlxG.save.data.noteskin).contains("Circles"))
+						frames = Paths.getSparrowAtlas("notetypes/mustpress_Circles", 'shared');
+					else
+						frames = Paths.getSparrowAtlas("notetypes/mustpress_Arrows", 'shared');
 					for (i in 0...4)
 					{
 						animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
@@ -238,13 +232,10 @@ class Note extends FlxSprite
 					{
 						case 'hurt':
 							{
-								switch (FlxG.save.data.noteskin)
-								{
-									default:
-										frames = Paths.getSparrowAtlas("notetypes/hurt_Arrows", 'shared');
-									case 1:
-										frames = Paths.getSparrowAtlas("notetypes/hurt_Circles", 'shared');
-								}
+								if (CustomNoteHelpers.Skin.getNoteskinByID(FlxG.save.data.noteskin).contains("Circles"))
+									frames = Paths.getSparrowAtlas("notetypes/hurt_Circles", 'shared');
+								else
+									frames = Paths.getSparrowAtlas("notetypes/hurt_Arrows", 'shared');
 								for (i in 0...4)
 								{
 									animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
@@ -257,13 +248,10 @@ class Note extends FlxSprite
 
 						case 'mustpress':
 							{
-								switch (FlxG.save.data.noteskin)
-								{
-									default:
-										frames = Paths.getSparrowAtlas("notetypes/mustpress_Arrows", 'shared');
-									case 1:
-										frames = Paths.getSparrowAtlas("notetypes/mustpress_Circles", 'shared');
-								}
+								if (CustomNoteHelpers.Skin.getNoteskinByID(FlxG.save.data.noteskin).contains("Circles"))
+									frames = Paths.getSparrowAtlas("notetypes/mustpress_Circles", 'shared');
+								else
+									frames = Paths.getSparrowAtlas("notetypes/mustpress_Arrows", 'shared');
 								for (i in 0...4)
 								{
 									animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
@@ -300,13 +288,10 @@ class Note extends FlxSprite
 					{
 						case 'hurt':
 							{
-								switch (FlxG.save.data.noteskin)
-								{
-									default:
-										frames = Paths.getSparrowAtlas("notetypes/hurt_Arrows", 'shared');
-									case 1:
-										frames = Paths.getSparrowAtlas("notetypes/hurt_Circles", 'shared');
-								}
+								if (CustomNoteHelpers.Skin.getNoteskinByID(FlxG.save.data.noteskin).contains("Circles"))
+									frames = Paths.getSparrowAtlas("notetypes/hurt_Circles", 'shared');
+								else
+									frames = Paths.getSparrowAtlas("notetypes/hurt_Arrows", 'shared');
 								for (i in 0...4)
 								{
 									animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
@@ -316,13 +301,10 @@ class Note extends FlxSprite
 							}
 
 						case 'mustpress':
-							switch (FlxG.save.data.noteskin)
-							{
-								default:
-									frames = Paths.getSparrowAtlas("notetypes/mustpress_Arrows", 'shared');
-								case 1:
-									frames = Paths.getSparrowAtlas("notetypes/mustpress_Circles", 'shared');
-							}
+							if (CustomNoteHelpers.Skin.getNoteskinByID(FlxG.save.data.noteskin).contains("Circles"))
+								frames = Paths.getSparrowAtlas("notetypes/mustpress_Circles", 'shared');
+							else
+								frames = Paths.getSparrowAtlas("notetypes/mustpress_Arrows", 'shared');
 							for (i in 0...4)
 							{
 								animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
@@ -330,11 +312,14 @@ class Note extends FlxSprite
 								animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
 							}
 						default:
-							{
-								if (isPlayer)
-									frames = PlayState.noteskinSprite;
-								else
-									frames = PlayState.cpuNoteskinSprite;
+							{	
+								switch (isPlayer)
+								{
+									case true:
+										frames = PlayState.noteskinSprite;
+									case false:
+										frames = PlayState.cpuNoteskinSprite;
+								}
 								for (i in 0...4)
 								{
 									animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
@@ -422,7 +407,7 @@ class Note extends FlxSprite
 				prevNote.scale.y *= (stepHeight / prevNote.height);
 				prevNote.updateHitbox();
 
-				if (antialiasing)
+				if (noteTypeCheck != 'pixel')
 					prevNote.scale.y *= 1.0 + (1.0 / prevNote.frameHeight);
 
 				prevNote.updateHitbox();

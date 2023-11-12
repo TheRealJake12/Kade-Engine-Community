@@ -4214,6 +4214,12 @@ class PlayState extends MusicBeatState
 		{
 			var bpmRatio = Conductor.bpm / 100;
 
+			if (PlayStateChangeables.zoom < 0.8)
+				PlayStateChangeables.zoom = 0.8;
+			if (PlayStateChangeables.zoom > 1.2)
+				PlayStateChangeables.zoom = 1.2;
+			// this motherfucker fucks me so much.
+
 			FlxG.camera.zoom = FlxMath.lerp(zoomForTweens, FlxG.camera.zoom,
 				CoolUtil.boundTo(1 - (elapsed * 3.125 * bpmRatio * songMultiplier * zoomMultiplier), 0, 1));
 			camHUD.zoom = FlxMath.lerp(PlayStateChangeables.zoom * zoomForHUDTweens, camHUD.zoom,

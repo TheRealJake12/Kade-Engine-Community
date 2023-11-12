@@ -30,6 +30,7 @@ import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import openfl.media.Sound;
 import openfl.net.FileReference;
+import CoolUtil.CoolText;
 #if FEATURE_DISCORD
 import Discord.DiscordClient;
 #end
@@ -69,7 +70,7 @@ class ChartingState extends MusicBeatState
 
 	var noteShit:Int = 0;
 	var shits:Array<String> = ['normal', 'hurt', 'mustpress'];
-	var notetypetext:FlxText;
+	var notetypetext:CoolText;
 
 	public var beatsShown:Float = 1; // for the zoom factor
 	public var zoomFactor:Float = 0.4;
@@ -81,7 +82,7 @@ class ChartingState extends MusicBeatState
 	// var curSection:Int = 0;
 	public static var lastSection:Int = 0;
 
-	var bpmTxt:FlxText;
+	var bpmTxt:CoolText;
 
 	var strumLine:FlxSprite;
 	var curSong:String = 'Dad Battle';
@@ -373,13 +374,17 @@ class ChartingState extends MusicBeatState
 		leftIcon.scrollFactor.set();
 		rightIcon.scrollFactor.set();
 
-		bpmTxt = new FlxText(985, 25, 0, "", 16);
-		bpmTxt.font = Paths.font("vcr.ttf");
+		bpmTxt = new CoolText(985, 25, 16, 16, Paths.bitmapFont('fonts/vcr'));
+		bpmTxt.autoSize = true;
+		bpmTxt.antialiasing = true;
+		bpmTxt.updateHitbox();
 		bpmTxt.scrollFactor.set();
 		add(bpmTxt);
 
-		notetypetext = new FlxText(825, 650, "", 28);
-		notetypetext.font = Paths.font("vcr.ttf");
+		notetypetext = new CoolText(825, 650, 28, 28, Paths.bitmapFont('fonts/vcr'));
+		notetypetext.autoSize = true;
+		notetypetext.antialiasing = true;
+		notetypetext.updateHitbox();
 		notetypetext.scrollFactor.set();
 		add(notetypetext);
 
@@ -3106,6 +3111,7 @@ class ChartingState extends MusicBeatState
 			+ (doSnapShit ? "Snap enabled" : "Snap disabled")
 			+
 			(FlxG.save.data.showHelp ? "\n\nHelp:\nCtrl-MWheel : Zoom in/out\nShift-Left/Right :\n Change playback speed\nCtrl-Drag Click : Select notes\nCtrl-C : Copy notes\nCtrl-V : Paste notes\nCtrl-Z : Undo\nDelete : Delete selection\nCTRL-Left/Right :\n  Change Snap\nHold Shift : Disable Snap\nClick:\n  Place notes\nUp/Down :\n  Move selected notes 1 step\nShift-Up/Down :\n  Move selected notes 1 beat\nSpace: Play Music\nEnter : Preview\n Z/X Change Notetype.\nPress F1 to hide/show this!" : "");
+		bpmTxt.updateHitbox();
 
 		super.update(elapsed);
 	}
@@ -3800,6 +3806,7 @@ class ChartingState extends MusicBeatState
 				notename = "Must Press";
 		}
 		notetypetext.text = "Note Type: " + notename;
+		notetypetext.updateHitbox();
 	}
 
 	function cleanObjects()
