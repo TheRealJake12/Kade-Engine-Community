@@ -44,6 +44,10 @@ class HitGraph extends Sprite
 	var _labelWidth:Int;
 	var _label:String;
 
+	var early:TextField;
+
+	var late:TextField;
+
 	public function new(X:Int, Y:Int, Width:Int, Height:Int)
 	{
 		super();
@@ -59,10 +63,12 @@ class HitGraph extends Sprite
 		_axis = new Shape();
 		_axis.x = _labelWidth + 10;
 
+		graphics.clear();
+
 		ts = Math.floor((PlayState.rep.replay.sf / 60) * 1000) / 166;
 
-		var early = createTextField(10, 10, FlxColor.WHITE, 12);
-		var late = createTextField(10, _height - 20, FlxColor.WHITE, 12);
+		early = createTextField(10, 10, FlxColor.WHITE, 12);
+		late = createTextField(10, _height - 20, FlxColor.WHITE, 12);
 
 		early.text = "Early (" + -166 * ts + "ms)";
 		late.text = "Late (" + 166 * ts + "ms)";
@@ -269,9 +275,13 @@ class HitGraph extends Sprite
 		return sum / history.length;
 	}
 
-	public function destroy():Void
+	public function destroy()
 	{
+		FlxDestroyUtil.removeChild(this, early);
+		FlxDestroyUtil.removeChild(this, late);
 		_axis = FlxDestroyUtil.removeChild(this, _axis);
+		history.resize(0);
 		history = null;
+		graphics.clear();
 	}
 }

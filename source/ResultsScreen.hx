@@ -246,4 +246,12 @@ class ResultsScreen extends FlxSubState
 
 		super.update(elapsed);
 	}
+
+	override function destroy()
+	{
+		graph.destroy();
+		graph = null;
+		graphSprite.destroy();
+		super.destroy();
+	}
 }

@@ -1,10 +1,6 @@
 #if !macro
 import Paths;
-#if (flixel >= "5.3.0")
 import flixel.sound.FlxSound;
-#else
-import flixel.system.FlxSound;
-#end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
@@ -16,6 +12,8 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.group.FlxSpriteGroup;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.util.FlxDestroyUtil;
+import flixel.util.FlxSpriteUtil;
 #end
 
 using StringTools;

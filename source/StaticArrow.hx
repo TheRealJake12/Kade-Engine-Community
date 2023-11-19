@@ -54,7 +54,20 @@ class StaticArrow extends FlxSprite
 		var skin:String = null;
 		if (texture.length < 1)
 		{
-			skin = player == 0 ? PlayState.cpuNoteskinSprite : PlayState.noteskinSprite;
+			if (!PlayStateChangeables.opponentMode)
+			{
+				if (player == 0)
+					skin = PlayState.cpuNoteskinSprite;
+				else
+					skin = PlayState.noteskinSprite;
+			}
+			else
+			{
+				if (player == 1)
+					skin = PlayState.cpuNoteskinSprite;
+				else
+					skin = PlayState.noteskinSprite;
+			}
 			if (skin == null || skin.length < 1)
 				skin = player == 0 ? defaultPlayerSkin : defaultCpuSkin;
 		}
