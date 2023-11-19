@@ -490,6 +490,7 @@ class PlayState extends MusicBeatState
 			scrollSpeed = FlxG.save.data.scrollSpeed;
 		PlayStateChangeables.Optimize = FlxG.save.data.optimize;
 		PlayStateChangeables.zoom = FlxG.save.data.zoom;
+		PlayStateChangeables.botPlay = FlxG.save.data.botplay;
 
 		if (!isStoryMode)
 		{
@@ -3884,7 +3885,7 @@ class PlayState extends MusicBeatState
 							|| daNote.wasGoodHit
 							|| holdArray[Math.floor(Math.abs(daNote.noteData))]))
 						{
-							if (daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= origin)
+							if ((daNote.causesMisses) && daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= origin)
 							{
 								// Clip to strumline
 								swagRect.width = daNote.frameWidth;
@@ -3897,14 +3898,9 @@ class PlayState extends MusicBeatState
 				}
 				else
 				{
-					if (daNote.mustPress)
-						daNote.y = (playerStrums.members[Math.floor(Math.abs(daNote.noteData))].y
-							- 0.45 * ((Conductor.songPosition - daNote.strumTime) / songMultiplier) * (FlxMath.roundDecimal(leSpeed, 2)))
-							+ daNote.noteYOff;
-					else
-						daNote.y = (strumLineNotes.members[Math.floor(Math.abs(daNote.noteData))].y
-							- 0.45 * ((Conductor.songPosition - daNote.strumTime) / songMultiplier) * (FlxMath.roundDecimal(leSpeed, 2)))
-							+ daNote.noteYOff;
+					daNote.y = (strumY
+						- 0.45 * ((Conductor.songPosition - daNote.strumTime) / songMultiplier) * (FlxMath.roundDecimal(leSpeed, 2)))
+						+ daNote.noteYOff;
 					if (daNote.isSustainNote)
 					{
 						if ((PlayStateChangeables.botPlay
@@ -3913,7 +3909,7 @@ class PlayState extends MusicBeatState
 							|| holdArray[Math.floor(Math.abs(daNote.noteData))]))
 						{
 							// Clip to strumline
-							if (daNote.y + daNote.offset.y * daNote.scale.y <= origin)
+							if ((daNote.causesMisses) && daNote.y + daNote.offset.y * daNote.scale.y <= origin)
 							{
 								swagRect.y = (origin - daNote.y) / daNote.scale.y;
 								swagRect.width = daNote.width / daNote.scale.x;
@@ -3981,7 +3977,7 @@ class PlayState extends MusicBeatState
 										totalNotesHit += 1;
 									else
 									{
-										if (daNote.causesMisses && !daNote.isSustainEnd)
+										if (daNote.causesMisses && !daNote.sustainActive && !daNote.isSustainEnd)
 										{
 											if (!SONG.splitVoiceTracks)
 												vocals.volume = 0;
@@ -4021,7 +4017,6 @@ class PlayState extends MusicBeatState
 											if (!daNote.wasGoodHit
 												&& daNote.isSustainNote
 												&& daNote.sustainActive
-												&& daNote.spotInLine != daNote.parent.children.length
 												&& !daNote.isSustainEnd
 												&& daNote.causesMisses)
 											{
@@ -4029,7 +4024,6 @@ class PlayState extends MusicBeatState
 												trace("hold fell over at " + daNote.spotInLine);
 												for (i in daNote.parent.children)
 												{
-													i.alpha = 0.3;
 													i.sustainActive = false;
 												}
 												if (daNote.parent.wasGoodHit)
@@ -4060,12 +4054,13 @@ class PlayState extends MusicBeatState
 								}
 								else
 								{
-									if (daNote.causesMisses && !daNote.isSustainEnd)
+									if (daNote.causesMisses && !daNote.sustainActive && !daNote.isSustainEnd)
 									{
 										if (!SONG.splitVoiceTracks)
 											vocals.volume = 0;
 										else
 											vocalsPlayer.volume = 0;
+										Debug.logTrace("huh2");	
 									}
 									if (theFunne && !daNote.isSustainNote && daNote.causesMisses)
 									{
@@ -4091,7 +4086,6 @@ class PlayState extends MusicBeatState
 										if (!daNote.wasGoodHit
 											&& daNote.isSustainNote
 											&& daNote.sustainActive
-											&& daNote.spotInLine != daNote.parent.children.length
 											&& !daNote.isSustainEnd
 											&& daNote.causesMisses)
 										{

@@ -60,7 +60,15 @@ class Paths
 	}
 
 	// Sprite content caching with GPU based on Forever Engine texture compression.
-	public static function loadImage(key:String, ?library:String, ?gpuRender:Bool):FlxGraphic
+
+	/**
+	 * For a given key and library for an image, returns the corresponding BitmapData.
+	 		* We can probably move the cache handling here.
+	 * @param key 
+	 * @param library 
+	 * @return BitmapData
+	 */
+	static function loadImage(key:String, ?library:String, ?gpuRender:Bool)
 	{
 		var path:String = '';
 
@@ -71,36 +79,39 @@ class Paths
 
 		if (OpenFlAssets.exists(path, IMAGE))
 		{
-			if (!currentTrackedAssets.exists(key))
+			if (!currentTrackedAssets.exists(path))
 			{
 				var bitmap:BitmapData = OpenFlAssets.getBitmapData(path, false);
-				var graphic:FlxGraphic = null;
 
+				var graphic:FlxGraphic = null;
 				if (gpuRender)
 				{
-					var texture = FlxG.stage.context3D.createTexture(bitmap.width, bitmap.height, BGRA, false, 0);
+					bitmap.lock();
+					var texture = FlxG.stage.context3D.createRectangleTexture(bitmap.width, bitmap.height, BGRA, true);
 					texture.uploadFromBitmapData(bitmap);
-					currentTrackedTextures.set(key, texture);
+
 					bitmap.disposeImage();
+
 					FlxDestroyUtil.dispose(bitmap);
+
 					bitmap = null;
-					graphic = FlxGraphic.fromBitmapData(BitmapData.fromTexture(texture), false, key);
+
+					bitmap = BitmapData.fromTexture(texture);
+
+					bitmap.unlock();
 				}
-				else
-				{
-					graphic = FlxGraphic.fromBitmapData(bitmap, false, key, false);
-				}
+				graphic = FlxGraphic.fromBitmapData(bitmap, false, path, false);
+
 				graphic.persist = true;
-				currentTrackedAssets.set(key, graphic);
+				currentTrackedAssets.set(path, graphic);
 			}
 			else
 			{
 				// Get data from cache.
 				// Debug.logTrace('Loading existing image from cache: $key');
 			}
-
-			localTrackedAssets.push(key);
-			return currentTrackedAssets.get(key);
+			localTrackedAssets.push(path);
+			return currentTrackedAssets.get(path);
 		}
 
 		Debug.logWarn('Could not find image at path $path');

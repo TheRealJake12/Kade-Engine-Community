@@ -1813,7 +1813,7 @@ class ChartingState extends MusicBeatState
 
 	function loadSong(daSong:String, reloadFromFile:Bool = false):Void
 	{
-		inst = new FlxSound().loadEmbedded(Paths.inst(_song.audioFile));
+		inst = FlxG.sound.load(Paths.inst(_song.audioFile));
 		if (inst != null)
 		{
 			inst.stop();
@@ -1831,7 +1831,7 @@ class ChartingState extends MusicBeatState
 		if (!_song.splitVoiceTracks)
 		{
 			if (_song.needsVoices)
-				vocals = new FlxSound().loadEmbedded(Paths.voices(_song.audioFile));
+				vocals = FlxG.sound.load(Paths.voices(_song.audioFile));
 			else
 				vocals = new FlxSound();
 			FlxG.sound.list.add(vocals);
@@ -1840,8 +1840,8 @@ class ChartingState extends MusicBeatState
 		{
 			if (_song.needsVoices)
 			{
-				vocalsPlayer = new FlxSound().loadEmbedded(Paths.voices(_song.audioFile, 'P'));
-				vocalsEnemy = new FlxSound().loadEmbedded(Paths.voices(_song.audioFile, 'E'));
+				vocalsPlayer = FlxG.sound.load(Paths.voices(_song.audioFile, 'P'));
+				vocalsEnemy = FlxG.sound.load(Paths.voices(_song.audioFile, 'E'));
 			}
 			else
 			{

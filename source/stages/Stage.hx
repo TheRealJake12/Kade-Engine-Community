@@ -73,12 +73,13 @@ class Stage extends MusicBeatState
 		this.curStage = daStage;
 		camZoom = 1.05; // Don't change zoom here, unless you want to change zoom of every stage that doesn't have custom one
 
-		if (FlxG.save.data.background)
+		if (!FlxG.save.data.optimize)
 		{
 			switch (daStage)
 			{
 				case 'halloween':
 					{
+						hasGF = false;
 						if (FlxG.save.data.distractions)
 						{
 							var hallowTex = Paths.getSparrowAtlas('halloween_bg', 'week2');

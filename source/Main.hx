@@ -128,8 +128,6 @@ class Main extends Sprite
 		{
 			if (Std.isOfType(this, debug.StageDebugState))
 				Paths.clearStoredMemory(true);
-			if (!FlxG.save.data.gpuRender)
-				FlxG.bitmap.dumpCache();
 
 			var cache = cast(Assets.cache, AssetCache);
 			for (key => font in cache.font)
