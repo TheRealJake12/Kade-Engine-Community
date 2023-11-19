@@ -138,85 +138,14 @@ class DiffOverview extends MusicBeatSubstate
 	{
 		for (i in 0...4)
 		{
-			var babyArrow:StaticArrow = new StaticArrow(-10, strumLine.y);
+			var babyArrow:StaticArrow = new StaticArrow(-10, strumLine.y, player, i);
 
 			var noteTypeCheck:String = 'normal';
 			babyArrow.downScroll = FlxG.save.data.downscroll;
 
-			// if (PlayStateChangeables.Optimize && player == 0)
-			// continue;
+			babyArrow.loadLane();
 
-			switch (noteTypeCheck)
-			{
-				case 'pixel':
-					#if html5
-					babyArrow.loadGraphic(Paths.image('noteskins/Arrows-pixel', 'shared'), true, 12, 17);
-					#else
-					babyArrow.loadGraphic(PlayState.noteskinPixelSprite, true, 17, 17);
-					#end
-
-					babyArrow.animation.add('green', [6]);
-					babyArrow.animation.add('red', [7]);
-					babyArrow.animation.add('blue', [5]);
-					babyArrow.animation.add('purple', [4]);
-
-					babyArrow.setGraphicSize(Std.int(babyArrow.width * CoolUtil.daPixelZoom));
-					babyArrow.updateHitbox();
-					babyArrow.antialiasing = false;
-
-					babyArrow.x += Note.swagWidth * i;
-					babyArrow.animation.add('static', [i]);
-					babyArrow.animation.add('pressed', [4 + i, 8 + i], 12, false);
-					babyArrow.animation.add('confirm', [12 + i, 16 + i], 12, false);
-
-					for (j in 0...4)
-					{
-						babyArrow.animation.add('dirCon' + j, [12 + j, 16 + j], 12, false);
-					}
-
-				default:
-					if (player == 0)
-						babyArrow.frames = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.cpuNoteskin);
-					else
-						babyArrow.frames = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.noteskin);
-					for (j in 0...4)
-					{
-						babyArrow.animation.addByPrefix(dataColor[j], 'arrow' + dataSuffix[j]);
-						babyArrow.animation.addByPrefix('dirCon' + j, dataSuffix[j].toLowerCase() + ' confirm', 24, false);
-					}
-
-					var lowerDir:String = dataSuffix[i].toLowerCase();
-
-					babyArrow.animation.addByPrefix('static', 'arrow' + dataSuffix[i]);
-					babyArrow.animation.addByPrefix('pressed', lowerDir + ' press', 24, false);
-					babyArrow.animation.addByPrefix('confirm', lowerDir + ' confirm', 24, false);
-
-					babyArrow.animation.addByPrefix('green', 'arrow static instance 1');
-					babyArrow.animation.addByPrefix('blue', 'arrow static instance 2');
-					babyArrow.animation.addByPrefix('purple', 'arrow static instance 3');
-					babyArrow.animation.addByPrefix('red', 'arrow static instance 4');
-
-					babyArrow.animation.addByPrefix('static', 'arrow static instance 1');
-					babyArrow.animation.addByPrefix('pressed', 'left press instance 1', 24, false);
-					babyArrow.animation.addByPrefix('confirm', 'left confirm instance 1', 24, false);
-
-					babyArrow.animation.addByPrefix('static', 'arrow static instance 2');
-					babyArrow.animation.addByPrefix('pressed', 'down press instance 1', 24, false);
-					babyArrow.animation.addByPrefix('confirm', 'down confirm instance 1', 24, false);
-
-					babyArrow.animation.addByPrefix('static', 'arrow static instance 4');
-					babyArrow.animation.addByPrefix('pressed', 'up press instance 1', 24, false);
-					babyArrow.animation.addByPrefix('confirm', 'up confirm instance 1', 24, false);
-
-					babyArrow.animation.addByPrefix('static', 'arrow static instance 3');
-					babyArrow.animation.addByPrefix('pressed', 'right press instance 1', 24, false);
-					babyArrow.animation.addByPrefix('confirm', 'right confirm instance 1', 24, false);
-
-					babyArrow.x += Note.swagWidth * i;
-
-					babyArrow.antialiasing = FlxG.save.data.antialiasing;
-					babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
-			}
+			babyArrow.x += Note.swagWidth * i;
 
 			babyArrow.updateHitbox();
 			babyArrow.scrollFactor.set();
@@ -249,12 +178,67 @@ class DiffOverview extends MusicBeatSubstate
 
 	function resyncVocals():Void
 	{
-		vocals.pause();
+		FlxG.sound.music.pause();
+		FlxG.sound.music.resume();
+		FlxG.sound.music.time = Conductor.songPosition * FreeplayState.rate;
+		if (!SONG.splitVoiceTracks)
+		{
+			if (!vocals.playing || vocals.time != Conductor.songPosition * FreeplayState.rate)
+			{
+				vocals.pause();
 
-		FlxG.sound.music.play();
-		Conductor.songPosition = FlxG.sound.music.time;
-		vocals.time = Conductor.songPosition;
-		vocals.play();
+				if (!(vocals.length < FlxG.sound.music.time))
+				{
+					vocals.play();
+
+					vocals.time = Conductor.songPosition * FreeplayState.rate;
+				}
+			}
+		}
+		else
+		{
+			if (!vocalsPlayer.playing || vocalsPlayer.time != Conductor.songPosition * FreeplayState.rate)
+			{
+				vocalsPlayer.pause();
+
+				if (!(vocalsPlayer.length < FlxG.sound.music.time))
+				{
+					vocalsPlayer.play();
+
+					vocalsPlayer.time = Conductor.songPosition * FreeplayState.rate;
+				}
+			}
+
+			if (!vocalsEnemy.playing || vocalsEnemy.time != Conductor.songPosition * FreeplayState.rate)
+			{
+				vocalsEnemy.pause();
+
+				if (!(vocalsEnemy.length < FlxG.sound.music.time))
+				{
+					vocalsEnemy.play();
+
+					vocalsEnemy.time = Conductor.songPosition * FreeplayState.rate;
+				}
+			}
+		}
+
+		if (FlxG.sound.music.playing)
+		{
+			FlxG.sound.music.pitch = FreeplayState.rate;
+			if (!SONG.splitVoiceTracks)
+			{
+				if (vocals.playing)
+					vocals.pitch = FreeplayState.rate;
+			}
+			else
+			{
+				if (vocalsPlayer.playing && vocalsEnemy.playing)
+				{
+					vocalsPlayer.pitch = FreeplayState.rate;
+					vocalsEnemy.pitch = FreeplayState.rate;
+				}
+			}
+		}
 	}
 
 	public var stopDoingShit = false;
@@ -432,6 +416,8 @@ class DiffOverview extends MusicBeatSubstate
 	}
 
 	var vocals:FlxSound;
+	var vocalsPlayer:FlxSound;
+	var vocalsEnemy:FlxSound;
 
 	var notes:FlxTypedGroup<Note>;
 	var unspawnNotes:Array<Note> = [];
@@ -441,17 +427,48 @@ class DiffOverview extends MusicBeatSubstate
 		// FlxG.log.add(ChartParser.parse());
 
 		var songData = SONG;
+
 		Conductor.changeBPM(songData.bpm);
 
-		if (SONG.needsVoices)
-			vocals = new FlxSound().loadEmbedded(Paths.voices(SONG.songId));
+		if (!SONG.splitVoiceTracks)
+		{
+			if (SONG.needsVoices)
+				vocals = new FlxSound().loadEmbedded(Paths.voices(SONG.audioFile));
+			else
+				vocals = new FlxSound();
+
+			if (FlxG.save.data.gen)
+				trace('loaded vocals');
+
+			FlxG.sound.list.add(vocals);
+		}
 		else
-			vocals = new FlxSound();
+		{
+			if (SONG.needsVoices)
+			{
+				vocalsPlayer = new FlxSound().loadEmbedded(Paths.voices(SONG.audioFile, 'P'));
+				vocalsEnemy = new FlxSound().loadEmbedded(Paths.voices(SONG.audioFile, 'E'));
+			}
+			else
+			{
+				vocalsEnemy = new FlxSound();
+				vocalsPlayer = new FlxSound();
+			}
 
-		trace('loaded vocals');
+			if (FlxG.save.data.gen)
+				trace('loaded vocals');
 
-		FlxG.sound.list.add(vocals);
+			FlxG.sound.list.add(vocalsPlayer);
+			FlxG.sound.list.add(vocalsEnemy);
+		}
 
+		Conductor.bpm = SONG.bpm * FreeplayState.rate;
+
+		Conductor.crochet = ((60 / (SONG.bpm * FreeplayState.rate) * 1000));
+		Conductor.stepCrochet = Conductor.crochet / 4;
+
+		PlayState.instance.fakeCrochet = Conductor.crochet;
+		PlayState.instance.fakeNoteStepCrochet = PlayState.instance.fakeCrochet / 4;
 		// recalculateAllSectionTimes();
 
 		notes = new FlxTypedGroup<Note>();
@@ -471,21 +488,19 @@ class DiffOverview extends MusicBeatSubstate
 
 			for (songNotes in section.sectionNotes)
 			{
-				var daStrumTime:Float = songNotes[0] + FlxG.save.data.offset;
+				var daStrumTime:Float = (songNotes[0] - FlxG.save.data.offset - SONG.offset) / FreeplayState.rate;
 				if (daStrumTime < 0)
 					daStrumTime = 0;
 				var daNoteData:Int = Std.int(songNotes[1] % 4);
 				var daNoteType:String = songNotes[5];
+				var daBeat = TimingStruct.getBeatFromTime(daStrumTime);
 
-				var gottaHitNote:Bool = false;
+				var gottaHitNote:Bool = section.mustHitSection;
 
-				if (songNotes[1] > 3)
-					gottaHitNote = true;
-				else if (songNotes[1] <= 3)
-					gottaHitNote = false;
-
-				if (PlayStateChangeables.opponentMode)
-					gottaHitNote = !gottaHitNote;
+				if (songNotes[1] > 3 && !PlayStateChangeables.opponentMode)
+					gottaHitNote = !section.mustHitSection;
+				else if (songNotes[1] <= 3 && PlayStateChangeables.opponentMode)
+					gottaHitNote = !section.mustHitSection;
 
 				var oldNote:Note;
 				if (unspawnNotes.length > 0)
@@ -493,32 +508,61 @@ class DiffOverview extends MusicBeatSubstate
 				else
 					oldNote = null;
 
-				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, true, true, null, songNotes[4], daNoteType);
+				var swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, gottaHitNote, null, daBeat);
+				swagNote.noteShit = daNoteType;
 
-				swagNote.baseStrum = Math.round(songNotes[0]);
+				if (PlayStateChangeables.holds)
+				{
+					swagNote.sustainLength = songNotes[2] / FreeplayState.rate;
+				}
+				else
+				{
+					swagNote.sustainLength = 0;
+				}
 
-				swagNote.sustainLength = songNotes[2];
 				swagNote.scrollFactor.set(0, 0);
 
 				var susLength:Float = swagNote.sustainLength;
 
-				susLength = susLength / Conductor.stepCrochet;
+				var anotherCrochet:Float = Conductor.crochet;
+				var anotherStepCrochet:Float = anotherCrochet / 4;
+				susLength = susLength / anotherStepCrochet;
+
 				unspawnNotes.push(swagNote);
 
-				for (susNote in 0...Math.floor(susLength))
+				swagNote.isAlt = songNotes[3]
+					|| ((section.altAnim || section.CPUAltAnim) && !gottaHitNote)
+					|| (section.playerAltAnim && gottaHitNote)
+					|| (PlayStateChangeables.opponentMode && gottaHitNote && (section.altAnim || section.CPUAltAnim))
+					|| (PlayStateChangeables.opponentMode && !gottaHitNote && section.playerAltAnim);
+
+				var type = 0;
+
+				if (susLength > 0)
 				{
-					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
-
-					var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, true,
-						true, null, songNotes[4], daNoteType);
-					sustainNote.scrollFactor.set();
-					unspawnNotes.push(sustainNote);
-
-					sustainNote.mustPress = gottaHitNote;
-
-					if (sustainNote.mustPress)
+					swagNote.isParent = true;
+					for (susNote in 0...Std.int(Math.max(susLength, 2)))
 					{
-						sustainNote.x += FlxG.width / 2; // general offset
+						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
+						var sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true, false,
+							gottaHitNote, null, 0);
+
+						sustainNote.noteShit = daNoteType;
+
+						sustainNote.scrollFactor.set();
+						unspawnNotes.push(sustainNote);
+						sustainNote.isAlt = songNotes[3]
+							|| ((section.altAnim || section.CPUAltAnim) && !gottaHitNote)
+							|| (section.playerAltAnim && gottaHitNote)
+							|| (PlayStateChangeables.opponentMode && gottaHitNote && (section.altAnim || section.CPUAltAnim))
+							|| (PlayStateChangeables.opponentMode && !gottaHitNote && section.playerAltAnim);
+
+						sustainNote.mustPress = gottaHitNote;
+
+						sustainNote.parent = swagNote;
+						swagNote.children.push(sustainNote);
+						sustainNote.spotInLine = type;
+						type++;
 					}
 				}
 
@@ -527,9 +571,6 @@ class DiffOverview extends MusicBeatSubstate
 				if (swagNote.mustPress)
 				{
 					swagNote.x += FlxG.width / 2; // general offset
-				}
-				else
-				{
 				}
 			}
 			daBeats += 1;

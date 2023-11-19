@@ -98,7 +98,7 @@ class NoteSplash extends FlxSprite
 					animation.addByPrefix('splash 1 ' + i, 'note splash 2 ' + anims[i], 24, false);
 				}
 			default:
-				frames = PlayState.notesplashSprite;
+				frames = Paths.getSparrowAtlas(PlayState.notesplashSprite, 'shared');
 				for (i in 0...4)
 				{
 					animation.addByPrefix('splash 0 ' + i, 'note splash 1 ' + anims[i], data.fps, false);

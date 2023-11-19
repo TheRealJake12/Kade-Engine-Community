@@ -35,7 +35,6 @@ class Init extends MusicBeatState
 
 		CustomNoteHelpers.Skin.updateNoteskins();
 		CustomNoteHelpers.Splash.updateNotesplashes();
-		
 
 		if (FlxG.save.data.volDownBind == null)
 			FlxG.save.data.volDownBind = "MINUS";

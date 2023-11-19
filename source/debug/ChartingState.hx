@@ -1690,9 +1690,10 @@ class ChartingState extends MusicBeatState
 
 						var thing = ii.sectionNotes[ii.sectionNotes.length - 1];
 
-						var note:Note = new Note(strum, Math.floor(i[1] % 4), null, false, true, true, i[3], i[4], i[5]);
+						var note:Note = new Note(strum, Math.floor(i[1] % 4), null, false, true, true, i[3], i[4]);
 						note.rawNoteData = i[1];
 						note.sustainLength = i[2];
+						note.noteShit = i[5];
 						note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));
 						note.updateHitbox();
 						note.x = Math.floor(i[1] * GRID_SIZE);
@@ -1758,10 +1759,10 @@ class ChartingState extends MusicBeatState
 
 					var thing = ii.sectionNotes[ii.sectionNotes.length - 1];
 
-					var note:Note = new Note(strum, originalNote.noteData, originalNote.prevNote, false, true, true, originalNote.isAlt, originalNote.beat,
-						originalNote.noteShit);
+					var note:Note = new Note(strum, originalNote.noteData, originalNote.prevNote, false, true, true, originalNote.isAlt, originalNote.beat,);
 					note.rawNoteData = originalNote.rawNoteData;
 					note.sustainLength = originalNote.sustainLength;
+					note.noteShit = originalNote.noteShit;
 					note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));
 					note.updateHitbox();
 					note.x = Math.floor(originalNote.rawNoteData * GRID_SIZE);
@@ -3326,8 +3327,9 @@ class ChartingState extends MusicBeatState
 					var daShit = i[5];
 					var daBeat = TimingStruct.getBeatFromTime(daStrumTime);
 
-					var note:Note = new Note(daStrumTime, daNoteInfo % 4, null, false, true, true, i[3], daBeat, daShit);
+					var note:Note = new Note(daStrumTime, daNoteInfo % 4, null, false, true, true, i[3], daBeat);
 					note.rawNoteData = daNoteInfo;
+					note.noteShit = daShit;
 					note.sustainLength = daSus;
 					note.strumTime = daStrumTime;
 					note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));
@@ -3689,9 +3691,10 @@ class ChartingState extends MusicBeatState
 
 		if (n == null)
 		{
-			var note:Note = new Note(noteStrum, noteData % 4, null, false, true, true, null, TimingStruct.getBeatFromTime(noteStrum), noteShit);
+			var note:Note = new Note(noteStrum, noteData % 4, null, false, true, true, null, TimingStruct.getBeatFromTime(noteStrum));
 			note.rawNoteData = noteData;
 			note.sustainLength = noteSus;
+			note.noteShit = noteShit;
 			note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));
 			note.updateHitbox();
 			note.x = Math.floor(noteData * GRID_SIZE);
@@ -3719,9 +3722,10 @@ class ChartingState extends MusicBeatState
 		}
 		else
 		{
-			var note:Note = new Note(n.strumTime, n.noteData % 4, null, false, true, true, n.isAlt, TimingStruct.getBeatFromTime(n.strumTime), noteShit);
+			var note:Note = new Note(n.strumTime, n.noteData % 4, null, false, true, true, n.isAlt, TimingStruct.getBeatFromTime(n.strumTime));
 			note.beat = TimingStruct.getBeatFromTime(n.strumTime);
 			note.rawNoteData = n.noteData;
+			note.noteShit = n.noteShit;
 			note.sustainLength = noteSus;
 			note.setGraphicSize(Math.floor(GRID_SIZE), Math.floor(GRID_SIZE));
 			note.updateHitbox();

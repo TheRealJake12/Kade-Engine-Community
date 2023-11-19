@@ -13,31 +13,24 @@ using StringTools;
 class Skin
 {
 	public static var noteskinArray = [];
-	public static var xmlData = [];
+
+	var ignoreList = ["Arrows", "Circles"];
 
 	public static function updateNoteskins()
 	{
-		noteskinArray = [];
-		xmlData = [];
-		#if FEATURE_FILESYSTEM
-		var count:Int = 0;
-		for (i in FileSystem.readDirectory(FileSystem.absolutePath("assets/shared/images/noteskins")))
+		for (i in CoolUtil.readAssetsDirectoryFromLibrary('assets/shared/images/noteskins', 'IMAGE', 'shared'))
 		{
 			if (i.contains("-pixel"))
 				continue;
-			if (i.endsWith(".xml"))
-			{
-				xmlData.push(sys.io.File.getContent(FileSystem.absolutePath("assets/shared/images/noteskins") + "/" + i));
-				continue;
-			}
 
 			if (!i.endsWith(".png"))
 				continue;
-			noteskinArray.push(i.replace(".png", ""));
+			var thingy = i.replace("assets/shared/images/noteskins/", "");
+
+			// Debug.logTrace(thingy);
+
+			noteskinArray.push(thingy.replace(".png", ""));
 		}
-		#else
-		noteskinArray = ["Arrows", "Circles"];
-		#end
 
 		return noteskinArray;
 	}
@@ -54,65 +47,34 @@ class Skin
 
 	static public function generateNoteskinSprite(id:Int)
 	{
-		#if FEATURE_FILESYSTEM
-		// TODO: Make this use OpenFlAssets.
-
-		var path = FileSystem.absolutePath("assets/shared/images/noteskins") + "/" + getNoteskinByID(id);
-		var data:BitmapData = BitmapData.fromFile(path + ".png");
-
-		return FlxAtlasFrames.fromSparrow(FlxGraphic.fromBitmapData(data), xmlData[id]);
-
-		// return Paths.getSparrowAtlas('noteskins/' + NoteskinHelpers.getNoteskinByID(FlxG.save.data.noteskin), "shared");
-		#else
-		return Paths.getSparrowAtlas('noteskins/' + CustomNoteHelpers.Skin.getNoteskinByID(FlxG.save.data.noteskin), "shared");
-		#end
+		return 'noteskins/${getNoteskinByID(id)}';
 	}
 
 	static public function generatePixelSprite(id:Int, ends:Bool = false)
 	{
-		#if FEATURE_FILESYSTEM
-		// TODO: Make this use OpenFlAssets.
-
-		var path = FileSystem.absolutePath("assets/shared/images/noteskins") + "/" + getNoteskinByID(id) + "-pixel" + (ends ? "-ends" : "");
-		if (!FileSystem.exists(path + ".png"))
-		{
+		if (!Paths.fileExists('images/noteskins/${getNoteskinByID(id)}' + "-pixel" + (ends ? "-ends" : ""), IMAGE))
 			return Paths.image("noteskins/Arrows-pixel" + (ends ? "-ends" : ""), 'shared');
-		}
-		return Paths.image('noteskins/${CustomNoteHelpers.Skin.getNoteskinByID(FlxG.save.data.noteskin)}-pixel${(ends ? '-ends' : '')}', "shared");
-		Debug.logTrace(path);
-
-		// return Paths.getSparrowAtlas('noteskins/' + NoteskinHelpers.getNoteskinByID(FlxG.save.data.noteskin), "shared");
-		#else
-		return Paths.image('noteskins/${CustomNoteHelpers.Skin.getNoteskinByID(FlxG.save.data.noteskin)}-pixel${(ends ? '-ends' : '')}', "shared");
-		#end
+		else
+			return Paths.image('noteskins/${getNoteskinByID(id)}' + "-pixel" + (ends ? "-ends" : ""));
 	}
 }
 
 class Splash
 {
 	public static var notesplashArray = [];
-	public static var xmlData = [];
 
 	public static function updateNotesplashes()
 	{
-		notesplashArray = [];
-		xmlData = [];
-		#if FEATURE_FILESYSTEM
-		var count:Int = 0;
-		for (i in FileSystem.readDirectory(FileSystem.absolutePath("assets/shared/images/splashes")))
+		for (i in CoolUtil.readAssetsDirectoryFromLibrary('assets/shared/images/splashes', 'IMAGE', 'shared'))
 		{
-			if (i.endsWith(".xml"))
-			{
-				xmlData.push(sys.io.File.getContent(FileSystem.absolutePath("assets/shared/images/splashes") + "/" + i));
-				continue;
-			}
 			if (!i.endsWith(".png"))
 				continue;
-			notesplashArray.push(i.replace(".png", ""));
+			var thingy = i.replace("assets/shared/images/splashes/", "");
+
+			// Debug.logTrace(thingy);
+
+			notesplashArray.push(thingy.replace(".png", ""));
 		}
-		#else
-		notesplashArray = ["Default", "Psych", "Week7"];
-		#end
 
 		return notesplashArray;
 	}
@@ -129,15 +91,6 @@ class Splash
 
 	static public function generateNotesplashSprite(id:Int)
 	{
-		#if FEATURE_FILESYSTEM
-		// TODO: Make this use OpenFlAssets.
-
-		var path = FileSystem.absolutePath("assets/shared/images/splashes") + "/" + getNotesplashByID(id);
-		var data:BitmapData = BitmapData.fromFile(path + ".png");
-
-		return FlxAtlasFrames.fromSparrow(FlxGraphic.fromBitmapData(data), xmlData[id]);
-		#else
-		return Paths.getSparrowAtlas('splashes/' + CustomNoteHelpers.Splash.getNotesplashByID(FlxG.save.data.notesplash), "shared");
-		#end
+		return 'splashes/${getNotesplashByID(id)}';
 	}
 }

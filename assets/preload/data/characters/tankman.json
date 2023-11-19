@@ -48,7 +48,8 @@
       "prefix": "TANKMAN UGH",
       "offsets": [-15, -8],
       "frameRate": 24,
-      "looped": false
+      "looped": false,
+      "nextAnim": "idle"
     },
     {
 			"offsets": [1,16],

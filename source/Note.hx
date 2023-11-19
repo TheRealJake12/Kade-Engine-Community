@@ -35,8 +35,8 @@ class Note extends FlxSprite
 	public var noteSection:Int = 0;
 	public var isSustainEnd:Bool = false;
 
-	public var noteShit:String = 'normal';
-	public var canPlayAnims:Bool = false; // if a note plays the sing animations
+	public var noteShit(default, set):String = null;
+	public var canPlayAnims:Bool = true; // if a note plays the sing animations
 	public var canNoteSplash:Bool = true; // if a note can notesplash on Sick! and Marv!
 	public var causesMisses:Bool = true; // if a note will do noteMiss or something.
 	public var botplayHit:Bool = true; // if botplay should hit the note.
@@ -84,23 +84,30 @@ class Note extends FlxSprite
 
 	public var modAlpha:Float = 1;
 
+	public static var defaultPlayerSkin(default, never):String = 'noteskins/Arrows';
+	public static var defaultCpuSkin(default, never):String = 'noteskins/Arrows';
+
+	public var texture(default, set):String = null;
+
+	var isPlayer:Bool = true;
+
+	// defaults if no noteStyle was found in chart
+	var noteTypeCheck:String = 'normal';
+
 	#if FEATURE_LUAMODCHART
 	public var LuaNote:LuaNote;
 	#end
 
 	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inCharter:Bool = false, ?isPlayer:Bool = false,
-			?isAlt:Bool = false, ?bet:Float = 0, ?noteShit:String = 'normal', ?speedMultiplier:Float = 1.0)
+			?isAlt:Bool = false, ?bet:Float = 0)
 	{
 		super();
-
-		if (noteShit == null || noteShit == '0' || noteShit == 'false' || noteShit == 'true')
-			noteShit = 'normal';
 		this.noteShit = noteShit; // FFFFFFFFFFFFFFFFFFFFFFUUUUUUUUUUUUUUUUUUUUUUUUUUUU
 		insideCharter = inCharter;
+		this.isPlayer = isPlayer;
 		if (prevNote == null)
 			prevNote = this;
 
-		this.speedMultiplier = speedMultiplier;
 		beat = bet;
 		this.isAlt = isAlt;
 
@@ -144,200 +151,13 @@ class Note extends FlxSprite
 			noteData = Std.int(Math.abs(3 - noteData));
 		}
 
-		// le note shit behaviour
-		switch (noteShit)
-		{
-			case 'hurt':
-				canPlayAnims = false;
-				canNoteSplash = false;
-				causesMisses = false;
-				botplayHit = false;
-			case 'mustpress':
-				canPlayAnims = false;
-				canNoteSplash = false;
-				botplayHit = true;
-			default:
-				canPlayAnims = true;
-				canNoteSplash = true;
-				causesMisses = true;
-				botplayHit = true;
-		}
+		texture = '';
 
-		// defaults if no noteStyle was found in chart
-		var noteTypeCheck:String = 'normal';
-
-		if (inCharter)
-		{
-			switch (noteShit)
-			{
-				case 'hurt':
-					{
-						if (CustomNoteHelpers.Skin.getNoteskinByID(FlxG.save.data.noteskin).contains("Circles"))
-							frames = Paths.getSparrowAtlas("notetypes/hurt_Circles", 'shared');
-						else
-							frames = Paths.getSparrowAtlas("notetypes/hurt_Arrows", 'shared');
-						for (i in 0...4)
-						{
-							animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
-							animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
-							animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
-						}
-					}
-				case 'mustpress':
-					if (CustomNoteHelpers.Skin.getNoteskinByID(FlxG.save.data.noteskin).contains("Circles"))
-						frames = Paths.getSparrowAtlas("notetypes/mustpress_Circles", 'shared');
-					else
-						frames = Paths.getSparrowAtlas("notetypes/mustpress_Arrows", 'shared');
-					for (i in 0...4)
-					{
-						animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
-						animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
-						animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
-					}
-				default:
-					{
-						frames = PlayState.noteskinSprite;
-						for (i in 0...4)
-						{
-							animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
-							animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
-							animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
-						}
-					}
-			}
-
-			setGraphicSize(Std.int(width * 0.7));
-			updateHitbox();
-			antialiasing = FlxG.save.data.antialiasing;
-		}
-		else
-		{
-			if (PlayState.SONG.noteStyle == null)
-			{
-				switch (PlayState.storyWeek)
-				{
-					case 6:
-						noteTypeCheck = 'pixel';
-				}
-			}
-			else
-			{
-				noteTypeCheck = PlayState.SONG.noteStyle;
-			}
-
-			switch (noteTypeCheck)
-			{
-				case 'pixel':
-					switch (noteShit)
-					{
-						case 'hurt':
-							{
-								if (CustomNoteHelpers.Skin.getNoteskinByID(FlxG.save.data.noteskin).contains("Circles"))
-									frames = Paths.getSparrowAtlas("notetypes/hurt_Circles", 'shared');
-								else
-									frames = Paths.getSparrowAtlas("notetypes/hurt_Arrows", 'shared');
-								for (i in 0...4)
-								{
-									animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
-									animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
-									animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
-								}
-								setGraphicSize(Std.int(width / 1.5));
-								updateHitbox();
-							}
-
-						case 'mustpress':
-							{
-								if (CustomNoteHelpers.Skin.getNoteskinByID(FlxG.save.data.noteskin).contains("Circles"))
-									frames = Paths.getSparrowAtlas("notetypes/mustpress_Circles", 'shared');
-								else
-									frames = Paths.getSparrowAtlas("notetypes/mustpress_Arrows", 'shared');
-								for (i in 0...4)
-								{
-									animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
-									animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
-									animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
-								}
-								setGraphicSize(Std.int(width / 1.5));
-								updateHitbox();
-							}
-						default:
-							#if html5
-							loadGraphic(Paths.image('noteskins/Arrows-pixel', 'shared'), true, 12, 12);
-							if (isSustainNote)
-								loadGraphic(Paths.image('noteskins/Arrows-pixel-ends', 'shared'), true, 7, 6);
-							#else
-							loadGraphic(PlayState.noteskinPixelSprite, true, 17, 17);
-							if (isSustainNote)
-								loadGraphic(PlayState.noteskinPixelSpriteEnds, true, 7, 6);
-							#end
-							for (i in 0...4)
-							{
-								animation.add(dataColor[i] + 'Scroll', [i + 4]); // Normal notes
-								animation.add(dataColor[i] + 'hold', [i]); // Holds
-								animation.add(dataColor[i] + 'holdend', [i + 4]); // Tails
-							}
-							antialiasing = false;
-
-							setGraphicSize(Std.int(width * CoolUtil.daPixelZoom));
-							updateHitbox();
-					}
-
-				default:
-					switch (noteShit)
-					{
-						case 'hurt':
-							{
-								if (CustomNoteHelpers.Skin.getNoteskinByID(FlxG.save.data.noteskin).contains("Circles"))
-									frames = Paths.getSparrowAtlas("notetypes/hurt_Circles", 'shared');
-								else
-									frames = Paths.getSparrowAtlas("notetypes/hurt_Arrows", 'shared');
-								for (i in 0...4)
-								{
-									animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
-									animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
-									animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
-								}
-							}
-
-						case 'mustpress':
-							if (CustomNoteHelpers.Skin.getNoteskinByID(FlxG.save.data.noteskin).contains("Circles"))
-								frames = Paths.getSparrowAtlas("notetypes/mustpress_Circles", 'shared');
-							else
-								frames = Paths.getSparrowAtlas("notetypes/mustpress_Arrows", 'shared');
-							for (i in 0...4)
-							{
-								animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
-								animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
-								animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
-							}
-						default:
-							{	
-								switch (isPlayer)
-								{
-									case true:
-										frames = PlayState.noteskinSprite;
-									case false:
-										frames = PlayState.cpuNoteskinSprite;
-								}
-								for (i in 0...4)
-								{
-									animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
-									animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
-									animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
-								}
-							}
-					}
-
-					setGraphicSize(Std.int(width * 0.7));
-					updateHitbox();
-
-					antialiasing = FlxG.save.data.antialiasing;
-			}
-		}
-
+		// x += swagWidth * (noteData);
+		var animToPlay:String = '';
+		animToPlay = dataColor[noteData] + 'Scroll';
 		x += swagWidth * noteData;
-		animation.play(dataColor[noteData] + 'Scroll');
+
 		originColor = noteData; // The note's origin color will be checked by its sustain notes
 
 		if (FlxG.save.data.stepMania && !isSustainNote && !(PlayState.instance != null ? PlayState.instance.executeModchart : false))
@@ -360,17 +180,15 @@ class Note extends FlxSprite
 			else if (beatRow % (192 / 32) == 0)
 				col = quantityColor[4];
 
-			animation.play(dataColor[col] + 'Scroll');
-
 			originColor = col;
 
-			if (FlxG.save.data.rotateSprites) // ok honestly who the fuck wanted this. Im keeping it for a challenge but what the fuck
-			{
-				localAngle -= arrowAngles[col];
-				localAngle += arrowAngles[noteData];
-				originAngle = localAngle;
-			}
+			localAngle -= arrowAngles[col];
+			localAngle += arrowAngles[noteData];
+			originAngle = localAngle;
+			animToPlay = dataColor[col] + 'Scroll';
 		}
+
+		animation.play(animToPlay);
 
 		if (isSustainNote && prevNote != null)
 		{
@@ -416,6 +234,152 @@ class Note extends FlxSprite
 		}
 		centerOffsets();
 		centerOrigin();
+	}
+
+	static var _lastValidChecked:String; // optimization
+
+	private function set_texture(value:String):String
+	{
+		if (texture != value)
+			reloadNote(value);
+
+		texture = value;
+		return value;
+	}
+
+	private function set_noteShit(value:String):String
+	{
+		if (noteShit != value)
+		{
+			switch (value)
+			{
+				case 'hurt':
+					canPlayAnims = false;
+					canNoteSplash = false;
+					causesMisses = false;
+					botplayHit = false;
+					// reloadNote('notetypes/hurt_Arrows');
+					texture = 'notetypes/hurt_Arrows';
+				case 'mustpress':
+					canPlayAnims = false;
+					canNoteSplash = false;
+					botplayHit = true;
+					// reloadNote('notetypes/mustpress_Arrows');
+					texture = 'notetypes/mustpress_Arrows';
+				default:
+					canPlayAnims = true;
+					canNoteSplash = true;
+					causesMisses = true;
+					botplayHit = true;
+			}
+			noteShit = value;
+		}
+		return value;
+	}
+
+	public function reloadNote(texture:String = '')
+	{
+		if (texture == null)
+			texture = '';
+
+		var skin:String = texture;
+
+		if (texture.length < 1)
+		{
+			skin = isPlayer ? PlayState.noteskinSprite : PlayState.cpuNoteskinSprite;
+			if (skin == null || skin.length < 1)
+				skin = isPlayer ? defaultPlayerSkin : defaultCpuSkin;
+		}
+
+		var animName:String = null;
+		if (animation.curAnim != null)
+		{
+			animName = animation.curAnim.name;
+		}
+
+		var lastScaleY:Float = scale.y;
+		var skinPostfix:String = '';
+		var customSkin:String = skin + skinPostfix;
+		var path:String = '';
+
+		if (customSkin == _lastValidChecked || Paths.fileExists('images/' + customSkin + '.png', IMAGE))
+		{
+			skin = customSkin;
+			_lastValidChecked = customSkin;
+		}
+		else
+			skinPostfix = '';
+
+		if (PlayState.SONG != null)
+			noteTypeCheck = PlayState.SONG.noteStyle;
+		else
+			noteTypeCheck = 'normal';
+
+		switch (noteTypeCheck)
+		{
+			case 'pixel':
+				loadGraphic(PlayState.noteskinPixelSprite, true, 17, 17);
+				if (isSustainNote)
+					loadGraphic(PlayState.noteskinPixelSpriteEnds, true, 7, 6);
+
+				loadPixelAnims();
+				antialiasing = false;
+			default:
+				frames = Paths.getSparrowAtlas(skin);
+				loadNoteAnims();
+				antialiasing = FlxG.save.data.antialiasing;
+				if (!isSustainNote)
+				{
+					centerOffsets();
+					centerOrigin();
+				}
+
+				if (isSustainNote)
+				{
+					scale.y = lastScaleY;
+				}
+		}
+
+		updateHitbox();
+
+		if (animName != null)
+			animation.play(animName, true);
+	}
+
+	function loadNoteAnims()
+	{
+		for (i in 0...4)
+		{
+			animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
+			animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + '0'); // Normal notes old
+
+			animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
+			animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold piece'); // Hold old
+
+			animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
+			animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' hold end'); // Tails old
+
+			animation.addByPrefix('purpleholdend', 'purple end hold'); // ?
+			animation.addByPrefix('purpleholdend', 'pruple end hold', 24, true); // this fixes some retarded typo from the original note .FLA
+
+			// For Legacy Noteskins.
+		}
+
+		setGraphicSize(Std.int(width * 0.7));
+		updateHitbox();
+	}
+
+	function loadPixelAnims()
+	{
+		for (i in 0...4)
+		{
+			animation.add(dataColor[i] + 'Scroll', [i + 4]); // Normal notes
+			animation.add(dataColor[i] + 'hold', [i]); // Holds
+			animation.add(dataColor[i] + 'holdend', [i + 4]); // Tails
+		}
+
+		setGraphicSize(Std.int(width * CoolUtil.daPixelZoom));
+		updateHitbox();
 	}
 
 	override function update(elapsed:Float)
@@ -464,6 +428,18 @@ class Note extends FlxSprite
 						}
 						if (strumTime - Conductor.songPosition < -Ratings.timingWindows[0] && !wasGoodHit)
 							tooLate = true;
+					case 'fuck':
+						if (strumTime - Conductor.songPosition <= ((Ratings.timingWindows[0]) * 3.4)
+							&& strumTime - Conductor.songPosition >= (-Ratings.timingWindows[0]) * 3.6)
+						{
+							canBeHit = true;
+						}
+						else
+						{
+							canBeHit = false;
+						}
+						if (strumTime - Conductor.songPosition < -Ratings.timingWindows[0] && !wasGoodHit)
+							tooLate = true;
 					default:
 						if (strumTime - Conductor.songPosition <= (((Ratings.timingWindows[0]) * lateHitMult))
 							&& strumTime - Conductor.songPosition >= (((-Ratings.timingWindows[0]) * earlyHitMult)))
@@ -478,8 +454,7 @@ class Note extends FlxSprite
 			if (isSustainNote)
 			{
 				isSustainEnd = spotInLine == parent.children.length - 1;
-				alpha = !sustainActive
-					&& (parent.tooLate || !parent.wasGoodHit) ? (modAlpha * FlxG.save.data.alpha) / 2 : modAlpha * FlxG.save.data.alpha; // This is the correct way
+				alpha = modAlpha * FlxG.save.data.alpha; // This is the correct way
 			}
 			else if (tooLate && !wasGoodHit)
 			{
@@ -499,6 +474,18 @@ class Note extends FlxSprite
 			return super.set_y(value);
 		}
 	 */
+	override public function destroy()
+	{
+		if (noteCharterObject != null)
+			noteCharterObject.destroy();
+
+		texture = '';
+		frames = null;
+
+		super.destroy();
+		_lastValidChecked = '';
+	}
+
 	@:noCompletion
 	override function set_clipRect(rect:FlxRect):FlxRect
 	{

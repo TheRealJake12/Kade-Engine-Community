@@ -15,6 +15,7 @@ import sys.FileSystem;
 #end
 import flixel.util.FlxColor;
 import haxe.io.Path;
+import lime.utils.Assets as LimeAssets;
 
 using StringTools;
 
@@ -179,6 +180,30 @@ class CoolUtil
 		if (colorNum == null)
 			colorNum = FlxColor.fromString('#$color');
 		return colorNum != null ? colorNum : FlxColor.WHITE;
+	}
+
+	/**
+		* Similar to FileSystem.readDirectory() using OpenFLAssets (manifest.json)
+		** WARNING: This function doesn't replace FileSystem.readDirectory(), this only lists the assets that came with the build, 
+		* if you drag new files to the assets folder it won't be detected!
+		** NOTE: Newer files dragged via ModCore/Polymod are detected!
+		* @param path The specific directory you want to read.
+		* @param library The library you want to scan. Ex: shared.
+	 */
+	public static function readAssetsDirectoryFromLibrary(path:String, type:String, library:String = 'default'):Array<String>
+	{
+		var lib = LimeAssets.getLibrary(library);
+		var list:Array<String> = lib.list(type);
+		var stringList = [];
+		for (hmm in list)
+		{
+			if (hmm.startsWith(path))
+			{
+				stringList.push(hmm);
+			}
+		}
+
+		return stringList;
 	}
 
 	public static var loadingVideos:Array<String> = [];

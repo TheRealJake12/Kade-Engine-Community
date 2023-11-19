@@ -215,9 +215,9 @@ class PlayState extends MusicBeatState
 	public static var lowPriorityNotes:Array<String> = CoolUtil.noteShitArray;
 
 	// Noteskin And Notesplash Related Stuff.
-	public static var noteskinSprite:FlxAtlasFrames;
-	public static var cpuNoteskinSprite:FlxAtlasFrames;
-	public static var notesplashSprite:FlxAtlasFrames;
+	public static var noteskinSprite:String;
+	public static var cpuNoteskinSprite:String;
+	public static var notesplashSprite:String;
 	public static var noteskinPixelSprite:FlxGraphic;
 	public static var noteskinPixelSpriteEnds:FlxGraphic;
 
@@ -2684,7 +2684,8 @@ class PlayState extends MusicBeatState
 				else
 					oldNote = null;
 
-				var swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, gottaHitNote, null, daBeat, daNoteType);
+				var swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, gottaHitNote, null, daBeat);
+				swagNote.noteShit = daNoteType;
 
 				if (PlayStateChangeables.holds)
 				{
@@ -2720,7 +2721,9 @@ class PlayState extends MusicBeatState
 					{
 						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 						var sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true, false,
-							gottaHitNote, null, 0, daNoteType);
+							gottaHitNote, null, 0);
+
+						sustainNote.noteShit = daNoteType;
 
 						sustainNote.scrollFactor.set();
 						unspawnNotes.push(sustainNote);
@@ -2797,92 +2800,14 @@ class PlayState extends MusicBeatState
 	{
 		for (i in 0...4)
 		{
-			var babyArrow:StaticArrow = new StaticArrow(-10, strumLine.y);
+			var babyArrow:StaticArrow = new StaticArrow(-10, strumLine.y, player, i);
 
 			var noteTypeCheck:String = 'normal';
 			babyArrow.downScroll = PlayStateChangeables.useDownscroll;
 
-			// if (PlayStateChangeables.Optimize && player == 0)
-			// continue;
-
-			if (SONG.noteStyle == null)
-			{
-				switch (storyWeek)
-				{
-					case 6:
-						noteTypeCheck = 'pixel';
-				}
-			}
-			else
-			{
-				noteTypeCheck = SONG.noteStyle;
-			}
-
-			switch (noteTypeCheck)
-			{
-				case 'pixel':
-					#if html5
-					babyArrow.loadGraphic(Paths.image('noteskins/Arrows-pixel', 'shared'), true, 12, 17);
-					#else
-					babyArrow.loadGraphic(noteskinPixelSprite, true, 17, 17);
-					#end
-
-					babyArrow.animation.add('green', [6]);
-					babyArrow.animation.add('red', [7]);
-					babyArrow.animation.add('blue', [5]);
-					babyArrow.animation.add('purple', [4]);
-
-					babyArrow.setGraphicSize(Std.int(babyArrow.width * CoolUtil.daPixelZoom));
-					babyArrow.updateHitbox();
-					babyArrow.antialiasing = false;
-
-					babyArrow.x += Note.swagWidth * i;
-					babyArrow.animation.add('static', [i]);
-					babyArrow.animation.add('pressed', [4 + i, 8 + i], 12, false);
-					babyArrow.animation.add('confirm', [12 + i, 16 + i], 12, false);
-
-					for (j in 0...4)
-					{
-						babyArrow.animation.add('dirCon' + j, [12 + j, 16 + j], 12, false);
-					}
-
-				default:
-					if (!PlayStateChangeables.opponentMode)
-					{
-						if (player == 0)
-							babyArrow.frames = cpuNoteskinSprite;
-						else
-							babyArrow.frames = noteskinSprite;
-					}
-					else
-					{
-						if (player == 1)
-							babyArrow.frames = cpuNoteskinSprite;
-						else
-							babyArrow.frames = noteskinSprite;
-					}
-					for (j in 0...4)
-					{
-						babyArrow.animation.addByPrefix(dataColor[j], 'arrow' + dataSuffix[j]);
-						babyArrow.animation.addByPrefix('dirCon' + j, dataSuffix[j].toLowerCase() + ' confirm', 24, false);
-					}
-
-					var lowerDir:String = dataSuffix[i].toLowerCase();
-
-					babyArrow.animation.addByPrefix('static', 'arrow' + dataSuffix[i]);
-					babyArrow.animation.addByPrefix('pressed', lowerDir + ' press', 24, false);
-					babyArrow.animation.addByPrefix('confirm', lowerDir + ' confirm', 24, false);
-
-					babyArrow.x += Note.swagWidth * i;
-
-					babyArrow.antialiasing = FlxG.save.data.antialiasing;
-					babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
-			}
-
-			babyArrow.updateHitbox();
-			babyArrow.scrollFactor.set();
-
 			babyArrow.loadLane();
+
+			babyArrow.x += Note.swagWidth * i;
 
 			arrowLanes.add(babyArrow.bgLane);
 
@@ -2924,7 +2849,6 @@ class PlayState extends MusicBeatState
 						cpuStrums.add(babyArrow);
 					}
 			}
-
 			babyArrow.playAnim('static');
 			babyArrow.x += 98.5; // Tryna make it not offset because it was pissing me off + Psych Engine has it somewhat like this.
 			babyArrow.x += ((FlxG.width / 2) * player);
@@ -4014,10 +3938,7 @@ class PlayState extends MusicBeatState
 										}
 										else
 										{
-											if (!daNote.wasGoodHit
-												&& daNote.isSustainNote
-												&& daNote.sustainActive
-												&& !daNote.isSustainEnd
+											if (!daNote.wasGoodHit && daNote.isSustainNote && daNote.sustainActive && !daNote.isSustainEnd
 												&& daNote.causesMisses)
 											{
 												// health -= 0.05; // give a health punishment for failing a LN
@@ -4060,7 +3981,6 @@ class PlayState extends MusicBeatState
 											vocals.volume = 0;
 										else
 											vocalsPlayer.volume = 0;
-										Debug.logTrace("huh2");	
 									}
 									if (theFunne && !daNote.isSustainNote && daNote.causesMisses)
 									{
@@ -4083,11 +4003,7 @@ class PlayState extends MusicBeatState
 									}
 									else
 									{
-										if (!daNote.wasGoodHit
-											&& daNote.isSustainNote
-											&& daNote.sustainActive
-											&& !daNote.isSustainEnd
-											&& daNote.causesMisses)
+										if (!daNote.wasGoodHit && daNote.isSustainNote && daNote.sustainActive && !daNote.isSustainEnd && daNote.causesMisses)
 										{
 											// health -= 0.05; // give a health punishment for failing a LN
 											noteMiss(daNote.noteData, daNote);
@@ -5739,29 +5655,6 @@ class PlayState extends MusicBeatState
 			gf.playAnim('cheer', true);
 		}
 
-		if (curSong == 'ugh')
-		{
-			if (curStep == 59 * songMultiplier)
-			{
-				dad.playAnim('ugh');
-			}
-
-			if (curStep == 443 * songMultiplier)
-			{
-				dad.playAnim('ugh');
-			}
-
-			if (curStep == 523 * songMultiplier)
-			{
-				dad.playAnim('ugh');
-			}
-
-			if (curStep == 828)
-			{
-				dad.playAnim('ugh');
-			}
-		}
-
 		if (curSong == 'stress')
 		{
 			if (curStep == 736 * songMultiplier)
@@ -6659,6 +6552,63 @@ class PlayState extends MusicBeatState
 					babyArrow.destroy();
 			});
 			arrowsGenerated = false;
+		}
+	}
+
+	function changeNoteSkins(isStrum:Bool, isPlayer:Bool, texture:String)
+	{
+		switch (isStrum)
+		{
+			case true:
+				switch (isPlayer)
+				{
+					case true:
+						for (i in 0...playerStrums.length)
+						{
+							playerStrums.members[i].texture = 'noteskins/' + texture;
+						}
+					case false:
+						for (i in 0...cpuStrums.length)
+						{
+							cpuStrums.members[i].texture = 'noteskins/' + texture;
+						}
+				}
+			case false:
+				switch (isPlayer)
+				{
+					case true:
+						for (note in unspawnNotes)
+						{
+							if (note.mustPress && (note.noteShit == null || note.noteShit == 'normal'))
+							{
+								note.texture = 'noteskins/' + texture;
+							}
+						}
+
+						for (note in notes)
+						{
+							if (note.mustPress && (note.noteShit == null || note.noteShit == 'normal'))
+							{
+								note.texture = 'noteskins/' + texture;
+							}
+						}
+					case false:
+						for (note in unspawnNotes)
+						{
+							if (!note.mustPress && (note.noteShit == null || note.noteShit == 'normal'))
+							{
+								note.texture = 'noteskins/' + texture;
+							}
+						}
+
+						for (note in notes)
+						{
+							if (!note.mustPress && (note.noteShit == null || note.noteShit == 'normal'))
+							{
+								note.texture = 'noteskins/' + texture;
+							}
+						}
+				}
 		}
 	}
 

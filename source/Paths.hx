@@ -68,7 +68,7 @@ class Paths
 	 * @param library 
 	 * @return BitmapData
 	 */
-	static function loadImage(key:String, ?library:String, ?gpuRender:Bool)
+	public static function loadImage(key:String, ?library:String, ?gpuRender:Bool):FlxGraphic
 	{
 		var path:String = '';
 
@@ -79,39 +79,36 @@ class Paths
 
 		if (OpenFlAssets.exists(path, IMAGE))
 		{
-			if (!currentTrackedAssets.exists(path))
+			if (!currentTrackedAssets.exists(key))
 			{
 				var bitmap:BitmapData = OpenFlAssets.getBitmapData(path, false);
-
 				var graphic:FlxGraphic = null;
+
 				if (gpuRender)
 				{
-					bitmap.lock();
-					var texture = FlxG.stage.context3D.createRectangleTexture(bitmap.width, bitmap.height, BGRA, true);
+					var texture = FlxG.stage.context3D.createTexture(bitmap.width, bitmap.height, BGRA, false, 0);
 					texture.uploadFromBitmapData(bitmap);
-
+					currentTrackedTextures.set(key, texture);
 					bitmap.disposeImage();
-
 					FlxDestroyUtil.dispose(bitmap);
-
 					bitmap = null;
-
-					bitmap = BitmapData.fromTexture(texture);
-
-					bitmap.unlock();
+					graphic = FlxGraphic.fromBitmapData(BitmapData.fromTexture(texture), false, key);
 				}
-				graphic = FlxGraphic.fromBitmapData(bitmap, false, path, false);
-
+				else
+				{
+					graphic = FlxGraphic.fromBitmapData(bitmap, false, key, false);
+				}
 				graphic.persist = true;
-				currentTrackedAssets.set(path, graphic);
+				currentTrackedAssets.set(key, graphic);
 			}
 			else
 			{
 				// Get data from cache.
 				// Debug.logTrace('Loading existing image from cache: $key');
 			}
-			localTrackedAssets.push(path);
-			return currentTrackedAssets.get(path);
+
+			localTrackedAssets.push(key);
+			return currentTrackedAssets.get(key);
 		}
 
 		Debug.logWarn('Could not find image at path $path');
