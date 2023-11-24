@@ -3,6 +3,8 @@ package;
 import lime.utils.Assets as LimeAssets;
 import flixel.group.FlxSpriteGroup;
 import Shaders;
+import shader.RuntimeShader;
+import flixel.addons.display.FlxRuntimeShader;
 import flixel.util.FlxSpriteUtil;
 import openfl.utils.Assets as OpenFlAssets;
 #if FEATURE_LUAMODCHART
@@ -4464,6 +4466,57 @@ class PlayState extends MusicBeatState
 
 	var hits:Array<Float> = [];
 	var offsetTest:Float = 0;
+
+	public var currentShaders:Array<FlxRuntimeShader> = [];
+
+	private function setShaders(obj:Dynamic, shaders:Array<RuntimeShader>)
+	{
+		#if (!flash && sys)
+		var filters = [];
+
+		for (shader in shaders)
+		{
+			filters.push(new ShaderFilter(shader));
+
+			if (!Std.isOfType(obj, FlxCamera))
+			{
+				obj.shader = shader;
+
+				return true;
+			}
+
+			currentShaders.push(shader);
+		}
+		if (Std.isOfType(obj, FlxCamera))
+			obj.setFilters(filters);
+
+		return true;
+		#end
+	}
+
+	private function removeShaders(obj:Dynamic)
+	{
+		#if (!flash && sys)
+		var filters = [];
+
+		for (shader in currentShaders)
+		{
+			currentShaders.remove(shader);
+		}
+
+		if (!Std.isOfType(obj, FlxCamera))
+		{
+			obj.shader = null;
+
+			return true;
+		}
+
+		if (Std.isOfType(obj, FlxCamera))
+			obj.setFilters(filters);
+
+		return true;
+		#end
+	}
 
 	public function getRatesScore(rate:Float, score:Float):Float
 	{

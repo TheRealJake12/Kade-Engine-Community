@@ -257,6 +257,16 @@ class Paths
 		return getPath(key + '.json', TEXT, library);
 	}
 
+	inline static public function shaderFragment(key:String, ?library:String)
+	{
+		return getPath('shaders/$key.frag', TEXT, library);
+	}
+
+	inline static public function shaderVertex(key:String, ?library:String)
+	{
+		return getPath('shaders/$key.vert', TEXT, library);
+	}
+
 	static public function sound(key:String, ?library:String):Any
 	{
 		var sound:Sound = loadSound('sounds', key, library);
