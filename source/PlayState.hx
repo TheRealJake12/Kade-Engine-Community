@@ -720,11 +720,11 @@ class PlayState extends MusicBeatState
 		}
 
 		// Load Characters.
-		if (!stageTesting || !FlxG.save.data.optimize)
+		if (!stageTesting)
 		{
 			gf = new Character(400, 130, gfCheck);
 
-			if (!FlxG.save.data.optimize && gf.frames == null)
+			if (gf.frames == null)
 			{
 				#if debug
 				FlxG.log.warn(["Couldn't load gf: " + gfCheck + ". Loading default gf"]);
@@ -734,7 +734,7 @@ class PlayState extends MusicBeatState
 
 			boyfriend = new Boyfriend(770, 450, SONG.player1);
 
-			if (!FlxG.save.data.optimize && boyfriend.frames == null)
+			if (boyfriend.frames == null)
 			{
 				#if debug
 				FlxG.log.warn(["Couldn't load boyfriend: " + SONG.player1 + ". Loading default boyfriend"]);
@@ -744,7 +744,7 @@ class PlayState extends MusicBeatState
 
 			dad = new Character(100, 100, SONG.player2);
 
-			if (!FlxG.save.data.optimize && dad.frames == null)
+			if (dad.frames == null)
 			{
 				#if debug
 				FlxG.log.warn(["Couldn't load opponent: " + SONG.player2 + ". Loading default opponent"]);
@@ -3799,12 +3799,11 @@ class PlayState extends MusicBeatState
 				if (swagRect == null)
 					swagRect = new FlxRect(0, 0, daNote.frameWidth, daNote.frameHeight);
 
-				if (strumScrollType)
+				if (daNote.isSustainNote && daNote.prevNote.wasGoodHit)
 				{
-					if (daNote.isSustainNote)
+					if (strumScrollType)
 					{
-						var bpmRatio = (SONG.bpm / 100);
-						daNote.y = (strumY + Math.sin(angleDir) * daNote.distance) - (daNote.height - Note.swagWidth);
+						// daNote.y = (strumY + Math.sin(angleDir) * daNote.distance) - (daNote.height - Note.swagWidth);
 
 						if ((PlayStateChangeables.botPlay
 							|| !daNote.mustPress
@@ -3821,13 +3820,7 @@ class PlayState extends MusicBeatState
 							}
 						}
 					}
-				}
-				else
-				{
-					daNote.y = (strumY
-						- 0.45 * ((Conductor.songPosition - daNote.strumTime) / songMultiplier) * (FlxMath.roundDecimal(leSpeed, 2)))
-						+ daNote.noteYOff;
-					if (daNote.isSustainNote)
+					else
 					{
 						if ((PlayStateChangeables.botPlay
 							|| !daNote.mustPress
@@ -4053,12 +4046,12 @@ class PlayState extends MusicBeatState
 		else
 			shownHealth = health;
 
-		var mult:Float = FlxMath.lerp(1, iconP1.scale.x, CoolUtil.boundTo(1 - (elapsed * 9 * songMultiplier), 0, 1));
+		var mult:Float = FlxMath.lerp(1, iconP1.scale.x, FlxMath.bound(1 - (elapsed * 9 * songMultiplier), 0, 1));
 		if (!FlxG.save.data.motion)
 			iconP1.scale.set(mult, mult);
 		iconP1.updateHitbox();
 
-		var mult:Float = FlxMath.lerp(1, iconP2.scale.x, CoolUtil.boundTo(1 - (elapsed * 9 * songMultiplier), 0, 1));
+		var mult:Float = FlxMath.lerp(1, iconP2.scale.x, FlxMath.bound(1 - (elapsed * 9 * songMultiplier), 0, 1));
 		if (!FlxG.save.data.motion)
 			iconP2.scale.set(mult, mult);
 		iconP2.updateHitbox();
@@ -4718,7 +4711,8 @@ class PlayState extends MusicBeatState
 				case 'marv':
 					currentTimingShown.color = FlxColor.CYAN;
 			}
-			currentTimingShown.borderStyle = OUTLINE;
+			currentTimingShown.font = Paths.font('vcr.ttf');
+			currentTimingShown.borderStyle = OUTLINE_FAST;
 			currentTimingShown.borderSize = 1;
 			currentTimingShown.borderColor = FlxColor.BLACK;
 			currentTimingShown.text = msTiming + "ms";
@@ -4769,9 +4763,6 @@ class PlayState extends MusicBeatState
 				comboSpr.x += 5.5;
 				comboSpr.y += 29.5;
 			}
-			/*currentTimingShown.y = rating.y + 100;
-				currentTimingShown.acceleration.y = 600;
-				currentTimingShown.velocity.y -= 150; */
 
 			comboSpr.velocity.x += FlxG.random.int(1, 10);
 
@@ -5315,48 +5306,44 @@ class PlayState extends MusicBeatState
 					health -= 0.8;
 			}
 		}
-
-		if (daNote.isParent)
-			for (i in daNote.children)
-				i.sustainActive = true;
-
-		if (!PlayStateChangeables.opponentMode)
-			dad.holdTimer = 0;
-		else
-			boyfriend.holdTimer = 0;
-
-		if (PlayStateChangeables.healthDrain)
+		if (!daNote.wasGoodHit)
 		{
-			if (!daNote.isSustainNote)
+			if (daNote.isParent)
+				for (i in daNote.children)
+					i.sustainActive = true;
+
+			if (!PlayStateChangeables.opponentMode)
+				dad.holdTimer = 0;
+			else
+				boyfriend.holdTimer = 0;
+
+			if (PlayStateChangeables.healthDrain)
 			{
-				updateScoreText();
-				if (!PlayStateChangeables.opponentMode)
+				if (!daNote.isSustainNote)
 				{
-					health -= 0.08 * PlayStateChangeables.healthLoss;
-					if (health <= 0.01)
+					updateScoreText();
+					if (!PlayStateChangeables.opponentMode)
 					{
-						health = 0.01;
+						health -= 0.08 * PlayStateChangeables.healthLoss;
+						if (health <= 0.01)
+						{
+							health = 0.01;
+						}
+					}
+					else
+					{
+						health += 0.08 * PlayStateChangeables.healthLoss;
+						if (health >= 2)
+							health = 2;
 					}
 				}
-				else
-				{
-					health += 0.08 * PlayStateChangeables.healthLoss;
-					if (health >= 2)
-						health = 2;
-				}
 			}
-			else
-			{
-			}
-		}
-		// Accessing the animation name directly to play it
-		if (!daNote.isParent && daNote.parent != null)
-		{
+
 			if (!daNote.isSustainEnd)
 			{
 				var singData:Int = Std.int(Math.abs(daNote.noteData));
 
-				if (!FlxG.save.data.optimize)
+				if (!FlxG.save.data.optimize && daNote.canPlayAnims)
 				{
 					if (PlayStateChangeables.opponentMode)
 						boyfriend.playAnim('sing' + dataSuffix[singData] + altAnim, true);
@@ -5380,44 +5367,18 @@ class PlayState extends MusicBeatState
 						vocalsEnemy.volume = 1;
 				}
 			}
-		}
-		else
-		{
-			var singData:Int = Std.int(Math.abs(daNote.noteData));
 
-			if (!FlxG.save.data.optimize && daNote.canPlayAnims)
-			{
-				if (PlayStateChangeables.opponentMode)
-					boyfriend.playAnim('sing' + dataSuffix[singData] + altAnim, true);
-				else
-					dad.playAnim('sing' + dataSuffix[singData] + altAnim, true);
-			}
+			daNote.wasGoodHit = true;
+		}
+
+		if (!daNote.isSustainNote)
+		{
 			if (FlxG.save.data.cpuStrums)
 			{
 				if (FlxG.save.data.cpuSplash && daNote.canNoteSplash && !FlxG.save.data.middleScroll)
 				{
 					spawnNoteSplashOnNoteDad(daNote);
 				}
-			}
-
-			if (FlxG.save.data.cpuStrums)
-			{
-				cpuStrums.forEach(function(spr:StaticArrow)
-				{
-					pressArrow(spr, spr.ID, daNote);
-				});
-			}
-
-			if (!PlayStateChangeables.opponentMode)
-				dad.holdTimer = 0;
-			else
-				boyfriend.holdTimer = 0;
-			if (SONG.needsVoices)
-			{
-				if (!SONG.splitVoiceTracks)
-					vocals.volume = 1;
-				else
-					vocalsEnemy.volume = 1;
 			}
 		}
 
@@ -5495,9 +5456,9 @@ class PlayState extends MusicBeatState
 						daHitSound.play();
 					}
 				}
-
 				combo += 1;
 				popUpScore(note);
+
 				/* Enable Sustains to be hit. 
 					// This is to prevent hitting sustains if you hold a strum before the note is coming without hitting the note parent. 
 					(I really hope I made me understand lol.) */
@@ -5555,15 +5516,13 @@ class PlayState extends MusicBeatState
 				updateAccuracy();
 				updateScoreText();
 			}
-			else
-			{
-				note.wasGoodHit = true;
-			}
-
+			
 			if (SONG.splitVoiceTracks != true)
 				vocals.volume = 1;
 			else
 				vocalsPlayer.volume = 1;
+			
+			note.wasGoodHit = true;
 		}
 	}
 
@@ -5670,8 +5629,8 @@ class PlayState extends MusicBeatState
 		{
 			if (curStep % 4 == 0)
 			{
-				iconP1.scale.set(1.15, 1.15);
-				iconP2.scale.set(1.15, 1.15);
+				iconP1.scale.set(1.2, 1.2);
+				iconP2.scale.set(1.2, 1.2);
 
 				iconP1.updateHitbox();
 				iconP2.updateHitbox();

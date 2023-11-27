@@ -105,72 +105,68 @@ class Character extends FlxSprite
 
 		var data:CharacterData = cast jsonData;
 
-		if (!FlxG.save.data.optimize)
-		{
-			var tex:FlxFramesCollection;
+		var tex:FlxFramesCollection;
 
-			if (data.AtlasType == 'PackerAtlas')
-				tex = Paths.getPackerAtlas(data.asset, 'shared');
-			else if (data.AtlasType == 'TextureAtlas')
-				tex = Paths.getTextureAtlas(data.asset, 'shared');
-			else if (data.AtlasType == 'JsonAtlas')
-				tex = Paths.getJSONAtlas(data.asset, 'shared');
-			else
-				tex = Paths.getSparrowAtlas(data.asset, 'shared');
+		if (data.AtlasType == 'PackerAtlas')
+			tex = Paths.getPackerAtlas(data.asset, 'shared');
+		else if (data.AtlasType == 'TextureAtlas')
+			tex = Paths.getTextureAtlas(data.asset, 'shared');
+		else if (data.AtlasType == 'JsonAtlas')
+			tex = Paths.getJSONAtlas(data.asset, 'shared');
+		else
+			tex = Paths.getSparrowAtlas(data.asset, 'shared');
 
-			frames = tex;
-			if (frames != null)
-				for (anim in data.animations)
+		frames = tex;
+		if (frames != null)
+			for (anim in data.animations)
+			{
+				var frameRate = anim.frameRate == null ? 24 : anim.frameRate;
+				var looped = anim.looped == null ? false : anim.looped;
+				var flipX = anim.flipX == null ? false : anim.flipX;
+				var flipY = anim.flipY == null ? false : anim.flipY;
+
+				if (anim.frameIndices != null)
 				{
-					var frameRate = anim.frameRate == null ? 24 : anim.frameRate;
-					var looped = anim.looped == null ? false : anim.looped;
-					var flipX = anim.flipX == null ? false : anim.flipX;
-					var flipY = anim.flipY == null ? false : anim.flipY;
-
-					if (anim.frameIndices != null)
-					{
-						animation.addByIndices(anim.name, anim.prefix, anim.frameIndices, "", Std.int(frameRate * PlayState.songMultiplier), looped, flipX,
-							flipY);
-					}
-					else
-					{
-						animation.addByPrefix(anim.name, anim.prefix, Std.int(frameRate * PlayState.songMultiplier), looped, flipX, flipY);
-					}
-
-					animOffsets[anim.name] = anim.offsets == null ? [0, 0] : anim.offsets;
-					animInterrupt[anim.name] = anim.interrupt == null ? true : anim.interrupt;
-
-					if (data.isDancing && anim.isDanced != null)
-						animDanced[anim.name] = anim.isDanced;
-
-					if (anim.nextAnim != null)
-						animNext[anim.name] = anim.nextAnim;
+					animation.addByIndices(anim.name, anim.prefix, anim.frameIndices, "", Std.int(frameRate * PlayState.songMultiplier), looped, flipX, flipY);
+				}
+				else
+				{
+					animation.addByPrefix(anim.name, anim.prefix, Std.int(frameRate * PlayState.songMultiplier), looped, flipX, flipY);
 				}
 
-			this.replacesGF = data.replacesGF == null ? false : data.replacesGF;
-			this.hasTrail = data.hasTrail == null ? false : data.hasTrail;
-			this.isDancing = data.isDancing == null ? false : data.isDancing;
-			this.charPos = data.charPos == null ? [0, 0] : data.charPos;
-			this.camPos = data.camPos == null ? [0, 0] : data.camPos;
-			this.camFollow = data.camFollow == null ? [0, 0] : data.camFollow;
-			this.holdLength = data.holdLength == null ? 4 : data.holdLength;
-			this.healthIcon = data.healthicon == null ? curCharacter : data.healthicon;
-			this.iconAnimated = data.iconAnimated == null ? false : data.iconAnimated;
+				animOffsets[anim.name] = anim.offsets == null ? [0, 0] : anim.offsets;
+				animInterrupt[anim.name] = anim.interrupt == null ? true : anim.interrupt;
 
-			this.rgbColorArray = data.rgbArray == null ? [255, 0, 0] : data.rgbArray;
+				if (data.isDancing && anim.isDanced != null)
+					animDanced[anim.name] = anim.isDanced;
 
-			flipX = data.flipX == null ? false : data.flipX;
-
-			if (data.scale != null)
-			{
-				setGraphicSize(Std.int(width * data.scale));
-				updateHitbox();
+				if (anim.nextAnim != null)
+					animNext[anim.name] = anim.nextAnim;
 			}
 
-			antialiasing = data.antialiasing == null ? FlxG.save.data.antialiasing : data.antialiasing;
+		this.replacesGF = data.replacesGF == null ? false : data.replacesGF;
+		this.hasTrail = data.hasTrail == null ? false : data.hasTrail;
+		this.isDancing = data.isDancing == null ? false : data.isDancing;
+		this.charPos = data.charPos == null ? [0, 0] : data.charPos;
+		this.camPos = data.camPos == null ? [0, 0] : data.camPos;
+		this.camFollow = data.camFollow == null ? [0, 0] : data.camFollow;
+		this.holdLength = data.holdLength == null ? 4 : data.holdLength;
+		this.healthIcon = data.healthicon == null ? curCharacter : data.healthicon;
+		this.iconAnimated = data.iconAnimated == null ? false : data.iconAnimated;
 
-			playAnim(data.startingAnim);
+		this.rgbColorArray = data.rgbArray == null ? [255, 0, 0] : data.rgbArray;
+
+		flipX = data.flipX == null ? false : data.flipX;
+
+		if (data.scale != null)
+		{
+			setGraphicSize(Std.int(width * data.scale));
+			updateHitbox();
 		}
+
+		antialiasing = data.antialiasing == null ? FlxG.save.data.antialiasing : data.antialiasing;
+
+		playAnim(data.startingAnim);
 
 		if (data.barType == 'rgb')
 			barColor = FlxColor.fromRGB(data.rgbArray[0], data.rgbArray[1], data.rgbArray[2]);
@@ -254,44 +250,39 @@ class Character extends FlxSprite
 	{
 		if (!debugMode)
 		{
-			if (!FlxG.save.data.optimize)
+			if (curCharacter != 'pico-speaker')
 			{
-				if (curCharacter != 'pico-speaker')
+				if (animation.curAnim != null)
 				{
-					if (animation.curAnim != null)
+					var canInterrupt = animInterrupt.get(animation.curAnim.name);
+
+					if (canInterrupt)
 					{
-						var canInterrupt = animInterrupt.get(animation.curAnim.name);
-
-						if (canInterrupt)
+						if (isDancing)
 						{
-							if (isDancing)
-							{
-								danced = !danced;
+							danced = !danced;
 
-								if (altAnim
-									&& animation.getByName('danceRight-alt') != null
-									&& animation.getByName('danceLeft-alt') != null)
-								{
-									if (danced)
-										playAnim('danceRight-alt');
-									else
-										playAnim('danceLeft-alt');
-								}
+							if (altAnim && animation.getByName('danceRight-alt') != null && animation.getByName('danceLeft-alt') != null)
+							{
+								if (danced)
+									playAnim('danceRight-alt');
 								else
-								{
-									if (danced)
-										playAnim('danceRight');
-									else
-										playAnim('danceLeft');
-								}
+									playAnim('danceLeft-alt');
 							}
 							else
 							{
-								if (altAnim && animation.getByName('idle-alt') != null)
-									playAnim('idle-alt', forced);
+								if (danced)
+									playAnim('danceRight');
 								else
-									playAnim('idle', forced);
+									playAnim('danceLeft');
 							}
+						}
+						else
+						{
+							if (altAnim && animation.getByName('idle-alt') != null)
+								playAnim('idle-alt', forced);
+							else
+								playAnim('idle', forced);
 						}
 					}
 				}
@@ -301,41 +292,38 @@ class Character extends FlxSprite
 
 	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
-		if (!FlxG.save.data.optimize)
+		if (AnimName.endsWith('alt') && animation.getByName(AnimName) == null)
 		{
-			if (AnimName.endsWith('alt') && animation.getByName(AnimName) == null)
+			#if debug
+			FlxG.log.warn(['Such alt animation doesnt exist: ' + AnimName]);
+			#end
+			AnimName = AnimName.split('-')[0];
+		}
+
+		animation.play(AnimName, Force, Reversed, Frame);
+
+		var daOffset = animOffsets.get(AnimName);
+		if (animOffsets.exists(AnimName))
+		{
+			offset.set(daOffset[0], daOffset[1]);
+		}
+		else
+			offset.set(0, 0);
+
+		if (curCharacter == 'gf')
+		{
+			if (AnimName == 'singLEFT')
 			{
-				#if debug
-				FlxG.log.warn(['Such alt animation doesnt exist: ' + AnimName]);
-				#end
-				AnimName = AnimName.split('-')[0];
+				danced = true;
+			}
+			else if (AnimName == 'singRIGHT')
+			{
+				danced = false;
 			}
 
-			animation.play(AnimName, Force, Reversed, Frame);
-
-			var daOffset = animOffsets.get(AnimName);
-			if (animOffsets.exists(AnimName))
+			if (AnimName == 'singUP' || AnimName == 'singDOWN')
 			{
-				offset.set(daOffset[0], daOffset[1]);
-			}
-			else
-				offset.set(0, 0);
-
-			if (curCharacter == 'gf')
-			{
-				if (AnimName == 'singLEFT')
-				{
-					danced = true;
-				}
-				else if (AnimName == 'singRIGHT')
-				{
-					danced = false;
-				}
-
-				if (AnimName == 'singUP' || AnimName == 'singDOWN')
-				{
-					danced = !danced;
-				}
+				danced = !danced;
 			}
 		}
 	}

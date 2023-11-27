@@ -428,18 +428,6 @@ class Note extends FlxSprite
 						}
 						if (strumTime - Conductor.songPosition < -Ratings.timingWindows[0] && !wasGoodHit)
 							tooLate = true;
-					case 'fuck':
-						if (strumTime - Conductor.songPosition <= ((Ratings.timingWindows[0]) * 3.4)
-							&& strumTime - Conductor.songPosition >= (-Ratings.timingWindows[0]) * 3.6)
-						{
-							canBeHit = true;
-						}
-						else
-						{
-							canBeHit = false;
-						}
-						if (strumTime - Conductor.songPosition < -Ratings.timingWindows[0] && !wasGoodHit)
-							tooLate = true;
 					default:
 						if (strumTime - Conductor.songPosition <= (((Ratings.timingWindows[0]) * lateHitMult))
 							&& strumTime - Conductor.songPosition >= (((-Ratings.timingWindows[0]) * earlyHitMult)))
@@ -454,7 +442,8 @@ class Note extends FlxSprite
 			if (isSustainNote)
 			{
 				isSustainEnd = spotInLine == parent.children.length - 1;
-				alpha = modAlpha * FlxG.save.data.alpha; // This is the correct way
+				alpha = !sustainActive
+					&& (parent.tooLate || parent.wasGoodHit) ? (modAlpha * FlxG.save.data.alpha) / 2 : modAlpha * FlxG.save.data.alpha; // This is the correct way
 			}
 			else if (tooLate && !wasGoodHit)
 			{
@@ -484,6 +473,15 @@ class Note extends FlxSprite
 
 		super.destroy();
 		_lastValidChecked = '';
+	}
+
+	@:noCompletion
+	override function set_y(value:Float):Float
+	{
+		if (isSustainNote)
+			if (PlayStateChangeables.useDownscroll)
+				value -= height - swagWidth;
+		return super.set_y(value);
 	}
 
 	@:noCompletion
