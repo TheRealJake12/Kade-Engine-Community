@@ -35,9 +35,9 @@ function stepHit(step) -- do nothing
 end
 
 function playerTwoTurn()
-    camGame.tweenZoom(camGame,1.3,(crochet * 4) / 1000)
+    setCamZoom(1.3)
 end
 
 function playerOneTurn()
-    camGame.tweenZoom(camGame,1,(crochet * 4) / 1000)
+    setCamZoom(1) 
 end

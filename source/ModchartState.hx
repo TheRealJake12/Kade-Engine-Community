@@ -535,10 +535,8 @@ class ModchartState
 				{
 					coverMeInPiss = Reflect.getProperty(coverMeInPiss, killMe[i]);
 				}
-				Debug.logTrace("setProp");
 				return Reflect.setProperty(coverMeInPiss, killMe[killMe.length - 1], value);
 			}
-			Debug.logTrace("setProp");
 			return Reflect.setProperty(PlayState.instance, variable, value);
 		});
 		Lua_helper.add_callback(lua, "getPropertyFromGroup", function(obj:String, index:Int, variable:Dynamic)

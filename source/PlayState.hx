@@ -1032,6 +1032,8 @@ class PlayState extends MusicBeatState
 					case 0:
 						precacheThing('splashes/Default', 'image', 'shared');
 					case 1:
+						precacheThing('splashes/Psych', 'image', 'shared');
+					case 2:
 						precacheThing('splashes/Week7', 'image', 'shared');
 				}
 			}
