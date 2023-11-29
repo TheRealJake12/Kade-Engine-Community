@@ -1,6 +1,6 @@
 {
   "name": "Girlfriend (Pixel Day)",
-  "asset": "characters/gfPixel",
+  "asset": ["characters/gfPixel"],
   "barColor": "#A5004D",
   "scale": 6,
   "antialiasing": false,

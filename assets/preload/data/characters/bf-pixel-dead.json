@@ -1,6 +1,6 @@
 {
   "name": "Boyfriend (Pixel Day) (Game Over)",
-  "asset": "characters/bfPixelsDEAD",
+  "asset": ["characters/bfPixelsDEAD"],
   "barColor": "#31B0D1",
   "scale": 6,
   "antialiasing": false,

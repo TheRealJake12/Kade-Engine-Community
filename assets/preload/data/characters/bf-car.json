@@ -1,6 +1,6 @@
 {
   "name": "Boyfriend (Car)",
-  "asset": "characters/bfCar",
+  "asset": ["characters/bfCar"],
   "barColor": "#31B0D1",
   "startingAnim": "idle",
   "camPos": [-100, -100],

@@ -1,6 +1,6 @@
 {
   "name": "tankman",
-  "asset": "characters/Tank",
+  "asset": ["characters/Tank"],
   "barColor": "#e1e1e1",
   "startingAnim": "idle",
   "holdLength": 4,

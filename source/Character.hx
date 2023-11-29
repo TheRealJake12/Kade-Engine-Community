@@ -3,6 +3,7 @@ package;
 import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFramesCollection;
 import Section.SwagSection;
 import flixel.util.FlxSort;
@@ -106,17 +107,39 @@ class Character extends FlxSprite
 		var data:CharacterData = cast jsonData;
 
 		var tex:FlxFramesCollection;
+		var thingy:FlxAtlasFrames;
 
-		if (data.AtlasType == 'PackerAtlas')
-			tex = Paths.getPackerAtlas(data.asset, 'shared');
-		else if (data.AtlasType == 'TextureAtlas')
-			tex = Paths.getTextureAtlas(data.asset, 'shared');
-		else if (data.AtlasType == 'JsonAtlas')
-			tex = Paths.getJSONAtlas(data.asset, 'shared');
-		else
-			tex = Paths.getSparrowAtlas(data.asset, 'shared');
+		switch (data.AtlasType)
+		{
+			case 'PackerAtlas':
+				thingy = Paths.getPackerAtlas(data.asset[0], 'shared');
+			case 'JsonAtlas':
+				thingy = Paths.getJSONAtlas(data.asset[0], 'shared');
+			case 'SparrowAtlas':
+				thingy = Paths.getSparrowAtlas(data.asset[0], 'shared');
+			default:
+				thingy = Paths.getSparrowAtlas(data.asset[0], 'shared');		
+		}
 
-		frames = tex;
+		for (i in 0...data.asset.length)
+		{
+			switch (data.AtlasType)
+			{
+				case 'PackerAtlas':
+					thingy.addAtlas(Paths.getPackerAtlas(data.asset[i], 'shared'));
+				case 'JsonAtlas':
+					thingy.addAtlas(Paths.getJSONAtlas(data.asset[i], 'shared'));
+				case 'SparrowAtlas':
+					thingy.addAtlas(Paths.getSparrowAtlas(data.asset[i], 'shared'));
+				default:
+					thingy.addAtlas(Paths.getSparrowAtlas(data.asset[i], 'shared'));
+			}
+		}
+
+		// Multi-atlas support which breaks everything 
+
+		frames = thingy;
+
 		if (frames != null)
 			for (anim in data.animations)
 			{
@@ -371,7 +394,7 @@ class Character extends FlxSprite
 typedef CharacterData =
 {
 	var name:String;
-	var asset:String;
+	var asset:Array<String>;
 	var startingAnim:String;
 
 	var ?healthicon:String;

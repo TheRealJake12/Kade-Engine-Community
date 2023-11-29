@@ -1,6 +1,6 @@
 {
   "name": "Pico",
-  "asset": "characters/Pico_FNF_assetss",
+  "asset": ["characters/Pico_FNF_assetss"],
   "barColor": "#B7D855",
   "startingAnim": "idle",
   "flipX":true,

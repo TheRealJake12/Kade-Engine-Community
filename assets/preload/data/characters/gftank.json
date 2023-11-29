@@ -1,6 +1,6 @@
 {
   "name": "Girlfriend (Tankmen)",
-  "asset": "characters/gfTankmen",
+  "asset": ["characters/gfTankmen"],
   "barColor": "#A5004D",
   "camPos":[0,140],
   "isDancing": true,

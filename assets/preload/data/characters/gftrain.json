@@ -1,6 +1,6 @@
 {
   "name": "Girlfriend Train",
-  "asset": "characters/GF_assets_train",
+  "asset": ["characters/GF_assets_train"],
   "barColor": "#A5004D",
   "startingAnim": "danceRight",
   "isDancing": true,

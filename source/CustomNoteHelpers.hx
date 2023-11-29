@@ -27,7 +27,7 @@ class Skin
 				continue;
 			var thingy = i.replace("assets/shared/images/noteskins/", "");
 
-			// Debug.logTrace(thingy);
+			// Debug.logTrace(i);
 
 			noteskinArray.push(thingy.replace(".png", ""));
 		}
@@ -61,21 +61,10 @@ class Skin
 
 class Splash
 {
-	public static var notesplashArray = [];
+	public static var notesplashArray = ['Default', 'Psych', 'Week7'];
 
 	public static function updateNotesplashes()
 	{
-		for (i in CoolUtil.readAssetsDirectoryFromLibrary('assets/shared/images/splashes', 'IMAGE', 'shared'))
-		{
-			if (!i.endsWith(".png"))
-				continue;
-			var thingy = i.replace("assets/shared/images/splashes/", "");
-
-			// Debug.logTrace(thingy);
-
-			notesplashArray.push(thingy.replace(".png", ""));
-		}
-
 		return notesplashArray;
 	}
 

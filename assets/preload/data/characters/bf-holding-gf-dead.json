@@ -1,5 +1,5 @@
 {
-	"asset": "characters/bfHoldingGF-DEAD",
+	"asset": ["characters/bfHoldingGF-DEAD"],
 	"barColor": "#31B0D1",
 	"camPos": [0,0],
 	"holdLength": 4,

@@ -1,6 +1,6 @@
 {
   "name": "Girlfriend (Car)",
-  "asset": "characters/gfCar",
+  "asset": ["characters/gfCar"],
   "barColor": "#A5004D",
   "startingAnim": "danceRight",
   "isDancing": true,

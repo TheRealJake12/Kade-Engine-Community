@@ -1,6 +1,6 @@
 {
   "name": "Daddy Dearest",
-  "asset": "characters/DADDY_DEAREST",
+  "asset": ["characters/DADDY_DEAREST"],
   "barColor": "#AF66CE",
   "startingAnim": "idle",
   "holdLength": 6.1,

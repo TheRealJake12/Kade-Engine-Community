@@ -1,6 +1,6 @@
 {
   "name": "Girlfriend (Christmas)",
-  "asset": "characters/gfChristmas",
+  "asset": ["characters/gfChristmas"],
   "barColor": "#A5004D",
   "startingAnim": "danceRight",
   "isDancing": true,

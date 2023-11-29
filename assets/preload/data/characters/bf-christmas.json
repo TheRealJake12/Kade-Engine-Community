@@ -1,6 +1,6 @@
 {
   "name": "Boyfriend (Christmas)",
-  "asset": "characters/bfChristmas",
+  "asset": ["characters/bfChristmas"],
   "barColor": "#31B0D1",
   "startingAnim": "idle",
   "flipX": true,

@@ -1,6 +1,6 @@
 {
 	"name": "Boyfriend holding GF",
-	"asset": "characters/bfAndGF",
+	"asset": ["characters/bfAndGF"],
 	"barColor": "#31B0D1",
 	"camPos": [-100, -100],
 	"scale": 1,

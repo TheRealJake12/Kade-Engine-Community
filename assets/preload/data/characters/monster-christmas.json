@@ -1,6 +1,6 @@
 {
   "name": "Monster (Christmas)",
-  "asset": "characters/monsterChristmas",
+  "asset": ["characters/monsterChristmas"],
   "barColor": "#F3FF6E",
   "startingAnim": "idle",
   "healthicon" : "monster",

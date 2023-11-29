@@ -1,6 +1,6 @@
 {
   "name": "bf-dead",
-  "asset": "characters/bfDEAD",
+  "asset": ["characters/bfDEAD"],
   "holdLength": 1,
   "flipX": true,
   "frameRate":24,

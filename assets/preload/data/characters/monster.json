@@ -1,6 +1,6 @@
 {
   "name": "Monster",
-  "asset": "characters/Monster_Assets",
+  "asset": ["characters/Monster_Assets"],
   "barColor": "#F3FF6E",
   "startingAnim": "idle",
   "healthicon" : "monster",

@@ -1,6 +1,6 @@
 {
   "name": "Spirit",
-  "asset": "characters/spirit",
+  "asset": ["characters/spirit"],
   "barColor": "#FF3C6E",
   "scale": 6,
   "antialiasing": false,
