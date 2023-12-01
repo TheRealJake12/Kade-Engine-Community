@@ -216,16 +216,10 @@ class CoolUtil
 		{
 			if (!loadedVideos.contains(name))
 			{
-				loadingVideos.push(name);
 				var cache:VideoHandler = new VideoHandler();
 				cache.mute = true;
-				cache.play(Paths.video(name));
-				cache.onOpening.add(function()
-				{
-					cache.stop();
-					loadedVideos.push(name);
-					loadingVideos.remove(name);
-				});
+				cache.load(Paths.video(name));
+				loadedVideos.push(name);
 				FlxG.log.add('Video file has been cached: ' + name);
 			}
 			else

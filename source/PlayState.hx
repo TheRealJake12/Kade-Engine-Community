@@ -6734,8 +6734,9 @@ class PlayState extends MusicBeatState
 		}
 
 		var video:VideoHandler = new VideoHandler();
+		video.load(filepath);
 		// Recent versions
-		video.play(filepath);
+		video.play();
 		video.onEndReached.add(function()
 		{
 			video.dispose();
@@ -6765,6 +6766,7 @@ class PlayState extends MusicBeatState
 		var diff:String = CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[storyDifficulty]);
 
 		var video:VideoHandler = new VideoHandler();
+		video.load(Paths.video(name));
 		inst.stop();
 		video.onEndReached.add(function()
 		{
@@ -6783,7 +6785,7 @@ class PlayState extends MusicBeatState
 
 			video.dispose();
 		});
-		video.play(Paths.video(name));
+		video.play();
 		#else
 		FlxG.log.warn("Platform Not Supported.");
 		#end

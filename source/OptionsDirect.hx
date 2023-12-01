@@ -25,7 +25,7 @@ class OptionsDirect extends MusicBeatState
 		persistentUpdate = false;
 
 		menuBG = new FlxSprite().loadGraphic(Paths.image("menuDesat"));
-		menuBG.color = 0xFFea71fd;
+		menuBG.color = 0xFF2F2F2F;
 		menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));
 		menuBG.updateHitbox();
 		menuBG.screenCenter();

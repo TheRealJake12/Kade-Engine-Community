@@ -129,6 +129,7 @@ class MainMenuState extends MusicBeatState
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
 		bg.updateHitbox();
 		bg.screenCenter();
+		bg.velocity.set(240, 0);
 		bg.antialiasing = FlxG.save.data.antialiasing;
 		add(bg);
 
@@ -145,6 +146,7 @@ class MainMenuState extends MusicBeatState
 		magenta.updateHitbox();
 		magenta.screenCenter();
 		magenta.visible = false;
+		magenta.velocity.set(240, 0);
 		magenta.antialiasing = FlxG.save.data.antialiasing;
 		magenta.color = 0xFFfd719b;
 		add(magenta);
@@ -292,9 +294,6 @@ class MainMenuState extends MusicBeatState
 				MusicBeatState.switchState(new SelectEditorsState());
 			}
 			#end
-
-			bg.x += 240 * elapsed;
-			magenta.x += 240 * elapsed;
 
 			if (FlxG.mouse.overlaps(menuItems, FlxG.camera) && FlxG.mouse.justPressed || controls.ACCEPT)
 			{

@@ -47,7 +47,7 @@ class OptionCata extends FlxSprite
 		title = _title;
 		middle = middleType;
 		graphics = [];
-
+		
 		var blackGraphic = new FlxSprite().makeGraphic(295, 64, FlxColor.BLACK);
 		var cumGraphic = new FlxSprite().makeGraphic(295, 64, FlxColor.WHITE);
 

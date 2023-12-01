@@ -46,6 +46,8 @@ class NoteSplash extends FlxSprite
 	{
 		super(x, y);
 
+		loadAnims();
+
 		antialiasing = FlxG.save.data.antialiasing;
 	}
 
