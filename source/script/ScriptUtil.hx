@@ -149,11 +149,6 @@ class ScriptUtil
 		script.set("Boyfriend", Boyfriend);
 	}
 
-	public static inline function findScriptsInDir(path:String, ?deepSearch:Bool = true):Array<String>
-	{
-		return CoolUtil.findFilesInPath(path, ["hx", "hscript", "hsc", "hxs"], true);
-	}
-
 	public static inline function hasPause(arr:Array<Dynamic>):Bool
 	{
 		return arr.contains(ScriptReturn.PUASE);

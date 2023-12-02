@@ -232,9 +232,12 @@ class Script extends FlxBasic
 		}
 		catch (e)
 		{
+			MusicBeatState.switchState(new FreeplayState());
 			error('$e', '${name}:${getCurLine() != null ? Std.string(getCurLine()) : ''}: Function Error');
 			return null;
+			// here
 		}
+		return null;
 	}
 
 	public function executeString(script:String):Dynamic

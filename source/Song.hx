@@ -2,7 +2,6 @@ package;
 
 import Section.SwagSection;
 import flixel.FlxG;
-import haxe.Json;
 
 using StringTools;
 

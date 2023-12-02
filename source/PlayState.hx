@@ -63,7 +63,6 @@ import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
-import haxe.Json;
 import openfl.filters.ShaderFilter;
 #if FEATURE_DISCORD
 import Discord.DiscordClient;
@@ -485,6 +484,7 @@ class PlayState extends MusicBeatState
 
 		// Initialize PlayStateChangeables Options For Later.
 		PlayStateChangeables.useDownscroll = FlxG.save.data.downscroll;
+		PlayStateChangeables.middleScroll = FlxG.save.data.middleScroll;
 		PlayStateChangeables.safeFrames = FlxG.save.data.frames;
 		if (FlxG.save.data.scrollSpeed == 1)
 			scrollSpeed = SONG.speed;
@@ -1020,24 +1020,6 @@ class PlayState extends MusicBeatState
 			luaModchart.executeState('onCreate', [null]);
 		}
 		#end
-
-		if (FlxG.save.data.noteSplashes)
-		{
-			if (SONG.noteStyle == 'pixel')
-				precacheThing('weeb/pixelUI/noteSplashes-pixels', 'image', 'week6');
-			else
-			{
-				switch (FlxG.save.data.notesplash)
-				{
-					case 0:
-						precacheThing('splashes/Default', 'image', 'shared');
-					case 1:
-						precacheThing('splashes/Psych', 'image', 'shared');
-					case 2:
-						precacheThing('splashes/Week7', 'image', 'shared');
-				}
-			}
-		}
 
 		#if FEATURE_LUAMODCHART
 		if (executeModchart)
@@ -2857,7 +2839,7 @@ class PlayState extends MusicBeatState
 			babyArrow.x += 98.5; // Tryna make it not offset because it was pissing me off + Psych Engine has it somewhat like this.
 			babyArrow.x += ((FlxG.width / 2) * player);
 
-			if (FlxG.save.data.middleScroll || FlxG.save.data.optimize)
+			if (PlayStateChangeables.middleScroll || FlxG.save.data.optimize)
 			{
 				if (!PlayStateChangeables.opponentMode)
 				{
@@ -2883,9 +2865,9 @@ class PlayState extends MusicBeatState
 		var index = 0;
 		strumLineNotes.forEach(function(babyArrow:FlxSprite)
 		{
-			if (isStoryMode && !FlxG.save.data.middleScroll || (PlayStateChangeables.Optimize))
+			if (isStoryMode && !PlayStateChangeables.middleScroll || (PlayStateChangeables.Optimize))
 				babyArrow.visible = true;
-			if (index > 3 && FlxG.save.data.middleScroll)
+			if (index > 3 && PlayStateChangeables.middleScroll)
 				babyArrow.visible = true;
 			index++;
 		});
@@ -3871,7 +3853,7 @@ class PlayState extends MusicBeatState
 
 				// there was some code idk what it did but it fucked with color quantization shit. ik its a feature not many like but I like it.
 
-				if (!daNote.mustPress && FlxG.save.data.middleScroll && !executeModchart)
+				if (!daNote.mustPress && PlayStateChangeables.middleScroll && !executeModchart)
 					daNote.visible = false;
 
 				if (Conductor.songPosition > Ratings.timingWindows[0] + daNote.strumTime)
@@ -4680,7 +4662,7 @@ class PlayState extends MusicBeatState
 			rating.loadGraphic(Paths.image(pixelShitPart1 + daRating + pixelShitPart2, pixelShitPart3));
 			rating.screenCenter();
 			rating.y -= 50;
-			if (!FlxG.save.data.middleScroll || PlayStateChangeables.Optimize)
+			if (!PlayStateChangeables.middleScroll || PlayStateChangeables.Optimize)
 				rating.x = (coolText.x - 125)
 			else
 				rating.x = (coolText.x + 200);
@@ -4749,7 +4731,7 @@ class PlayState extends MusicBeatState
 			// comboGroup.add(comboSpr);
 
 			currentTimingShown.screenCenter();
-			if (!FlxG.save.data.middleScroll)
+			if (!PlayStateChangeables.middleScroll)
 				currentTimingShown.x = comboSpr.x + 100;
 			else
 			{
@@ -5377,7 +5359,7 @@ class PlayState extends MusicBeatState
 		{
 			if (FlxG.save.data.cpuStrums)
 			{
-				if (FlxG.save.data.cpuSplash && daNote.canNoteSplash && !FlxG.save.data.middleScroll)
+				if (FlxG.save.data.cpuSplash && daNote.canNoteSplash && !PlayStateChangeables.middleScroll)
 				{
 					spawnNoteSplashOnNoteDad(daNote);
 				}
@@ -5518,12 +5500,12 @@ class PlayState extends MusicBeatState
 				updateAccuracy();
 				updateScoreText();
 			}
-			
+
 			if (SONG.splitVoiceTracks != true)
 				vocals.volume = 1;
 			else
 				vocalsPlayer.volume = 1;
-			
+
 			note.wasGoodHit = true;
 		}
 	}
@@ -6115,15 +6097,20 @@ class PlayState extends MusicBeatState
 
 		var scriptData:Map<String, String> = [];
 
-		// SONG && GLOBAL SCRIPTS
-		var files:Array<String> = SONG.songId == null ? [] : ScriptUtil.findScriptsInDir(Paths.getPreloadPath("data/songs/"
-			+ Paths.formatToSongPath(SONG.songId)));
+		var files:Array<String> = [];
+		var extensions = ["hx", "hscript", "hsc", "hxs"];
+		var rawFiles:Array<String> = CoolUtil.readAssetsDirectoryFromLibrary('assets/data/songs/${SONG.songId}', 'TEXT');
 
-		if (FileSystem.exists("assets/scripts/states/playstate"))
+		for (sub in rawFiles)
 		{
-			for (_ in ScriptUtil.findScriptsInDir("assets/scripts/states/playstate"))
-				files.push(_);
+			for (ext in extensions)
+				if (sub.contains(ext)) // Dont want the charts in there lmfao who made this function
+					files.push(sub);
 		}
+
+		for (_ in CoolUtil.readAssetsDirectoryFromLibrary('assets/scripts', 'TEXT'))
+			files.push(_);
+
 		if (FlxG.save.data.gen)
 			Debug.logTrace(files);
 
@@ -6131,8 +6118,8 @@ class PlayState extends MusicBeatState
 		{
 			var hx:Null<String> = null;
 
-			if (FileSystem.exists(file))
-				hx = File.getContent(file);
+			if (OpenFlAssets.exists(file))
+				hx = OpenFlAssets.getText(file);
 
 			if (hx != null)
 			{
@@ -6151,7 +6138,7 @@ class PlayState extends MusicBeatState
 				scripts.addScript(scriptName).executeString(hx);
 			else
 			{
-				scripts.getScriptByTag(scriptName).error("Duplacite Script Error!", '$scriptName: Duplicate Script');
+				scripts.getScriptByTag(scriptName).error("Duplicate Script Error!", '$scriptName: Duplicate Script');
 			}
 		}
 	}
@@ -6269,10 +6256,10 @@ class PlayState extends MusicBeatState
 		}); // ! HAS PAUSE
 
 		//  MISC
-		script.set("update", function(?elapsed:Float)
+		script.set("update", function(elapsed:Float)
 		{
 		});
-		script.set("updatePost", function(?elapsed:Float)
+		script.set("updatePost", function(elapsed:Float)
 		{
 		});
 		script.set("updateScore", function(?miss:Bool = false)
@@ -6300,6 +6287,8 @@ class PlayState extends MusicBeatState
 		// NOTES
 		script.set("notes", notes);
 		script.set("strumLineNotes", strumLineNotes);
+		script.set("playerStrums", playerStrums);
+		script.set("cpuStrums", cpuStrums);
 
 		script.set("unspawnNotes", unspawnNotes);
 

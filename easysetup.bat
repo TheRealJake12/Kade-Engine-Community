@@ -12,7 +12,8 @@ haxelib install flixel-tools
 haxelib install flixel-ui
 haxelib install flixel-addons
 haxelib install hxcpp-debug-server
-haxelib install polymod
+haxelib install polymod 1.7.0
+haxelib install tjson
 haxelib install SScript
 haxelib run lime setup
 haxelib run lime setup flixel
@@ -26,7 +27,6 @@ echo Press any key to install the git libraries.
 pause >nul
 title KEC Setup - Installing libraries
 haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
-haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
 haxelib git faxe https://github.com/uhrobots/faxe
 haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
 haxelib git hxvlc https://github.com/MAJigsaw77/hxvlc.git

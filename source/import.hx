@@ -14,6 +14,7 @@ import flixel.group.FlxSpriteGroup;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
+import tjson.TJSON as Json;
 #end
 
 using StringTools;

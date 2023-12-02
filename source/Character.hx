@@ -118,7 +118,7 @@ class Character extends FlxSprite
 			case 'SparrowAtlas':
 				thingy = Paths.getSparrowAtlas(data.asset[0], 'shared');
 			default:
-				thingy = Paths.getSparrowAtlas(data.asset[0], 'shared');		
+				thingy = Paths.getSparrowAtlas(data.asset[0], 'shared');
 		}
 
 		for (i in 0...data.asset.length)
@@ -136,7 +136,7 @@ class Character extends FlxSprite
 			}
 		}
 
-		// Multi-atlas support which breaks everything 
+		// Multi-atlas support which breaks everything
 
 		frames = thingy;
 

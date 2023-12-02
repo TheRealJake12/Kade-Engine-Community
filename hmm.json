@@ -6,6 +6,11 @@
       "version": null
     },
     {
+      "name": "tjson",
+      "type": "haxelib",
+      "version": null
+    },
+    {
       "name": "SScript",
       "type": "git",
       "ref": "testing",

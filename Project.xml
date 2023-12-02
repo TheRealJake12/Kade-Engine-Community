@@ -17,6 +17,26 @@
 	<!--Minimum without FLX_NO_GAMEPAD: 11.8, without FLX_NO_NATIVE_CURSOR: 11.2-->
 	<set name="SWF_VERSION" value="11.8" />
 
+	<!-- Use defines to ensure compile-time definitions have readable context. -->
+	<!-- Allowed inputs are mobile,desktop,web,ios,android,windows,mac,linux,switch,html5,cpp,neko,flash,js -->
+
+	<!-- Defines whether the Discord client should be enabled. Only works on desktop. -->
+	<define name="FEATURE_DISCORD" if="desktop" />
+	<!-- Defines whether the file system can be read/written directly. Does not work in browser. -->
+	<define name="FEATURE_FILESYSTEM" if="desktop" />
+	<!-- Defines whether Lua Modcharts should be enabled. Only works on Windows. -->
+	<define name="FEATURE_LUAMODCHART" if="desktop" />
+	<!-- Defines whether StepMania files can be loaded. -->
+	<define name="FEATURE_STEPMANIA" if="desktop" />
+	<!-- Defines whether the Thread class can be used. -->
+	<define name="FEATURE_MULTITHREADING" if="cpp" />
+	<!-- Videos -->
+	<define name="VIDEOS" if="desktop || android"/>
+	<!-- Defines if hscript are enabled. Dosen't work in browser -->
+	<define name="FEATURE_HSCRIPT" if="desktop" />
+	<!-- Defines whether modcore can be used. -->
+	<define name="FEATURE_MODCORE" if="desktop" />
+
 	<!-- ____________________________ Window Settings ___________________________ -->
 
 	<!--These window settings apply to all targets-->
@@ -119,26 +139,31 @@
 	<assets path="assets/fonts" embed='true'/>
 	<!-- _______________________________ Libraries ______________________________ -->
 
-	<haxelib name="flixel" />
 	<haxedev set='webgl' />
 
-	<!--In case you want to use the addons package-->
-	<haxelib name="flixel-addons" />
+	<!-- Flixel -->
 
-	<!--In case you want to use the ui package-->
+	<haxelib name="flixel" />
+	<haxelib name="flixel-addons" />
 	<haxelib name="flixel-ui" />
+	<!-- APIs -->
+
+	<haxelib name="discord_rpc" if="FEATURE_DISCORD"/>
+	<haxelib name="polymod" if="FEATURE_MODCORE"/>
+	<haxelib name="linc_luajit" if="FEATURE_LUAMODCHART"/>
+	<haxelib name="SScript" if="FEATURE_HSCRIPT"/>
+	<haxedef name="openflPos" if="FEATURE_HSCRIPT"/>
+	<haxedef name="hscriptPos" if="FEATURE_HSCRIPT"/>
+
+	<!-- Utilities -->
+
 	<haxelib name="faxe" if='switch'/>
-	<haxelib name="discord_rpc" if="desktop"/>
-	<haxelib name="polymod"/>
-	<haxelib name="linc_luajit" if="desktop"/>
+	<haxelib name="tjson"/>
 	<haxelib name="hxcpp-debug-server" if="desktop"/>
 	<section if="cpp">
 		<haxelib name="hxvlc" if="desktop || android" />
 	</section>
-	<haxelib name="SScript"/>
 	
-	<haxedef name="openflPos" />
-	<haxedef name="hscriptPos" />
 
 	<!-- <haxelib name="markdown" /> -->
 	<!-- <haxelib name="HtmlParser" /> -->
@@ -201,31 +226,6 @@
 	<icon path="art/icon256.png" size='256'/>
 	<icon path="art/icon512.png" size='512'/>
 	<icon path="art/iconOG.png" />
-
-  <!-- Use defines to ensure compile-time definitions have readable context. -->
-  <!-- Allowed inputs are mobile,desktop,web,ios,android,windows,mac,linux,switch,html5,cpp,neko,flash,js -->
-
-  <!-- Defines whether the Discord client should be enabled. Only works on desktop. -->
-  <haxedef name="FEATURE_DISCORD" if="desktop" />
-  <!-- Defines whether the file system can be read/written directly. Does not work in browser. -->
-  <haxedef name="FEATURE_FILESYSTEM" if="desktop" />
-  <!-- Defines whether Lua Modcharts should be enabled. Only works on Windows. -->
-  <haxedef name="FEATURE_LUAMODCHART" if="desktop" />
-  <!-- Defines whether StepMania files can be loaded. -->
-  <haxedef name="FEATURE_STEPMANIA" if="desktop" />
-  <!-- Defines whether the Thread class can be used. -->
-  <haxedef name="FEATURE_MULTITHREADING" if="cpp" />
-  <!-- Videos -->
-  <haxedef name="VIDEOS" if="desktop || android"/>
-  <!-- Defines if hscript are enabled. Dosen't work in browser -->
-  <define name="FEATURE_HSCRIPT" if="desktop" />
-  <!-- Defines whether modcore can be used. -->
-  <haxedef name="FEATURE_MODCORE" if="desktop" />
-  <!--Polymod shit that'll allow hscript I think.-->
-  <haxedef name="POLYMOD_SCRIPT_EXT" value=".hx" />
-  <haxedef name="POLYMOD_DEBUG" if="debug" />
-  <haxedef name="POLYMOD_SCRIPT_LIBRARY" value="scripts" />
-  <haxedef name="POLYMOD_ROOT_PATH" value="scripts/" />
 
    <haxedef name="gl_stats" if="desktop" />
 

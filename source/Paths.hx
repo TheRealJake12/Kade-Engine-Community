@@ -6,7 +6,6 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection;
 import animateatlas.AtlasFrameMaker;
 import flixel.graphics.frames.FlxAtlasFrames;
-import haxe.Json;
 import lime.utils.Assets;
 import openfl.system.System;
 import openfl.display3D.textures.RectangleTexture;
