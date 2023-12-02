@@ -1,0 +1,22 @@
+# Changelog For Update 1.9
+- Majorly Improve Chart Editor Performance.
+- Fix Memory Leak Going To The Chart Editor.
+- Fixed Autosaving In The Chart Editor Crashing.
+- Added A Second Value To Chart Events.
+- Re-Organize Chart Editor.
+- Make Hitsounds In The Chart Editor Use Your Saved Hitsound.
+- Fixed Chart Editor Information Text Being Inaccurate.
+- Multiple Chart Editor Bugs Fixed.
+- Added Split Vocals Support.
+- Added Animated Icon Support.
+- Different Song Difficulties Can Use Different Audio Files.
+- Fixed A Few Character Editor Bugs.
+- Fixed Game Slowing Down At Really High Framerates.
+- Reorganized Options.
+- A Few Fixes For Linux.
+- Compressed / Removed Unused Assets.
+- Re-Export Note Assets.
+- Stage Editor Now Plays The Stage Animations.
+- Use SScript Instead Of Hscript.
+- Circle Hurt And Must Press Notes.
+- Bug Fixes.
