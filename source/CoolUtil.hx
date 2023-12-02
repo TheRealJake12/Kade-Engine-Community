@@ -259,12 +259,12 @@ class CoolUtil
 		}
 		return files;
 	}
+	#end
 
 	public static inline function getFileStringFromPath(file:String):String
 	{
 		return Path.withoutDirectory(Path.withoutExtension(file));
 	}
-	#end
 }
 
 /**

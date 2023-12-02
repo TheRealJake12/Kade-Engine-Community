@@ -17,7 +17,9 @@ import openfl.Lib;
 import sys.FileSystem;
 import sys.io.File;
 #end
+#if cpp
 import cpp.CPPInterface;
+#end
 
 using StringTools;
 
@@ -137,7 +139,7 @@ class Script extends FlxBasic
 
 				if (OpenFlAssets.exists(path))
 				{
-					hx = File.getContent(path);
+					hx = OpenFlAssets.getText(path);
 					break;
 				}
 			}

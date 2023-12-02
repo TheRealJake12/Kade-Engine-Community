@@ -854,10 +854,15 @@ class FreeplayState extends MusicBeatState
 			{
 				var songPath:String = null;
 
-				if (songs[curSelected].songCharacter == "sm")
-					songPath = FileSystem.absolutePath(songs[curSelected].path + "/" + songs[curSelected].sm.header.MUSIC);
-				else
-					songPath = Paths.inst(songs[curSelected].songName, true);
+				switch (songs[curSelected].songCharacter)
+				{
+					case "sm":
+						#if (FEATURE_FILESYSTEM && FEATURE_STEPMANIA)
+						songPath = FileSystem.absolutePath(songs[curSelected].path + "/" + songs[curSelected].sm.header.MUSIC);
+						#end
+					default:
+						songPath = Paths.inst(songs[curSelected].songName, true);
+				}
 
 				FlxG.sound.playMusic(songPath, 0.7, true);
 
@@ -921,14 +926,16 @@ class FreeplayState extends MusicBeatState
 		var currentSongData:SongData = null;
 		try
 		{
-			if (instance.songs[curSelected].songCharacter == "sm")
+			switch (instance.songs[curSelected].songCharacter)
 			{
-				currentSongData = Song.loadFromJsonRAW(#if FEATURE_FILESYSTEM File.getContent(instance.songs[curSelected].sm.jsonPath) #else OpenFlAssets.getText(instance.songs[curSelected].songName) #end);
-			}
-			else
-			{
-				currentSongData = Song.loadFromJson(instance.songs[curSelected].songName,
-					CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[CoolUtil.difficultyArray.indexOf(instance.songs[curSelected].diffs[difficulty])]));
+				#if FEATURE_STEPMANIA
+				case "sm":
+					currentSongData = Song.loadFromJsonRAW(#if FEATURE_FILESYSTEM File.getContent(instance.songs[curSelected].sm.jsonPath) #else OpenFlAssets.getText(instance.songs[curSelected].songName) #end);
+				#end	
+				default:
+					currentSongData = Song.loadFromJson(instance.songs[curSelected].songName,
+						CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[CoolUtil.difficultyArray.indexOf(instance.songs[curSelected].diffs[difficulty])]));
+
 			}
 		}
 		catch (ex)

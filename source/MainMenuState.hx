@@ -2,7 +2,7 @@ package;
 
 import Controls.KeyboardScheme;
 import flixel.util.FlxTimer;
-#if desktop
+#if FEATURE_DISCORD
 import Discord.DiscordClient;
 #end
 import flixel.FlxG;
@@ -93,7 +93,7 @@ class MainMenuState extends MusicBeatState
 	{
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
-		#if desktop
+		#if FEATURE_DISCORD
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end

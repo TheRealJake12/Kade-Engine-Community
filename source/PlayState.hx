@@ -522,20 +522,19 @@ class PlayState extends MusicBeatState
 		startTime = 0;
 
 		// Search For Lua Modcharts / Hscripts.
-		#if FEATURE_LUAMODCHART
+		#if (FEATURE_FILESYSTEM && FEATURE_LUAMODCHART)
 		executeModchart = FileSystem.exists(Paths.lua('songs/${PlayState.SONG.songId}/modchart')) && PlayStateChangeables.modchart;
 		if (isSM)
 			executeModchart = FileSystem.exists(pathToSm + "/modchart.lua");
+		executeModchart = OpenFlAssets.exists(Paths.lua('songs/${PlayState.SONG.songId}/modchart')) && PlayStateChangeables.modchart;
+		if (isSM)
+			executeModchart = OpenFlAssets.exists(pathToSm + "/modchart.lua");
 		#end
-		#if !cpp
+		#if !FEATURE_LUAMODCHART
 		executeModchart = false;
 		#end
 
 		// Use FileSystem on desktop for cool modcharts with no compile :>
-
-		#if !cpp
-		executeModchart = false;
-		#end
 
 		if (FlxG.save.data.gen)
 		{
@@ -6711,7 +6710,7 @@ class PlayState extends MusicBeatState
 		inCutscene = true;
 
 		var filepath:String = Paths.video(name);
-		#if sys
+		#if FEATURE_FILESYSTEM
 		if (!FileSystem.exists(filepath))
 		#else
 		if (!OpenFlAssets.exists(filepath))
