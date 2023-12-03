@@ -27,6 +27,9 @@ jobs:
       - name: Installing/Updating libraries
         run: |
           haxe -cp ./update -D analyzer-optimize -main Update --interp
+       - name: Skip SScript setup mode
+        run: echo 'oy9:showMacroty8:loopCosti25y10:includeAllfg' >> %USERPROFILE%/settings.cocoa
+        shell: cmd
       - name: Building the game
         run: |
           haxelib run lime build windows

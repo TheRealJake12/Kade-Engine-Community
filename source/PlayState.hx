@@ -526,9 +526,6 @@ class PlayState extends MusicBeatState
 		executeModchart = FileSystem.exists(Paths.lua('songs/${PlayState.SONG.songId}/modchart')) && PlayStateChangeables.modchart;
 		if (isSM)
 			executeModchart = FileSystem.exists(pathToSm + "/modchart.lua");
-		executeModchart = OpenFlAssets.exists(Paths.lua('songs/${PlayState.SONG.songId}/modchart')) && PlayStateChangeables.modchart;
-		if (isSM)
-			executeModchart = OpenFlAssets.exists(pathToSm + "/modchart.lua");
 		#end
 		#if !FEATURE_LUAMODCHART
 		executeModchart = false;

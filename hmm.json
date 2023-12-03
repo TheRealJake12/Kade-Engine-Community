@@ -12,9 +12,8 @@
     },
     {
       "name": "SScript",
-      "type": "git",
-      "ref": "testing",
-      "url": "https://github.com/TheRealJake12/SScript-macroless.git"
+      "type": "haxelib",
+      "version": null
     },
     {
       "name": "hxcpp-debug-server",
