@@ -104,7 +104,7 @@ It will take a while to build for both versions.
 
 - [TheRealJake_12](https://www.youtube.com/channel/UCYy-RfMjVx-1dYnmNQGB2sw) - *mostly everything.*
 
-- [KadeDev](https://github.com/KadeDev) - The Original Guy who created Kade Engine.
+- [KadeDev](https://github.com/kade-github) - The Original Guy who created Kade Engine.
 
 - [PolybiusProxy](https://github.com/polybiusproxy) - The Video Support.
 
