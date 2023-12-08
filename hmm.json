@@ -7,8 +7,9 @@
     },
     {
       "name": "tjson",
-      "type": "haxelib",
-      "version": null
+      "type": "git",
+      "ref": "master",
+      "url": "https://github.com/EliteMasterEric/TJSON.git"
     },
     {
       "name": "SScript",

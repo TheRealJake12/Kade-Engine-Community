@@ -18,6 +18,7 @@ class Skin
 
 	public static function updateNoteskins()
 	{
+		noteskinArray = [];
 		for (i in CoolUtil.readAssetsDirectoryFromLibrary('assets/shared/images/noteskins', 'IMAGE', 'shared'))
 		{
 			if (i.contains("-pixel"))
@@ -27,11 +28,8 @@ class Skin
 				continue;
 			var thingy = i.replace("assets/shared/images/noteskins/", "");
 
-			// Debug.logTrace(i);
-
 			noteskinArray.push(thingy.replace(".png", ""));
 		}
-
 		return noteskinArray;
 	}
 

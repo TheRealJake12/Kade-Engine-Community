@@ -202,6 +202,8 @@ class CoolUtil
 				stringList.push(hmm);
 			}
 		}
+		
+		stringList.sort(Reflect.compare);
 
 		return stringList;
 	}
@@ -243,8 +245,6 @@ class CoolUtil
 	public static function findFilesInPath(path:String, extns:Array<String>, ?filePath:Bool = false, ?deepSearch:Bool = true):Array<String>
 	{
 		var files:Array<String> = [];
-
-		Debug.logTrace(readAssetsDirectoryFromLibrary(path, 'TEXT'));
 
 		if (LimeAssets.exists(path))
 		{
