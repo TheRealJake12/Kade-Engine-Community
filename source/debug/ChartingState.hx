@@ -1926,6 +1926,11 @@ class ChartingState extends MusicBeatState
 						nums.value = 1;
 					_song.bpm = nums.value;
 
+					for (section in _song.notes)
+					{
+						section.bpm = _song.bpm;
+					}
+
 					if (_song.eventObjects[0].type != "BPM Change")
 						Application.current.window.alert("i'm crying, first event isn't a bpm change. fuck you");
 					else

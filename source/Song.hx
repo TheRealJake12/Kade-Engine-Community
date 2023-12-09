@@ -232,7 +232,7 @@ class Song
 			if (i.changeBPM && i.bpm != ba)
 			{
 				ba = i.bpm;
-				song.eventObjects.push(new Song.Event("FNF BPM Change " + index, beat, i.bpm, "1", "BPM Change"));
+				song.eventObjects.push(new Song.Event("FNF BPM Change " + index, beat, '${i.bpm}', "1", "BPM Change"));
 			}
 
 			if (i.lengthInSteps == null)

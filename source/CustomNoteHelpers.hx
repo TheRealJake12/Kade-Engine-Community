@@ -59,10 +59,19 @@ class Skin
 
 class Splash
 {
-	public static var notesplashArray = ['Default', 'Psych', 'Week7'];
+	public static var notesplashArray = ['Default', 'Psych', 'Week7']; // Defaults, should be in this order normally.
 
 	public static function updateNotesplashes()
 	{
+		notesplashArray = [];
+		for (i in CoolUtil.readAssetsDirectoryFromLibrary('assets/shared/images/splashes', 'IMAGE', 'shared'))
+		{
+			if (!i.endsWith(".png"))
+				continue;
+			var thingy = i.replace("assets/shared/images/splashes/", "");
+
+			notesplashArray.push(thingy.replace(".png", ""));
+		}
 		return notesplashArray;
 	}
 
@@ -76,8 +85,11 @@ class Splash
 		return notesplashArray[id];
 	}
 
-	static public function generateNotesplashSprite(id:Int)
+	static public function generateNotesplashSprite(id:Int, ?type:String = '')
 	{
-		return 'splashes/${getNotesplashByID(id)}';
+		if (type != '')
+			return 'notetypes/splashes/${getNotesplashByID(id) + type}';
+		else
+			return 'splashes/${getNotesplashByID(id)}';
 	}
 }

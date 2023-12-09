@@ -931,11 +931,10 @@ class FreeplayState extends MusicBeatState
 				#if FEATURE_STEPMANIA
 				case "sm":
 					currentSongData = Song.loadFromJsonRAW(#if FEATURE_FILESYSTEM File.getContent(instance.songs[curSelected].sm.jsonPath) #else OpenFlAssets.getText(instance.songs[curSelected].songName) #end);
-				#end	
+				#end
 				default:
 					currentSongData = Song.loadFromJson(instance.songs[curSelected].songName,
 						CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[CoolUtil.difficultyArray.indexOf(instance.songs[curSelected].diffs[difficulty])]));
-
 			}
 		}
 		catch (ex)

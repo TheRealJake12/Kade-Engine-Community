@@ -202,7 +202,7 @@ class CoolUtil
 				stringList.push(hmm);
 			}
 		}
-		
+
 		stringList.sort(Reflect.compare);
 
 		return stringList;

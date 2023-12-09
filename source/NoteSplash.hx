@@ -38,13 +38,19 @@ class NoteSplash extends FlxSprite
 	public static var swidths:Array<Float> = [160, 120, 110, 90];
 	public static var posRest:Array<Int> = [0, 35, 50, 70];
 
+	public var noteType:String = '';
+
 	var name:String;
 
 	public static var anims:Array<String> = ['purple', 'blue', 'green', 'red'];
 
-	public function new(x:Float = 0, y:Float = 0, noteData:Int)
+	public function new(x:Float = 0, y:Float = 0, noteType:String, noteData:Int)
 	{
 		super(x, y);
+
+		this.noteType = noteType;
+
+		// because it doesn't know what to do if it ACTUALLY has notetype data.	
 
 		loadAnims();
 
@@ -58,7 +64,12 @@ class NoteSplash extends FlxSprite
 		setPosition(x - Note.swagWidth * 0.95, y - Note.swagWidth);
 		alpha = FlxG.save.data.alphaSplash;
 
-		loadAnims();
+		Debug.logTrace(noteType);
+
+		if (note.noteShit == null || note.noteShit == 'normal') // *proper* noteType checking to make sure it isn't null.
+			noteType = '';
+
+		loadAnims(noteType);
 
 		var animNum:Int = FlxG.random.int(0, 1);
 
@@ -76,19 +87,9 @@ class NoteSplash extends FlxSprite
 		}
 	}
 
-	function loadAnims()
+	function loadAnims(?noteType:String = '')
 	{
-		switch (FlxG.save.data.notesplash)
-		{
-			case 0:
-				name = 'Default';
-			case 1:
-				name = 'Psych';
-			case 2:
-				name = 'Week7';
-		}
-
-		var rawJson = Paths.loadData('images/splashes/' + name, 'shared');
+		var rawJson = Paths.loadData('images/splashes/' + CustomNoteHelpers.Splash.notesplashArray[FlxG.save.data.notesplash], 'shared');
 		var data:SplashData = cast rawJson;
 		switch (PlayState.SONG.noteStyle)
 		{
@@ -100,7 +101,9 @@ class NoteSplash extends FlxSprite
 					animation.addByPrefix('splash 1 ' + i, 'note splash 2 ' + anims[i], 24, false);
 				}
 			default:
-				frames = Paths.getSparrowAtlas(PlayState.notesplashSprite, 'shared');
+				frames = Paths.getSparrowAtlas(CustomNoteHelpers.Splash.generateNotesplashSprite(FlxG.save.data.notesplash, noteType), 'shared');
+				if (frames == null)
+					frames = Paths.getSparrowAtlas(CustomNoteHelpers.Splash.generateNotesplashSprite(0, noteType), 'shared');
 				for (i in 0...4)
 				{
 					animation.addByPrefix('splash 0 ' + i, 'note splash 1 ' + anims[i], data.fps, false);

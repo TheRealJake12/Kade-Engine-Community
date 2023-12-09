@@ -992,7 +992,7 @@ class PlayState extends MusicBeatState
 			cpuNoteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.cpuNoteskin);
 		}
 
-		notesplashSprite = CustomNoteHelpers.Splash.generateNotesplashSprite(FlxG.save.data.notesplash);
+		notesplashSprite = CustomNoteHelpers.Splash.generateNotesplashSprite(FlxG.save.data.notesplash, '');
 
 		var tweenBoolshit = !isStoryMode || storyPlaylist.length >= 3 || SONG.songId == 'tutorial';
 
@@ -1159,7 +1159,7 @@ class PlayState extends MusicBeatState
 			icon1AnimArray[1] = true;
 		}
 
-		var splash:NoteSplash = new NoteSplash(100, 100, 0);
+		var splash:NoteSplash = new NoteSplash(100, 100, '', 0);
 		grpNoteSplashes.add(splash);
 		splash.alpha = 0.00001;
 
@@ -2749,6 +2749,7 @@ class PlayState extends MusicBeatState
 	public function spawnNoteSplash(x:Float, y:Float, note:Note)
 	{
 		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
+		splash.noteType = note.noteShit;
 		splash.setupNoteSplash(x, y, note);
 		grpNoteSplashes.add(splash);
 	}
@@ -2756,6 +2757,7 @@ class PlayState extends MusicBeatState
 	public function spawnNoteSplashDad(x:Float, y:Float, note:Note)
 	{
 		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
+		splash.noteType = note.noteShit;
 		splash.setupNoteSplash(x, y, note);
 		grpNoteSplashes.add(splash);
 	}
@@ -5424,7 +5426,7 @@ class PlayState extends MusicBeatState
 
 		if (!note.wasGoodHit)
 		{
-			if (!note.isSustainNote && note.canPlayAnims)
+			if (!note.isSustainNote)
 			{
 				if (FlxG.save.data.hitSound != 0)
 				{
@@ -5436,24 +5438,39 @@ class PlayState extends MusicBeatState
 						daHitSound.play();
 					}
 				}
-				combo += 1;
-				popUpScore(note);
-
 				/* Enable Sustains to be hit. 
 					// This is to prevent hitting sustains if you hold a strum before the note is coming without hitting the note parent. 
 					(I really hope I made me understand lol.) */
 				if (note.isParent)
 					for (i in note.children)
 						i.sustainActive = true;
-			}
 
+				switch (note.noteShit)
+				{
+					case 'hurt':
+						if (note.canNoteSplash && FlxG.save.data.notesplashes)
+						{
+							spawnNoteSplashOnNote(note);
+							if (FlxG.save.data.accuracyMod == 0)
+								totalNotesHit -= 1;
+						}
+						note.rating = "bad";
+						health -= 0.8;
+						boyfriend.playAnim('hurt');
+					case 'mustpress':
+						health += 0.8;
+				}		
+
+				if (note.canRate)
+				{
+					combo += 1;
+					popUpScore(note);
+				}			
+			}
+			
 			switch (note.noteShit)
 			{
-				case 'hurt':
-					health -= 0.8;
-					boyfriend.playAnim('hurt');
-				case 'mustpress':
-					health += 0.8;
+				
 			}
 
 			var altAnim:String = "";

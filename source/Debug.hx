@@ -238,6 +238,7 @@ class Debug
 			FlxG.save.data.debugLogLevel = "TRACE";
 
 		logFileWriter.setLogLevel(FlxG.save.data.debugLogLevel);
+		logInfo('Current Build Version: ' + flixel.FlxG.game.stage.application.meta["build"]);
 	}
 
 	static function writeToFlxGLog(data:Array<Dynamic>, logStyle:LogStyle)

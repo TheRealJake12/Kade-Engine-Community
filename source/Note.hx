@@ -40,6 +40,7 @@ class Note extends FlxSprite
 	public var canNoteSplash:Bool = true; // if a note can notesplash on Sick! and Marv!
 	public var causesMisses:Bool = true; // if a note will do noteMiss or something.
 	public var botplayHit:Bool = true; // if botplay should hit the note.
+	public var canRate:Bool = true; // if it should do ratings, popup score and whatnot.
 
 	public var luaID:Int = 0;
 
@@ -255,15 +256,18 @@ class Note extends FlxSprite
 			{
 				case 'hurt':
 					canPlayAnims = false;
-					canNoteSplash = false;
+					canNoteSplash = true;
 					causesMisses = false;
 					botplayHit = false;
+					canRate = false;
 					// reloadNote('notetypes/hurt_Arrows');
 					texture = 'notetypes/hurt_Arrows';
+					
 				case 'mustpress':
 					canPlayAnims = false;
-					canNoteSplash = false;
+					canNoteSplash = true;
 					botplayHit = true;
+					canRate = true;
 					// reloadNote('notetypes/mustpress_Arrows');
 					texture = 'notetypes/mustpress_Arrows';
 				default:
@@ -271,6 +275,7 @@ class Note extends FlxSprite
 					canNoteSplash = true;
 					causesMisses = true;
 					botplayHit = true;
+					canRate = true;
 			}
 			noteShit = value;
 		}
