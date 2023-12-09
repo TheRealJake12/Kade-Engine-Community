@@ -388,10 +388,6 @@ class MusicBeatState extends FlxUIState
 		FlxG.resetState();
 	}
 
-	public static function getState():MusicBeatState
-	{
-		var curState:Dynamic = FlxG.state;
-		var leState:MusicBeatState = curState;
-		return leState;
-	}
+	public inline static function getState():MusicBeatState
+		return cast(FlxG.state, MusicBeatState);
 }
