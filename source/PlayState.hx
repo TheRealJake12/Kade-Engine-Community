@@ -293,6 +293,10 @@ class PlayState extends MusicBeatState
 	public var boyfriend:Boyfriend;
 
 	// I'll come back to this later but basically is unused for now.
+	public var boyfriendMap:Map<String, Boyfriend> = new Map<String, Boyfriend>();
+	public var dadMap:Map<String, Character> = new Map<String, Character>();
+	public var gfMap:Map<String, Character> = new Map<String, Character>();
+
 	public var boyfriendGroup:FlxSpriteGroup;
 	public var dadGroup:FlxSpriteGroup;
 	public var gfGroup:FlxSpriteGroup;
@@ -769,6 +773,15 @@ class PlayState extends MusicBeatState
 					if (person.curCharacter == char)
 						person.setPosition(pos[0], pos[1]);
 		}
+
+		gfGroup = new FlxSpriteGroup();
+		boyfriendGroup = new FlxSpriteGroup();
+		dadGroup = new FlxSpriteGroup();
+
+		gfGroup.add(gf);
+		dadGroup.add(dad);
+		boyfriendGroup.add(boyfriend);
+
 		if (!FlxG.save.data.optimize)
 		{
 			gf.x += gf.charPos[0];
@@ -804,16 +817,16 @@ class PlayState extends MusicBeatState
 				{
 					case 0:
 						if (Stage.hasGF)
-							add(gf);
+							add(gfGroup);
 						gf.scrollFactor.set(0.95, 0.95);
 						for (bg in array)
 							add(bg);
 					case 1:
-						add(dad);
+						add(dadGroup);
 						for (bg in array)
 							add(bg);
 					case 2:
-						add(boyfriend);
+						add(boyfriendGroup);
 						for (bg in array)
 							add(bg);
 				}
@@ -1848,7 +1861,7 @@ class PlayState extends MusicBeatState
 		// speedChanged = true;
 		if (generatedMusic)
 		{
-			var ratio:Float = value / scrollSpeed / songMultiplier;
+			var ratio:Float = value / scrollSpeed;
 			for (note in notes)
 			{
 				if (note.animation.curAnim != null)
@@ -2765,6 +2778,7 @@ class PlayState extends MusicBeatState
 	function spawnNoteSplashOnNote(note:Note)
 	{
 		var strum:StaticArrow = playerStrums.members[note.noteData];
+		
 		if (strum != null)
 		{
 			spawnNoteSplash(strum.x + 10.5, strum.y, note);
@@ -5832,22 +5846,52 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	public function cacheCharacter(newCharacter:String, type:Int)
+	{
+		switch (type)
+		{
+			case 0:
+				if (!dadMap.exists(newCharacter))
+				{
+					var newDad:Character = new Character(0, 0, newCharacter);
+					dadMap.set(newCharacter, newDad);
+					dadGroup.add(newDad);
+					newDad.alpha = 0.00001;
+				}
+
+			case 1:
+				if (!boyfriendMap.exists(newCharacter))
+				{
+					var newBoyfriend:Boyfriend = new Boyfriend(0, 0, newCharacter);
+					boyfriendMap.set(newCharacter, newBoyfriend);
+					boyfriendGroup.add(newBoyfriend);
+					newBoyfriend.alpha = 0.00001;
+				}
+		}
+	}
+
 	function changeChar(type:Int, value:String, x:Float, y:Float)
 	{
 		switch (type)
 		{
 			case 0:
-				dad.alpha = 0.0001;
-				remove(dad);
-				dad = new Character(x, y, value, false);
-				add(dad);
-				dad.alpha = 1;
+				if (dad.curCharacter != value)
+				{
+					var lastAlpha:Float = dad.alpha;
+					dad.alpha = 0.00001;
+					dad = dadMap.get(value);
+					dad.setPosition(x, y);
+					dad.alpha = lastAlpha;
+				}
 			case 1:
-				boyfriend.alpha = 0.0001;
-				remove(boyfriend);
-				boyfriend = new Boyfriend(x, y, value);
-				add(boyfriend);
-				boyfriend.alpha = 1;
+				if (boyfriend.curCharacter != value)
+				{
+					var lastAlpha:Float = boyfriend.alpha;
+					boyfriend.alpha = 0.00001;
+					boyfriend = boyfriendMap.get(value);
+					boyfriend.setPosition(x, y);
+					boyfriend.alpha = lastAlpha;
+				}
 		}
 	}
 
@@ -6320,14 +6364,14 @@ class PlayState extends MusicBeatState
 				}
 				else
 				{
-					var position:Int = PlayState.instance.members.indexOf(PlayState.instance.gf);
-					if (PlayState.instance.members.indexOf(PlayState.instance.boyfriend) < position)
+					var position:Int = PlayState.instance.members.indexOf(PlayState.instance.gfGroup);
+					if (PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup) < position)
 					{
-						position = PlayState.instance.members.indexOf(PlayState.instance.boyfriend);
+						position = PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup);
 					}
-					else if (PlayState.instance.members.indexOf(PlayState.instance.dad) < position)
+					else if (PlayState.instance.members.indexOf(PlayState.instance.dadGroup) < position)
 					{
-						position = PlayState.instance.members.indexOf(PlayState.instance.dad);
+						position = PlayState.instance.members.indexOf(PlayState.instance.dadGroup);
 					}
 					PlayState.instance.insert(position, obj);
 				}

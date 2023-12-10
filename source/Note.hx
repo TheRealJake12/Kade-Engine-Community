@@ -261,7 +261,14 @@ class Note extends FlxSprite
 					botplayHit = false;
 					canRate = false;
 					// reloadNote('notetypes/hurt_Arrows');
-					texture = 'notetypes/hurt_Arrows';
+					// texture = 'notetypes/hurt_Arrows';
+					switch (CustomNoteHelpers.Skin.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin])
+					{
+						default:
+							texture = "notetypes/hurt_Arrows";
+						case "Circles":
+							texture = "notetypes/hurt_Circles";
+					}
 					
 				case 'mustpress':
 					canPlayAnims = false;
@@ -269,7 +276,14 @@ class Note extends FlxSprite
 					botplayHit = true;
 					canRate = true;
 					// reloadNote('notetypes/mustpress_Arrows');
-					texture = 'notetypes/mustpress_Arrows';
+					// texture = 'notetypes/mustpress_Arrows';
+					switch (CustomNoteHelpers.Skin.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin])
+					{
+						default:
+							texture = "notetypes/mustpress_Arrows";
+						case "Circles":
+							texture = "notetypes/mustpress_Circles";
+					}
 				default:
 					canPlayAnims = true;
 					canNoteSplash = true;
