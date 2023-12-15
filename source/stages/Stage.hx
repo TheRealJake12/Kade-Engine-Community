@@ -79,7 +79,7 @@ class Stage extends MusicBeatState
 			{
 				case 'halloween':
 					{
-						hasGF = false;
+						hasGF = true;
 						if (FlxG.save.data.distractions)
 						{
 							var hallowTex = Paths.getSparrowAtlas('halloween_bg', 'week2');
