@@ -15,6 +15,9 @@ import openfl.display3D.textures.Texture;
 import openfl.display.BitmapData;
 import flixel.graphics.frames.FlxBitmapFont;
 import flixel.util.FlxDestroyUtil;
+#if cpp
+import cpp.vm.Gc;
+#end
 
 using StringTools;
 
@@ -597,26 +600,16 @@ class Paths
 			localTrackedAssets = [];
 			openfl.Assets.cache.clear("songs");
 			#end
+			runGC();
 		}
-
-		var cache:haxe.ds.Map<String, FlxGraphic> = cast Reflect.field(FlxG.bitmap, "_cache");
-		for (key => graphic in cache)
-		{
-			if (key.indexOf("text") == 0 && graphic.useCount <= 0)
-			{
-				FlxG.bitmap.remove(graphic);
-			}
-		}
-		// idk if this does anything.
-		// THANK YOU MALICIOUS BUNNY!!
 	}
 
 	public static function runGC()
 	{
 		#if cpp
-		cpp.vm.Gc.run(false);
-
-		cpp.vm.Gc.compact();
+		Gc.run(true);
+		Gc.compact();
+		Gc.run(false);
 		#else
 		System.gc();
 		#end

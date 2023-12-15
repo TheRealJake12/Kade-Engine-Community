@@ -101,7 +101,7 @@ class NoteSplash extends FlxSprite
 			default:
 				frames = Paths.getSparrowAtlas(CustomNoteHelpers.Splash.generateNotesplashSprite(FlxG.save.data.notesplash, noteType), 'shared');
 				if (frames == null)
-					frames = Paths.getSparrowAtlas(CustomNoteHelpers.Splash.generateNotesplashSprite(0, noteType), 'shared');
+					frames = Paths.getSparrowAtlas(CustomNoteHelpers.Splash.generateNotesplashSprite(0, ''), 'shared');
 				for (i in 0...4)
 				{
 					animation.addByPrefix('splash 0 ' + i, 'note splash 1 ' + anims[i], data.fps, false);

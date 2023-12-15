@@ -219,7 +219,7 @@ class OptionsMenu extends MusicBeatSubstate
 				new WatermarkOption("Enable and disable all watermarks from the engine."),
 				new MissSoundsOption("Toggle miss sounds playing when you don't hit a note."),
 				new ScoreScreen("Show the score screen after the end of a song"),
-				new ShowInput("Display every single input on the score screen."),
+				new ShowInput("Display every input on the score screen."),
 				#if FEATURE_MODCORE
 				new CanLoadMods("Allows Modcore To Detect Mods In The Mods Folder"),
 				#end

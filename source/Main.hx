@@ -122,13 +122,8 @@ class Main extends Sprite
 
 		FlxG.fixedTimestep = false;
 
-		FlxGraphic.defaultPersist = false;
-
 		FlxG.signals.preStateSwitch.add(function()
 		{
-			if (Std.isOfType(this, debug.StageDebugState))
-				Paths.clearStoredMemory(true);
-
 			var cache = cast(Assets.cache, AssetCache);
 			for (key => font in cache.font)
 				cache.removeFont(key);
@@ -136,14 +131,6 @@ class Main extends Sprite
 			{
 				for (key => sound in cache.sound)
 					cache.removeSound(key);
-			}
-		});
-		FlxG.signals.postStateSwitch.add(function()
-		{
-			if (FlxG.save.data.unload)
-			{
-				Paths.clearUnusedMemory();
-				Paths.runGC();
 			}
 		});
 

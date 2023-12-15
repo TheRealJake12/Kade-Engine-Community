@@ -2767,30 +2767,14 @@ class PlayState extends MusicBeatState
 		grpNoteSplashes.add(splash);
 	}
 
-	public function spawnNoteSplashDad(x:Float, y:Float, note:Note)
-	{
-		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
-		splash.noteType = note.noteShit;
-		splash.setupNoteSplash(x, y, note);
-		grpNoteSplashes.add(splash);
-	}
-
 	function spawnNoteSplashOnNote(note:Note)
 	{
 		var strum:StaticArrow = playerStrums.members[note.noteData];
-		
+		if (!note.mustPress)
+			strum = cpuStrums.members[note.noteData];
 		if (strum != null)
 		{
 			spawnNoteSplash(strum.x + 10.5, strum.y, note);
-		}
-	}
-
-	function spawnNoteSplashOnNoteDad(note:Note)
-	{
-		var strum:StaticArrow = cpuStrums.members[note.noteData];
-		if (strum != null)
-		{
-			spawnNoteSplashDad(strum.x + 10.5, strum.y, note);
 		}
 	}
 
@@ -5281,8 +5265,6 @@ class PlayState extends MusicBeatState
 
 	function opponentNoteHit(daNote:Note):Void
 	{
-		if (SONG.songId != 'tutorial')
-			camZooming = FlxG.save.data.camzoom;
 		// come back to this later
 		var altAnim:String = "";
 
@@ -5373,7 +5355,7 @@ class PlayState extends MusicBeatState
 			{
 				if (FlxG.save.data.cpuSplash && daNote.canNoteSplash && !PlayStateChangeables.middleScroll)
 				{
-					spawnNoteSplashOnNoteDad(daNote);
+					spawnNoteSplashOnNote(daNote);
 				}
 			}
 		}
@@ -5397,10 +5379,7 @@ class PlayState extends MusicBeatState
 	{
 		if (mashing != 0)
 			mashing = 0;
-
-		if (PlayStateChangeables.opponentMode)
-			camZooming = FlxG.save.data.camzoom;
-
+		
 		// add newest note to front of notesHitArray
 		// the oldest notes are at the end and are removed first
 
@@ -5465,9 +5444,9 @@ class PlayState extends MusicBeatState
 						if (note.canNoteSplash && FlxG.save.data.notesplashes)
 						{
 							spawnNoteSplashOnNote(note);
-							if (FlxG.save.data.accuracyMod == 0)
-								totalNotesHit -= 1;
 						}
+						if (FlxG.save.data.accuracyMod == 0)
+							totalNotesHit -= 1;
 						note.rating = "bad";
 						health -= 0.8;
 						boyfriend.playAnim('hurt');
@@ -5615,7 +5594,7 @@ class PlayState extends MusicBeatState
 		}
 
 		// HARDCODING FOR MILF ZOOMS!
-		if (PlayState.SONG.songId == 'milf' && curStep >= 672 && curStep < 800 && camZooming)
+		if (PlayState.SONG.songId == 'milf' && curStep >= 672 && curStep < 800)
 		{
 			if (curStep % 4 == 0)
 			{
@@ -5751,7 +5730,7 @@ class PlayState extends MusicBeatState
 	{
 		super.sectionHit();
 
-		if (camZooming && FlxG.camera.zoom < 1.35)
+		if (FlxG.save.data.camzoom && FlxG.camera.zoom < 1.35)
 		{
 			FlxG.camera.zoom += 0.015;
 			camHUD.zoom += 0.03;

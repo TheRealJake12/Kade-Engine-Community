@@ -150,23 +150,28 @@ class ChartingState extends MusicBeatState
 
 	var reloadOnInit = false;
 	var curDiff:String = "";
+	public static var mustCleanMem:Bool = false;
 
 	override function create()
 	{
+		if (mustCleanMem)
+		{
+			Paths.clearStoredMemory();
+			Paths.clearUnusedMemory();
+			mustCleanMem = false;
+		}
+
 		#if FEATURE_DISCORD
 		DiscordClient.changePresence("Chart Editor", null, null, true);
 		#end
-		Paths.clearStoredMemory();
-		Paths.clearUnusedMemory();
 
+		FlxG.mouse.visible = true;
 		instance = this;
 
 		speed = PlayState.songMultiplier;
 		// curSection = lastSection;
 
 		PlayState.noteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.noteskin);
-
-		FlxG.mouse.visible = true;
 
 		PlayState.inDaPlay = false;
 
@@ -3792,6 +3797,7 @@ class ChartingState extends MusicBeatState
 		{
 			PlayState.storyDifficulty = CoolUtil.difficultyArray.indexOf(diff);
 			PlayState.SONG = Song.loadFromJson(songId, CoolUtil.getSuffixFromDiff(diff));
+			mustCleanMem = true;
 
 			LoadingState.loadAndSwitchState(new ChartingState());
 		}
@@ -3853,6 +3859,10 @@ class ChartingState extends MusicBeatState
 		sectionRenderes.clear();
 		selectedBoxes.forEachAlive(function(huh:ChartingBox) huh.destroy());
 		selectedBoxes.clear();
+		lines.forEachAlive(function(huh:FlxSprite) huh.destroy());
+		lines.clear();
+		texts.forEachAlive(function(huh:FlxText) huh.destroy());
+		texts.clear();
 
 		cleanObjects();
 

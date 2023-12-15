@@ -107,22 +107,24 @@ class ResultsScreen extends FlxSubState
 		contText.color = FlxColor.WHITE;
 		contText.scrollFactor.set();
 		add(contText);
+		if (FlxG.save.data.inputShow)
+		{
+			anotherBackground = new FlxSprite(FlxG.width - 500, 45).makeGraphic(450, 240, FlxColor.BLACK);
+			anotherBackground.scrollFactor.set();
+			anotherBackground.alpha = 0;
+			add(anotherBackground);
 
-		anotherBackground = new FlxSprite(FlxG.width - 500, 45).makeGraphic(450, 240, FlxColor.BLACK);
-		anotherBackground.scrollFactor.set();
-		anotherBackground.alpha = 0;
-		add(anotherBackground);
+			graph = new HitGraph(FlxG.width - 500, 45, 495, 240);
+			graph.alpha = 0;
 
-		graph = new HitGraph(FlxG.width - 500, 45, 495, 240);
-		graph.alpha = 0;
+			graphSprite = new OFLSprite(FlxG.width - 510, 45, 460, 240, graph);
+			graphSprite.scrollFactor.set();
+			graphSprite.alpha = 0;
 
-		graphSprite = new OFLSprite(FlxG.width - 510, 45, 460, 240, graph);
+			add(graphSprite);
+		}
 
-		graphSprite.scrollFactor.set();
-		graphSprite.alpha = 0;
-
-		add(graphSprite);
-
+		
 		var sicks = HelperFunctions.truncateFloat(PlayState.sicks / PlayState.goods, 1);
 		var goods = HelperFunctions.truncateFloat(PlayState.goods / PlayState.bads, 1);
 
@@ -149,6 +151,7 @@ class ResultsScreen extends FlxSubState
 			var judge = obj2;
 			if (diff != (166 * Math.floor((PlayState.rep.replay.sf / 60) * 1000) / 166))
 				mean += diff;
+			if (FlxG.save.data.inputShow)	
 			if (obj[1] != -1)
 				graph.addToHistory(diff / PlayState.songMultiplier, judge, obj3 / PlayState.songMultiplier);
 		}
@@ -158,7 +161,8 @@ class ResultsScreen extends FlxSubState
 		if (goods == Math.POSITIVE_INFINITY || goods == Math.NaN)
 			goods = 0;
 
-		graph.update();
+		if (FlxG.save.data.inputShow)
+			graph.update();
 
 		mean = HelperFunctions.truncateFloat(mean / PlayState.rep.replay.songNotes.length, 2);
 
@@ -176,13 +180,16 @@ class ResultsScreen extends FlxSubState
 		FlxTween.tween(comboText, {y: 145}, 0.5, {ease: FlxEase.expoInOut});
 		FlxTween.tween(contText, {y: FlxG.height - 45}, 0.5, {ease: FlxEase.expoInOut});
 		FlxTween.tween(settingsText, {y: FlxG.height - 35}, 0.5, {ease: FlxEase.expoInOut});
-		FlxTween.tween(anotherBackground, {alpha: 0.6}, 0.5, {
-			onUpdate: function(tween:FlxTween)
-			{
-				graph.alpha = FlxMath.lerp(0, 1, tween.percent);
-				graphSprite.alpha = FlxMath.lerp(0, 1, tween.percent);
-			}
-		});
+		if (FlxG.save.data.inputShow)
+		{
+			FlxTween.tween(anotherBackground, {alpha: 0.6}, 0.5, {
+				onUpdate: function(tween:FlxTween)
+				{
+					graph.alpha = FlxMath.lerp(0, 1, tween.percent);
+					graphSprite.alpha = FlxMath.lerp(0, 1, tween.percent);
+				}
+			});
+		}
 
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
@@ -249,9 +256,12 @@ class ResultsScreen extends FlxSubState
 
 	override function destroy()
 	{
-		graph.destroy();
-		graph = null;
-		graphSprite.destroy();
+		if (FlxG.save.data.inputShow)
+		{
+			graph.destroy();
+			graph = null;
+			graphSprite.destroy();
+		}
 		super.destroy();
 	}
 }

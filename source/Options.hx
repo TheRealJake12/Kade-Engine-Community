@@ -883,7 +883,7 @@ class ShowInput extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Score Screen Debug: < " + (FlxG.save.data.inputShow ? "Enabled" : "Disabled") + " >";
+		return "Show Inputs On Score Screen: < " + (FlxG.save.data.inputShow ? "Enabled" : "Disabled") + " >";
 	}
 }
 
