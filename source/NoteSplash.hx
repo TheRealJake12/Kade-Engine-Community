@@ -50,7 +50,7 @@ class NoteSplash extends FlxSprite
 
 		this.noteType = noteType;
 
-		// because it doesn't know what to do if it ACTUALLY has notetype data.	
+		// because it doesn't know what to do if it ACTUALLY has notetype data.
 
 		loadAnims();
 

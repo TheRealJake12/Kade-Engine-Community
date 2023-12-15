@@ -269,7 +269,7 @@ class Note extends FlxSprite
 						case "Circles":
 							texture = "notetypes/hurt_Circles";
 					}
-					
+
 				case 'mustpress':
 					canPlayAnims = false;
 					canNoteSplash = true;

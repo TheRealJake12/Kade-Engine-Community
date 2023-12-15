@@ -2943,11 +2943,6 @@ class PlayState extends MusicBeatState
 		}
 		else if (paused)
 		{
-			#if FEATURE_HSCRIPT
-			if (!ScriptUtil.hasPause(scripts.executeAllFunc("resume")))
-			{
-			};
-			#end
 			if (inst != null && !startingSong)
 			{
 				resyncVocals();
@@ -4288,6 +4283,9 @@ class PlayState extends MusicBeatState
 			Highscore.saveLetter(PlayState.SONG.songId, Ratings.GenerateLetterRank(accuracy), storyDifficulty, songMultiplier);
 		}
 
+		if (ScriptUtil.hasPause(scripts.executeAllFunc("endSong")))
+			return;
+
 		if (offsetTesting)
 		{
 			FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
@@ -5379,7 +5377,7 @@ class PlayState extends MusicBeatState
 	{
 		if (mashing != 0)
 			mashing = 0;
-		
+
 		// add newest note to front of notesHitArray
 		// the oldest notes are at the end and are removed first
 
@@ -5452,18 +5450,17 @@ class PlayState extends MusicBeatState
 						boyfriend.playAnim('hurt');
 					case 'mustpress':
 						health += 0.8;
-				}		
+				}
 
 				if (note.canRate)
 				{
 					combo += 1;
 					popUpScore(note);
-				}			
+				}
 			}
-			
+
 			switch (note.noteShit)
 			{
-				
 			}
 
 			var altAnim:String = "";
@@ -6185,7 +6182,6 @@ class PlayState extends MusicBeatState
 		script.set("game", PlayState.instance);
 		script.set("Debug", Debug);
 		script.set("health", health);
-		script.set("Stage", Stage);
 		script.set("CoolUtil", CoolUtil);
 		script.set("SONG", SONG);
 		script.set("PlayStateChangeables", PlayStateChangeables);

@@ -124,7 +124,6 @@ class ResultsScreen extends FlxSubState
 			add(graphSprite);
 		}
 
-		
 		var sicks = HelperFunctions.truncateFloat(PlayState.sicks / PlayState.goods, 1);
 		var goods = HelperFunctions.truncateFloat(PlayState.goods / PlayState.bads, 1);
 
@@ -151,9 +150,9 @@ class ResultsScreen extends FlxSubState
 			var judge = obj2;
 			if (diff != (166 * Math.floor((PlayState.rep.replay.sf / 60) * 1000) / 166))
 				mean += diff;
-			if (FlxG.save.data.inputShow)	
-			if (obj[1] != -1)
-				graph.addToHistory(diff / PlayState.songMultiplier, judge, obj3 / PlayState.songMultiplier);
+			if (FlxG.save.data.inputShow)
+				if (obj[1] != -1)
+					graph.addToHistory(diff / PlayState.songMultiplier, judge, obj3 / PlayState.songMultiplier);
 		}
 
 		if (sicks == Math.POSITIVE_INFINITY || sicks == Math.NaN)

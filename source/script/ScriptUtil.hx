@@ -30,6 +30,7 @@ import Section;
 import Song;
 import PlayState;
 import CoolUtil;
+import flixel.addons.display.FlxRuntimeShader;
 #if FEATURE_FILESYSTEM
 import sys.FileSystem;
 import sys.io.File;
@@ -71,6 +72,8 @@ class ScriptUtil
 		// OpenFL
 		script.set("Lib", Lib);
 		script.set("Capabilities", Capabilities);
+		script.set("ShaderFitler", ShaderFilter);
+
 		// Basic Stuff
 		script.set("state", FlxG.state);
 		script.set("camera", FlxG.camera);
@@ -111,6 +114,10 @@ class ScriptUtil
 		script.set("FlxTextFormatMarkerPair", FlxTextFormatMarkerPair);
 		script.set("FlxTextBorderStyle", FlxTextBorderStyle);
 
+		// Shaders
+		script.set("FlxShader", FlxShader);
+		script.set("FlxRuntimeShader", FlxRuntimeShader);
+
 		// Color Functions
 		script.set("colorFromRGB", function(Red:Int, Green:Int, Blue:Int, Alpha:Int = 255)
 		{
@@ -132,7 +139,9 @@ class ScriptUtil
 			return;
 
 		// Save Data
+		script.set("WeekData", WeekData.Week);
 		script.set("Highscore", Highscore);
+		script.set("Stage", stages.Stage);
 
 		// Assets
 		script.set("Paths", Paths);
@@ -145,6 +154,7 @@ class ScriptUtil
 		// Objects
 		script.set("Note", Note);
 		script.set("StaticArrow", StaticArrow);
+		script.set("NoteSplash", NoteSplash);
 		script.set("Character", Character);
 		script.set("Boyfriend", Boyfriend);
 	}

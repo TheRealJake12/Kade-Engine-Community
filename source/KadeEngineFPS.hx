@@ -104,7 +104,6 @@ class KadeEngineFPS extends TextField
 		if (visible)
 		{
 			memoryUsage = (FlxG.save.data.mem ? "Memory Usage: " : "");
-			#if !html5
 			memoryMegas = Int64.make(0, System.totalMemory);
 
 			taskMemoryMegas = Int64.make(0, MemoryUtil.getMemoryfromProcess());
@@ -120,12 +119,12 @@ class KadeEngineFPS extends TextField
 					memoryUsage += (Math.round(cast(taskMemoryMegas, Float) / 0x400 * 1000) / 1000) + " KB";
 				else
 					memoryUsage += taskMemoryMegas + " B)";
+				#else
+				memoryMegas = flixel.util.FlxStringUtil.formatBytes(memoryMegas);
+				memoryUsage += memoryMegas;
+				// linux and other operating systems die when cpp code. Can't be 99.5% accurate like windows
 				#end
 			}
-			#else
-			memoryMegas = HelperFunctions.truncateFloat((MemoryUtil.getMemoryfromProcess() / (1024 * 1024)) * 10, 3);
-			memoryUsage += memoryMegas + " MB";
-			#end
 
 			text = ('${displayFPS}\n' + '$memoryUsage\n' + stateText + lmao);
 

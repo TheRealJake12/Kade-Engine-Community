@@ -23,7 +23,6 @@ import flixel.util.FlxTimer;
 #if FEATURE_MULTITHREADING
 import sys.thread.Mutex;
 #end
-
 #if cpp
 import cpp.vm.Gc;
 #end
@@ -50,7 +49,7 @@ class TitleState extends MusicBeatState
 	{
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
-		
+
 		Gc.run(true);
 		Gc.compact();
 		Gc.run(false);

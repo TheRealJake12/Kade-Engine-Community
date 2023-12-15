@@ -150,6 +150,7 @@ class ChartingState extends MusicBeatState
 
 	var reloadOnInit = false;
 	var curDiff:String = "";
+
 	public static var mustCleanMem:Bool = false;
 
 	override function create()

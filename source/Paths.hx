@@ -23,7 +23,7 @@ using StringTools;
 
 class Paths
 {
-	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
+	public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
 
 	public static var currentLevel:String;
 	public static var localTrackedAssets:Array<String> = [];
@@ -36,7 +36,7 @@ class Paths
 		currentLevel = name.toLowerCase();
 	}
 
-	inline static public function formatToSongPath(path:String)
+	static public function formatToSongPath(path:String)
 	{
 		return path.toLowerCase().replace(' ', '-');
 	}
@@ -192,79 +192,79 @@ class Paths
 		return if (library == "preload" || library == "default") getPreloadPath(file); else getLibraryPathForce(file, library);
 	}
 
-	inline static function getLibraryPathForce(file:String, library:String)
+	static function getLibraryPathForce(file:String, library:String)
 	{
 		var returnPath = '$library:assets/$library/$file';
 
 		return returnPath;
 	}
 
-	public inline static function getPreloadPath(file:String)
+	public static function getPreloadPath(file:String)
 	{
 		return 'assets/$file';
 	}
 
-	inline static public function hscript(key:String, ?library:String)
+	static public function hscript(key:String, ?library:String)
 	{
 		return getPath('data/$key.hx', TEXT, library);
 	}
 
-	inline static public function hx(key:String, ?library:String)
+	static public function hx(key:String, ?library:String)
 	{
 		return getPath('$key.hx', TEXT, library);
 	}
 
-	public static inline function songMeta(key:String, ?library:String)
+	public static function songMeta(key:String, ?library:String)
 	{
 		return getPath('data/songs/$key/_meta.json', TEXT, library);
 	}
 
-	inline static public function file(file:String, ?library:String, type:AssetType = TEXT)
+	static public function file(file:String, ?library:String, type:AssetType = TEXT)
 	{
 		return getPath(file, type, library);
 	}
 
-	inline static public function lua(key:String, ?library:String)
+	static public function lua(key:String, ?library:String)
 	{
 		return getPath('data/$key.lua', TEXT, library);
 	}
 
-	inline static public function luaImage(key:String, ?library:String)
+	static public function luaImage(key:String, ?library:String)
 	{
 		return getPath('data/$key.png', IMAGE, library);
 	}
 
-	inline static public function txt(key:String, ?library:String)
+	static public function txt(key:String, ?library:String)
 	{
 		return getPath('$key.txt', TEXT, library);
 	}
 
-	inline static public function xml(key:String, ?library:String)
+	static public function xml(key:String, ?library:String)
 	{
 		return getPath('data/$key.xml', TEXT, library);
 	}
 
-	inline static public function imageXml(key:String, ?library:String)
+	static public function imageXml(key:String, ?library:String)
 	{
 		return getPath('images/$key.xml', TEXT, library);
 	}
 
-	inline static public function json(key:String, ?library:String)
+	static public function json(key:String, ?library:String)
 	{
 		return getPath('data/$key.json', TEXT, library);
 	}
 
-	inline static public function data(key:String, ?library:String)
+	static public function data(key:String, ?library:String)
 	{
 		return getPath(key + '.json', TEXT, library);
 	}
 
-	inline static public function shaderFragment(key:String, ?library:String)
+	static public function shaderFragment(key:String, ?library:String)
 	{
 		return getPath('shaders/$key.frag', TEXT, library);
 	}
 
-	inline static public function shaderVertex(key:String, ?library:String)
+	static public function shaderVertex(key:String, ?library:String)
 	{
 		return getPath('shaders/$key.vert', TEXT, library);
 	}
@@ -275,41 +275,41 @@ class Paths
 		return sound;
 	}
 
-	inline static public function soundRandom(key:String, min:Int, max:Int, ?library:String)
+	static public function soundRandom(key:String, min:Int, max:Int, ?library:String)
 	{
 		return sound(key + FlxG.random.int(min, max), library);
 	}
 
-	inline static public function animJson(key:String, ?library:String)
+	static public function animJson(key:String, ?library:String)
 	{
 		return getPath('images/$key/Animation.json', TEXT, library);
 	}
 
-	inline static public function spriteMapJson(key:String, ?library:String)
+	static public function spriteMapJson(key:String, ?library:String)
 	{
 		return getPath('images/$key/spritemap.json', TEXT, library);
 	}
 
-	inline static public function image(key:String, ?library:String, ?gpuRender:Bool):FlxGraphic
+	static public function image(key:String, ?library:String, ?gpuRender:Bool):FlxGraphic
 	{
 		gpuRender = gpuRender != null ? gpuRender : FlxG.save.data.gpuRender;
 		var image:FlxGraphic = loadImage(key, library, gpuRender);
 		return image;
 	}
 
-	inline static public function oldImage(key:String, ?library:String)
+	static public function oldImage(key:String, ?library:String)
 	{
 		return getPath('images/$key.png', IMAGE, library);
 	}
 
 	#if VIDEOS
-	inline static public function video(key:String)
+	static public function video(key:String)
 	{
 		return 'assets/videos/$key';
 	}
 	#end
 
-	inline static public function music(key:String, ?library:String, ?returnString:Bool = false):Any
+	static public function music(key:String, ?library:String, ?returnString:Bool = false):Any
 	{
 		var file:Dynamic;
 		if (!returnString)
@@ -319,7 +319,7 @@ class Paths
 		return file;
 	}
 
-	inline static public function voices(song:String, ?char:String = '', ?returnString:Bool = false):Any
+	static public function voices(song:String, ?char:String = '', ?returnString:Bool = false):Any
 	{
 		var songLowercase = StringTools.replace(song, " ", "-").toLowerCase() + '/Voices$char';
 		switch (songLowercase)
@@ -344,7 +344,7 @@ class Paths
 		return file;
 	}
 
-	inline static public function inst(song:String, ?returnString:Bool = false):Any
+	static public function inst(song:String, ?returnString:Bool = false):Any
 	{
 		var songLowercase = StringTools.replace(song, " ", "-").toLowerCase() + '/Inst';
 		switch (songLowercase)
@@ -469,27 +469,27 @@ class Paths
 		return OpenFlAssets.exists(path, AssetType.SOUND) || OpenFlAssets.exists(path, AssetType.MUSIC);
 	}
 
-	inline static public function doesTextAssetExist(path:String)
+	static public function doesTextAssetExist(path:String)
 	{
 		return OpenFlAssets.exists(path, AssetType.TEXT);
 	}
 
-	inline static public function font(key:String)
+	static public function font(key:String)
 	{
 		return 'assets/fonts/$key';
 	}
 
-	inline static public function bitmapFont(key:String, ?library:String):FlxBitmapFont
+	static public function bitmapFont(key:String, ?library:String):FlxBitmapFont
 	{
 		return FlxBitmapFont.fromAngelCode(image(key, library), fontXML(key, library));
 	}
 
-	inline static public function fontXML(key:String, ?library:String):Xml
+	static public function fontXML(key:String, ?library:String):Xml
 	{
 		return Xml.parse(OpenFlAssets.getText(getPath('images/$key.fnt', TEXT, library)));
 	}
 
-	inline static public function fileExists(key:String, type:AssetType, ?library:String)
+	static public function fileExists(key:String, type:AssetType, ?library:String)
 	{
 		if (OpenFlAssets.exists(getPath(key, type, library)))
 			return true;
@@ -628,7 +628,7 @@ class Paths
 	/**
 	 * Senpai in Thorns uses this instead of Sparrow and IDK why.
 	 */
-	inline static public function getPackerAtlas(key:String, ?library:String, ?isCharacter:Bool = false, ?gpuRender:Bool)
+	static public function getPackerAtlas(key:String, ?library:String, ?isCharacter:Bool = false, ?gpuRender:Bool)
 	{
 		gpuRender = gpuRender != null ? gpuRender : FlxG.save.data.gpuRender;
 		if (isCharacter)
@@ -638,7 +638,7 @@ class Paths
 		return FlxAtlasFrames.fromSpriteSheetPacker(loadImage(key, library, gpuRender), file('images/$key.txt', library));
 	}
 
-	inline static public function getTextureAtlas(key:String, ?library:String, ?isCharacter:Bool = false, ?excludeArray:Array<String>):FlxFramesCollection
+	static public function getTextureAtlas(key:String, ?library:String, ?isCharacter:Bool = false, ?excludeArray:Array<String>):FlxFramesCollection
 	{
 		if (isCharacter)
 			return AtlasFrameMaker.construct('characters/$key', library, excludeArray);
@@ -646,7 +646,7 @@ class Paths
 		return AtlasFrameMaker.construct(key, library, excludeArray);
 	}
 
-	inline static public function getJSONAtlas(key:String, ?library:String, ?isCharacter:Bool = false, ?gpuRender:Bool)
+	static public function getJSONAtlas(key:String, ?library:String, ?isCharacter:Bool = false, ?gpuRender:Bool)
 	{
 		gpuRender = gpuRender != null ? gpuRender : FlxG.save.data.gpuRender;
 		if (isCharacter)
