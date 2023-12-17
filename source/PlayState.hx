@@ -5753,10 +5753,12 @@ class PlayState extends MusicBeatState
 		{
 			if (currentSection != null)
 			{
-				if (!currentSection.mustHitSection)
+				var offsetX = 0;
+				var offsetY = 0;
+				if (!currentSection.mustHitSection
+					&& (camFollow.x != dad.getMidpoint().x + dad.camPos[0] + offsetX
+						&& camFollow.y != dad.getMidpoint().y + dad.camPos[1] + offsetY))
 				{
-					var offsetX = 0;
-					var offsetY = 0;
 					#if FEATURE_LUAMODCHART
 					if (luaModchart != null)
 					{
@@ -5782,10 +5784,10 @@ class PlayState extends MusicBeatState
 					}
 				}
 
-				if (currentSection.mustHitSection)
+				if (currentSection.mustHitSection
+					&& (camFollow.x != boyfriend.getMidpoint().x + boyfriend.camPos[0] + offsetX
+						&& camFollow.y != boyfriend.getMidpoint().y + boyfriend.camPos[1] + offsetY))
 				{
-					var offsetX = 0;
-					var offsetY = 0;
 					#if FEATURE_LUAMODCHART
 					if (luaModchart != null)
 					{

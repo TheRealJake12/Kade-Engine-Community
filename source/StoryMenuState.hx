@@ -23,6 +23,7 @@ class StoryMenuState extends MusicBeatState
 	var scoreText:CoolText;
 
 	static var weeksID:Array<String> = null;
+	var storyBackground:FlxSprite = null;
 
 	public static function weekData():Array<WeekData>
 	{
@@ -128,7 +129,8 @@ class StoryMenuState extends MusicBeatState
 		txtWeekTitle.antialiasing = FlxG.save.data.antialiasing;
 
 		var ui_tex = Paths.getSparrowAtlas('campaign_menu_UI_assets');
-		var yellowBG:FlxSprite = new FlxSprite(0, 56).makeGraphic(FlxG.width, 400, 0xFFF9CF51);
+		var yellowBG:FlxSprite = new FlxSprite(0, 56).makeGraphic(FlxG.width, 386, 0xFFF9CF51);
+		storyBackground = new FlxSprite(0, 56);
 
 		grpWeekText = new FlxTypedGroup<MenuItem>();
 		add(grpWeekText);
@@ -207,6 +209,7 @@ class StoryMenuState extends MusicBeatState
 		trace("Line 150");
 
 		add(yellowBG);
+		add(storyBackground);
 		add(grpWeekCharacters);
 
 		txtTracklist = new CoolText(FlxG.width * 0.05, yellowBG.x + yellowBG.height + 100, 32, 32, Paths.bitmapFont('fonts/vcr'));
@@ -446,6 +449,14 @@ class StoryMenuState extends MusicBeatState
 		if (weeksLoaded[curWeek].difficulties == null || weeksLoaded[curWeek].difficulties.length == 0)
 			weeksLoaded[curWeek].difficulties = CoolUtil.defaultDifficulties;
 
+		if (weeksLoaded[curWeek].background != null)
+		{
+			storyBackground.loadGraphic(Paths.image('storymenu/bg/${weeksLoaded[curWeek].background}'));
+			storyBackground.alpha = 1;
+		}
+		else
+			storyBackground.alpha = 0;	
+
 		changeDifficulty();
 
 		var bullShit:Int = 0;
@@ -477,7 +488,10 @@ class StoryMenuState extends MusicBeatState
 		txtTracklist.text = "Tracks\n\n";
 
 		for (i in stringThing)
-			txtTracklist.text += "\n" + i;
+		{
+			var actual = i.replace("-", " ");
+			txtTracklist.text += "\n" + actual;
+		}
 
 		txtTracklist.text = txtTracklist.text.toUpperCase();
 

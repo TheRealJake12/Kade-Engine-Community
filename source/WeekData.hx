@@ -6,6 +6,7 @@ typedef WeekData =
 	var characters:Array<String>;
 	var weekName:String;
 	var difficulties:Array<String>;
+	var ?background:String;
 }
 
 class Week
