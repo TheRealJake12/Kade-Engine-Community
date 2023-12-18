@@ -212,7 +212,7 @@
 	<haxeflag name="-D no-traces" unless="debug" />
 	<haxedef name="queue_experimental_optimization"/>
 
-	<haxeflag name="--dce full" if="release" />
+	<haxeflag name="-dce" value="full" if="release"/>
 
 	<!-- _________________________________ Custom _______________________________ -->
 

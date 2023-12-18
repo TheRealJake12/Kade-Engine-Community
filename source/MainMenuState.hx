@@ -123,8 +123,7 @@ class MainMenuState extends MusicBeatState
 		transOut = FlxTransitionableState.defaultTransOut;
 
 		persistentUpdate = persistentDraw = true;
-
-		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
+		
 		bg = new FlxBackdrop(Paths.image('menuDesat'), X, 0, 0);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
 		bg.updateHitbox();
@@ -153,15 +152,11 @@ class MainMenuState extends MusicBeatState
 
 		menuItems = new FlxTypedGroup<FlxSprite>();
 		add(menuItems);
-
-		var scale:Float = 1;
-
+		
 		for (i in 0...optionShit.length)
 		{
 			var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
 			var menuItem:FlxSprite = new FlxSprite(0, 0);
-			menuItem.scale.x = scale;
-			menuItem.scale.y = scale;
 			menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[i]);
 			menuItem.animation.addByPrefix('idle', optionShit[i] + " basic", 24);
 			menuItem.animation.addByPrefix('selected', optionShit[i] + " white", 24);
@@ -241,13 +236,11 @@ class MainMenuState extends MusicBeatState
 			if (FlxG.keys.justPressed.UP || controls.UP_P)
 			{
 				changeItem(-1);
-				FlxG.sound.play(Paths.sound('scrollMenu'));
 			}
 
 			if (FlxG.keys.justPressed.DOWN || controls.DOWN_P)
 			{
 				changeItem(1);
-				FlxG.sound.play(Paths.sound('scrollMenu'));
 			}
 
 			if (controls.BACK || FlxG.mouse.justPressedRight)
@@ -275,7 +268,6 @@ class MainMenuState extends MusicBeatState
 					if (FlxG.mouse.overlaps(daSprite) && curSelected != daSprite.ID)
 					{
 						curSelected = daSprite.ID;
-						FlxG.sound.play(Paths.sound('scrollMenu'));
 						changeItem();
 					}
 				});
@@ -284,7 +276,6 @@ class MainMenuState extends MusicBeatState
 			if (FlxG.mouse.wheel != 0)
 			{
 				changeItem(-shiftMult * FlxG.mouse.wheel);
-				FlxG.sound.play(Paths.sound('scrollMenu'));
 			}
 			#end
 
@@ -370,6 +361,8 @@ class MainMenuState extends MusicBeatState
 
 	function changeItem(huh:Int = 0)
 	{
+		FlxG.sound.play(Paths.sound('scrollMenu'));
+		
 		curSelected += huh;
 
 		if (curSelected >= menuItems.length)
@@ -385,12 +378,6 @@ class MainMenuState extends MusicBeatState
 			if (spr.ID == curSelected)
 			{
 				spr.animation.play('selected');
-				var add:Float = 0;
-				if (menuItems.length > 4)
-				{
-					add = menuItems.length * 8;
-				}
-				camFollow.setPosition(spr.getGraphicMidpoint().x, spr.getGraphicMidpoint().y - add);
 				spr.centerOffsets();
 			}
 		});

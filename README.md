@@ -84,7 +84,7 @@ sudo apt install build-essential
 sudo apt install luajit
 ```
 
-You need to install libvlc for hxCodec to work on Linux.
+You need to install libvlc for hxvlc / hxCodec to work on Linux.
 ```
 sudo apt-get install libvlc-dev libvlccore-dev 
 ```
