@@ -36,6 +36,7 @@ class Stage extends MusicBeatState
 	public var tankGround:FlxSprite;
 	public var tankmanRun:FlxTypedGroup<TankmenBG>;
 	public var foregroundSprites:FlxTypedGroup<TankBGSprite>;
+	public var doesExist = true;
 
 	public static var instance:Stage = null;
 
@@ -659,12 +660,17 @@ class Stage extends MusicBeatState
 		{
 			case 'stage' | 'limo' | 'tank' | 'void':
 				camZoom = 0.9;
+				doesExist = true;
 			case 'halloween' | 'philly' | 'mallEvil' | 'school' | 'schoolEvil':
 				camZoom = 1.05;
+				doesExist = true;
 			case 'mall':
 				camZoom = 0.8;
+				doesExist = true;
 			default:
+				doesExist = false;
 				camZoom = 1.05;
+
 		}
 
 		overridePropertiesFromJSON();
@@ -685,7 +691,6 @@ class Stage extends MusicBeatState
 			else
 			{
 				camPosition = [0, 0];
-				Debug.logTrace("there");
 			}
 		}
 	}
@@ -694,6 +699,7 @@ class Stage extends MusicBeatState
 	{
 		if (stageJSON != null)
 		{
+			doesExist = true;
 			if (stageJSON.staticCam != null)
 				if (Std.isOfType(stageJSON.staticCam, Bool))
 					staticCam = stageJSON.staticCam;

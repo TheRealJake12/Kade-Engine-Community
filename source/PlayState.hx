@@ -694,11 +694,17 @@ class PlayState extends MusicBeatState
 		{
 			stageCheck = SONG.stage;
 		}
-		Stage = new Stage(stageCheck);
 
+		Stage = new Stage(stageCheck);
+		
 		Stage.loadStageData(stageCheck);
 
 		Stage.initStageProperties();
+
+		if (!Stage.doesExist)
+			Stage.loadStageData('stage');
+
+		// pissed me off that having non existent stages just load black instead of default stag	
 
 		if (isStoryMode)
 			songMultiplier = 1;
