@@ -128,8 +128,11 @@ class Stage extends MusicBeatState
 							swagBacks['halloweenBG'] = halloweenBG;
 							toAdd.push(halloweenBG);
 						}
-						PlayState.instance.precacheThing('thunder_1', 'sound', 'shared');
-						PlayState.instance.precacheThing('thunder_2', 'sound', 'shared');
+						if (PlayState.instance != null)
+						{
+							PlayState.instance.precacheThing('thunder_1', 'sound', 'shared');
+							PlayState.instance.precacheThing('thunder_2', 'sound', 'shared');
+						}	
 					}
 				case 'philly':
 					{
@@ -959,8 +962,11 @@ class Stage extends MusicBeatState
 
 	function onAddScript(script:Script)
 	{
-		script.set("PlayState", PlayState.instance);
-		script.set("game", PlayState.instance);
+		if (PlayState.instance != null)
+		{
+			script.set("PlayState", PlayState.instance);
+			script.set("game", PlayState.instance);
+		}
 		script.set("Debug", Debug);
 		script.set("CoolUtil", CoolUtil);
 		script.set("SONG", PlayState.SONG);
@@ -1010,9 +1016,12 @@ class Stage extends MusicBeatState
 		script.set("bpm", Conductor.bpm);
 
 		// OBJECTS
-		script.set("camGame", PlayState.instance.camGame);
-		script.set("camHUD", PlayState.instance.camHUD);
-		script.set("overlayCam", PlayState.instance.overlayCam);
+		if (PlayState.instance != null)
+		{
+			script.set("camGame", PlayState.instance.camGame);
+			script.set("camHUD", PlayState.instance.camHUD);
+			script.set("overlayCam", PlayState.instance.overlayCam);
+		}
 
 		// CHARACTERS
 		script.set("boyfriend", PlayState.boyfriend);
