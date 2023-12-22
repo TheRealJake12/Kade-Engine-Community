@@ -29,24 +29,24 @@ typedef SplashData =
 	 */
 	var yOffset:Int;
 
+	var minFps:Int;
+	var maxFps:Int;
+
 	// theres gonna be more but the fps fucks me so much rn
 }
 
 class NoteSplash extends FlxSprite
 {
-	public static var scales:Array<Float> = [0.7, 0.6, 0.55, 0.46];
-	public static var swidths:Array<Float> = [160, 120, 110, 90];
-	public static var posRest:Array<Int> = [0, 35, 50, 70];
-
 	public var noteType:String = '';
-
 	var name:String;
-
 	public static var anims:Array<String> = ['purple', 'blue', 'green', 'red'];
+	var rawJson = null;
 
 	public function new(x:Float = 0, y:Float = 0, noteType:String, noteData:Int)
 	{
 		super(x, y);
+
+		rawJson = Paths.loadData('images/splashes/' + CustomNoteHelpers.Splash.notesplashArray[FlxG.save.data.notesplash], 'shared');
 
 		this.noteType = noteType;
 
@@ -75,8 +75,11 @@ class NoteSplash extends FlxSprite
 			animation.play('splash ' + animNum + " " + note.noteData);
 		else
 			animation.play('splash ' + animNum + " " + note.originColor);
+		var data:SplashData = cast rawJson;
+		var minFps = data.minFps == null ? 60 : data.minFps;
+		var maxFps = data.maxFps == null ? 62 : data.maxFps;
 
-		animation.curAnim.frameRate += FlxG.random.int(0, 2);
+		animation.curAnim.frameRate = FlxG.random.int(minFps, maxFps);
 
 		animation.finishCallback = function(name:String)
 		{
@@ -87,7 +90,6 @@ class NoteSplash extends FlxSprite
 
 	function loadAnims(?noteType:String = '')
 	{
-		var rawJson = Paths.loadData('images/splashes/' + CustomNoteHelpers.Splash.notesplashArray[FlxG.save.data.notesplash], 'shared');
 		var data:SplashData = cast rawJson;
 		switch (PlayState.SONG.noteStyle)
 		{

@@ -1,6 +1,8 @@
 {
     "name": "Psych",
     "fps": 24,
+    "minFps": 22,
+    "maxFps": 26,
     "xOffset": 0,
     "yOffset": 0
 }

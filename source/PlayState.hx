@@ -2184,8 +2184,6 @@ class PlayState extends MusicBeatState
 					closestNotes.push(daNote);
 			});
 
-			haxe.ds.ArraySort.sort(closestNotes, sortHitNotes);
-
 			closestNotes = closestNotes.filter(function(i)
 			{
 				return i.noteData == data;
@@ -2774,7 +2772,7 @@ class PlayState extends MusicBeatState
 			strum = cpuStrums.members[note.noteData];
 		if (strum != null)
 		{
-			spawnNoteSplash(strum.x + 10.5, strum.y, note);
+			spawnNoteSplash(strum.x, strum.y, note);
 		}
 	}
 
@@ -5046,16 +5044,6 @@ class PlayState extends MusicBeatState
 				return i;
 		}
 		return -1;
-	}
-
-	function sortHitNotes(a:Note, b:Note):Int
-	{
-		if (lowPriorityNotes.contains(a.noteShit) && !lowPriorityNotes.contains(b.noteShit))
-			return 1;
-		else if (!lowPriorityNotes.contains(a.noteShit) && lowPriorityNotes.contains(b.noteShit))
-			return -1;
-
-		return FlxSort.byValues(FlxSort.ASCENDING, a.strumTime, b.strumTime);
 	}
 
 	public function changeScrollSpeed(mult:Float, time:Float, ease):Void

@@ -1,6 +1,6 @@
 @echo off
 title KEC Setup - Start
-echo Make sure Haxe 4.2.4 or 4.2.5 and HaxeFlixel is installed.
+echo Make sure Haxe 4.2.5 or 4.3.4 and HaxeFlixel is installed.
 echo Press any key to install required libraries.
 pause >nul
 title KEC Setup - Installing libraries

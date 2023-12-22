@@ -1,6 +1,8 @@
 {
     "name": "Default",
     "fps": 60,
-    "xOffset": -28,
-    "yOffset": -28
+    "minFps": 60,
+    "maxFps": 62,
+    "xOffset": -30,
+    "yOffset": -15
 }

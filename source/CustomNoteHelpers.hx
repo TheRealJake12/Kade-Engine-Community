@@ -59,7 +59,7 @@ class Skin
 
 class Splash
 {
-	public static var notesplashArray = ['Default', 'Psych', 'Week7']; // Defaults, should be in this order normally.
+	public static var notesplashArray = ['Default', 'Psych']; // Defaults, should be in this order normally.
 
 	public static function updateNotesplashes()
 	{
