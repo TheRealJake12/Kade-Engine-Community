@@ -288,17 +288,17 @@ class Debug
 		addConsoleCommand("trackBoyfriend", function()
 		{
 			Debug.logInfo("CONSOLE: Begin tracking Boyfriend...");
-			trackObject(PlayState.instance.boyfriend);
+			trackObject(PlayState.boyfriend);
 		});
 		addConsoleCommand("trackGirlfriend", function()
 		{
 			Debug.logInfo("CONSOLE: Begin tracking Girlfriend...");
-			trackObject(PlayState.instance.gf);
+			trackObject(PlayState.gf);
 		});
 		addConsoleCommand("trackDad", function()
 		{
 			Debug.logInfo("CONSOLE: Begin tracking Dad...");
-			trackObject(PlayState.instance.dad);
+			trackObject(PlayState.dad);
 		});
 
 		addConsoleCommand("setLogLevel", function(logLevel:String)

@@ -200,6 +200,8 @@ class StageDebugState extends MusicBeatState
 				remove(bg);
 		}
 
+		Stage.destroy();
+
 		remove(dad);
 		remove(boyfriend);
 		remove(gf);
@@ -212,6 +214,10 @@ class StageDebugState extends MusicBeatState
 
 		Stage = new Stage(leStage);
 
+		Stage.loadStageData(leStage);
+
+		Stage.initStageProperties();
+
 		if (FlxG.save.data.gen)
 			Debug.logTrace('Initalize New Stage Data...');
 
@@ -219,6 +225,9 @@ class StageDebugState extends MusicBeatState
 		{
 			add(i);
 		}
+
+		if (FlxG.save.data.gen)
+			Debug.logTrace('Add Characters And Stage Sprites...');
 
 		for (index => array in Stage.layInFront)
 		{
@@ -239,9 +248,6 @@ class StageDebugState extends MusicBeatState
 						add(bg);
 			}
 		}
-
-		if (FlxG.save.data.gen)
-			Debug.logTrace('Add Characters And Stage Sprites...');
 
 		Paths.clearUnusedMemory();
 

@@ -288,9 +288,9 @@ class PlayState extends MusicBeatState
 	public var zoomMultiplier:Float = 1;
 
 	// Characters, Very Useful.
-	public var dad:Character;
-	public var gf:Character;
-	public var boyfriend:Boyfriend;
+	public static var dad:Character;
+	public static var gf:Character;
+	public static var boyfriend:Boyfriend;
 
 	// I'll come back to this later but basically is unused for now.
 	public var boyfriendMap:Map<String, Boyfriend> = new Map<String, Boyfriend>();
@@ -525,7 +525,7 @@ class PlayState extends MusicBeatState
 
 		startTime = 0;
 
-		// Search For Lua Modcharts / Hscripts.
+		// Search For Lua Modcharts
 		#if (FEATURE_FILESYSTEM && FEATURE_LUAMODCHART)
 		executeModchart = FileSystem.exists(Paths.lua('songs/${PlayState.SONG.songId}/modchart')) && PlayStateChangeables.modchart;
 		if (isSM)
@@ -659,6 +659,8 @@ class PlayState extends MusicBeatState
 		{
 			switch (storyWeek)
 			{
+				case 0 | 1:
+					stageCheck = 'stage';
 				case 2:
 					stageCheck = 'halloween';
 				case 3:
@@ -693,6 +695,10 @@ class PlayState extends MusicBeatState
 			stageCheck = SONG.stage;
 		}
 		Stage = new Stage(stageCheck);
+
+		Stage.loadStageData(stageCheck);
+
+		Stage.initStageProperties();
 
 		if (isStoryMode)
 			songMultiplier = 1;
@@ -753,6 +759,8 @@ class PlayState extends MusicBeatState
 			}
 		}
 
+		Stage.initCamPos();
+
 		// Initialize Scripts For Real.
 
 		#if FEATURE_HSCRIPT
@@ -760,10 +768,6 @@ class PlayState extends MusicBeatState
 
 		scripts.executeAllFunc("create");
 		#end
-
-		// Load Stage And Character Posistions.
-		if (!stageTesting)
-			Stage = new Stage(SONG.stage);
 
 		var positions = Stage.positions[Stage.curStage];
 		if (positions != null && !stageTesting)
@@ -852,24 +856,10 @@ class PlayState extends MusicBeatState
 		// Camera Positioning.
 		if (!FlxG.save.data.optimize)
 		{
-			camPos = new FlxPoint(dad.getGraphicMidpoint().x + dad.camPos[0], dad.getGraphicMidpoint().y + dad.camPos[1]);
-
-			switch (Stage.curStage)
-			{
-				case 'halloween':
-					camPos = new FlxPoint(gf.getMidpoint().x, gf.getMidpoint().y);
-				case 'stage':
-					if (dad.replacesGF)
-						camPos = new FlxPoint(dad.getGraphicMidpoint().x + dad.camPos[0] - 200, dad.getGraphicMidpoint().y + dad.camPos[1]);
-				case 'mallEvil':
-					camPos = new FlxPoint(boyfriend.getMidpoint().x - 100 + boyfriend.camPos[0], boyfriend.getMidpoint().y - 100 + boyfriend.camPos[1]);
-				default:
-					camPos = new FlxPoint(dad.getMidpoint().x + dad.camPos[0], dad.getMidpoint().y + dad.camPos[1]);
-			}
-		}
-		else
-		{
 			camPos = new FlxPoint(0, 0);
+
+			camPos.x = Stage.camPosition[0];
+			camPos.y = Stage.camPosition[1];
 		}
 
 		if (dad.replacesGF)
@@ -4035,57 +4025,63 @@ class PlayState extends MusicBeatState
 
 		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
 		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
-
-		if (iconP1.isAnimated)
+		try
 		{
-			if (healthBar.percent < 20 && icon1AnimArray[0])
+			if (iconP1.isAnimated)
 			{
-				animName = 'Lose';
+				if (healthBar.percent < 20 && icon1AnimArray[0])
+				{
+					animName = 'Lose';
+				}
+				else
+				{
+					animName = 'Idle';
+				}
+
+				if (iconP1.animation.curAnim.finished || (animName != iconP1.animation.curAnim.name))
+				{
+					iconP1.playAnim(animName, true);
+				}
 			}
 			else
 			{
-				animName = 'Idle';
+				if (healthBar.percent < 20)
+					iconP1.animation.curAnim.curFrame = 1;
+				else if (healthBar.percent > 80 && iconP1.hasWinningIcon)
+					iconP1.animation.curAnim.curFrame = 2;
+				else
+					iconP1.animation.curAnim.curFrame = 0;
 			}
 
-			if (iconP1.animation.curAnim.finished || (animName != iconP1.animation.curAnim.name))
+			if (iconP2.isAnimated)
 			{
-				iconP1.playAnim(animName, true);
+				if (healthBar.percent > 80 && icon2AnimArray[0])
+				{
+					animName = 'Lose';
+				}
+				else
+				{
+					animName = 'Idle';
+				}
+
+				if (iconP2.animation.curAnim.finished || (animName != iconP2.animation.curAnim.name))
+				{
+					iconP2.playAnim(animName, true);
+				}
+			}
+			else
+			{
+				if (healthBar.percent > 80)
+					iconP2.animation.curAnim.curFrame = 1;
+				else if (healthBar.percent < 20 && iconP2.hasWinningIcon)
+					iconP2.animation.curAnim.curFrame = 2;
+				else
+					iconP2.animation.curAnim.curFrame = 0;
 			}
 		}
-		else
+		catch (e)
 		{
-			if (healthBar.percent < 20)
-				iconP1.animation.curAnim.curFrame = 1;
-			else if (healthBar.percent > 80 && iconP1.hasWinningIcon)
-				iconP1.animation.curAnim.curFrame = 2;
-			else
-				iconP1.animation.curAnim.curFrame = 0;
-		}
-
-		if (iconP2.isAnimated)
-		{
-			if (healthBar.percent > 80 && icon2AnimArray[0])
-			{
-				animName = 'Lose';
-			}
-			else
-			{
-				animName = 'Idle';
-			}
-
-			if (iconP2.animation.curAnim.finished || (animName != iconP2.animation.curAnim.name))
-			{
-				iconP2.playAnim(animName, true);
-			}
-		}
-		else
-		{
-			if (healthBar.percent > 80)
-				iconP2.animation.curAnim.curFrame = 1;
-			else if (healthBar.percent < 20 && iconP2.hasWinningIcon)
-				iconP2.animation.curAnim.curFrame = 2;
-			else
-				iconP2.animation.curAnim.curFrame = 0;
+			Debug.logTrace(e);
 		}
 
 		if (songStarted)
@@ -5595,6 +5591,7 @@ class PlayState extends MusicBeatState
 			luaModchart.executeState('stepHit', [curStep]);
 		}
 		#end
+
 		#if FEATURE_HSCRIPT
 		scripts.setAll("curStep", curStep);
 		scripts.executeAllFunc("stepHit", [curStep]);
@@ -5754,7 +5751,10 @@ class PlayState extends MusicBeatState
 						offsetY = luaModchart.getVar("followYOffset", "float");
 					}
 					#end
-					camFollow.setPosition(dad.getMidpoint().x + dad.camPos[0] + offsetX, dad.getMidpoint().y + dad.camPos[1] + offsetY);
+					if (!Stage.staticCam)
+					{
+						camFollow.setPosition(dad.getMidpoint().x + dad.camPos[0] + offsetX, dad.getMidpoint().y + dad.camPos[1] + offsetY);
+					}
 					#if FEATURE_LUAMODCHART
 					if (luaModchart != null)
 						luaModchart.executeState('playerTwoTurn', []);
@@ -5783,8 +5783,11 @@ class PlayState extends MusicBeatState
 						offsetY = luaModchart.getVar("followYOffset", "float");
 					}
 					#end
-					camFollow.setPosition(boyfriend.getMidpoint()
-						.x + boyfriend.camPos[0] + offsetX, boyfriend.getMidpoint().y + boyfriend.camPos[1] + offsetY);
+					if (!Stage.staticCam)
+					{
+						camFollow.setPosition(boyfriend.getMidpoint().x + boyfriend.camPos[0] + offsetX,
+							boyfriend.getMidpoint().y + boyfriend.camPos[1] + offsetY);
+					}
 
 					#if FEATURE_LUAMODCHART
 					if (luaModchart != null)

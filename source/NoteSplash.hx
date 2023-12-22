@@ -31,15 +31,17 @@ typedef SplashData =
 
 	var minFps:Int;
 	var maxFps:Int;
-
 	// theres gonna be more but the fps fucks me so much rn
 }
 
 class NoteSplash extends FlxSprite
 {
 	public var noteType:String = '';
+
 	var name:String;
+
 	public static var anims:Array<String> = ['purple', 'blue', 'green', 'red'];
+
 	var rawJson = null;
 
 	public function new(x:Float = 0, y:Float = 0, noteType:String, noteData:Int)
@@ -76,8 +78,8 @@ class NoteSplash extends FlxSprite
 		else
 			animation.play('splash ' + animNum + " " + note.originColor);
 		var data:SplashData = cast rawJson;
-		var minFps = data.minFps == null ? 60 : data.minFps;
-		var maxFps = data.maxFps == null ? 62 : data.maxFps;
+		var minFps = data.minFps;
+		var maxFps = data.maxFps;
 
 		animation.curAnim.frameRate = FlxG.random.int(minFps, maxFps);
 

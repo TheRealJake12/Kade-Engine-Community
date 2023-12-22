@@ -271,7 +271,7 @@ class Main extends Sprite
 			{
 				PlayState.instance.openSubState(new PauseSubState());
 
-				PlayState.instance.boyfriend.stunned = true;
+				PlayState.boyfriend.stunned = true;
 
 				PlayState.instance.persistentUpdate = false;
 				PlayState.instance.persistentDraw = true;

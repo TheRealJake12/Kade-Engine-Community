@@ -59,8 +59,8 @@ class HealthIcon extends FlxSprite
 				offset.set(0, 0);
 
 				frames = Paths.getSparrowAtlas('icons/animated/${newChar}');
-				animation.addByPrefix('Idle', 'idle', 24, true, isPlayer);
-				animation.addByPrefix('Lose', 'lose', 24, true, isPlayer);
+				animation.addByPrefix('Idle', 'Idle', 24, true, isPlayer);
+				animation.addByPrefix('Lose', 'Lose', 24, true, isPlayer);
 
 				addOffset('Idle', 0, 0);
 				addOffset('Lose', 0, 0);

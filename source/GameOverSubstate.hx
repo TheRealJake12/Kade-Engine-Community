@@ -29,7 +29,7 @@ class GameOverSubstate extends MusicBeatSubstate
 	{
 		var daStage = PlayState.instance.Stage.curStage;
 		var daBf:String = '';
-		switch (PlayState.instance.boyfriend.curCharacter)
+		switch (PlayState.boyfriend.curCharacter)
 		{
 			case 'bf-pixel':
 				stageSuffix = '-pixel';

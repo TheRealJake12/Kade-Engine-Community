@@ -14,9 +14,22 @@ import flixel.util.FlxColor;
 import openfl.display.BlendMode;
 import flixel.math.FlxMath;
 import flixel.math.FlxAngle;
+import openfl.Assets as OpenFlAssets;
+import stages.StageData;
+import haxe.DynamicAccess;
+#if FEATURE_HSCRIPT
+import script.Script;
+import script.ScriptGroup;
+import script.ScriptUtil;
+#end
 
 class Stage extends MusicBeatState
 {
+	#if FEATURE_HSCRIPT
+	public var scripts:ScriptGroup;
+	#end
+
+	public var stageJSON:StageData;
 	public var curStage:String = '';
 	public var ground:FlxSprite;
 	public var tankWatchtower:FlxSprite;
@@ -26,7 +39,11 @@ class Stage extends MusicBeatState
 
 	public static var instance:Stage = null;
 
-	public var camZoom:Float; // The zoom of the camera to have at the start of the game
+	public var camZoom:Float = 1.05; // The zoom of the camera to have at the start of the game
+	public var hasGF:Bool = true; // Whether The Stage Has GF In It Or Not.
+	public var staticCam:Bool = false; // Whether The Camera Moves In The Song.
+	public var camPosition:Array<Float> = []; // Camera Position
+
 	public var hideLastBG:Bool = false; // True = hide last BGs and show ones from slowBacks on certain step, False = Toggle visibility of BGs from SlowBacks on certain step
 	// Use visible property to manage if BG would be visible or not at the start of the game
 	public var tweenDuration:Float = 2; // How long will it tween hiding/showing BGs, variable above must be set to True for tween to activate
@@ -39,11 +56,10 @@ class Stage extends MusicBeatState
 	public var layInFront:Array<Array<FlxSprite>> = [[], [], []]; // BG layering, format: first [0] - in front of GF, second [1] - in front of opponent, third [2] - in front of boyfriend(and technically also opponent since Haxe layering moment)
 	public var slowBacks:Map<Int,
 		Array<FlxSprite>> = []; // Change/add/remove backgrounds mid song! Format: "slowBacks[StepToBeActivated] = [Sprites,To,Be,Changed,Or,Added];"
-	public var hasGF:Bool = true; // Whether The Stage Has GF In It Or Not.
 	// BGs still must be added by using toAdd Array for them to show in game after slowBacks take effect!!
 	// BGs still must be added by using toAdd Array for them to show in game after slowBacks take effect!!
 	// All of the above must be set or used in your stage case code block!!
-	public var positions:Map<String, Map<String, Array<Int>>> = [
+	public var positions:Map<String, Map<String, Array<Float>>> = [
 		// Assign your characters positions on stage here!
 		'halloween' => ['spooky' => [100, 300], 'monster' => [100, 200]],
 		'philly' => ['pico' => [100, 400]],
@@ -71,11 +87,23 @@ class Stage extends MusicBeatState
 		super();
 
 		this.curStage = daStage;
-		camZoom = 1.05; // Don't change zoom here, unless you want to change zoom of every stage that doesn't have custom one
+		stageJSON = StageJSON.loadJSONFile(daStage);
+		#if FEATURE_HSCRIPT
+		scripts = new ScriptGroup();
+		scripts.onAddScript.push(onAddScript);
 
+		initScripts();
+		#end
+	}
+
+	public function loadStageData(stage:String)
+	{
 		if (!FlxG.save.data.optimize)
 		{
-			switch (daStage)
+			#if FEATURE_HSCRIPT
+			scripts.executeAllFunc("create");
+			#end
+			switch (stage)
 			{
 				case 'halloween':
 					{
@@ -161,8 +189,6 @@ class Stage extends MusicBeatState
 					}
 				case 'limo':
 					{
-						camZoom = 0.90;
-
 						var skyBG:FlxSprite = new FlxSprite(-120, -50).loadGraphic(Paths.image('limo/limoSunset', 'week4'));
 						skyBG.scrollFactor.set(0.1, 0.1);
 						skyBG.antialiasing = FlxG.save.data.antialiasing;
@@ -232,8 +258,6 @@ class Stage extends MusicBeatState
 					}
 				case 'mall':
 					{
-						camZoom = 0.80;
-
 						var bg:FlxSprite = new FlxSprite(-1000, -500).loadGraphic(Paths.image('christmas/bgWalls', 'week5'));
 						bg.antialiasing = FlxG.save.data.antialiasing;
 						bg.scrollFactor.set(0.2, 0.2);
@@ -334,8 +358,6 @@ class Stage extends MusicBeatState
 					}
 				case 'school':
 					{
-						// defaultCamZoom = 0.9;
-
 						var bgSky = new FlxSprite().loadGraphic(Paths.image('weeb/weebSky', 'week6'));
 						bgSky.scrollFactor.set(0.1, 0.1);
 						bgSky.antialiasing = false;
@@ -430,7 +452,6 @@ class Stage extends MusicBeatState
 						toAdd.push(bg);
 					}
 				case 'tank':
-					camZoom = 0.9;
 					var tankSky:FlxSprite = new FlxSprite(-400, -400).loadGraphic(Paths.image('tankSky', 'week7'));
 					tankSky.antialiasing = FlxG.save.data.antialiasing;
 					tankSky.scrollFactor.set(0, 0);
@@ -585,7 +606,6 @@ class Stage extends MusicBeatState
 						layInFront[2].push(foreGround5);
 					}
 				case 'void': // In case you want to do chart with videos.
-					camZoom = 0.9;
 					curStage = 'void';
 					var black:FlxSprite = new FlxSprite().makeGraphic(FlxG.width * 2, FlxG.height * 2, FlxColor.BLACK);
 					black.scrollFactor.set(0, 0);
@@ -593,41 +613,6 @@ class Stage extends MusicBeatState
 
 				case 'stage':
 					{
-						camZoom = 0.9;
-						curStage = 'stage';
-						var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stageback', 'shared'));
-						bg.antialiasing = FlxG.save.data.antialiasing;
-						bg.scrollFactor.set(0.9, 0.9);
-						bg.active = false;
-						swagBacks['bg'] = bg;
-						toAdd.push(bg);
-
-						var stageFront:FlxSprite = new FlxSprite(-650, 600).loadGraphic(Paths.image('stagefront', 'shared'));
-						stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
-						stageFront.updateHitbox();
-						stageFront.antialiasing = FlxG.save.data.antialiasing;
-						stageFront.scrollFactor.set(0.9, 0.9);
-						stageFront.active = false;
-						swagBacks['stageFront'] = stageFront;
-						toAdd.push(stageFront);
-
-						if (FlxG.save.data.distractions)
-						{
-							var stageCurtains:FlxSprite = new FlxSprite(-500, -300).loadGraphic(Paths.image('stagecurtains', 'shared'));
-							stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
-							stageCurtains.updateHitbox();
-							stageCurtains.antialiasing = FlxG.save.data.antialiasing;
-							stageCurtains.scrollFactor.set(1.3, 1.3);
-							stageCurtains.active = false;
-
-							swagBacks['stageCurtains'] = stageCurtains;
-							toAdd.push(stageCurtains);
-						}
-					}
-
-				default:
-					{
-						camZoom = 0.9;
 						curStage = 'stage';
 						var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stageback', 'shared'));
 						bg.antialiasing = FlxG.save.data.antialiasing;
@@ -662,10 +647,79 @@ class Stage extends MusicBeatState
 		}
 	}
 
+	public function initStageProperties()
+	{
+		switch (curStage)
+		{
+			case 'stage' | 'limo' | 'tank' | 'void':
+				camZoom = 0.9;
+			case 'halloween' | 'philly' | 'mallEvil' | 'school' | 'schoolEvil':
+				camZoom = 1.05;
+			case 'mall':
+				camZoom = 0.8;
+			default:
+				camZoom = 1.05;
+		}
+
+		overridePropertiesFromJSON();
+	}
+
+	// Initial and default Camera position, needs to be called after initStageProperties because of loading GF property.
+	public function initCamPos()
+	{
+		if (camPosition.length == 0)
+		{
+			if (PlayState.gf != null)
+				camPosition = [
+					PlayState.gf.getGraphicMidpoint().x + PlayState.gf.camPos[0],
+					PlayState.gf.getGraphicMidpoint().y + PlayState.gf.camPos[1]
+				];
+			else
+				camPosition = [0, 0];
+		}
+	}
+
+	private function overridePropertiesFromJSON()
+	{
+		if (stageJSON != null)
+		{
+			if (stageJSON.staticCam != null)
+				if (Std.isOfType(stageJSON.staticCam, Bool))
+					staticCam = stageJSON.staticCam;
+
+			if (stageJSON.camZoom != null)
+				if (Std.isOfType(stageJSON.camZoom, Type.resolveClass('Float')))
+					camZoom = stageJSON.camZoom;
+
+			if (stageJSON.hasGF != null)
+				if (Std.isOfType(stageJSON.hasGF, Bool))
+					hasGF = stageJSON.hasGF;
+
+			if (stageJSON.camPosition != null)
+				if (Std.isOfType(stageJSON.camPosition, Type.resolveClass('Array')))
+					camPosition = stageJSON.camPosition;		
+
+			if (stageJSON.positions != null)
+			{
+				var posesMap:DynamicAccess<Array<Float>> = haxe.Json.parse(haxe.Json.stringify(stageJSON.positions));
+				var charMap:Map<String, Array<Float>> = [];
+				for (char in posesMap.keys())
+				{ // Don't use get(char) method because it crashes the game without any log
+					charMap.set(char, posesMap[char]);
+					positions.set(curStage, charMap);
+				}
+			}
+		}
+	}
+
 	override public function update(elapsed:Float)
 	{
 		if (FlxG.save.data.background)
 		{
+			#if FEATURE_HSCRIPT
+			if (scripts != null)
+				scripts.executeAllFunc("update", [elapsed]);
+			#end
 			switch (curStage)
 			{
 				case 'philly':
@@ -685,11 +739,21 @@ class Stage extends MusicBeatState
 			}
 		}
 		super.update(elapsed);
+
+		#if FEATURE_HSCRIPT
+		if (scripts != null)
+			scripts.executeAllFunc("updatePost", [elapsed]);
+		#end
 	}
 
 	override function stepHit()
 	{
 		super.stepHit();
+
+		#if FEATURE_HSCRIPT
+		scripts.setAll("curStep", curStep);
+		scripts.executeAllFunc("stepHit", [curStep]);
+		#end
 
 		if (!PlayStateChangeables.Optimize)
 		{
@@ -729,6 +793,11 @@ class Stage extends MusicBeatState
 	{
 		super.beatHit();
 
+		#if FEATURE_HSCRIPT
+		scripts.setAll("curBeat", curBeat);
+		scripts.executeAllFunc("beatHit", [beatHit]);
+		#end
+
 		if (FlxG.save.data.distractions && animatedBacks.length > 0)
 		{
 			for (bg in animatedBacks)
@@ -742,7 +811,7 @@ class Stage extends MusicBeatState
 				case 'halloween':
 					if (FlxG.random.bool(Conductor.bpm > 320 ? 100 : 10) && curBeat > lightningStrikeBeat + lightningOffset)
 					{
-						if (FlxG.save.data.distractions)
+						if (FlxG.save.data.distractions && PlayState.stageTesting)
 						{
 							lightningStrikeShit();
 						}
@@ -760,7 +829,7 @@ class Stage extends MusicBeatState
 							dancer.dance();
 						});
 
-						if (FlxG.random.bool(10) && fastCarCanDrive)
+						if (FlxG.random.bool(10) && fastCarCanDrive && PlayState.stageTesting)
 							fastCarDrive();
 					}
 				case "philly":
@@ -790,11 +859,19 @@ class Stage extends MusicBeatState
 						{
 							trainCooldown = FlxG.random.int(-4, 0);
 							trainStart();
-							Debug.logTrace('train');
 						}
 					}
 			}
 		}
+	}
+
+	override function sectionHit()
+	{
+		super.sectionHit();
+		#if FEATURE_HSCRIPT
+		scripts.setAll("curSection", curSection);
+		scripts.executeAllFunc("sectionHit", [curSection]);
+		#end
 	}
 
 	// Variables and Functions for Stages
@@ -810,10 +887,10 @@ class Stage extends MusicBeatState
 		lightningStrikeBeat = curBeat;
 		lightningOffset = FlxG.random.int(8, 24);
 
-		if (PlayState.instance.boyfriend != null)
+		if (PlayState.boyfriend != null)
 		{
-			PlayState.instance.boyfriend.playAnim('scared', true);
-			PlayState.instance.gf.playAnim('scared', true);
+			PlayState.boyfriend.playAnim('scared', true);
+			PlayState.gf.playAnim('scared', true);
 		}
 		else
 		{
@@ -821,6 +898,120 @@ class Stage extends MusicBeatState
 			GameplayCustomizeState.instance.gf.playAnim('scared', true);
 		}
 	}
+
+	#if FEATURE_HSCRIPT
+	function initScripts()
+	{
+		if (scripts == null)
+			return;
+
+		var scriptData:Map<String, String> = [];
+
+		var files:Array<String> = [];
+		var extensions = ["hx", "hscript", "hsc", "hxs"];
+		var rawFiles:Array<String> = CoolUtil.readAssetsDirectoryFromLibrary('assets/data/stages/$curStage', 'TEXT');
+
+		for (sub in rawFiles)
+		{
+			for (ext in extensions)
+				if (sub.contains(ext))
+					files.push(sub);
+		}
+		if (FlxG.save.data.gen)
+			Debug.logTrace(files);
+
+		for (file in files)
+		{
+			var hx:Null<String> = null;
+
+			if (OpenFlAssets.exists(file))
+				hx = OpenFlAssets.getText(file);
+
+			if (hx != null)
+			{
+				var scriptName:String = CoolUtil.getFileStringFromPath(file);
+
+				if (!scriptData.exists(scriptName))
+				{
+					scriptData.set(scriptName, hx);
+				}
+			}
+		}
+
+		for (scriptName => hx in scriptData)
+		{
+			if (scripts.getScriptByTag(scriptName) == null)
+				scripts.addScript(scriptName).executeString(hx);
+			else
+			{
+				scripts.getScriptByTag(scriptName).error("Duplicate Script Error!", '$scriptName: Duplicate Script');
+			}
+		}
+	}
+
+	function onAddScript(script:Script)
+	{
+		script.set("PlayState", PlayState.instance);
+		script.set("game", PlayState.instance);
+		script.set("Debug", Debug);
+		script.set("CoolUtil", CoolUtil);
+		script.set("SONG", PlayState.SONG);
+		script.set("PlayStateChangeables", PlayStateChangeables);
+		script.set("Stage", Stage);
+
+		script.set("curStage", curStage);
+		script.set("swagBacks", swagBacks);
+		script.set("positions", positions);
+		script.set("toAdd", toAdd);
+		script.set("layInFront", layInFront);
+		script.set("animatedBacks", animatedBacks);
+
+		// FUNCTIONS
+
+		//  CREATION FUNCTIONS
+		script.set("create", function()
+		{
+		});
+		script.set("createPost", function()
+		{
+		});
+
+		script.set("beatHit", function(?beat:Int)
+		{
+		});
+		script.set("stepHit", function(?step:Int)
+		{
+		});
+
+		script.set("sectionHit", function(?section:Int)
+		{
+		});
+
+		//  MISC
+		script.set("update", function(elapsed:Float)
+		{
+		});
+		script.set("updatePost", function(elapsed:Float)
+		{
+		});
+
+		// VARIABLES
+		script.set("curStep", 0);
+		script.set("curSection", 0);
+		script.set("curBeat", 0);
+		script.set("bpm", Conductor.bpm);
+
+		// OBJECTS
+		script.set("camGame", PlayState.instance.camGame);
+		script.set("camHUD", PlayState.instance.camHUD);
+		script.set("overlayCam", PlayState.instance.overlayCam);
+
+		// CHARACTERS
+		script.set("boyfriend", PlayState.boyfriend);
+		script.set("dad", PlayState.dad);
+		script.set("gf", PlayState.gf);
+	}
+	#end
 
 	var trainMoving:Bool = false;
 	var trainFrameTiming:Float = 0;
@@ -849,8 +1040,8 @@ class Stage extends MusicBeatState
 			{
 				startedMoving = true;
 
-				if (PlayState.instance.gf != null)
-					PlayState.instance.gf.playAnim('hairBlow');
+				if (PlayState.gf != null)
+					PlayState.gf.playAnim('hairBlow');
 				else
 					GameplayCustomizeState.instance.gf.playAnim('hairBlow');
 			}
@@ -879,8 +1070,8 @@ class Stage extends MusicBeatState
 	{
 		if (FlxG.save.data.distractions)
 		{
-			if (PlayState.instance.gf != null)
-				PlayState.instance.gf.playAnim('hairFall');
+			if (PlayState.gf != null)
+				PlayState.gf.playAnim('hairFall');
 			else
 				GameplayCustomizeState.instance.gf.playAnim('hairFall');
 

@@ -23,6 +23,7 @@ class StoryMenuState extends MusicBeatState
 	var scoreText:CoolText;
 
 	static var weeksID:Array<String> = null;
+
 	var storyBackground:FlxSprite = null;
 
 	public static function weekData():Array<WeekData>
@@ -455,7 +456,7 @@ class StoryMenuState extends MusicBeatState
 			storyBackground.alpha = 1;
 		}
 		else
-			storyBackground.alpha = 0;	
+			storyBackground.alpha = 0;
 
 		changeDifficulty();
 
