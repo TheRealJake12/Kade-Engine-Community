@@ -867,8 +867,6 @@ class PlayState extends MusicBeatState
 			if (!stageTesting)
 				dad.setPosition(gf.x, gf.y);
 			gf.visible = false;
-
-			camPos.x += 600;
 			tweenCamIn();
 		}
 
@@ -5641,7 +5639,7 @@ class PlayState extends MusicBeatState
 
 		if (curSong == 'stress')
 		{
-			if (curStep == 736 * songMultiplier)
+			if (curStep == 736)
 			{
 				dad.playAnim('good');
 			}

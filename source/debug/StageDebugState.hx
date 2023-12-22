@@ -46,6 +46,8 @@ class StageDebugState extends MusicBeatState
 
 	public static var Stage:Stage;
 
+	public static var fromEditor = false;
+
 	var camFollow:FlxObject;
 	var posText:FlxText;
 	var helpBg:FlxSprite;
@@ -81,21 +83,22 @@ class StageDebugState extends MusicBeatState
 	{
 		Paths.clearUnusedMemory();
 		FlxG.sound.music.stop();
+
 		FlxG.sound.playMusic(Paths.inst(PlayState.SONG.songId));
 		FlxG.sound.music.fadeIn(3, 0, 0.5);
 		FlxG.mouse.visible = true;
 
-		gf = new Character(400, 130, PlayState.SONG.gfVersion);
-		boyfriend = new Boyfriend(770, 450, PlayState.SONG.player1);
-		dad = new Character(100, 100, PlayState.SONG.player2);
+		gf = new Character(400, 130, daGf);
+		boyfriend = new Boyfriend(770, 450, daBf);
+		dad = new Character(100, 100, opponent);
 
 		dad.dance();
 		boyfriend.dance();
 		gf.dance();
 
-		reloadStage(Stage.curStage);
+		loadStage(daStage);
 
-		var positions = Stage.positions[Stage.curStage];
+		var positions = Stage.positions[daStage];
 		if (positions != null)
 		{
 			for (char => pos in positions)
@@ -256,6 +259,40 @@ class StageDebugState extends MusicBeatState
 		// Idk why I felt like I had to add traces. Feels more cooler than it should be.
 	}
 
+	function loadStage(leStage:String)
+	{
+		Stage = new Stage(leStage);
+
+		Stage.loadStageData(leStage);
+
+		Stage.initStageProperties();
+
+		for (i in Stage.toAdd)
+		{
+			add(i);
+		}
+
+		for (index => array in Stage.layInFront)
+		{
+			switch (index)
+			{
+				case 0:
+					if (Stage.hasGF)
+						add(gf);
+					for (bg in array)
+						add(bg);
+				case 1:
+					add(dad);
+					for (bg in array)
+						add(bg);
+				case 2:
+					add(boyfriend);
+					for (bg in array)
+						add(bg);
+			}
+		}
+	}
+
 	var helpText:FlxText;
 
 	function addHelpText():Void
@@ -369,7 +406,10 @@ class StageDebugState extends MusicBeatState
 			FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
 			MainMenuState.freakyPlaying = true;
 			Conductor.changeBPM(102, false);
-			MusicBeatState.switchState(new FreeplayState());
+			if (!fromEditor)
+				MusicBeatState.switchState(new FreeplayState());
+			else
+				MusicBeatState.switchState(new SelectEditorsState());	
 		}
 
 		if (FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.S)

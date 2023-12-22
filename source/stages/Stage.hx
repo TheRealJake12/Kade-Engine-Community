@@ -358,6 +358,7 @@ class Stage extends MusicBeatState
 					}
 				case 'school':
 					{
+						camPosition = [600, 500];
 						var bgSky = new FlxSprite().loadGraphic(Paths.image('weeb/weebSky', 'week6'));
 						bgSky.scrollFactor.set(0.1, 0.1);
 						bgSky.antialiasing = false;
@@ -435,6 +436,7 @@ class Stage extends MusicBeatState
 					}
 				case 'schoolEvil':
 					{
+						camPosition = [600, 500];
 						var waveEffectBG = new FlxWaveEffect(FlxWaveMode.ALL, 2, -1, 3, 2);
 						var waveEffectFG = new FlxWaveEffect(FlxWaveMode.ALL, 2, -1, 5, 2);
 
@@ -452,6 +454,7 @@ class Stage extends MusicBeatState
 						toAdd.push(bg);
 					}
 				case 'tank':
+					camPosition = [500, 400];
 					var tankSky:FlxSprite = new FlxSprite(-400, -400).loadGraphic(Paths.image('tankSky', 'week7'));
 					tankSky.antialiasing = FlxG.save.data.antialiasing;
 					tankSky.scrollFactor.set(0, 0);
@@ -670,12 +673,17 @@ class Stage extends MusicBeatState
 		if (camPosition.length == 0)
 		{
 			if (PlayState.gf != null)
+			{
 				camPosition = [
 					PlayState.gf.getGraphicMidpoint().x + PlayState.gf.camPos[0],
 					PlayState.gf.getGraphicMidpoint().y + PlayState.gf.camPos[1]
 				];
+			}
 			else
+			{
 				camPosition = [0, 0];
+				Debug.logTrace("there");
+			}
 		}
 	}
 

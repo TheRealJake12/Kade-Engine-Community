@@ -185,6 +185,9 @@ class Song
 		if (song.gfVersion == null)
 			song.gfVersion = "gf";
 
+		if (song.stage == null)
+			song.stage = "stage";	
+
 		TimingStruct.clearTimings();
 
 		if (song.splitVoiceTracks == null)

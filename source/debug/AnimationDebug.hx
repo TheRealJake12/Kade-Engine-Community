@@ -41,6 +41,7 @@ class AnimationDebug extends MusicBeatState
 	var isDad:Bool = true;
 	var daAnim:String = 'spooky';
 	var camFollow:FlxObject;
+	public static var fromEditor = false;
 
 	var background:FlxSprite;
 	var curt:FlxSprite;
@@ -356,7 +357,10 @@ class AnimationDebug extends MusicBeatState
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
 			FlxG.mouse.visible = false;
-			MusicBeatState.switchState(new PlayState());
+			if (!fromEditor)
+				MusicBeatState.switchState(new PlayState());
+			else
+				MusicBeatState.switchState(new SelectEditorsState());
 		}
 
 		if (FlxG.keys.justPressed.E)

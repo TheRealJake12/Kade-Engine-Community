@@ -30,6 +30,15 @@ class SelectEditorsState extends MusicBeatState
 	{
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
+
+		if (MainMenuState.freakyPlaying)
+		{
+			if (!FlxG.sound.music.playing)
+				FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
+			MainMenuState.freakyPlaying = true;
+			Conductor.changeBPM(102, false);
+		}
+
 		bgSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('menuDesat'));
 		bgSprite.scrollFactor.set(1.0, 1.0);
 		bgSprite.screenCenter();
@@ -52,9 +61,12 @@ class SelectEditorsState extends MusicBeatState
 
 		for (i in 0...editors.length)
 		{
-			var text:Alphabet = new Alphabet(0, (70 * i) + 30, editors[i], true);
+			var text:Alphabet = new Alphabet(0, 320 + (70 * i), editors[i], true);
+			text.changeX = false;
 			text.isMenuItem = true;
 			text.targetY = i;
+			text.snapToPosition();
+			text.screenCenter(X);
 			grpTexts.add(text);
 		}
 		changeSelection();
@@ -85,27 +97,22 @@ class SelectEditorsState extends MusicBeatState
 			switch (editors[curSelected])
 			{
 				case 'Character Editor':
+					debug.AnimationDebug.fromEditor = true;
 					LoadingState.loadAndSwitchState(new debug.AnimationDebug());
 				case 'Stage Editor':
-					LoadingState.loadAndSwitchState(new debug.StageDebugState());
+					PlayState.SONG = Song.loadFromJson('test', '');
+					debug.StageDebugState.fromEditor = true;
+					LoadingState.loadAndSwitchState(new debug.StageDebugState('stage'));
 				case 'Chart Editor':
-					LoadingState.loadAndSwitchState(new debug.ChartingState());
+					PlayState.SONG = Song.loadFromJson('test', '');
+					PlayState.storyDifficulty = 1;
+					PlayState.storyWeek = 0;
+					PlayState.isStoryMode = false;
+					PlayState.isSM = false;
+					PlayState.songMultiplier = 1;
+					LoadingState.loadAndSwitchState(new debug.ChartingState(true), true);
 			}
 			FlxG.sound.music.volume = 0;
-		}
-
-		var thing:Int = 0;
-		for (item in grpTexts.members)
-		{
-			item.targetY = thing - curSelected;
-			thing++;
-
-			item.alpha = 0.6;
-
-			if (item.targetY == 0)
-			{
-				item.alpha = 1;
-			}
 		}
 
 		super.update(elapsed);
@@ -121,5 +128,20 @@ class SelectEditorsState extends MusicBeatState
 			curSelected = editors.length - 1;
 		if (curSelected >= editors.length)
 			curSelected = 0;
+
+		var bullShit:Int = 0;
+
+		for (item in grpTexts.members)
+		{
+			item.targetY = bullShit - curSelected;
+			bullShit++;
+
+			item.alpha = 0.6;
+
+			if (item.targetY == 0)
+			{
+				item.alpha = 1;
+			}
+		}	
 	}
 }

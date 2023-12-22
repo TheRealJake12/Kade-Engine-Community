@@ -278,13 +278,11 @@ class MainMenuState extends MusicBeatState
 				changeItem(-shiftMult * FlxG.mouse.wheel);
 			}
 			#end
-
-			#if debug
+			
 			if (FlxG.keys.justPressed.SEVEN)
 			{
 				MusicBeatState.switchState(new SelectEditorsState());
 			}
-			#end
 
 			if (FlxG.mouse.overlaps(menuItems, FlxG.camera) && FlxG.mouse.justPressed || controls.ACCEPT)
 			{
