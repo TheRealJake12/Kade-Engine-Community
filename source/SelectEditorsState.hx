@@ -10,14 +10,27 @@ import flixel.util.FlxTimer;
 class SelectEditorsState extends MusicBeatState
 {
 	var editors:Array<String> = ['Character Editor', 'Stage Editor', 'Chart Editor'];
+	var icons = ['face', 'tankman', 'sm'];
 
 	private var grpTexts:FlxTypedGroup<Alphabet>;
 
 	private var curSelected = 0;
+	private var iconArray:Array<HealthIcon> = [];
 
-	private var bgColors:Array<String> = ['#314d7f', '#4e7093', '#70526e', '#594465'];
+	var back:FlxSprite;
+	var info:CoolUtil.CoolText;
 
-	private var colorRotation:Int = 1;
+	var colorArray:Array<FlxColor> = [
+		FlxColor.fromRGB(148, 0, 211),
+		FlxColor.fromRGB(75, 0, 130),
+		FlxColor.fromRGB(0, 0, 200),
+		FlxColor.fromRGB(0, 255, 0),
+		FlxColor.fromRGB(200, 160, 0),
+		FlxColor.fromRGB(200, 127, 0),
+		FlxColor.fromRGB(160, 0, 0)
+	];
+
+	public static var icon:HealthIcon;
 
 	public function new()
 	{
@@ -42,34 +55,44 @@ class SelectEditorsState extends MusicBeatState
 		bgSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('menuDesat'));
 		bgSprite.scrollFactor.set(1.0, 1.0);
 		bgSprite.screenCenter();
-
 		add(bgSprite);
 
-		FlxTween.color(bgSprite, 2, bgSprite.color, FlxColor.fromString(bgColors[colorRotation]));
+		back = new FlxSprite(0, 700).makeGraphic(1, 1, FlxColor.BLACK);
+		back.setGraphicSize(FlxG.width, 50);
+		back.screenCenter(X);
+		back.alpha =0.6;
+		add(back);
 
-		new FlxTimer().start(1, function(tmr:FlxTimer)
-		{
-			FlxTween.color(bgSprite, 2, bgSprite.color, FlxColor.fromString(bgColors[colorRotation]));
-			if (colorRotation < (bgColors.length - 1))
-				colorRotation++;
-			else
-				colorRotation = 0;
-		}, 0);
-
+		info = new CoolUtil.CoolText(225, 680, 32, 32, Paths.bitmapFont('fonts/vcr'));
+		info.autoSize = true;
+		info.text = "huh";
+		info.antialiasing = FlxG.save.data.antialiasing;
+		info.updateHitbox();
+		info.borderStyle = FlxTextBorderStyle.OUTLINE_FAST;
+		info.borderSize = 2;
+		add(info);
+		
 		grpTexts = new FlxTypedGroup<Alphabet>();
 		add(grpTexts);
 
 		for (i in 0...editors.length)
 		{
-			var text:Alphabet = new Alphabet(0, 320 + (70 * i), editors[i], true);
+			var text:Alphabet = new Alphabet(0, 280 + (70 * i), editors[i], true);
 			text.changeX = false;
 			text.isMenuItem = true;
 			text.targetY = i;
 			text.snapToPosition();
 			text.screenCenter(X);
 			grpTexts.add(text);
+
+			icon = new HealthIcon(icons[i]);
+			icon.sprTracker = text;
+			iconArray.push(icon);
+			add(icon);
 		}
 		changeSelection();
+
+		tweenColorShit();
 
 		super.create();
 		Paths.clearUnusedMemory();
@@ -143,6 +166,24 @@ class SelectEditorsState extends MusicBeatState
 
 		var bullShit:Int = 0;
 
+		switch (curSelected)
+		{
+			case 0:
+				info.text = "Character Editor, Edit Character Offsets.";
+			case 1:
+				info.text = "Stage Editor, Move The Positions Of Stage Assets.";
+			case 2:
+				info.text = "Chart Editor, Place Notes And Create Charts.";
+		}
+		info.updateHitbox();
+
+		for (i in 0...iconArray.length)
+		{
+			iconArray[i].alpha = 0.6;
+		}
+
+		iconArray[curSelected].alpha = 1;
+
 		for (item in grpTexts.members)
 		{
 			item.targetY = bullShit - curSelected;
@@ -155,5 +196,22 @@ class SelectEditorsState extends MusicBeatState
 				item.alpha = 1;
 			}
 		}	
+	}
+
+	function tweenColorShit()
+	{
+		var beforeInt = FlxG.random.int(0, 6);
+		var randomInt = FlxG.random.int(0, 6);
+
+		FlxTween.color(bgSprite, 4, bgSprite.color, colorArray[beforeInt], {
+			onComplete: function(twn)
+			{
+				if (beforeInt != randomInt)
+					beforeInt = randomInt;
+
+				tweenColorShit();
+			}
+		});
+		// thanks bolo lmao
 	}
 }
