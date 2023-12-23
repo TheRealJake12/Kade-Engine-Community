@@ -1086,7 +1086,7 @@ class Stage extends MusicBeatState
 	{
 		if (FlxG.save.data.distractions)
 		{
-			if (PlayState.gf != null)
+			if (PlayState.gf != null && PlayState.gf.curCharacter == 'gftrain')
 				PlayState.gf.playAnim('hairFall');
 
 			swagBacks['phillyTrain'].x = FlxG.width + 200;
