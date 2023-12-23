@@ -276,7 +276,7 @@ class StageDebugState extends MusicBeatState
 		gf = new Character(gf.x, gf.y, daGf, false);
 
 		curChars = [dad, boyfriend, gf];
-		if (!gf.visible || Stage.hasGF) // for when gf is an opponent
+		if (!gf.visible || !Stage.hasGF) // for when gf is an opponent
 			curChars.pop();
 		curChar = curChars[curCharIndex];
 
@@ -371,7 +371,7 @@ class StageDebugState extends MusicBeatState
 
 	function addHelpText():Void
 	{
-		var helpTextValue = "Help:\nQ/E : Zoom in and out\nW/ASK/D : Pan Camera\nSpace : Cycle Object\nShift : Switch Mode (Char/Stage)\nClick and Drag : Move Active Object\nZ/X : Rotate Object\nR : Reset Rotation\nCTRL-S : Save Offsets to File\nESC : Return to Stage\nEnter : Reload Selected Stage\nPress F1 to hide/show this!\n";
+		var helpTextValue = "Help:\nQ/E : Zoom in and out\nW/ASK/D : Pan Camera\nSpace : Cycle Object\nShift : Switch Mode (Char/Stage)\nClick and Drag : Move Active Object\nZ/X : Rotate Object\nR : Reset Rotation\nCTRL-S : Save Offsets to File\nESC : Return to Stage\nEnter : Reload Selected Stage\nF4 : Hide/Unhide Editor UI \nPress F1 to hide/show this!\n";
 		helpText = new FlxText(1200, 10, 0, helpTextValue, 18);
 		helpText.setFormat(Paths.font('vcr.ttf'), 18, FlxColor.WHITE, FlxTextAlign.RIGHT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 		helpText.scrollFactor.set();
@@ -380,7 +380,7 @@ class StageDebugState extends MusicBeatState
 		helpText.alpha = 0;
 		FlxTween.tween(helpText, {x: 885, alpha: 1}, 1.2);
 
-		helpBg = new FlxSprite(2000, 0).makeGraphic(450, 215, FlxColor.BLACK);
+		helpBg = new FlxSprite(2000, 0).makeGraphic(450, 230, FlxColor.BLACK);
 		helpBg.scrollFactor.set();
 		helpBg.cameras = [camHUD];
 		helpBg.alpha = 0;
@@ -468,10 +468,25 @@ class StageDebugState extends MusicBeatState
 
 		if (FlxG.keys.pressed.Z)
 			curChar.angle -= 1 * Math.ceil(elapsed);
-		else if (FlxG.keys.pressed.X)
+		if (FlxG.keys.pressed.X)
 			curChar.angle += 1 * Math.ceil(elapsed);
-		else if (FlxG.keys.pressed.R)
+		if (FlxG.keys.pressed.R)
 			curChar.angle = 0;
+
+		if (FlxG.keys.justPressed.UP)
+			curChar.y -= 1;
+
+		if (FlxG.keys.justPressed.DOWN)
+			curChar.y += 1;
+
+		if (FlxG.keys.justPressed.LEFT)
+			curChar.x -= 1;
+
+		if (FlxG.keys.justPressed.RIGHT)
+			curChar.x += 1;
+
+		if (FlxG.keys.justPressed.F4)
+			camMenu.visible = !camMenu.visible;	
 
 		posText.text = (curCharString.toUpperCase() + " X: " + curChar.x + " Y: " + curChar.y + " Rotation: " + curChar.angle + " Camera Zoom "
 			+ fakeZoom);
