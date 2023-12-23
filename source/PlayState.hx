@@ -4281,8 +4281,10 @@ class PlayState extends MusicBeatState
 			Highscore.saveLetter(PlayState.SONG.songId, Ratings.GenerateLetterRank(accuracy), storyDifficulty, songMultiplier);
 		}
 
+		#if FEATURE_HSCRIPT
 		if (ScriptUtil.hasPause(scripts.executeAllFunc("endSong")))
 			return;
+		#end	
 
 		if (offsetTesting)
 		{

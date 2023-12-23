@@ -48,6 +48,8 @@ class StageDebugState extends MusicBeatState
 
 	public static var fromEditor = false;
 
+	var fakeZoom = 1.0;
+
 	var camFollow:FlxObject;
 	var posText:FlxText;
 	var helpBg:FlxSprite;
@@ -65,8 +67,14 @@ class StageDebugState extends MusicBeatState
 	var UI_box:FlxUITabMenu;
 	var UI_options:FlxUITabMenu;
 	var stageDropDown:FlxUIDropDownMenu;
+	var player1Drop:FlxUIDropDownMenu;
+	var player2Drop:FlxUIDropDownMenu;
+	var gfDrop:FlxUIDropDownMenu;
+	var hasGF:FlxUICheckBox;
 
 	var stageList:Array<String>;
+	var charList:Array<String>;
+	var gfList:Array<String>;
 	var newStage:String = 'stage';
 
 	public function new(daStage:String = 'stage', daGf:String = 'gf', daBf:String = 'bf', opponent:String = 'dad')
@@ -87,6 +95,8 @@ class StageDebugState extends MusicBeatState
 		FlxG.sound.playMusic(Paths.inst(PlayState.SONG.songId));
 		FlxG.sound.music.fadeIn(3, 0, 0.5);
 		FlxG.mouse.visible = true;
+
+		PlayState.stageTesting = true;
 
 		gf = new Character(400, 130, daGf);
 		boyfriend = new Boyfriend(770, 450, daBf);
@@ -140,8 +150,13 @@ class StageDebugState extends MusicBeatState
 		FlxG.camera.follow(camFollow);
 
 		stageList = CoolUtil.coolTextFile(Paths.txt('data/stageList'));
+		charList = CoolUtil.coolTextFile(Paths.txt('data/characterList'));
+		gfList = CoolUtil.coolTextFile(Paths.txt('data/gfVersionList'));
 
-		var tabs = [{name: "Stage", label: 'Select Stage'}];
+		var tabs = [
+			{name: "Stage", label: 'Select Stage'},
+			{name: "Characters", label: 'Select Characters'}
+		];
 
 		// var opt_tabs = [{name: "test", label: 'test'}];
 
@@ -169,6 +184,7 @@ class StageDebugState extends MusicBeatState
 
 		addHelpText();
 		addEditorUI();
+		addCharacterUI();
 
 		Conductor.changeBPM(PlayState.SONG.bpm);
 	}
@@ -177,21 +193,63 @@ class StageDebugState extends MusicBeatState
 	{
 		var tab_group = new FlxUI(null, UI_options);
 		tab_group.name = "Stage";
-		stageDropDown = new FlxUIDropDownMenu(10, 50, FlxUIDropDownMenu.makeStrIdLabelArray(stageList, true), function(stage:String)
+		stageDropDown = new FlxUIDropDownMenu(10, 20, FlxUIDropDownMenu.makeStrIdLabelArray(stageList, true), function(stage:String)
 		{
 			newStage = stageList[Std.parseInt(stage)];
 			Debug.logTrace('Selected Stage : ${newStage}');
 		});
 		stageDropDown.selectedLabel = newStage;
 
+		hasGF = new FlxUICheckBox(150, 20, null, null, "Stage Has GF", 100);
+		hasGF.checked = Stage.hasGF;
+		hasGF.callback = function()
+		{
+			Stage.hasGF = !Stage.hasGF;
+		};
+
 		tab_group.add(stageDropDown);
+		tab_group.add(hasGF);
 
 		UI_options.addGroup(tab_group);
+	}
+
+	function addCharacterUI():Void
+	{
+		var char = new FlxUI(null, UI_options);
+		char.name = "Characters";
+		player1Drop = new FlxUIDropDownMenu(10, 10, FlxUIDropDownMenu.makeStrIdLabelArray(charList, true), function(char:String)
+		{
+			daBf = charList[Std.parseInt(char)];
+			Debug.logTrace('Player 1 : ${daBf}');
+		});
+		player1Drop.selectedLabel = daBf;
+
+		player2Drop = new FlxUIDropDownMenu(150, 10, FlxUIDropDownMenu.makeStrIdLabelArray(charList, true), function(char:String)
+		{
+			opponent = charList[Std.parseInt(char)];
+			Debug.logTrace('Player 2 : ${opponent}');
+		});
+		player2Drop.selectedLabel = opponent;
+
+		gfDrop = new FlxUIDropDownMenu(10, 100, FlxUIDropDownMenu.makeStrIdLabelArray(gfList, true), function(char:String)
+		{
+			daGf = gfList[Std.parseInt(char)];
+			Debug.logTrace('GF : ${daGf}');
+		});
+		gfDrop.selectedLabel = daGf;
+		
+		char.add(gfDrop);
+		char.add(player2Drop);
+		char.add(player1Drop);
+
+		UI_options.addGroup(char);
 	}
 
 	function reloadStage(leStage:String)
 	{
 		Debug.logTrace('Reloading Stage...');
+		curCharIndex = 0;
+		curChars = [];
 		for (i in Stage.toAdd)
 		{
 			remove(i);
@@ -215,11 +273,25 @@ class StageDebugState extends MusicBeatState
 		if (FlxG.save.data.gen)
 			Debug.logTrace('Removing Characters...');
 
+		dad = new Character(dad.x, dad.y, opponent, false);
+		boyfriend = new Boyfriend(boyfriend.x, boyfriend.y, daBf);
+		gf = new Character(gf.x, gf.y, daGf, false);
+
+		curChars = [dad, boyfriend, gf];
+		if (!gf.visible || Stage.hasGF) // for when gf is an opponent
+			curChars.pop();
+		curChar = curChars[curCharIndex];
+
 		Stage = new Stage(leStage);
 
 		Stage.loadStageData(leStage);
 
 		Stage.initStageProperties();
+
+		getNextObject();
+		getNextChar();
+		
+		fakeZoom = Stage.camZoom;
 
 		if (FlxG.save.data.gen)
 			Debug.logTrace('Initalize New Stage Data...');
@@ -237,7 +309,7 @@ class StageDebugState extends MusicBeatState
 			switch (index)
 			{
 				case 0:
-					if (Stage.hasGF)
+					if (Stage.hasGF && hasGF.checked)
 						add(gf);
 					for (bg in array)
 						add(bg);
@@ -266,6 +338,8 @@ class StageDebugState extends MusicBeatState
 		Stage.loadStageData(leStage);
 
 		Stage.initStageProperties();
+
+		fakeZoom = Stage.camZoom;
 
 		for (i in Stage.toAdd)
 		{
@@ -327,14 +401,16 @@ class StageDebugState extends MusicBeatState
 			Conductor.songPosition = FlxG.sound.music.time;
 
 		if (FlxG.keys.justPressed.E)
-			FlxG.camera.zoom += 0.05;
+			fakeZoom += 0.05;
 		if (FlxG.keys.justPressed.Q)
 		{
-			if (FlxG.camera.zoom > 0.15) // me when floating point error
-				FlxG.camera.zoom -= 0.05;
+			if (fakeZoom > 0.15) // me when floating point error
+				fakeZoom -= 0.05;
 		}
 
 		FlxG.watch.addQuick('Camera Zoom', FlxG.camera.zoom);
+
+		FlxG.camera.zoom = FlxMath.lerp(fakeZoom, FlxG.camera.zoom, 0.95);
 
 		if (FlxG.keys.justPressed.SHIFT)
 		{
@@ -398,7 +474,7 @@ class StageDebugState extends MusicBeatState
 			curChar.angle = 0;
 
 		posText.text = (curCharString.toUpperCase() + " X: " + curChar.x + " Y: " + curChar.y + " Rotation: " + curChar.angle + " Camera Zoom "
-			+ FlxG.camera.zoom);
+			+ fakeZoom);
 
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
@@ -494,7 +570,7 @@ class StageDebugState extends MusicBeatState
 			++curCharIndex;
 		}
 
-		result += 'Camera Zoom: ' + FlxG.camera.zoom;
+		result += 'Camera Zoom: ' + fakeZoom;
 
 		if ((result != null) && (result.length > 0))
 		{

@@ -828,7 +828,7 @@ class Stage extends MusicBeatState
 				case 'halloween':
 					if (FlxG.random.bool(Conductor.bpm > 320 ? 100 : 10) && curBeat > lightningStrikeBeat + lightningOffset)
 					{
-						if (FlxG.save.data.distractions && PlayState.stageTesting)
+						if (FlxG.save.data.distractions)
 						{
 							lightningStrikeShit();
 						}
@@ -846,7 +846,7 @@ class Stage extends MusicBeatState
 							dancer.dance();
 						});
 
-						if (FlxG.random.bool(10) && fastCarCanDrive && PlayState.stageTesting)
+						if (FlxG.random.bool(10) && fastCarCanDrive)
 							fastCarDrive();
 					}
 				case "philly":
@@ -889,31 +889,6 @@ class Stage extends MusicBeatState
 		scripts.setAll("curSection", curSection);
 		scripts.executeAllFunc("sectionHit", [curSection]);
 		#end
-	}
-
-	// Variables and Functions for Stages
-	var lightningStrikeBeat:Int = 0;
-	var lightningOffset:Int = 8;
-	var curLight:Int = 0;
-
-	function lightningStrikeShit():Void
-	{
-		FlxG.sound.play(Paths.soundRandom('thunder_', 1, 2, 'shared'));
-		swagBacks['halloweenBG'].animation.play('lightning');
-
-		lightningStrikeBeat = curBeat;
-		lightningOffset = FlxG.random.int(8, 24);
-
-		if (PlayState.boyfriend != null)
-		{
-			PlayState.boyfriend.playAnim('scared', true);
-			PlayState.gf.playAnim('scared', true);
-		}
-		else
-		{
-			GameplayCustomizeState.instance.boyfriend.playAnim('scared', true);
-			GameplayCustomizeState.instance.gf.playAnim('scared', true);
-		}
 	}
 
 	#if FEATURE_HSCRIPT
@@ -1036,6 +1011,26 @@ class Stage extends MusicBeatState
 	}
 	#end
 
+	// Variables and Functions for Stages
+	var lightningStrikeBeat:Int = 0;
+	var lightningOffset:Int = 8;
+	var curLight:Int = 0;
+
+	function lightningStrikeShit():Void
+	{
+		FlxG.sound.play(Paths.soundRandom('thunder_', 1, 2, 'shared'));
+		swagBacks['halloweenBG'].animation.play('lightning');
+
+		lightningStrikeBeat = curBeat;
+		lightningOffset = FlxG.random.int(8, 24);
+
+		if (PlayState.boyfriend != null && PlayState.gf != null)
+		{
+			PlayState.boyfriend.playAnim('scared', true);
+			PlayState.gf.playAnim('scared', true);
+		}
+	}
+
 	var trainMoving:Bool = false;
 	var trainFrameTiming:Float = 0;
 
@@ -1065,8 +1060,6 @@ class Stage extends MusicBeatState
 
 				if (PlayState.gf != null)
 					PlayState.gf.playAnim('hairBlow');
-				else
-					GameplayCustomizeState.instance.gf.playAnim('hairBlow');
 			}
 
 			if (startedMoving)
@@ -1095,8 +1088,6 @@ class Stage extends MusicBeatState
 		{
 			if (PlayState.gf != null)
 				PlayState.gf.playAnim('hairFall');
-			else
-				GameplayCustomizeState.instance.gf.playAnim('hairFall');
 
 			swagBacks['phillyTrain'].x = FlxG.width + 200;
 			trainMoving = false;
@@ -1134,7 +1125,8 @@ class Stage extends MusicBeatState
 			fastCarCanDrive = false;
 			new FlxTimer().start(2, function(tmr:FlxTimer)
 			{
-				resetFastCar();
+				if (curStage == 'limo')
+					resetFastCar();
 			});
 		}
 	}
@@ -1147,7 +1139,7 @@ class Stage extends MusicBeatState
 	{
 		tankAngle += FlxG.elapsed * tankSpeed * PlayState.songMultiplier;
 		// Worst fix I've ever done in my life. I hope this doesn't make lag stutters.
-		if (!PlayState.instance.endingSong)
+		if (PlayState.instance != null && !PlayState.instance.endingSong)
 			PlayState.instance.createTween(swagBacks['tankGround'], {angle: tankAngle - 90 + 15}, 0.01, {type: FlxTweenType.ONESHOT});
 		swagBacks['tankGround'].x = tankX + 1500 * FlxMath.fastCos(FlxAngle.asRadians(tankAngle + 180));
 		swagBacks['tankGround'].y = 1300 + 1100 * FlxMath.fastSin(FlxAngle.asRadians(tankAngle + 180));
@@ -1199,5 +1191,14 @@ class Stage extends MusicBeatState
 		}
 
 		swagGroup.clear();
+
+		#if FEATURE_HSCRIPT
+		if (scripts != null)
+		{
+			scripts.active = false;
+			scripts.destroy();
+			scripts = null;
+		}
+		#end
 	}
 }

@@ -2744,6 +2744,8 @@ class ChartingState extends MusicBeatState
 			Conductor.songPosition = inst.time;
 
 			_song.songId = typingShit.text;
+			_song.song = typingShit.text;
+			_song.songName = typingShit.text;
 			_song.audioFile = typingShit2.text;
 
 			var timingSeg = TimingStruct.getTimingAtTimestamp(Conductor.songPosition);
