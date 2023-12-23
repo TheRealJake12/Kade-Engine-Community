@@ -96,8 +96,6 @@ class StageDebugState extends MusicBeatState
 		FlxG.sound.music.fadeIn(3, 0, 0.5);
 		FlxG.mouse.visible = true;
 
-		PlayState.stageTesting = true;
-
 		gf = new Character(400, 130, daGf);
 		boyfriend = new Boyfriend(770, 450, daBf);
 		dad = new Character(100, 100, opponent);
@@ -287,6 +285,8 @@ class StageDebugState extends MusicBeatState
 		Stage.loadStageData(leStage);
 
 		Stage.initStageProperties();
+
+		Stage.initCamPos();
 
 		getNextObject();
 		getNextChar();
@@ -498,6 +498,11 @@ class StageDebugState extends MusicBeatState
 		helpBg.visible = FlxG.save.data.showHelp;
 
 		super.update(elapsed);
+	}
+
+	override function destroy()
+	{
+		super.destroy();
 	}
 
 	function updateMousePos()
