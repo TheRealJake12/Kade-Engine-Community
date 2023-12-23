@@ -21,6 +21,10 @@ The goal of this Repo is to make it community focused. If theres a feature just 
 
 Stylized Main Menu.
 
+![Editors](art/readme/editors.png)
+
+Editors Select Menu.
+
 ![Options](art/readme/options.png)
 
 Expanded Options Menu For More Customizability.
@@ -28,6 +32,10 @@ Expanded Options Menu For More Customizability.
 ![Charter](art/readme/charteditor.png)
 
 Reskinned and optimized chart editor.
+
+![Stage](art/readme/stageeditor.png)
+
+Stage Editor For Editing Stage Positions.
 
 ![Freeplay](art/readme/freeplay.png)
 
