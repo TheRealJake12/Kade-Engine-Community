@@ -938,6 +938,7 @@ class Stage extends MusicBeatState
 				scripts.getScriptByTag(scriptName).error("Duplicate Script Error!", '$scriptName: Duplicate Script');
 			}
 		}
+		doesExist = true; // fix not having a json but having the stage.
 	}
 
 	function onAddScript(script:Script)

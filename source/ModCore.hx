@@ -48,11 +48,12 @@ class ModCore
 		var loadedModlist:Array<ModMetadata> = Polymod.init({
 			modRoot: MOD_DIR,
 			dirs: folders,
-			framework: OPENFL,
+			framework: CUSTOM,
 			frameworkParams: buildFrameworkParams(),
 			errorCallback: onPolymodError,
 			parseRules: getParseRules(),
 			extensionMap: extensions,
+			customBackend: ModCoreBackend,
 			ignoredFiles: Polymod.getDefaultIgnoreList()
 		});
 
