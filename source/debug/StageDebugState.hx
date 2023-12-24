@@ -380,7 +380,7 @@ class StageDebugState extends MusicBeatState
 
 	function addHelpText():Void
 	{
-		var helpTextValue = "Help:\nQ/E : Zoom in and out\nI-J-K-L : Pan Camera\nSpace : Cycle Object\nShift : Switch Mode (Char/Stage)\nClick and Drag : Move Active Object\nZ/X : Rotate Object\nR : Reset Rotation\nEnter : Reload Selected Stage\nF12: Save Stage Properties To File\nESC : Return To Game\nF4 : Hide/Unhide Editor UI \nPress F1 To Hide/Unhide Help Text\n";
+		var helpTextValue = "Help:\nQ/E : Zoom in and out\nI-J-K-L : Pan Camera\nA-D : Change Object Alpha\nSpace : Cycle Object\nShift : Switch Mode (Char/Stage)\nClick and Drag : Move Active Object\nZ/X : Rotate Object\nR : Reset Rotation\nEnter : Reload Selected Stage\nF12: Save Stage Properties To File\nESC : Return To Game\nF4 : Hide/Unhide Editor UI \nPress F1 To Hide/Unhide Help Text\n";
 		helpText = new FlxText(1200, 10, 0, helpTextValue, 18);
 		helpText.setFormat(Paths.font('vcr.ttf'), 18, FlxColor.WHITE, FlxTextAlign.RIGHT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 		helpText.scrollFactor.set();
@@ -389,7 +389,7 @@ class StageDebugState extends MusicBeatState
 		helpText.alpha = 0;
 		FlxTween.tween(helpText, {x: 885, alpha: 1}, 1.2);
 
-		helpBg = new FlxSprite(2000, 0).makeGraphic(450, 230, FlxColor.BLACK);
+		helpBg = new FlxSprite(2000, 0).makeGraphic(450, 250, FlxColor.BLACK);
 		helpBg.scrollFactor.set();
 		helpBg.cameras = [camHUD];
 		helpBg.alpha = 0;
@@ -495,6 +495,16 @@ class StageDebugState extends MusicBeatState
 		if (FlxG.keys.justPressed.RIGHT)
 			curChar.x += 1;
 
+		if (FlxG.keys.justPressed.A)
+		{
+			if (curChar.alpha > 0.15) // me when floating point error
+				curChar.alpha -= 0.05;
+		}
+		if (FlxG.keys.justPressed.D)
+		{
+				curChar.alpha += 0.05;	
+		}
+
 		if (FlxG.keys.justPressed.F4)
 		{
 			camHUD.visible = !camHUD.visible;
@@ -511,6 +521,8 @@ class StageDebugState extends MusicBeatState
 			+ curChar.x
 			+ " Y: "
 			+ curChar.y
+			+ " Alpha: "
+			+ curChar.alpha
 			+ " Rotation: "
 			+ curChar.angle
 			+ " Camera Zoom "
@@ -617,7 +629,7 @@ class StageDebugState extends MusicBeatState
 
 		for (spriteName => sprite in Stage.swagBacks)
 		{
-			var text = spriteName + " X: " + sprite.x + " Y: " + sprite.y + " Rotation: " + sprite.angle;
+			var text = spriteName + " X: " + sprite.x + " Y: " + sprite.y + " Alpha: " + sprite.alpha + " Rotation: " + sprite.angle;
 			result += text + "\n";
 		}
 		var curCharIndex:Int = 0;
@@ -634,7 +646,7 @@ class StageDebugState extends MusicBeatState
 				case 2:
 					char = daGf;
 			}
-			result += char + ' X: ' + curChars[curCharIndex].x + " Y: " + curChars[curCharIndex].y + " Rotation: " + curChars[curCharIndex].angle + "\n";
+			result += char + ' X: ' + curChars[curCharIndex].x + " Y: " + curChars[curCharIndex].y + " Alpha: " + curChars[curCharIndex].alpha + " Rotation: " + curChars[curCharIndex].angle + "\n";
 			++curCharIndex;
 		}
 
