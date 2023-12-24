@@ -278,7 +278,7 @@ class MainMenuState extends MusicBeatState
 				changeItem(-shiftMult * FlxG.mouse.wheel);
 			}
 			#end
-			
+
 			if (FlxG.keys.justPressed.SEVEN)
 			{
 				MusicBeatState.switchState(new SelectEditorsState());

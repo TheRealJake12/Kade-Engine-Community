@@ -186,7 +186,7 @@ class Song
 			song.gfVersion = "gf";
 
 		if (song.stage == null)
-			song.stage = "stage";	
+			song.stage = "stage";
 
 		TimingStruct.clearTimings();
 

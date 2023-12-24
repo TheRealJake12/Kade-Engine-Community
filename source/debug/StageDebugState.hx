@@ -71,6 +71,7 @@ class StageDebugState extends MusicBeatState
 	var player2Drop:FlxUIDropDownMenu;
 	var gfDrop:FlxUIDropDownMenu;
 	var hasGF:FlxUICheckBox;
+	var staticCam:FlxUICheckBox;
 
 	var stageList:Array<String>;
 	var charList:Array<String>;
@@ -205,8 +206,16 @@ class StageDebugState extends MusicBeatState
 			Stage.hasGF = !Stage.hasGF;
 		};
 
+		staticCam = new FlxUICheckBox(150, 40, null, null, "Static Camera", 100);
+		staticCam.checked = Stage.staticCam;
+		staticCam.callback = function()
+		{
+			Stage.staticCam = !Stage.staticCam;
+		};
+
 		tab_group.add(stageDropDown);
 		tab_group.add(hasGF);
+		tab_group.add(staticCam);
 
 		UI_options.addGroup(tab_group);
 	}
@@ -235,7 +244,7 @@ class StageDebugState extends MusicBeatState
 			Debug.logTrace('GF : ${daGf}');
 		});
 		gfDrop.selectedLabel = daGf;
-		
+
 		char.add(gfDrop);
 		char.add(player2Drop);
 		char.add(player1Drop);
@@ -290,7 +299,7 @@ class StageDebugState extends MusicBeatState
 
 		getNextObject();
 		getNextChar();
-		
+
 		fakeZoom = Stage.camZoom;
 
 		if (FlxG.save.data.gen)
@@ -371,7 +380,7 @@ class StageDebugState extends MusicBeatState
 
 	function addHelpText():Void
 	{
-		var helpTextValue = "Help:\nQ/E : Zoom in and out\nW/ASK/D : Pan Camera\nSpace : Cycle Object\nShift : Switch Mode (Char/Stage)\nClick and Drag : Move Active Object\nZ/X : Rotate Object\nR : Reset Rotation\nCTRL-S : Save Offsets to File\nESC : Return to Stage\nEnter : Reload Selected Stage\nF4 : Hide/Unhide Editor UI \nPress F1 to hide/show this!\n";
+		var helpTextValue = "Help:\nQ/E : Zoom in and out\nI-J-K-L : Pan Camera\nSpace : Cycle Object\nShift : Switch Mode (Char/Stage)\nClick and Drag : Move Active Object\nZ/X : Rotate Object\nR : Reset Rotation\nEnter : Reload Selected Stage\nF12: Save Stage Properties To File\nESC : Return To Game\nF4 : Hide/Unhide Editor UI \nPress F1 To Hide/Unhide Help Text\n";
 		helpText = new FlxText(1200, 10, 0, helpTextValue, 18);
 		helpText.setFormat(Paths.font('vcr.ttf'), 18, FlxColor.WHITE, FlxTextAlign.RIGHT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 		helpText.scrollFactor.set();
@@ -402,6 +411,7 @@ class StageDebugState extends MusicBeatState
 
 		if (FlxG.keys.justPressed.E)
 			fakeZoom += 0.05;
+
 		if (FlxG.keys.justPressed.Q)
 		{
 			if (fakeZoom > 0.15) // me when floating point error
@@ -486,9 +496,24 @@ class StageDebugState extends MusicBeatState
 			curChar.x += 1;
 
 		if (FlxG.keys.justPressed.F4)
-			camMenu.visible = !camMenu.visible;	
+		{
+			camHUD.visible = !camHUD.visible;
+			camMenu.visible = !camMenu.visible;
+		}
 
-		posText.text = (curCharString.toUpperCase() + " X: " + curChar.x + " Y: " + curChar.y + " Rotation: " + curChar.angle + " Camera Zoom "
+		if (FlxG.keys.justPressed.F11)
+			saveBoyPos();
+		if (FlxG.keys.justPressed.F12)
+			saveProperties();
+
+		posText.text = (curCharString.toUpperCase()
+			+ " X: "
+			+ curChar.x
+			+ " Y: "
+			+ curChar.y
+			+ " Rotation: "
+			+ curChar.angle
+			+ " Camera Zoom "
 			+ fakeZoom);
 
 		if (FlxG.keys.justPressed.ESCAPE)
@@ -500,11 +525,8 @@ class StageDebugState extends MusicBeatState
 			if (!fromEditor)
 				MusicBeatState.switchState(new FreeplayState());
 			else
-				MusicBeatState.switchState(new SelectEditorsState());	
+				MusicBeatState.switchState(new SelectEditorsState());
 		}
-
-		if (FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.S)
-			saveBoyPos();
 
 		if (FlxG.keys.justPressed.F1)
 			FlxG.save.data.showHelp = !FlxG.save.data.showHelp;
@@ -560,6 +582,32 @@ class StageDebugState extends MusicBeatState
 				curCharString = daBf;
 			case 2:
 				curCharString = daGf;
+		}
+	}
+
+	function saveProperties()
+	{
+		var b = boyfriend.curCharacter;
+		var g = gf.curCharacter;
+		var d = dad.curCharacter;
+		var json:stages.StageData = {
+			staticCam: staticCam.checked,
+			camZoom: fakeZoom,
+			hasGF: hasGF.checked,
+			camPosition: [camFollow.x, camFollow.y],
+			positions: [b => [boyfriend.x, boyfriend.y], g => [gf.x, gf.y], d => [dad.x, dad.y]]
+		};
+
+		// weirdest fuckin code for jsons ever
+		var data:String = haxe.Json.stringify(json, null, " ");
+
+		if ((data != null) && (data.length > 0))
+		{
+			_file = new FileReference();
+			_file.addEventListener(Event.COMPLETE, onSaveComplete);
+			_file.addEventListener(Event.CANCEL, onSaveCancel);
+			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
+			_file.save(data.trim(), Stage.curStage + ".json");
 		}
 	}
 

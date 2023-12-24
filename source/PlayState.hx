@@ -696,7 +696,7 @@ class PlayState extends MusicBeatState
 		}
 
 		Stage = new Stage(stageCheck);
-		
+
 		Stage.loadStageData(stageCheck);
 
 		Stage.initStageProperties();
@@ -704,7 +704,7 @@ class PlayState extends MusicBeatState
 		if (!Stage.doesExist)
 			Stage.loadStageData('stage');
 
-		// pissed me off that having non existent stages just load black instead of default stag	
+		// pissed me off that having non existent stages just load black instead of default stag
 
 		if (isStoryMode)
 			songMultiplier = 1;
@@ -3357,10 +3357,7 @@ class PlayState extends MusicBeatState
 		if (FlxG.keys.justPressed.NINE)
 			iconP1.swapOldIcon();
 
-		var pauseBind = FlxKey.fromString(FlxG.save.data.pauseBind);
-		var gppauseBind = FlxKey.fromString(FlxG.save.data.gppauseBind);
-
-		if ((FlxG.keys.anyJustPressed([pauseBind])) && startedCountdown && canPause && !cannotDie)
+		if (controls.PAUSE && startedCountdown && canPause && !cannotDie)
 		{
 			persistentUpdate = false;
 			persistentDraw = true;
@@ -4284,7 +4281,7 @@ class PlayState extends MusicBeatState
 		#if FEATURE_HSCRIPT
 		if (ScriptUtil.hasPause(scripts.executeAllFunc("endSong")))
 			return;
-		#end	
+		#end
 
 		if (offsetTesting)
 		{

@@ -41,6 +41,7 @@ class AnimationDebug extends MusicBeatState
 	var isDad:Bool = true;
 	var daAnim:String = 'spooky';
 	var camFollow:FlxObject;
+
 	public static var fromEditor = false;
 
 	var background:FlxSprite;

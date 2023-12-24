@@ -1931,7 +1931,6 @@ class ChartingState extends MusicBeatState
 					if (nums.value <= 0)
 						nums.value = 1;
 					_song.bpm = nums.value;
-					
 
 					for (section in _song.notes)
 					{

@@ -44,6 +44,8 @@ class SelectEditorsState extends MusicBeatState
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 
+		FlxG.mouse.visible = true;
+
 		if (MainMenuState.freakyPlaying)
 		{
 			if (!FlxG.sound.music.playing)
@@ -60,7 +62,7 @@ class SelectEditorsState extends MusicBeatState
 		back = new FlxSprite(0, 700).makeGraphic(1, 1, FlxColor.BLACK);
 		back.setGraphicSize(FlxG.width, 50);
 		back.screenCenter(X);
-		back.alpha =0.6;
+		back.alpha = 0.6;
 		add(back);
 
 		info = new CoolUtil.CoolText(225, 680, 32, 32, Paths.bitmapFont('fonts/vcr'));
@@ -71,7 +73,7 @@ class SelectEditorsState extends MusicBeatState
 		info.borderStyle = FlxTextBorderStyle.OUTLINE_FAST;
 		info.borderSize = 2;
 		add(info);
-		
+
 		grpTexts = new FlxTypedGroup<Alphabet>();
 		add(grpTexts);
 
@@ -120,7 +122,7 @@ class SelectEditorsState extends MusicBeatState
 			else if (FlxG.mouse.wheel > 0)
 				changeSelection(-1);
 			#end
-		}	
+		}
 
 		if (no)
 		{
@@ -129,28 +131,33 @@ class SelectEditorsState extends MusicBeatState
 
 		if (yes)
 		{
-			switch (editors[curSelected])
-			{
-				case 'Character Editor':
-					debug.AnimationDebug.fromEditor = true;
-					LoadingState.loadAndSwitchState(new debug.AnimationDebug());
-				case 'Stage Editor':
-					PlayState.SONG = Song.loadFromJson('test', '');
-					debug.StageDebugState.fromEditor = true;
-					LoadingState.loadAndSwitchState(new debug.StageDebugState('stage'));
-				case 'Chart Editor':
-					PlayState.SONG = Song.loadFromJson('test', '');
-					PlayState.storyDifficulty = 1;
-					PlayState.storyWeek = 0;
-					PlayState.isStoryMode = false;
-					PlayState.isSM = false;
-					PlayState.songMultiplier = 1;
-					LoadingState.loadAndSwitchState(new debug.ChartingState(true), true);
-			}
-			FlxG.sound.music.volume = 0;
+			goToEditor();
 		}
 
 		super.update(elapsed);
+	}
+
+	function goToEditor()
+	{
+		switch (editors[curSelected])
+		{
+			case 'Character Editor':
+				debug.AnimationDebug.fromEditor = true;
+				LoadingState.loadAndSwitchState(new debug.AnimationDebug());
+			case 'Stage Editor':
+				PlayState.SONG = Song.loadFromJson('test', '');
+				debug.StageDebugState.fromEditor = true;
+				LoadingState.loadAndSwitchState(new debug.StageDebugState('stage'));
+			case 'Chart Editor':
+				PlayState.SONG = Song.loadFromJson('test', '');
+				PlayState.storyDifficulty = 1;
+				PlayState.storyWeek = 0;
+				PlayState.isStoryMode = false;
+				PlayState.isSM = false;
+				PlayState.songMultiplier = 1;
+				LoadingState.loadAndSwitchState(new debug.ChartingState(true), true);
+		}
+		FlxG.sound.music.stop();
 	}
 
 	function changeSelection(change:Int = 0)
@@ -195,7 +202,7 @@ class SelectEditorsState extends MusicBeatState
 			{
 				item.alpha = 1;
 			}
-		}	
+		}
 	}
 
 	function tweenColorShit()

@@ -133,7 +133,7 @@ class Stage extends MusicBeatState
 						{
 							PlayState.instance.precacheThing('thunder_1', 'sound', 'shared');
 							PlayState.instance.precacheThing('thunder_2', 'sound', 'shared');
-						}	
+						}
 					}
 				case 'philly':
 					{
@@ -670,7 +670,6 @@ class Stage extends MusicBeatState
 			default:
 				doesExist = false;
 				camZoom = 1.05;
-
 		}
 
 		overridePropertiesFromJSON();
@@ -714,7 +713,7 @@ class Stage extends MusicBeatState
 
 			if (stageJSON.camPosition != null)
 				if (Std.isOfType(stageJSON.camPosition, Type.resolveClass('Array')))
-					camPosition = stageJSON.camPosition;		
+					camPosition = stageJSON.camPosition;
 
 			if (stageJSON.positions != null)
 			{
@@ -1041,7 +1040,7 @@ class Stage extends MusicBeatState
 
 	function trainStart():Void
 	{
-		if (FlxG.save.data.distractions && FlxG.save.data.background)
+		if (FlxG.save.data.distractions && FlxG.save.data.background && curStage == 'philly')
 		{
 			trainMoving = true;
 			trainSound.play(true);
@@ -1052,13 +1051,13 @@ class Stage extends MusicBeatState
 
 	function updateTrainPos():Void
 	{
-		if (FlxG.save.data.distractions)
+		if (FlxG.save.data.distractions && curStage == 'philly')
 		{
 			if (trainSound.time >= 4700)
 			{
 				startedMoving = true;
 
-				if (PlayState.gf != null)
+				if (PlayState.gf != null && PlayState.gf.curCharacter == 'gftrain')
 					PlayState.gf.playAnim('hairBlow');
 			}
 
@@ -1084,7 +1083,7 @@ class Stage extends MusicBeatState
 
 	function trainReset():Void
 	{
-		if (FlxG.save.data.distractions)
+		if (FlxG.save.data.distractions && curStage == 'philly')
 		{
 			if (PlayState.gf != null && PlayState.gf.curCharacter == 'gftrain')
 				PlayState.gf.playAnim('hairFall');
@@ -1103,7 +1102,7 @@ class Stage extends MusicBeatState
 
 	function resetFastCar():Void
 	{
-		if (FlxG.save.data.distractions)
+		if (FlxG.save.data.distractions && curStage == 'limo')
 		{
 			var fastCar = swagBacks['fastCar'];
 			fastCar.x = -12600;
@@ -1116,7 +1115,7 @@ class Stage extends MusicBeatState
 
 	function fastCarDrive()
 	{
-		if (FlxG.save.data.distractions)
+		if (FlxG.save.data.distractions && curStage == 'limo')
 		{
 			FlxG.sound.play(Paths.soundRandom('carPass', 0, 1, 'shared'), 0.7);
 
