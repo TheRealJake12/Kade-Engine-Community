@@ -1242,7 +1242,7 @@ class PlayState extends MusicBeatState
 				case 'ugh', 'guns', 'stress':
 					removeStaticArrows();
 					#if VIDEOS
-					playCutscene('${SONG.songId}Cutscene.mp4', false);
+					playCutscene('${SONG.songId.toLowerCase()}Cutscene.mp4', false);
 					#end
 				default:
 					createTimer(0.5, function(timer)
