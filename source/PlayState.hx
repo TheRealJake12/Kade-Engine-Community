@@ -5641,14 +5641,6 @@ class PlayState extends MusicBeatState
 			boyfriend.playAnim('hey', true);
 			gf.playAnim('cheer', true);
 		}
-
-		if (curSong == 'stress')
-		{
-			if (curStep == 736)
-			{
-				dad.playAnim('good');
-			}
-		}
 	}
 
 	override function beatHit()
