@@ -143,7 +143,10 @@ class GameplayCustomizeState extends MusicBeatState
 			gf = new Character(400, 130, 'gf');
 		}
 
-		Stage = new Stage(stageCheck);
+		Stage = new Stage('stage');
+
+		Stage.loadStageData('stage');
+		Stage.initStageProperties();
 
 		var positions = Stage.positions[Stage.curStage];
 		if (positions != null)
@@ -177,6 +180,8 @@ class GameplayCustomizeState extends MusicBeatState
 						add(bg);
 			}
 		}
+
+		Stage.initCamPos();
 
 		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x + 400, dad.getGraphicMidpoint().y);
 
@@ -266,13 +271,13 @@ class GameplayCustomizeState extends MusicBeatState
 			sick.y = (FlxG.mouse.y - sick.height) - 60;
 		}
 
-		if (FlxG.keys.justPressed.Q)
+		if (FlxG.keys.justPressed.E)
 		{
 			FlxG.save.data.zoom += 0.02;
 			camHUD.zoom = FlxG.save.data.zoom;
 		}
 
-		if (FlxG.keys.justPressed.E)
+		if (FlxG.keys.justPressed.Q)
 		{
 			FlxG.save.data.zoom -= 0.02;
 			camHUD.zoom = FlxG.save.data.zoom;
