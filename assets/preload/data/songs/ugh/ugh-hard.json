@@ -2,8 +2,8 @@
     "song": {
         "splitVoiceTracks": false,
         "player1": "bf",
-        "songId": "ugh",
-        "songName": "ugh",
+        "songId": "Ugh",
+        "songName": "Ugh",
         "player2": "tankman",
         "notes": [
             {
@@ -3855,9 +3855,80 @@
                         206
                     ]
                 ],
-                "endTime": null,
+                "endTime": 78000,
                 "startTime": 76500,
                 "mustHitSection": false
+            },
+            {
+                "lengthInSteps": 16,
+                "sectionNotes": [
+                    [
+                        78000,
+                        3,
+                        0,
+                        false,
+                        208
+                    ],
+                    [
+                        78187.5,
+                        3,
+                        0,
+                        false,
+                        208.5
+                    ],
+                    [
+                        78375,
+                        2,
+                        93.75,
+                        false,
+                        209
+                    ],
+                    [
+                        78562.5,
+                        3,
+                        0,
+                        false,
+                        209.5
+                    ],
+                    [
+                        78750,
+                        1,
+                        93.75,
+                        false,
+                        210
+                    ],
+                    [
+                        78937.5,
+                        3,
+                        0,
+                        false,
+                        210.5
+                    ],
+                    [
+                        79125,
+                        0,
+                        93.75,
+                        false,
+                        211
+                    ],
+                    [
+                        79312.5,
+                        2,
+                        0,
+                        false,
+                        211.5
+                    ],
+                    [
+                        79406.25,
+                        2,
+                        0,
+                        false,
+                        211.75
+                    ]
+                ],
+                "endTime": 79500,
+                "startTime": 78000,
+                "mustHitSection": true
             },
             {
                 "lengthInSteps": 16,
@@ -3926,8 +3997,65 @@
                         215
                     ]
                 ],
-                "endTime": null,
-                "startTime": null,
+                "endTime": 81000,
+                "startTime": 79500,
+                "mustHitSection": true
+            },
+            {
+                "lengthInSteps": 16,
+                "sectionNotes": [
+                    [
+                        81000,
+                        3,
+                        0,
+                        false,
+                        216
+                    ],
+                    [
+                        81187.5,
+                        3,
+                        0,
+                        false,
+                        216.5
+                    ],
+                    [
+                        81375,
+                        2,
+                        93.75,
+                        false,
+                        217
+                    ],
+                    [
+                        81562.5,
+                        3,
+                        0,
+                        false,
+                        217.5
+                    ],
+                    [
+                        81750,
+                        1,
+                        93.75,
+                        false,
+                        218
+                    ],
+                    [
+                        81937.5,
+                        3,
+                        0,
+                        false,
+                        218.5
+                    ],
+                    [
+                        82125,
+                        0,
+                        281.25,
+                        false,
+                        219
+                    ]
+                ],
+                "endTime": 82500,
+                "startTime": 81000,
                 "mustHitSection": true
             },
             {
@@ -3976,15 +4104,22 @@
                         223
                     ]
                 ],
-                "endTime": null,
-                "startTime": null,
+                "endTime": 84000,
+                "startTime": 82500,
                 "mustHitSection": true
             },
             {
                 "lengthInSteps": 16,
                 "sectionNotes": [],
-                "endTime": null,
-                "startTime": null,
+                "endTime": 85500,
+                "startTime": 84000,
+                "mustHitSection": true
+            },
+            {
+                "lengthInSteps": 16,
+                "sectionNotes": [],
+                "endTime": 87000,
+                "startTime": 85500,
                 "mustHitSection": true
             },
             {
@@ -3994,9 +4129,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 88500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 90000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4007,9 +4142,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 91500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 93000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4020,9 +4155,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 94500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 96000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4033,9 +4168,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 97500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 99000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4046,9 +4181,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 100500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 102000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4059,9 +4194,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 103500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 105000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4072,9 +4207,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 106500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 108000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4085,9 +4220,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 109500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 111000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4098,9 +4233,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 112500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 114000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4111,9 +4246,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 115500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 117000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4124,9 +4259,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 118500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 120000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4137,9 +4272,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 121500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 123000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4150,9 +4285,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 124500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 126000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4163,9 +4298,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 127500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 129000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4176,9 +4311,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 130500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 132000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4189,9 +4324,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 133500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 135000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4202,9 +4337,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 136500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 138000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4215,9 +4350,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 139500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 141000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4228,9 +4363,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 142500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 144000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4241,9 +4376,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 145500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 147000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4254,9 +4389,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 148500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 150000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4267,9 +4402,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 151500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 153000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4280,9 +4415,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 154500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 156000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4293,9 +4428,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 157500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 159000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4306,9 +4441,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 160500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 162000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4319,9 +4454,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 163500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 165000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4332,9 +4467,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 166500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 168000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4345,9 +4480,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 169500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 171000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4358,9 +4493,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 172500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 174000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4371,9 +4506,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 175500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 177000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4384,9 +4519,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 178500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 180000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4397,9 +4532,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 181500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 183000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4410,9 +4545,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 184500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 186000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4423,9 +4558,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 187500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 189000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4436,9 +4571,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 190500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 192000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4449,9 +4584,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 193500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 195000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4462,9 +4597,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 196500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 198000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             },
@@ -4475,9 +4610,9 @@
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
-                "startTime": null,
+                "startTime": 199500,
                 "changeBPM": false,
-                "endTime": null,
+                "endTime": 201000,
                 "playerAltAnim": false,
                 "mustHitSection": true
             }
@@ -4488,7 +4623,7 @@
         "validScore": true,
         "speed": 2.3,
         "gfVersion": "gftank",
-        "chartVersion": "Kade Engine Community 1.9",
+        "chartVersion": "Kade Engine Community 1.9.2",
         "eventObjects": [
             {
                 "name": "Init BPM",
