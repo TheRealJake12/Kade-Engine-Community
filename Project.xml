@@ -214,6 +214,9 @@
 
 	<haxeflag name="-dce" value="full" if="release"/>
 
+	<!--Basically Allows Videos To Render In Higher Quality On Higher Resoluttions-->
+	<haxedef name="openfl_dpi_aware" unless="web" />
+
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
