@@ -82,7 +82,7 @@ When its finished, you will need to download these like you did with the Librari
 ```cmd
 haxelib git linc_luajit https://github.com/superpowers04/linc_luajit
 haxelib git faxe https://github.com/uhrobots/faxe
-haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
+haxelib git hxdiscord_rpc https://github.com/MAJigsaw77/hxdiscord_rpc.git
 haxelib git hxvlc https://github.com/MAJigsaw77/hxvlc.git
 ```
 
@@ -118,7 +118,7 @@ It will take a while to build for both versions.
 
 - [PolybiusProxy](https://github.com/polybiusproxy) - The Video Support (Legacy).
 
-- [MAJigsaw77](https://github.com/MAJigsaw77) - The Video Support (Current).
+- [MAJigsaw77](https://github.com/MAJigsaw77) - The Video Support (Current), And Discord Support.
 
 - [BoloVEVO](https://github.com/BoloVEVO) - Fixed my shit code and improved the chart editor. Made a ton of code improvements. Did the gameplay changers(thanks!!!)
 

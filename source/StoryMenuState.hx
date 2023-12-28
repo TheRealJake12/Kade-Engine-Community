@@ -12,7 +12,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import lime.app.Application;
 #if FEATURE_DISCORD
-import Discord.DiscordClient;
+import Discord;
 #end
 import WeekData;
 
@@ -102,7 +102,7 @@ class StoryMenuState extends MusicBeatState
 		PlayState.inDaPlay = false;
 		#if FEATURE_DISCORD
 		// Updating Discord Rich Presence
-		DiscordClient.changePresence("In the Story Mode Menu", null);
+		Discord.changePresence("In the Story Mode Menu", null);
 		#end
 
 		transIn = FlxTransitionableState.defaultTransIn;

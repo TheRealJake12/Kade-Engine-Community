@@ -7,7 +7,7 @@ import flixel.FlxCamera;
 import flixel.math.FlxPoint;
 import flixel.FlxObject;
 #if FEATURE_DISCORD
-import Discord.DiscordClient;
+import Discord;
 #end
 import flixel.group.FlxGroup.FlxTypedGroup;
 import openfl.ui.Keyboard;
@@ -72,7 +72,7 @@ class GameplayCustomizeState extends MusicBeatState
 		Paths.clearUnusedMemory();
 		#if FEATURE_DISCORD
 		// Updating Discord Rich Presence
-		DiscordClient.changePresence("Customizing Gameplay Modules", null);
+		Discord.changePresence("Customizing Gameplay Modules", null);
 		#end
 
 		instance = this;

@@ -70,11 +70,10 @@
       "version": null
     },
     {
-      "name": "discord_rpc",
+      "name": "hxdiscord_rpc",
       "type": "git",
-      "dir": "discord_rpc",
-      "ref": "master",
-      "url": "https://github.com/Aidan63/linc_discord-rpc"
+      "ref": "main",
+      "url": "https://github.com/MAJigsaw77/hxdiscord_rpc.git"
     },
     {
       "name": "openfl",

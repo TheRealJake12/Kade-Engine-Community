@@ -7,9 +7,6 @@ import Controls.KeyboardScheme;
 import flixel.FlxG;
 import openfl.display.FPS;
 import openfl.Lib;
-#if FEATURE_DISCORD
-import Discord.DiscordClient;
-#end
 import FreeplaySubState;
 
 // Used Options.hx code template to make this. Go to FreeplaySubState.hx to see the menu code :D

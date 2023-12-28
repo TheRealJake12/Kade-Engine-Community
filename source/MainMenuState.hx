@@ -3,7 +3,7 @@ package;
 import Controls.KeyboardScheme;
 import flixel.util.FlxTimer;
 #if FEATURE_DISCORD
-import Discord.DiscordClient;
+import Discord;
 #end
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -30,7 +30,7 @@ using StringTools;
 class MainMenuState extends MusicBeatState
 {
 	public static var nightly:String = "";
-	public static var kecVer:String = 'Kade Engine Community 1.9.2';
+	public static var kecVer:String = 'Kade Engine Community 1.9.3';
 	public static var keVer:String = "Kade Engine 1.8.1";
 	public static var curSelected:Int = 0;
 	public static var freakyPlaying:Bool = true;
@@ -95,7 +95,7 @@ class MainMenuState extends MusicBeatState
 		Paths.clearUnusedMemory();
 		#if FEATURE_DISCORD
 		// Updating Discord Rich Presence
-		DiscordClient.changePresence("In the Menus", null);
+		Discord.changePresence("In the Menus", null);
 		#end
 
 		#if FEATURE_MODCORE

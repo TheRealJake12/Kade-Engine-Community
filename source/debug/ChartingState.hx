@@ -31,12 +31,8 @@ import openfl.media.Sound;
 import openfl.net.FileReference;
 import CoolUtil.CoolText;
 #if FEATURE_DISCORD
-import Discord.DiscordClient;
+import Discord;
 #end
-#if FEATURE_DISCORD
-import Discord.DiscordClient;
-#end
-
 using StringTools;
 
 @:access(flixel.system.FlxSound._sound)
@@ -163,7 +159,7 @@ class ChartingState extends MusicBeatState
 		}
 
 		#if FEATURE_DISCORD
-		DiscordClient.changePresence("Chart Editor", null, null, true);
+		Discord.changePresence("Chart Editor", null, null, true);
 		#end
 
 		FlxG.mouse.visible = true;

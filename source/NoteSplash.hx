@@ -78,8 +78,17 @@ class NoteSplash extends FlxSprite
 		else
 			animation.play('splash ' + animNum + " " + note.originColor);
 		var data:SplashData = cast rawJson;
-		var minFps = data.minFps;
-		var maxFps = data.maxFps;
+		var minFps = 24;
+		var maxFps = 26;
+		switch (PlayState.SONG.noteStyle)
+		{
+			case 'pixel':
+				minFps = 22;
+				maxFps = 26;
+			default:
+				minFps = data.minFps;
+				maxFps = data.maxFps;
+		}
 
 		animation.curAnim.frameRate = FlxG.random.int(minFps, maxFps);
 

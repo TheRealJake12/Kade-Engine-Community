@@ -1,13 +1,12 @@
 {
     "song": {
-        "splitVoiceTracks": false,
+        "songName": "ugh",
+        "songId": "ugh",
         "player1": "bf",
-        "songId": "Ugh",
-        "songName": "Ugh",
-        "player2": "tankman",
+        "splitVoiceTracks": false,
         "notes": [
             {
-                "lengthInSteps": 16,
+                "endTime": 1500,
                 "sectionNotes": [
                     [
                         0,
@@ -73,12 +72,12 @@
                         3.75
                     ]
                 ],
-                "endTime": 1500,
-                "startTime": 0,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 0
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 3000,
                 "sectionNotes": [
                     [
                         1500,
@@ -144,12 +143,12 @@
                         7
                     ]
                 ],
-                "endTime": 3000,
-                "startTime": 1500,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 1500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 4500,
                 "sectionNotes": [
                     [
                         3000,
@@ -201,12 +200,12 @@
                         11
                     ]
                 ],
-                "endTime": 4500,
-                "startTime": 3000,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 3000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 6000,
                 "sectionNotes": [
                     [
                         4500,
@@ -244,12 +243,12 @@
                         14
                     ]
                 ],
-                "endTime": 6000,
-                "startTime": 4500,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 4500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 7500,
                 "sectionNotes": [
                     [
                         6000,
@@ -315,12 +314,12 @@
                         19.75
                     ]
                 ],
-                "endTime": 7500,
-                "startTime": 6000,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 6000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 9000,
                 "sectionNotes": [
                     [
                         7500,
@@ -386,12 +385,12 @@
                         23
                     ]
                 ],
-                "endTime": 9000,
-                "startTime": 7500,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 7500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 10500,
                 "sectionNotes": [
                     [
                         9000,
@@ -443,12 +442,12 @@
                         27
                     ]
                 ],
-                "endTime": 10500,
-                "startTime": 9000,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 9000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 12000,
                 "sectionNotes": [
                     [
                         10500,
@@ -493,12 +492,12 @@
                         31
                     ]
                 ],
-                "endTime": 12000,
-                "startTime": 10500,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 10500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 13500,
                 "sectionNotes": [
                     [
                         12000,
@@ -578,12 +577,12 @@
                         35.5
                     ]
                 ],
-                "endTime": 13500,
-                "startTime": 12000,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 12000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 15000,
                 "sectionNotes": [
                     [
                         13500,
@@ -642,12 +641,12 @@
                         39.5
                     ]
                 ],
-                "endTime": 15000,
-                "startTime": 13500,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 13500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 16500,
                 "sectionNotes": [
                     [
                         15000,
@@ -727,12 +726,12 @@
                         43.5
                     ]
                 ],
-                "endTime": 16500,
-                "startTime": 15000,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 15000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 18000,
                 "sectionNotes": [
                     [
                         16500,
@@ -798,12 +797,12 @@
                         47.5
                     ]
                 ],
-                "endTime": 18000,
-                "startTime": 16500,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 16500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 19500,
                 "sectionNotes": [
                     [
                         18000,
@@ -890,12 +889,12 @@
                         51.5
                     ]
                 ],
-                "endTime": 19500,
-                "startTime": 18000,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 18000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 21000,
                 "sectionNotes": [
                     [
                         19500,
@@ -954,12 +953,12 @@
                         55.5
                     ]
                 ],
-                "endTime": 21000,
-                "startTime": 19500,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 19500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 22500,
                 "sectionNotes": [
                     [
                         21000,
@@ -1039,12 +1038,12 @@
                         59.5
                     ]
                 ],
-                "endTime": 22500,
-                "startTime": 21000,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 21000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 24000,
                 "sectionNotes": [
                     [
                         22500,
@@ -1110,12 +1109,12 @@
                         63.5
                     ]
                 ],
-                "endTime": 24000,
-                "startTime": 22500,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 22500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 25500,
                 "sectionNotes": [
                     [
                         24000,
@@ -1223,12 +1222,12 @@
                         67.75
                     ]
                 ],
-                "endTime": 25500,
-                "startTime": 24000,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 24000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 27000,
                 "sectionNotes": [
                     [
                         25500,
@@ -1294,12 +1293,12 @@
                         71.5
                     ]
                 ],
-                "endTime": 27000,
-                "startTime": 25500,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 25500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 28500,
                 "sectionNotes": [
                     [
                         27000,
@@ -1428,12 +1427,12 @@
                         75.75
                     ]
                 ],
-                "endTime": 28500,
-                "startTime": 27000,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 27000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 30000,
                 "sectionNotes": [
                     [
                         28500,
@@ -1527,12 +1526,12 @@
                         79.5
                     ]
                 ],
-                "endTime": 30000,
-                "startTime": 28500,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 28500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 31500,
                 "sectionNotes": [
                     [
                         30000,
@@ -1619,12 +1618,12 @@
                         83.75
                     ]
                 ],
-                "endTime": 31500,
-                "startTime": 30000,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 30000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 33000,
                 "sectionNotes": [
                     [
                         31500,
@@ -1676,12 +1675,12 @@
                         87
                     ]
                 ],
-                "endTime": 33000,
-                "startTime": 31500,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 31500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 34500,
                 "sectionNotes": [
                     [
                         33000,
@@ -1789,12 +1788,12 @@
                         91.75
                     ]
                 ],
-                "endTime": 34500,
-                "startTime": 33000,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 33000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 36000,
                 "sectionNotes": [
                     [
                         34500,
@@ -1874,12 +1873,12 @@
                         95
                     ]
                 ],
-                "endTime": 36000,
-                "startTime": 34500,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 34500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 37500,
                 "sectionNotes": [
                     [
                         36000,
@@ -1952,12 +1951,12 @@
                         99.75
                     ]
                 ],
-                "endTime": 37500,
-                "startTime": 36000,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 36000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 39000,
                 "sectionNotes": [
                     [
                         37500,
@@ -2023,12 +2022,12 @@
                         103
                     ]
                 ],
-                "endTime": 39000,
-                "startTime": 37500,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 37500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 40500,
                 "sectionNotes": [
                     [
                         39000,
@@ -2080,12 +2079,12 @@
                         107
                     ]
                 ],
-                "endTime": 40500,
-                "startTime": 39000,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 39000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 42000,
                 "sectionNotes": [
                     [
                         40500,
@@ -2123,12 +2122,12 @@
                         110
                     ]
                 ],
-                "endTime": 42000,
-                "startTime": 40500,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 40500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 43500,
                 "sectionNotes": [
                     [
                         42000,
@@ -2194,12 +2193,12 @@
                         115.75
                     ]
                 ],
-                "endTime": 43500,
-                "startTime": 42000,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 42000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 45000,
                 "sectionNotes": [
                     [
                         43500,
@@ -2265,12 +2264,12 @@
                         119
                     ]
                 ],
-                "endTime": 45000,
-                "startTime": 43500,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 43500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 46500,
                 "sectionNotes": [
                     [
                         45000,
@@ -2322,12 +2321,12 @@
                         123
                     ]
                 ],
-                "endTime": 46500,
-                "startTime": 45000,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 45000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 48000,
                 "sectionNotes": [
                     [
                         46500,
@@ -2372,12 +2371,12 @@
                         127
                     ]
                 ],
-                "endTime": 48000,
-                "startTime": 46500,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 46500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 49500,
                 "sectionNotes": [
                     [
                         48000,
@@ -2450,12 +2449,12 @@
                         130.5
                     ]
                 ],
-                "endTime": 49500,
-                "startTime": 48000,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 48000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 51000,
                 "sectionNotes": [
                     [
                         49500,
@@ -2514,12 +2513,12 @@
                         135.5
                     ]
                 ],
-                "endTime": 51000,
-                "startTime": 49500,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 49500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 52500,
                 "sectionNotes": [
                     [
                         51000,
@@ -2599,12 +2598,12 @@
                         139.5
                     ]
                 ],
-                "endTime": 52500,
-                "startTime": 51000,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 51000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 54000,
                 "sectionNotes": [
                     [
                         52500,
@@ -2670,12 +2669,12 @@
                         143.5
                     ]
                 ],
-                "endTime": 54000,
-                "startTime": 52500,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 52500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 55500,
                 "sectionNotes": [
                     [
                         54000,
@@ -2762,12 +2761,12 @@
                         147
                     ]
                 ],
-                "endTime": 55500,
-                "startTime": 54000,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 54000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 57000,
                 "sectionNotes": [
                     [
                         55500,
@@ -2826,12 +2825,12 @@
                         151.5
                     ]
                 ],
-                "endTime": 57000,
-                "startTime": 55500,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 55500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 58500,
                 "sectionNotes": [
                     [
                         57000,
@@ -2911,12 +2910,12 @@
                         155.5
                     ]
                 ],
-                "endTime": 58500,
-                "startTime": 57000,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 57000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 60000,
                 "sectionNotes": [
                     [
                         58500,
@@ -2982,12 +2981,12 @@
                         159.5
                     ]
                 ],
-                "endTime": 60000,
-                "startTime": 58500,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 58500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 61500,
                 "sectionNotes": [
                     [
                         60000,
@@ -3074,12 +3073,12 @@
                         163.5
                     ]
                 ],
-                "endTime": 61500,
-                "startTime": 60000,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 60000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 63000,
                 "sectionNotes": [
                     [
                         61500,
@@ -3138,12 +3137,12 @@
                         167.5
                     ]
                 ],
-                "endTime": 63000,
-                "startTime": 61500,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 61500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 64500,
                 "sectionNotes": [
                     [
                         63000,
@@ -3223,12 +3222,12 @@
                         171.5
                     ]
                 ],
-                "endTime": 64500,
-                "startTime": 63000,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 63000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 66000,
                 "sectionNotes": [
                     [
                         64500,
@@ -3294,12 +3293,12 @@
                         175.5
                     ]
                 ],
-                "endTime": 66000,
-                "startTime": 64500,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 64500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 67500,
                 "sectionNotes": [
                     [
                         66000,
@@ -3386,12 +3385,12 @@
                         179.5
                     ]
                 ],
-                "endTime": 67500,
-                "startTime": 66000,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 66000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 69000,
                 "sectionNotes": [
                     [
                         67500,
@@ -3450,12 +3449,12 @@
                         183.5
                     ]
                 ],
-                "endTime": 69000,
-                "startTime": 67500,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 67500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 70500,
                 "sectionNotes": [
                     [
                         69000,
@@ -3535,12 +3534,12 @@
                         187.5
                     ]
                 ],
-                "endTime": 70500,
-                "startTime": 69000,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 69000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 72000,
                 "sectionNotes": [
                     [
                         70500,
@@ -3606,12 +3605,12 @@
                         191.5
                     ]
                 ],
-                "endTime": 72000,
-                "startTime": 70500,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 70500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 73500,
                 "sectionNotes": [
                     [
                         72000,
@@ -3684,12 +3683,12 @@
                         195.75
                     ]
                 ],
-                "endTime": 73500,
-                "startTime": 72000,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 72000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 75000,
                 "sectionNotes": [
                     [
                         73500,
@@ -3755,12 +3754,12 @@
                         199
                     ]
                 ],
-                "endTime": 75000,
-                "startTime": 73500,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 73500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 76500,
                 "sectionNotes": [
                     [
                         75000,
@@ -3812,12 +3811,12 @@
                         203
                     ]
                 ],
-                "endTime": 76500,
-                "startTime": 75000,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 75000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 78000,
                 "sectionNotes": [
                     [
                         76500,
@@ -3855,12 +3854,12 @@
                         206
                     ]
                 ],
-                "endTime": 78000,
-                "startTime": 76500,
-                "mustHitSection": false
+                "lengthInSteps": 16,
+                "mustHitSection": false,
+                "startTime": 76500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 79500,
                 "sectionNotes": [
                     [
                         78000,
@@ -3926,12 +3925,12 @@
                         211.75
                     ]
                 ],
-                "endTime": 79500,
-                "startTime": 78000,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 78000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 81000,
                 "sectionNotes": [
                     [
                         79500,
@@ -3997,12 +3996,12 @@
                         215
                     ]
                 ],
-                "endTime": 81000,
-                "startTime": 79500,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 79500
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 82500,
                 "sectionNotes": [
                     [
                         81000,
@@ -4054,12 +4053,12 @@
                         219
                     ]
                 ],
-                "endTime": 82500,
-                "startTime": 81000,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 81000
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 84000,
                 "sectionNotes": [
                     [
                         82500,
@@ -4104,270 +4103,270 @@
                         223
                     ]
                 ],
-                "endTime": 84000,
-                "startTime": 82500,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 82500
             },
             {
-                "lengthInSteps": 16,
-                "sectionNotes": [],
                 "endTime": 85500,
-                "startTime": 84000,
-                "mustHitSection": true
-            },
-            {
-                "lengthInSteps": 16,
                 "sectionNotes": [],
-                "endTime": 87000,
-                "startTime": 85500,
-                "mustHitSection": true
+                "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 84000
             },
             {
+                "endTime": 87000,
+                "sectionNotes": [],
                 "lengthInSteps": 16,
+                "mustHitSection": true,
+                "startTime": 85500
+            },
+            {
+                "endTime": 90000,
+                "playerAltAnim": false,
                 "altAnim": false,
                 "CPUAltAnim": false,
+                "mustHitSection": true,
+                "lengthInSteps": 16,
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
                 "startTime": 88500,
-                "changeBPM": false,
-                "endTime": 90000,
-                "playerAltAnim": false,
-                "mustHitSection": true
+                "changeBPM": false
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 93000,
+                "playerAltAnim": false,
                 "altAnim": false,
                 "CPUAltAnim": false,
+                "mustHitSection": true,
+                "lengthInSteps": 16,
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
                 "startTime": 91500,
-                "changeBPM": false,
-                "endTime": 93000,
-                "playerAltAnim": false,
-                "mustHitSection": true
+                "changeBPM": false
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 96000,
+                "playerAltAnim": false,
                 "altAnim": false,
                 "CPUAltAnim": false,
+                "mustHitSection": true,
+                "lengthInSteps": 16,
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
                 "startTime": 94500,
-                "changeBPM": false,
-                "endTime": 96000,
-                "playerAltAnim": false,
-                "mustHitSection": true
+                "changeBPM": false
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 99000,
+                "playerAltAnim": false,
                 "altAnim": false,
                 "CPUAltAnim": false,
+                "mustHitSection": true,
+                "lengthInSteps": 16,
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
                 "startTime": 97500,
-                "changeBPM": false,
-                "endTime": 99000,
-                "playerAltAnim": false,
-                "mustHitSection": true
+                "changeBPM": false
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 102000,
+                "playerAltAnim": false,
                 "altAnim": false,
                 "CPUAltAnim": false,
+                "mustHitSection": true,
+                "lengthInSteps": 16,
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
                 "startTime": 100500,
-                "changeBPM": false,
-                "endTime": 102000,
-                "playerAltAnim": false,
-                "mustHitSection": true
+                "changeBPM": false
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 105000,
+                "playerAltAnim": false,
                 "altAnim": false,
                 "CPUAltAnim": false,
+                "mustHitSection": true,
+                "lengthInSteps": 16,
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
                 "startTime": 103500,
-                "changeBPM": false,
-                "endTime": 105000,
-                "playerAltAnim": false,
-                "mustHitSection": true
+                "changeBPM": false
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 108000,
+                "playerAltAnim": false,
                 "altAnim": false,
                 "CPUAltAnim": false,
+                "mustHitSection": true,
+                "lengthInSteps": 16,
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
                 "startTime": 106500,
-                "changeBPM": false,
-                "endTime": 108000,
-                "playerAltAnim": false,
-                "mustHitSection": true
+                "changeBPM": false
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 111000,
+                "playerAltAnim": false,
                 "altAnim": false,
                 "CPUAltAnim": false,
+                "mustHitSection": true,
+                "lengthInSteps": 16,
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
                 "startTime": 109500,
-                "changeBPM": false,
-                "endTime": 111000,
-                "playerAltAnim": false,
-                "mustHitSection": true
+                "changeBPM": false
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 114000,
+                "playerAltAnim": false,
                 "altAnim": false,
                 "CPUAltAnim": false,
+                "mustHitSection": true,
+                "lengthInSteps": 16,
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
                 "startTime": 112500,
-                "changeBPM": false,
-                "endTime": 114000,
-                "playerAltAnim": false,
-                "mustHitSection": true
+                "changeBPM": false
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 117000,
+                "playerAltAnim": false,
                 "altAnim": false,
                 "CPUAltAnim": false,
+                "mustHitSection": true,
+                "lengthInSteps": 16,
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
                 "startTime": 115500,
-                "changeBPM": false,
-                "endTime": 117000,
-                "playerAltAnim": false,
-                "mustHitSection": true
+                "changeBPM": false
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 120000,
+                "playerAltAnim": false,
                 "altAnim": false,
                 "CPUAltAnim": false,
+                "mustHitSection": true,
+                "lengthInSteps": 16,
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
                 "startTime": 118500,
-                "changeBPM": false,
-                "endTime": 120000,
-                "playerAltAnim": false,
-                "mustHitSection": true
+                "changeBPM": false
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 123000,
+                "playerAltAnim": false,
                 "altAnim": false,
                 "CPUAltAnim": false,
+                "mustHitSection": true,
+                "lengthInSteps": 16,
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
                 "startTime": 121500,
-                "changeBPM": false,
-                "endTime": 123000,
-                "playerAltAnim": false,
-                "mustHitSection": true
+                "changeBPM": false
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 126000,
+                "playerAltAnim": false,
                 "altAnim": false,
                 "CPUAltAnim": false,
+                "mustHitSection": true,
+                "lengthInSteps": 16,
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
                 "startTime": 124500,
-                "changeBPM": false,
-                "endTime": 126000,
-                "playerAltAnim": false,
-                "mustHitSection": true
+                "changeBPM": false
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 129000,
+                "playerAltAnim": false,
                 "altAnim": false,
                 "CPUAltAnim": false,
+                "mustHitSection": true,
+                "lengthInSteps": 16,
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
                 "startTime": 127500,
-                "changeBPM": false,
-                "endTime": 129000,
-                "playerAltAnim": false,
-                "mustHitSection": true
+                "changeBPM": false
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 132000,
+                "playerAltAnim": false,
                 "altAnim": false,
                 "CPUAltAnim": false,
+                "mustHitSection": true,
+                "lengthInSteps": 16,
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
                 "startTime": 130500,
-                "changeBPM": false,
-                "endTime": 132000,
-                "playerAltAnim": false,
-                "mustHitSection": true
+                "changeBPM": false
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 135000,
+                "playerAltAnim": false,
                 "altAnim": false,
                 "CPUAltAnim": false,
+                "mustHitSection": true,
+                "lengthInSteps": 16,
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
                 "startTime": 133500,
-                "changeBPM": false,
-                "endTime": 135000,
-                "playerAltAnim": false,
-                "mustHitSection": true
+                "changeBPM": false
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 138000,
+                "playerAltAnim": false,
                 "altAnim": false,
                 "CPUAltAnim": false,
+                "mustHitSection": true,
+                "lengthInSteps": 16,
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
                 "startTime": 136500,
-                "changeBPM": false,
-                "endTime": 138000,
-                "playerAltAnim": false,
-                "mustHitSection": true
+                "changeBPM": false
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 141000,
+                "playerAltAnim": false,
                 "altAnim": false,
                 "CPUAltAnim": false,
+                "mustHitSection": true,
+                "lengthInSteps": 16,
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
                 "startTime": 139500,
-                "changeBPM": false,
-                "endTime": 141000,
-                "playerAltAnim": false,
-                "mustHitSection": true
+                "changeBPM": false
             },
             {
-                "lengthInSteps": 16,
+                "endTime": 144000,
+                "playerAltAnim": false,
                 "altAnim": false,
                 "CPUAltAnim": false,
+                "mustHitSection": true,
+                "lengthInSteps": 16,
                 "typeOfSection": 0,
                 "sectionNotes": [],
                 "bpm": 160,
                 "startTime": 142500,
-                "changeBPM": false,
-                "endTime": 144000,
-                "playerAltAnim": false,
-                "mustHitSection": true
+                "changeBPM": false
             },
             {
                 "lengthInSteps": 16,
@@ -4617,6 +4616,7 @@
                 "mustHitSection": true
             }
         ],
+        "player2": "tankman",
         "audioFile": "ugh",
         "offset": 0,
         "song": "Ugh",
@@ -4663,7 +4663,7 @@
         ],
         "stage": "tank",
         "needsVoices": true,
-        "noteStyle": "normal",
-        "bpm": 160
+        "bpm": 160,
+        "noteStyle": "normal"
     }
 }

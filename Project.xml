@@ -2,7 +2,7 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Kade Engine Community" file="Kade Engine Community" packageName="com.therealjake12.kec" package="com.therealjake12.kec" main="Main" version="1.9.2" company="TheRealJake12" />
+	<app title="Kade Engine Community" file="Kade Engine Community" packageName="com.therealjake12.kec" package="com.therealjake12.kec" main="Main" version="1.9.3" company="TheRealJake12" />
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
@@ -36,6 +36,12 @@
 	<define name="FEATURE_HSCRIPT" />
 	<!-- Defines whether modcore can be used. -->
 	<define name="FEATURE_MODCORE" />
+
+	<!-- Discord Thingy -->
+	<haxedef name="DISCORD_DISABLE_IO_THREAD" />
+
+	<!--Disables the use of precompiled headers but can cause issues with build times and memory usage-->
+    <haxedef name="NO_PRECOMPILED_HEADERS" if="linux" />
 
 	<!-- ____________________________ Window Settings ___________________________ -->
 
@@ -148,7 +154,7 @@
 	<haxelib name="flixel-ui" />
 	<!-- APIs -->
 
-	<haxelib name="discord_rpc" if="FEATURE_DISCORD"/>
+	<haxelib name="hxdiscord_rpc" if="FEATURE_DISCORD"/>
 	<haxelib name="polymod" if="FEATURE_MODCORE"/>
 	<haxelib name="linc_luajit" if="FEATURE_LUAMODCHART"/>
 	<haxelib name="SScript" if="FEATURE_HSCRIPT"/>

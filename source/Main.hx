@@ -8,7 +8,7 @@ import openfl.Assets;
 import flixel.util.FlxColor;
 import openfl.display.Bitmap;
 #if FEATURE_DISCORD
-import Discord.DiscordClient;
+import Discord;
 #end
 import openfl.Lib;
 import openfl.display.FPS;
@@ -233,9 +233,6 @@ class Main extends Sprite
 		Sys.println(errMsg);
 		Sys.println("Crash dump saved in " + Path.normalize(path));
 		Application.current.window.alert(errMsg, "Error!");
-		#if FEATURE_DISCORD
-		DiscordClient.shutdown();
-		#end
 		Sys.exit(1);
 	}
 

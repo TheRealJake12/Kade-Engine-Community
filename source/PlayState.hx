@@ -65,7 +65,7 @@ import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
 import openfl.filters.ShaderFilter;
 #if FEATURE_DISCORD
-import Discord.DiscordClient;
+import Discord;
 #end
 #if FEATURE_HSCRIPT
 import script.Script;
@@ -411,6 +411,9 @@ class PlayState extends MusicBeatState
 	// Self Explainitory.
 	public static var startTime = 0.0;
 
+	// Week 7 Cutscenes. You Can Use It Your Own Way Too.
+	public var cutscene:VideoHandler;
+
 	// Adding Objects Using Lua
 	public function addObject(object:FlxBasic)
 	{
@@ -579,7 +582,7 @@ class PlayState extends MusicBeatState
 		detailsPausedText = "Paused - " + detailsText;
 
 		// Updating Discord Rich Presence.
-		DiscordClient.changePresence(detailsText
+		Discord.changePresence(detailsText
 			+ " "
 			+ SONG.song
 			+ " ("
@@ -1192,7 +1195,7 @@ class PlayState extends MusicBeatState
 		cacheCountdown();
 
 		if (inCutscene)
-			removeStaticArrows();
+			removeStaticArrows(true);
 
 		if (isStoryMode)
 		{
@@ -2455,7 +2458,7 @@ class PlayState extends MusicBeatState
 
 		#if FEATURE_DISCORD
 		// Updating Discord Rich Presence (with Time Left)
-		DiscordClient.changePresence(detailsText
+		Discord.changePresence(detailsText
 			+ " "
 			+ SONG.song
 			+ " ("
@@ -2779,11 +2782,7 @@ class PlayState extends MusicBeatState
 			var noteTypeCheck:String = 'normal';
 			babyArrow.downScroll = PlayStateChangeables.useDownscroll;
 
-			babyArrow.loadLane();
-
 			babyArrow.x += Note.swagWidth * i;
-
-			arrowLanes.add(babyArrow.bgLane);
 
 			if (tween)
 			{
@@ -2795,6 +2794,9 @@ class PlayState extends MusicBeatState
 				babyArrow.alpha = 1;
 
 			babyArrow.ID = i;
+
+			babyArrow.loadLane();
+			arrowLanes.add(babyArrow.bgLane);
 
 			babyArrow.animation.followGlobalSpeed = false;
 
@@ -2897,7 +2899,7 @@ class PlayState extends MusicBeatState
 			}
 
 			#if FEATURE_DISCORD
-			DiscordClient.changePresence("PAUSED on "
+			Discord.changePresence("PAUSED on "
 				+ SONG.song
 				+ " ("
 				+ storyDifficultyText
@@ -2947,7 +2949,7 @@ class PlayState extends MusicBeatState
 			#if FEATURE_DISCORD
 			if (startTimer.finished)
 			{
-				DiscordClient.changePresence(detailsText
+				Discord.changePresence(detailsText
 					+ " "
 					+ SONG.song
 					+ " ("
@@ -2965,7 +2967,7 @@ class PlayState extends MusicBeatState
 			}
 			else
 			{
-				DiscordClient.changePresence(detailsText, SONG.songName + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy), iconRPC);
+				Discord.changePresence(detailsText, SONG.songName + " (" + storyDifficultyText + ") " + Ratings.GenerateLetterRank(accuracy), iconRPC);
 			}
 			#end
 		}
@@ -3049,7 +3051,7 @@ class PlayState extends MusicBeatState
 		}
 
 		#if FEATURE_DISCORD
-		DiscordClient.changePresence(detailsText
+		Discord.changePresence(detailsText
 			+ " "
 			+ SONG.song
 			+ " ("
@@ -3177,6 +3179,9 @@ class PlayState extends MusicBeatState
 		if (scripts != null)
 			scripts.executeAllFunc("update", [elapsed]);
 		#end
+
+		if ((cutscene != null && cutscene.isPlaying && inCutscene)&& FlxG.keys.justPressed.ANY)
+			cutscene.onEndReached.dispatch();
 
 		super.update(elapsed);
 
@@ -4138,7 +4143,7 @@ class PlayState extends MusicBeatState
 
 				#if FEATURE_DISCORD
 				// Game Over doesn't get his own variable because it's only used here
-				DiscordClient.changePresence("GAME OVER -- "
+				Discord.changePresence("GAME OVER -- "
 					+ SONG.song
 					+ " ("
 					+ storyDifficultyText
@@ -4190,7 +4195,7 @@ class PlayState extends MusicBeatState
 				isDead = true;
 
 				#if FEATURE_DISCORD
-				DiscordClient.changePresence("GAME OVER -- "
+				Discord.changePresence("GAME OVER -- "
 					+ SONG.song
 					+ " ("
 					+ storyDifficultyText
@@ -5179,7 +5184,7 @@ class PlayState extends MusicBeatState
 
 		#if FEATURE_DISCORD
 		// Updating Discord Rich Presence (with Time Left)
-		DiscordClient.changePresence(detailsText
+		Discord.changePresence(detailsText
 			+ " "
 			+ SONG.song
 			+ " ("
@@ -6554,6 +6559,8 @@ class PlayState extends MusicBeatState
 			arrowLanes.forEach(function(bgLane:FlxSprite)
 			{
 				arrowLanes.remove(bgLane, true);
+				if (destroy)
+					arrowLanes.destroy();
 			});
 
 			playerStrums.forEach(function(babyArrow:StaticArrow)
@@ -6771,13 +6778,11 @@ class PlayState extends MusicBeatState
 	{
 		#if VIDEOS
 		inCutscene = true;
-
 		var diff:String = CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[storyDifficulty]);
-
-		var video:VideoHandler = new VideoHandler();
-		video.load(Paths.video(name));
+		cutscene = new VideoHandler();
+		cutscene.load(Paths.video(name));
 		inst.stop();
-		video.onEndReached.add(function()
+		cutscene.onEndReached.add(function()
 		{
 			if (atend == true)
 			{
@@ -6792,9 +6797,9 @@ class PlayState extends MusicBeatState
 			else
 				startCountdown();
 
-			video.dispose();
+			cutscene.dispose();
 		});
-		video.play();
+		cutscene.play();
 		#else
 		FlxG.log.warn("Platform Not Supported.");
 		#end

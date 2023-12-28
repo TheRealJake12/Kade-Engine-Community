@@ -2,7 +2,7 @@ package;
 
 import lime.app.Application;
 #if FEATURE_DISCORD
-import Discord.DiscordClient;
+import Discord;
 #end
 import flixel.FlxBasic;
 #if FEATURE_STEPMANIA
@@ -61,12 +61,7 @@ class TitleState extends MusicBeatState
 		#if FEATURE_DISCORD
 		if (Main.gameContainer.hasWifi)
 		{
-			Discord.DiscordClient.initialize();
-
-			Application.current.onExit.add(function(exitCode)
-			{
-				DiscordClient.shutdown();
-			});
+			Discord.load();
 		}
 		#end
 

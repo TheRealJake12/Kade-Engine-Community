@@ -26,7 +26,7 @@ import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 import openfl.utils.Assets as OpenFlAssets;
 #if FEATURE_DISCORD
-import Discord.DiscordClient;
+import Discord;
 #end
 import FreeplaySubState;
 import Modifiers;
@@ -140,7 +140,7 @@ class FreeplayState extends MusicBeatState
 
 		#if FEATURE_DISCORD
 		// Updating Discord Rich Presence
-		DiscordClient.changePresence("In the Freeplay Menu", null);
+		Discord.changePresence("In the Freeplay Menu", null);
 		#end
 
 		var isDebug:Bool = false;
