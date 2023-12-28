@@ -1024,7 +1024,7 @@ class ChartingState extends MusicBeatState
 			if (curDiff != difficulties[Std.parseInt(diff)])
 			{
 				curDiff = difficulties[Std.parseInt(diff)];
-				loadJson(_song.songId, curDiff);
+				loadJson(_song.songId.toLowerCase(), curDiff);
 			}
 			Debug.logTrace("Selected Difficulty : " + curDiff);
 		});
