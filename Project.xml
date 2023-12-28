@@ -2,7 +2,7 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Kade Engine Community" file="Kade Engine Community" packageName="com.therealjake12.kec" package="com.therealjake12.kec" main="Main" version="1.9.1" company="TheRealJake12" />
+	<app title="Kade Engine Community" file="Kade Engine Community" packageName="com.therealjake12.kec" package="com.therealjake12.kec" main="Main" version="1.9.2" company="TheRealJake12" />
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
