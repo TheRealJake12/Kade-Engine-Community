@@ -497,12 +497,11 @@ class StageDebugState extends MusicBeatState
 
 		if (FlxG.keys.justPressed.A)
 		{
-			if (curChar.alpha > 0.15) // me when floating point error
-				curChar.alpha -= 0.05;
+			curChar.alpha = FlxMath.roundDecimal(curChar.alpha - 0.05, 2);
 		}
 		if (FlxG.keys.justPressed.D)
 		{
-				curChar.alpha += 0.05;	
+			curChar.alpha += 0.05;	
 		}
 
 		if (FlxG.keys.justPressed.F4)

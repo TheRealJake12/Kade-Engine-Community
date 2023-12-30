@@ -3824,7 +3824,7 @@ class PlayState extends MusicBeatState
 
 				if (!daNote.mustPress)
 				{
-					if (Conductor.songPosition >= daNote.strumTime && daNote.canPlayAnims)
+					if (Conductor.songPosition >= daNote.strumTime && daNote.botplayHit)
 						opponentNoteHit(daNote);
 				}
 				else

@@ -367,26 +367,32 @@ class Note extends FlxSprite
 
 	function loadNoteAnims()
 	{
-		if (isSustainNote)
+		for (i in 0...4)
 		{
-			animation.addByPrefix(dataColor[noteData] + 'hold', dataColor[noteData] + ' hold'); // Hold
-			animation.addByPrefix(dataColor[noteData] + 'holdend', dataColor[noteData] + ' tail'); // Tails
+			if (isSustainNote)
+			{
+				animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
+				animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
+			}
+			else
+				animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
 		}
-		else
-			animation.addByPrefix(dataColor[noteData] + 'Scroll', dataColor[noteData] + ' alone'); // Normal notes
 		setGraphicSize(Std.int(width * 0.7));
 		updateHitbox();
 	}
 
 	function loadPixelAnims()
 	{
-		if (isSustainNote)
+		for (i in 0...4)
 		{
-			animation.add(dataColor[noteData] + 'hold', [noteData]); // Holds
-			animation.add(dataColor[noteData] + 'holdend', [noteData + 4]); // Tails
+			if (isSustainNote)
+			{
+				animation.add(dataColor[i] + 'hold', [i]); // Holds
+				animation.add(dataColor[i] + 'holdend', [i + 4]); // Tails
+			}
+			else
+				animation.add(dataColor[i] + 'Scroll', [i + 4]); // Normal notes
 		}
-		else
-			animation.add(dataColor[noteData] + 'Scroll', [noteData + 4]); // Normal notes
 
 		setGraphicSize(Std.int(width * CoolUtil.daPixelZoom));
 		updateHitbox();
