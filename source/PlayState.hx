@@ -1243,7 +1243,6 @@ class PlayState extends MusicBeatState
 				case 'thorns':
 					schoolIntro(doof);
 				case 'ugh', 'guns', 'stress':
-					removeStaticArrows();
 					#if VIDEOS
 					playCutscene('${SONG.songId.toLowerCase()}Cutscene.mp4', false);
 					#end
@@ -6784,6 +6783,7 @@ class PlayState extends MusicBeatState
 		inst.stop();
 		cutscene.onEndReached.add(function()
 		{
+			inCutscene = false;
 			if (atend == true)
 			{
 				if (storyPlaylist.length <= 0)
@@ -6795,7 +6795,12 @@ class PlayState extends MusicBeatState
 				}
 			}
 			else
-				startCountdown();
+			{
+				createTimer(0.5, function(timer)
+				{
+					startCountdown();
+				});
+			}
 
 			cutscene.dispose();
 		});
