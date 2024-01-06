@@ -69,21 +69,21 @@ class Discord
 		final user:cpp.Star<DiscordUser> = cpp.ConstPointer.fromRaw(request).ptr;
 
 		if (Std.parseInt(cast(user.discriminator, String)) != 0)
-			FlxG.log.notice('(Discord) Connected to User "${cast (user.username, String)}#${cast (user.discriminator, String)}"');
+			Debug.logInfo('(Discord) Connected to User "${cast (user.username, String)}#${cast (user.discriminator, String)}"');
 		else
-			FlxG.log.notice('(Discord) Connected to User "${cast (user.username, String)}"');
+			Debug.logInfo('(Discord) Connected to User "${cast (user.username, String)}"');
 
 		Discord.changePresence('Just Started');
 	}
 
 	private static function onDisconnected(errorCode:Int, message:cpp.ConstCharStar):Void
 	{
-		FlxG.log.notice('(Discord) Disconnected ($errorCode: ${cast (message, String)})');
+		Debug.logInfo('(Discord) Disconnected ($errorCode: ${cast (message, String)})');
 	}
 
 	private static function onError(errorCode:Int, message:cpp.ConstCharStar):Void
 	{
-		FlxG.log.notice('(Discord) Error ($errorCode: ${cast (message, String)})');
+		Debug.logError('(Discord) Error ($errorCode: ${cast (message, String)})');
 	}
 }
 #end

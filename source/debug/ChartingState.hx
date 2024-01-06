@@ -109,8 +109,7 @@ class ChartingState extends MusicBeatState
 	 * WILL BE THE CURRENT / LAST PLACED NOTE
 	**/
 	var curSelectedNote:Array<Dynamic>;
-
-	var tempBpm:Float = 0;
+	
 	var gridBlackLine:FlxSprite;
 	var vocals:FlxSound;
 	var vocalsPlayer:FlxSound;
@@ -241,9 +240,7 @@ class ChartingState extends MusicBeatState
 
 		curRenderedNotes = new FlxTypedGroup<Note>();
 		curRenderedSustains = new FlxTypedGroup<FlxSprite>();
-
-		tempBpm = _song.bpm;
-
+		
 		addSection();
 
 		activeSong = _song;
@@ -3053,7 +3050,6 @@ class ChartingState extends MusicBeatState
 					}
 				}
 			}
-			_song.bpm = tempBpm;
 		}
 		catch (e)
 		{

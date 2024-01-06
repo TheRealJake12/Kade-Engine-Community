@@ -1005,7 +1005,7 @@ class PlayState extends MusicBeatState
 		notesplashSprite = CustomNoteHelpers.Splash.generateNotesplashSprite(FlxG.save.data.notesplash, '');
 
 		var tweenBoolshit = !isStoryMode || storyPlaylist.length >= 3 || SONG.songId == 'tutorial';
-
+		
 		generateStaticArrows(0, tweenBoolshit);
 		generateStaticArrows(1, tweenBoolshit);
 
@@ -6736,6 +6736,7 @@ class PlayState extends MusicBeatState
 	{
 		#if VIDEOS
 		inCutscene = true;
+		inCinematic = true;
 
 		var filepath:String = Paths.video(name);
 		#if FEATURE_FILESYSTEM
@@ -6778,6 +6779,7 @@ class PlayState extends MusicBeatState
 	{
 		#if VIDEOS
 		inCutscene = true;
+		inCinematic = true;
 		var diff:String = CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[storyDifficulty]);
 		cutscene = new VideoHandler();
 		cutscene.load(Paths.video(name));
