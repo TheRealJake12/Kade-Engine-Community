@@ -430,7 +430,7 @@ class Stage extends MusicBeatState
 							var bgGirls = new BackgroundGirls(-100, 190);
 							bgGirls.scrollFactor.set(0.9, 0.9);
 							bgGirls.setGraphicSize(Std.int(bgGirls.width * CoolUtil.daPixelZoom));
-							if (PlayState.SONG.songId == 'roses')
+							if (PlayState.SONG != null && PlayState.SONG.songId == 'roses')
 								bgGirls.getScared();
 							bgGirls.updateHitbox();
 							swagBacks['bgGirls'] = bgGirls;
@@ -620,6 +620,7 @@ class Stage extends MusicBeatState
 
 				case 'stage':
 					{
+						camPosition = [639, 359];
 						curStage = 'stage';
 						var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stageback', 'shared'));
 						bg.antialiasing = FlxG.save.data.antialiasing;
@@ -820,7 +821,7 @@ class Stage extends MusicBeatState
 				bg.animation.play('idle', true);
 		}
 
-		if (FlxG.save.data.distractions && FlxG.save.data.background && !FlxG.save.data.optimize)
+		if (FlxG.save.data.distractions && FlxG.save.data.background)
 		{
 			switch (curStage)
 			{

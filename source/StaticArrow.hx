@@ -33,6 +33,8 @@ class StaticArrow extends FlxSprite
 	private var player:Int;
 	private var noteData:Int = 0;
 
+	public var noteTypeCheck:String = 'normal';
+
 	private function set_texture(value:String):String
 	{
 		if (texture != value)
@@ -81,7 +83,7 @@ class StaticArrow extends FlxSprite
 		scrollFactor.set();
 	}
 
-	private function reloadNote()
+	public function reloadNote()
 	{
 		if (texture == null)
 			texture = '';
@@ -89,13 +91,9 @@ class StaticArrow extends FlxSprite
 		var lastAnim:String = null;
 		if (animation.curAnim != null)
 			lastAnim = animation.curAnim.name;
-
-		var noteTypeCheck:String = 'normal';
+		
 		if (PlayState.SONG != null)
 			noteTypeCheck = PlayState.SONG.noteStyle;
-		else
-			noteTypeCheck = 'normal';
-
 		switch (noteTypeCheck)
 		{
 			case 'pixel':

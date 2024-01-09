@@ -14,6 +14,7 @@ import openfl.ui.Keyboard;
 import flixel.FlxSprite;
 import flixel.FlxG;
 import stages.Stage;
+import flixel.addons.display.FlxExtendedSprite;
 
 class GameplayCustomizeState extends MusicBeatState
 {
@@ -39,7 +40,7 @@ class GameplayCustomizeState extends MusicBeatState
 	var curt:FlxSprite;
 	var front:FlxSprite;
 
-	var sick:FlxSprite;
+	var sick:FlxExtendedSprite;
 
 	var pixelShitPart1:String = '';
 	var pixelShitPart2:String = '';
@@ -77,11 +78,6 @@ class GameplayCustomizeState extends MusicBeatState
 
 		instance = this;
 
-		sick = new FlxSprite().loadGraphic(Paths.image('sick', 'shared'));
-		sick.antialiasing = FlxG.save.data.antialiasing;
-		sick.scrollFactor.set();
-		sick.setGraphicSize(Std.int(sick.width * 0.7));
-
 		// Conductor.changeBPM(102);
 		persistentUpdate = true;
 
@@ -89,11 +85,29 @@ class GameplayCustomizeState extends MusicBeatState
 
 		super.create();
 
+		if (freeplayNoteStyle == 'pixel')
+		{
+			PlayState.noteskinPixelSprite = CustomNoteHelpers.Skin.generatePixelSprite(FlxG.save.data.noteskin);
+			PlayState.noteskinPixelSpriteEnds = CustomNoteHelpers.Skin.generatePixelSprite(FlxG.save.data.noteskin, true);
+		}
+		else
+		{
+			PlayState.noteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.noteskin);
+			PlayState.cpuNoteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.cpuNoteskin);
+		}
+
+		Stage = new Stage(freeplayStage);
+
+		Stage.loadStageData(freeplayStage);
+		Stage.initStageProperties();
+
 		camHUD = new SwagCamera();
 		camHUD.bgColor.alpha = 0;
 
 		camOverlay = new SwagCamera();
 		camOverlay.bgColor.alpha = 0;
+
+		Stage.initCamPos();
 
 		// Game Camera (where stage and characters are)
 		FlxG.cameras.reset(camGame);
@@ -105,13 +119,17 @@ class GameplayCustomizeState extends MusicBeatState
 		camOverlay.zoom = 1;
 
 		var camFollow = new FlxObject(0, 0, 1, 1);
+		var camPos:FlxPoint = new FlxPoint(0, 0);
+		camPos.set(Stage.camPosition[0], Stage.camPosition[1]);
+		camFollow.setPosition(camPos.x, camPos.y);
+		add(camFollow);
 
 		FlxG.camera.follow(camFollow, LOCKON, 0.01);
 		// FlxG.camera.setScrollBounds(0, FlxG.width, 0, FlxG.height);
-		FlxG.camera.zoom = 0.9;
+		FlxG.camera.zoom = Stage.camZoom;
 		FlxG.camera.focusOn(camFollow.getPosition());
 
-		dad = new Character(100, 100, 'dad');
+		dad = new Character(100, 100, freeplayDad);
 
 		if (dad.frames == null)
 		{
@@ -121,7 +139,7 @@ class GameplayCustomizeState extends MusicBeatState
 			dad = new Character(100, 100, 'dad');
 		}
 
-		boyfriend = new Boyfriend(770, 450, 'bf');
+		boyfriend = new Boyfriend(770, 450, freeplayBf);
 
 		if (boyfriend.frames == null)
 		{
@@ -131,9 +149,27 @@ class GameplayCustomizeState extends MusicBeatState
 			boyfriend = new Boyfriend(770, 450, 'bf');
 		}
 
+		// defaults if no gf was found in chart
 		var gfCheck:String = 'gf';
 
-		gf = new Character(400, 130, 'gf');
+		if (freeplayGf == null)
+		{
+			switch (freeplayWeek)
+			{
+				case 4:
+					gfCheck = 'gf-car';
+				case 5:
+					gfCheck = 'gf-christmas';
+				case 6:
+					gfCheck = 'gf-pixel';
+				case 7:
+					gfCheck = 'gfTank';
+			}
+		}
+		else
+			gfCheck = freeplayGf;
+
+		gf = new Character(400, 130, freeplayGf);
 
 		if (gf.frames == null)
 		{
@@ -142,11 +178,6 @@ class GameplayCustomizeState extends MusicBeatState
 			#end
 			gf = new Character(400, 130, 'gf');
 		}
-
-		Stage = new Stage('stage');
-
-		Stage.loadStageData('stage');
-		Stage.initStageProperties();
 
 		var positions = Stage.positions[Stage.curStage];
 		if (positions != null)
@@ -166,7 +197,8 @@ class GameplayCustomizeState extends MusicBeatState
 			switch (index)
 			{
 				case 0:
-					add(gf);
+					if (Stage.hasGF)
+						add(gf);
 					gf.scrollFactor.set(0.95, 0.95);
 					for (bg in array)
 						add(bg);
@@ -180,20 +212,30 @@ class GameplayCustomizeState extends MusicBeatState
 						add(bg);
 			}
 		}
+		
+		if (freeplayNoteStyle == 'pixel')
+		{
+			pixelShitPart1 = 'weeb/pixelUI/';
+			pixelShitPart2 = '-pixel';
+			pixelShitPart3 = 'week6';
+			pixelShitPart4 = 'week6';
+		}
 
-		Stage.initCamPos();
-
-		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x + 400, dad.getGraphicMidpoint().y);
-
-		camFollow.setPosition(camPos.x, camPos.y);
-
-		add(gf);
-		add(boyfriend);
-		add(dad);
-
+		sick = new FlxExtendedSprite(0, 0, Paths.image(pixelShitPart1 + 'sick' + pixelShitPart2, pixelShitPart3));
+		if (freeplayNoteStyle != 'pixel')
+		{
+			sick.setGraphicSize(Std.int(sick.width * 0.7));
+			sick.antialiasing = FlxG.save.data.antialiasing;
+		}
+		else
+		{
+			sick.antialiasing = false;
+			sick.setGraphicSize(Std.int(sick.width * CoolUtil.daPixelZoom * 0.7));
+		}
+		sick.scrollFactor.set();
+		sick.updateHitbox();
+		sick.enableMouseDrag();
 		add(sick);
-
-		add(camFollow);
 
 		strumLine = new FlxSprite(0, 50).makeGraphic(FlxG.width, 10);
 		strumLine.scrollFactor.set();
@@ -265,12 +307,6 @@ class GameplayCustomizeState extends MusicBeatState
 		FlxG.camera.zoom = FlxMath.lerp(0.9, FlxG.camera.zoom, 0.95);
 		camHUD.zoom = FlxMath.lerp(FlxG.save.data.zoom, camHUD.zoom, 0.95);
 
-		if (FlxG.mouse.overlaps(sick) && FlxG.mouse.pressed)
-		{
-			sick.x = (FlxG.mouse.x - sick.width / 2) - 60;
-			sick.y = (FlxG.mouse.y - sick.height) - 60;
-		}
-
 		if (FlxG.keys.justPressed.E)
 		{
 			FlxG.save.data.zoom += 0.02;
@@ -283,7 +319,7 @@ class GameplayCustomizeState extends MusicBeatState
 			camHUD.zoom = FlxG.save.data.zoom;
 		}
 
-		if (FlxG.mouse.overlaps(sick) && FlxG.mouse.justReleased)
+		if (sick.x != defaultX && sick.y != defaultY)
 		{
 			FlxG.save.data.changedHitX = sick.x;
 			FlxG.save.data.changedHitY = sick.y;
@@ -332,9 +368,10 @@ class GameplayCustomizeState extends MusicBeatState
 		for (i in 0...4)
 		{
 			var babyArrow:StaticArrow = new StaticArrow(-10, strumLine.y, player, i);
-
-			var noteTypeCheck:String = 'normal';
 			babyArrow.downScroll = FlxG.save.data.downscroll;
+			
+			babyArrow.noteTypeCheck = freeplayNoteStyle;
+			babyArrow.reloadNote();
 
 			babyArrow.loadLane();
 
