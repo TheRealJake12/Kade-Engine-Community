@@ -96,7 +96,7 @@ You need to install libvlc for hxvlc / hxCodec to work on Linux.
 ```
 sudo apt-get install libvlc-dev
 sudo apt-get install libvlccore-dev
-sudo apt-get install vlc-bin
+sudo apt-get install vlc
 ```
 4. [Read the original FNF source code guide for Visual Studio](https://github.com/ninjamuffin99/Funkin.git)
 Once it is installed you should be able to build your game.
