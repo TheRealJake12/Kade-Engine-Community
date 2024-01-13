@@ -170,6 +170,8 @@ class ChartingState extends MusicBeatState
 		// curSection = lastSection;
 
 		PlayState.noteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.noteskin);
+		PlayState.noteskinPixelSprite = CustomNoteHelpers.Skin.generatePixelSprite(FlxG.save.data.noteskin);
+		PlayState.noteskinPixelSpriteEnds = CustomNoteHelpers.Skin.generatePixelSprite(FlxG.save.data.noteskin, true);
 
 		PlayState.inDaPlay = false;
 
@@ -1722,7 +1724,6 @@ class ChartingState extends MusicBeatState
 						{
 							var sustainVis:FlxSprite = new FlxSprite(note.x + (GRID_SIZE * 0.5) - 2,
 								note.y + GRID_SIZE).makeGraphic(8, Math.floor((getYfromStrum(note.strumTime + note.sustainLength) * zoomFactor) - note.y));
-
 							note.noteCharterObject = sustainVis;
 
 							curRenderedSustains.add(sustainVis);
@@ -2181,7 +2182,6 @@ class ChartingState extends MusicBeatState
 				curRenderedSustains.remove(i.noteCharterObject);
 				var sustainVis:FlxSprite = new FlxSprite(i.x + (GRID_SIZE * 0.5) - 2,
 					i.y + GRID_SIZE).makeGraphic(8, Math.floor((getYfromStrum(i.strumTime + i.sustainLength) * zoomFactor) - i.y), FlxColor.WHITE);
-
 				i.noteCharterObject = sustainVis;
 				curRenderedSustains.add(i.noteCharterObject);
 			}
@@ -2537,27 +2537,6 @@ class ChartingState extends MusicBeatState
 				}
 
 				if (FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.D)
-				{
-					lastAction = "delete";
-					var notesToBeDeleted = [];
-					deletedNotes = [];
-					for (i in 0...selectedBoxes.members.length)
-					{
-						deletedNotes.push([
-							selectedBoxes.members[i].connectedNote.strumTime,
-							selectedBoxes.members[i].connectedNote.rawNoteData,
-							selectedBoxes.members[i].connectedNote.sustainLength
-						]);
-						notesToBeDeleted.push(selectedBoxes.members[i].connectedNote);
-					}
-
-					for (i in notesToBeDeleted)
-					{
-						deleteNote(i);
-					}
-				}
-
-				if (FlxG.keys.justPressed.DELETE)
 				{
 					lastAction = "delete";
 					var notesToBeDeleted = [];
@@ -3124,7 +3103,7 @@ class ChartingState extends MusicBeatState
 			+ "\n"
 			+ (doSnapShit ? "Snap enabled" : "Snap disabled")
 			+
-			(FlxG.save.data.showHelp ? "\n\nHelp:\nCtrl-MWheel : Zoom in/out\nShift-Left/Right :\n Change playback speed\nCtrl-Drag Click : Select notes\nCtrl-C : Copy notes\nCtrl-V : Paste notes\nCtrl-Z : Undo\nDelete : Delete selection\nCTRL-Left/Right :\n  Change Snap\nHold Shift : Disable Snap\nClick:\n  Place notes\nUp/Down :\n  Move selected notes 1 step\nShift-Up/Down :\n  Move selected notes 1 beat\nSpace: Play Music\nEnter : Preview\n Z/X Change Notetype.\nPress F1 to hide/show this!" : "");
+			(FlxG.save.data.showHelp ? "\n\nHelp:\nCtrl-MWheel : Zoom in/out\nShift-Left/Right :\n Change playback speed\nCtrl-Drag Click : Select notes\nCtrl-C : Copy notes\nCtrl-V : Paste notes\nCtrl-Z : Undo\nCtrl-D : Delete selection\nCTRL-Left/Right :\n  Change Snap\nHold Shift : Disable Snap\nClick:\n  Place notes\nUp/Down :\n  Move selected notes 1 step\nShift-Up/Down :\n  Move selected notes 1 beat\nSpace: Play Music\nEnter : Preview\n Z/X Change Notetype.\nPress F1 to hide/show this!" : "");
 		bpmTxt.updateHitbox();
 
 		super.update(elapsed);
@@ -3159,11 +3138,10 @@ class ChartingState extends MusicBeatState
 				curSelectedNoteObject.noteCharterObject = sustainVis;
 
 				curRenderedSustains.add(sustainVis);
+				// updateGrid(); // massive performance impact but fixes bugs. Bruh.
+				updateNoteUI();
 			}
 		}
-
-		updateGrid();
-		updateNoteUI();
 	}
 
 	function resetSection(songBeginning:Bool = false):Void
@@ -3321,11 +3299,15 @@ class ChartingState extends MusicBeatState
 
 	function updateGrid():Void
 	{
-		// curRenderedNotes.forEachAlive(function(spr:Note) spr.destroy());
-		curRenderedNotes.clear();
-		// curRenderedSustains.forEachAlive(function(spr:FlxSprite) spr.destroy());
-		curRenderedSustains.clear();
+		while (curRenderedNotes.members.length > 0)
+		{
+			curRenderedNotes.remove(curRenderedNotes.members[0], true);
+		}
 
+		while (curRenderedSustains.members.length > 0)
+		{
+			curRenderedSustains.remove(curRenderedSustains.members[0], true);
+		}
 		var currentSection = 0;
 
 		for (section in _song.notes)
@@ -3363,7 +3345,6 @@ class ChartingState extends MusicBeatState
 					{
 						var sustainVis:FlxSprite = new FlxSprite(note.x + (GRID_SIZE * 0.5) - 2,
 							note.y + GRID_SIZE).makeGraphic(8, Math.floor((getYfromStrum(note.strumTime + note.sustainLength) * zoomFactor) - note.y));
-
 						note.noteCharterObject = sustainVis;
 
 						curRenderedSustains.add(sustainVis);

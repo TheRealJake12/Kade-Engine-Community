@@ -3883,7 +3883,7 @@ class PlayState extends MusicBeatState
 		}
 
 		if (!inCutscene && songStarted)
-			keyShit();
+			keyShit();	
 
 		if (generatedMusic && !(inCutscene || inCinematic))
 		{
@@ -3958,7 +3958,7 @@ class PlayState extends MusicBeatState
 				if (swagRect == null)
 					swagRect = new FlxRect(0, 0, daNote.frameWidth, daNote.frameHeight);
 
-				if (daNote.isSustainNote)
+				if (daNote.isSustainNote && daNote.prevNote.wasGoodHit)
 				{
 					if (strumScrollType)
 					{
@@ -4094,20 +4094,10 @@ class PlayState extends MusicBeatState
 									{
 										// misses++;
 
-										if (daNote.noteShit == 'mustpress')
-										{
-											if (!PlayStateChangeables.opponentMode)
-												health -= (0.8 * PlayStateChangeables.healthLoss);
-											else
-												health += (0.8 * PlayStateChangeables.healthLoss);
-										}
+										if (!PlayStateChangeables.opponentMode)
+											health -= (daNote.missHealth * PlayStateChangeables.healthLoss);
 										else
-										{
-											if (!PlayStateChangeables.opponentMode)
-												health -= (0.08 * PlayStateChangeables.healthLoss);
-											else
-												health += (0.08 * PlayStateChangeables.healthLoss);
-										}
+											health += (daNote.missHealth * PlayStateChangeables.healthLoss);
 									}
 								}
 							}
@@ -5169,7 +5159,7 @@ class PlayState extends MusicBeatState
 		{
 			altAnim = '-alt';
 		}
-		if (!PlayStateChangeables.opponentMode)
+		if (PlayStateChangeables.opponentMode)
 		{
 			switch (daNote.noteShit)
 			{
@@ -5240,8 +5230,6 @@ class PlayState extends MusicBeatState
 						vocalsEnemy.volume = 1;
 				}
 			}
-
-			daNote.wasGoodHit = true;
 		}
 
 		if (!daNote.isSustainNote)
@@ -5267,7 +5255,10 @@ class PlayState extends MusicBeatState
 		scripts.executeAllFunc("opponentNoteHit", [daNote]);
 		#end
 
-		destroyNote(daNote);
+		if (!daNote.isSustainNote)
+			destroyNote(daNote);
+
+		daNote.wasGoodHit = true;
 	}
 
 	function goodNoteHit(note:Note, resetMashViolation = true):Void

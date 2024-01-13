@@ -248,7 +248,7 @@ class KadeEngineData
 			FlxG.save.data.showState = false;
 
 		if (FlxG.save.data.saveReplays == null)
-			FlxG.save.data.saveReplays = false;
+			FlxG.save.data.saveReplays = true;
 
 		if (FlxG.save.data.glDebug == null)
 			FlxG.save.data.glDebug = false;

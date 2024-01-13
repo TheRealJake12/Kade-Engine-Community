@@ -114,7 +114,7 @@ class GameplayCustomizeState extends MusicBeatState
 
 		FlxG.cameras.add(camHUD, false);
 		FlxG.cameras.add(camOverlay, false);
-
+		FlxG.camera.zoom = Stage.camZoom;	
 		camHUD.zoom = FlxG.save.data.zoom;
 		camOverlay.zoom = 1;
 
@@ -306,7 +306,7 @@ class GameplayCustomizeState extends MusicBeatState
 		if (FlxG.save.data.zoom > 1.2)
 			FlxG.save.data.zoom = 1.2;
 
-		FlxG.camera.zoom = FlxMath.lerp(0.9, FlxG.camera.zoom, 0.95);
+		FlxG.camera.zoom = FlxMath.lerp(Stage.camZoom, FlxG.camera.zoom, 0.95);
 		camHUD.zoom = FlxMath.lerp(FlxG.save.data.zoom, camHUD.zoom, 0.95);
 
 		if (FlxG.keys.justPressed.E)
