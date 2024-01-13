@@ -212,7 +212,7 @@ class GameplayCustomizeState extends MusicBeatState
 						add(bg);
 			}
 		}
-		
+
 		if (freeplayNoteStyle == 'pixel')
 		{
 			pixelShitPart1 = 'weeb/pixelUI/';
@@ -298,6 +298,8 @@ class GameplayCustomizeState extends MusicBeatState
 
 		super.update(elapsed);
 
+		Stage.update(elapsed);
+
 		if (FlxG.save.data.zoom < 0.8)
 			FlxG.save.data.zoom = 0.8;
 
@@ -369,7 +371,7 @@ class GameplayCustomizeState extends MusicBeatState
 		{
 			var babyArrow:StaticArrow = new StaticArrow(-10, strumLine.y, player, i);
 			babyArrow.downScroll = FlxG.save.data.downscroll;
-			
+
 			babyArrow.noteTypeCheck = freeplayNoteStyle;
 			babyArrow.reloadNote();
 

@@ -351,7 +351,7 @@ class OptionsMenu extends MusicBeatSubstate
 
 		for (i in 0...options.length - 1)
 		{
-			if (i > 5) // impoirtant
+			if (i > 5) // VERY IMPORTANT.
 				continue;
 			var cat = options[i];
 			add(cat);
@@ -567,6 +567,7 @@ class OptionsMenu extends MusicBeatSubstate
 			{
 				if (!isInPause)
 				{
+					FlxG.sound.play(Paths.sound('cancelMenu'));
 					exiting = true;
 					FlxTween.tween(background, {alpha: 0}, 0.5, {ease: FlxEase.smootherStepInOut});
 					for (i in 0...selectedCat.optionObjects.length)

@@ -1,68 +1,69 @@
 {
  "song": {
-  "songName": "guns",
-  "songId": "guns",
+  "splitVoiceTracks": false,
   "player1": "bf",
-  "songFile": "guns",
+  "songId": "guns",
+  "songName": "Guns",
+  "player2": "tankman",
   "notes": [
    {
+    "lengthInSteps": 16,
+    "sectionNotes": [],
     "endTime": 1297.2972972973,
-    "sectionNotes": [],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 0
+    "startTime": 0,
+    "mustHitSection": true
    },
    {
+    "lengthInSteps": 16,
+    "sectionNotes": [],
     "endTime": 2594.59459459459,
-    "sectionNotes": [],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 1297.2972972973
+    "startTime": 1297.2972972973,
+    "mustHitSection": true
    },
    {
+    "lengthInSteps": 16,
+    "sectionNotes": [],
     "endTime": 3891.89189189189,
-    "sectionNotes": [],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 2594.59459459459
+    "startTime": 2594.59459459459,
+    "mustHitSection": true
    },
    {
+    "lengthInSteps": 16,
+    "sectionNotes": [],
     "endTime": 5189.18918918919,
-    "sectionNotes": [],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 3891.89189189189
+    "startTime": 3891.89189189189,
+    "mustHitSection": true
    },
    {
+    "lengthInSteps": 16,
+    "sectionNotes": [],
     "endTime": 6486.48648648649,
-    "sectionNotes": [],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 5189.18918918919
+    "startTime": 5189.18918918919,
+    "mustHitSection": true
    },
    {
+    "lengthInSteps": 16,
+    "sectionNotes": [],
     "endTime": 7783.78378378378,
-    "sectionNotes": [],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 6486.48648648649
+    "startTime": 6486.48648648649,
+    "mustHitSection": true
    },
    {
+    "lengthInSteps": 16,
+    "sectionNotes": [],
     "endTime": 9081.08108108108,
-    "sectionNotes": [],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 7783.78378378378
+    "startTime": 7783.78378378378,
+    "mustHitSection": true
    },
    {
+    "lengthInSteps": 16,
+    "sectionNotes": [],
     "endTime": 10378.3783783784,
-    "sectionNotes": [],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 9081.08108108108
+    "startTime": 9081.08108108108,
+    "mustHitSection": true
    },
    {
-    "endTime": 11675.6756756757,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       10378.3779,
@@ -107,12 +108,12 @@
       34.9999976833333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 10378.3783783784
+    "endTime": 11675.6756756757,
+    "startTime": 10378.3783783784,
+    "mustHitSection": false
    },
    {
-    "endTime": 12972.972972973,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       11675.6748,
@@ -157,12 +158,12 @@
       38.9999964583333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 11675.6756756757
+    "endTime": 12972.972972973,
+    "startTime": 11675.6756756757,
+    "mustHitSection": false
    },
    {
-    "endTime": 14270.2702702703,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       12972.9717,
@@ -200,12 +201,12 @@
       42.9999980083333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 12972.972972973
+    "endTime": 14270.2702702703,
+    "startTime": 12972.972972973,
+    "mustHitSection": false
    },
    {
-    "endTime": 15567.5675675676,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       14270.27,
@@ -264,12 +265,12 @@
       47.4999965916667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 14270.2702702703
+    "endTime": 15567.5675675676,
+    "startTime": 14270.2702702703,
+    "mustHitSection": false
    },
    {
-    "endTime": 16864.8648648649,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       15567.5664,
@@ -314,12 +315,12 @@
       50.9999983333333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 15567.5675675676
+    "endTime": 16864.8648648649,
+    "startTime": 15567.5675675676,
+    "mustHitSection": true
    },
    {
-    "endTime": 18162.1621621622,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       16864.8633,
@@ -364,12 +365,12 @@
       54.999994025
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 16864.8648648649
+    "endTime": 18162.1621621622,
+    "startTime": 16864.8648648649,
+    "mustHitSection": true
    },
    {
-    "endTime": 19459.4594594595,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       18162.16,
@@ -407,12 +408,12 @@
       58.9999989666667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 18162.1621621622
+    "endTime": 19459.4594594595,
+    "startTime": 18162.1621621622,
+    "mustHitSection": true
    },
    {
-    "endTime": 20756.7567567568,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       19459.459,
@@ -471,12 +472,12 @@
       63.49999755
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 19459.4594594595
+    "endTime": 20756.7567567568,
+    "startTime": 19459.4594594595,
+    "mustHitSection": true
    },
    {
-    "endTime": 22054.0540540541,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       20756.7559,
@@ -521,12 +522,12 @@
       67.4999941666667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 20756.7567567568
+    "endTime": 22054.0540540541,
+    "startTime": 20756.7567567568,
+    "mustHitSection": false
    },
    {
-    "endTime": 23351.3513513513,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       22054.0527,
@@ -585,12 +586,12 @@
       71.4999947916667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 22054.0540540541
+    "endTime": 23351.3513513513,
+    "startTime": 22054.0540540541,
+    "mustHitSection": false
    },
    {
-    "endTime": 24648.6486486487,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       23351.35,
@@ -635,12 +636,12 @@
       75.4999935666667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 23351.3513513513
+    "endTime": 24648.6486486487,
+    "startTime": 23351.3513513513,
+    "mustHitSection": false
    },
    {
-    "endTime": 25945.9459459459,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       24648.6465,
@@ -699,12 +700,12 @@
       79.4999923416667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 24648.6486486487
+    "endTime": 25945.9459459459,
+    "startTime": 24648.6486486487,
+    "mustHitSection": false
    },
    {
-    "endTime": 27243.2432432432,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       25945.9434,
@@ -749,12 +750,12 @@
       83.4999966666667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 25945.9459459459
+    "endTime": 27243.2432432432,
+    "startTime": 25945.9459459459,
+    "mustHitSection": true
    },
    {
-    "endTime": 28540.5405405405,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       27243.2422,
@@ -813,12 +814,12 @@
       87.49999575
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 27243.2432432432
+    "endTime": 28540.5405405405,
+    "startTime": 27243.2432432432,
+    "mustHitSection": true
    },
    {
-    "endTime": 29837.8378378378,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       28540.54,
@@ -863,12 +864,12 @@
       91.4999942166667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 28540.5405405405
+    "endTime": 29837.8378378378,
+    "startTime": 28540.5405405405,
+    "mustHitSection": true
    },
    {
-    "endTime": 31135.1351351351,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       29837.8359,
@@ -927,12 +928,12 @@
       95.4999908333333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 29837.8378378378
+    "endTime": 31135.1351351351,
+    "startTime": 29837.8378378378,
+    "mustHitSection": true
    },
    {
-    "endTime": 32432.4324324324,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       31135.1328,
@@ -991,12 +992,12 @@
       99.4999917666667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 31135.1351351351
+    "endTime": 32432.4324324324,
+    "startTime": 31135.1351351351,
+    "mustHitSection": false
    },
    {
-    "endTime": 33729.7297297297,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       32432.43,
@@ -1055,12 +1056,12 @@
       103.4999964
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 32432.4324324324
+    "endTime": 33729.7297297297,
+    "startTime": 32432.4324324324,
+    "mustHitSection": false
    },
    {
-    "endTime": 35027.027027027,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       33729.7266,
@@ -1126,12 +1127,12 @@
       107.499995175
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 33729.7297297297
+    "endTime": 35027.027027027,
+    "startTime": 33729.7297297297,
+    "mustHitSection": false
    },
    {
-    "endTime": 36324.3243243243,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       35027.0234,
@@ -1204,12 +1205,12 @@
       111.499993333333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 35027.027027027
+    "endTime": 36324.3243243243,
+    "startTime": 35027.027027027,
+    "mustHitSection": false
    },
    {
-    "endTime": 37621.6216216216,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       36324.32,
@@ -1268,12 +1269,12 @@
       115.499992416667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 36324.3243243243
+    "endTime": 37621.6216216216,
+    "startTime": 36324.3243243243,
+    "mustHitSection": true
    },
    {
-    "endTime": 38918.9189189189,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       37621.6172,
@@ -1332,12 +1333,12 @@
       119.499991191667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 37621.6216216216
+    "endTime": 38918.9189189189,
+    "startTime": 37621.6216216216,
+    "mustHitSection": true
    },
    {
-    "endTime": 40216.2162162162,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       38918.918,
@@ -1396,12 +1397,12 @@
       123.4999875
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 38918.9189189189
+    "endTime": 40216.2162162162,
+    "startTime": 38918.9189189189,
+    "mustHitSection": true
    },
    {
-    "endTime": 41513.5135135135,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       40216.2148,
@@ -1460,12 +1461,12 @@
       127.499988741667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 40216.2162162162
+    "endTime": 41513.5135135135,
+    "startTime": 40216.2162162162,
+    "mustHitSection": true
    },
    {
-    "endTime": 42810.8108108108,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       41513.51,
@@ -1538,12 +1539,12 @@
       131.499987208333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 41513.5135135135
+    "endTime": 42810.8108108108,
+    "startTime": 41513.5135135135,
+    "mustHitSection": false
    },
    {
-    "endTime": 44108.1081081081,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       42810.81,
@@ -1602,12 +1603,12 @@
       135.499981666667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 42810.8108108108
+    "endTime": 44108.1081081081,
+    "startTime": 42810.8108108108,
+    "mustHitSection": false
    },
    {
-    "endTime": 45405.4054054054,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       44108.1055,
@@ -1673,12 +1674,12 @@
       139.49999
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 44108.1081081081
+    "endTime": 45405.4054054054,
+    "startTime": 44108.1081081081,
+    "mustHitSection": false
    },
    {
-    "endTime": 46702.7027027027,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       45405.4023,
@@ -1765,12 +1766,12 @@
       143.499998333333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 45405.4054054054
+    "endTime": 46702.7027027027,
+    "startTime": 45405.4054054054,
+    "mustHitSection": false
    },
    {
-    "endTime": 48000,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       46702.7,
@@ -1836,12 +1837,12 @@
       147.499994025
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 46702.7027027027
+    "endTime": 48000,
+    "startTime": 46702.7027027027,
+    "mustHitSection": true
    },
    {
-    "endTime": 49297.2972972973,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       47999.9961,
@@ -1900,12 +1901,12 @@
       151.4999928
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 48000
+    "endTime": 49297.2972972973,
+    "startTime": 48000,
+    "mustHitSection": true
    },
    {
-    "endTime": 50594.5945945946,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       49297.293,
@@ -1971,12 +1972,12 @@
       155.4999925
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 49297.2972972973
+    "endTime": 50594.5945945946,
+    "startTime": 49297.2972972973,
+    "mustHitSection": true
    },
    {
-    "endTime": 51891.8918918919,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       50594.59,
@@ -2035,12 +2036,12 @@
       159.49999035
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 50594.5945945946
+    "endTime": 51891.8918918919,
+    "startTime": 50594.5945945946,
+    "mustHitSection": true
    },
    {
-    "endTime": 53189.1891891892,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       51891.8867,
@@ -2106,12 +2107,12 @@
       163.499988816667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 51891.8918918919
+    "endTime": 53189.1891891892,
+    "startTime": 51891.8918918919,
+    "mustHitSection": false
    },
    {
-    "endTime": 54486.4864864865,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       53351.3477,
@@ -2170,12 +2171,12 @@
       167.499986666667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 53189.1891891892
+    "endTime": 54486.4864864865,
+    "startTime": 53189.1891891892,
+    "mustHitSection": false
    },
    {
-    "endTime": 55783.7837837838,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       54486.4844,
@@ -2234,12 +2235,12 @@
       171.499986366667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 54486.4864864865
+    "endTime": 55783.7837837838,
+    "startTime": 54486.4864864865,
+    "mustHitSection": false
    },
    {
-    "endTime": 57081.0810810811,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       55783.78,
@@ -2298,12 +2299,12 @@
       175.499985141667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 55783.7837837838
+    "endTime": 57081.0810810811,
+    "startTime": 55783.7837837838,
+    "mustHitSection": false
    },
    {
-    "endTime": 58378.3783783784,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       57081.08,
@@ -2376,12 +2377,12 @@
       179.499980833333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 57081.0810810811
+    "endTime": 58378.3783783784,
+    "startTime": 57081.0810810811,
+    "mustHitSection": true
    },
    {
-    "endTime": 59675.6756756757,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       58540.5352,
@@ -2440,12 +2441,12 @@
       183.499982383333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 58378.3783783784
+    "endTime": 59675.6756756757,
+    "startTime": 58378.3783783784,
+    "mustHitSection": true
    },
    {
-    "endTime": 60972.972972973,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       59675.67,
@@ -2504,12 +2505,12 @@
       187.4999975
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 59675.6756756757
+    "endTime": 60972.972972973,
+    "startTime": 59675.6756756757,
+    "mustHitSection": true
    },
    {
-    "endTime": 62270.2702702703,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       60972.97,
@@ -2568,12 +2569,12 @@
       191.499991958333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 60972.972972973
+    "endTime": 62270.2702702703,
+    "startTime": 60972.972972973,
+    "mustHitSection": true
    },
    {
-    "endTime": 63567.5675675676,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       62270.2656,
@@ -2639,12 +2640,12 @@
       195.499990425
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 62270.2702702703
+    "endTime": 63567.5675675676,
+    "startTime": 62270.2702702703,
+    "mustHitSection": false
    },
    {
-    "endTime": 64864.8648648649,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       63567.5625,
@@ -2703,12 +2704,12 @@
       199.499991666667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 63567.5675675676
+    "endTime": 64864.8648648649,
+    "startTime": 63567.5675675676,
+    "mustHitSection": false
    },
    {
-    "endTime": 66162.1621621622,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       64864.86,
@@ -2767,12 +2768,12 @@
       203.499969166667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 64864.8648648649
+    "endTime": 66162.1621621622,
+    "startTime": 64864.8648648649,
+    "mustHitSection": false
    },
    {
-    "endTime": 67459.4594594595,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       66162.16,
@@ -2831,12 +2832,12 @@
       207.4999775
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 66162.1621621622
+    "endTime": 67459.4594594595,
+    "startTime": 66162.1621621622,
+    "mustHitSection": false
    },
    {
-    "endTime": 68756.7567567568,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       67459.45,
@@ -2902,12 +2903,12 @@
       211.499985833333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 67459.4594594595
+    "endTime": 68756.7567567568,
+    "startTime": 67459.4594594595,
+    "mustHitSection": true
    },
    {
-    "endTime": 70054.0540540541,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       68756.75,
@@ -2966,12 +2967,12 @@
       215.499994166667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 68756.7567567568
+    "endTime": 70054.0540540541,
+    "startTime": 68756.7567567568,
+    "mustHitSection": true
    },
    {
-    "endTime": 71351.3513513514,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       70054.05,
@@ -3030,12 +3031,12 @@
       219.5000025
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 70054.0540540541
+    "endTime": 71351.3513513514,
+    "startTime": 70054.0540540541,
+    "mustHitSection": true
    },
    {
-    "endTime": 72648.6486486486,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       71351.34,
@@ -3094,12 +3095,12 @@
       223.499993566667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 71351.3513513514
+    "endTime": 72648.6486486486,
+    "startTime": 71351.3513513514,
+    "mustHitSection": true
    },
    {
-    "endTime": 73945.9459459459,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       72648.64,
@@ -3158,12 +3159,12 @@
       227.499988333333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 72648.6486486486
+    "endTime": 73945.9459459459,
+    "startTime": 72648.6486486486,
+    "mustHitSection": false
    },
    {
-    "endTime": 75243.2432432432,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       73945.94,
@@ -3222,12 +3223,12 @@
       231.499996666667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 73945.9459459459
+    "endTime": 75243.2432432432,
+    "startTime": 73945.9459459459,
+    "mustHitSection": false
    },
    {
-    "endTime": 76540.5405405405,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       75243.2344,
@@ -3279,12 +3280,12 @@
       234.999980833333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 75243.2432432432
+    "endTime": 76540.5405405405,
+    "startTime": 75243.2432432432,
+    "mustHitSection": false
    },
    {
-    "endTime": 77837.8378378378,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       76540.54,
@@ -3343,12 +3344,12 @@
       239.4999825
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 76540.5405405405
+    "endTime": 77837.8378378378,
+    "startTime": 76540.5405405405,
+    "mustHitSection": false
    },
    {
-    "endTime": 79135.1351351351,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       77837.8359,
@@ -3407,12 +3408,12 @@
       243.499990833333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 77837.8378378378
+    "endTime": 79135.1351351351,
+    "startTime": 77837.8378378378,
+    "mustHitSection": false
    },
    {
-    "endTime": 80432.4324324324,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       79135.13,
@@ -3471,12 +3472,12 @@
       247.4999856
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 79135.1351351351
+    "endTime": 80432.4324324324,
+    "startTime": 79135.1351351351,
+    "mustHitSection": false
    },
    {
-    "endTime": 81729.7297297297,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       80432.43,
@@ -3535,12 +3536,12 @@
       251.499976666667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 80432.4324324324
+    "endTime": 81729.7297297297,
+    "startTime": 80432.4324324324,
+    "mustHitSection": false
    },
    {
-    "endTime": 83027.027027027,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       81729.73,
@@ -3599,12 +3600,12 @@
       255.499985
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 81729.7297297297
+    "endTime": 83027.027027027,
+    "startTime": 81729.7297297297,
+    "mustHitSection": false
    },
    {
-    "endTime": 84324.3243243243,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       83027.02,
@@ -3656,12 +3657,12 @@
       259.499993333333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 83027.027027027
+    "endTime": 84324.3243243243,
+    "startTime": 83027.027027027,
+    "mustHitSection": true
    },
    {
-    "endTime": 85621.6216216216,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       84324.32,
@@ -3720,12 +3721,12 @@
       263.499970833333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 84324.3243243243
+    "endTime": 85621.6216216216,
+    "startTime": 84324.3243243243,
+    "mustHitSection": true
    },
    {
-    "endTime": 86918.9189189189,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       85621.62,
@@ -3777,12 +3778,12 @@
       266.999973191667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 85621.6216216216
+    "endTime": 86918.9189189189,
+    "startTime": 85621.6216216216,
+    "mustHitSection": true
    },
    {
-    "endTime": 88216.2162162162,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       86918.9141,
@@ -3841,12 +3842,12 @@
       271.4999875
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 86918.9189189189
+    "endTime": 88216.2162162162,
+    "startTime": 86918.9189189189,
+    "mustHitSection": true
    },
    {
-    "endTime": 89513.5135135135,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       88216.21,
@@ -3905,12 +3906,12 @@
       275.499965
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 88216.2162162162
+    "endTime": 89513.5135135135,
+    "startTime": 88216.2162162162,
+    "mustHitSection": true
    },
    {
-    "endTime": 90810.8108108108,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       89513.51,
@@ -3969,12 +3970,12 @@
       279.499973333333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 89513.5135135135
+    "endTime": 90810.8108108108,
+    "startTime": 89513.5135135135,
+    "mustHitSection": true
    },
    {
-    "endTime": 92108.1081081081,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       90810.8047,
@@ -4033,12 +4034,12 @@
       283.499981666667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 90810.8108108108
+    "endTime": 92108.1081081081,
+    "startTime": 90810.8108108108,
+    "mustHitSection": true
    },
    {
-    "endTime": 93405.4054054054,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       92108.1,
@@ -4097,12 +4098,12 @@
       287.499972733333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 92108.1081081081
+    "endTime": 93405.4054054054,
+    "startTime": 92108.1081081081,
+    "mustHitSection": true
    },
    {
-    "endTime": 94702.7027027027,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       93405.4,
@@ -4168,12 +4169,12 @@
       291.4999675
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 93405.4054054054
+    "endTime": 94702.7027027027,
+    "startTime": 93405.4054054054,
+    "mustHitSection": false
    },
    {
-    "endTime": 96000,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       94702.6953,
@@ -4232,12 +4233,12 @@
       295.499975833333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 94702.7027027027
+    "endTime": 96000,
+    "startTime": 94702.7027027027,
+    "mustHitSection": false
    },
    {
-    "endTime": 97297.2972972973,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       95999.99,
@@ -4296,12 +4297,12 @@
       299.49996875
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 96000
+    "endTime": 97297.2972972973,
+    "startTime": 96000,
+    "mustHitSection": false
    },
    {
-    "endTime": 98594.5945945946,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       97297.29,
@@ -4360,12 +4361,12 @@
       303.4999925
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 97297.2972972973
+    "endTime": 98594.5945945946,
+    "startTime": 97297.2972972973,
+    "mustHitSection": false
    },
    {
-    "endTime": 99891.8918918919,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       98756.75,
@@ -4417,12 +4418,12 @@
       307.500000833333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 98594.5945945946
+    "endTime": 99891.8918918919,
+    "startTime": 98594.5945945946,
+    "mustHitSection": false
    },
    {
-    "endTime": 101189.189189189,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       99891.88,
@@ -4481,12 +4482,12 @@
       311.499987583333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 99891.8918918919
+    "endTime": 101189.189189189,
+    "startTime": 99891.8918918919,
+    "mustHitSection": false
    },
    {
-    "endTime": 102486.486486486,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       101189.18,
@@ -4545,12 +4546,12 @@
       315.499986666667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 101189.189189189
+    "endTime": 102486.486486486,
+    "startTime": 101189.189189189,
+    "mustHitSection": false
    },
    {
-    "endTime": 103783.783783784,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       102486.477,
@@ -4609,12 +4610,12 @@
       319.49998575
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 102486.486486486
+    "endTime": 103783.783783784,
+    "startTime": 102486.486486486,
+    "mustHitSection": false
    },
    {
-    "endTime": 105081.081081081,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       103783.773,
@@ -4673,12 +4674,12 @@
       323.499984833333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 103783.783783784
+    "endTime": 105081.081081081,
+    "startTime": 103783.783783784,
+    "mustHitSection": true
    },
    {
-    "endTime": 106378.378378378,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       105081.07,
@@ -4737,12 +4738,12 @@
       327.499983916667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 105081.081081081
+    "endTime": 106378.378378378,
+    "startTime": 105081.081081081,
+    "mustHitSection": true
    },
    {
-    "endTime": 107675.675675676,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       106378.375,
@@ -4801,12 +4802,12 @@
       331.499983
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 106378.378378378
+    "endTime": 107675.675675676,
+    "startTime": 106378.378378378,
+    "mustHitSection": true
    },
    {
-    "endTime": 108972.972972973,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       107675.672,
@@ -4865,12 +4866,12 @@
       335.499982083333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 107675.675675676
+    "endTime": 108972.972972973,
+    "startTime": 107675.675675676,
+    "mustHitSection": true
    },
    {
-    "endTime": 110270.27027027,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       109135.125,
@@ -4922,12 +4923,12 @@
       339.499975
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 108972.972972973
+    "endTime": 110270.27027027,
+    "startTime": 108972.972972973,
+    "mustHitSection": true
    },
    {
-    "endTime": 111567.567567568,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       110270.266,
@@ -4986,12 +4987,12 @@
       343.499983333333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 110270.27027027
+    "endTime": 111567.567567568,
+    "startTime": 110270.27027027,
+    "mustHitSection": true
    },
    {
-    "endTime": 112864.864864865,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       111567.563,
@@ -5050,12 +5051,12 @@
       347.49997625
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 111567.567567568
+    "endTime": 112864.864864865,
+    "startTime": 111567.567567568,
+    "mustHitSection": true
    },
    {
-    "endTime": 114162.162162162,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       112864.859,
@@ -5114,12 +5115,12 @@
       351.499975333333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 112864.864864865
+    "endTime": 114162.162162162,
+    "startTime": 112864.864864865,
+    "mustHitSection": true
    },
    {
-    "endTime": 115459.459459459,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       114162.156,
@@ -5199,12 +5200,12 @@
       355.499974416667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 114162.162162162
+    "endTime": 115459.459459459,
+    "startTime": 114162.162162162,
+    "mustHitSection": false
    },
    {
-    "endTime": 116756.756756757,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       115459.453,
@@ -5263,12 +5264,12 @@
       359.4999735
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 115459.459459459
+    "endTime": 116756.756756757,
+    "startTime": 115459.459459459,
+    "mustHitSection": false
    },
    {
-    "endTime": 118054.054054054,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       116756.75,
@@ -5327,12 +5328,12 @@
       363.499972583333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 116756.756756757
+    "endTime": 118054.054054054,
+    "startTime": 116756.756756757,
+    "mustHitSection": false
    },
    {
-    "endTime": 119351.351351351,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       118054.047,
@@ -5391,12 +5392,12 @@
       367.499971666667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 118054.054054054
+    "endTime": 119351.351351351,
+    "startTime": 118054.054054054,
+    "mustHitSection": false
    },
    {
-    "endTime": 120648.648648649,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       119351.344,
@@ -5455,12 +5456,12 @@
       371.49997075
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 119351.351351351
+    "endTime": 120648.648648649,
+    "startTime": 119351.351351351,
+    "mustHitSection": false
    },
    {
-    "endTime": 121945.945945946,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       120648.641,
@@ -5519,12 +5520,12 @@
       375.49996675
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 120648.648648649
+    "endTime": 121945.945945946,
+    "startTime": 120648.648648649,
+    "mustHitSection": false
    },
    {
-    "endTime": 123243.243243243,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       121945.938,
@@ -5583,12 +5584,12 @@
       379.499965833333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 121945.945945946
+    "endTime": 123243.243243243,
+    "startTime": 121945.945945946,
+    "mustHitSection": false
    },
    {
-    "endTime": 124540.540540541,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       123243.234,
@@ -5654,12 +5655,12 @@
       383.749980083333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": false,
-    "startTime": 123243.243243243
+    "endTime": 124540.540540541,
+    "startTime": 123243.243243243,
+    "mustHitSection": false
    },
    {
-    "endTime": 125837.837837838,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       124540.531,
@@ -5732,12 +5733,12 @@
       387.499964
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 124540.540540541
+    "endTime": 125837.837837838,
+    "startTime": 124540.540540541,
+    "mustHitSection": true
    },
    {
-    "endTime": 127135.135135135,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       125837.828,
@@ -5796,12 +5797,12 @@
       391.499963083333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 125837.837837838
+    "endTime": 127135.135135135,
+    "startTime": 125837.837837838,
+    "mustHitSection": true
    },
    {
-    "endTime": 128432.432432432,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       127135.125,
@@ -5860,12 +5861,12 @@
       395.499962166667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 127135.135135135
+    "endTime": 128432.432432432,
+    "startTime": 127135.135135135,
+    "mustHitSection": true
    },
    {
-    "endTime": 129729.72972973,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       128432.422,
@@ -5924,12 +5925,12 @@
       399.499985916667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 128432.432432432
+    "endTime": 129729.72972973,
+    "startTime": 128432.432432432,
+    "mustHitSection": true
    },
    {
-    "endTime": 131027.027027027,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       129729.719,
@@ -5988,12 +5989,12 @@
       403.499981916667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 129729.72972973
+    "endTime": 131027.027027027,
+    "startTime": 129729.72972973,
+    "mustHitSection": true
    },
    {
-    "endTime": 132324.324324324,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       131027.016,
@@ -6052,12 +6053,12 @@
       407.499981
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 131027.027027027
+    "endTime": 132324.324324324,
+    "startTime": 131027.027027027,
+    "mustHitSection": true
    },
    {
-    "endTime": 133621.621621622,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       132324.313,
@@ -6116,12 +6117,12 @@
       411.499980083333
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 132324.324324324
+    "endTime": 133621.621621622,
+    "startTime": 132324.324324324,
+    "mustHitSection": true
    },
    {
-    "endTime": 134918.918918919,
+    "lengthInSteps": 16,
     "sectionNotes": [
      [
       133621.609,
@@ -6187,59 +6188,85 @@
       415.749969666667
      ]
     ],
-    "lengthInSteps": 16,
-    "mustHitSection": true,
-    "startTime": 133621.621621622
+    "endTime": 134918.918918919,
+    "startTime": 133621.621621622,
+    "mustHitSection": true
    },
    {
-    "lengthInSteps": 16,
+    "endTime": 136216.216216216,
+    "playerAltAnim": false,
     "altAnim": false,
     "CPUAltAnim": false,
+    "mustHitSection": true,
+    "lengthInSteps": 16,
     "typeOfSection": 0,
     "sectionNotes": [],
     "bpm": 185,
     "startTime": 134918.918918919,
-    "changeBPM": false,
-    "endTime": 136216.216216216,
-    "playerAltAnim": false,
-    "mustHitSection": true
+    "changeBPM": false
    },
    {
-    "lengthInSteps": 16,
+    "endTime": 137513.513513514,
+    "playerAltAnim": false,
     "altAnim": false,
     "CPUAltAnim": false,
+    "mustHitSection": true,
+    "lengthInSteps": 16,
     "typeOfSection": 0,
     "sectionNotes": [],
     "bpm": 185,
     "startTime": 136216.216216216,
-    "changeBPM": false,
-    "endTime": 137513.513513514,
-    "playerAltAnim": false,
-    "mustHitSection": true
+    "changeBPM": false
    },
    {
-    "lengthInSteps": 16,
+    "endTime": 138810.810810811,
+    "playerAltAnim": false,
     "altAnim": false,
     "CPUAltAnim": false,
+    "mustHitSection": true,
+    "lengthInSteps": 16,
     "typeOfSection": 0,
     "sectionNotes": [],
     "bpm": 185,
     "startTime": 137513.513513514,
-    "changeBPM": false,
-    "endTime": 138810.810810811,
-    "playerAltAnim": false,
-    "mustHitSection": true
+    "changeBPM": false
    },
    {
-    "lengthInSteps": 16,
+    "endTime": 140108.108108108,
+    "playerAltAnim": false,
     "altAnim": false,
     "CPUAltAnim": false,
+    "mustHitSection": true,
+    "lengthInSteps": 16,
     "typeOfSection": 0,
     "sectionNotes": [],
     "bpm": 185,
     "startTime": 138810.810810811,
+    "changeBPM": false
+   },
+   {
+    "endTime": 141405.405405405,
+    "playerAltAnim": false,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "mustHitSection": true,
+    "lengthInSteps": 16,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 140108.108108108,
+    "changeBPM": false
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 142702.702702703,
     "changeBPM": false,
-    "endTime": 140108.108108108,
+    "endTime": 144000,
     "playerAltAnim": false,
     "mustHitSection": true
    },
@@ -6250,14 +6277,704 @@
     "typeOfSection": 0,
     "sectionNotes": [],
     "bpm": 185,
-    "startTime": 140108.108108108,
+    "startTime": 145297.297297297,
     "changeBPM": false,
-    "endTime": 141405.405405405,
+    "endTime": 146594.594594595,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 147891.891891892,
+    "changeBPM": false,
+    "endTime": 149189.189189189,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 150486.486486486,
+    "changeBPM": false,
+    "endTime": 151783.783783784,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 153081.081081081,
+    "changeBPM": false,
+    "endTime": 154378.378378378,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 155675.675675676,
+    "changeBPM": false,
+    "endTime": 156972.972972973,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 158270.27027027,
+    "changeBPM": false,
+    "endTime": 159567.567567568,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 160864.864864865,
+    "changeBPM": false,
+    "endTime": 162162.162162162,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 163459.459459459,
+    "changeBPM": false,
+    "endTime": 164756.756756757,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 166054.054054054,
+    "changeBPM": false,
+    "endTime": 167351.351351351,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 168648.648648649,
+    "changeBPM": false,
+    "endTime": 169945.945945946,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 171243.243243243,
+    "changeBPM": false,
+    "endTime": 172540.540540541,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 173837.837837838,
+    "changeBPM": false,
+    "endTime": 175135.135135135,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 176432.432432432,
+    "changeBPM": false,
+    "endTime": 177729.72972973,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 179027.027027027,
+    "changeBPM": false,
+    "endTime": 180324.324324324,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 181621.621621622,
+    "changeBPM": false,
+    "endTime": 182918.918918919,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 184216.216216216,
+    "changeBPM": false,
+    "endTime": 185513.513513514,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 186810.810810811,
+    "changeBPM": false,
+    "endTime": 188108.108108108,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 189405.405405405,
+    "changeBPM": false,
+    "endTime": 190702.702702703,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 192000,
+    "changeBPM": false,
+    "endTime": 193297.297297297,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 194594.594594595,
+    "changeBPM": false,
+    "endTime": 195891.891891892,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 197189.189189189,
+    "changeBPM": false,
+    "endTime": 198486.486486486,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 199783.783783784,
+    "changeBPM": false,
+    "endTime": 201081.081081081,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 202378.378378378,
+    "changeBPM": false,
+    "endTime": 203675.675675676,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 204972.972972973,
+    "changeBPM": false,
+    "endTime": 206270.27027027,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 207567.567567568,
+    "changeBPM": false,
+    "endTime": 208864.864864865,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 210162.162162162,
+    "changeBPM": false,
+    "endTime": 211459.459459459,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 212756.756756757,
+    "changeBPM": false,
+    "endTime": 214054.054054054,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 215351.351351351,
+    "changeBPM": false,
+    "endTime": 216648.648648649,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 217945.945945946,
+    "changeBPM": false,
+    "endTime": 219243.243243243,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 220540.540540541,
+    "changeBPM": false,
+    "endTime": 221837.837837838,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 223135.135135135,
+    "changeBPM": false,
+    "endTime": 224432.432432432,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 225729.72972973,
+    "changeBPM": false,
+    "endTime": 227027.027027027,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 228324.324324324,
+    "changeBPM": false,
+    "endTime": 229621.621621622,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 230918.918918919,
+    "changeBPM": false,
+    "endTime": 232216.216216216,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 233513.513513514,
+    "changeBPM": false,
+    "endTime": 234810.810810811,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 236108.108108108,
+    "changeBPM": false,
+    "endTime": 237405.405405405,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 238702.702702703,
+    "changeBPM": false,
+    "endTime": 240000,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 241297.297297297,
+    "changeBPM": false,
+    "endTime": 242594.594594595,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 243891.891891892,
+    "changeBPM": false,
+    "endTime": 245189.189189189,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 246486.486486486,
+    "changeBPM": false,
+    "endTime": 247783.783783784,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 249081.081081081,
+    "changeBPM": false,
+    "endTime": 250378.378378378,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 251675.675675676,
+    "changeBPM": false,
+    "endTime": 252972.972972973,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 254270.27027027,
+    "changeBPM": false,
+    "endTime": 255567.567567568,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 256864.864864865,
+    "changeBPM": false,
+    "endTime": 258162.162162162,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 259459.459459459,
+    "changeBPM": false,
+    "endTime": 260756.756756757,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 262054.054054054,
+    "changeBPM": false,
+    "endTime": 263351.351351351,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 264648.648648649,
+    "changeBPM": false,
+    "endTime": 265945.945945946,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 267243.243243243,
+    "changeBPM": false,
+    "endTime": 268540.540540541,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 269837.837837838,
+    "changeBPM": false,
+    "endTime": 271135.135135135,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 272432.432432432,
+    "changeBPM": false,
+    "endTime": 273729.72972973,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 275027.027027027,
+    "changeBPM": false,
+    "endTime": 276324.324324324,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 277621.621621622,
+    "changeBPM": false,
+    "endTime": 278918.918918919,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 280216.216216216,
+    "changeBPM": false,
+    "endTime": 281513.513513513,
+    "playerAltAnim": false,
+    "mustHitSection": true
+   },
+   {
+    "lengthInSteps": 16,
+    "altAnim": false,
+    "CPUAltAnim": false,
+    "typeOfSection": 0,
+    "sectionNotes": [],
+    "bpm": 185,
+    "startTime": 282810.810810811,
+    "changeBPM": false,
+    "endTime": 284108.108108108,
     "playerAltAnim": false,
     "mustHitSection": true
    }
   ],
-  "player2": "tankman",
+  "songFile": "guns",
+  "audioFile": "guns",
   "offset": 0,
   "song": "Guns",
   "validScore": true,
@@ -6268,13 +6985,14 @@
     "name": "Init BPM",
     "position": 0,
     "value": 185,
+    "value2": "1",
     "type": "BPM Change"
    }
   ],
-  "chartVersion": "KEC 1.5",
+  "chartVersion": "Kade Engine Community 1.9.3",
   "stage": "tank",
   "needsVoices": true,
-  "bpm": 185,
-  "noteStyle": "normal"
+  "noteStyle": "normal",
+  "bpm": 185
  }
 }

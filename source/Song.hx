@@ -25,11 +25,10 @@ class Event
 
 typedef SongData =
 {
-	var ?song:String;
-
 	/**
-	 * The readable name of the song, as displayed to the user.
-	 		* Can be any string.
+		* The readable name of the song, as displayed to the user.
+				* Can be any string. 
+				Actually Used Now Instead Of Song.	
 	 */
 	var songName:String;
 
@@ -37,6 +36,11 @@ typedef SongData =
 	 * The internal name of the song, as used in the file system.
 	 */
 	var songId:String;
+
+	/**
+	 * Old Display Name. Only Used For Formatting Now.
+	 */
+	var ?song:String;
 
 	var ?songFile:String;
 	var chartVersion:String;
@@ -269,10 +273,12 @@ class Song
 			songData.songId = songId;
 
 		if (songData.songName == null)
-			songData.songName = songId;
-
-		if (songData.song == null)
-			songData.song = songId;
+		{
+			if (songData.song != null)
+				songData.songName = songData.song;
+			else
+				songData.songName = songId;
+		}
 
 		if (songData.audioFile == null)
 			songData.audioFile = songId;

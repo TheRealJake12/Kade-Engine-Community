@@ -33,6 +33,7 @@ import CoolUtil.CoolText;
 #if FEATURE_DISCORD
 import Discord;
 #end
+
 using StringTools;
 
 @:access(flixel.system.FlxSound._sound)
@@ -105,11 +106,12 @@ class ChartingState extends MusicBeatState
 
 	var typingShit:FlxInputText;
 	var typingShit2:FlxInputText;
+	var typingShit3:FlxInputText;
 	/*
 	 * WILL BE THE CURRENT / LAST PLACED NOTE
 	**/
 	var curSelectedNote:Array<Dynamic>;
-	
+
 	var gridBlackLine:FlxSprite;
 	var vocals:FlxSound;
 	var vocalsPlayer:FlxSound;
@@ -200,7 +202,6 @@ class ChartingState extends MusicBeatState
 			_song = {
 				chartVersion: latestChartVersion,
 				songId: 'test',
-				song: 'test',
 				songName: 'Test',
 				audioFile: 'test',
 				splitVoiceTracks: false,
@@ -240,7 +241,7 @@ class ChartingState extends MusicBeatState
 
 		curRenderedNotes = new FlxTypedGroup<Note>();
 		curRenderedSustains = new FlxTypedGroup<FlxSprite>();
-		
+
 		addSection();
 
 		activeSong = _song;
@@ -1125,6 +1126,12 @@ class ChartingState extends MusicBeatState
 		var audioLabel:FlxText = new FlxText(85, 200, 0, "Audio Track", 12);
 		audioLabel.font = Paths.font('vcr.ttf');
 
+		var UI_displayName = new FlxUIInputText(10, 225, 70, _song.songName, 8);
+		typingShit3 = UI_displayName;
+
+		var displayLabel:FlxText = new FlxText(85, 225, 0, "Display Name", 12);
+		displayLabel.font = Paths.font('vcr.ttf');
+
 		var check_voices = new FlxUICheckBox(10, 25, null, null, "Has voice track", 100);
 		check_voices.checked = _song.needsVoices;
 		// _song.needsVoices = check_voices.checked;
@@ -1275,11 +1282,13 @@ class ChartingState extends MusicBeatState
 
 		blockTypes.push(UI_songTitle);
 		blockTypes.push(UI_audioFile);
+		blockTypes.push(UI_displayName);
 		// sfjl
 
 		var tab_group_song = new FlxUI(null, UI_box);
 		tab_group_song.name = "Song";
 		tab_group_song.add(UI_songTitle);
+		tab_group_song.add(UI_displayName);
 		tab_group_song.add(UI_audioFile);
 		tab_group_song.add(restart);
 		tab_group_song.add(check_voices);
@@ -1312,6 +1321,7 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(stepperShiftNoteDialms);
 		tab_group_song.add(shiftNoteButton);
 		tab_group_song.add(audioLabel);
+		tab_group_song.add(displayLabel);
 		// tab_group_song.add(hitsounds);
 
 		UI_box.addGroup(tab_group_song);
@@ -2736,8 +2746,7 @@ class ChartingState extends MusicBeatState
 			Conductor.songPosition = inst.time;
 
 			_song.songId = typingShit.text;
-			_song.song = typingShit.text;
-			_song.songName = typingShit.text;
+			_song.songName = typingShit3.text;
 			_song.audioFile = typingShit2.text;
 
 			var timingSeg = TimingStruct.getTimingAtTimestamp(Conductor.songPosition);

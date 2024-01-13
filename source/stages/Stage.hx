@@ -36,7 +36,7 @@ class Stage extends MusicBeatState
 	public var tankGround:FlxSprite;
 	public var tankmanRun:FlxTypedGroup<TankmenBG>;
 	public var foregroundSprites:FlxTypedGroup<TankBGSprite>;
-	public var doesExist = true;
+	public var doesExist = false;
 
 	public static var instance:Stage = null;
 
@@ -669,7 +669,6 @@ class Stage extends MusicBeatState
 				camZoom = 0.8;
 				doesExist = true;
 			default:
-				doesExist = false;
 				camZoom = 1.05;
 		}
 
@@ -906,9 +905,14 @@ class Stage extends MusicBeatState
 		for (sub in rawFiles)
 		{
 			for (ext in extensions)
-				if (sub.contains(ext))
-					files.push(sub);
+			{
+				files.push(sub);
+				break; // only one
+			}
 		}
+
+		// I'll come back and optimize this later.
+
 		if (FlxG.save.data.gen)
 			Debug.logTrace(files);
 
@@ -926,6 +930,7 @@ class Stage extends MusicBeatState
 				if (!scriptData.exists(scriptName))
 				{
 					scriptData.set(scriptName, hx);
+					doesExist = true;
 				}
 			}
 		}
@@ -939,7 +944,6 @@ class Stage extends MusicBeatState
 				scripts.getScriptByTag(scriptName).error("Duplicate Script Error!", '$scriptName: Duplicate Script');
 			}
 		}
-		doesExist = true; // fix not having a json but having the stage.
 	}
 
 	function onAddScript(script:Script)
@@ -961,6 +965,7 @@ class Stage extends MusicBeatState
 		script.set("toAdd", toAdd);
 		script.set("layInFront", layInFront);
 		script.set("animatedBacks", animatedBacks);
+		script.set("doesExist", doesExist);
 
 		// FUNCTIONS
 

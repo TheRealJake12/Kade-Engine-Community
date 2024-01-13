@@ -246,9 +246,6 @@ class PlayState extends MusicBeatState
 	// If Is In PlayState.
 	public static var inDaPlay:Bool = false;
 
-	// Text At The Bottom Of The Screen That Says What Song And Difficulty.
-	var kadeEngineWatermark:FlxText;
-
 	// If You Can Skip To Where Notes Start In A Song (Freeplay Only.)
 	var needSkip:Bool = false;
 	var skipActive:Bool = false;
@@ -448,7 +445,7 @@ class PlayState extends MusicBeatState
 		PlayerSettings.player1.controls.loadKeyBinds();
 
 		// Change The Application Title To The Engine Version, Song Name, And Difficulty.
-		Application.current.window.title = '${MainMenuState.kecVer}: ' + SONG.song + ' ' + CoolUtil.difficultyArray[storyDifficulty];
+		Application.current.window.title = '${MainMenuState.kecVer}: ${SONG.songName} - [${CoolUtil.difficultyArray[storyDifficulty]}]';
 
 		// grab variables here too or else its gonna break stuff later on
 		GameplayCustomizeState.freeplayBf = SONG.player1;
@@ -469,9 +466,9 @@ class PlayState extends MusicBeatState
 			FlxG.sound.music.stop();
 
 		inDaPlay = true;
-		if (curSong != SONG.song)
+		if (curSong != SONG.songId)
 		{
-			curSong = SONG.song;
+			curSong = SONG.songId;
 			if (!FlxG.save.data.gpuRender)
 				Main.dumpCache();
 		}
@@ -584,7 +581,7 @@ class PlayState extends MusicBeatState
 		// Updating Discord Rich Presence.
 		Discord.changePresence(detailsText
 			+ " "
-			+ SONG.song
+			+ SONG.songName
 			+ " ("
 			+ storyDifficultyText
 			+ ") "
@@ -700,12 +697,9 @@ class PlayState extends MusicBeatState
 
 		Stage = new Stage(stageCheck);
 
-		Stage.loadStageData(stageCheck);
-
 		Stage.initStageProperties();
 
-		if (!Stage.doesExist)
-			Stage.loadStageData('stage');
+		Stage.loadStageData(stageCheck);
 
 		// pissed me off that having non existent stages just load black instead of default stag
 
@@ -766,6 +760,12 @@ class PlayState extends MusicBeatState
 				#end
 				dad = new Character(100, 100, 'dad');
 			}
+		}
+
+		if (!Stage.doesExist)
+		{
+			Debug.logTrace('Stage Does Not Exist For ${Stage.curStage}. Loading Default Stage.');
+			Stage.loadStageData('stage');
 		}
 
 		Stage.initCamPos();
@@ -1005,7 +1005,7 @@ class PlayState extends MusicBeatState
 		notesplashSprite = CustomNoteHelpers.Splash.generateNotesplashSprite(FlxG.save.data.notesplash, '');
 
 		var tweenBoolshit = !isStoryMode || storyPlaylist.length >= 3 || SONG.songId == 'tutorial';
-		
+
 		generateStaticArrows(0, tweenBoolshit);
 		generateStaticArrows(1, tweenBoolshit);
 
@@ -1323,20 +1323,6 @@ class PlayState extends MusicBeatState
 			precacheThing("hitsounds/" + HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase(), 'sound', 'shared');
 
 		cachePopUpScore();
-
-		kadeEngineWatermark = new FlxText(4, healthBarBG.y
-			+ 50, 0,
-			StringTools.replace(SONG.song, "-", " ")
-			+ (FlxMath.roundDecimal(songMultiplier, 2) != 1.00 ? " (" + FlxMath.roundDecimal(songMultiplier, 2) + "x)" : "")
-			+ " - "
-			+ CoolUtil.difficultyFromInt(storyDifficulty),
-			16);
-		kadeEngineWatermark.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		kadeEngineWatermark.scrollFactor.set();
-		uiGroup.add(kadeEngineWatermark);
-
-		if (PlayStateChangeables.useDownscroll)
-			kadeEngineWatermark.y = FlxG.height * 0.9 + 45;
 
 		if (FlxG.save.data.popup)
 		{
@@ -1768,6 +1754,7 @@ class PlayState extends MusicBeatState
 		var senpaiEvil:FlxSprite = new FlxSprite();
 		senpaiEvil.frames = Paths.getSparrowAtlas('weeb/senpaiCrazy');
 		senpaiEvil.animation.addByPrefix('idle', 'Senpai Pre Explosion', 24, false);
+		senpaiEvil.antialiasing = false;
 		senpaiEvil.setGraphicSize(Std.int(senpaiEvil.width * 6));
 		senpaiEvil.scrollFactor.set();
 		senpaiEvil.updateHitbox();
@@ -2180,6 +2167,8 @@ class PlayState extends MusicBeatState
 					closestNotes.push(daNote);
 			});
 
+			closestNotes.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
+
 			closestNotes = closestNotes.filter(function(i)
 			{
 				return i.noteData == data;
@@ -2459,7 +2448,7 @@ class PlayState extends MusicBeatState
 		// Updating Discord Rich Presence (with Time Left)
 		Discord.changePresence(detailsText
 			+ " "
-			+ SONG.song
+			+ SONG.songName
 			+ " ("
 			+ storyDifficultyText
 			+ ") "
@@ -2496,11 +2485,11 @@ class PlayState extends MusicBeatState
 
 		songPosBG.width = songPosBar.width;
 
-		songName = new FlxText(songPosBG.x + (songPosBG.width / 2) - (SONG.songName.length * 5), songPosBG.y - 15, 0, SONG.song, 16);
+		songName = new FlxText(songPosBG.x + (songPosBG.width / 2) - (SONG.songName.length * 5), songPosBG.y - 15, 0, SONG.songName, 16);
 		songName.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		songName.scrollFactor.set();
 
-		songName.text = SONG.song + ' (' + FlxStringUtil.formatTime(songLength, false) + ')';
+		songName.text = SONG.songName + ' (' + FlxStringUtil.formatTime(songLength, false) + ')';
 		songName.y = songPosBG.y + (songPosBG.height / 3);
 		songName.alpha = 0;
 		songName.visible = FlxG.save.data.songPosition;
@@ -2899,7 +2888,7 @@ class PlayState extends MusicBeatState
 
 			#if FEATURE_DISCORD
 			Discord.changePresence("PAUSED on "
-				+ SONG.song
+				+ SONG.songName
 				+ " ("
 				+ storyDifficultyText
 				+ ") "
@@ -2950,7 +2939,7 @@ class PlayState extends MusicBeatState
 			{
 				Discord.changePresence(detailsText
 					+ " "
-					+ SONG.song
+					+ SONG.songName
 					+ " ("
 					+ storyDifficultyText
 					+ ") "
@@ -3052,7 +3041,7 @@ class PlayState extends MusicBeatState
 		#if FEATURE_DISCORD
 		Discord.changePresence(detailsText
 			+ " "
-			+ SONG.song
+			+ SONG.songName
 			+ " ("
 			+ storyDifficultyText
 			+ ") "
@@ -3179,7 +3168,7 @@ class PlayState extends MusicBeatState
 			scripts.executeAllFunc("update", [elapsed]);
 		#end
 
-		if ((cutscene != null && cutscene.isPlaying && inCutscene)&& FlxG.keys.justPressed.ANY)
+		if ((cutscene != null && cutscene.isPlaying && inCutscene) && FlxG.keys.justPressed.ANY)
 			cutscene.onEndReached.dispatch();
 
 		super.update(elapsed);
@@ -3199,7 +3188,6 @@ class PlayState extends MusicBeatState
 					{
 						createTween(judgementCounter, {alpha: 0}, 1, {ease: FlxEase.circIn});
 						createTween(scoreTxt, {alpha: 0}, 1, {ease: FlxEase.circIn});
-						createTween(kadeEngineWatermark, {alpha: 0}, 1, {ease: FlxEase.circIn});
 						createTween(songName, {alpha: 0}, 1, {ease: FlxEase.circIn});
 						createTween(songPosBar, {alpha: 0}, 1, {ease: FlxEase.circIn});
 						createTween(bar, {alpha: 0}, 1, {ease: FlxEase.circIn});
@@ -3218,7 +3206,6 @@ class PlayState extends MusicBeatState
 					{
 						createTween(judgementCounter, {alpha: 0}, 1, {ease: FlxEase.circIn});
 						createTween(scoreTxt, {alpha: 0}, 1, {ease: FlxEase.circIn});
-						createTween(kadeEngineWatermark, {alpha: 0}, 1, {ease: FlxEase.circIn});
 						createTween(songName, {alpha: 0}, 1, {ease: FlxEase.circIn});
 						createTween(songPosBar, {alpha: 0}, 1, {ease: FlxEase.circIn});
 						createTween(bar, {alpha: 0}, 1, {ease: FlxEase.circIn});
@@ -3586,7 +3573,7 @@ class PlayState extends MusicBeatState
 
 				if (secondsTotal < 0)
 					secondsTotal = 0;
-				songName.text = SONG.song + ' (' + FlxStringUtil.formatTime((songLength - secondsTotal), false) + ')';
+				songName.text = SONG.songName + ' (' + FlxStringUtil.formatTime((songLength - secondsTotal), false) + ')';
 			}
 		}
 
@@ -3692,321 +3679,6 @@ class PlayState extends MusicBeatState
 					}
 				}
 			}
-		}
-
-		if (generatedMusic && !(inCutscene || inCinematic))
-		{
-			var holdArray:Array<Bool> = [controls.LEFT, controls.DOWN, controls.UP, controls.RIGHT];
-			var leSpeed = scrollSpeed == 1 ? SONG.speed : scrollSpeed;
-			var stepHeight = (0.45 * fakeNoteStepCrochet * FlxMath.roundDecimal((SONG.speed * Math.pow(PlayState.songMultiplier, 2)), 2));
-
-			// hell
-			// note scroll code (mostly)
-
-			notes.forEachAlive(function(daNote:Note)
-			{
-				if (daNote.noteData == -1)
-				{
-					Debug.logWarn('Weird Note detected! Note Data = "${daNote.rawNoteData}" is not valid, deleting...');
-					destroyNote(daNote);
-				}
-
-				if (!daNote.active)
-				{
-					destroyNote(daNote);
-					return;
-				}
-
-				var strum:FlxTypedGroup<StaticArrow> = playerStrums;
-				if (!daNote.mustPress)
-					strum = cpuStrums;
-
-				#if FEATURE_HSCRIPT
-				if (!ScriptUtil.hasPause(scripts.executeAllFunc("notesUpdate", [daNote])))
-				{
-					scripts.executeAllFunc("notesUpdate", [daNote]);
-				};
-				#end
-
-				var strumY = strum.members[daNote.noteData].y;
-
-				var strumX = strum.members[daNote.noteData].x;
-
-				var strumAngle = strum.members[daNote.noteData].modAngle;
-
-				var strumScrollType = strum.members[daNote.noteData].downScroll;
-
-				var strumDirection = strum.members[daNote.noteData].direction;
-
-				var angleDir = strumDirection * Math.PI / 180;
-
-				var origin = strumY + Note.swagWidth / 2;
-
-				if (daNote.isSustainNote)
-					daNote.x = (strumX + Math.cos(angleDir) * daNote.distance) + (Note.swagWidth / 3);
-				else
-					daNote.x = strumX + Math.cos(angleDir) * daNote.distance;
-
-				if (SONG.noteStyle == 'pixel' && daNote.isSustainNote)
-					daNote.x -= 5;
-
-				daNote.y = strumY + Math.sin(angleDir) * daNote.distance;
-				if (!daNote.overrideDistance)
-				{
-					if (PlayStateChangeables.useDownscroll)
-					{
-						daNote.distance = (0.45 * ((Conductor.songPosition - daNote.strumTime)) * (FlxMath.roundDecimal(leSpeed, 2)) * daNote.speedMultiplier)
-							- daNote.noteYOff;
-					}
-					else
-						daNote.distance = (-0.45 * ((Conductor.songPosition - daNote.strumTime)) * (FlxMath.roundDecimal(leSpeed, 2)) * daNote.speedMultiplier)
-							+ daNote.noteYOff;
-				}
-
-				var swagRect:FlxRect = daNote.clipRect;
-				if (swagRect == null)
-					swagRect = new FlxRect(0, 0, daNote.frameWidth, daNote.frameHeight);
-
-				if (daNote.isSustainNote && daNote.prevNote.wasGoodHit)
-				{
-					if (strumScrollType)
-					{
-						// daNote.y = (strumY + Math.sin(angleDir) * daNote.distance) - (daNote.height - Note.swagWidth);
-
-						if ((PlayStateChangeables.botPlay
-							|| !daNote.mustPress
-							|| daNote.wasGoodHit
-							|| holdArray[Math.floor(Math.abs(daNote.noteData))]))
-						{
-							if ((daNote.causesMisses) && daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= origin)
-							{
-								// Clip to strumline
-								swagRect.width = daNote.frameWidth;
-								swagRect.height = (origin - daNote.y) / daNote.scale.y;
-								swagRect.y = daNote.frameHeight - swagRect.height;
-								daNote.clipRect = swagRect;
-							}
-						}
-					}
-					else
-					{
-						if ((PlayStateChangeables.botPlay
-							|| !daNote.mustPress
-							|| daNote.wasGoodHit
-							|| holdArray[Math.floor(Math.abs(daNote.noteData))]))
-						{
-							// Clip to strumline
-							if ((daNote.causesMisses) && daNote.y + daNote.offset.y * daNote.scale.y <= origin)
-							{
-								swagRect.y = (origin - daNote.y) / daNote.scale.y;
-								swagRect.width = daNote.width / daNote.scale.x;
-								swagRect.height = (daNote.height / daNote.scale.y) - swagRect.y;
-								daNote.clipRect = swagRect;
-							}
-						}
-					}
-				}
-
-				if (!daNote.modifiedByLua)
-				{
-					daNote.visible = strum.members[Math.floor(Math.abs(daNote.noteData))].visible;
-					if (!daNote.isSustainNote)
-					{
-						daNote.alpha = strum.members[Math.floor(Math.abs(daNote.noteData))].alpha;
-						daNote.modAngle = strum.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
-					}
-					if (daNote.isSustainNote && daNote.sustainActive)
-					{
-						daNote.modAlpha = strum.members[Math.floor(Math.abs(daNote.noteData))].alpha;
-					}
-				}
-
-				if (!daNote.mustPress)
-				{
-					if (Conductor.songPosition >= daNote.strumTime && daNote.botplayHit)
-						opponentNoteHit(daNote);
-				}
-				else
-				{
-					if (PlayStateChangeables.botPlay)
-						handleBotplay(daNote);
-					else if (!PlayStateChangeables.botPlay && daNote.isSustainNote && daNote.canBeHit && daNote.mustPress && keys[daNote.noteData]
-						&& daNote.sustainActive)
-						handleHolds(daNote);
-				}
-
-				// there was some code idk what it did but it fucked with color quantization shit. ik its a feature not many like but I like it.
-
-				if (!daNote.mustPress && PlayStateChangeables.middleScroll && !executeModchart)
-					daNote.visible = false;
-
-				if (Conductor.songPosition > Ratings.timingWindows[0] + daNote.strumTime)
-				{
-					if (daNote.isSustainNote && daNote.wasGoodHit && Conductor.songPosition >= daNote.strumTime)
-					{
-						destroyNote(daNote);
-					}
-
-					if (daNote != null)
-					{
-						if (daNote.mustPress && daNote.tooLate && !daNote.canBeHit && daNote.mustPress)
-						{
-							if (daNote.isSustainNote && daNote.wasGoodHit && daNote.causesMisses)
-							{
-								destroyNote(daNote);
-							}
-							else
-							{
-								if (loadRep && daNote.isSustainNote)
-								{
-									// im tired and lazy this sucks I know i'm dumb
-									if (findByTime(daNote.strumTime) != null)
-										totalNotesHit += 1;
-									else
-									{
-										if (daNote.causesMisses && !daNote.sustainActive && !daNote.isSustainEnd)
-										{
-											if (!SONG.splitVoiceTracks)
-												vocals.volume = 0;
-											else
-												vocalsPlayer.volume = 0;
-										}
-										if (theFunne && !daNote.isSustainNote && daNote.causesMisses)
-										{
-											noteMiss(daNote.noteData, daNote);
-										}
-										if (daNote.isParent && daNote.causesMisses)
-										{
-											if (daNote.noteShit == 'mustpress')
-											{
-												if (!PlayStateChangeables.opponentMode)
-													health -= (0.8 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
-												else
-													health += (0.8 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
-											}
-											else
-											{
-												if (!PlayStateChangeables.opponentMode)
-													health -= (0.08 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
-												else
-													health += (0.08 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
-											}
-
-											// wanted to be a little more clean but fuck I hate lag
-
-											for (i in daNote.children)
-											{
-												i.sustainActive = false;
-											}
-										}
-										else
-										{
-											if (!daNote.wasGoodHit && daNote.isSustainNote && daNote.sustainActive && !daNote.isSustainEnd
-												&& daNote.causesMisses)
-											{
-												// health -= 0.05; // give a health punishment for failing a LN
-												trace("hold fell over at " + daNote.spotInLine);
-												for (i in daNote.parent.children)
-												{
-													i.sustainActive = false;
-												}
-												if (daNote.parent.wasGoodHit)
-												{
-													totalNotesHit -= 1;
-												}
-												updateAccuracy();
-											}
-											else if (!daNote.wasGoodHit && !daNote.isSustainNote && daNote.causesMisses)
-											{
-												if (daNote.noteShit == 'mustpress')
-												{
-													if (!PlayStateChangeables.opponentMode)
-														health -= (0.8 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
-													else
-														health += (0.8 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
-												}
-												else
-												{
-													if (!PlayStateChangeables.opponentMode)
-														health -= (0.08 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
-													else
-														health += (0.08 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
-												}
-											}
-										}
-									}
-								}
-								else
-								{
-									if (daNote.causesMisses && !daNote.sustainActive && !daNote.isSustainEnd)
-									{
-										if (!SONG.splitVoiceTracks)
-											vocals.volume = 0;
-										else
-											vocalsPlayer.volume = 0;
-									}
-									if (theFunne && !daNote.isSustainNote && daNote.causesMisses)
-									{
-										if (PlayStateChangeables.botPlay)
-										{
-											daNote.rating = "sick";
-											goodNoteHit(daNote);
-										}
-										else
-											noteMiss(daNote.noteData, daNote);
-									}
-
-									if (daNote.isParent && daNote.visible && daNote.causesMisses)
-									{
-										health -= 0.15; // give a health punishment for failing a LN
-										for (i in daNote.children)
-										{
-											i.sustainActive = false;
-										}
-									}
-									else
-									{
-										if (!daNote.wasGoodHit && daNote.isSustainNote && daNote.sustainActive && !daNote.isSustainEnd && daNote.causesMisses)
-										{
-											// health -= 0.05; // give a health punishment for failing a LN
-											noteMiss(daNote.noteData, daNote);
-											for (i in daNote.parent.children)
-											{
-												i.sustainActive = false;
-											}
-											if (daNote.parent.wasGoodHit)
-											{
-												totalNotesHit -= 1;
-											}
-											updateAccuracy();
-										}
-										else if (!daNote.wasGoodHit && !daNote.isSustainNote && daNote.causesMisses)
-										{
-											// misses++;
-
-											if (daNote.noteShit == 'mustpress')
-											{
-												if (!PlayStateChangeables.opponentMode)
-													health -= (0.8 * PlayStateChangeables.healthLoss);
-												else
-													health += (0.8 * PlayStateChangeables.healthLoss);
-											}
-											else
-											{
-												if (!PlayStateChangeables.opponentMode)
-													health -= (0.08 * PlayStateChangeables.healthLoss);
-												else
-													health += (0.08 * PlayStateChangeables.healthLoss);
-											}
-										}
-									}
-								}
-							}
-							destroyNote(daNote);
-						}
-					}
-				}
-			});
 		}
 
 		if (FlxG.save.data.smoothHealthbar)
@@ -4143,7 +3815,7 @@ class PlayState extends MusicBeatState
 				#if FEATURE_DISCORD
 				// Game Over doesn't get his own variable because it's only used here
 				Discord.changePresence("GAME OVER -- "
-					+ SONG.song
+					+ SONG.songName
 					+ " ("
 					+ storyDifficultyText
 					+ ") "
@@ -4195,7 +3867,7 @@ class PlayState extends MusicBeatState
 
 				#if FEATURE_DISCORD
 				Discord.changePresence("GAME OVER -- "
-					+ SONG.song
+					+ SONG.songName
 					+ " ("
 					+ storyDifficultyText
 					+ ") "
@@ -4210,10 +3882,244 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		charactersDance();
-
 		if (!inCutscene && songStarted)
 			keyShit();
+
+		if (generatedMusic && !(inCutscene || inCinematic))
+		{
+			var holdArray:Array<Bool> = [controls.LEFT, controls.DOWN, controls.UP, controls.RIGHT];
+			var leSpeed = scrollSpeed == 1 ? SONG.speed : scrollSpeed;
+			var stepHeight = (0.45 * fakeNoteStepCrochet * FlxMath.roundDecimal((SONG.speed * Math.pow(PlayState.songMultiplier, 2)), 2));
+
+			// hell
+			// note scroll code (mostly)
+
+			notes.forEachAlive(function(daNote:Note)
+			{
+				if (daNote.noteData == -1)
+				{
+					Debug.logWarn('Weird Note detected! Note Data = "${daNote.rawNoteData}" is not valid, deleting...');
+					destroyNote(daNote);
+				}
+
+				if (!daNote.active)
+				{
+					destroyNote(daNote);
+					return;
+				}
+
+				var strum:FlxTypedGroup<StaticArrow> = playerStrums;
+				if (!daNote.mustPress)
+					strum = cpuStrums;
+
+				#if FEATURE_HSCRIPT
+				if (!ScriptUtil.hasPause(scripts.executeAllFunc("notesUpdate", [daNote])))
+				{
+					scripts.executeAllFunc("notesUpdate", [daNote]);
+				};
+				#end
+
+				var strumY = strum.members[daNote.noteData].y;
+
+				var strumX = strum.members[daNote.noteData].x;
+
+				var strumAngle = strum.members[daNote.noteData].modAngle;
+
+				var strumScrollType = strum.members[daNote.noteData].downScroll;
+
+				var strumDirection = strum.members[daNote.noteData].direction;
+
+				var angleDir = strumDirection * Math.PI / 180;
+
+				var origin = strumY + Note.swagWidth / 2;
+
+				if (daNote.isSustainNote)
+					daNote.x = (strumX + Math.cos(angleDir) * daNote.distance) + (Note.swagWidth / 3);
+				else
+					daNote.x = strumX + Math.cos(angleDir) * daNote.distance;
+
+				if (SONG.noteStyle == 'pixel' && daNote.isSustainNote)
+					daNote.x -= 5;
+
+				daNote.y = strumY + Math.sin(angleDir) * daNote.distance;
+				if (!daNote.overrideDistance)
+				{
+					if (PlayStateChangeables.useDownscroll)
+					{
+						daNote.distance = (0.45 * ((Conductor.songPosition - daNote.strumTime)) * (FlxMath.roundDecimal(leSpeed, 2)) * daNote.speedMultiplier)
+							- daNote.noteYOff;
+					}
+					else
+						daNote.distance = (-0.45 * ((Conductor.songPosition - daNote.strumTime)) * (FlxMath.roundDecimal(leSpeed, 2)) * daNote.speedMultiplier)
+							+ daNote.noteYOff;
+				}
+
+				var swagRect:FlxRect = daNote.clipRect;
+				if (swagRect == null)
+					swagRect = new FlxRect(0, 0, daNote.frameWidth, daNote.frameHeight);
+
+				if (daNote.isSustainNote)
+				{
+					if (strumScrollType)
+					{
+						// daNote.y = (strumY + Math.sin(angleDir) * daNote.distance) - (daNote.height - Note.swagWidth);
+
+						if ((PlayStateChangeables.botPlay
+							|| !daNote.mustPress
+							|| daNote.wasGoodHit
+							|| holdArray[Math.floor(Math.abs(daNote.noteData))]))
+						{
+							if ((daNote.causesMisses) && daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= origin)
+							{
+								// Clip to strumline
+								swagRect.width = daNote.frameWidth;
+								swagRect.height = (origin - daNote.y) / daNote.scale.y;
+								swagRect.y = daNote.frameHeight - swagRect.height;
+								daNote.clipRect = swagRect;
+							}
+						}
+					}
+					else
+					{
+						if ((PlayStateChangeables.botPlay
+							|| !daNote.mustPress
+							|| daNote.wasGoodHit
+							|| holdArray[Math.floor(Math.abs(daNote.noteData))]))
+						{
+							// Clip to strumline
+							if ((daNote.causesMisses) && daNote.y + daNote.offset.y * daNote.scale.y <= origin)
+							{
+								swagRect.y = (origin - daNote.y) / daNote.scale.y;
+								swagRect.width = daNote.width / daNote.scale.x;
+								swagRect.height = (daNote.height / daNote.scale.y) - swagRect.y;
+								daNote.clipRect = swagRect;
+							}
+						}
+					}
+				}
+
+				if (!daNote.modifiedByLua)
+				{
+					daNote.visible = strum.members[Math.floor(Math.abs(daNote.noteData))].visible;
+					if (!daNote.isSustainNote)
+					{
+						daNote.alpha = strum.members[Math.floor(Math.abs(daNote.noteData))].alpha;
+						daNote.modAngle = strum.members[Math.floor(Math.abs(daNote.noteData))].modAngle;
+					}
+					if (daNote.isSustainNote && daNote.sustainActive)
+					{
+						daNote.modAlpha = strum.members[Math.floor(Math.abs(daNote.noteData))].alpha;
+					}
+				}
+
+				if (!daNote.mustPress)
+				{
+					if (Conductor.songPosition >= daNote.strumTime && daNote.botplayHit)
+						opponentNoteHit(daNote);
+				}
+				else
+				{
+					if (PlayStateChangeables.botPlay)
+						handleBotplay(daNote);
+					else if (!PlayStateChangeables.botPlay && daNote.isSustainNote && daNote.canBeHit && daNote.mustPress && keys[daNote.noteData]
+						&& daNote.sustainActive)
+						handleHolds(daNote);
+				}
+
+				// there was some code idk what it did but it fucked with color quantization shit. ik its a feature not many like but I like it.
+
+				if (!daNote.mustPress && PlayStateChangeables.middleScroll && !executeModchart)
+					daNote.visible = false;
+
+				if (Conductor.songPosition > Ratings.timingWindows[0] + daNote.strumTime)
+				{
+					if (daNote.isSustainNote && daNote.wasGoodHit && Conductor.songPosition >= daNote.strumTime)
+					{
+						destroyNote(daNote);
+					}
+
+					if (daNote != null)
+					{
+						if (daNote.mustPress && daNote.tooLate && !daNote.canBeHit && daNote.mustPress)
+						{
+							if (daNote.isSustainNote && daNote.wasGoodHit && daNote.causesMisses)
+							{
+								destroyNote(daNote);
+							}
+							else
+							{
+								if (daNote.causesMisses && !daNote.sustainActive && !daNote.isSustainEnd)
+								{
+									if (!SONG.splitVoiceTracks)
+										vocals.volume = 0;
+									else
+										vocalsPlayer.volume = 0;
+								}
+								if (theFunne && !daNote.isSustainNote && daNote.causesMisses)
+								{
+									if (PlayStateChangeables.botPlay)
+									{
+										daNote.rating = "sick";
+										goodNoteHit(daNote);
+									}
+									else
+										noteMiss(daNote.noteData, daNote);
+								}
+
+								if (daNote.isParent && daNote.visible && daNote.causesMisses)
+								{
+									health -= 0.15; // give a health punishment for failing a LN
+									for (i in daNote.children)
+									{
+										i.sustainActive = false;
+									}
+								}
+								else
+								{
+									if (!daNote.wasGoodHit && daNote.isSustainNote && daNote.sustainActive && !daNote.isSustainEnd && daNote.causesMisses)
+									{
+										// health -= 0.05; // give a health punishment for failing a LN
+										noteMiss(daNote.noteData, daNote);
+										for (i in daNote.parent.children)
+										{
+											i.sustainActive = false;
+										}
+										if (daNote.parent.wasGoodHit)
+										{
+											totalNotesHit -= 1;
+										}
+										updateAccuracy();
+									}
+									else if (!daNote.wasGoodHit && !daNote.isSustainNote && daNote.causesMisses)
+									{
+										// misses++;
+
+										if (daNote.noteShit == 'mustpress')
+										{
+											if (!PlayStateChangeables.opponentMode)
+												health -= (0.8 * PlayStateChangeables.healthLoss);
+											else
+												health += (0.8 * PlayStateChangeables.healthLoss);
+										}
+										else
+										{
+											if (!PlayStateChangeables.opponentMode)
+												health -= (0.08 * PlayStateChangeables.healthLoss);
+											else
+												health += (0.08 * PlayStateChangeables.healthLoss);
+										}
+									}
+								}
+							}
+							destroyNote(daNote);
+						}
+					}
+				}
+			});
+		}
+
+		charactersDance();
+
 		if (FlxG.keys.justPressed.ONE)
 			endSong();
 		for (i in shaderUpdates)
@@ -5185,7 +5091,7 @@ class PlayState extends MusicBeatState
 		// Updating Discord Rich Presence (with Time Left)
 		Discord.changePresence(detailsText
 			+ " "
-			+ SONG.song
+			+ SONG.songName
 			+ " ("
 			+ storyDifficultyText
 			+ ") "
@@ -6083,8 +5989,6 @@ class PlayState extends MusicBeatState
 
 		scoreTxt.revive();
 		uiGroup.add(scoreTxt);
-		kadeEngineWatermark.revive();
-		uiGroup.add(kadeEngineWatermark);
 		currentTimingShown.revive();
 		uiGroup.add(currentTimingShown);
 		currentTimingShown.alpha = 0;
@@ -6528,7 +6432,6 @@ class PlayState extends MusicBeatState
 		if (hidden)
 		{
 			healthBarBG.visible = false;
-			kadeEngineWatermark.visible = false;
 			healthBar.visible = false;
 			iconP1.visible = false;
 			iconP2.visible = false;
@@ -6540,7 +6443,6 @@ class PlayState extends MusicBeatState
 		else
 		{
 			healthBarBG.visible = true;
-			kadeEngineWatermark.visible = true;
 			healthBar.visible = true;
 			iconP1.visible = true;
 			iconP2.visible = true;

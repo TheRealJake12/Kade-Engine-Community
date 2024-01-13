@@ -91,7 +91,7 @@ class StaticArrow extends FlxSprite
 		var lastAnim:String = null;
 		if (animation.curAnim != null)
 			lastAnim = animation.curAnim.name;
-		
+
 		if (PlayState.SONG != null)
 			noteTypeCheck = PlayState.SONG.noteStyle;
 		switch (noteTypeCheck)

@@ -41,6 +41,7 @@ class Note extends FlxSprite
 	public var causesMisses:Bool = true; // if a note will do noteMiss or something.
 	public var botplayHit:Bool = true; // if botplay should hit the note.
 	public var canRate:Bool = true; // if it should do ratings, popup score and whatnot.
+	public var missHealth:Float = 0.08; // default health you lose.
 
 	public var luaID:Int = 0;
 
@@ -260,6 +261,7 @@ class Note extends FlxSprite
 					causesMisses = false;
 					botplayHit = false;
 					canRate = false;
+					missHealth = 0;
 					// reloadNote('notetypes/hurt_Arrows');
 					// texture = 'notetypes/hurt_Arrows';
 					switch (CustomNoteHelpers.Skin.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin])
@@ -275,6 +277,7 @@ class Note extends FlxSprite
 					canNoteSplash = true;
 					botplayHit = true;
 					canRate = true;
+					missHealth = 0.8;
 					// reloadNote('notetypes/mustpress_Arrows');
 					// texture = 'notetypes/mustpress_Arrows';
 					switch (CustomNoteHelpers.Skin.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin])
@@ -288,6 +291,7 @@ class Note extends FlxSprite
 					canPlayAnims = true;
 					canNoteSplash = true;
 					causesMisses = true;
+					missHealth = 0.08;
 					botplayHit = true;
 					canRate = true;
 			}

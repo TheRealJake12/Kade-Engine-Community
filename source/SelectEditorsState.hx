@@ -126,6 +126,7 @@ class SelectEditorsState extends MusicBeatState
 
 		if (no)
 		{
+			FlxG.sound.play(Paths.sound('cancelMenu'));
 			MusicBeatState.switchState(new MainMenuState());
 		}
 

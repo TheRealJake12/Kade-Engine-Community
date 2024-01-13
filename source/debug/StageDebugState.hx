@@ -93,7 +93,7 @@ class StageDebugState extends MusicBeatState
 		Paths.clearUnusedMemory();
 		FlxG.sound.music.stop();
 
-		FlxG.sound.playMusic(Paths.inst(PlayState.SONG.songId));
+		FlxG.sound.playMusic(Paths.inst(PlayState.SONG.audioFile));
 		FlxG.sound.music.fadeIn(3, 0, 0.5);
 		FlxG.mouse.visible = true;
 
@@ -501,7 +501,7 @@ class StageDebugState extends MusicBeatState
 		}
 		if (FlxG.keys.justPressed.D)
 		{
-			curChar.alpha += 0.05;	
+			curChar.alpha += 0.05;
 		}
 
 		if (FlxG.keys.justPressed.F4)
@@ -515,17 +515,8 @@ class StageDebugState extends MusicBeatState
 		if (FlxG.keys.justPressed.F12)
 			saveProperties();
 
-		posText.text = (curCharString.toUpperCase()
-			+ " X: "
-			+ curChar.x
-			+ " Y: "
-			+ curChar.y
-			+ " Alpha: "
-			+ curChar.alpha
-			+ " Rotation: "
-			+ curChar.angle
-			+ " Camera Zoom "
-			+ fakeZoom);
+		posText.text = (curCharString.toUpperCase() + " X: " + curChar.x + " Y: " + curChar.y + " Alpha: " + curChar.alpha + " Rotation: " + curChar.angle
+			+ " Camera Zoom " + fakeZoom);
 
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
@@ -645,7 +636,10 @@ class StageDebugState extends MusicBeatState
 				case 2:
 					char = daGf;
 			}
-			result += char + ' X: ' + curChars[curCharIndex].x + " Y: " + curChars[curCharIndex].y + " Alpha: " + curChars[curCharIndex].alpha + " Rotation: " + curChars[curCharIndex].angle + "\n";
+			result += char
+				+ ' X: '
+				+ curChars[curCharIndex].x + " Y: " + curChars[curCharIndex].y + " Alpha: " + curChars[curCharIndex].alpha + " Rotation: " +
+					curChars[curCharIndex].angle + "\n";
 			++curCharIndex;
 		}
 

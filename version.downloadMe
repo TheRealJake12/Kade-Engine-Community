@@ -1,4 +1,9 @@
-1.9.3;
+1.9.4;
 
-- Fully Fix Ugh Chart.
-- Minor Bug Fixes.
+- Fix Broken Input With Jacks.
+- Heavily Improve Gameplay Editor.
+- Fix Scripted Stages Loading The Default Stage If No JSON Exists.
+- Add Display Names To Songs.
+- Fix Note Color Quantization.
+- Tweaks
+- Bug Fixes.
