@@ -118,8 +118,6 @@ class FreeplayState extends MusicBeatState
 		if (!FlxG.save.data.gpuRender)
 			Main.dumpCache();
 
-		clean();
-
 		#if desktop
 		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
 		#end
@@ -912,7 +910,6 @@ class FreeplayState extends MusicBeatState
 	function loadSong(isCharting:Bool = false)
 	{
 		loadSongInFreePlay(songs[curSelected].songName, curDifficulty, isCharting);
-		clean();
 	}
 
 	/**

@@ -74,7 +74,7 @@ class GameOverSubstate extends MusicBeatSubstate
 			endBullshit();
 		}
 
-		if (FlxG.save.data.InstantRespawn || PlayStateChangeables.Optimize)
+		if (FlxG.save.data.InstantRespawn)
 		{
 			LoadingState.loadAndSwitchState(new PlayState());
 		}

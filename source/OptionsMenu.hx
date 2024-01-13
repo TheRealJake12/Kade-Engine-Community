@@ -252,7 +252,6 @@ class OptionsMenu extends MusicBeatSubstate
 				new BackgroundsOption("Toggles Backrounds From Being Visible. (Good Performance Booster.)"),
 				new DistractionsAndEffectsOption("Toggles Extra Assets Be Loaded To Improve Quality At The Cost Of Performance"),
 				new Shaders("Should Shaders Be Enabled? (High GPU and CPU Usage.)"),
-				new Optimization("Nothing But Your Strumline Is Visible. Best Performance."),
 				#if desktop
 				new UnloadSongs("Should Assets Be Unloaded To Improve Memory Usage (At The Cost Of Loading Times)."),
 				new UnloadNow("Clears All Cache We Can Remove."),

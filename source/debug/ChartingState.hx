@@ -1486,7 +1486,6 @@ class ChartingState extends MusicBeatState
 			}
 			Main.dumpCache();
 			LoadingState.loadAndSwitchState(new PlayState());
-			clean();
 		});
 
 		var duetButton:FlxUIButton = new FlxUIButton(10, copyButton.y + 95, "Duet Notes", function()
@@ -2854,7 +2853,6 @@ class ChartingState extends MusicBeatState
 					Main.dumpCache();
 
 					LoadingState.loadAndSwitchState(new PlayState());
-					clean();
 				}
 
 				if (curSelectedNote != null && curSelectedNote[2] > -1)
@@ -3128,19 +3126,21 @@ class ChartingState extends MusicBeatState
 
 				if (curSelectedNoteObject.noteCharterObject != null)
 					curRenderedSustains.remove(curSelectedNoteObject.noteCharterObject);
-
-				remove(curSelectedNoteObject.noteCharterObject);
-
-				var sustainVis:FlxSprite = new FlxSprite(curSelectedNoteObject.x + (GRID_SIZE * 0.5) - 2,
-					curSelectedNoteObject.y + GRID_SIZE).makeGraphic(8,
+				
+				if (curSelectedNote[2] > 0)
+				{
+					remove(curSelectedNoteObject.noteCharterObject);
+					var sustainVis:FlxSprite = new FlxSprite(curSelectedNoteObject.x + (GRID_SIZE * 0.5) - 2, curSelectedNoteObject.y + GRID_SIZE);
+					sustainVis.makeGraphic(8,
 						Math.floor((getYfromStrum(curSelectedNoteObject.strumTime + curSelectedNote[2]) * zoomFactor) - curSelectedNoteObject.y));
-				curSelectedNoteObject.sustainLength = curSelectedNote[2];
-				curSelectedNoteObject.noteCharterObject = sustainVis;
+					curSelectedNoteObject.sustainLength = curSelectedNote[2];
+					curSelectedNoteObject.noteCharterObject = sustainVis;
 
-				curRenderedSustains.add(sustainVis);
+					curRenderedSustains.add(sustainVis);	
+				}	
 				// updateGrid(); // massive performance impact but fixes bugs. Bruh.
-				updateNoteUI();
 			}
+			updateNoteUI();
 		}
 	}
 
@@ -3474,8 +3474,8 @@ class ChartingState extends MusicBeatState
 				return;
 			}
 		}
-
-		// updateNoteUI();
+		
+		updateNoteUI();
 	}
 
 	function clearSection():Void
@@ -3920,7 +3920,6 @@ class ChartingState extends MusicBeatState
 				_song.notes.remove(i);
 		}
 		LoadingState.loadAndSwitchState(new ChartingState());
-		clean();
 	}
 
 	function onSaveComplete(_):Void

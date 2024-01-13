@@ -75,17 +75,6 @@ class MusicBeatState extends FlxUIState
 		return result;
 	}
 
-	public function clean()
-	{
-		if (FlxG.save.data.optimize)
-		{
-			for (i in assets)
-			{
-				remove(i);
-			}
-		}
-	}
-
 	public function destroyObject(Object:Dynamic):Void
 	{
 		if (Std.isOfType(Object, FlxSprite))

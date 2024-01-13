@@ -99,7 +99,7 @@ class Stage extends MusicBeatState
 
 	public function loadStageData(stage:String)
 	{
-		if (!FlxG.save.data.optimize)
+		if (FlxG.save.data.background)
 		{
 			#if FEATURE_HSCRIPT
 			scripts.executeAllFunc("create");
@@ -362,7 +362,6 @@ class Stage extends MusicBeatState
 					}
 				case 'school':
 					{
-						camPosition = [600, 500];
 						var bgSky = new FlxSprite().loadGraphic(Paths.image('weeb/weebSky', 'week6'));
 						bgSky.scrollFactor.set(0.1, 0.1);
 						bgSky.antialiasing = false;
@@ -440,7 +439,6 @@ class Stage extends MusicBeatState
 					}
 				case 'schoolEvil':
 					{
-						camPosition = [600, 500];
 						var waveEffectBG = new FlxWaveEffect(FlxWaveMode.ALL, 2, -1, 3, 2);
 						var waveEffectFG = new FlxWaveEffect(FlxWaveMode.ALL, 2, -1, 5, 2);
 
@@ -458,7 +456,6 @@ class Stage extends MusicBeatState
 						toAdd.push(bg);
 					}
 				case 'tank':
-					camPosition = [500, 400];
 					var tankSky:FlxSprite = new FlxSprite(-400, -400).loadGraphic(Paths.image('tankSky', 'week7'));
 					tankSky.antialiasing = FlxG.save.data.antialiasing;
 					tankSky.scrollFactor.set(0, 0);
@@ -620,7 +617,6 @@ class Stage extends MusicBeatState
 
 				case 'stage':
 					{
-						camPosition = [639, 359];
 						curStage = 'stage';
 						var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stageback', 'shared'));
 						bg.antialiasing = FlxG.save.data.antialiasing;
@@ -659,14 +655,39 @@ class Stage extends MusicBeatState
 	{
 		switch (curStage)
 		{
-			case 'stage' | 'limo' | 'tank' | 'void':
+			case 'stage':
 				camZoom = 0.9;
 				doesExist = true;
-			case 'halloween' | 'philly' | 'mallEvil' | 'school' | 'schoolEvil':
+				camPosition = [639, 359];
+			case 'halloween':
 				camZoom = 1.05;
+				doesExist = true;
+			case 'philly':
+				camZoom = 1.05;
+				doesExist = true;
+			case 'limo':
+				camZoom = 0.9;
 				doesExist = true;
 			case 'mall':
 				camZoom = 0.8;
+				doesExist = true;
+			case 'mallEvil':
+				camZoom = 1.05;
+				doesExist = true;
+			case 'school':
+				camZoom = 1.05;
+				doesExist = true;
+				camPosition = [600, 500];
+			case 'schoolEvil':
+				camZoom = 1.05;
+				doesExist = true;
+				camPosition = [600, 500];
+			case 'tank':
+				camZoom = 0.9;
+				doesExist = true;
+				camPosition = [500, 400];
+			case 'void':
+				camZoom = 0.9;
 				doesExist = true;
 			default:
 				camZoom = 1.05;
@@ -771,7 +792,7 @@ class Stage extends MusicBeatState
 		scripts.executeAllFunc("stepHit", [curStep]);
 		#end
 
-		if (!PlayStateChangeables.Optimize)
+		if (FlxG.save.data.background)
 		{
 			var array = slowBacks[curStep];
 			if (array != null && array.length > 0)
