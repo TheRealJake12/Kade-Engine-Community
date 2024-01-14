@@ -592,6 +592,8 @@ class PlayState extends MusicBeatState
 			+ misses, iconRPC);
 		#end
 
+		barImage = Paths.image('healthBar', 'shared');
+
 		// Setup The Cameras.
 		camGame = new SwagCamera();
 		camHUD = new FlxCamera();
@@ -1324,9 +1326,7 @@ class PlayState extends MusicBeatState
 
 	function createBar()
 	{
-		barImage = Paths.image('healthBar', 'shared');
-
-		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('healthBar'));
+		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(barImage);
 		if (PlayStateChangeables.useDownscroll)
 			healthBarBG.y = 50;
 		healthBarBG.screenCenter(X);
