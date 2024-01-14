@@ -401,11 +401,11 @@ class ChartingState extends MusicBeatState
 		];
 
 		UI_box = new FlxUITabMenu(null, tabs, true);
-
 		UI_box.scrollFactor.set();
 		UI_box.resize(300, 400);
 		UI_box.x = FlxG.width / 2 + 40;
 		UI_box.y = 20;
+		UI_box.color = FlxColor.fromRGB(40, 40, 40);
 
 		var opt_tabs = [
 			{name: "Options", label: 'Charting Options'},
@@ -419,6 +419,7 @@ class ChartingState extends MusicBeatState
 		UI_options.resize(300, 200);
 		UI_options.x = UI_box.x;
 		UI_options.y = FlxG.height - 300;
+		UI_options.color = FlxColor.fromRGB(40, 40, 40);
 		add(UI_options);
 		add(UI_box);
 
@@ -679,6 +680,7 @@ class ChartingState extends MusicBeatState
 
 			autosaveSong();
 		});
+
 		var posLabel = new FlxText(150, 85, 'Event Position');
 		posLabel.font = Paths.font("vcr.ttf");
 		var eventPos = new FlxUIInputText(150, 100, 80, "");
@@ -2342,6 +2344,15 @@ class ChartingState extends MusicBeatState
 
 			if (doInput)
 			{
+				for (dropDownMenu in blockScroll)
+				{
+					if (dropDownMenu.dropPanel.visible)
+					{
+						doInput = false;
+						break;
+					}
+				}
+
 				for (stepper in blockSteppers)
 				{
 					@:privateAccess
@@ -2352,22 +2363,7 @@ class ChartingState extends MusicBeatState
 						break;
 					}
 				}
-			}
 
-			if (doInput)
-			{
-				for (dropDownMenu in blockScroll)
-				{
-					if (dropDownMenu.dropPanel.visible)
-					{
-						doInput = false;
-						break;
-					}
-				}
-			}
-
-			if (doInput)
-			{
 				if (FlxG.mouse.wheel != 0)
 				{
 					if (inst.playing)
@@ -2762,21 +2758,11 @@ class ChartingState extends MusicBeatState
 			strumLine.y = getYfromStrum(start) * zoomFactor;
 			camFollow.y = strumLine.y;
 
-			var left = FlxG.keys.justPressed.ONE;
-			var down = FlxG.keys.justPressed.TWO;
-			var up = FlxG.keys.justPressed.THREE;
-			var right = FlxG.keys.justPressed.FOUR;
-			var leftO = FlxG.keys.justPressed.FIVE;
-			var downO = FlxG.keys.justPressed.SIX;
-			var upO = FlxG.keys.justPressed.SEVEN;
-			var rightO = FlxG.keys.justPressed.EIGHT;
-
 			if (FlxG.keys.justPressed.F1)
 			{
 				FlxG.save.data.showHelp = !FlxG.save.data.showHelp;
 			}
 
-			var pressArray = [left, down, up, right, leftO, downO, upO, rightO];
 			var delete = false;
 
 			if (FlxG.mouse.justPressed && !waitingForRelease)
@@ -3126,7 +3112,7 @@ class ChartingState extends MusicBeatState
 
 				if (curSelectedNoteObject.noteCharterObject != null)
 					curRenderedSustains.remove(curSelectedNoteObject.noteCharterObject);
-				
+
 				if (curSelectedNote[2] > 0)
 				{
 					remove(curSelectedNoteObject.noteCharterObject);
@@ -3136,8 +3122,8 @@ class ChartingState extends MusicBeatState
 					curSelectedNoteObject.sustainLength = curSelectedNote[2];
 					curSelectedNoteObject.noteCharterObject = sustainVis;
 
-					curRenderedSustains.add(sustainVis);	
-				}	
+					curRenderedSustains.add(sustainVis);
+				}
 				// updateGrid(); // massive performance impact but fixes bugs. Bruh.
 			}
 			updateNoteUI();
@@ -3474,7 +3460,7 @@ class ChartingState extends MusicBeatState
 				return;
 			}
 		}
-		
+
 		updateNoteUI();
 	}
 

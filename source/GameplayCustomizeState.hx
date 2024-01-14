@@ -114,7 +114,7 @@ class GameplayCustomizeState extends MusicBeatState
 
 		FlxG.cameras.add(camHUD, false);
 		FlxG.cameras.add(camOverlay, false);
-		FlxG.camera.zoom = Stage.camZoom;	
+		FlxG.camera.zoom = Stage.camZoom;
 		camHUD.zoom = FlxG.save.data.zoom;
 		camOverlay.zoom = 1;
 
