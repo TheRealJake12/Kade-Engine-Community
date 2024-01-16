@@ -914,36 +914,26 @@ class PlayState extends MusicBeatState
 			var playerTurn = false;
 			for (index => section in SONG.notes)
 			{
-				if (section.sectionNotes.length > 0 && !isSM)
+				for (note in section.sectionNotes)
 				{
-					if (section.startTime > 5000)
+					if (note[0] < firstNoteTime)
+					{
+						firstNoteTime = note[0];
+						if (note[1] > 3)
+							playerTurn = true;
+						else
+							playerTurn = false;
+					}
+				}
+
+				if (index + 1 == SONG.notes.length)
+				{
+					var timing = firstNoteTime;
+
+					if (timing > 5000)
 					{
 						needSkip = true;
-						skipTo = section.startTime - 1000;
-					}
-					break;
-				}
-				else if (isSM)
-				{
-					for (note in section.sectionNotes)
-					{
-						if (note[0] < firstNoteTime)
-						{
-							firstNoteTime = note[0];
-							if (note[1] > 3)
-								playerTurn = true;
-							else
-								playerTurn = false;
-						}
-					}
-					if (index + 1 == SONG.notes.length)
-					{
-						var timing = ((!playerTurn) ? firstNoteTime : TimingStruct.getTimeFromBeat(TimingStruct.getBeatFromTime(firstNoteTime) - 4));
-						if (timing > 5000)
-						{
-							needSkip = true;
-							skipTo = timing - 1000;
-						}
+						skipTo = (timing - 1000) / songMultiplier;
 					}
 				}
 			}
@@ -5104,6 +5094,8 @@ class PlayState extends MusicBeatState
 
 	function opponentNoteHit(daNote:Note):Void
 	{
+		if (SONG.songId != 'tutorial')
+			camZooming = FlxG.save.data.camzoom;
 		// come back to this later
 		var altAnim:String = "";
 
@@ -5217,6 +5209,9 @@ class PlayState extends MusicBeatState
 
 	function goodNoteHit(note:Note, resetMashViolation = true):Void
 	{
+		if (PlayStateChangeables.opponentMode)
+			camZooming = FlxG.save.data.camzoom;
+
 		if (mashing != 0)
 			mashing = 0;
 
@@ -5427,7 +5422,7 @@ class PlayState extends MusicBeatState
 		}
 
 		// HARDCODING FOR MILF ZOOMS!
-		if (PlayState.SONG.songId == 'milf' && curStep >= 672 && curStep < 800)
+		if (PlayState.SONG.songId == 'milf' && curStep >= 672 && curStep < 800 && camZooming)
 		{
 			if (curStep % 4 == 0)
 			{
@@ -5553,7 +5548,7 @@ class PlayState extends MusicBeatState
 	{
 		super.sectionHit();
 
-		if (FlxG.save.data.camzoom && FlxG.camera.zoom < 1.35)
+		if (camZooming && FlxG.camera.zoom < 1.35)
 		{
 			FlxG.camera.zoom += 0.015;
 			camHUD.zoom += 0.03;

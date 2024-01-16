@@ -1572,7 +1572,7 @@ class CamZoomOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Camera Zoom: < " + (!FlxG.save.data.camzoom ? "Disabled" : "Enabled") + " >";
+		return "Camera Zoom On Beats: < " + (!FlxG.save.data.camzoom ? "Disabled" : "Enabled") + " >";
 	}
 }
 
