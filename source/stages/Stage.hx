@@ -775,6 +775,7 @@ class Stage extends MusicBeatState
 					moveTank();
 			}
 		}
+
 		super.update(elapsed);
 
 		#if FEATURE_HSCRIPT
@@ -835,7 +836,7 @@ class Stage extends MusicBeatState
 		scripts.executeAllFunc("beatHit", [beatHit]);
 		#end
 
-		if (FlxG.save.data.distractions && animatedBacks.length > 0)
+		if (FlxG.save.data.distractions && animatedBacks.length > 0 && FlxG.save.data.background)
 		{
 			for (bg in animatedBacks)
 				bg.animation.play('idle', true);

@@ -820,27 +820,36 @@ class PlayState extends MusicBeatState
 					}
 				}
 			}
-		}
 
-		for (index => array in Stage.layInFront)
-		{
-			switch (index)
+			for (index => array in Stage.layInFront)
 			{
-				case 0:
-					if (Stage.hasGF)
-						add(gfGroup);
-					gf.scrollFactor.set(0.95, 0.95);
-					for (bg in array)
-						add(bg);
-				case 1:
-					add(dadGroup);
-					for (bg in array)
-						add(bg);
-				case 2:
-					add(boyfriendGroup);
-					for (bg in array)
-						add(bg);
+				switch (index)
+				{
+					case 0:
+						if (Stage.hasGF)
+							add(gfGroup);
+						gf.scrollFactor.set(0.95, 0.95);
+						for (bg in array)
+							add(bg);
+					case 1:
+						add(dadGroup);
+						for (bg in array)
+							add(bg);
+					case 2:
+						add(boyfriendGroup);
+						for (bg in array)
+							add(bg);
+				}
 			}
+		}
+		else
+		{
+			if (Stage.hasGF)
+				add(gfGroup);
+			gf.scrollFactor.set(0.95, 0.95);
+
+			add(dadGroup);
+			add(boyfriendGroup);
 		}
 
 		if (dad.hasTrail)
@@ -1860,25 +1869,6 @@ class PlayState extends MusicBeatState
 		Conductor.songPosition = 0;
 		Conductor.songPosition -= Conductor.crochet * 5;
 
-		#if FEATURE_STEPMANIA
-		if (isSM)
-		{
-			if (FlxG.sound.music.playing)
-				FlxG.sound.music.stop();
-		}
-		else
-		{
-			if (inst.playing)
-				inst.stop();
-			if (vocals != null && !SONG.splitVoiceTracks)
-				vocals.stop();
-			if ((vocalsPlayer != null && vocalsEnemy != null) && SONG.splitVoiceTracks)
-			{
-				vocalsPlayer.stop();
-				vocalsEnemy.stop();
-			}
-		}
-		#else
 		if (inst.playing)
 			inst.stop();
 		if (vocals != null && !SONG.splitVoiceTracks)
@@ -1888,7 +1878,6 @@ class PlayState extends MusicBeatState
 			vocalsPlayer.stop();
 			vocalsEnemy.stop();
 		}
-		#end
 
 		var swagCounter:Int = 0;
 
@@ -2327,25 +2316,17 @@ class PlayState extends MusicBeatState
 			return;
 		#end
 
-		if (isSM)
-		{
-			FlxG.sound.music.play();
-			songLength = ((FlxG.sound.music.length / songMultiplier) / 1000);
-		}
+		inst.play();
+		// FlxG.sound.music.play();
+		if (!SONG.splitVoiceTracks)
+			vocals.play();
 		else
 		{
-			inst.play();
-			// FlxG.sound.music.play();
-			if (!SONG.splitVoiceTracks)
-				vocals.play();
-			else
-			{
-				vocalsPlayer.play();
-				vocalsEnemy.play();
-			}
-
-			songLength = ((inst.length / songMultiplier) / 1000);
+			vocalsPlayer.play();
+			vocalsEnemy.play();
 		}
+
+		songLength = ((inst.length / songMultiplier) / 1000);
 
 		if (allowedToHeadbang)
 			if (gf.curCharacter != 'pico-speaker')
@@ -2489,18 +2470,10 @@ class PlayState extends MusicBeatState
 
 		if (!SONG.splitVoiceTracks)
 		{
-			#if FEATURE_STEPMANIA
-			if (SONG.needsVoices && !isSM)
-				vocals = new FlxSound().loadEmbedded(Paths.voices(SONG.audioFile));
-			else
-				vocals = new FlxSound();
-			#else
 			if (SONG.needsVoices)
 				vocals = new FlxSound().loadEmbedded(Paths.voices(SONG.audioFile));
 			else
 				vocals = new FlxSound();
-			#end
-
 			if (FlxG.save.data.gen)
 				trace('loaded vocals');
 
@@ -2508,15 +2481,6 @@ class PlayState extends MusicBeatState
 		}
 		else
 		{
-			#if FEATURE_STEPMANIA
-			if (SONG.needsVoices && !isSM)
-			{
-				vocalsPlayer = new FlxSound().loadEmbedded(Paths.voices(SONG.audioFile, 'P'));
-				vocalsEnemy = new FlxSound().loadEmbedded(Paths.voices(SONG.audioFile, 'E'));
-			}
-			else
-				vocals = new FlxSound();
-			#else
 			if (SONG.needsVoices)
 			{
 				vocalsPlayer = new FlxSound().loadEmbedded(Paths.voices(SONG.audioFile, 'P'));
@@ -2527,7 +2491,6 @@ class PlayState extends MusicBeatState
 				vocalsEnemy = new FlxSound();
 				vocalsPlayer = new FlxSound();
 			}
-			#end
 
 			if (FlxG.save.data.gen)
 				trace('loaded vocals');
@@ -2536,27 +2499,23 @@ class PlayState extends MusicBeatState
 			FlxG.sound.list.add(vocalsEnemy);
 		}
 
-		inst = new FlxSound().loadEmbedded(Paths.inst(PlayState.SONG.audioFile));
+		
+
+		if (!isStoryMode && isSM)
+		{
+			var bytes = File.getBytes(pathToSm + "/" + sm.header.MUSIC);
+			var sound = new Sound();
+			sound.loadCompressedDataFromByteArray(bytes.getData(), bytes.length);
+			inst = new FlxSound().loadEmbedded(sound);
+		}
+		else
+		{
+			inst = new FlxSound().loadEmbedded(Paths.inst(PlayState.SONG.audioFile));
+		}
+
 		inst.pause();
 
-		if (isSM)
-			FlxG.sound.music.pause();
-
 		FlxG.sound.list.add(inst);
-
-		if (!paused)
-		{
-			#if FEATURE_STEPMANIA
-			if (!isStoryMode && isSM)
-			{
-				var bytes = File.getBytes(pathToSm + "/" + sm.header.MUSIC);
-				var sound = new Sound();
-				sound.loadCompressedDataFromByteArray(bytes.getData(), bytes.length);
-				FlxG.sound.playMusic(sound);
-				FlxG.sound.music.stop();
-			}
-			#end
-		}
 
 		addSongTiming();
 
@@ -2813,30 +2772,22 @@ class PlayState extends MusicBeatState
 	{
 		if (paused)
 		{
-			if (isSM)
+			if (inst.playing)
+				inst.pause();
+			if (!SONG.splitVoiceTracks)
 			{
-				if (FlxG.sound.music.playing)
-					FlxG.sound.music.pause();
+				if (vocals != null)
+					if (vocals.playing)
+						vocals.pause();
 			}
 			else
 			{
-				if (inst.playing)
-					inst.pause();
-				if (!SONG.splitVoiceTracks)
-				{
-					if (vocals != null)
-						if (vocals.playing)
-							vocals.pause();
-				}
-				else
-				{
-					if (vocalsPlayer != null)
-						if (vocalsPlayer.playing)
-							vocalsPlayer.pause();
-					if (vocalsEnemy != null)
-						if (vocalsEnemy.playing)
-							vocalsEnemy.pause();
-				}
+				if (vocalsPlayer != null)
+					if (vocalsPlayer.playing)
+						vocalsPlayer.pause();
+				if (vocalsEnemy != null)
+					if (vocalsEnemy.playing)
+						vocalsEnemy.pause();
 			}
 
 			#if FEATURE_DISCORD
@@ -2920,55 +2871,46 @@ class PlayState extends MusicBeatState
 	{
 		if (endingSong)
 			return;
-		if (isSM)
+		inst.pause();
+		inst.resume();
+		inst.time = Conductor.songPosition * songMultiplier;
+		if (!SONG.splitVoiceTracks)
 		{
-			FlxG.sound.music.pause();
-			FlxG.sound.music.resume();
-			FlxG.sound.music.time = Conductor.songPosition * songMultiplier;
+			if (!vocals.playing || vocals.time != Conductor.songPosition * songMultiplier)
+			{
+				vocals.pause();
+
+				if (!(vocals.length < inst.time))
+				{
+					vocals.play();
+
+					vocals.time = Conductor.songPosition * songMultiplier;
+				}
+			}
 		}
 		else
 		{
-			inst.pause();
-			inst.resume();
-			inst.time = Conductor.songPosition * songMultiplier;
-			if (!SONG.splitVoiceTracks)
+			if (!vocalsPlayer.playing || vocalsPlayer.time != Conductor.songPosition * songMultiplier)
 			{
-				if (!vocals.playing || vocals.time != Conductor.songPosition * songMultiplier)
+				vocalsPlayer.pause();
+
+				if (!(vocalsPlayer.length < inst.time))
 				{
-					vocals.pause();
+					vocalsPlayer.play();
 
-					if (!(vocals.length < inst.time))
-					{
-						vocals.play();
-
-						vocals.time = Conductor.songPosition * songMultiplier;
-					}
+					vocalsPlayer.time = Conductor.songPosition * songMultiplier;
 				}
 			}
-			else
+
+			if (!vocalsEnemy.playing || vocalsEnemy.time != Conductor.songPosition * songMultiplier)
 			{
-				if (!vocalsPlayer.playing || vocalsPlayer.time != Conductor.songPosition * songMultiplier)
+				vocalsEnemy.pause();
+
+				if (!(vocalsEnemy.length < inst.time))
 				{
-					vocalsPlayer.pause();
+					vocalsEnemy.play();
 
-					if (!(vocalsPlayer.length < inst.time))
-					{
-						vocalsPlayer.play();
-
-						vocalsPlayer.time = Conductor.songPosition * songMultiplier;
-					}
-				}
-
-				if (!vocalsEnemy.playing || vocalsEnemy.time != Conductor.songPosition * songMultiplier)
-				{
-					vocalsEnemy.pause();
-
-					if (!(vocalsEnemy.length < inst.time))
-					{
-						vocalsEnemy.play();
-
-						vocalsEnemy.time = Conductor.songPosition * songMultiplier;
-					}
+					vocalsEnemy.time = Conductor.songPosition * songMultiplier;
 				}
 			}
 		}
@@ -3131,25 +3073,7 @@ class PlayState extends MusicBeatState
 
 		if (generatedMusic)
 		{
-			if (songStarted && !endingSong && isSM)
-			{
-				if ((FlxG.sound.music.length / songMultiplier) - Conductor.songPosition <= 0)
-				{
-					if (FlxG.save.data.gen)
-						Debug.logTrace("we're fuckin ending the song ");
-					if (FlxG.save.data.songPosition)
-					{
-						createTween(judgementCounter, {alpha: 0}, 1, {ease: FlxEase.circIn});
-						createTween(scoreTxt, {alpha: 0}, 1, {ease: FlxEase.circIn});
-						createTween(songName, {alpha: 0}, 1, {ease: FlxEase.circIn});
-						createTween(songPosBar, {alpha: 0}, 1, {ease: FlxEase.circIn});
-						createTween(bar, {alpha: 0}, 1, {ease: FlxEase.circIn});
-					}
-					endingSong = true;
-					endSong();
-				}
-			}
-			else if (songStarted && !endingSong)
+			if (songStarted && !endingSong)
 			{
 				if ((inst.length / songMultiplier) - Conductor.songPosition <= 0)
 				{
@@ -3344,7 +3268,7 @@ class PlayState extends MusicBeatState
 			#end
 		}
 
-		if (FlxG.keys.justPressed.EIGHT && songStarted)
+		if (FlxG.keys.justPressed.EIGHT && songStarted && FlxG.save.data.background)
 		{
 			paused = true;
 			new FlxTimer().start(0.3, function(tmr:FlxTimer)
@@ -3445,40 +3369,29 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.keys.justPressed.SPACE && skipActive)
 		{
-			if (isSM)
+			inst.pause();
+			if (!SONG.splitVoiceTracks)
+				vocals.pause();
+			else
 			{
-				FlxG.sound.music.pause();
-				Conductor.songPosition = skipTo;
-				Conductor.rawPosition = skipTo;
-				FlxG.sound.music.time = Conductor.songPosition;
-				FlxG.sound.music.resume();
+				vocalsPlayer.pause();
+				vocalsEnemy.pause();
+			}
+			Conductor.songPosition = skipTo;
+			Conductor.rawPosition = skipTo;
+			inst.time = Conductor.songPosition;
+			inst.resume();
+			if (!SONG.splitVoiceTracks)
+			{
+				vocals.time = Conductor.songPosition;
+				vocals.resume();
 			}
 			else
 			{
-				inst.pause();
-				if (!SONG.splitVoiceTracks)
-					vocals.pause();
-				else
-				{
-					vocalsPlayer.pause();
-					vocalsEnemy.pause();
-				}
-				Conductor.songPosition = skipTo;
-				Conductor.rawPosition = skipTo;
-				inst.time = Conductor.songPosition;
-				inst.resume();
-				if (!SONG.splitVoiceTracks)
-				{
-					vocals.time = Conductor.songPosition;
-					vocals.resume();
-				}
-				else
-				{
-					vocalsPlayer.time = Conductor.songPosition;
-					vocalsPlayer.resume();
-					vocalsEnemy.time = Conductor.songPosition;
-					vocalsEnemy.resume();
-				}
+				vocalsPlayer.time = Conductor.songPosition;
+				vocalsPlayer.resume();
+				vocalsEnemy.time = Conductor.songPosition;
+				vocalsEnemy.resume();
 			}
 			createTween(skipText, {alpha: 0}, 0.2, {
 				onComplete: function(tw)
@@ -4241,18 +4154,13 @@ class PlayState extends MusicBeatState
 			else
 			{
 				paused = true;
-				if (isSM)
-					FlxG.sound.music.stop();
+				inst.stop();
+				if (!SONG.splitVoiceTracks)
+					vocals.stop();
 				else
 				{
-					inst.stop();
-					if (!SONG.splitVoiceTracks)
-						vocals.stop();
-					else
-					{
-						vocalsPlayer.stop();
-						vocalsEnemy.stop();
-					}
+					vocalsPlayer.stop();
+					vocalsEnemy.stop();
 				}
 
 				if (FlxG.save.data.scoreScreen)

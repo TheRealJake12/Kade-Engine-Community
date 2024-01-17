@@ -142,7 +142,7 @@ class SMFile
 			stage: 'stage',
 			speed: 2.8,
 			validScore: false,
-			chartVersion: "",
+			chartVersion: Song.latestChart,
 		};
 
 		// lets check if the sm loading was valid
