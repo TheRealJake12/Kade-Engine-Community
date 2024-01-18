@@ -1,0 +1,23 @@
+{
+ "staticCam": false,
+ "positions": {
+  "gf-christmas": [
+   400,
+   130
+  ],
+  "parents-christmas": [
+   -400,
+   100
+  ],
+  "bf-christmas": [
+   970,
+   450
+  ]
+ },
+ "camZoom": 0.8,
+ "hasGF": true,
+ "camPosition": [
+  808.5,
+  487.5
+ ]
+}

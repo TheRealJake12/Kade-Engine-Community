@@ -1,0 +1,23 @@
+{
+    "staticCam": false,
+    "positions": {
+        "gf-car": [
+            400,
+            130
+        ],
+        "mom-car": [
+            100,
+            100
+        ],
+        "bf-car": [
+            1030,
+            230
+        ]
+    },
+    "camZoom": 0.9,
+    "hasGF": true,
+    "camPosition": [
+        787,
+        454.5
+    ]
+}

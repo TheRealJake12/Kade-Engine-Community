@@ -1,0 +1,23 @@
+{
+ "staticCam": false,
+ "positions": {
+  "gf-pixel": [
+   580,
+   430
+  ],
+  "bf-pixel": [
+   970,
+   670
+  ],
+  "spirit": [
+   -50,
+   200
+  ]
+ },
+ "camZoom": 1.05,
+ "hasGF": true,
+ "camPosition": [
+  600,
+  500
+ ]
+}

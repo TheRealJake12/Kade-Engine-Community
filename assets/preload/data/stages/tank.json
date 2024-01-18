@@ -1,0 +1,27 @@
+{
+    "staticCam": false,
+    "positions": {
+        "bf": [
+            810,
+            450
+        ],
+        "tankman": [
+            20,
+            340
+        ],
+        "gftank": [
+            200,
+            65
+        ],
+        "pico-speaker": [
+            320,
+            -60
+        ],
+        "camZoom": 0.9,
+        "hasGF": true,
+        "camPosition": [
+            666.5,
+            472.5
+        ]
+    }
+}

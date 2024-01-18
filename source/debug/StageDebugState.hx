@@ -24,6 +24,7 @@ import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUITabMenu;
 import flixel.addons.ui.FlxUITooltip.FlxUITooltipStyle;
+import flixel.addons.ui.FlxUIButton;
 
 using StringTools;
 
@@ -72,6 +73,7 @@ class StageDebugState extends MusicBeatState
 	var gfDrop:FlxUIDropDownMenu;
 	var hasGF:FlxUICheckBox;
 	var staticCam:FlxUICheckBox;
+	var resetPos:FlxUIButton;
 
 	var stageList:Array<String>;
 	var charList:Array<String>;
@@ -105,7 +107,13 @@ class StageDebugState extends MusicBeatState
 		boyfriend.dance();
 		gf.dance();
 
+		camFollow = new FlxObject(0, 0, 2, 2);
+		camFollow.screenCenter();
+		add(camFollow);
+
 		loadStage(daStage);
+		
+		curChar = curChars[curCharIndex];
 
 		var positions = Stage.positions[daStage];
 		if (positions != null)
@@ -126,14 +134,6 @@ class StageDebugState extends MusicBeatState
 		 */
 
 		PlayState.inDaPlay = false;
-		curChars = [dad, boyfriend, gf];
-		if (!gf.visible) // for when gf is an opponent
-			curChars.pop();
-		curChar = curChars[curCharIndex];
-
-		camFollow = new FlxObject(0, 0, 2, 2);
-		camFollow.screenCenter();
-		add(camFollow);
 
 		camEditor = new FlxCamera();
 		camHUD = new FlxCamera();
@@ -213,9 +213,15 @@ class StageDebugState extends MusicBeatState
 			Stage.staticCam = !Stage.staticCam;
 		};
 
+		resetPos = new FlxUIButton(150, 75, "Reset Character Positions", function()
+		{
+			resetPositions();
+		});
+
 		tab_group.add(stageDropDown);
 		tab_group.add(hasGF);
 		tab_group.add(staticCam);
+		tab_group.add(resetPos);
 
 		UI_options.addGroup(tab_group);
 	}
@@ -284,11 +290,6 @@ class StageDebugState extends MusicBeatState
 		boyfriend = new Boyfriend(boyfriend.x, boyfriend.y, daBf);
 		gf = new Character(gf.x, gf.y, daGf, false);
 
-		curChars = [dad, boyfriend, gf];
-		if (!gf.visible || !Stage.hasGF) // for when gf is an opponent
-			curChars.pop();
-		curChar = curChars[curCharIndex];
-
 		Stage = new Stage(leStage);
 
 		Stage.loadStageData(leStage);
@@ -296,6 +297,19 @@ class StageDebugState extends MusicBeatState
 		Stage.initStageProperties();
 
 		Stage.initCamPos();
+
+		curChars = [dad, boyfriend, gf];
+		if (dad.replacesGF)
+		{
+			gf.visible = false;
+			dad.setPosition(gf.x, gf.y);
+		}
+
+		if (!gf.visible || !Stage.hasGF) // for when gf is an opponent
+			curChars.pop();
+		curChar = curChars[curCharIndex];
+
+		camFollow.setPosition(Stage.camPosition[0], Stage.camPosition[1]);
 
 		getNextObject();
 		getNextChar();
@@ -340,6 +354,8 @@ class StageDebugState extends MusicBeatState
 		// Idk why I felt like I had to add traces. Feels more cooler than it should be.
 	}
 
+
+
 	function loadStage(leStage:String)
 	{
 		Stage = new Stage(leStage);
@@ -347,6 +363,26 @@ class StageDebugState extends MusicBeatState
 		Stage.loadStageData(leStage);
 
 		Stage.initStageProperties();
+
+		Stage.initCamPos();
+
+		newStage = leStage;
+
+		curChars = [dad, boyfriend, gf];
+		if (dad.replacesGF)
+		{
+			gf.visible = false;
+			dad.setPosition(gf.x, gf.y);
+		}
+
+		if (!gf.visible || !Stage.hasGF) // for when gf is an opponent
+			curChars.pop();
+		curChar = curChars[curCharIndex];
+
+		getNextObject();
+		getNextChar();
+
+		camFollow.setPosition(Stage.camPosition[0], Stage.camPosition[1]);
 
 		fakeZoom = Stage.camZoom;
 
@@ -374,6 +410,21 @@ class StageDebugState extends MusicBeatState
 						add(bg);
 			}
 		}
+	}
+
+	function resetPositions()
+	{
+		var positions = Stage.positions[newStage];
+		if (positions != null)
+		{
+			for (char => pos in positions)
+				for (person in [boyfriend, gf, dad])
+					if (person != null)
+						if (person.curCharacter == char)
+						person.setPosition(pos[0], pos[1]);
+		}
+
+		Debug.logTrace("Reset Character Positions.");
 	}
 
 	var helpText:FlxText;

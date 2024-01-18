@@ -1,0 +1,23 @@
+{
+    "staticCam": false,
+    "positions": {
+        "bf": [
+            770,
+            450
+        ],
+        "gftrain": [
+            400,
+            130
+        ],
+        "pico": [
+            100,
+            400
+        ]
+    },
+    "camZoom": 1.05,
+    "hasGF": true,
+    "camPosition": [
+        751.5,
+        454
+    ]
+}

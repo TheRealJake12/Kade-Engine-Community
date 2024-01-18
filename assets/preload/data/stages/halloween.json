@@ -1,0 +1,27 @@
+{
+    "staticCam": false,
+    "positions": {
+        "bf": [
+            770,
+            450
+        ],
+        "gf": [
+            400,
+            130
+        ],
+        "spooky": [
+            100,
+            300
+        ],
+        "monster": [
+            100,
+            200
+        ]
+    },
+    "camZoom": 1.05,
+    "hasGF": true,
+    "camPosition": [
+        751.5,
+        454
+    ]
+}

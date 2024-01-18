@@ -731,14 +731,17 @@ class PlayState extends MusicBeatState
 		// Load Characters.
 		if (!stageTesting)
 		{
-			gf = new Character(400, 130, gfCheck);
-
-			if (gf.frames == null)
+			if (Stage.hasGF)
 			{
-				#if debug
-				FlxG.log.warn(["Couldn't load gf: " + gfCheck + ". Loading default gf"]);
-				#end
-				gf = new Character(400, 130, 'gf');
+				gf = new Character(400, 130, gfCheck);
+
+				if (gf.frames == null)
+				{
+					#if debug
+					FlxG.log.warn(["Couldn't load gf: " + gfCheck + ". Loading default gf"]);
+					#end
+					gf = new Character(400, 130, 'gf');
+				}
 			}
 
 			boyfriend = new Boyfriend(770, 450, SONG.player1);
@@ -783,20 +786,26 @@ class PlayState extends MusicBeatState
 		{
 			for (char => pos in positions)
 				for (person in [boyfriend, gf, dad])
-					if (person.curCharacter == char)
-						person.setPosition(pos[0], pos[1]);
+					if (person != null)
+						if (person.curCharacter == char)
+							person.setPosition(pos[0], pos[1]);
 		}
 
 		gfGroup = new FlxSpriteGroup();
 		boyfriendGroup = new FlxSpriteGroup();
 		dadGroup = new FlxSpriteGroup();
 
-		gfGroup.add(gf);
+		if (gf != null)
+			gfGroup.add(gf);
+
 		dadGroup.add(dad);
 		boyfriendGroup.add(boyfriend);
 
-		gf.x += gf.charPos[0];
-		gf.y += gf.charPos[1];
+		if (gf != null)
+		{
+			gf.x += gf.charPos[0];
+			gf.y += gf.charPos[1];
+		}
 		dad.x += dad.charPos[0];
 		dad.y += dad.charPos[1];
 		boyfriend.x += boyfriend.charPos[0];
@@ -811,7 +820,7 @@ class PlayState extends MusicBeatState
 
 			if (FlxG.save.data.distractions)
 			{
-				if (SONG.songId == 'stress')
+				if (SONG.songId == 'stress' && gf != null)
 				{
 					switch (gf.curCharacter)
 					{
@@ -826,9 +835,12 @@ class PlayState extends MusicBeatState
 				switch (index)
 				{
 					case 0:
-						if (Stage.hasGF)
+						if (Stage.hasGF && gf != null)
+						{
 							add(gfGroup);
-						gf.scrollFactor.set(0.95, 0.95);
+							gf.scrollFactor.set(0.95, 0.95);
+						}
+						
 						for (bg in array)
 							add(bg);
 					case 1:
@@ -844,9 +856,11 @@ class PlayState extends MusicBeatState
 		}
 		else
 		{
-			if (Stage.hasGF)
+			if (Stage.hasGF && gf != null)
+			{
 				add(gfGroup);
-			gf.scrollFactor.set(0.95, 0.95);
+				gf.scrollFactor.set(0.95, 0.95);
+			}
 
 			add(dadGroup);
 			add(boyfriendGroup);
@@ -871,7 +885,7 @@ class PlayState extends MusicBeatState
 		camPos.x = Stage.camPosition[0];
 		camPos.y = Stage.camPosition[1];
 
-		if (dad.replacesGF)
+		if (dad.replacesGF && gf != null)
 		{
 			if (!stageTesting)
 				dad.setPosition(gf.x, gf.y);
@@ -890,27 +904,7 @@ class PlayState extends MusicBeatState
 		}
 
 		var doof = null;
-
-		switch (SONG.gfVersion)
-		{
-			case 'pico-speaker':
-				gf.x -= 50;
-				gf.y -= 200;
-		}
-
-		switch (Stage.curStage)
-		{
-			case "tank":
-				gf.y += 10;
-				gf.x -= 30;
-				dad.x -= 80;
-
-				if (SONG.gfVersion != 'pico-speaker')
-				{
-					gf.x -= 170;
-					gf.y -= 75;
-				}
-		}
+		
 
 		if (isStoryMode)
 		{
@@ -1016,7 +1010,9 @@ class PlayState extends MusicBeatState
 			new LuaCamera(camHUD, "camHUD").Register(ModchartState.lua);
 			new LuaCamera(camStrums, "camStrums").Register(ModchartState.lua);
 			new LuaCharacter(dad, "dad").Register(ModchartState.lua);
-			new LuaCharacter(gf, "gf").Register(ModchartState.lua);
+			if (gf != null)
+				new LuaCharacter(gf, "gf").Register(ModchartState.lua);
+
 			new LuaCharacter(boyfriend, "boyfriend").Register(ModchartState.lua);
 		}
 		#end
@@ -1169,7 +1165,8 @@ class PlayState extends MusicBeatState
 		startingSong = true;
 		dad.dance();
 		boyfriend.dance();
-		gf.dance();
+		if (gf != null)
+			gf.dance();
 
 		cacheCountdown();
 
@@ -1257,7 +1254,7 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.save.data.distractions && FlxG.save.data.background)
 		{
-			if (gfCheck == 'pico-speaker' && Stage.curStage == 'tank')
+			if (gfCheck == 'pico-speaker' && Stage.curStage == 'tank' && gf != null)
 			{
 				if (FlxG.save.data.distractions)
 				{
@@ -1884,7 +1881,7 @@ class PlayState extends MusicBeatState
 		startTimer = createTimer((Conductor.crochet / 1000), function(tmr:FlxTimer)
 		{
 			// this just based on beatHit stuff but compact
-			if (allowedToHeadbang && swagCounter % gfSpeed == 0)
+			if (allowedToHeadbang && swagCounter % gfSpeed == 0 && gf != null)
 				gf.dance();
 
 			if (swagCounter % Math.floor(idleBeat * songMultiplier) == 0)
@@ -2329,7 +2326,7 @@ class PlayState extends MusicBeatState
 		songLength = ((inst.length / songMultiplier) / 1000);
 
 		if (allowedToHeadbang)
-			if (gf.curCharacter != 'pico-speaker')
+			if (gf != null && gf.curCharacter != 'pico-speaker')
 				gf.dance();
 		if (idleToBeat && !boyfriend.animation.curAnim.name.startsWith("sing"))
 			boyfriend.dance(forcedToIdle);
@@ -3143,7 +3140,8 @@ class PlayState extends MusicBeatState
 								case 'bf' | 'boyfriend':
 									char = boyfriend;
 								case 'gf' | 'girlfriend':
-									char = gf;
+									if (gf != null)
+										char = gf;
 								default:
 									char = dad;
 							}
@@ -3288,10 +3286,12 @@ class PlayState extends MusicBeatState
 				}
 				remove(boyfriend);
 				remove(dad);
-				remove(gf);
+				if (gf != null)
+					remove(gf);
 			});
 			StageDebugState.Stage = Stage;
-			LoadingState.loadAndSwitchState(new StageDebugState(Stage.curStage, gf.curCharacter, boyfriend.curCharacter, dad.curCharacter));
+			StageDebugState.fromEditor = false;
+			LoadingState.loadAndSwitchState(new StageDebugState(Stage.curStage, if (gf != null) gf.curCharacter else "gf", boyfriend.curCharacter, dad.curCharacter));
 			#if FEATURE_LUAMODCHART
 			if (luaModchart != null)
 			{
@@ -3448,7 +3448,7 @@ class PlayState extends MusicBeatState
 			{
 				if (gf.animation.curAnim.name == 'danceLeft'
 					|| gf.animation.curAnim.name == 'danceRight'
-					|| gf.animation.curAnim.name == 'idle')
+					|| gf.animation.curAnim.name == 'idle' && gf != null)
 				{
 					switch (curSong)
 					{
@@ -4068,9 +4068,11 @@ class PlayState extends MusicBeatState
 				}
 				remove(boyfriend);
 				remove(dad);
-				remove(gf);
+				if (gf != null)
+					remove(gf);
 			});
 			StageDebugState.Stage = Stage;
+			StageDebugState.fromEditor = false;
 			LoadingState.loadAndSwitchState(new StageDebugState(Stage.curStage));
 		}
 		else
@@ -4839,7 +4841,7 @@ class PlayState extends MusicBeatState
 	{
 		if (daNote.causesMisses)
 		{
-			if (combo > 5 && gf.animOffsets.exists('sad') && !PlayStateChangeables.opponentMode)
+			if (gf != null && combo > 5 && gf.animOffsets.exists('sad') && !PlayStateChangeables.opponentMode)
 			{
 				gf.playAnim('sad');
 			}
@@ -5386,12 +5388,14 @@ class PlayState extends MusicBeatState
 		if (curStep % 32 == 28 #if cpp && curStep != 316 #end && SONG.songId == 'bopeebo')
 		{
 			boyfriend.playAnim('hey', true);
-			gf.playAnim('cheer', true);
+			if (gf != null)
+				gf.playAnim('cheer', true);
 		}
 		if ((curStep == 190 * songMultiplier || curStep == 446 * songMultiplier) && SONG.songId == 'bopeebo')
 		{
 			boyfriend.playAnim('hey', true);
-			gf.playAnim('cheer', true);
+			if (gf != null)
+				gf.playAnim('cheer', true);
 		}
 	}
 

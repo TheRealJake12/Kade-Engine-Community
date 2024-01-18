@@ -61,26 +61,7 @@ class Stage extends MusicBeatState
 	// BGs still must be added by using toAdd Array for them to show in game after slowBacks take effect!!
 	// All of the above must be set or used in your stage case code block!!
 	public var positions:Map<String, Map<String, Array<Float>>> = [
-		// Assign your characters positions on stage here!
-		'halloween' => ['spooky' => [100, 300], 'monster' => [100, 200]],
-		'philly' => ['pico' => [100, 400]],
-		'limo' => ['bf-car' => [1030, 230]],
-		'mall' => ['bf-christmas' => [970, 450], 'parents-christmas' => [-400, 100]],
-		'mallEvil' => ['bf-christmas' => [1090, 450], 'monster-christmas' => [100, 150]],
-		'school' => [
-			'gf-pixel' => [580, 430],
-			'bf-pixel' => [970, 670],
-			'senpai' => [250, 460],
-			'senpai-angry' => [250, 460]
-		],
-		'schoolEvil' => ['gf-pixel' => [580, 430], 'bf-pixel' => [970, 670], 'spirit' => [-50, 200]],
-		'tank' => [
-			'tankman' => [50, 225],
-			'bf' => [850, 400],
-			'bf-holding-gf' => [850, 370],
-			'gftank' => [330, 110],
-			'pico-speaker' => [330, 165]
-		]
+		// Assign your characters positions on stage here! Or use the json system.
 	];
 
 	public function new(daStage:String)
@@ -658,7 +639,6 @@ class Stage extends MusicBeatState
 			case 'stage':
 				camZoom = 0.9;
 				doesExist = true;
-				camPosition = [639, 359];
 			case 'halloween':
 				camZoom = 1.05;
 				doesExist = true;
@@ -677,15 +657,12 @@ class Stage extends MusicBeatState
 			case 'school':
 				camZoom = 1.05;
 				doesExist = true;
-				camPosition = [600, 500];
 			case 'schoolEvil':
 				camZoom = 1.05;
 				doesExist = true;
-				camPosition = [600, 500];
 			case 'tank':
 				camZoom = 0.9;
 				doesExist = true;
-				camPosition = [500, 400];
 			case 'void':
 				camZoom = 0.9;
 				doesExist = true;
@@ -928,8 +905,11 @@ class Stage extends MusicBeatState
 		{
 			for (ext in extensions)
 			{
-				files.push(sub);
-				break; // only one
+				if (sub.contains(ext))
+				{
+					files.push(sub);
+					break; // only one
+				}
 			}
 		}
 
@@ -1052,7 +1032,9 @@ class Stage extends MusicBeatState
 		lightningStrikeBeat = curBeat;
 		lightningOffset = FlxG.random.int(8, 24);
 
-		if (PlayState.boyfriend != null && PlayState.gf != null)
+		if (PlayState.boyfriend != null
+			&& PlayState.gf != null
+			&& PlayState.boyfriend.curCharacter == 'bf' && PlayState.gf.curCharacter == 'gf')
 		{
 			PlayState.boyfriend.playAnim('scared', true);
 			PlayState.gf.playAnim('scared', true);

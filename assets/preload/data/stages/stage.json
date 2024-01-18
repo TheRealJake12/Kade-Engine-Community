@@ -1,0 +1,23 @@
+{
+    "staticCam": false,
+    "positions": {
+        "bf": [
+            770,
+            450
+        ],
+        "gf": [
+            400,
+            130
+        ],
+        "dad": [
+            100,
+            100
+        ]
+    },
+    "camZoom": 0.9,
+    "hasGF": true,
+    "camPosition": [
+        639,
+        359
+    ]
+}
