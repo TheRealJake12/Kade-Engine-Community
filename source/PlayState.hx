@@ -2442,13 +2442,17 @@ class PlayState extends MusicBeatState
 		if (needSkip)
 		{
 			skipActive = true;
-			skipText = new Alphabet(healthBarBG.x + 375, 1000, "Press Space To Skip Intro.", true);
-			skipText.set_alignment(CENTERED);
-			skipText.scaleY = 0.5;
-			skipText.scaleX = 0.5;
-			skipText.cameras = [camHUD];
+			skipText = new Alphabet(0, 550, "Press Space To Skip Intro.", true);
+			skipText.setScale(0.5,0.5);
+			skipText.changeX = false;
+			skipText.changeY = false;
+			if (PlayStateChangeables.useDownscroll)
+				skipText.y = 150;
+			skipText.snapToPosition();
+			skipText.screenCenter(X);
 			skipText.alpha = 0;
 			createTween(skipText, {alpha: 1}, 0.2);
+			skipText.cameras = [camHUD];
 			add(skipText);
 		}
 	}

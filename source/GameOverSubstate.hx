@@ -27,6 +27,8 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	public function new(x:Float, y:Float)
 	{
+		FlxG.sound.play(Paths.sound('fnf_loss_sfx' + stageSuffix));
+
 		var daStage = PlayState.instance.Stage.curStage;
 		var daBf:String = '';
 		switch (PlayState.boyfriend.curCharacter)
@@ -51,8 +53,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		camFollow = new FlxObject(bf.getGraphicMidpoint().x, bf.getGraphicMidpoint().y, 1, 1);
 		add(camFollow);
-
-		FlxG.sound.play(Paths.sound('fnf_loss_sfx' + stageSuffix));
+		
 		Conductor.changeBPM(100);
 
 		// FlxG.camera.followLerp = 1;

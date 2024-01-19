@@ -49,8 +49,6 @@ class FreeplayState extends MusicBeatState
 	private var camGame:SwagCamera;
 	var lerpSelected:Float = 0;
 
-	var selector:FlxText;
-
 	public static var rate:Float = 1.0;
 	public static var lastRate:Float = 1.0;
 	public static var currentSongPlaying:String = '';
@@ -258,11 +256,6 @@ class FreeplayState extends MusicBeatState
 
 		// FlxG.sound.playMusic(Paths.music('title'), 0);
 		// FlxG.sound.music.fadeIn(2, 0, 0.8);
-		selector = new FlxText();
-
-		selector.size = 40;
-		selector.text = ">";
-		// add(selector);
 
 		var swag:Alphabet = new Alphabet(1, 0, "swag");
 
