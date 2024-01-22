@@ -4917,9 +4917,9 @@ class PlayState extends MusicBeatState
 			#end
 
 			if (!PlayStateChangeables.opponentMode)
-				health -= (0.08 * PlayStateChangeables.healthLoss);
+				health -= (daNote.missHealth * PlayStateChangeables.healthLoss);
 			else
-				health += (0.08 * PlayStateChangeables.healthLoss);
+				health += (daNote.missHealth * PlayStateChangeables.healthLoss);
 
 			updateAccuracy();
 			updateScoreText();

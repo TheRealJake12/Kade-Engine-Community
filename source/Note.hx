@@ -228,14 +228,17 @@ class Note extends FlxSprite
 				prevNote.updateHitbox();
 
 				if (noteTypeCheck != 'pixel')
-					prevNote.scale.y *= 1.0 + (1.0 / prevNote.frameHeight);
+					prevNote.scale.y *= 1.0 + (1.0 / prevNote.frameHeight) * 1.05;
 
 				prevNote.updateHitbox();
 				updateHitbox();
 			}
 		}
-		centerOffsets();
-		centerOrigin();
+		else if (!isSustainNote)
+		{
+			centerOffsets();
+			centerOrigin();
+		}
 	}
 
 	static var _lastValidChecked:String; // optimization
@@ -362,7 +365,8 @@ class Note extends FlxSprite
 					scale.y = lastScaleY;
 				}
 		}
-
+		
+		prevNote.updateHitbox();
 		updateHitbox();
 
 		if (animName != null)
@@ -477,26 +481,16 @@ class Note extends FlxSprite
 			}
 		}
 	}
-
-	/*
-		@:noCompletion
-		override function set_y(value:Float):Float
-		{
-			if (!isSustainNote)
-				if (PlayStateChangeables.useDownscroll)
-					value -= height - swagWidth;
-			return super.set_y(value);
-		}
-	 */
+	
 	override public function destroy()
 	{
 		if (noteCharterObject != null)
 			noteCharterObject.destroy();
 
-		texture = '';
+		super.destroy();
+
 		frames = null;
 
-		super.destroy();
 		_lastValidChecked = '';
 	}
 

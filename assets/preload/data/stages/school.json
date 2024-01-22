@@ -1,23 +1,27 @@
 {
- "staticCam": false,
- "positions": {
-  "gf-pixel": [
-   580,
-   430
-  ],
-  "senpai": [
-   250,
-   460
-  ],
-  "bf-pixel": [
-   970,
-   670
-  ]
- },
- "camZoom": 1.05,
- "hasGF": true,
- "camPosition": [
-  600,
-  500
- ]
+    "staticCam": false,
+    "positions": {
+        "gf-pixel": [
+            580,
+            430
+        ],
+        "senpai": [
+            250,
+            460
+        ],
+        "senpai-angry": [
+            250,
+            460
+        ],
+        "bf-pixel": [
+            970,
+            670
+        ]
+    },
+    "camZoom": 1.05,
+    "hasGF": true,
+    "camPosition": [
+        600,
+        500
+    ]
 }

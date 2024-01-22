@@ -3294,6 +3294,7 @@ class ChartingState extends MusicBeatState
 		{
 			curRenderedSustains.remove(curRenderedSustains.members[0], true);
 		}
+		
 		var currentSection = 0;
 
 		for (section in _song.notes)
