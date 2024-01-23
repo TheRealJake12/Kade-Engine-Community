@@ -1034,7 +1034,8 @@ class Stage extends MusicBeatState
 
 		if (PlayState.boyfriend != null
 			&& PlayState.gf != null
-			&& PlayState.boyfriend.curCharacter == 'bf' && PlayState.gf.curCharacter == 'gf')
+			&& PlayState.boyfriend.curCharacter == 'bf'
+			&& PlayState.gf.curCharacter == 'gf')
 		{
 			PlayState.boyfriend.playAnim('scared', true);
 			PlayState.gf.playAnim('scared', true);

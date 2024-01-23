@@ -365,7 +365,7 @@ class Note extends FlxSprite
 					scale.y = lastScaleY;
 				}
 		}
-		
+
 		prevNote.updateHitbox();
 		updateHitbox();
 
@@ -481,7 +481,7 @@ class Note extends FlxSprite
 			}
 		}
 	}
-	
+
 	override public function destroy()
 	{
 		if (noteCharterObject != null)

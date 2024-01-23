@@ -50,9 +50,11 @@ class TitleState extends MusicBeatState
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 
+		#if cpp
 		Gc.run(true);
 		Gc.compact();
 		Gc.run(false);
+		#end
 
 		Main.mainClassState = TitleState;
 

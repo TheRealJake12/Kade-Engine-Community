@@ -2344,15 +2344,6 @@ class ChartingState extends MusicBeatState
 
 			if (doInput)
 			{
-				for (dropDownMenu in blockScroll)
-				{
-					if (dropDownMenu.dropPanel.visible)
-					{
-						doInput = false;
-						break;
-					}
-				}
-
 				for (stepper in blockSteppers)
 				{
 					@:privateAccess
@@ -2363,7 +2354,22 @@ class ChartingState extends MusicBeatState
 						break;
 					}
 				}
+			}
 
+			if (doInput)
+			{
+				for (dropDownMenu in blockScroll)
+				{
+					if (dropDownMenu.dropPanel.visible)
+					{
+						doInput = false;
+						break;
+					}
+				}
+			}
+
+			if (doInput)
+			{
 				if (FlxG.mouse.wheel != 0)
 				{
 					if (inst.playing)
@@ -3294,7 +3300,7 @@ class ChartingState extends MusicBeatState
 		{
 			curRenderedSustains.remove(curRenderedSustains.members[0], true);
 		}
-		
+
 		var currentSection = 0;
 
 		for (section in _song.notes)
@@ -3769,9 +3775,9 @@ class ChartingState extends MusicBeatState
 		{
 			PlayState.storyDifficulty = CoolUtil.difficultyArray.indexOf(diff);
 			PlayState.SONG = Song.loadFromJson(songId, CoolUtil.getSuffixFromDiff(diff));
-			mustCleanMem = true;
+			// mustCleanMem = true;
 
-			LoadingState.loadAndSwitchState(new ChartingState());
+			MusicBeatState.switchState(new ChartingState());
 		}
 		catch (e)
 		{
@@ -3797,17 +3803,10 @@ class ChartingState extends MusicBeatState
 
 	function cleanObjects()
 	{
-		remove(leftIcon);
-		remove(rightIcon);
-
-		leftIcon.kill();
-		leftIcon.destroy();
-
-		rightIcon.kill();
-		rightIcon.destroy();
-
-		player1 = null;
-		player2 = null;
+		player1.kill();
+		player1.destroy();
+		player1.kill();
+		player1.destroy();
 
 		var toRemove = [];
 

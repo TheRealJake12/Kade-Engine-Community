@@ -4,11 +4,7 @@ import flash.geom.Rectangle;
 import flixel.addons.ui.interfaces.IFlxUIClickable;
 import flixel.addons.ui.interfaces.IFlxUIWidget;
 import flixel.addons.ui.interfaces.IHasParams;
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.math.FlxMath;
 import flixel.ui.FlxButton;
-import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxStringUtil;
 import flixel.addons.ui.FlxUIGroup;
@@ -20,14 +16,18 @@ import flixel.addons.ui.FlxUIAssets;
 import flixel.addons.ui.StrNameLabel;
 import flixel.addons.ui.FlxUI;
 
+/*
+
+	THIS IS AN EDIT OF FlxUIDropDownMenu I'VE MADE BECAUSE I'M TIRED OF IT NOT SUPPORTING SCROLLING UP/DOWN
+	BAH!
+
+	The differences are the following:
+	* Support to scrolling up/down with mouse wheel or arrow keys
+	* THe default drop direction is "Down" instead of "Automatic"
+
+ */
 /**
- * @author Shadow_Mario_
- * 
- * THIS IS AN EDIT OF FlxUIDropDownMenu I'VE MADE BECAUSE I'M TIRED OF IT NOT SUPPORTING SCROLLING UP/DOWN BAH!
- * 
- * The differences are the following:
- * Support to scrolling up/down with mouse wheel or arrow keys
- * THe default drop direction is "Down" instead of "Automatic"
+ * @author larsiusprime
  */
 class FlxUIDropDownMenu extends FlxUIGroup implements IFlxUIWidget implements IFlxUIClickable implements IHasParams
 {
@@ -226,7 +226,7 @@ class FlxUIDropDownMenu extends FlxUIGroup implements IFlxUIWidget implements IF
 			var button:FlxUIButton = list[i];
 			if (button != null)
 			{
-				button.y = -99999;
+				button.y = FlxG.height + 250;
 			}
 		}
 		for (i in currentScroll...list.length)
@@ -429,48 +429,15 @@ class FlxUIDropDownMenu extends FlxUIGroup implements IFlxUIWidget implements IF
 		#if FLX_MOUSE
 		if (dropPanel.visible)
 		{
-			#if android // thanks gamerbross -saw
 			if (list.length > 1 && canScroll)
 			{
-				for (swipe in FlxG.swipes)
-				{
-					var f = swipe.startPosition.x - swipe.endPosition.x;
-					var g = swipe.startPosition.y - swipe.endPosition.y;
-					if (25 <= Math.sqrt(f * f + g * g))
-					{
-						if ((-45 <= swipe.startPosition.angleBetween(swipe.endPosition)
-							&& 45 >= swipe.startPosition.angleBetween(swipe.endPosition)))
-						{
-							// Go down
-							currentScroll++;
-							if (currentScroll >= list.length)
-								currentScroll = list.length - 1;
-							updateButtonPositions();
-						}
-						else if (-180 <= swipe.startPosition.angleBetween(swipe.endPosition)
-							&& -135 >= swipe.startPosition.angleBetween(swipe.endPosition)
-							|| (135 <= swipe.startPosition.angleBetween(swipe.endPosition)
-								&& 180 >= swipe.startPosition.angleBetween(swipe.endPosition)))
-						{
-							// Go up
-							--currentScroll;
-							if (currentScroll < 0)
-								currentScroll = 0;
-							updateButtonPositions();
-						}
-					}
-				}
-			}
-			#else
-			if (list.length > 1 && canScroll)
-			{
+				var lastScroll:Int = currentScroll;
 				if (FlxG.mouse.wheel > 0 || FlxG.keys.justPressed.UP)
 				{
 					// Go up
 					--currentScroll;
 					if (currentScroll < 0)
 						currentScroll = 0;
-					updateButtonPositions();
 				}
 				else if (FlxG.mouse.wheel < 0 || FlxG.keys.justPressed.DOWN)
 				{
@@ -478,15 +445,16 @@ class FlxUIDropDownMenu extends FlxUIGroup implements IFlxUIWidget implements IF
 					currentScroll++;
 					if (currentScroll >= list.length)
 						currentScroll = list.length - 1;
-					updateButtonPositions();
 				}
+
+				if (lastScroll != currentScroll)
+					updateButtonPositions();
 			}
 
-			if (FlxG.mouse.justPressed && !FlxG.mouse.overlaps(this))
+			if (FlxG.mouse.justPressed && !FlxG.mouse.overlaps(this, camera))
 			{
 				showList(false);
 			}
-			#end
 		}
 		#end
 	}

@@ -1,4 +1,5 @@
 package;
+
 import flixel.math.FlxPoint;
 
 enum Alignment

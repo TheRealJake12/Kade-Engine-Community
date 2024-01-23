@@ -112,7 +112,7 @@ class StageDebugState extends MusicBeatState
 		add(camFollow);
 
 		loadStage(daStage);
-		
+
 		curChar = curChars[curCharIndex];
 
 		var positions = Stage.positions[daStage];
@@ -354,8 +354,6 @@ class StageDebugState extends MusicBeatState
 		// Idk why I felt like I had to add traces. Feels more cooler than it should be.
 	}
 
-
-
 	function loadStage(leStage:String)
 	{
 		Stage = new Stage(leStage);
@@ -421,7 +419,7 @@ class StageDebugState extends MusicBeatState
 				for (person in [boyfriend, gf, dad])
 					if (person != null)
 						if (person.curCharacter == char)
-						person.setPosition(pos[0], pos[1]);
+							person.setPosition(pos[0], pos[1]);
 		}
 
 		Debug.logTrace("Reset Character Positions.");

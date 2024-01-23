@@ -21,9 +21,9 @@
 	<!-- Allowed inputs are mobile,desktop,web,ios,android,windows,mac,linux,switch,html5,cpp,neko,flash,js -->
 
 	<!-- Defines whether the Discord client should be enabled. Only works on desktop. -->
-	<define name="FEATURE_DISCORD" if="desktop" />
+	<define name="FEATURE_DISCORD" if="cpp" />
 	<!-- Defines whether the file system can be read/written directly. Does not work in browser. -->
-	<define name="FEATURE_FILESYSTEM" if="desktop" />
+	<define name="FEATURE_FILESYSTEM" if="cpp" />
 	<!-- Defines whether Lua Modcharts should be enabled. Does not work in browser. -->
 	<define name="FEATURE_LUAMODCHART" if="FEATURE_FILESYSTEM" />
 	<!-- Defines whether StepMania files can be loaded. -->
@@ -31,7 +31,7 @@
 	<!-- Defines whether the Thread class can be used. -->
 	<define name="FEATURE_MULTITHREADING" if="cpp" />
 	<!-- Videos -->
-	<define name="VIDEOS" if="desktop || android"/>
+	<define name="VIDEOS" if="cpp"/>
 	<!-- Defines if hscript are enabled. Might Work In Browser. -->
 	<define name="FEATURE_HSCRIPT" />
 	<!-- Defines whether modcore can be used. -->

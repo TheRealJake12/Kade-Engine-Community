@@ -408,8 +408,10 @@ class PlayState extends MusicBeatState
 	// Self Explainitory.
 	public static var startTime = 0.0;
 
+	#if VIDEOS
 	// Week 7 Cutscenes. You Can Use It Your Own Way Too.
 	public var cutscene:VideoHandler;
+	#end
 
 	// Adding Objects Using Lua
 	public function addObject(object:FlxBasic)
@@ -840,7 +842,7 @@ class PlayState extends MusicBeatState
 							add(gfGroup);
 							gf.scrollFactor.set(0.95, 0.95);
 						}
-						
+
 						for (bg in array)
 							add(bg);
 					case 1:
@@ -904,7 +906,6 @@ class PlayState extends MusicBeatState
 		}
 
 		var doof = null;
-		
 
 		if (isStoryMode)
 		{
@@ -2443,7 +2444,7 @@ class PlayState extends MusicBeatState
 		{
 			skipActive = true;
 			skipText = new Alphabet(0, 550, "Press Space To Skip Intro.", true);
-			skipText.setScale(0.5,0.5);
+			skipText.setScale(0.5, 0.5);
 			skipText.changeX = false;
 			skipText.changeY = false;
 			if (PlayStateChangeables.useDownscroll)
@@ -2500,14 +2501,14 @@ class PlayState extends MusicBeatState
 			FlxG.sound.list.add(vocalsEnemy);
 		}
 
-		
-
 		if (!isStoryMode && isSM)
 		{
+			#if FEATURE_STEPMANIA
 			var bytes = File.getBytes(pathToSm + "/" + sm.header.MUSIC);
 			var sound = new Sound();
 			sound.loadCompressedDataFromByteArray(bytes.getData(), bytes.length);
 			inst = new FlxSound().loadEmbedded(sound);
+			#end
 		}
 		else
 		{
@@ -3064,8 +3065,10 @@ class PlayState extends MusicBeatState
 			scripts.executeAllFunc("update", [elapsed]);
 		#end
 
+		#if VIDEOS
 		if ((cutscene != null && cutscene.isPlaying && inCutscene) && FlxG.keys.justPressed.ANY)
 			cutscene.onEndReached.dispatch();
+		#end
 
 		super.update(elapsed);
 
@@ -3144,8 +3147,7 @@ class PlayState extends MusicBeatState
 								case 'bf' | 'boyfriend':
 									char = boyfriend;
 								case 'gf' | 'girlfriend':
-									if (gf != null)
-										char = gf;
+									if (gf != null) char = gf;
 								default:
 									char = dad;
 							}
@@ -3295,7 +3297,8 @@ class PlayState extends MusicBeatState
 			});
 			StageDebugState.Stage = Stage;
 			StageDebugState.fromEditor = false;
-			LoadingState.loadAndSwitchState(new StageDebugState(Stage.curStage, if (gf != null) gf.curCharacter else "gf", boyfriend.curCharacter, dad.curCharacter));
+			LoadingState.loadAndSwitchState(new StageDebugState(Stage.curStage, if (gf != null) gf.curCharacter else "gf", boyfriend.curCharacter,
+				dad.curCharacter));
 			#if FEATURE_LUAMODCHART
 			if (luaModchart != null)
 			{
@@ -3452,7 +3455,8 @@ class PlayState extends MusicBeatState
 			{
 				if (gf.animation.curAnim.name == 'danceLeft'
 					|| gf.animation.curAnim.name == 'danceRight'
-					|| gf.animation.curAnim.name == 'idle' && gf != null)
+					|| gf.animation.curAnim.name == 'idle'
+					&& gf != null)
 				{
 					switch (curSong)
 					{
