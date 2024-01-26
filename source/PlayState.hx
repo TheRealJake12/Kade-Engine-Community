@@ -79,6 +79,7 @@ import debug.ChartingState;
 #if VIDEOS
 import hxvlc.flixel.FlxVideo as VideoHandler;
 import hxvlc.flixel.FlxVideoSprite as VideoSprite;
+import hxvlc.libvlc.Handle;
 #end
 import stages.Stage;
 import stages.TankmenBG;
@@ -6527,36 +6528,46 @@ class PlayState extends MusicBeatState
 	function playCutscene(name:String, ?atend:Bool)
 	{
 		#if VIDEOS
-		inCutscene = true;
-		inCinematic = true;
-		var diff:String = CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[storyDifficulty]);
-		cutscene = new VideoHandler();
-		cutscene.load(Paths.video(name));
-		inst.stop();
-		cutscene.onEndReached.add(function()
+		Handle.initAsync([], function(success:Bool):Void
 		{
-			inCutscene = false;
-			if (atend == true)
+			if (!success)
+				return;
+
+			inCutscene = true;
+			inCinematic = true;
+			var diff:String = CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[storyDifficulty]);
+			cutscene = new VideoHandler();
+			cutscene.load(Paths.video(name));
+			inst.stop();
+			cutscene.onEndReached.add(function()
 			{
-				if (storyPlaylist.length <= 0)
-					LoadingState.loadAndSwitchState(new StoryMenuState());
+				inCutscene = false;
+				if (atend == true)
+				{
+					if (storyPlaylist.length <= 0)
+						LoadingState.loadAndSwitchState(new StoryMenuState());
+					else
+					{
+						SONG = Song.loadFromJson(storyPlaylist[0].toLowerCase(), diff);
+						LoadingState.loadAndSwitchState(new PlayState());
+					}
+				}
 				else
 				{
-					SONG = Song.loadFromJson(storyPlaylist[0].toLowerCase(), diff);
-					LoadingState.loadAndSwitchState(new PlayState());
+					createTimer(0.5, function(timer)
+					{
+						startCountdown();
+					});
 				}
-			}
-			else
-			{
-				createTimer(0.5, function(timer)
-				{
-					startCountdown();
-				});
-			}
 
-			cutscene.dispose();
+				cutscene.dispose();
+			});
+
+			new FlxTimer().start(0.001, function(tmr:FlxTimer):Void
+			{
+				cutscene.play();
+			});
 		});
-		cutscene.play();
 		#else
 		FlxG.log.warn("Platform Not Supported.");
 		#end

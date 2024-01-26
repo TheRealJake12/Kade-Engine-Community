@@ -214,20 +214,23 @@ class CoolUtil
 	public static function precacheVideo(name:String):Void
 	{
 		#if VIDEOS
-		if (OpenFlAssets.exists(Paths.video(name)))
+		if (FileSystem.exists(Paths.video(name)))
 		{
-			if (!loadedVideos.contains(name))
+			Handle.initAsync([], function(success:Bool):Void
 			{
-				var cache:VideoHandler = new VideoHandler();
-				cache.mute = true;
-				cache.load(Paths.video(name));
-				loadedVideos.push(name);
-				FlxG.log.add('Video file has been cached: ' + name);
-			}
-			else
-			{
-				FlxG.log.add('Video file has already been cached: ' + name);
-			}
+				if (!loadedVideos.contains(name))
+				{
+					var cache:VideoHandler = new VideoHandler();
+					cache.mute = true;
+					cache.load(Paths.video(name));
+					loadedVideos.push(name);
+					FlxG.log.add('Video file has been cached: ' + name);
+				}
+				else
+				{
+					FlxG.log.add('Video file has already been cached: ' + name);
+				}
+			});
 		}
 		else
 		{
@@ -237,29 +240,6 @@ class CoolUtil
 		FlxG.log.warn('Platform not supported!');
 		#end
 	}
-
-	#if FEATURE_FILESYSTEM
-	/*
-	 *	this function is not working. It was solely used for hscript shit. Don't need it anymore.
-	 */
-	public static function findFilesInPath(path:String, extns:Array<String>, ?filePath:Bool = false, ?deepSearch:Bool = true):Array<String>
-	{
-		var files:Array<String> = [];
-
-		if (LimeAssets.exists(path))
-		{
-			for (file in readAssetsDirectoryFromLibrary(path, 'TEXT'))
-			{
-				var path = haxe.io.Path.join([path, file]);
-				var pathsFiles:Array<String> = findFilesInPath(path, extns);
-
-				for (_ in pathsFiles)
-					files.push(_);
-			}
-		}
-		return files;
-	}
-	#end
 
 	public static inline function getFileStringFromPath(file:String):String
 	{
