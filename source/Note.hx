@@ -223,15 +223,12 @@ class Note extends FlxSprite
 			{
 				prevNote.animation.play(dataColor[prevNote.originColor] + 'hold');
 				prevNote.updateHitbox();
-
 				prevNote.scale.y *= (stepHeight / prevNote.height);
-				prevNote.updateHitbox();
 
 				if (noteTypeCheck != 'pixel')
 					prevNote.scale.y *= 1.0 + (1.0 / prevNote.frameHeight) * 1.05;
 
 				prevNote.updateHitbox();
-				updateHitbox();
 			}
 		}
 		else if (!isSustainNote)
@@ -359,11 +356,14 @@ class Note extends FlxSprite
 					centerOffsets();
 					centerOrigin();
 				}
+		}
 
-				if (isSustainNote)
-				{
-					scale.y = lastScaleY;
-				}
+		if (noteTypeCheck != 'pixel')
+		{
+			if (isSustainNote)
+			{
+				scale.y = lastScaleY;
+			}
 		}
 
 		prevNote.updateHitbox();

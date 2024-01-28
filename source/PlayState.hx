@@ -838,7 +838,7 @@ class PlayState extends MusicBeatState
 				switch (index)
 				{
 					case 0:
-						if (Stage.hasGF && gf != null)
+						if (gf != null)
 						{
 							add(gfGroup);
 							gf.scrollFactor.set(0.95, 0.95);
@@ -859,7 +859,7 @@ class PlayState extends MusicBeatState
 		}
 		else
 		{
-			if (Stage.hasGF && gf != null)
+			if (gf != null)
 			{
 				add(gfGroup);
 				gf.scrollFactor.set(0.95, 0.95);

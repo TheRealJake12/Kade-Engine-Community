@@ -166,6 +166,7 @@ class StageDebugState extends MusicBeatState
 		UI_options.resize(300, 200);
 		UI_options.x = FlxG.width - UI_options.width - 20;
 		UI_options.y = FlxG.height - 300;
+		UI_options.color = FlxColor.fromRGB(40, 40, 40);
 		add(UI_options);
 
 		posText = new FlxText(0, 690);
@@ -304,6 +305,8 @@ class StageDebugState extends MusicBeatState
 			gf.visible = false;
 			dad.setPosition(gf.x, gf.y);
 		}
+
+		hasGF.checked = Stage.hasGF;
 
 		if (!gf.visible || !Stage.hasGF) // for when gf is an opponent
 			curChars.pop();
