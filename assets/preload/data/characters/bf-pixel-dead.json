@@ -15,12 +15,12 @@
     {
       "name": "deathLoop",
       "prefix": "Retry Loop",
-      "offsets": [-30, -12]
+      "offsets": [-5, -2]
     },
     {
       "name": "deathConfirm",
       "prefix": "RETRY CONFIRM",
-      "offsets": [-30, -12]
+      "offsets": [-5, -2]
     }
   ]
 }

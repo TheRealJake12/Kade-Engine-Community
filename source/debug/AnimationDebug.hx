@@ -148,6 +148,7 @@ class AnimationDebug extends MusicBeatState
 		UI_box.camera = camHUD;
 		UI_box.x = FlxG.width - UI_box.width - 20;
 		UI_box.y = 20;
+		UI_box.color = FlxColor.fromRGB(40, 40, 40);
 
 		// var opt_tabs = [{name: "test", label: 'test'}];
 

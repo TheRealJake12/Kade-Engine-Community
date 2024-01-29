@@ -17,11 +17,11 @@
             320,
             -60
         ],
-        "camZoom": 0.9,
-        "hasGF": true,
-        "camPosition": [
-            666.5,
-            472.5
-        ]
-    }
+    },
+    "camZoom": 0.9,
+    "hasGF": true,
+    "camPosition": [
+        599,
+        529
+    ]
 }

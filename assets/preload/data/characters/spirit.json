@@ -1,39 +1,59 @@
 {
   "name": "Spirit",
-  "asset": ["characters/spirit"],
+  "asset": [
+    "characters/spirit"
+  ],
   "barColor": "#FF3C6E",
   "scale": 6,
   "antialiasing": false,
   "AtlasType": "PackerAtlas",
   "startingAnim": "idle",
-  "camPos": [0, 0],
+  "camPos": [
+    0,
+    0
+  ],
   "hasTrail": true,
-  "healthicon" : "spirit",
+  "healthicon": "spirit",
   "animations": [
     {
       "name": "idle",
       "prefix": "idle spirit_",
-      "offsets": [-220, -280]
+      "offsets": [
+        -36,
+        -46
+      ]
     },
     {
       "name": "singUP",
       "prefix": "up_",
-      "offsets": [-220, -240]
+      "offsets": [
+        -36,
+        -46
+      ]
     },
     {
       "name": "singLEFT",
       "prefix": "left_",
-      "offsets": [-200, -280]
+      "offsets": [
+        -33,
+        -46
+      ]
     },
     {
       "name": "singRIGHT",
       "prefix": "right_",
-      "offsets": [-220, -280]
+      "offsets": [
+        -36,
+        -46
+      ]
     },
     {
       "name": "singDOWN",
       "prefix": "spirit down_",
-      "offsets": [170, 110]
+      "offsets": [
+        28,
+        18
+      ]
     }
   ]
 }

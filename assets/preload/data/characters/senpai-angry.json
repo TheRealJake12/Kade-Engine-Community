@@ -1,37 +1,57 @@
 {
   "name": "Senpai (Angry)",
-  "asset": ["characters/senpai"],
+  "asset": [
+    "characters/senpai"
+  ],
   "barColor": "#FFAA6F",
   "scale": 6,
   "antialiasing": false,
   "startingAnim": "idle",
-  "camPos": [-100, -400],
-  "healthicon" : "senpai",
+  "camPos": [
+    -100,
+    -400
+  ],
+  "healthicon": "senpai",
   "animations": [
     {
       "name": "idle",
       "prefix": "Angry Senpai Idle",
-      "offsets": [0, 0]
+      "offsets": [
+        0,
+        0
+      ]
     },
     {
       "name": "singUP",
       "prefix": "Angry Senpai UP NOTE",
-      "offsets": [5, 37]
+      "offsets": [
+        0,
+        6
+      ]
     },
     {
       "name": "singLEFT",
       "prefix": "Angry Senpai LEFT NOTE",
-      "offsets": [40, 0]
+      "offsets": [
+        6,
+        0
+      ]
     },
     {
       "name": "singRIGHT",
       "prefix": "Angry Senpai RIGHT NOTE",
-      "offsets": [0, 0]
+      "offsets": [
+        0,
+        0
+      ]
     },
     {
       "name": "singDOWN",
       "prefix": "Angry Senpai DOWN NOTE",
-      "offsets": [14, 0]
+      "offsets": [
+        1,
+        1
+      ]
     }
   ]
 }
