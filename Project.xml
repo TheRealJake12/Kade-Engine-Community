@@ -127,6 +127,9 @@
 	<assets path="assets/week7"    library="week7"    exclude="*.mp3" unless="web"/>
 	<assets path="assets/sm"    library="sm"    exclude="*.ogg" if="web"/>
 	<assets path="assets/sm"    library="sm"    exclude="*.mp3" unless="web"/>
+
+	<assets path="assets/shared/images"/> <!--Quick Cache Fix For Shared Images.-->
+
 	<assets path="assets/scripts"  library="scripts"/>
 	
 	<assets path='mods' embed='false'/>

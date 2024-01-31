@@ -170,6 +170,9 @@ class Main extends Sprite
 					obj.destroy();
 				}
 			}
+			#if cpp
+			cpp.vm.Gc.run(true);
+			#end
 			Assets.cache.clear("songs");
 			#end
 		}

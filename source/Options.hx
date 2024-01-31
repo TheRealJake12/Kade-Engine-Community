@@ -1329,6 +1329,27 @@ class NPSDisplayOption extends Option
 	}
 }
 
+class CacheNow extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+		acceptType = true;
+	}
+
+	public override function press():Bool
+	{
+		MusicBeatState.switchState(new Caching());
+		return false;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Cache";
+	}
+}
+
 class ReplayOption extends Option
 {
 	public function new(desc:String)

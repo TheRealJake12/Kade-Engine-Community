@@ -286,9 +286,9 @@ class PlayState extends MusicBeatState
 	public var zoomMultiplier:Float = 1;
 
 	// Characters, Very Useful.
-	public static var dad:Character;
-	public static var gf:Character;
-	public static var boyfriend:Boyfriend;
+	public static var dad:Character = null;
+	public static var gf:Character = null;
+	public static var boyfriend:Boyfriend = null;
 
 	// I'll come back to this later but basically is unused for now.
 	public var boyfriendMap:Map<String, Boyfriend> = new Map<String, Boyfriend>();
@@ -746,6 +746,8 @@ class PlayState extends MusicBeatState
 					gf = new Character(400, 130, 'gf');
 				}
 			}
+			else
+				gf = null;
 
 			boyfriend = new Boyfriend(770, 450, SONG.player1);
 
@@ -6477,6 +6479,19 @@ class PlayState extends MusicBeatState
 				return;
 			}
 		}
+
+		boyfriendGroup.clear();
+		dadGroup.clear();
+		gfGroup.clear();
+
+		boyfriend.destroy();
+		dad.destroy();
+		gf.destroy();
+
+		boyfriend = null;
+		dad = null;
+		if (gf != null)
+			gf = null;
 
 		Stage.destroy();
 		Stage = null;

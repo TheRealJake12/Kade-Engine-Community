@@ -26,9 +26,8 @@ class Skin
 
 			if (!i.endsWith(".png"))
 				continue;
-			var thingy = i.replace("assets/shared/images/noteskins/", "");
 
-			noteskinArray.push(thingy.replace(".png", ""));
+			noteskinArray.push(i.replace(".png", ""));
 		}
 		return noteskinArray;
 	}

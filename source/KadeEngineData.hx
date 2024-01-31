@@ -105,9 +105,6 @@ class KadeEngineData
 		if (FlxG.save.data.cacheImages == null)
 			FlxG.save.data.cacheImages = false;
 
-		if (FlxG.save.data.cacheCharacters == null)
-			FlxG.save.data.cacheCharacters = false;
-
 		if (FlxG.save.data.healthBar == null)
 			FlxG.save.data.healthBar = true;
 
@@ -164,8 +161,8 @@ class KadeEngineData
 		if (FlxG.save.data.cpuNoteskin == null)
 			FlxG.save.data.cpuNoteskin = 0;
 
-		if (FlxG.save.data.cacheSongs == null)
-			FlxG.save.data.cacheSongs = false;
+		if (FlxG.save.data.cacheSounds == null)
+			FlxG.save.data.cacheSounds = false;
 
 		if (FlxG.save.data.unload == null)
 			FlxG.save.data.unload = true;
