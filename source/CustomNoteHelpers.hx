@@ -67,9 +67,8 @@ class Splash
 		{
 			if (!i.endsWith(".png"))
 				continue;
-			var thingy = i.replace("assets/shared/images/splashes/", "");
 
-			notesplashArray.push(thingy.replace(".png", ""));
+			notesplashArray.push(i.replace(".png", ""));
 		}
 		return notesplashArray;
 	}
@@ -86,7 +85,7 @@ class Splash
 
 	static public function generateNotesplashSprite(id:Int, ?type:String = '')
 	{
-		if (type != '')
+		if (type != '' && Paths.fileExists('notetypes/splashes/${getNotesplashByID(id)}', IMAGE, 'shared'))
 			return 'notetypes/splashes/${getNotesplashByID(id) + type}';
 		else
 			return 'splashes/${getNotesplashByID(id)}';

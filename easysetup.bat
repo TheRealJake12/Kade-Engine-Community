@@ -28,7 +28,7 @@ pause >nul
 title KEC Setup - Installing libraries
 haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
 haxelib git faxe https://github.com/uhrobots/faxe
-haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
+haxelib git hxdiscord_rpc https://github.com/MAJigsaw77/hxdiscord_rpc.git
 haxelib git hxvlc https://github.com/MAJigsaw77/hxvlc.git
 cls
 

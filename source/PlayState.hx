@@ -5879,7 +5879,7 @@ class PlayState extends MusicBeatState
 
 		var files:Array<String> = [];
 		var extensions = ["hx", "hscript", "hsc", "hxs"];
-		var rawFiles:Array<String> = CoolUtil.readAssetsDirectoryFromLibrary('assets/data/songs/${SONG.songId}', 'TEXT');
+		var rawFiles:Array<String> = CoolUtil.readAssetsDirectoryFromLibrary('assets/data/songs/${SONG.songId}', 'TEXT', 'default', false);
 
 		for (sub in rawFiles)
 		{
@@ -5898,7 +5898,7 @@ class PlayState extends MusicBeatState
 		{
 			var hx:Null<String> = null;
 
-			if (OpenFlAssets.exists(file))
+			if (OpenFlAssets.exists(file, TEXT))
 				hx = OpenFlAssets.getText(file);
 
 			if (hx != null)

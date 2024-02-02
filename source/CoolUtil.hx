@@ -191,7 +191,7 @@ class CoolUtil
 		* @param path The specific directory you want to read.
 		* @param library The library you want to scan. Ex: shared.
 	 */
-	public static function readAssetsDirectoryFromLibrary(path:String, ?type:String, ?library:String = 'default'):Array<String>
+	public static function readAssetsDirectoryFromLibrary(path:String, ?type:String, ?library:String = 'default', ?removePath:Bool = true):Array<String>
 	{
 		var lib = LimeAssets.getLibrary(library);
 		var list:Array<String> = lib.list(type);
@@ -200,7 +200,11 @@ class CoolUtil
 		{
 			if (hmm.startsWith(path))
 			{
-				var bruh = hmm.replace('$path/', '');
+				var bruh = null;
+				if (removePath)
+					bruh = hmm.replace('$path/', '');
+				else
+					bruh = hmm;
 				stringList.push(bruh);
 			}
 		}

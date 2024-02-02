@@ -44,12 +44,6 @@
       "url": "https://github.com/superpowers04/linc_luajit"
     },
     {
-      "name": "faxe",
-      "type": "git",
-      "ref": "master",
-      "url": "https://github.com/uhrobots/faxe"
-    },
-    {
       "name": "flixel-ui",
       "type": "haxelib",
       "version": null

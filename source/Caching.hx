@@ -15,6 +15,7 @@ class Caching extends MusicBeatState
 	var images = [];
 	var sounds = [];
 	var shitz:FlxText;
+	var kadeLogo:FlxSprite;
 
 	override function create()
 	{
@@ -23,10 +24,27 @@ class Caching extends MusicBeatState
 		Discord.changePresence("I Have A Chad PC (Caching)", null);
 		#end
 
-		shitz = new FlxText(12, 12, 0, "Loading...", 12);
-		shitz.scrollFactor.set();
-		shitz.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		add(shitz);
+		text = new FlxText(FlxG.width / 2, FlxG.height / 2 + 300, 0, "Loading...");
+		text.size = 34;
+		text.alignment = FlxTextAlign.CENTER;
+		text.alpha = 1;
+		text.font = Paths.font("vcr.ttf");
+
+		kadeLogo = new FlxSprite(FlxG.width / 2, FlxG.height / 2).loadGraphic(Paths.image('KadeEngineLogoOld'));
+		kadeLogo.screenCenter();
+		text.y -= kadeLogo.height / 2 - 125;
+		text.x -= 170;
+
+		kadeLogo.setGraphicSize(Std.int(kadeLogo.width * 0.6));
+		if (FlxG.save.data.antialiasing != null)
+			kadeLogo.antialiasing = FlxG.save.data.antialiasing;
+		else
+			kadeLogo.antialiasing = true;
+
+		kadeLogo.alpha = 0;
+
+		add(kadeLogo);
+		add(text);
 		for (imageDir in ['assets/images/', 'assets/shared/images/'])
 		{
 			list('image', imageDir);
@@ -58,7 +76,9 @@ class Caching extends MusicBeatState
 				{
 					if (toBeDone != 0 && BaseCache.cacheAmount != toBeDone)
 					{
-						shitz.text = "Loading... (" + BaseCache.cacheAmount + "/" + toBeDone + ")";
+						var alpha = HelperFunctions.truncateFloat(BaseCache.cacheAmount / toBeDone * 100, 2) / 100;
+						kadeLogo.alpha = alpha;
+						text.text = "Loading... (" + BaseCache.cacheAmount + "/" + toBeDone + ")";
 					}
 				}
 			});
