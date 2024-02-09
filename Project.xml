@@ -165,8 +165,7 @@
 	<haxedef name="hscriptPos" if="FEATURE_HSCRIPT"/>
 
 	<!-- Utilities -->
-
-	<haxelib name="faxe" if='switch'/>
+	
 	<haxelib name="tjson"/>
 	<haxelib name="hxcpp-debug-server" if="desktop"/>
 	<section if="cpp">
@@ -215,7 +214,8 @@
 	<haxeflag name="-D no-traces" unless="debug" />
 	<haxedef name="queue_experimental_optimization"/>
 
-	<haxeflag name="-dce" value="full" if="release"/>
+	<haxeflag name="-dce" value="no" if="release"/>
+	<!--I'm Crying So Hard Right Now.-->
 
 	<!--Basically Allows Videos To Render In Higher Quality On Higher Resoluttions-->
 	<haxedef name="openfl_dpi_aware" unless="web" />

@@ -309,7 +309,11 @@ class Note extends FlxSprite
 
 		if (texture.length < 1)
 		{
-			skin = isPlayer ? PlayState.noteskinSprite : PlayState.cpuNoteskinSprite;
+			if (!PlayStateChangeables.opponentMode)
+				skin = isPlayer ? PlayState.noteskinSprite : PlayState.cpuNoteskinSprite;
+			else
+				skin = isPlayer ? PlayState.cpuNoteskinSprite : PlayState.noteskinSprite;
+
 			if (skin == null || skin.length < 1)
 				skin = isPlayer ? defaultPlayerSkin : defaultCpuSkin;
 		}
@@ -358,19 +362,18 @@ class Note extends FlxSprite
 				}
 		}
 
+		if (animName != null)
+			animation.play(animName, true);
+
 		if (noteTypeCheck != 'pixel')
 		{
-			if (isSustainNote)
+			if (isSustainNote && (animation.curAnim != null && !animation.curAnim.name.endsWith('end')))
 			{
 				scale.y = lastScaleY;
 			}
 		}
 
-		prevNote.updateHitbox();
 		updateHitbox();
-
-		if (animName != null)
-			animation.play(animName, true);
 	}
 
 	function loadNoteAnims()

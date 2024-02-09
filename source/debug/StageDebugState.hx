@@ -75,6 +75,10 @@ class StageDebugState extends MusicBeatState
 	var staticCam:FlxUICheckBox;
 	var resetPos:FlxUIButton;
 
+	var idleToBeat:Bool = true; // change if bf and dad would idle to the beat of the song
+	var idleBeat:Int = 2; // how frequently bf and dad would play their idle animation(1 - every beat, 2 - every 2 beats and so on)
+	var forcedToIdle:Bool = false; // change if bf and dad are forced to idle to every (idleBeat) beats of the song
+
 	var stageList:Array<String>;
 	var charList:Array<String>;
 	var gfList:Array<String>;
@@ -98,6 +102,10 @@ class StageDebugState extends MusicBeatState
 		FlxG.sound.playMusic(Paths.inst(PlayState.SONG.audioFile));
 		FlxG.sound.music.fadeIn(3, 0, 0.5);
 		FlxG.mouse.visible = true;
+
+		#if FEATURE_DISCORD
+		Discord.changePresence("Stage Editor", null, null, true);
+		#end
 
 		gf = new Character(400, 130, daGf);
 		boyfriend = new Boyfriend(770, 450, daBf);
@@ -314,8 +322,14 @@ class StageDebugState extends MusicBeatState
 
 		camFollow.setPosition(Stage.camPosition[0], Stage.camPosition[1]);
 
-		getNextObject();
-		getNextChar();
+		if (charMode)
+		{
+			getNextChar();
+		}
+		else
+		{
+			getNextObject();
+		}
 
 		fakeZoom = Stage.camZoom;
 
@@ -380,8 +394,14 @@ class StageDebugState extends MusicBeatState
 			curChars.pop();
 		curChar = curChars[curCharIndex];
 
-		getNextObject();
-		getNextChar();
+		if (charMode)
+		{
+			getNextChar();
+		}
+		else
+		{
+			getNextObject();
+		}
 
 		camFollow.setPosition(Stage.camPosition[0], Stage.camPosition[1]);
 
@@ -711,12 +731,23 @@ class StageDebugState extends MusicBeatState
 	{
 		super.beatHit();
 
-		if (curBeat % 2 == 0)
+		if (curBeat % idleBeat == 0)
 		{
-			dad.dance(true);
-			boyfriend.dance(true);
-			if (Stage.hasGF)
-				gf.dance(true);
+			if (idleToBeat)
+				dad.dance(forcedToIdle);
+			if (idleToBeat)
+				boyfriend.dance(forcedToIdle);
+			if (gf != null && idleToBeat)
+				gf.dance(forcedToIdle);
+		}
+		else if (curBeat % idleBeat != 0)
+		{
+			if (boyfriend.isDancing)
+				boyfriend.dance(forcedToIdle);
+			if (dad.isDancing)
+				dad.dance(forcedToIdle);
+			if (gf != null && gf.isDancing)
+				gf.dance(forcedToIdle);
 		}
 	}
 

@@ -49,7 +49,7 @@ class Caching extends MusicBeatState
 		{
 			list('image', imageDir);
 		}
-		
+
 		for (soundDir in [
 			'assets/songs/',
 			'assets/shared/sounds/',
@@ -91,7 +91,6 @@ class Caching extends MusicBeatState
 			MusicBeatState.switchState(new OptionsDirect());
 			Debug.logTrace("Loaded Before, No Need To Load Again.");
 		}
-		
 		#end
 
 		super.create();
