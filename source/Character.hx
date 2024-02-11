@@ -121,7 +121,7 @@ class Character extends FlxSprite
 				thingy = Paths.getSparrowAtlas(data.asset[0], 'shared');
 		}
 
-		for (i in 0...data.asset.length)
+		for (i in 1...data.asset.length)
 		{
 			switch (data.AtlasType)
 			{
@@ -367,8 +367,8 @@ class Character extends FlxSprite
 
 				var oldNote:Note;
 
-				if (PlayState.instance.unspawnNotes.length > 0)
-					oldNote = PlayState.instance.unspawnNotes[Std.int(PlayState.instance.unspawnNotes.length - 1)];
+				if (animationNotes.length > 0)
+					oldNote = animationNotes[Std.int(animationNotes.length - 1)];
 				else
 					oldNote = null;
 				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, false, false, songNotes[4], daBeat);
