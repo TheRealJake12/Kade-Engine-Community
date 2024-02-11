@@ -1,4 +1,4 @@
-package;
+package shader;
 
 import flixel.system.FlxAssets.FlxShader;
 import openfl.filters.ShaderFilter;
