@@ -14,7 +14,7 @@
     {
       "name": "SScript",
       "type": "haxelib",
-      "version": null
+      "version": "8.1.6"
     },
     {
       "name": "hxcpp-debug-server",
