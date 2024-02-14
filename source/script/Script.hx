@@ -29,7 +29,7 @@ enum ScriptReturn
 	CONTINUE;
 }
 
-@:access(haxescript.Interp)
+@:access(hscriptBase.Interp)
 class Script extends FlxBasic
 {
 	public var variables(get, null):Map<String, Dynamic>;

@@ -7,6 +7,9 @@ import flixel.FlxState;
 import openfl.Assets;
 import flixel.util.FlxColor;
 import openfl.display.Bitmap;
+import openfl.filters.ShaderFilter;
+import flixel.system.FlxAssets.FlxShader;
+import flash.display.StageQuality;
 #if FEATURE_DISCORD
 import Discord;
 #end
@@ -119,6 +122,10 @@ class Main extends Sprite
 		game.framerate = 60;
 		addChild(new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate,
 			game.skipSplash, game.startFullscreen));
+
+		FlxG.game.setFilters([new ShaderFilter(new FlxShader())]);
+
+		FlxG.game.stage.quality = StageQuality.LOW;
 
 		FlxG.fixedTimestep = false;
 

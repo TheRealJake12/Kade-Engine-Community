@@ -2188,7 +2188,7 @@ class PlayState extends MusicBeatState
 
 	private function handleBotplay(note:Note)
 	{
-		if (note.mustPress && Conductor.songPosition >= note.strumTime)
+		if (note.mustPress && Conductor.songPosition >= note.strumTime && note.botplayHit)
 		{
 			// Force good note hit regardless if it's too late to hit it or not as a fail safe
 
@@ -3002,9 +3002,12 @@ class PlayState extends MusicBeatState
 			while (unspawnNotes.length > 0 && unspawnNotes[0].strumTime - Conductor.songPosition < time)
 			{
 				var dunceNote:Note = unspawnNotes[0];
+
+				var tex = dunceNote.texture;
 				notes.insert(0, dunceNote);
 
-				dunceNote.reloadNote();
+				// dunceNote.reloadNote();
+				dunceNote.texture = tex;
 
 				#if FEATURE_LUAMODCHART
 				if (executeModchart)
@@ -3961,7 +3964,7 @@ class PlayState extends MusicBeatState
 									&& daNote.sustainActive
 									&& !daNote.isSustainEnd
 									&& !holdArray[Std.int(Math.abs(daNote.noteData))])
-								{	
+								{
 									// there should be a ! infront of the wasGoodHit one but it'd cause a miss per every sustain note.
 									// now it just misses on the slightest sustain end for some reason.
 									Debug.logTrace("User released key while playing a sustain at: " + daNote.spotInLine);
