@@ -41,7 +41,7 @@ class Note extends FlxSprite
 	public var causesMisses:Bool = true; // if a note will do noteMiss or something.
 	public var botplayHit:Bool = true; // if botplay should hit the note.
 	public var canRate:Bool = true; // if it should do ratings, popup score and whatnot.
-	public var missHealth:Float = 0.08; // default health you lose.
+	public var missHealth:Float = 0.08; // default health you miss.
 
 	public var luaID:Int = 0;
 
@@ -74,7 +74,7 @@ class Note extends FlxSprite
 	public var isParent:Bool = false;
 	public var parent:Note = null;
 	public var spotInLine:Int = 0;
-	public var sustainActive:Bool = true;
+	public var sustainActive:Bool = false;
 
 	public var children:Array<Note> = [];
 

@@ -3959,7 +3959,7 @@ class PlayState extends MusicBeatState
 						if (daNote != null)
 							if (daNote.mustPress)
 							{
-								if (daNote.wasGoodHit
+								if (!daNote.wasGoodHit
 									&& daNote.isSustainNote
 									&& daNote.sustainActive
 									&& !daNote.isSustainEnd
