@@ -2994,7 +2994,7 @@ class PlayState extends MusicBeatState
 
 		if (unspawnNotes[0] != null)
 		{
-			var shit:Float = 1500;
+			var shit:Float = 2000;
 			if (SONG.speed < 1 || scrollSpeed < 1)
 				shit /= scrollSpeed == 1 ? SONG.speed : scrollSpeed;
 			var time:Float = shit * songMultiplier;
@@ -3006,7 +3006,7 @@ class PlayState extends MusicBeatState
 				var tex = dunceNote.texture;
 				notes.insert(0, dunceNote);
 
-				// dunceNote.reloadNote();
+				// post process notes to look gud
 				dunceNote.texture = tex;
 
 				#if FEATURE_LUAMODCHART
@@ -3971,7 +3971,7 @@ class PlayState extends MusicBeatState
 									for (i in daNote.parent.children)
 									{
 										i.sustainActive = false;
-										health -= (0.08 * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
+										health -= (daNote.missHealth * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
 									}
 									if (daNote.parent.wasGoodHit)
 									{
