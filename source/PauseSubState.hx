@@ -25,6 +25,8 @@ class PauseSubState extends MusicBeatSubstate
 	public static var goToOptions:Bool = false;
 	public static var goBack:Bool = false;
 
+	var tweenManager:FlxTweenManager = null;
+
 	var pauseOG:Array<String> = ['Resume', 'Restart Song', 'Change Difficulty', 'Options', 'Exit to menu'];
 	var difficultyChoices = [];
 
@@ -35,14 +37,7 @@ class PauseSubState extends MusicBeatSubstate
 	public static var playingPause:Bool = false;
 
 	var pauseMusic:FlxSound;
-
-	var perSongOffset:FlxText;
-
-	var offsetChanged:Bool = false;
-	var startOffset:Float = PlayState.SONG.offset;
-
 	var bg:FlxSprite;
-
 	var levelDifficulty:FlxText;
 
 	var levelInfo:FlxText;
@@ -51,20 +46,13 @@ class PauseSubState extends MusicBeatSubstate
 	{
 		Paths.clearUnusedMemory();
 		super();
-		
+
 		openCallback = refresh;
+
+		tweenManager = new FlxTweenManager();
 
 		if (CoolUtil.difficultyArray.length < 2)
 			pauseOG.remove('Change Difficulty'); // No need to change difficulty if there is only one!
-
-		if (FlxG.sound.music.playing)
-			FlxG.sound.music.pause();
-
-		for (i in FlxG.sound.list)
-		{
-			if (i.playing && i.ID != 9000)
-				i.pause();
-		}
 
 		menuItems = pauseOG;
 
@@ -75,45 +63,41 @@ class PauseSubState extends MusicBeatSubstate
 		}
 		difficultyChoices.push('BACK');
 
-		if (!playingPause)
-		{
-			playingPause = true;
-			pauseMusic = new FlxSound().loadEmbedded(Paths.music('breakfast'), true, true);
-			pauseMusic.volume = 0;
-			pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
-			pauseMusic.ID = 9000;
-
-			FlxG.sound.list.add(pauseMusic);
-		}
-		else
-		{
-			for (i in FlxG.sound.list)
-			{
-				if (i.ID == 9000) // jankiest static variable
-					pauseMusic = i;
-			}
-		}
-
 		bg = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
 		bg.scale.set(FlxG.width, FlxG.height);
 		bg.updateHitbox();
 		bg.alpha = 0;
 		bg.scrollFactor.set();
-		add(bg);
 
 		levelInfo = new FlxText(20, 15, 0, "", 32);
 		levelInfo.text += PlayState.SONG.songName.toUpperCase();
 		levelInfo.scrollFactor.set();
 		levelInfo.setFormat(Paths.font("vcr.ttf"), 32);
 		levelInfo.updateHitbox();
-		add(levelInfo);
 
 		levelDifficulty = new FlxText(20, 15 + 32, 0, "", 32);
 		levelDifficulty.text += CoolUtil.difficultyFromInt(PlayState.storyDifficulty).toUpperCase();
 		levelDifficulty.scrollFactor.set();
 		levelDifficulty.setFormat(Paths.font('vcr.ttf'), 32);
 		levelDifficulty.updateHitbox();
+
+		grpMenuShit = new FlxTypedGroup<Alphabet>();
+		regenMenu();
+	}
+
+	override public function create()
+	{
+		pauseMusic = new FlxSound().loadEmbedded(Paths.music('breakfast'), true, true);
+		pauseMusic.volume = 0;
+		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
+
+		add(bg);
+
+		add(levelInfo);
+
 		add(levelDifficulty);
+
+		add(grpMenuShit);
 
 		levelDifficulty.alpha = 0;
 		levelInfo.alpha = 0;
@@ -121,23 +105,14 @@ class PauseSubState extends MusicBeatSubstate
 		levelInfo.x = FlxG.width - (levelInfo.width + 20);
 		levelDifficulty.x = FlxG.width - (levelDifficulty.width + 20);
 
-		grpMenuShit = new FlxTypedGroup<Alphabet>();
+		FlxTween.tween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
+
 		add(grpMenuShit);
 
 		regenMenu();
-	}
-
-	override public function create()
-	{
-		FlxTween.tween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
-		FlxTween.tween(levelInfo, {alpha: 1, y: 20}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.3});
-		FlxTween.tween(levelDifficulty, {alpha: 1, y: levelDifficulty.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.5});
-
-		changeSelection();
 
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
-
-		regenMenu();
+		super.create();
 	}
 
 	#if !mobile
@@ -146,8 +121,7 @@ class PauseSubState extends MusicBeatSubstate
 
 	override function update(elapsed:Float)
 	{
-		// if (pauseMusic.volume < 0.5)
-		// pauseMusic.volume += 0.01 * elapsed;
+		tweenManager.update(elapsed);
 
 		super.update(elapsed);
 
@@ -171,14 +145,6 @@ class PauseSubState extends MusicBeatSubstate
 
 		if (bg.alpha > 0.6)
 			bg.alpha = 0.6;
-		var oldOffset:Float = 0;
-
-		var songPath = 'assets/data/songs/${PlayState.SONG.songId}/';
-
-		#if FEATURE_STEPMANIA
-		if (PlayState.isSM && !PlayState.isStoryMode)
-			songPath = PlayState.pathToSm;
-		#end
 
 		if (controls.UP_P)
 		{
@@ -257,13 +223,18 @@ class PauseSubState extends MusicBeatSubstate
 
 	override function destroy()
 	{
-		if (!goToOptions)
-		{
-			pauseMusic.destroy();
-			playingPause = false;
-		}
+		tweenManager.clear();
+		tweenManager.destroy();
 
 		super.destroy();
+	}
+
+	override function close()
+	{
+		tweenManager.clear();
+		pauseMusic.pause();
+
+		super.close();
 	}
 
 	private function regenMenu():Void
@@ -314,5 +285,25 @@ class PauseSubState extends MusicBeatSubstate
 
 	private function refresh()
 	{
+		for (i in 0...grpMenuShit.length - 1)
+		{
+			grpMenuShit.members[i].y = (70 * i) + 30;
+		}
+
+		pauseMusic.volume = 0;
+		pauseMusic.play();
+
+		levelInfo.y = 15;
+		levelDifficulty.y = 15 + 32;
+
+		bg.alpha = 0;
+		levelDifficulty.alpha = 0;
+		levelInfo.alpha = 0;
+
+		tweenManager.tween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
+		tweenManager.tween(levelInfo, {alpha: 1, y: 20}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.3});
+		tweenManager.tween(levelDifficulty, {alpha: 1, y: levelDifficulty.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.5});
+
+		changeSelection();
 	}
 }
