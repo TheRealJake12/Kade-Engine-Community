@@ -9,7 +9,7 @@ import flixel.util.FlxColor;
 import openfl.display.Bitmap;
 import openfl.filters.ShaderFilter;
 import flixel.system.FlxAssets.FlxShader;
-import flash.display.StageQuality;
+import openfl.display.StageQuality;
 #if FEATURE_DISCORD
 import Discord;
 #end
@@ -126,6 +126,8 @@ class Main extends Sprite
 		FlxG.game.setFilters([new ShaderFilter(new FlxShader())]);
 
 		FlxG.game.stage.quality = StageQuality.LOW;
+
+		// """Pixel Perfect Effect"""
 
 		FlxG.fixedTimestep = false;
 
