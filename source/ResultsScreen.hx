@@ -50,6 +50,7 @@ class ResultsScreen extends MusicBeatSubstate
 				modifiers = 'Active Modifiers: None';
 			activeMods = new FlxText(FlxG.width - 500, FlxG.height - 450, FlxG.width, modifiers);
 			activeMods.size = 24;
+			activeMods.font = Paths.font("vcr.ttf");
 			activeMods.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2, 1);
 			activeMods.scrollFactor.set();
 		}
@@ -202,7 +203,7 @@ class ResultsScreen extends MusicBeatSubstate
 		var acceptShit:String = (superMegaConditionShit ? '| Accepted' : '| Rejected');
 
 		if (!PlayStateChangeables.modchart #if FEATURE_LUAMODCHART
-			&& FileSystem.exists(Paths.lua('songs/${PlayState.SONG.songId}/modchart'))#end)
+			&& FileSystem.exists(Paths.lua('songs/${PlayState.SONG.songId}/modchart')) #end)
 			acceptShit = '| Rejected';
 
 		#if debug

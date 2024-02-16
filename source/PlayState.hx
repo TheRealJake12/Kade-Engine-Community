@@ -1075,7 +1075,7 @@ class PlayState extends MusicBeatState
 		{
 			uiGroup.add(judgementCounter);
 		}
-		
+
 		botPlayState = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 75, healthBarBG.y + (PlayStateChangeables.useDownscroll ? 100 : -100), 0,
 			"BOTPLAY", 20);
 		botPlayState.setFormat(Paths.font("vcr.ttf"), 42, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -2219,16 +2219,10 @@ class PlayState extends MusicBeatState
 		if (FlxG.save.data.ghost)
 			return;
 
-		if (!PlayStateChangeables.opponentMode)
-			health -= 0.08 * PlayStateChangeables.healthLoss;
-		else
-			health += 0.08 * PlayStateChangeables.healthLoss;
+		health -= 0.08 * PlayStateChangeables.healthLoss;
 
 		if (PlayStateChangeables.skillIssue)
-			if (!PlayStateChangeables.opponentMode)
-				health = 0;
-			else
-				health = 2.1;
+			health = 0;
 		if (combo > 5 && gf != null && gf.animOffsets.exists('sad'))
 		{
 			gf.playAnim('sad');
@@ -2253,6 +2247,7 @@ class PlayState extends MusicBeatState
 		{
 			vocalsPlayer.volume = 0;
 		}
+		updateAccuracy();
 		updateScoreText();
 
 		#if FEATURE_HSCRIPT
@@ -3551,7 +3546,9 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (health >= 2 && !PlayStateChangeables.opponentMode)
+		if (health <= 0 && PlayStateChangeables.practiceMode)
+			health = 0;
+		else if (health >= 2 && PlayStateChangeables.practiceMode)
 			health = 2;
 
 		if (!usedBot && PlayStateChangeables.botPlay)
@@ -3577,66 +3574,136 @@ class PlayState extends MusicBeatState
 
 		var iconOffset:Int = 26;
 
-		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
-		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
+		iconP1.x = healthBar.x
+			+ (healthBar.width * (FlxMath.remapToRange(PlayStateChangeables.opponentMode ? 100 - healthBar.percent : healthBar.percent, 0, 100, 100, 0) * 0.01)
+				- iconOffset);
+		iconP2.x = healthBar.x
+			+ (healthBar.width * (FlxMath.remapToRange(PlayStateChangeables.opponentMode ? 100 - healthBar.percent : healthBar.percent, 0, 100, 100, 0) * 0.01))
+			- (iconP2.width - iconOffset);
 		try
 		{
 			if (iconP1.isAnimated)
 			{
-				if (healthBar.percent < 20 && icon1AnimArray[0])
+				if (!PlayStateChangeables.opponentMode)
 				{
-					animName = 'Lose';
+					if (healthBar.percent < 20 && icon1AnimArray[0])
+					{
+						animName = 'Lose';
+					}
+					else
+					{
+						animName = 'Idle';
+					}
+
+					if (iconP1.animation.curAnim.finished || (animName != iconP1.animation.curAnim.name))
+					{
+						iconP1.playAnim(animName, true);
+					}
 				}
 				else
 				{
-					animName = 'Idle';
-				}
+					if (healthBar.percent > 80 && icon1AnimArray[0])
+					{
+						animName = 'Lose';
+					}
+					else
+					{
+						animName = 'Idle';
+					}
 
-				if (iconP1.animation.curAnim.finished || (animName != iconP1.animation.curAnim.name))
-				{
-					iconP1.playAnim(animName, true);
+					if (iconP1.animation.curAnim.finished || (animName != iconP1.animation.curAnim.name))
+					{
+						iconP1.playAnim(animName, true);
+					}
 				}
 			}
 			else
 			{
-				if (healthBar.percent < 20)
-					iconP1.animation.curAnim.curFrame = 1;
-				else if (healthBar.percent > 80 && iconP1.hasWinningIcon)
-					iconP1.animation.curAnim.curFrame = 2;
+				if (!PlayStateChangeables.opponentMode)
+				{
+					if (healthBar.percent < 20)
+						iconP1.animation.curAnim.curFrame = 1;
+					else if (healthBar.percent > 80 && iconP1.hasWinningIcon)
+						iconP1.animation.curAnim.curFrame = 2;
+					else
+						iconP1.animation.curAnim.curFrame = 0;
+				}
 				else
-					iconP1.animation.curAnim.curFrame = 0;
+				{
+					if (healthBar.percent > 80)
+						iconP1.animation.curAnim.curFrame = 1;
+					else if (healthBar.percent < 20 && iconP1.hasWinningIcon)
+						iconP1.animation.curAnim.curFrame = 2;
+					else
+						iconP1.animation.curAnim.curFrame = 0;
+				}
 			}
 
 			if (iconP2.isAnimated)
 			{
-				if (healthBar.percent > 80 && icon2AnimArray[0])
+				if (!PlayStateChangeables.opponentMode)
 				{
-					animName = 'Lose';
+					if (healthBar.percent > 80 && icon2AnimArray[0])
+					{
+						animName = 'Lose';
+					}
+					else
+					{
+						animName = 'Idle';
+					}
+
+					if (iconP2.animation.curAnim.finished || (animName != iconP2.animation.curAnim.name))
+					{
+						iconP2.playAnim(animName, true);
+					}
 				}
 				else
 				{
-					animName = 'Idle';
-				}
+					if (healthBar.percent < 20 && icon2AnimArray[0])
+					{
+						animName = 'Lose';
+					}
+					else
+					{
+						animName = 'Idle';
+					}
 
-				if (iconP2.animation.curAnim.finished || (animName != iconP2.animation.curAnim.name))
-				{
-					iconP2.playAnim(animName, true);
+					if (iconP2.animation.curAnim.finished || (animName != iconP2.animation.curAnim.name))
+					{
+						iconP2.playAnim(animName, true);
+					}
 				}
 			}
 			else
 			{
-				if (healthBar.percent > 80)
-					iconP2.animation.curAnim.curFrame = 1;
-				else if (healthBar.percent < 20 && iconP2.hasWinningIcon)
-					iconP2.animation.curAnim.curFrame = 2;
+				if (PlayStateChangeables.opponentMode)
+				{
+					if (healthBar.percent < 20)
+						iconP2.animation.curAnim.curFrame = 1;
+					else if (healthBar.percent > 80 && iconP2.hasWinningIcon)
+						iconP2.animation.curAnim.curFrame = 2;
+					else
+						iconP2.animation.curAnim.curFrame = 0;
+				}
 				else
-					iconP2.animation.curAnim.curFrame = 0;
+				{
+					if (healthBar.percent > 80)
+						iconP2.animation.curAnim.curFrame = 1;
+					else if (healthBar.percent < 20 && iconP2.hasWinningIcon)
+						iconP2.animation.curAnim.curFrame = 2;
+					else
+						iconP2.animation.curAnim.curFrame = 0;
+				}
 			}
+
+			// Debug.logTrace(healthBar.percent);
 		}
 		catch (e)
 		{
 			Debug.logTrace(e);
 		}
+
+		// I don't wanna talk about the code above.
 
 		if (songStarted)
 		{
@@ -3660,8 +3727,7 @@ class PlayState extends MusicBeatState
 		FlxG.watch.addQuick("secShit", curSection);
 		FlxG.watch.addQuick("stepShit", curStep);
 
-		if ((health <= 0 && !cannotDie && !PlayStateChangeables.practiceMode && !PlayStateChangeables.opponentMode)
-			|| (health > 2 && !cannotDie && !PlayStateChangeables.practiceMode && PlayStateChangeables.opponentMode))
+		if (health <= 0 && !cannotDie && !PlayStateChangeables.practiceMode)
 		{
 			if (!usedTimeTravel)
 			{
@@ -4633,14 +4699,6 @@ class PlayState extends MusicBeatState
 				combo = 0;
 			}
 
-			if (PlayStateChangeables.skillIssue)
-			{
-				if (!PlayStateChangeables.opponentMode)
-					health = 0;
-				else
-					health = 2.1;
-			}
-
 			misses++;
 
 			daNote.rating = Ratings.timingWindows[0];
@@ -4673,11 +4731,8 @@ class PlayState extends MusicBeatState
 			scripts.executeAllFunc("noteMiss", [daNote]);
 			#end
 
-			if (!PlayStateChangeables.opponentMode)
-				health -= (daNote.missHealth * PlayStateChangeables.healthLoss);
-			else
-				health += (daNote.missHealth * PlayStateChangeables.healthLoss);
-
+			health -= (daNote.missHealth * PlayStateChangeables.healthLoss);
+			updateAccuracy();
 			updateScoreText();
 		}
 	}

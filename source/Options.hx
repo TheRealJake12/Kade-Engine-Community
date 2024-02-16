@@ -1350,7 +1350,6 @@ class CacheNow extends Option
 	}
 }
 
-
 class AccuracyDOption extends Option
 {
 	public function new(desc:String)
