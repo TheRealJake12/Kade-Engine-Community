@@ -1350,26 +1350,6 @@ class CacheNow extends Option
 	}
 }
 
-class ReplayOption extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		description = desc;
-		acceptType = true;
-	}
-
-	public override function press():Bool
-	{
-		MusicBeatState.switchState(new LoadReplayState());
-		return false;
-	}
-
-	private override function updateDisplay():String
-	{
-		return "Load replays";
-	}
-}
 
 class AccuracyDOption extends Option
 {
@@ -1914,35 +1894,6 @@ class LockWeeksOption extends Option
 		return confirm ? "Confirm Story Reset" : "Reset Story Progress";
 	}
 }
-
-#if FEATURE_FILESYSTEM
-class SaveReplayOption extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		description = desc;
-	}
-
-	public override function left():Bool
-	{
-		FlxG.save.data.saveReplays = !FlxG.save.data.saveReplays;
-		display = updateDisplay();
-		return true;
-	}
-
-	public override function right():Bool
-	{
-		left();
-		return true;
-	}
-
-	private override function updateDisplay():String
-	{
-		return "Save Replays: < " + (!FlxG.save.data.saveReplays ? "Disabled" : "Enabled") + " >";
-	}
-}
-#end
 
 #if FEATURE_MODCORE
 class CanLoadMods extends Option
@@ -3074,7 +3025,6 @@ class ResetSettings extends Option
 		FlxG.save.data.cpuSplash = null;
 		FlxG.save.data.showState = null;
 		FlxG.save.data.loadMods = null;
-		FlxG.save.data.saveReplays = null;
 		FlxG.save.data.glDebug = null;
 		FlxG.save.data.shaders = null;
 		FlxG.save.data.alphaSplash = null;

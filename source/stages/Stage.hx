@@ -678,11 +678,11 @@ class Stage extends MusicBeatState
 	{
 		if (camPosition.length == 0)
 		{
-			if (PlayState.gf != null)
+			if (PlayState.instance.gf != null)
 			{
 				camPosition = [
-					PlayState.gf.getGraphicMidpoint().x + PlayState.gf.camPos[0],
-					PlayState.gf.getGraphicMidpoint().y + PlayState.gf.camPos[1]
+					PlayState.instance.gf.getGraphicMidpoint().x + PlayState.instance.gf.camPos[0],
+					PlayState.instance.gf.getGraphicMidpoint().y + PlayState.instance.gf.camPos[1]
 				];
 			}
 			else
@@ -1010,12 +1010,12 @@ class Stage extends MusicBeatState
 			script.set("camGame", PlayState.instance.camGame);
 			script.set("camHUD", PlayState.instance.camHUD);
 			script.set("overlayCam", PlayState.instance.overlayCam);
-		}
 
-		// CHARACTERS
-		script.set("boyfriend", PlayState.boyfriend);
-		script.set("dad", PlayState.dad);
-		script.set("gf", PlayState.gf);
+			// CHARACTERS
+			script.set("boyfriend", PlayState.instance.boyfriend);
+			script.set("dad", PlayState.instance.dad);
+			script.set("gf", PlayState.instance.gf);
+		}
 	}
 	#end
 
@@ -1032,13 +1032,13 @@ class Stage extends MusicBeatState
 		lightningStrikeBeat = curBeat;
 		lightningOffset = FlxG.random.int(8, 24);
 
-		if (PlayState.boyfriend != null
-			&& PlayState.gf != null
-			&& PlayState.boyfriend.curCharacter == 'bf'
-			&& PlayState.gf.curCharacter == 'gf')
+		if (PlayState.instance.boyfriend != null
+			&& PlayState.instance.gf != null
+			&& PlayState.instance.boyfriend.curCharacter == 'bf'
+			&& PlayState.instance.gf.curCharacter == 'gf')
 		{
-			PlayState.boyfriend.playAnim('scared', true);
-			PlayState.gf.playAnim('scared', true);
+			PlayState.instance.boyfriend.playAnim('scared', true);
+			PlayState.instance.gf.playAnim('scared', true);
 		}
 	}
 
@@ -1069,8 +1069,8 @@ class Stage extends MusicBeatState
 			{
 				startedMoving = true;
 
-				if (PlayState.gf != null && PlayState.gf.curCharacter == 'gftrain')
-					PlayState.gf.playAnim('hairBlow');
+				if (PlayState.instance.gf != null && PlayState.instance.gf.curCharacter == 'gftrain')
+					PlayState.instance.gf.playAnim('hairBlow');
 			}
 
 			if (startedMoving)
@@ -1097,8 +1097,8 @@ class Stage extends MusicBeatState
 	{
 		if (FlxG.save.data.distractions && curStage == 'philly')
 		{
-			if (PlayState.gf != null && PlayState.gf.curCharacter == 'gftrain')
-				PlayState.gf.playAnim('hairFall');
+			if (PlayState.instance.gf != null && PlayState.instance.gf.curCharacter == 'gftrain')
+				PlayState.instance.gf.playAnim('hairFall');
 
 			swagBacks['phillyTrain'].x = FlxG.width + 200;
 			trainMoving = false;

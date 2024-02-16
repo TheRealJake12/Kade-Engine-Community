@@ -1,44 +1,18 @@
 package;
 
-import haxe.Exception;
-#if FEATURE_STEPMANIA
-import smTools.SMFile;
-#end
-#if FEATURE_FILESYSTEM
-import sys.FileSystem;
-import sys.io.File;
-#end
-import openfl.geom.Matrix;
-import openfl.display.BitmapData;
-import flixel.sound.FlxSound;
 import flixel.util.FlxAxes;
-import flixel.FlxSubState;
-import Options.Option;
 import flixel.input.FlxInput;
-import flixel.input.keyboard.FlxKey;
-import flixel.FlxG;
-import flixel.FlxObject;
-import flixel.FlxSprite;
-import flixel.effects.FlxFlicker;
-import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.text.FlxText;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
-import flixel.util.FlxColor;
-import lime.app.Application;
-import flixel.math.FlxMath;
-import flixel.text.FlxText;
-import flixel.input.FlxKeyManager;
+#if FEATURE_FILESYSTEM
+import sys.io.File;
+import Sys;
+import sys.FileSystem;
+#end
 
-using StringTools;
-
-class ResultsScreen extends FlxSubState
+class ResultsScreen extends MusicBeatSubstate
 {
 	public var background:FlxSprite;
 	public var text:FlxText;
 
-	public var anotherBackground:FlxSprite;
 	public var graph:HitGraph;
 	public var graphSprite:OFLSprite;
 
@@ -46,42 +20,115 @@ class ResultsScreen extends FlxSubState
 	public var contText:FlxText;
 	public var settingsText:FlxText;
 
+	public var songText:FlxText;
 	public var music:FlxSound;
 
-	public var graphData:BitmapData;
+	public var modifiers:String;
 
-	public var ranking:String;
-	public var accuracy:String;
+	public var activeMods:FlxText;
+
+	public var superMegaConditionShit:Bool;
+
+	public static var instance:ResultsScreen = null;
+
+	public function new()
+	{
+		super();
+		instance = this;
+
+		openCallback = refresh;
+
+		background = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		background.scrollFactor.set();
+
+		music = new FlxSound().loadEmbedded(Paths.music('breakfast'), true, true);
+
+		if (!PlayState.isStoryMode)
+		{
+			modifiers = 'Active Modifiers:\n${(PlayStateChangeables.opponentMode ? '- Opponent Mode\n' : '')}${(PlayStateChangeables.mirrorMode ? '- Mirror Mode\n' : '')}${(PlayStateChangeables.practiceMode ? '- Practice Mode\n' : '')}${(PlayStateChangeables.skillIssue ? '- No Misses mode\n' : '')}${(!PlayStateChangeables.holds ? '- Hold Notes OFF\n' : '')}${(!PlayStateChangeables.modchart #if FEATURE_LUAMODCHART && FileSystem.exists(Paths.lua('songs/${PlayState.SONG.songId}/modchart')) #else && PlayState.instance.sourceModchart #end ? '- Song modchart OFF\n' : '')}${(PlayStateChangeables.healthDrain ? '- Health Drain ON\n' : '')}${(HelperFunctions.truncateFloat(PlayStateChangeables.healthGain,2) != 1 ? '- HP Gain ${HelperFunctions.truncateFloat(PlayStateChangeables.healthGain, 2)}x\n': '')}${(HelperFunctions.truncateFloat(PlayStateChangeables.healthLoss,2) != 1 ? '- HP Loss ${HelperFunctions.truncateFloat(PlayStateChangeables.healthLoss, 2)}x\n':'')}';
+			if (modifiers == 'Active Modifiers:\n')
+				modifiers = 'Active Modifiers: None';
+			activeMods = new FlxText(FlxG.width - 500, FlxG.height - 450, FlxG.width, modifiers);
+			activeMods.size = 24;
+			activeMods.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2, 1);
+			activeMods.scrollFactor.set();
+		}
+
+		text = new FlxText(20, -55, 0, "Song Cleared!");
+		text.size = 34;
+		text.font = Paths.font("vcr.ttf");
+		text.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2, 1);
+		text.color = FlxColor.WHITE;
+		text.scrollFactor.set();
+
+		if (PlayState.isStoryMode)
+		{
+			text.text = 'Week Cleared on ${PlayState.instance.storyDifficultyText.toUpperCase()}!';
+		}
+		comboText = new FlxText(20, -75, 0, '');
+		comboText.font = Paths.font("vcr.ttf");
+
+		if (!PlayState.isStoryMode)
+		{
+			songText = new FlxText(20, -65, FlxG.width,
+				'Played on ${PlayState.SONG.songName} - ${CoolUtil.difficultyFromInt(PlayState.storyDifficulty).toUpperCase()}');
+			songText.size = 34;
+			songText.font = Paths.font("vcr.ttf");
+			songText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2, 1);
+			songText.color = FlxColor.WHITE;
+			songText.scrollFactor.set();
+		}
+
+		comboText.size = 28;
+		comboText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2, 1);
+		comboText.color = FlxColor.WHITE;
+		comboText.scrollFactor.set();
+
+		contText = new FlxText(FlxG.width - 525, FlxG.height + 50, 0, 'Click or Press ${KeyBinds.gamepad ? 'A' : 'ENTER'} to continue.');
+		contText.font = Paths.font("vcr.ttf");
+		contText.size = 24;
+		contText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2, 1);
+		contText.color = FlxColor.WHITE;
+		contText.scrollFactor.set();
+
+		graph = new HitGraph(FlxG.width - 600, 45, 525, 180);
+
+		settingsText = new FlxText(20, FlxG.height + 50, 0, '');
+		settingsText.font = Paths.font("vcr.ttf");
+		settingsText.size = 16;
+		settingsText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 2, 1);
+		settingsText.color = FlxColor.WHITE;
+		settingsText.scrollFactor.set();
+	}
+
+	var mean:Float = 0;
 
 	override function create()
 	{
-		background = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		background.scrollFactor.set();
 		add(background);
-
 		if (!PlayState.inResults)
 		{
-			music = new FlxSound().loadEmbedded(Paths.music('breakfast'), true, true);
 			music.volume = 0;
 			music.play(false, FlxG.random.int(0, Std.int(music.length / 2)));
 			FlxG.sound.list.add(music);
 		}
 
+		add(activeMods);
+
 		background.alpha = 0;
 
-		text = new FlxText(20, -55, 0, "Song Cleared!");
-		text.size = 34;
-		text.font = Paths.font("vcr.ttf");
-		text.setBorderStyle(FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK, 2, 2);
-		text.color = FlxColor.WHITE;
-		text.scrollFactor.set();
 		add(text);
 
+		if (!PlayState.isStoryMode)
+			add(songText);
+
 		var score = PlayState.instance.songScore;
+		var acc = PlayState.instance.accuracy;
+
 		if (PlayState.isStoryMode)
 		{
+			acc = PlayState.campaignAccuracy;
 			score = PlayState.campaignScore;
-			text.text = "Week Cleared!";
 		}
 
 		var marvs = PlayState.isStoryMode ? PlayState.campaignMarvs : PlayState.marvs;
@@ -90,39 +137,21 @@ class ResultsScreen extends FlxSubState
 		var bads = PlayState.isStoryMode ? PlayState.campaignBads : PlayState.bads;
 		var shits = PlayState.isStoryMode ? PlayState.campaignShits : PlayState.shits;
 
-		comboText = new FlxText(20, -75, 0,
-			'Judgements:\nMarvs - ${marvs}\nSicks - ${sicks}\nGoods - ${goods}\nBads - ${bads}\n\nMisses: ${(PlayState.isStoryMode ? PlayState.campaignMisses : PlayState.misses)}\nHighest Combo: ${PlayState.highestCombo + 1}\nScore: ${PlayState.instance.songScore}\nAccuracy: ${HelperFunctions.truncateFloat(PlayState.instance.accuracy, 2)}%\n\n${Ratings.GenerateLetterRank(PlayState.instance.accuracy)}\nRate: ${PlayState.songMultiplier}x\n\n${!PlayState.loadRep ? "\nF1 - Replay song" : ""}
-        ');
-		comboText.size = 28;
-		comboText.font = Paths.font("vcr.ttf");
-		comboText.setBorderStyle(FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK, 2, 2);
-		comboText.color = FlxColor.WHITE;
-		comboText.scrollFactor.set();
+		comboText.text = 'Judgements:\nMarvs - ${marvs}\nSicks - ${sicks}\nGoods - ${goods}\nBads - ${bads}\n\nCombo Breaks: ${(PlayState.isStoryMode ? PlayState.campaignMisses : PlayState.misses)}\nHighest Combo: ${PlayState.highestCombo + 1}\nScore: $score\n${(PlayState.isStoryMode ? 'Average Accuracy' : 'Accuracy')}: ${HelperFunctions.truncateFloat(acc, 2)}% ( ${(FlxG.save.data.accuracyMod == 0 ? 'Accurate' : 'Complex')} )\n\n${Ratings.GenerateComboRank(PlayState.instance.accuracy)} ${Ratings.GenerateLetterRank(PlayState.instance.accuracy)}\nRate: ${HelperFunctions.truncateFloat(PlayState.songMultiplier, 2)}x\n\n\nF1 - Replay song';
+
 		add(comboText);
 
-		contText = new FlxText(FlxG.width - 475, FlxG.height + 50, 0, 'Press ENTER to continue.');
-		contText.font = Paths.font("vcr.ttf");
-		contText.size = 28;
-		contText.setBorderStyle(FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK, 2, 2);
-		contText.color = FlxColor.WHITE;
-		contText.scrollFactor.set();
 		add(contText);
-		if (FlxG.save.data.inputShow)
-		{
-			anotherBackground = new FlxSprite(FlxG.width - 500, 45).makeGraphic(450, 240, FlxColor.BLACK);
-			anotherBackground.scrollFactor.set();
-			anotherBackground.alpha = 0;
-			add(anotherBackground);
 
-			graph = new HitGraph(FlxG.width - 500, 45, 495, 240);
-			graph.alpha = 0;
+		graph.update();
 
-			graphSprite = new OFLSprite(FlxG.width - 510, 45, 460, 240, graph);
-			graphSprite.scrollFactor.set();
-			graphSprite.alpha = 0;
+		graphSprite = new OFLSprite(graph.xPos, graph.yPos, Std.int(graph._width), Std.int(graph._rectHeight), graph);
+		FlxSpriteUtil.drawRect(graphSprite, 0, 0, graphSprite.width, graphSprite.height, FlxColor.TRANSPARENT, {thickness: 1.5, color: FlxColor.WHITE});
 
-			add(graphSprite);
-		}
+		graphSprite.scrollFactor.set();
+		graphSprite.alpha = 0;
+
+		add(graphSprite);
 
 		var sicks = HelperFunctions.truncateFloat(PlayState.sicks / PlayState.goods, 1);
 		var goods = HelperFunctions.truncateFloat(PlayState.goods / PlayState.bads, 1);
@@ -132,116 +161,141 @@ class ResultsScreen extends FlxSubState
 		if (goods == Math.POSITIVE_INFINITY)
 			goods = 0;
 
-		var mean:Float = 0;
-
-		for (i in 0...PlayState.rep.replay.songNotes.length)
-		{
-			// 0 = time
-			// 1 = length
-			// 2 = type
-			// 3 = diff
-			var obj = PlayState.rep.replay.songNotes[i];
-			// judgement
-			var obj2 = PlayState.rep.replay.songJudgements[i];
-
-			var obj3 = obj[0];
-
-			var diff = obj[3];
-			var judge = obj2;
-			if (diff != (166 * Math.floor((PlayState.rep.replay.sf / 60) * 1000) / 166))
-				mean += diff;
-			if (FlxG.save.data.inputShow)
-				if (obj[1] != -1)
-					graph.addToHistory(diff / PlayState.songMultiplier, judge, obj3 / PlayState.songMultiplier);
-		}
-
 		if (sicks == Math.POSITIVE_INFINITY || sicks == Math.NaN)
 			sicks = 0;
 		if (goods == Math.POSITIVE_INFINITY || goods == Math.NaN)
 			goods = 0;
 
-		if (FlxG.save.data.inputShow)
-			graph.update();
+		var legitTimings:Bool = true;
+		for (rating in Ratings.timingWindows)
+		{
+			if (rating.timingWindow != rating.defaultTimingWindow)
+			{
+				legitTimings = false;
+				break;
+			}
+		}
 
-		mean = HelperFunctions.truncateFloat(mean / PlayState.rep.replay.songNotes.length, 2);
+		superMegaConditionShit = legitTimings
+			&& !PlayState.usedBot
+			&& !FlxG.save.data.practice
+			&& PlayStateChangeables.holds
+			&& !PlayState.wentToChartEditor
+			&& HelperFunctions.truncateFloat(PlayStateChangeables.healthGain, 2) <= 1
+			&& HelperFunctions.truncateFloat(PlayStateChangeables.healthLoss, 2) >= 1;
 
-		settingsText = new FlxText(20, FlxG.height + 50, 0,
-			'Mean: ${mean}ms (MARV:${Ratings.timingWindows[4]}ms,SICK:${Ratings.timingWindows[3]}ms,GOOD:${Ratings.timingWindows[2]}ms,BAD:${Ratings.timingWindows[1]}ms,SHIT:${Ratings.timingWindows[0]}ms)');
-		settingsText.size = 16;
-		settingsText.font = Paths.font("vcr.ttf");
-		settingsText.setBorderStyle(FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK, 2, 2);
-		settingsText.color = FlxColor.WHITE;
-		settingsText.scrollFactor.set();
+		if (PlayState.SONG.validScore && superMegaConditionShit)
+		{
+			Highscore.saveScore(PlayState.SONG.songId, Math.round(PlayState.instance.songScore), PlayState.storyDifficulty, PlayState.songMultiplier);
+			Highscore.saveCombo(PlayState.SONG.songId, Ratings.GenerateLetterRank(PlayState.instance.accuracy), PlayState.storyDifficulty,
+				PlayState.songMultiplier);
+			Highscore.saveAcc(PlayState.SONG.songId, HelperFunctions.truncateFloat(PlayState.instance.accuracy, 2), PlayState.storyDifficulty,
+				PlayState.songMultiplier);
+			Highscore.saveLetter(PlayState.SONG.songId, Ratings.GenerateLetterRank(PlayState.instance.accuracy), PlayState.storyDifficulty,
+				PlayState.songMultiplier);
+		}
+
+		// Debug.logTrace('$legitTimings ${!PlayState.usedBot} ${!FlxG.save.data.practice} ${PlayStateChangeables.holds} ${!PlayState.wentToChartEditor} ${HelperFunctions.truncateFloat(PlayStateChangeables.healthGain, 2) <= 1} ${HelperFunctions.truncateFloat(PlayStateChangeables.healthLoss, 2) >= 1}');
+
+		Debug.logTrace('$superMegaConditionShit');
+		mean = HelperFunctions.truncateFloat(mean / PlayState.instance.playerNotes, 2);
+		var acceptShit:String = (superMegaConditionShit ? '| Accepted' : '| Rejected');
+
+		if (!PlayStateChangeables.modchart #if FEATURE_LUAMODCHART
+			&& FileSystem.exists(Paths.lua('songs/${PlayState.SONG.songId}/modchart'))#end)
+			acceptShit = '| Rejected';
+
+		#if debug
+		acceptShit = '| Debug';
+		#end
+
+		if (PlayState.isStoryMode)
+			acceptShit = '';
+
+		settingsText.text = 'Mean: ${mean}ms (';
+		var reverseWins = Ratings.timingWindows.copy();
+		reverseWins.reverse();
+		for (i in 0...reverseWins.length)
+		{
+			var timing = reverseWins[i];
+			settingsText.text += '${timing.name.toUpperCase()}:${timing.timingWindow}ms';
+			if (i != reverseWins.length - 1)
+				settingsText.text += ',';
+		}
+		settingsText.text += ') $acceptShit';
+
 		add(settingsText);
 
 		FlxTween.tween(background, {alpha: 0.5}, 0.5);
+		if (!PlayState.isStoryMode)
+		{
+			FlxTween.tween(songText, {y: 65}, 0.5, {ease: FlxEase.expoInOut});
+			FlxTween.tween(activeMods, {y: FlxG.height - 400}, 0.5, {ease: FlxEase.expoInOut});
+		}
 		FlxTween.tween(text, {y: 20}, 0.5, {ease: FlxEase.expoInOut});
 		FlxTween.tween(comboText, {y: 145}, 0.5, {ease: FlxEase.expoInOut});
 		FlxTween.tween(contText, {y: FlxG.height - 45}, 0.5, {ease: FlxEase.expoInOut});
 		FlxTween.tween(settingsText, {y: FlxG.height - 35}, 0.5, {ease: FlxEase.expoInOut});
-		if (FlxG.save.data.inputShow)
-		{
-			FlxTween.tween(anotherBackground, {alpha: 0.6}, 0.5, {
-				onUpdate: function(tween:FlxTween)
-				{
-					graph.alpha = FlxMath.lerp(0, 1, tween.percent);
-					graphSprite.alpha = FlxMath.lerp(0, 1, tween.percent);
-				}
-			});
-		}
+		FlxTween.tween(graphSprite, {alpha: 1}, 1, {ease: FlxEase.expoInOut});
 
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
 		super.create();
 	}
 
+	public function registerHit(note:Note, isMiss:Bool = false)
+	{
+		var noteRating = note.rating;
+
+		var noteDiff = note.strumTime - Conductor.songPosition;
+
+		if (isMiss)
+			noteDiff = Ratings.timingWindows[0].timingWindow;
+
+		if (PlayStateChangeables.botPlay)
+			noteDiff = 0;
+		// judgement
+
+		var strumTime = note.strumTime;
+
+		if (noteDiff != Ratings.timingWindows[0].timingWindow)
+			mean += noteDiff;
+
+		graph.addToHistory(noteDiff, noteRating, strumTime);
+	}
+
 	var frames = 0;
 
 	override function update(elapsed:Float)
 	{
+		#if !cpp
 		if (music != null)
 			if (music.volume < 0.5)
 				music.volume += 0.01 * elapsed;
+		#end
 
 		// keybinds
 
-		if (PlayerSettings.player1.controls.ACCEPT)
+		if ((PlayerSettings.player1.controls.ACCEPT && !FlxG.keys.pressed.ALT) || FlxG.mouse.pressed)
 		{
 			if (music != null)
 				music.fadeOut(0.3);
 
-			PlayState.loadRep = false;
-			PlayState.stageTesting = false;
-			PlayState.rep = null;
-
-			#if !switch
-			Highscore.saveScore(PlayState.SONG.songId, Math.round(PlayState.instance.songScore), PlayState.storyDifficulty);
-			Highscore.saveCombo(PlayState.SONG.songId, Ratings.GenerateLetterRank(PlayState.instance.accuracy), PlayState.storyDifficulty);
-			#end
-
 			if (PlayState.isStoryMode)
 			{
 				FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
-				MainMenuState.freakyPlaying = true;
 				Conductor.changeBPM(102);
 				MusicBeatState.switchState(new StoryMenuState());
 			}
 			else
+			{
+				Conductor.changeBPM(102);
 				MusicBeatState.switchState(new FreeplayState());
+			}
 		}
 
-		if (FlxG.keys.justPressed.F1 && !PlayState.loadRep)
+		if (FlxG.keys.justPressed.F1)
 		{
-			PlayState.rep = null;
-
-			PlayState.loadRep = false;
-			PlayState.stageTesting = false;
-
-			#if !switch
-			Highscore.saveScore(PlayState.SONG.songId, Math.round(PlayState.instance.songScore), PlayState.storyDifficulty);
-			Highscore.saveCombo(PlayState.SONG.songId, Ratings.GenerateLetterRank(PlayState.instance.accuracy), PlayState.storyDifficulty);
-			#end
-
 			if (music != null)
 				music.fadeOut(0.3);
 
@@ -255,12 +309,14 @@ class ResultsScreen extends FlxSubState
 
 	override function destroy()
 	{
-		if (FlxG.save.data.inputShow)
-		{
-			graph.destroy();
-			graph = null;
-			graphSprite.destroy();
-		}
+		instance = null;
+		graph.destroy();
+		graph = null;
+		graphSprite.destroy();
 		super.destroy();
+	}
+
+	private function refresh()
+	{
 	}
 }

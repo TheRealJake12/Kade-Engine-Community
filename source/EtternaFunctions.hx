@@ -60,16 +60,17 @@ class EtternaFunctions
 		return (getNotes() * 350);
 	}
 
-	public static function wife3(maxms:Float, ts:Float)
+	public static function wife3(maxms:Float)
 	{
+		var ts = PlayState.songMultiplier;
 		var max_points = 1.0;
 		var miss_weight = -5.5;
 		var ridic = 5 * ts;
-		var max_boo_weight = 166 * (ts / PlayState.songMultiplier);
+		var max_boo_weight = Ratings.timingWindows[0].timingWindow;
 		var ts_pow = 0.75;
-		var zero = 65 * (Math.pow(ts, ts_pow));
+		var zero = 65 * Math.pow(ts, ts_pow);
 		var power = 2.5;
-		var dev = 22.7 * (Math.pow(ts, ts_pow));
+		var dev = 22.7 * Math.pow(ts, ts_pow);
 
 		if (maxms <= ridic) // anything below this (judge scaled) threshold is counted as full pts
 			return max_points;
@@ -79,5 +80,19 @@ class EtternaFunctions
 			return (maxms - zero) * miss_weight / (max_boo_weight - zero);
 		else
 			return miss_weight;
+	}
+
+	// This doesn't respect original etterna ms-based scoring btw
+	public static function getMSScore(ms:Float)
+	{
+		var start = Ratings.timingWindows[4].timingWindow;
+		var end = Ratings.timingWindows[0].timingWindow;
+		var linFac = 9.5;
+		var expFac = 2;
+		var maxPoints = 3.5;
+
+		var result = maxPoints - (linFac * (Math.pow((ms - start) / (end - start), expFac)));
+
+		return result * 100;
 	}
 }

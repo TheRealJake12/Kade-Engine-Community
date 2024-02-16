@@ -44,11 +44,14 @@ class MusicBeatState extends FlxUIState
 	private var controls(get, never):Controls;
 	var fullscreenBind:FlxKey;
 
+	public static var subStates:Array<MusicBeatSubstate> = [];
+
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;
 
 	override function create()
 	{
+		destroySubStates = false;
 		var skip:Bool = FlxTransitionableState.skipNextTransOut;
 
 		if (!skip)
@@ -121,6 +124,23 @@ class MusicBeatState extends FlxUIState
 		}
 
 		curTiming = null;
+
+		if (subStates != null)
+		{
+			while (subStates.length > 5)
+			{
+				var subState:MusicBeatSubstate = subStates[0];
+				if (subState != null)
+				{
+					Debug.logTrace('Destroying Substates!');
+					subStates.remove(subState);
+					subState.destroy();
+				}
+				subState = null;
+			}
+
+			subStates.resize(0);
+		}
 	}
 
 	public function fancyOpenURL(schmancy:String)

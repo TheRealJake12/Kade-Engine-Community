@@ -38,6 +38,8 @@ class Character extends FlxSprite
 
 	public static var animationNotes:Array<Note> = [];
 
+	public var deadChar:String = 'bf-dead';
+
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
 	{
 		super(x, y);
@@ -176,6 +178,8 @@ class Character extends FlxSprite
 		this.holdLength = data.holdLength == null ? 4 : data.holdLength;
 		this.healthIcon = data.healthicon == null ? curCharacter : data.healthicon;
 		this.iconAnimated = data.iconAnimated == null ? false : data.iconAnimated;
+
+		this.deadChar = data.deadChar == null ? curCharacter + '-dead' : data.deadChar;
 
 		this.rgbColorArray = data.rgbArray == null ? [255, 0, 0] : data.rgbArray;
 
@@ -461,6 +465,8 @@ typedef CharacterData =
 	 * @default false
 	 */
 	var ?replacesGF:Bool;
+
+	var ?deadChar:String;
 }
 
 typedef AnimationData =

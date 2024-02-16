@@ -130,6 +130,7 @@ class ChartingState extends MusicBeatState
 	public var lines:FlxTypedGroup<FlxSprite>;
 
 	public var snapText:FlxText;
+
 	var camFollow:FlxObject;
 
 	public static var latestChartVersion = "2";

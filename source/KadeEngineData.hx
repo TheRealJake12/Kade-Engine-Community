@@ -35,12 +35,11 @@ class KadeEngineData
 		if (FlxG.save.data.fps == null)
 			FlxG.save.data.fps = true;
 
-		if (FlxG.save.data.changedHit == null)
-		{
-			FlxG.save.data.changedHitX = -1;
-			FlxG.save.data.changedHitY = -1;
-			FlxG.save.data.changedHit = false;
-		}
+		if (FlxG.save.data.changedHitX == null)
+			FlxG.save.data.changedHitX = FlxG.width * 0.55 - 135;
+
+		if (FlxG.save.data.changedHitY == null)
+			FlxG.save.data.changedHitY = FlxG.height / 2 - 50;
 
 		if (FlxG.save.data.fpsCap == null)
 			FlxG.save.data.fpsCap = 60;
@@ -274,10 +273,6 @@ class KadeEngineData
 		}
 
 		FlxSprite.defaultAntialiasing = FlxG.save.data.antialiasing;
-
-		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
-
-		KeyBinds.gamepad = gamepad != null;
 
 		// if (FlxG.save.data.volume == null)
 		// FlxG.save.data.volume = 1;

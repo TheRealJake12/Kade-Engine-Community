@@ -229,9 +229,6 @@ class OptionsMenu extends MusicBeatSubstate
 			]),
 			new OptionCata(935, 40, "Saves", [
 				new General("Traces things in the debug console or logs."),
-				#if FEATURE_FILESYSTEM
-				new ReplayOption("Watch Replays"), new SaveReplayOption("Allows Replays To Be Saved When A Song Ends."),
-				#end
 				new ResetScoreOption("Reset your score on all songs and weeks. This is irreversible!"),
 				new LockWeeksOption("Reset your story mode progress. This is irreversible!"),
 				new ResetSettings("Reset ALL your settings. This is irreversible!")

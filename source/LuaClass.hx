@@ -1432,11 +1432,11 @@ class LuaCharacter extends LuaClass
 
 		PlayState.instance.remove(char);
 
-		PlayState.dad = new Character(x, y, newName, char.isPlayer);
+		PlayState.instance.dad = new Character(x, y, newName, char.isPlayer);
 
-		property.char = PlayState.dad;
+		property.char = PlayState.instance.dad;
 
-		PlayState.instance.add(PlayState.dad);
+		PlayState.instance.add(PlayState.instance.dad);
 
 		return 0;
 	}

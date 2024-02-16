@@ -1,11 +1,10 @@
 package;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.math.FlxMath;
 import PlayState;
 import LuaClass;
 import flixel.math.FlxRect;
+import Ratings.RatingWindow;
 
 using StringTools;
 
@@ -61,7 +60,7 @@ class Note extends FlxSprite
 	public static final BLUE_NOTE:Int = 1;
 	public static final RED_NOTE:Int = 3;
 
-	public var rating:String = "shit";
+	public var rating:RatingWindow;
 
 	public var modAngle:Float = 0; // The angle set by modcharts
 	public var localAngle:Float = 0; // The angle to be edited inside Note.hx
@@ -449,8 +448,8 @@ class Note extends FlxSprite
 				switch (noteShit)
 				{
 					case 'hurt':
-						if (strumTime - Conductor.songPosition <= ((Ratings.timingWindows[0]) * 0.2)
-							&& strumTime - Conductor.songPosition >= (-Ratings.timingWindows[0]) * 0.4)
+						if (strumTime - Conductor.songPosition <= ((Ratings.timingWindows[0].timingWindow) * 0.2)
+							&& strumTime - Conductor.songPosition >= (-Ratings.timingWindows[0].timingWindow) * 0.4)
 						{
 							canBeHit = true;
 						}
@@ -458,15 +457,15 @@ class Note extends FlxSprite
 						{
 							canBeHit = false;
 						}
-						if (strumTime - Conductor.songPosition < -Ratings.timingWindows[0] && !wasGoodHit)
+						if (strumTime - Conductor.songPosition < -Ratings.timingWindows[0].timingWindow && !wasGoodHit)
 							tooLate = true;
 					default:
-						if (strumTime - Conductor.songPosition <= (((Ratings.timingWindows[0]) * lateHitMult))
-							&& strumTime - Conductor.songPosition >= (((-Ratings.timingWindows[0]) * earlyHitMult)))
+						if (strumTime - Conductor.songPosition <= (((Ratings.timingWindows[0].timingWindow) * lateHitMult))
+							&& strumTime - Conductor.songPosition >= (((-Ratings.timingWindows[0].timingWindow) * earlyHitMult)))
 							canBeHit = true;
 						else
 							canBeHit = false;
-						if (strumTime - Conductor.songPosition < (-Ratings.timingWindows[0]) && !wasGoodHit)
+						if (strumTime - Conductor.songPosition < (-Ratings.timingWindows[0].timingWindow) && !wasGoodHit)
 							tooLate = true;
 				}
 			}

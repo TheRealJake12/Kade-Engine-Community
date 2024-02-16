@@ -258,13 +258,13 @@ class ModchartState
 		{
 			case 'boyfriend':
 				@:privateAccess
-				return PlayState.boyfriend;
+				return PlayState.instance.boyfriend;
 			case 'girlfriend':
 				@:privateAccess
-				return PlayState.gf;
+				return PlayState.instance.gf;
 			case 'dad':
 				@:privateAccess
-				return PlayState.dad;
+				return PlayState.instance.dad;
 		}
 		// lua objects or what ever
 		if (luaSprites.get(id) == null)
@@ -290,21 +290,21 @@ class ModchartState
 
 	function changeDadCharacter(id:String)
 	{
-		var olddadx = PlayState.dad.x;
-		var olddady = PlayState.dad.y;
-		PlayState.instance.removeObject(PlayState.dad);
-		PlayState.dad = new Character(olddadx, olddady, id);
-		PlayState.instance.addObject(PlayState.dad);
+		var olddadx = PlayState.instance.dad.x;
+		var olddady = PlayState.instance.dad.y;
+		PlayState.instance.removeObject(PlayState.instance.dad);
+		PlayState.instance.dad = new Character(olddadx, olddady, id);
+		PlayState.instance.addObject(PlayState.instance.dad);
 		PlayState.instance.iconP2.changeIcon(id);
 	}
 
 	function changeBoyfriendCharacter(id:String)
 	{
-		var oldboyfriendx = PlayState.boyfriend.x;
-		var oldboyfriendy = PlayState.boyfriend.y;
-		PlayState.instance.removeObject(PlayState.boyfriend);
-		PlayState.boyfriend = new Boyfriend(oldboyfriendx, oldboyfriendy, id);
-		PlayState.instance.addObject(PlayState.boyfriend);
+		var oldboyfriendx = PlayState.instance.boyfriend.x;
+		var oldboyfriendy = PlayState.instance.boyfriend.y;
+		PlayState.instance.removeObject(PlayState.instance.boyfriend);
+		PlayState.instance.boyfriend = new Boyfriend(oldboyfriendx, oldboyfriendy, id);
+		PlayState.instance.addObject(PlayState.instance.boyfriend);
 		PlayState.instance.iconP1.changeIcon(id);
 	}
 
@@ -387,16 +387,16 @@ class ModchartState
 		{
 			if (drawBehind)
 			{
-				PlayState.instance.removeObject(PlayState.gf);
-				PlayState.instance.removeObject(PlayState.boyfriend);
-				PlayState.instance.removeObject(PlayState.dad);
+				PlayState.instance.removeObject(PlayState.instance.gf);
+				PlayState.instance.removeObject(PlayState.instance.boyfriend);
+				PlayState.instance.removeObject(PlayState.instance.dad);
 			}
 			PlayState.instance.addObject(sprite);
 			if (drawBehind)
 			{
-				PlayState.instance.addObject(PlayState.gf);
-				PlayState.instance.addObject(PlayState.boyfriend);
-				PlayState.instance.addObject(PlayState.dad);
+				PlayState.instance.addObject(PlayState.instance.gf);
+				PlayState.instance.addObject(PlayState.instance.boyfriend);
+				PlayState.instance.addObject(PlayState.instance.dad);
 			}
 		}
 		new LuaSprite(sprite, toBeCalled).Register(lua);

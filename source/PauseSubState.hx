@@ -43,10 +43,16 @@ class PauseSubState extends MusicBeatSubstate
 
 	var bg:FlxSprite;
 
+	var levelDifficulty:FlxText;
+
+	var levelInfo:FlxText;
+
 	public function new()
 	{
 		Paths.clearUnusedMemory();
 		super();
+		
+		openCallback = refresh;
 
 		if (CoolUtil.difficultyArray.length < 2)
 			pauseOG.remove('Change Difficulty'); // No need to change difficulty if there is only one!
@@ -95,14 +101,14 @@ class PauseSubState extends MusicBeatSubstate
 		bg.scrollFactor.set();
 		add(bg);
 
-		var levelInfo:FlxText = new FlxText(20, 15, 0, "", 32);
+		levelInfo = new FlxText(20, 15, 0, "", 32);
 		levelInfo.text += PlayState.SONG.songName.toUpperCase();
 		levelInfo.scrollFactor.set();
 		levelInfo.setFormat(Paths.font("vcr.ttf"), 32);
 		levelInfo.updateHitbox();
 		add(levelInfo);
 
-		var levelDifficulty:FlxText = new FlxText(20, 15 + 32, 0, "", 32);
+		levelDifficulty = new FlxText(20, 15 + 32, 0, "", 32);
 		levelDifficulty.text += CoolUtil.difficultyFromInt(PlayState.storyDifficulty).toUpperCase();
 		levelDifficulty.scrollFactor.set();
 		levelDifficulty.setFormat(Paths.font('vcr.ttf'), 32);
@@ -115,12 +121,17 @@ class PauseSubState extends MusicBeatSubstate
 		levelInfo.x = FlxG.width - (levelInfo.width + 20);
 		levelDifficulty.x = FlxG.width - (levelDifficulty.width + 20);
 
+		grpMenuShit = new FlxTypedGroup<Alphabet>();
+		add(grpMenuShit);
+
+		regenMenu();
+	}
+
+	override public function create()
+	{
 		FlxTween.tween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
 		FlxTween.tween(levelInfo, {alpha: 1, y: 20}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.3});
 		FlxTween.tween(levelDifficulty, {alpha: 1, y: levelDifficulty.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.5});
-
-		grpMenuShit = new FlxTypedGroup<Alphabet>();
-		add(grpMenuShit);
 
 		changeSelection();
 
@@ -202,13 +213,6 @@ class PauseSubState extends MusicBeatSubstate
 			{
 				case "Resume":
 					close();
-					Ratings.timingWindows = [
-						FlxG.save.data.shitMs,
-						FlxG.save.data.badMs,
-						FlxG.save.data.goodMs,
-						FlxG.save.data.sickMs,
-						FlxG.save.data.marvMs
-					];
 					if (!PlayState.instance.speedChanged)
 						PlayState.instance.scrollSpeed = (FlxG.save.data.scrollSpeed == 1 ? PlayState.SONG.speed : FlxG.save.data.scrollSpeed) * PlayState.instance.scrollMult;
 					PlayStateChangeables.botPlay = FlxG.save.data.botplay;
@@ -228,7 +232,6 @@ class PauseSubState extends MusicBeatSubstate
 					regenMenu();
 				case "Exit to menu":
 					PlayState.startTime = 0;
-					PlayState.loadRep = false;
 					PlayState.stageTesting = false;
 					PlayState.inDaPlay = false;
 					#if FEATURE_LUAMODCHART
@@ -243,10 +246,6 @@ class PauseSubState extends MusicBeatSubstate
 					{
 						GameplayCustomizeState.freeplayNoteStyle = 'normal';
 						MusicBeatState.switchState(new StoryMenuState());
-					}
-					else if (PlayState.loadRep)
-					{
-						MusicBeatState.switchState(new LoadReplayState());
 					}
 					else
 					{
@@ -290,7 +289,7 @@ class PauseSubState extends MusicBeatSubstate
 	{
 		curSelected += change;
 
-		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+		// FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
 		if (curSelected < 0)
 			curSelected = menuItems.length - 1;
@@ -311,5 +310,9 @@ class PauseSubState extends MusicBeatSubstate
 				item.alpha = 1;
 			}
 		}
+	}
+
+	private function refresh()
+	{
 	}
 }

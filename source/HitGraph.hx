@@ -1,105 +1,150 @@
-import flixel.FlxG;
+package;
+
+import Ratings;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import openfl.text.TextFieldAutoSize;
+import flixel.system.FlxAssets;
 import openfl.text.TextFormat;
 import flash.display.Graphics;
 import flash.display.Shape;
-import flash.display.Sprite;
+import openfl.display.Sprite;
 import flash.text.TextField;
-import flixel.util.FlxColor;
+import flash.text.TextFormatAlign;
 import flixel.util.FlxDestroyUtil;
 
-/**
- * stolen from https://github.com/HaxeFlixel/flixel/blob/master/flixel/system/debug/stats/StatsGraph.hx
- */
+typedef HitNote =
+{
+	var diff:Float;
+	var rating:RatingWindow;
+	var strumTime:Float;
+}
+
 class HitGraph extends Sprite
 {
-	static inline var AXIS_COLOR:FlxColor = 0xffffff;
-	static inline var AXIS_ALPHA:Float = 0.5;
-	inline static var HISTORY_MAX:Int = 30;
+	public var history:Array<HitNote> = [];
 
-	public var minLabel:TextField;
-	public var curLabel:TextField;
-	public var maxLabel:TextField;
-	public var avgLabel:TextField;
+	public var _width:Float = 0;
 
-	public var minValue:Float = -(Math.floor((PlayState.rep.replay.sf / 60) * 1000) + 95);
-	public var maxValue:Float = Math.floor((PlayState.rep.replay.sf / 60) * 1000) + 95;
+	public var _height:Float = 0;
 
-	public var showInput:Bool = FlxG.save.data.inputShow;
+	public var _rectHeight:Float = 0;
 
-	public var graphColor:FlxColor;
+	public var xPos:Float = 0;
 
-	public var history:Array<Dynamic> = [];
+	public var yPos:Float = 0;
 
-	public var bitmap:Bitmap;
+	var earlyText:TextField;
 
-	public var ts:Float;
+	var lateText:TextField;
 
-	var _axis:Shape;
-	var _width:Int;
-	var _height:Int;
-	var _unit:String;
-	var _labelWidth:Int;
-	var _label:String;
-
-	var early:TextField;
-
-	var late:TextField;
-
-	public function new(X:Int, Y:Int, Width:Int, Height:Int)
+	public function new(x:Float, y:Float, width:Float, height:Float)
 	{
 		super();
-		x = X;
-		y = Y;
-		_width = Width;
-		_height = Height;
-
-		var bm = new BitmapData(Width, Height);
-		bm.draw(this);
-		bitmap = new Bitmap(bm);
-
-		_axis = new Shape();
-		_axis.x = _labelWidth + 10;
+		_width = width;
+		_height = height;
+		_rectHeight = height + (height / 3);
+		xPos = x;
+		yPos = y;
 
 		graphics.clear();
 
-		ts = Math.floor((PlayState.rep.replay.sf / 60) * 1000) / 166;
-
-		early = createTextField(10, 10, FlxColor.WHITE, 12);
-		late = createTextField(10, _height - 20, FlxColor.WHITE, 12);
-
-		early.text = "Early (" + -166 * ts + "ms)";
-		late.text = "Late (" + 166 * ts + "ms)";
-
-		addChild(early);
-		addChild(late);
-
-		addChild(_axis);
-
-		drawAxes();
+		drawContents();
 	}
 
-	/**
-	 * Redraws the axes of the graph.
-	 */
-	function drawAxes():Void
+	private function drawContents():Void
 	{
-		var gfx = _axis.graphics;
-		gfx.clear();
-		gfx.lineStyle(1, AXIS_COLOR, AXIS_ALPHA);
+		drawRectBackground();
+		setupText();
+		drawGraph();
+	}
 
-		// y-Axis
-		gfx.moveTo(0, 0);
-		gfx.lineTo(0, _height);
+	private function drawRectBackground()
+	{
+		graphics.lineStyle(1, FlxColor.BLACK.to24Bit(), 0);
+		graphics.beginFill(FlxColor.BLACK.to24Bit(), 0.6);
+		graphics.drawRect(0, 0, _width, _rectHeight);
+		graphics.endFill();
+	}
 
-		// x-Axis
-		gfx.moveTo(0, _height);
-		gfx.lineTo(_width, _height);
+	private function drawJudgeLine(ms:Float, color:FlxColor)
+	{
+		var y_position = FlxMath.remapToRange((_height / 2) + ms, (_height / 2), (_height / 2) + Ratings.timingWindows[0].timingWindow, _height / 2, _height)
+			+ ((_rectHeight - _height) / 2);
 
-		gfx.moveTo(0, _height / 2);
-		gfx.lineTo(_width, _height / 2);
+		var daColor = color.to24Bit();
+		graphics.lineStyle(1, daColor, 0);
+		graphics.beginFill(daColor, 0.4);
+
+		graphics.drawRect(0, y_position - (1.5 / 2), _width, 1.5);
+		graphics.endFill();
+	}
+
+	private function setupText()
+	{
+		lateText = createTextField(7, 7, FlxColor.WHITE, 12);
+		earlyText = createTextField(7, _rectHeight - 21, FlxColor.WHITE, 12);
+
+		earlyText.text = "Early (" + -Ratings.timingWindows[0].timingWindow + "ms)";
+		lateText.text = "Late (" + Ratings.timingWindows[0].timingWindow + "ms)";
+
+		addChild(earlyText);
+		addChild(lateText);
+	}
+
+	private function drawGraph()
+	{
+		// MID LINE
+		drawJudgeLine(0, 0xFFFFFF);
+
+		var posVals = Ratings.timingWindows.copy();
+
+		for (i in 0...(posVals.length * 2))
+		{
+			var id = i;
+			if (id >= posVals.length)
+				id -= posVals.length;
+			var color = posVals[id].displayColor;
+			var ms = posVals[id].timingWindow;
+
+			if (i >= posVals.length)
+				ms = -ms;
+
+			drawJudgeLine(ms, color);
+		}
+	}
+
+	private function drawHitNotes()
+	{
+		for (i in 0...history.length)
+		{
+			var x_position = (history[i].strumTime / (PlayState.inst.length / PlayState.songMultiplier)) * (_width);
+			var y_position = FlxMath.remapToRange((_height / 2) + history[i].diff, (_height / 2), (_height / 2) + Ratings.timingWindows[0].timingWindow,
+				_height / 2, _height)
+				+ ((_rectHeight - _height) / 2);
+
+			graphics.beginFill(history[i].rating.displayColor.to24Bit());
+			graphics.drawRect(x_position - 2, y_position - 2, 4, 4);
+			graphics.endFill();
+		}
+	}
+
+	public function update()
+	{
+		drawHitNotes();
+	}
+
+	public function addToHistory(noteDiff:Float, noteRating:RatingWindow, noteStrum:Float)
+	{
+		history.push({diff: noteDiff, rating: noteRating, strumTime: noteStrum});
+	}
+
+	public function destroy()
+	{
+		FlxDestroyUtil.removeChild(this, earlyText);
+		FlxDestroyUtil.removeChild(this, lateText);
+		history.resize(0);
+		history = null;
 	}
 
 	public static function createTextField(X:Float = 0, Y:Float = 0, Color:FlxColor = FlxColor.WHITE, Size:Int = 12):TextField
@@ -123,165 +168,5 @@ class HitGraph extends Sprite
 		tf.alpha = Color.alphaFloat;
 		tf.autoSize = TextFieldAutoSize.LEFT;
 		return tf;
-	}
-
-	function drawJudgementLine(ms:Float):Void
-	{
-		var gfx:Graphics = graphics;
-
-		gfx.lineStyle(1, graphColor, 0.3);
-
-		var ts = Math.floor((PlayState.rep.replay.sf / 60) * 1000) / 166;
-		var range:Float = Math.max(maxValue - minValue, maxValue * 0.1);
-
-		var value = ((ms * ts) - minValue) / range;
-
-		var pointY = _axis.y + ((-value * _height - 1) + _height);
-
-		var graphX = _axis.x + 1;
-
-		if (ms == 45)
-			gfx.moveTo(graphX, _axis.y + pointY);
-
-		var graphX = _axis.x + 1;
-
-		gfx.drawRect(graphX, pointY, _width, 1);
-
-		gfx.lineStyle(1, graphColor, 1);
-	}
-
-	/**
-	 * Redraws the graph based on the values stored in the history.
-	 */
-	function drawGraph():Void
-	{
-		var gfx:Graphics = graphics;
-		gfx.clear();
-		gfx.lineStyle(1, graphColor, 1);
-
-		gfx.beginFill(0x00FF00);
-		drawJudgementLine(45);
-		gfx.endFill();
-
-		gfx.beginFill(0xFF0000);
-		drawJudgementLine(90);
-		gfx.endFill();
-
-		gfx.beginFill(0x8b0000);
-		drawJudgementLine(135);
-		gfx.endFill();
-
-		gfx.beginFill(0x580000);
-		drawJudgementLine(166);
-		gfx.endFill();
-
-		gfx.beginFill(0x00FF00);
-		drawJudgementLine(-45);
-		gfx.endFill();
-
-		gfx.beginFill(0xFF0000);
-		drawJudgementLine(-90);
-		gfx.endFill();
-
-		gfx.beginFill(0x8b0000);
-		drawJudgementLine(-135);
-		gfx.endFill();
-
-		gfx.beginFill(0x580000);
-		drawJudgementLine(-166);
-		gfx.endFill();
-
-		var range:Float = Math.max(maxValue - minValue, maxValue * 0.1);
-		var graphX = _axis.x + 1;
-
-		if (showInput)
-		{
-			for (i in 0...PlayState.rep.replay.ana.anaArray.length)
-			{
-				var ana = PlayState.rep.replay.ana.anaArray[i];
-
-				var value = (ana.key * 25 - minValue) / range;
-
-				if (ana.hit)
-					gfx.beginFill(0xFFFF00);
-				else
-					gfx.beginFill(0xC2B280);
-
-				if (ana.hitTime < 0)
-					continue;
-
-				var pointY = (-value * _height - 1) + _height;
-				gfx.drawRect(graphX + fitX(ana.hitTime), pointY, 2, 2);
-				gfx.endFill();
-			}
-		}
-
-		for (i in 0...history.length)
-		{
-			var value = (history[i][0] - minValue) / range;
-			var judge = history[i][1];
-
-			switch (judge)
-			{
-				case "marv":
-					gfx.beginFill(0x5EFF00);
-				case "sick":
-					gfx.beginFill(0x00FFFF);
-				case "good":
-					gfx.beginFill(0x00FF00);
-				case "bad":
-					gfx.beginFill(0xFF0000);
-				case "shit":
-					gfx.beginFill(0x8b0000);
-				case "miss":
-					gfx.beginFill(0x580000);
-				default:
-					gfx.beginFill(0xFFFFFF);
-			}
-			var pointY = ((-value * _height - 1) + _height);
-
-			/*if (i == 0)
-				gfx.moveTo(graphX, _axis.y + pointY); */
-			gfx.drawRect(fitX(history[i][2]), pointY, 4, 4);
-
-			gfx.endFill();
-		}
-
-		var bm = new BitmapData(_width, _height);
-		bm.draw(this);
-		bitmap = new Bitmap(bm);
-	}
-
-	public function fitX(x:Float)
-	{
-		return ((x / (PlayState.inst.length / PlayState.songMultiplier)) * width) * PlayState.songMultiplier;
-	}
-
-	public function addToHistory(diff:Float, judge:String, time:Float)
-	{
-		history.push([diff, judge, time]);
-	}
-
-	public function update():Void
-	{
-		drawGraph();
-	}
-
-	public function average():Float
-	{
-		var sum:Float = 0;
-		for (value in history)
-			sum += value;
-		return sum / history.length;
-	}
-
-	public function destroy()
-	{
-		FlxDestroyUtil.removeChild(this, early);
-		FlxDestroyUtil.removeChild(this, late);
-		_axis = FlxDestroyUtil.removeChild(this, _axis);
-		history.resize(0);
-		history = null;
-		graphics.clear();
 	}
 }
