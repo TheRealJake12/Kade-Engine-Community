@@ -4771,6 +4771,8 @@ class PlayState extends MusicBeatState
 		for (rating in timingWins)
 			judgementCounter.text += '${rating.name}s: ${rating.count}\n';
 
+		judgementCounter.text += 'Misses: ${misses}';
+
 		judgementCounter.updateHitbox();
 	}
 
