@@ -83,7 +83,8 @@ class Discord
 
 	private static function onError(errorCode:Int, message:cpp.ConstCharStar):Void
 	{
-		Debug.logError('(Discord) Error ($errorCode: ${cast (message, String)})');
+		trace('(Discord) Error ($errorCode: ${cast (message, String)})');
+		// spammed with """errors"""
 	}
 }
 #end

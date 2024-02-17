@@ -210,7 +210,6 @@ class OptionsMenu extends MusicBeatSubstate
 				new AccuracyOption("Display accuracy information on the info bar."),
 				new RoundAccuracy("Round your accuracy to the nearest whole number for the score text (cosmetic only)."),
 				new NPSDisplayOption("Shows your current Notes Per Second on the info bar."),
-				new RatingPopup("Toggle Ratings (SICK!, MARV!) From Showing Up Ingame."),
 				new RatingStack("Allows Ratings To Stack And Look Cooler But Is More Distracting."),
 			]),
 			new OptionCata(640, 40, "Misc", [

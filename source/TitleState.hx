@@ -54,6 +54,7 @@ class TitleState extends MusicBeatState
 		Gc.run(true);
 		Gc.compact();
 		Gc.run(false);
+		Gc.enable(true);
 		#end
 
 		Main.mainClassState = TitleState;

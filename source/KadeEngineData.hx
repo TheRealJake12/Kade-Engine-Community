@@ -258,6 +258,15 @@ class KadeEngineData
 		if (FlxG.save.data.shaders == null)
 			FlxG.save.data.shaders = false;
 
+		if (FlxG.save.data.showRating == null)
+			FlxG.save.data.showRating = true;
+
+		if (FlxG.save.data.showNum == null)
+			FlxG.save.data.showNum = true;	
+
+		if (FlxG.save.data.showMs == null)
+			FlxG.save.data.showMs = true;		
+
 		if (FlxG.save.data.volume != null)
 		{
 			FlxG.sound.volume = FlxG.save.data.volume;
@@ -265,11 +274,6 @@ class KadeEngineData
 		if (FlxG.save.data.mute != null)
 		{
 			FlxG.sound.muted = FlxG.save.data.mute;
-		}
-
-		if (FlxG.save.data.fpsBorder = true)
-		{
-			FlxG.save.data.fpsBorder = false;
 		}
 
 		FlxSprite.defaultAntialiasing = FlxG.save.data.antialiasing;

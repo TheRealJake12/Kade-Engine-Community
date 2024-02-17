@@ -2471,41 +2471,6 @@ class CPUNotesplashOption extends Option
 	}
 }
 
-class RatingPopup extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		if (OptionsMenu.isInPause)
-		{
-			blocked = true;
-			description = pauseDesc;
-		}
-		else
-			description = desc;
-	}
-
-	public override function left():Bool
-	{
-		if (OptionsMenu.isInPause)
-			return false;
-		FlxG.save.data.popup = !FlxG.save.data.popup;
-		display = updateDisplay();
-		return true;
-	}
-
-	public override function right():Bool
-	{
-		left();
-		return true;
-	}
-
-	private override function updateDisplay():String
-	{
-		return "Rating Popup : < " + (!FlxG.save.data.popup ? "Disabled" : "Enabled") + " >";
-	}
-}
-
 class BorderlessWindow extends Option
 {
 	public function new(desc:String)
@@ -3011,7 +2976,6 @@ class ResetSettings extends Option
 		FlxG.save.data.gen = null;
 		FlxG.save.data.oldcharter = null;
 		FlxG.save.data.motion = null;
-		FlxG.save.data.popup = null;
 		FlxG.save.data.fpsMark = null;
 		FlxG.save.data.borderless = null;
 		FlxG.save.data.resolution = null;
@@ -3027,6 +2991,9 @@ class ResetSettings extends Option
 		FlxG.save.data.glDebug = null;
 		FlxG.save.data.shaders = null;
 		FlxG.save.data.alphaSplash = null;
+		FlxG.save.data.showRating = null;
+		FlxG.save.data.showNum = null;
+		FlxG.save.data.showMs = null;
 
 		KadeEngineData.initSave();
 		confirm = false;

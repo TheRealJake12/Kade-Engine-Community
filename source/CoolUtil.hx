@@ -7,7 +7,7 @@ import flixel.graphics.frames.FlxBitmapFont;
 import flixel.text.FlxBitmapText;
 #if VIDEOS
 import hxvlc.flixel.FlxVideo as VideoHandler;
-import hxvlc.libvlc.Handle;
+import hxvlc.util.Handle;
 #end
 #if FEATURE_FILESYSTEM
 import sys.io.File;

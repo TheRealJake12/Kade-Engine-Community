@@ -1,9 +1,7 @@
 #if !macro
 import Paths;
+import flixel.*;
 import flixel.sound.FlxSound;
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.FlxCamera;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;

@@ -1,20 +1,16 @@
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
-import flixel.util.FlxColor;
-import flixel.text.FlxText;
+import flixel.addons.display.FlxExtendedMouseSprite;
+import flixel.addons.ui.FlxUI;
+import flixel.addons.ui.FlxUICheckBox;
+import flixel.addons.ui.FlxUIDropDownMenu;
+import flixel.addons.ui.FlxUITabMenu;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
-import flixel.FlxCamera;
 import flixel.math.FlxPoint;
-import flixel.FlxObject;
+import openfl.ui.Keyboard;
+import stages.Stage;
 #if FEATURE_DISCORD
 import Discord;
 #end
-import flixel.group.FlxGroup.FlxTypedGroup;
-import openfl.ui.Keyboard;
-import flixel.FlxSprite;
-import flixel.FlxG;
-import stages.Stage;
-import flixel.addons.display.FlxExtendedSprite;
 
 class GameplayCustomizeState extends MusicBeatState
 {
@@ -40,7 +36,7 @@ class GameplayCustomizeState extends MusicBeatState
 	var curt:FlxSprite;
 	var front:FlxSprite;
 
-	var sick:FlxExtendedSprite;
+	var sick:FlxExtendedMouseSprite;
 
 	var pixelShitPart1:String = '';
 	var pixelShitPart2:String = '';
@@ -66,6 +62,13 @@ class GameplayCustomizeState extends MusicBeatState
 	public static var freeplayStage:String = 'stage';
 	public static var freeplaySong:String = 'bopeebo';
 	public static var freeplayWeek:Int = 1;
+
+	var daBox:FlxUITabMenu;
+	var daRating:FlxUICheckBox;
+	var daCombo:FlxUICheckBox;
+	var daTiming:FlxUICheckBox;
+
+	var currentTimingShown:FlxText = new FlxText(0, 0, 0, "0ms");
 
 	public override function create()
 	{
@@ -128,6 +131,18 @@ class GameplayCustomizeState extends MusicBeatState
 		// FlxG.camera.setScrollBounds(0, FlxG.width, 0, FlxG.height);
 		FlxG.camera.zoom = Stage.camZoom;
 		FlxG.camera.focusOn(camFollow.getPosition());
+
+		var tabs = [{name: "Ratings", label: 'Ratings'}];
+
+		daBox = new FlxUITabMenu(null, tabs, true);
+		daBox.camera = camOverlay;
+
+		daBox.scrollFactor.set();
+		daBox.resize(150, 100);
+		daBox.x = FlxG.width - daBox.width - 20;
+		daBox.y = FlxG.height - 250;
+		daBox.color = FlxColor.fromRGB(40, 40, 40);
+		add(daBox);
 
 		dad = new Character(100, 100, freeplayDad);
 
@@ -221,7 +236,7 @@ class GameplayCustomizeState extends MusicBeatState
 			pixelShitPart4 = 'week6';
 		}
 
-		sick = new FlxExtendedSprite(0, 0, Paths.image(pixelShitPart1 + 'sick' + pixelShitPart2, pixelShitPart3));
+		sick = new FlxExtendedMouseSprite(0, 0, Paths.image(pixelShitPart1 + 'sick' + pixelShitPart2, pixelShitPart3));
 		if (freeplayNoteStyle != 'pixel')
 		{
 			sick.setGraphicSize(Std.int(sick.width * 0.7));
@@ -234,8 +249,23 @@ class GameplayCustomizeState extends MusicBeatState
 		}
 		sick.scrollFactor.set();
 		sick.updateHitbox();
+		sick.visible = FlxG.save.data.showRating;
 		sick.enableMouseDrag();
 		add(sick);
+
+		currentTimingShown.color = FlxColor.CYAN;
+		currentTimingShown.font = Paths.font('vcr.ttf');
+		currentTimingShown.borderStyle = OUTLINE_FAST;
+		currentTimingShown.borderSize = 1;
+		currentTimingShown.borderColor = FlxColor.BLACK;
+		currentTimingShown.text = "0ms";
+		currentTimingShown.size = 20;
+
+		currentTimingShown.x = sick.x + 100;
+		currentTimingShown.alignment = FlxTextAlign.RIGHT;
+		currentTimingShown.y = sick.y + 85;
+		currentTimingShown.visible = FlxG.save.data.showMs;
+		add(currentTimingShown);
 
 		strumLine = new FlxSprite(0, 50).makeGraphic(FlxG.width, 10);
 		strumLine.scrollFactor.set();
@@ -265,6 +295,7 @@ class GameplayCustomizeState extends MusicBeatState
 		text.cameras = [camOverlay];
 
 		sick.cameras = [camHUD];
+		currentTimingShown.cameras = [camHUD];
 		strumLine.cameras = [camHUD];
 		playerStrums.cameras = [camHUD];
 		cpuStrums.cameras = [camHUD];
@@ -288,7 +319,44 @@ class GameplayCustomizeState extends MusicBeatState
 		sick.y = FlxG.save.data.changedHitY;
 
 		FlxG.mouse.visible = true;
+
+		addMenuUI();
 		Paths.clearUnusedMemory();
+	}
+
+	function addMenuUI():Void
+	{
+		var tab_group = new FlxUI(null, daBox);
+		tab_group.name = "Ratings";
+
+		daRating = new FlxUICheckBox(10, 0, null, null, "Show Rating", 100);
+		daRating.checked = FlxG.save.data.showRating;
+		daRating.callback = function()
+		{
+			FlxG.save.data.showRating = !FlxG.save.data.showRating;
+			sick.visible = FlxG.save.data.showRating;
+		};
+
+		daCombo = new FlxUICheckBox(10, 25, null, null, "Show Combo Number", 100);
+		daCombo.checked = FlxG.save.data.showNum;
+		daCombo.callback = function()
+		{
+			FlxG.save.data.showNum = !FlxG.save.data.showNum;
+		};
+
+		daTiming = new FlxUICheckBox(10, 50, null, null, "Show MS Timing", 100);
+		daTiming.checked = FlxG.save.data.showMs;
+		daTiming.callback = function()
+		{
+			FlxG.save.data.showMs = !FlxG.save.data.showMs;
+			currentTimingShown.visible = FlxG.save.data.showMs;
+		};
+
+		tab_group.add(daRating);
+		tab_group.add(daCombo);
+		tab_group.add(daTiming);
+
+		daBox.addGroup(tab_group);
 	}
 
 	override function update(elapsed:Float)
@@ -325,7 +393,9 @@ class GameplayCustomizeState extends MusicBeatState
 		{
 			FlxG.save.data.changedHitX = sick.x;
 			FlxG.save.data.changedHitY = sick.y;
-			FlxG.save.data.changedHit = true;
+
+			currentTimingShown.x = sick.x + 100;
+			currentTimingShown.y = sick.y + 100;
 		}
 
 		if (FlxG.keys.justPressed.R)

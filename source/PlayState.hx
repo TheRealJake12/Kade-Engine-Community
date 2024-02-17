@@ -77,7 +77,7 @@ import debug.ChartingState;
 #if VIDEOS
 import hxvlc.flixel.FlxVideo as VideoHandler;
 import hxvlc.flixel.FlxVideoSprite as VideoSprite;
-import hxvlc.libvlc.Handle;
+import hxvlc.util.Handle;
 #end
 import stages.Stage;
 import stages.TankmenBG;
@@ -970,18 +970,10 @@ class PlayState extends MusicBeatState
 
 		notesplashSprite = CustomNoteHelpers.Splash.generateNotesplashSprite(FlxG.save.data.notesplash, '');
 
-		tweenBoolshit = !isStoryMode || SONG.songId == 'tutorial';
+		tweenBoolshit = SONG.songId != 'tutorial';
 
-		if (!PlayStateChangeables.opponentMode)
-		{
-			generateStaticArrows(0, tweenBoolshit);
-			generateStaticArrows(1, tweenBoolshit);
-		}
-		else
-		{
-			generateStaticArrows(1, tweenBoolshit);
-			generateStaticArrows(0, tweenBoolshit);
-		}
+		generateStaticArrows(0, tweenBoolshit);
+		generateStaticArrows(1, tweenBoolshit);
 
 		if (FlxG.save.data.gen)
 		{
@@ -1102,9 +1094,19 @@ class PlayState extends MusicBeatState
 			uiGroup.add(iconP2);
 
 			if (FlxG.save.data.colour)
-				healthBar.createFilledBar(dad.barColor, boyfriend.barColor);
+			{
+				if (!PlayStateChangeables.opponentMode)
+					healthBar.createFilledBar(dad.barColor, boyfriend.barColor);
+				else
+					healthBar.createFilledBar(boyfriend.barColor, dad.barColor);
+			}
 			else
-				healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
+			{
+				if (!PlayStateChangeables.opponentMode)
+					healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
+				else
+					healthBar.createFilledBar(0xFF66FF33, 0xFFFF0000);
+			}
 		}
 
 		scoreTxt = new FlxText(FlxG.width / 2 - 235, healthBarBG.y + 50, 0, "", 16);
@@ -1291,11 +1293,14 @@ class PlayState extends MusicBeatState
 		if (isStoryMode)
 			initStoryLength = StoryMenuState.weekData()[storyWeek].songs.length;
 
-		if (FlxG.save.data.popup)
+		if (FlxG.save.data.showMs)
 		{
 			add(currentTimingShown);
 			currentTimingShown.alpha = 0;
+		}
 
+		if (FlxG.save.data.showRating)
+		{
 			add(rating);
 			rating.alpha = 0;
 		}
@@ -1328,8 +1333,8 @@ class PlayState extends MusicBeatState
 		healthBarBG.scrollFactor.set();
 		healthBarBG.antialiasing = FlxG.save.data.antialiasing;
 
-		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
-			'shownHealth', 0, 2);
+		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, PlayStateChangeables.opponentMode ? LEFT_TO_RIGHT : RIGHT_TO_LEFT,
+			Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this, 'shownHealth', 0, 2);
 		healthBar.scrollFactor.set();
 		healthBar.antialiasing = FlxG.save.data.antialiasing;
 
@@ -2725,14 +2730,6 @@ class PlayState extends MusicBeatState
 			// babyArrow.x += ((FlxG.width / 2) * player);
 			babyArrow.x += 50;
 			babyArrow.x += ((FlxG.width / 2) * player);
-
-			if (PlayStateChangeables.middleScroll)
-			{
-				if (player == 0)
-				{
-					babyArrow.x += 128 * 5;
-				}
-			}
 
 			strumLineNotes.add(babyArrow);
 		}
@@ -4334,9 +4331,12 @@ class PlayState extends MusicBeatState
 		var noteDiffAbs = Math.abs(noteDiff);
 		if (!PlayStateChangeables.botPlay)
 		{
-			currentTimingShown.alpha = 1;
-			tweenManager.cancelTweensOf(currentTimingShown);
-			currentTimingShown.alpha = 1;
+			if (FlxG.save.data.showMs)
+			{
+				currentTimingShown.alpha = 1;
+				tweenManager.cancelTweensOf(currentTimingShown);
+				currentTimingShown.alpha = 1;
+			}
 
 			rating.velocity.y = 0;
 			rating.velocity.x = 0;
@@ -4444,9 +4444,12 @@ class PlayState extends MusicBeatState
 		rating.velocity.x -= FlxG.random.int(0, 10);
 		rating.acceleration.y = 550;
 
-		msTiming = HelperFunctions.truncateFloat(noteDiff, 3);
-		if (PlayStateChangeables.botPlay)
-			msTiming = 0;
+		if (FlxG.save.data.showMs)
+		{
+			msTiming = HelperFunctions.truncateFloat(noteDiff, 3);
+			if (PlayStateChangeables.botPlay)
+				msTiming = 0;
+		}
 
 		timeShown = 0;
 
@@ -4473,7 +4476,7 @@ class PlayState extends MusicBeatState
 			currentTimingShown.x = rating.x + 100;
 			currentTimingShown.alignment = FlxTextAlign.RIGHT;
 		}
-		currentTimingShown.y = rating.y + 85;
+		currentTimingShown.y = rating.y + 100;
 
 		if (SONG.noteStyle == 'pixel')
 		{
@@ -4522,45 +4525,48 @@ class PlayState extends MusicBeatState
 		}
 
 		var daLoop:Int = 0;
-		for (i in seperatedScore)
+		if (FlxG.save.data.showNum)
 		{
-			var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2, pixelShitPart4));
-			numScore.screenCenter();
-			numScore.cameras = [camHUD];
-
-			numScore.x = rating.x + (43 * daLoop) - (16.67 * seperatedScore.length);
-			numScore.y = rating.y + 100;
-
-			if (SONG.noteStyle != 'pixel')
+			for (i in seperatedScore)
 			{
-				numScore.antialiasing = FlxG.save.data.antialiasing;
-				numScore.setGraphicSize(Std.int(numScore.width * 0.5));
-			}
-			else
-			{
-				numScore.setGraphicSize(Std.int(numScore.width * CoolUtil.daPixelZoom));
-				numScore.antialiasing = false;
-			}
+				var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2, pixelShitPart4));
+				numScore.screenCenter();
+				numScore.cameras = [camHUD];
 
-			numScore.updateHitbox();
+				numScore.x = rating.x + (43 * daLoop) - (16.67 * seperatedScore.length);
+				numScore.y = rating.y + 100;
 
-			numScore.acceleration.y = FlxG.random.int(200, 300);
-			numScore.velocity.y -= FlxG.random.int(140, 160);
-			numScore.velocity.x = FlxG.random.float(-5, 5);
-
-			lastScore.push(numScore);
-			add(numScore);
-
-			createTween(numScore, {alpha: 0}, 0.2, {
-				onComplete: function(tween:FlxTween)
+				if (SONG.noteStyle != 'pixel')
 				{
-					remove(numScore);
-					numScore.destroy();
-				},
-				startDelay: Conductor.crochet * 0.002 * Math.pow(songMultiplier, 2)
-			});
+					numScore.antialiasing = FlxG.save.data.antialiasing;
+					numScore.setGraphicSize(Std.int(numScore.width * 0.5));
+				}
+				else
+				{
+					numScore.setGraphicSize(Std.int(numScore.width * CoolUtil.daPixelZoom));
+					numScore.antialiasing = false;
+				}
 
-			daLoop++;
+				numScore.updateHitbox();
+
+				numScore.acceleration.y = FlxG.random.int(200, 300);
+				numScore.velocity.y -= FlxG.random.int(140, 160);
+				numScore.velocity.x = FlxG.random.float(-5, 5);
+
+				lastScore.push(numScore);
+				add(numScore);
+
+				createTween(numScore, {alpha: 0}, 0.2, {
+					onComplete: function(tween:FlxTween)
+					{
+						remove(numScore);
+						numScore.destroy();
+					},
+					startDelay: Conductor.crochet * 0.002 * Math.pow(songMultiplier, 2)
+				});
+
+				daLoop++;
+			}
 		}
 
 		createTween(rating, {alpha: 0}, 0.2, {
@@ -5525,9 +5531,19 @@ class PlayState extends MusicBeatState
 	{
 		scoreTxt.y = healthBarBG.y;
 		if (FlxG.save.data.colour)
-			healthBar.createFilledBar(dad.barColor, boyfriend.barColor);
+		{
+			if (!PlayStateChangeables.opponentMode)
+				healthBar.createFilledBar(dad.barColor, boyfriend.barColor);
+			else
+				healthBar.createFilledBar(boyfriend.barColor, dad.barColor);
+		}
 		else
-			healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
+		{
+			if (!PlayStateChangeables.opponentMode)
+				healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
+			else
+				healthBar.createFilledBar(0xFF66FF33, 0xFFFF0000);
+		}
 		healthBar.updateBar();
 
 		PlayStateChangeables.botPlay = FlxG.save.data.botplay;
