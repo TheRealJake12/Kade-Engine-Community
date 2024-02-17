@@ -675,7 +675,6 @@ class OptionsMenu extends MusicBeatSubstate
 						}
 					}
 					selectedOptionIndex = 0;
-					Debug.logTrace('returning');
 				}
 
 				selectOption(options[selectedCatIndex].options[selectedOptionIndex]);

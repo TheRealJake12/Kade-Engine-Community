@@ -83,25 +83,32 @@ class Paths
 		{
 			if (!currentTrackedAssets.exists(key))
 			{
-				var bitmap:BitmapData = OpenFlAssets.getBitmapData(path, false);
-				var graphic:FlxGraphic = null;
-
-				if (gpuRender)
+				// credits to raltyro for the simpler gpu rendering
+				var bitmap = OpenFlAssets.getBitmapData(path);
+				var graph:FlxGraphic = null;
+				if (gpuRender && bitmap.image != null)
 				{
-					var texture = FlxG.stage.context3D.createTexture(bitmap.width, bitmap.height, BGRA, false, 0);
-					texture.uploadFromBitmapData(bitmap);
-					currentTrackedTextures.set(key, texture);
-					bitmap.disposeImage();
-					FlxDestroyUtil.dispose(bitmap);
-					bitmap = null;
-					graphic = FlxGraphic.fromBitmapData(BitmapData.fromTexture(texture), false, key);
+					@:privateAccess {
+						bitmap.lock();
+						if (bitmap.__texture == null)
+						{
+							bitmap.image.premultiplied = true;
+							bitmap.getTexture(FlxG.stage.context3D);
+						}
+						bitmap.getSurface();
+						bitmap.disposeImage();
+						bitmap.image.data = null;
+						bitmap.image = null;
+					}
 				}
 				else
 				{
-					graphic = FlxGraphic.fromBitmapData(bitmap, false, key, false);
+					graph = FlxGraphic.fromBitmapData(bitmap, false, key, false);
 				}
-				graphic.persist = true;
-				currentTrackedAssets.set(key, graphic);
+				
+				graph.persist = true;
+
+				currentTrackedAssets.set(key, graph);
 			}
 			else
 			{

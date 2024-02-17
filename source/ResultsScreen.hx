@@ -92,7 +92,8 @@ class ResultsScreen extends MusicBeatSubstate
 		contText.color = FlxColor.WHITE;
 		contText.scrollFactor.set();
 
-		graph = new HitGraph(FlxG.width - 600, 45, 525, 180);
+		if (FlxG.save.data.inputShow)
+			graph = new HitGraph(FlxG.width - 600, 45, 525, 180);
 
 		settingsText = new FlxText(20, FlxG.height + 50, 0, '');
 		settingsText.font = Paths.font("vcr.ttf");
@@ -144,15 +145,18 @@ class ResultsScreen extends MusicBeatSubstate
 
 		add(contText);
 
-		graph.update();
+		if (FlxG.save.data.inputShow)
+		{
+			graph.update();
 
-		graphSprite = new OFLSprite(graph.xPos, graph.yPos, Std.int(graph._width), Std.int(graph._rectHeight), graph);
-		FlxSpriteUtil.drawRect(graphSprite, 0, 0, graphSprite.width, graphSprite.height, FlxColor.TRANSPARENT, {thickness: 1.5, color: FlxColor.WHITE});
+			graphSprite = new OFLSprite(graph.xPos, graph.yPos, Std.int(graph._width), Std.int(graph._rectHeight), graph);
+			FlxSpriteUtil.drawRect(graphSprite, 0, 0, graphSprite.width, graphSprite.height, FlxColor.TRANSPARENT, {thickness: 1.5, color: FlxColor.WHITE});
 
-		graphSprite.scrollFactor.set();
-		graphSprite.alpha = 0;
+			graphSprite.scrollFactor.set();
+			graphSprite.alpha = 0;
 
-		add(graphSprite);
+			add(graphSprite);
+		}
 
 		var sicks = HelperFunctions.truncateFloat(PlayState.sicks / PlayState.goods, 1);
 		var goods = HelperFunctions.truncateFloat(PlayState.goods / PlayState.bads, 1);
@@ -237,7 +241,8 @@ class ResultsScreen extends MusicBeatSubstate
 		FlxTween.tween(comboText, {y: 145}, 0.5, {ease: FlxEase.expoInOut});
 		FlxTween.tween(contText, {y: FlxG.height - 45}, 0.5, {ease: FlxEase.expoInOut});
 		FlxTween.tween(settingsText, {y: FlxG.height - 35}, 0.5, {ease: FlxEase.expoInOut});
-		FlxTween.tween(graphSprite, {alpha: 1}, 1, {ease: FlxEase.expoInOut});
+		if (FlxG.save.data.inputShow)
+			FlxTween.tween(graphSprite, {alpha: 1}, 1, {ease: FlxEase.expoInOut});
 
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
@@ -245,24 +250,27 @@ class ResultsScreen extends MusicBeatSubstate
 	}
 
 	public function registerHit(note:Note, isMiss:Bool = false)
-	{
-		var noteRating = note.rating;
+	{	
+		if (FlxG.save.data.inputShow)
+		{
+			var noteRating = note.rating;
 
-		var noteDiff = note.strumTime - Conductor.songPosition;
+			var noteDiff = note.strumTime - Conductor.songPosition;
 
-		if (isMiss)
-			noteDiff = Ratings.timingWindows[0].timingWindow;
+			if (isMiss)
+				noteDiff = Ratings.timingWindows[0].timingWindow;
 
-		if (PlayStateChangeables.botPlay)
-			noteDiff = 0;
-		// judgement
+			if (PlayStateChangeables.botPlay)
+				noteDiff = 0;
+			// judgement
 
-		var strumTime = note.strumTime;
+			var strumTime = note.strumTime;
 
-		if (noteDiff != Ratings.timingWindows[0].timingWindow)
-			mean += noteDiff;
+			if (noteDiff != Ratings.timingWindows[0].timingWindow)
+				mean += noteDiff;
 
-		graph.addToHistory(noteDiff, noteRating, strumTime);
+			graph.addToHistory(noteDiff, noteRating, strumTime);
+		}
 	}
 
 	var frames = 0;
@@ -310,10 +318,13 @@ class ResultsScreen extends MusicBeatSubstate
 
 	override function destroy()
 	{
+		if (FlxG.save.data.inputShow)
+		{
+			graph.destroy();
+			graph = null;
+			graphSprite.destroy();
+		}
 		instance = null;
-		graph.destroy();
-		graph = null;
-		graphSprite.destroy();
 		super.destroy();
 	}
 

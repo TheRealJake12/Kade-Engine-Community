@@ -4843,7 +4843,7 @@ class PlayState extends MusicBeatState
 				if (!daNote.isSustainNote)
 				{
 					updateScoreText();
-					health -= 0.08 * PlayStateChangeables.healthLoss;
+					health -= 0.04 * PlayStateChangeables.healthLoss;
 					if (health <= 0.01)
 					{
 						health = 0.01;
