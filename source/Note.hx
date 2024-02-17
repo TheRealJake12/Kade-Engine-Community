@@ -261,6 +261,7 @@ class Note extends FlxSprite
 					botplayHit = false;
 					canRate = false;
 					missHealth = 0;
+					sustainActive = true;
 					// reloadNote('notetypes/hurt_Arrows');
 					// texture = 'notetypes/hurt_Arrows';
 					switch (CustomNoteHelpers.Skin.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin])

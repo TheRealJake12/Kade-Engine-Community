@@ -2234,6 +2234,7 @@ class PlayState extends MusicBeatState
 		{
 			misses++;
 		}
+		totalNotesHit -= 1;
 		totalPlayed += 1;
 
 		if (FlxG.save.data.missSounds)
@@ -3000,6 +3001,7 @@ class PlayState extends MusicBeatState
 
 				// post process notes to look gud
 				dunceNote.texture = tex;
+				dunceNote.updateHitbox();
 
 				#if FEATURE_LUAMODCHART
 				if (executeModchart)
@@ -3586,7 +3588,7 @@ class PlayState extends MusicBeatState
 			{
 				if (!PlayStateChangeables.opponentMode)
 				{
-					if (healthBar.percent < 20 && icon1AnimArray[0])
+					if (healthBar.percent < 20 && icon1AnimArray[1])
 					{
 						animName = 'Lose';
 					}
@@ -3990,7 +3992,7 @@ class PlayState extends MusicBeatState
 										default:
 											if (daNote.isSustainNote)
 											{
-												totalNotesHit += 1;
+												// totalNotesHit += 1;
 											}
 											else
 											{
@@ -4030,6 +4032,7 @@ class PlayState extends MusicBeatState
 									&& daNote.isSustainNote
 									&& daNote.sustainActive
 									&& !daNote.isSustainEnd
+									&& daNote.causesMisses
 									&& !holdArray[Std.int(Math.abs(daNote.noteData))])
 								{
 									// there should be a ! infront of the wasGoodHit one but it'd cause a miss per every sustain note.
@@ -4039,10 +4042,6 @@ class PlayState extends MusicBeatState
 									{
 										i.sustainActive = false;
 										health -= (daNote.missHealth * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
-									}
-									if (daNote.parent.wasGoodHit)
-									{
-										totalNotesHit -= 1;
 									}
 									noteMiss(daNote.noteData, daNote);
 								}
@@ -4704,14 +4703,9 @@ class PlayState extends MusicBeatState
 			daNote.rating = Ratings.timingWindows[0];
 
 			totalNotesHit -= 1;
+			totalPlayed += 1;
 
-			if (daNote != null)
-			{
-				if (!daNote.isSustainNote)
-					songScore -= 10;
-			}
-			else
-				songScore -= 10;
+			songScore -= 10;
 
 			if (FlxG.save.data.missSounds)
 			{
@@ -4841,19 +4835,10 @@ class PlayState extends MusicBeatState
 				if (!daNote.isSustainNote)
 				{
 					updateScoreText();
-					if (!PlayStateChangeables.opponentMode)
+					health -= 0.08 * PlayStateChangeables.healthLoss;
+					if (health <= 0.01)
 					{
-						health -= 0.08 * PlayStateChangeables.healthLoss;
-						if (health <= 0.01)
-						{
-							health = 0.01;
-						}
-					}
-					else
-					{
-						health += 0.08 * PlayStateChangeables.healthLoss;
-						if (health >= 2)
-							health = 2;
+						health = 0.01;
 					}
 				}
 			}
@@ -4961,25 +4946,25 @@ class PlayState extends MusicBeatState
 					for (i in note.children)
 						i.sustainActive = true;
 
-				switch (note.noteShit)
-				{
-					case 'hurt':
-						if (note.canNoteSplash && FlxG.save.data.notesplashes)
-						{
-							spawnNoteSplashOnNote(note);
-						}
-						if (FlxG.save.data.accuracyMod == 0)
-							totalNotesHit -= 1;
-						note.rating = Ratings.timingWindows[0];
-						health -= 0.8;
-						boyfriend.playAnim('hurt');
-				}
-
 				if (note.canRate)
 				{
 					combo += 1;
 					popUpScore(note);
 				}
+			}
+
+			switch (note.noteShit)
+			{
+				case 'hurt':
+					if (FlxG.save.data.notesplashes && !note.isSustainNote)
+					{
+						spawnNoteSplashOnNote(note);
+					}
+					if (FlxG.save.data.accuracyMod == 0)
+						totalNotesHit -= 1;
+					note.rating = Ratings.timingWindows[0];
+					health -= 0.8;
+					boyfriend.playAnim('hurt');
 			}
 
 			var altAnim:String = "";
@@ -5729,14 +5714,6 @@ class PlayState extends MusicBeatState
 		{
 		});
 
-		script.set("playVid", function(path:String)
-		{
-		});
-
-		script.set("playVideoSprite", function(x:Float, y:Float, scaleX:Float, scaleY:Float, path:String)
-		{
-		});
-
 		//  NOTE FUNCTIONS
 		script.set("spawnNote", function(?note:Note)
 		{
@@ -6263,11 +6240,7 @@ class PlayState extends MusicBeatState
 		inCinematic = true;
 
 		var filepath:String = Paths.video(name);
-		#if FEATURE_FILESYSTEM
-		if (!FileSystem.exists(filepath))
-		#else
 		if (!OpenFlAssets.exists(filepath))
-		#end
 		{
 			FlxG.log.warn('Couldnt find video file: ' + name);
 			startAndEnd();

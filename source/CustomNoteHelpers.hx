@@ -7,6 +7,7 @@ import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.FlxG;
+import openfl.utils.Assets as OpenFlAssets;
 
 using StringTools;
 
@@ -49,10 +50,13 @@ class Skin
 
 	static public function generatePixelSprite(id:Int, ends:Bool = false)
 	{
-		if (!Paths.fileExists('images/noteskins/${getNoteskinByID(id)}' + "-pixel" + (ends ? "-ends" : ""), IMAGE))
+		if (!OpenFlAssets.exists('assets/shared/images/noteskins/${getNoteskinByID(id)}' + '-pixel' + (ends ? '-ends' : '') + ".png", IMAGE))
+		{
+			// .png moment
 			return Paths.image("noteskins/Arrows-pixel" + (ends ? "-ends" : ""), 'shared');
+		}
 		else
-			return Paths.image('noteskins/${getNoteskinByID(id)}' + "-pixel" + (ends ? "-ends" : ""));
+			return Paths.image('noteskins/${getNoteskinByID(id)}' + "-pixel" + (ends ? "-ends" : ""), 'shared');
 	}
 }
 
@@ -85,7 +89,7 @@ class Splash
 
 	static public function generateNotesplashSprite(id:Int, ?type:String = '')
 	{
-		if (type != '' && Paths.fileExists('notetypes/splashes/${getNotesplashByID(id)}', IMAGE, 'shared'))
+		if (type != '' && OpenFlAssets.exists('assets/shared/images/notetypes/splashes/${getNotesplashByID(id) + type}.png'))
 			return 'notetypes/splashes/${getNotesplashByID(id) + type}';
 		else
 			return 'splashes/${getNotesplashByID(id)}';
