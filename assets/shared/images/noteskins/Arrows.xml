@@ -2,11 +2,11 @@
 <TextureAtlas imagePath="Arrows.png">
 	<!-- Created with Adobe Animate version 22.0.2.168 -->
 	<!-- http://www.adobe.com/products/animate.html -->
-	<SubTexture name="arrowDOWN0000" x="162" y="717" width="157" height="154"/>
-	<SubTexture name="arrowLEFT0000" x="929" y="216" width="154" height="157"/>
-	<SubTexture name="arrowRIGHT0000" x="1088" y="324" width="154" height="157"/>
-	<SubTexture name="arrowUP0000" x="644" y="700" width="157" height="154"/>
-	<SubTexture name="blue alone0000" x="482" y="700" width="157" height="154"/>
+	<SubTexture name="arrowDOWN0000" x="482" y="700" width="157" height="154"/>
+	<SubTexture name="arrowLEFT0000" x="1146" y="0" width="154" height="157"/>
+	<SubTexture name="arrowRIGHT0000" x="1146" y="162" width="154" height="157"/>
+	<SubTexture name="arrowUP0000" x="0" y="717" width="157" height="154"/>
+	<SubTexture name="blue alone0000" x="162" y="717" width="157" height="154"/>
 	<SubTexture name="blue hold0000" x="765" y="599" width="50" height="44"/>
 	<SubTexture name="blue tail0000" x="864" y="448" width="50" height="64"/>
 	<SubTexture name="down confirm0000" x="0" y="0" width="238" height="235"/>
@@ -17,7 +17,7 @@
 	<SubTexture name="down press0001" x="1013" y="640" width="142" height="140" frameX="-4" frameY="-2" frameWidth="149" frameHeight="146"/>
 	<SubTexture name="down press0002" x="710" y="448" width="149" height="146"/>
 	<SubTexture name="down press0003" x="710" y="448" width="149" height="146"/>
-	<SubTexture name="green alone0000" x="0" y="717" width="157" height="154"/>
+	<SubTexture name="green alone0000" x="644" y="700" width="157" height="154"/>
 	<SubTexture name="green hold0000" x="1233" y="486" width="50" height="44"/>
 	<SubTexture name="green tail0000" x="1088" y="216" width="50" height="64"/>
 	<SubTexture name="left confirm0000" x="243" y="0" width="228" height="231"/>
@@ -44,10 +44,10 @@
 	<SubTexture name="left press0017" x="1082" y="486" width="146" height="149"/>
 	<SubTexture name="left press0018" x="1082" y="486" width="146" height="149"/>
 	<SubTexture name="left press0019" x="1082" y="486" width="146" height="149"/>
-	<SubTexture name="purple alone0000" x="1146" y="0" width="154" height="157"/>
+	<SubTexture name="purple alone0000" x="929" y="216" width="154" height="157"/>
 	<SubTexture name="purple hold0000" x="1233" y="535" width="50" height="44"/>
 	<SubTexture name="purple tail0000" x="1013" y="534" width="50" height="64"/>
-	<SubTexture name="red alone0000" x="1146" y="162" width="154" height="157"/>
+	<SubTexture name="red alone0000" x="1088" y="324" width="154" height="157"/>
 	<SubTexture name="red hold0000" x="1233" y="584" width="50" height="44"/>
 	<SubTexture name="red tail0000" x="710" y="599" width="50" height="64"/>
 	<SubTexture name="right confirm0000" x="476" y="0" width="223" height="226" frameX="-1" frameY="-3" frameWidth="226" frameHeight="230"/>
