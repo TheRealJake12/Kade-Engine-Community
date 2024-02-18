@@ -19,8 +19,6 @@ haxelib run lime setup flixel
 haxelib run flixel-tools setup
 title KEC Setup - User action required
 cls
-haxelib run flixel-tools setup
-cls
 echo Make sure you have git installed. You can download it here: https://git-scm.com/downloads
 echo Press any key to install the git libraries.
 pause >nul

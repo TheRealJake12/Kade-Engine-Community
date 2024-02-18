@@ -4161,11 +4161,8 @@ class PlayState extends MusicBeatState
 				{
 					paused = true;
 					openSubState(subStates[1]);
-					createTimer(2, function(tmr:FlxTimer)
-					{
-						persistentUpdate = false;
-						inResults = true;
-					});
+					persistentUpdate = false;
+					inResults = true;
 				}
 				else
 				{
@@ -4368,6 +4365,20 @@ class PlayState extends MusicBeatState
 		totalPlayed += 1;
 
 		daNote.rating = daRating;
+
+		switch (daRating.name.toLowerCase())
+		{
+			case 'shit':
+				shits += 1;
+			case 'bad':
+				bads += 1;
+			case 'good':
+				goods += 1;
+			case 'sick':
+				sicks += 1;
+			case 'marv':
+				marvs += 1;
+		}
 
 		if (!daNote.isSustainNote)
 		{
