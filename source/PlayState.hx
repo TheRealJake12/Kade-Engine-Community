@@ -3545,9 +3545,9 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (health <= 0 && PlayStateChangeables.practiceMode)
+		if (health <= 0)
 			health = 0;
-		else if (health >= 2 && PlayStateChangeables.practiceMode)
+		else if (health >= 2)
 			health = 2;
 
 		if (!usedBot && PlayStateChangeables.botPlay)
