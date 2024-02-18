@@ -101,11 +101,8 @@ class Paths
 						bitmap.image = null;
 					}
 				}
-				else
-				{
-					graph = FlxGraphic.fromBitmapData(bitmap, false, key, false);
-				}
-				
+
+				graph = FlxGraphic.fromBitmapData(bitmap, false, key, false);
 				graph.persist = true;
 
 				currentTrackedAssets.set(key, graph);
