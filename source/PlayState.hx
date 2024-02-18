@@ -6282,7 +6282,7 @@ class PlayState extends MusicBeatState
 		#end
 	}
 
-	function startAndEnd()
+	public function startAndEnd()
 	{
 		if (endingSong)
 			endSong();

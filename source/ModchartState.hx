@@ -600,14 +600,7 @@ class ModchartState
 			}
 			return false;
 			#else
-			if (PlayState.endingSong)
-			{
-				PlayState.endSong();
-			}
-			else
-			{
-				PlayState.startCountdown();
-			}
+			PlayState.instance.startAndEnd();
 			return true;
 			#end
 		});
