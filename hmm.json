@@ -3,7 +3,7 @@
     {
       "name": "flixel",
       "type": "haxelib",
-      "version": null
+      "version": "5.6.1"
     },
     {
       "name": "tjson",
