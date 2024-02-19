@@ -123,12 +123,6 @@ class Main extends Sprite
 		addChild(new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate,
 			game.skipSplash, game.startFullscreen));
 
-		FlxG.game.setFilters([new ShaderFilter(new FlxShader())]);
-
-		FlxG.game.stage.quality = StageQuality.LOW;
-
-		// """Pixel Perfect Effect"""
-
 		FlxG.fixedTimestep = false;
 
 		FlxG.signals.preStateSwitch.add(function()

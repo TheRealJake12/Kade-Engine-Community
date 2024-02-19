@@ -970,7 +970,7 @@ class PlayState extends MusicBeatState
 
 		notesplashSprite = CustomNoteHelpers.Splash.generateNotesplashSprite(FlxG.save.data.notesplash, '');
 
-		tweenBoolshit = SONG.songId != 'tutorial';
+		tweenBoolshit = SONG.songId != 'tutorial' && SONG.songId != 'roses';
 
 		generateStaticArrows(0, tweenBoolshit);
 		generateStaticArrows(1, tweenBoolshit);
@@ -1205,8 +1205,6 @@ class PlayState extends MusicBeatState
 				case 'senpai':
 					schoolIntro(doof);
 				case 'roses':
-					generateStaticArrows(0, false);
-					generateStaticArrows(1, false);
 					FlxG.sound.play(Paths.sound('ANGRY'));
 					schoolIntro(doof);
 				case 'thorns':
@@ -4159,10 +4157,9 @@ class PlayState extends MusicBeatState
 				}
 				if (FlxG.save.data.scoreScreen)
 				{
-					paused = true;
-					openSubState(subStates[1]);
 					persistentUpdate = false;
 					inResults = true;
+					openSubState(subStates[1]);
 				}
 				else
 				{
