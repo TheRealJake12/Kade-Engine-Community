@@ -20,7 +20,7 @@ class Skin
 	public static function updateNoteskins()
 	{
 		noteskinArray = [];
-		for (i in CoolUtil.readAssetsDirectoryFromLibrary('assets/shared/images/noteskins', 'IMAGE', 'shared'))
+		for (i in CoolUtil.readAssetsDirectoryFromLibrary('assets/shared/images/noteskins', 'IMAGE'))
 		{
 			if (i.contains("-pixel"))
 				continue;
@@ -67,7 +67,7 @@ class Splash
 	public static function updateNotesplashes()
 	{
 		notesplashArray = [];
-		for (i in CoolUtil.readAssetsDirectoryFromLibrary('assets/shared/images/splashes', 'IMAGE', 'shared'))
+		for (i in CoolUtil.readAssetsDirectoryFromLibrary('assets/shared/images/splashes', 'IMAGE'))
 		{
 			if (!i.endsWith(".png"))
 				continue;

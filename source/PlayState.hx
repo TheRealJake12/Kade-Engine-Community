@@ -592,7 +592,7 @@ class PlayState extends MusicBeatState
 			+ misses, iconRPC);
 		#end
 
-		barImage = Paths.image('healthBar', 'shared');
+		barImage = Paths.image('healthBar');
 
 		// Setup The Cameras.
 		camGame = new SwagCamera();
@@ -1270,7 +1270,7 @@ class PlayState extends MusicBeatState
 
 		if (PlayStateChangeables.skillIssue)
 		{
-			var redVignette:FlxSprite = new FlxSprite().loadGraphic(Paths.image('nomisses_vignette', 'shared'));
+			var redVignette:FlxSprite = new FlxSprite().loadGraphic(Paths.image('nomisses_vignette'));
 			redVignette.screenCenter();
 			redVignette.cameras = [overlayCam];
 			add(redVignette);
@@ -1281,7 +1281,7 @@ class PlayState extends MusicBeatState
 
 		precacheThing('alphabet', 'image', null);
 
-		precacheThing('breakfast', 'music', 'shared');
+		precacheThing('breakfast', 'music');
 
 		if (FlxG.save.data.hitSound != 0)
 			precacheThing("hitsounds/" + HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase(), 'sound', 'shared');
@@ -2358,7 +2358,7 @@ class PlayState extends MusicBeatState
 			+ misses, iconRPC);
 		#end
 
-		songPosBG = new FlxSprite(0, FlxG.height - 710).loadGraphic(Paths.image('healthBar', 'shared'));
+		songPosBG = new FlxSprite(0, FlxG.height - 710).loadGraphic(Paths.image('healthBar'));
 
 		if (PlayStateChangeables.useDownscroll)
 			songPosBG.y = FlxG.height - 37;
@@ -3241,7 +3241,7 @@ class PlayState extends MusicBeatState
 			executeModchart = false;
 			cannotDie = true;
 			persistentUpdate = false;
-			MusicBeatState.switchState(new ChartingState());
+			LoadingState.loadAndSwitchState(new ChartingState());
 		}
 
 		/* if (FlxG.keys.justPressed.NINE)
@@ -3741,7 +3741,7 @@ class PlayState extends MusicBeatState
 				inst.stop();
 				if (FlxG.save.data.InstantRespawn || (PlayStateChangeables.opponentMode && !dad.animOffsets.exists('firstDeath')))
 				{
-					MusicBeatState.switchState(new PlayState());
+					LoadingState.loadAndSwitchState(new PlayState());
 				}
 				else
 				{
@@ -3788,7 +3788,7 @@ class PlayState extends MusicBeatState
 				inst.stop();
 				if (FlxG.save.data.InstantRespawn || (PlayStateChangeables.opponentMode && !dad.animOffsets.exists('firstDeath')))
 				{
-					MusicBeatState.switchState(new PlayState());
+					LoadingState.loadAndSwitchState(new PlayState());
 				}
 				else
 				{
@@ -5647,7 +5647,7 @@ class PlayState extends MusicBeatState
 
 		var files:Array<String> = [];
 		var extensions = ["hx", "hscript", "hsc", "hxs"];
-		var rawFiles:Array<String> = CoolUtil.readAssetsDirectoryFromLibrary('assets/data/songs/${SONG.songId}', 'TEXT', 'default', false);
+		var rawFiles:Array<String> = CoolUtil.readAssetsDirectoryFromLibrary('assets/shared/data/songs/${SONG.songId}', 'TEXT', 'default', false);
 
 		for (sub in rawFiles)
 		{
@@ -5656,7 +5656,7 @@ class PlayState extends MusicBeatState
 					files.push(sub);
 		}
 
-		for (_ in CoolUtil.readAssetsDirectoryFromLibrary('assets/scripts', 'TEXT'))
+		for (_ in CoolUtil.readAssetsDirectoryFromLibrary('assets/scripts', 'TEXT', ))
 			files.push(_);
 
 		if (FlxG.save.data.gen)
@@ -6050,6 +6050,7 @@ class PlayState extends MusicBeatState
 			songName.visible = false;
 			songPosBar.visible = false;
 			bar.visible = false;
+			judgementCounter.visible = false;
 		}
 		else
 		{
@@ -6061,6 +6062,7 @@ class PlayState extends MusicBeatState
 			songName.visible = FlxG.save.data.songPosition;
 			songPosBar.visible = FlxG.save.data.songPosition;
 			bar.visible = FlxG.save.data.songPosition;
+			judgementCounter.visible = FlxG.save.data.judgementCounter;
 		}
 	}
 

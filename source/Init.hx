@@ -43,7 +43,7 @@ class Init extends MusicBeatState
 
 		FlxG.worldBounds.set(0, 0);
 
-		FlxGraphic.defaultPersist = true;
+		Paths.setCurrentLevel('shared');
 
 		MusicBeatState.initSave = true;
 

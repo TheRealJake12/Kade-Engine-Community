@@ -6,6 +6,9 @@ import polymod.format.ParseRules.TextFileFormat;
 import polymod.format.ParseRules;
 import polymod.Polymod;
 #end
+#if FEATURE_FILESYSTEM
+import sys.FileSystem;
+#end
 import flixel.FlxG;
 
 /**
@@ -73,6 +76,11 @@ class ModCore
 		var daList:Array<String> = [];
 
 		trace('Searching for Mods...');
+		if (!FileSystem.exists('mods'))
+		{
+			Debug.logTrace("Mods Folder Missing. Skipping.");
+			return [];
+		}
 
 		for (i in Polymod.scan({modRoot: MOD_DIR, errorCallback: onPolymodError}))
 		{
@@ -102,20 +110,13 @@ class ModCore
 	{
 		return {
 			assetLibraryPaths: [
-				"default" => "./preload", // ./preload
+				"default" => "./shared", // ./preload
 				"sm" => "./sm",
 				"songs" => "./songs",
-				"shared" => "./",
+				"shared" => "./shared",
 				"videos" => "./videos",
 				"scripts" => "./scripts",
-				"tutorial" => "./tutorial",
-				"week1" => "./week1",
-				"week2" => "./week2",
-				"week3" => "./week3",
-				"week4" => "./week4",
-				"week5" => "./week5",
-				"week6" => "./week6",
-				"week7" => "./week7",
+				"weeks" => "./",
 			]
 		}
 	}

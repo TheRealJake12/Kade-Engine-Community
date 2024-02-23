@@ -41,24 +41,41 @@ class Paths
 		return path.toLowerCase().replace(' ', '-');
 	}
 
-	static function getPath(file:String, type:AssetType, ?library:Null<String>)
+	public static function getPath(file:String, ?type:AssetType = TEXT, ?library:Null<String> = null):String
 	{
 		if (library != null)
 			return getLibraryPath(file, library);
 
 		if (currentLevel != null)
 		{
-			var levelPath = getLibraryPathForce(file, currentLevel);
-
-			if (OpenFlAssets.exists(levelPath, type))
-				return levelPath;
-
-			levelPath = getLibraryPathForce(file, "shared");
-			if (OpenFlAssets.exists(levelPath, type))
-				return levelPath;
+			var levelPath:String = '';
+			if (currentLevel != 'shared')
+			{
+				levelPath = getLibraryPathForce(file, 'weeks', currentLevel);
+				if (OpenFlAssets.exists(levelPath, type))
+					return levelPath;
+			}
 		}
 
-		return getPreloadPath(file);
+		return getSharedPath(file);
+	}
+
+	static public function getLibraryPath(file:String, library = "shared")
+	{
+		return if (library == "shared") getSharedPath(file); else getLibraryPathForce(file, library);
+	}
+
+	inline static function getLibraryPathForce(file:String, library:String, ?level:String)
+	{
+		if (level == null)
+			level = library;
+		var returnPath = '$library:assets/$level/$file';
+		return returnPath;
+	}
+
+	inline public static function getSharedPath(file:String = '')
+	{
+		return 'assets/shared/$file';
 	}
 
 	// Sprite content caching with GPU based on Forever Engine texture compression.
@@ -70,13 +87,12 @@ class Paths
 	 * @param library 
 	 * @return BitmapData
 	 */
-	public static function loadImage(key:String, ?library:String, ?gpuRender:Bool):FlxGraphic
+	public static function loadImage(key:String, ?library:String = null, ?gpuRender:Bool):FlxGraphic
 	{
 		var path:String = '';
 
 		path = getPath('images/$key.png', IMAGE, library);
-
-		// Debug.logTrace(path);
+		
 		gpuRender = gpuRender != null ? gpuRender : FlxG.save.data.gpuRender;
 
 		if (OpenFlAssets.exists(path, IMAGE))
@@ -189,23 +205,6 @@ class Paths
 			// Return null.
 			return null;
 		}
-	}
-
-	static public function getLibraryPath(file:String, library = "preload")
-	{
-		return if (library == "preload" || library == "default") getPreloadPath(file); else getLibraryPathForce(file, library);
-	}
-
-	static function getLibraryPathForce(file:String, library:String)
-	{
-		var returnPath = '$library:assets/$library/$file';
-
-		return returnPath;
-	}
-
-	public static function getPreloadPath(file:String)
-	{
-		return 'assets/$file';
 	}
 
 	static public function hscript(key:String, ?library:String)
@@ -339,7 +338,7 @@ class Paths
 		var file:Dynamic;
 		#if PRELOAD_ALL
 		if (!returnString)
-			file = loadSound('songs', songLowercase);
+			file = loadSound(null, songLowercase, 'songs');
 		else
 			file = 'songs:assets/songs/$songLowercase.$SOUND_EXT';
 		#else
@@ -363,7 +362,7 @@ class Paths
 		var file:Dynamic;
 		#if PRELOAD_ALL
 		if (!returnString)
-			file = loadSound('songs', songLowercase);
+			file = loadSound(null, songLowercase, 'songs');
 		else
 			file = 'songs:assets/songs/$songLowercase.$SOUND_EXT';
 		#else
@@ -373,32 +372,29 @@ class Paths
 		return file;
 	}
 
-	public static function loadSound(path:String, key:String, ?library:String)
+	public static function loadSound(path:Null<String>, key:String, ?library:String)
 	{
 		// I hate this so god damn much
-
-		var gottenPath:String = getPath('$path/$key.$SOUND_EXT', SOUND, library);
-		var folder:String = '';
-
-		if (path == 'songs')
-			folder = 'songs:';
-
-		// trace(gottenPath);
-		if (OpenFlAssets.exists(folder + gottenPath, SOUND))
+		var gottenPath:String = '$key.$SOUND_EXT';
+		if (path != null)
+			gottenPath = '$path/$gottenPath';
+		gottenPath = getPath(gottenPath, SOUND, library);
+		gottenPath = gottenPath.substring(gottenPath.indexOf(':') + 1, gottenPath.length);
+		if (!currentTrackedSounds.exists(gottenPath))
 		{
-			if (!currentTrackedSounds.exists(gottenPath))
+			var retKey:String = (path != null) ? '$path/$key' : key;
+			retKey = ((path == 'songs') ? 'songs:' : '') + getPath('$retKey.$SOUND_EXT', SOUND, library);
+			if (OpenFlAssets.exists(retKey, SOUND))
 			{
-				currentTrackedSounds.set(gottenPath, OpenFlAssets.getSound(folder + gottenPath));
+				currentTrackedSounds.set(gottenPath, OpenFlAssets.getSound(retKey));
+			}
+			else
+			{
+				Debug.logTrace("Sound File Not Found At " + gottenPath);
+				return null;
 			}
 		}
-		else
-		{
-			Debug.logWarn('Could not find sound at ${folder + gottenPath}');
-			return null;
-		}
-
 		localTrackedAssets.push(gottenPath);
-
 		return currentTrackedSounds.get(gottenPath);
 	}
 
