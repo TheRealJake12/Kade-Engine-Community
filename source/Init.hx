@@ -53,14 +53,9 @@ class Init extends MusicBeatState
 		if (FlxG.save.data.loadMods)
 			ModCore.initialize();
 
-		super.create();
-
 		FlxG.autoPause = FlxG.save.data.autoPause;
 		FlxG.mouse.visible = true;
-	}
 
-	override function update(elapsed:Float)
-	{
 		switch (FlxG.save.data.resolution)
 		{
 			case 0:
@@ -86,8 +81,8 @@ class Init extends MusicBeatState
 				FlxG.resizeGame(1920, 1080);
 		}
 
-		FlxG.switchState(new TitleState());
+		super.create();
 
-		// Main.gameContainer.setFPSCap(FlxG.save.data.fpsCap);
+		FlxG.switchState(new TitleState());
 	}
 }

@@ -580,7 +580,7 @@ class Paths
 				}
 			}
 
-			#if PRELOAD_ALL
+			#if !html5
 			// clear all sounds that are cached
 			var counterSound:Int = 0;
 			for (key in currentTrackedSounds.keys())
@@ -595,11 +595,11 @@ class Paths
 					counterSound++;
 				}
 			}
-
-			// flags everything to be cleared out next unused memory clear
-			localTrackedAssets = [];
+			
 			openfl.Assets.cache.clear("songs");
 			#end
+			// flags everything to be cleared out next unused memory clear
+			localTrackedAssets = [];
 			runGC();
 		}
 	}

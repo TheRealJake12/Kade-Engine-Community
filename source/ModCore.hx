@@ -76,11 +76,13 @@ class ModCore
 		var daList:Array<String> = [];
 
 		trace('Searching for Mods...');
+		#if FEATURE_FILESYSTEM
 		if (!FileSystem.exists('mods'))
 		{
 			Debug.logTrace("Mods Folder Missing. Skipping.");
 			return [];
 		}
+		#end
 
 		for (i in Polymod.scan({modRoot: MOD_DIR, errorCallback: onPolymodError}))
 		{

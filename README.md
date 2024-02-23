@@ -132,7 +132,9 @@ It will take a while to build for both versions.
 
 - [gaminbottomtext](https://github.com/gaminbottomtext) also epic fren that helped with notesplashes. He has disappeared.
 
-- [yakY](https://twitter.com/yak_yyy) person that made the mouse icon specifically for the engine. (epico)
+- [yakY](https://twitter.com/yak_yyy) person that made the mouse icon specifically for the engine. (epico) (Legacy)
+
+- [!SIG7Ivan](https://github.com/SIG7Pro) person that made the mouse icon. (Current)
 
 - [AhmedxRNMD](https://twitter.com/AhmedxRNMD_) - Made the volume sounds.
 
