@@ -4170,7 +4170,7 @@ class PlayState extends MusicBeatState
 					Conductor.changeBPM(102);
 					createTimer(2, function(tmr:FlxTimer)
 					{
-						MusicBeatState.switchState(new StoryMenuState());
+						LoadingState.loadAndSwitchState(new StoryMenuState());
 					});
 				}
 

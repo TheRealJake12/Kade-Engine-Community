@@ -144,7 +144,7 @@ class Note extends FlxSprite
 		if (this.strumTime < 0)
 			this.strumTime = 0;
 
-		this.noteData = noteData;
+		this.noteData = Math.floor(noteData % 4);
 
 		if (PlayStateChangeables.mirrorMode)
 		{

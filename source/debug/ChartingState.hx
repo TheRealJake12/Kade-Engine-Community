@@ -36,8 +36,6 @@ import Discord;
 
 using StringTools;
 
-@:access(flixel.system.FlxSound._sound)
-@:access(openfl.media.Sound.__buffer)
 class ChartingState extends MusicBeatState
 {
 	public static var instance:ChartingState = null;
@@ -95,12 +93,14 @@ class ChartingState extends MusicBeatState
 
 	var dummyArrow:FlxSprite;
 
-	var curRenderedNotes:FlxTypedGroup<Note>;
-	var curRenderedSustains:FlxTypedGroup<FlxSprite>;
+	var camOther:FlxCamera; // stupid fix because something doesn't want to stay still.
+
+	var curRenderedNotes:FlxTypedGroup<Note> = null;
+	var curRenderedSustains:FlxTypedGroup<FlxSprite> = null;
 
 	public var sectionRenderes:FlxTypedGroup<SectionRender>;
 
-	var gridBG:FlxSprite;
+	var gridBG:FlxSprite = null;
 
 	public static var _song:SongData;
 
@@ -111,8 +111,7 @@ class ChartingState extends MusicBeatState
 	 * WILL BE THE CURRENT / LAST PLACED NOTE
 	**/
 	var curSelectedNote:Array<Dynamic>;
-
-	var gridBlackLine:FlxSprite;
+	
 	var vocals:FlxSound;
 	var vocalsPlayer:FlxSound;
 	var vocalsEnemy:FlxSound;
@@ -147,6 +146,8 @@ class ChartingState extends MusicBeatState
 	var curDiff:String = "";
 
 	public static var mustCleanMem:Bool = false;
+
+	var middleLine:FlxSprite;
 
 	override function create()
 	{
@@ -353,25 +354,16 @@ class ChartingState extends MusicBeatState
 			height = Math.floor(renderer.y);
 		}
 
-		addGrid(1);
+		gridBG = new FlxSprite(0, 0).makeGraphic(40 * 8, 40 * 16);
 
-		gridBlackLine = new FlxSprite(gridBG.width / 2).makeGraphic(4, height, FlxColor.BLACK);
-		gridBlackLine.alpha = 0.5;
-
-		// leftIcon.scrollFactor.set();
-		// rightIcon.scrollFactor.set();
+		leftIcon.scrollFactor.set();
+		rightIcon.scrollFactor.set();
 
 		leftIcon.setGraphicSize(0, 45);
 		rightIcon.setGraphicSize(0, 45);
 
 		add(leftIcon);
 		add(rightIcon);
-
-		leftIcon.setPosition(0, -100);
-		rightIcon.setPosition(gridBG.width / 2, -100);
-
-		leftIcon.scrollFactor.set();
-		rightIcon.scrollFactor.set();
 
 		bpmTxt = new CoolText(985, 25, 16, 16, Paths.bitmapFont('fonts/vcr'));
 		bpmTxt.autoSize = true;
@@ -444,7 +436,17 @@ class ChartingState extends MusicBeatState
 		add(dummyArrow);
 		add(lines);
 		add(texts);
-		add(gridBlackLine);
+
+		leftIcon.setPosition(0, -100);
+		rightIcon.setPosition(gridBG.width / 2, -100);
+
+		leftIcon.scrollFactor.set();
+		rightIcon.scrollFactor.set();
+
+		middleLine = new FlxSprite(0 + gridBG.width / 2, 0).makeGraphic(4, FlxG.height, FlxColor.BLACK);
+		// middleLine.camera = camGrid;
+		add(middleLine);
+
 		add(strumLine);
 		add(curRenderedNotes);
 		add(curRenderedSustains);
@@ -475,6 +477,16 @@ class ChartingState extends MusicBeatState
 		}
 
 		if (_song.eventObjects != null)
+		{
+			for (i in sectionRenderes)
+			{
+				var pos = getYfromStrum(i.section.startTime) * zoomFactor;
+				i.icon.y = pos - 75;
+
+				var line = new FlxSprite(0, pos).makeGraphic(Std.int(GRID_SIZE * 8), 4, FlxColor.BLACK);
+				lines.add(line);
+			}
+
 			for (i in _song.eventObjects)
 			{
 				var seg = TimingStruct.getTimingAtBeat(i.position);
@@ -501,43 +513,12 @@ class ChartingState extends MusicBeatState
 				text.font = Paths.font("vcr.ttf");
 				var line = new FlxSprite(0, pos).makeGraphic(Std.int(GRID_SIZE * 8), 4, FlxColor.BLUE);
 
-				line.alpha = 0.2;
+				line.alpha = 0.6;
 
 				lines.add(line);
 				texts.add(text);
-
-				add(line);
-				add(text);
 			}
-		for (i in sectionRenderes)
-		{
-			var pos = getYfromStrum(i.section.startTime) * zoomFactor;
-			i.icon.y = pos - 75;
-
-			var line = new FlxSprite(0, pos).makeGraphic(Std.int(GRID_SIZE * 8), 4, FlxColor.BLACK);
-			line.alpha = 0.5;
-			lines.add(line);
 		}
-	}
-
-	function addGrid(?divisions:Float = 1)
-	{
-		// This here is because non-integer numbers aren't supported as grid sizes, making the grid slowly 'drift' as it goes on
-		var h = GRID_SIZE / divisions;
-		if (Math.floor(h) != h)
-			h = GRID_SIZE;
-
-		remove(gridBG);
-		gridBG = new FlxSprite(0, 0).makeGraphic(40 * 8, 40 * 16);
-
-		var totalHeight = 0;
-
-		// add(gridBG);
-
-		remove(gridBlackLine);
-		gridBlackLine = new FlxSprite(0 + gridBG.width / 2).makeGraphic(4, Std.int(Math.floor(lengthInSteps)), FlxColor.BLACK);
-		gridBlackLine.alpha = 0.5;
-		add(gridBlackLine);
 	}
 
 	var stepperDiv:FlxUINumericStepper;
@@ -2760,6 +2741,7 @@ class ChartingState extends MusicBeatState
 			}
 
 			strumLine.y = getYfromStrum(start) * zoomFactor;
+			middleLine.y = strumLine.y - 350;
 			camFollow.y = strumLine.y;
 
 			if (FlxG.keys.justPressed.F1)
@@ -3289,15 +3271,10 @@ class ChartingState extends MusicBeatState
 
 	function updateGrid():Void
 	{
-		while (curRenderedNotes.members.length > 0)
-		{
-			curRenderedNotes.remove(curRenderedNotes.members[0], true);
-		}
-
-		while (curRenderedSustains.members.length > 0)
-		{
-			curRenderedSustains.remove(curRenderedSustains.members[0], true);
-		}
+		curRenderedNotes.forEachAlive(function(spr:Note) spr.destroy());
+		curRenderedNotes.clear();
+		curRenderedSustains.forEachAlive(function(spr:FlxSprite) spr.destroy());
+		curRenderedSustains.clear();
 
 		var currentSection = 0;
 
