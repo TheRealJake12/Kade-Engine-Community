@@ -37,6 +37,8 @@
 	<!-- Defines whether modcore can be used. -->
 	<define name="FEATURE_MODCORE" />
 
+	<define name="CUSTOM_CLASSES" />
+
 	<!-- Discord Thingy -->
 	<haxedef name="DISCORD_DISABLE_IO_THREAD" />
 
@@ -115,8 +117,7 @@
 	<haxelib name="hxdiscord_rpc" if="FEATURE_DISCORD"/>
 	<haxelib name="polymod" if="FEATURE_MODCORE"/>
 	<haxelib name="linc_luajit" if="FEATURE_LUAMODCHART"/>
-	<haxelib name="SScript" if="FEATURE_HSCRIPT"/>
-	<haxedef name="openflPos" if="FEATURE_HSCRIPT"/>
+	<haxelib name="hscript-improved" if="FEATURE_HSCRIPT"/>
 	<haxedef name="hscriptPos" if="FEATURE_HSCRIPT"/>
 
 	<!-- Utilities -->

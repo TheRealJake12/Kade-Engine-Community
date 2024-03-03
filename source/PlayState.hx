@@ -4454,7 +4454,7 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.save.data.showMs)
 		{
-			msTiming = HelperFunctions.truncateFloat(noteDiff, 3);
+			msTiming = HelperFunctions.truncateFloat(noteDiff, 2);
 			if (PlayStateChangeables.botPlay)
 				msTiming = 0;
 		}

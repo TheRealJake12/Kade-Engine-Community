@@ -7,10 +7,9 @@ import haxe.CallStack;
 import haxe.Json;
 import haxe.Log;
 #if FEATURE_HSCRIPT
-import tea.SScript;
-import hscriptBase.Interp;
-import hscriptBase.Parser;
-import hscriptBase.Expr;
+import _hscript.Interp;
+import _hscript.Parser;
+import _hscript.Expr;
 #end
 import openfl.Lib;
 #if FEATURE_FILESYSTEM
@@ -29,7 +28,7 @@ enum ScriptReturn
 	CONTINUE;
 }
 
-@:access(hscriptBase.Interp)
+@:access(_hscript.Interp)
 class Script extends FlxBasic
 {
 	public var variables(get, null):Map<String, Dynamic>;
@@ -81,53 +80,6 @@ class Script extends FlxBasic
 				customParams: _.length > 0 ? _ : null
 			});
 		}));
-
-		set("import", function(path:String, ?as:Null<String>)
-		{
-			try
-			{
-				if (path == null || path == "")
-				{
-					error("Path Not Specified!", '${name}:${getCurLine() != null ? Std.string(getCurLine()) : ''}: Import Error!');
-					return;
-				}
-
-				var clas = Type.resolveClass(path);
-
-				if (clas == null)
-				{
-					error('Class Not Found!\nPath: ${path}', '${name}:${getCurLine() != null ? Std.string(getCurLine()) : ''}: Import Error!');
-					return;
-				}
-
-				var stringName:String = "";
-
-				if (as != null)
-					stringName = as;
-				else
-				{
-					var arr = Std.string(clas).split(".");
-					stringName = arr[arr.length - 1];
-				}
-				@:privateAccess
-				if (!variables.exists(stringName) && !_interp.locals.exists(stringName))
-				{
-					set(stringName, clas);
-
-					if (interacter.presetVars != [])
-						interacter.presetVars.push(stringName);
-				}
-				else
-				{
-					error('$stringName is alreadly a variable in the script, please change the variable to a different name!',
-						'${name}:${getCurLine() != null ? Std.string(getCurLine()) : ''}: Import Error!');
-				}
-			}
-			catch (e)
-			{
-				error('${e}', '${name}:${getCurLine() != null ? Std.string(getCurLine()) : ''}: Import Error!');
-			}
-		});
 
 		set("addScript", function(scriptName:String):Dynamic
 		{

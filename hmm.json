@@ -12,9 +12,10 @@
       "url": "https://github.com/EliteMasterEric/TJSON.git"
     },
     {
-      "name": "SScript",
-      "type": "haxelib",
-      "version": "8.1.6"
+      "name": "hscript-improved",
+      "type": "git",
+      "ref": "master",
+      "url": "https://github.com/TheRealJake12/hscript-improved.git"
     },
     {
       "name": "hxcpp-debug-server",
