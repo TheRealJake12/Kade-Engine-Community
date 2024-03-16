@@ -2046,7 +2046,7 @@ class PlayState extends MusicBeatState
 
 		keys[data] = false;
 
-		if (songStarted && !paused)
+		if (songStarted)
 			keyShit();
 	}
 
@@ -2158,7 +2158,7 @@ class PlayState extends MusicBeatState
 				noteMissPress(data);
 			}
 
-			if (songStarted && !inCutscene && !paused)
+			if (songStarted && !inCutscene)
 				keyShit();
 
 			// Conductor.songPosition = Conductor.rawPosition;

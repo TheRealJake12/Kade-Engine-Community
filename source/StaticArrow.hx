@@ -110,14 +110,14 @@ class StaticArrow extends FlxSprite
 				for (j in 0...4)
 				{
 					animation.addByPrefix(dataColor[j], 'arrow' + dataSuffix[j]);
-					animation.addByPrefix('dirCon' + j, dataSuffix[j].toLowerCase() + ' confirm', 30, false);
+					animation.addByPrefix('dirCon' + j, dataSuffix[j].toLowerCase() + ' confirm', 24, false);
 				}
 
 				var lowerDir:String = dataSuffix[noteData].toLowerCase();
 
 				animation.addByPrefix('static', 'arrow' + dataSuffix[noteData]);
-				animation.addByPrefix('pressed', lowerDir + ' press', 30, false);
-				animation.addByPrefix('confirm', lowerDir + ' confirm', 30, false);
+				animation.addByPrefix('pressed', lowerDir + ' press', 24, false);
+				animation.addByPrefix('confirm', lowerDir + ' confirm', 24, false);
 
 				antialiasing = FlxG.save.data.antialiasing;
 				setGraphicSize(Std.int(width * 0.7));
