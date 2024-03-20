@@ -1,6 +1,7 @@
 package;
 
 import flash.media.Sound;
+import haxe.ui.ToolkitAssets;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection;
@@ -92,7 +93,7 @@ class Paths
 		var path:String = '';
 
 		path = getPath('images/$key.png', IMAGE, library);
-		
+
 		gpuRender = gpuRender != null ? gpuRender : FlxG.save.data.gpuRender;
 
 		if (OpenFlAssets.exists(path, IMAGE))
@@ -503,13 +504,71 @@ class Paths
 		'assets/music/ke_freakyMenu.$SOUND_EXT'
 	];
 
+	public static function clearStoredMemory(?cleanUnused:Bool = false)
+	{
+		if (FlxG.save.data.unload)
+		{
+			// clear anything not in the tracked assets list
+			@:privateAccess
+			if (ToolkitAssets.instance._imageCache != null)
+			{
+				for (key in ToolkitAssets.instance._imageCache.keys())
+				{
+					ToolkitAssets.instance._imageCache.remove(key);
+				}
+			}
+
+			@:privateAccess
+			for (key in FlxG.bitmap._cache.keys())
+			{
+				var obj = FlxG.bitmap._cache.get(key);
+				if (obj != null)
+				{
+					OpenFlAssets.cache.removeBitmapData(key);
+					OpenFlAssets.cache.clearBitmapData(key);
+					OpenFlAssets.cache.clear(key);
+					FlxG.bitmap._cache.remove(key);
+					obj.destroy();
+				}
+			}
+
+			#if !html5
+			// clear all sounds that are cached
+			for (key in currentTrackedSounds.keys())
+			{
+				if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && key != null)
+				{
+					// trace('test: ' + dumpExclusions, key);
+					OpenFlAssets.cache.clear(key);
+					OpenFlAssets.cache.removeSound(key);
+					OpenFlAssets.cache.clearSounds(key);
+					currentTrackedSounds.remove(key);
+				}
+			}
+
+			openfl.Assets.cache.clear("songs");
+			#end
+			// flags everything to be cleared out next unused memory clear
+			localTrackedAssets = [];
+			runGC();
+		}
+	}
+
 	/// haya I love you for the base cache dump I took to the max
 	public static function clearUnusedMemory()
 	{
 		if (FlxG.save.data.unload)
 		{
 			// clear non local assets in the tracked assets list
-			var counter:Int = 0;
+			@:privateAccess
+			if (ToolkitAssets.instance._imageCache != null)
+			{
+				for (key in ToolkitAssets.instance._imageCache.keys())
+				{
+					ToolkitAssets.instance._imageCache.remove(key);
+				}
+			}
+
 			for (key in currentTrackedAssets.keys())
 			{
 				// if it is not currently contained within the used local assets
@@ -549,58 +608,11 @@ class Paths
 
 						obj = null;
 						currentTrackedAssets.remove(key);
-						counter++;
 					}
 				}
 			}
 			runGC();
 			// to be safe that NO gc memory is left.
-		}
-	}
-
-	public static function clearStoredMemory(?cleanUnused:Bool = false)
-	{
-		if (FlxG.save.data.unload)
-		{
-			// clear anything not in the tracked assets list
-			var counterAssets:Int = 0;
-
-			@:privateAccess
-			for (key in FlxG.bitmap._cache.keys())
-			{
-				var obj = FlxG.bitmap._cache.get(key);
-				if (obj != null && !currentTrackedAssets.exists(key))
-				{
-					OpenFlAssets.cache.removeBitmapData(key);
-					OpenFlAssets.cache.clearBitmapData(key);
-					OpenFlAssets.cache.clear(key);
-					FlxG.bitmap._cache.remove(key);
-					obj.destroy();
-					counterAssets++;
-				}
-			}
-
-			#if !html5
-			// clear all sounds that are cached
-			var counterSound:Int = 0;
-			for (key in currentTrackedSounds.keys())
-			{
-				if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && key != null)
-				{
-					// trace('test: ' + dumpExclusions, key);
-					OpenFlAssets.cache.clear(key);
-					OpenFlAssets.cache.removeSound(key);
-					OpenFlAssets.cache.clearSounds(key);
-					currentTrackedSounds.remove(key);
-					counterSound++;
-				}
-			}
-			
-			openfl.Assets.cache.clear("songs");
-			#end
-			// flags everything to be cleared out next unused memory clear
-			localTrackedAssets = [];
-			runGC();
 		}
 	}
 

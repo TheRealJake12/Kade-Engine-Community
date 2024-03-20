@@ -1916,12 +1916,11 @@ class PlayState extends MusicBeatState
 			}
 
 			switch (swagCounter)
-
 			{
 				case 0:
 					FlxG.sound.play(Paths.sound('intro3' + altSuffix), 0.6);
 				case 1:
-					var ready:FlxSprite = new FlxSprite().loadGraphic(Paths.image(introAlts[0], week6Bullshit));
+					var ready:FlxSprite = new FlxSprite().loadGraphic(Paths.image(introAlts[0]));
 					ready.scrollFactor.set();
 					ready.scale.set(0.7, 0.7);
 					ready.cameras = [camHUD];
@@ -1944,7 +1943,7 @@ class PlayState extends MusicBeatState
 					});
 					FlxG.sound.play(Paths.sound('intro2' + altSuffix), 0.6);
 				case 2:
-					var set:FlxSprite = new FlxSprite().loadGraphic(Paths.image(introAlts[1], week6Bullshit));
+					var set:FlxSprite = new FlxSprite().loadGraphic(Paths.image(introAlts[1]));
 					set.scrollFactor.set();
 					set.scale.set(0.7, 0.7);
 					if (SONG.noteStyle == 'pixel')
@@ -1964,7 +1963,7 @@ class PlayState extends MusicBeatState
 					});
 					FlxG.sound.play(Paths.sound('intro1' + altSuffix), 0.6);
 				case 3:
-					var go:FlxSprite = new FlxSprite().loadGraphic(Paths.image(introAlts[2], week6Bullshit));
+					var go:FlxSprite = new FlxSprite().loadGraphic(Paths.image(introAlts[2]));
 					go.scrollFactor.set();
 					go.scale.set(0.7, 0.7);
 					go.cameras = [camHUD];
@@ -2046,7 +2045,7 @@ class PlayState extends MusicBeatState
 
 		keys[data] = false;
 
-		if (songStarted)
+		if (songStarted && !paused)
 			keyShit();
 	}
 
@@ -2158,7 +2157,7 @@ class PlayState extends MusicBeatState
 				noteMissPress(data);
 			}
 
-			if (songStarted && !inCutscene)
+			if (songStarted && !inCutscene && !paused)
 				keyShit();
 
 			// Conductor.songPosition = Conductor.rawPosition;
@@ -2531,15 +2530,18 @@ class PlayState extends MusicBeatState
 				if (daStrumTime < 0)
 					daStrumTime = 0;
 				var daNoteData:Int = Std.int(songNotes[1] % 4);
-				var daNoteType:String = songNotes[5];
+				var daNoteType:String = songNotes[4];
 				var daBeat = TimingStruct.getBeatFromTime(daStrumTime);
 
-				var gottaHitNote:Bool = section.mustHitSection;
+				var gottaHitNote:Bool = false;
 
-				if (songNotes[1] > 3 && !PlayStateChangeables.opponentMode)
-					gottaHitNote = !section.mustHitSection;
-				else if (songNotes[1] <= 3 && PlayStateChangeables.opponentMode)
-					gottaHitNote = !section.mustHitSection;
+				if (songNotes[1] > 3)
+					gottaHitNote = true;
+				else if (songNotes[1] <= 3)
+					gottaHitNote = false;
+
+				if (PlayStateChangeables.opponentMode)
+					gottaHitNote = !gottaHitNote;
 
 				var oldNote:Note;
 				if (unspawnNotes.length > 0)
@@ -2547,7 +2549,7 @@ class PlayState extends MusicBeatState
 				else
 					oldNote = null;
 
-				var swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, gottaHitNote, null, daBeat);
+				var swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, gottaHitNote, daBeat);
 				swagNote.noteShit = daNoteType;
 
 				if (PlayStateChangeables.holds)
@@ -2569,12 +2571,6 @@ class PlayState extends MusicBeatState
 
 				unspawnNotes.push(swagNote);
 
-				swagNote.isAlt = songNotes[3]
-					|| ((section.altAnim || section.CPUAltAnim) && !gottaHitNote)
-					|| (section.playerAltAnim && gottaHitNote)
-					|| (PlayStateChangeables.opponentMode && gottaHitNote && (section.altAnim || section.CPUAltAnim))
-					|| (PlayStateChangeables.opponentMode && !gottaHitNote && section.playerAltAnim);
-
 				var type = 0;
 
 				if (susLength > 0)
@@ -2584,17 +2580,12 @@ class PlayState extends MusicBeatState
 					{
 						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 						var sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true, false,
-							gottaHitNote, null, 0);
+							gottaHitNote, 0);
 
 						sustainNote.noteShit = daNoteType;
 
 						sustainNote.scrollFactor.set();
 						unspawnNotes.push(sustainNote);
-						sustainNote.isAlt = songNotes[3]
-							|| ((section.altAnim || section.CPUAltAnim) && !gottaHitNote)
-							|| (section.playerAltAnim && gottaHitNote)
-							|| (PlayStateChangeables.opponentMode && gottaHitNote && (section.altAnim || section.CPUAltAnim))
-							|| (PlayStateChangeables.opponentMode && !gottaHitNote && section.playerAltAnim);
 
 						sustainNote.mustPress = gottaHitNote;
 
@@ -3241,6 +3232,7 @@ class PlayState extends MusicBeatState
 			executeModchart = false;
 			cannotDie = true;
 			persistentUpdate = false;
+			ChartingState.clean = true;
 			LoadingState.loadAndSwitchState(new ChartingState());
 		}
 
@@ -4004,7 +3996,7 @@ class PlayState extends MusicBeatState
 												}
 												else
 												{
-													if (!daNote.wasGoodHit && !daNote.isSustainNote)
+													if (!daNote.wasGoodHit && !daNote.isSustainNote && daNote.causesMisses)
 													{
 														health -= (daNote.missHealth * PlayStateChangeables.healthLoss);
 														Debug.logTrace("User failed note.");
@@ -4170,7 +4162,7 @@ class PlayState extends MusicBeatState
 					Conductor.changeBPM(102);
 					createTimer(2, function(tmr:FlxTimer)
 					{
-						LoadingState.loadAndSwitchState(new StoryMenuState());
+						MusicBeatState.switchState(new StoryMenuState());
 					});
 				}
 
@@ -4390,9 +4382,9 @@ class PlayState extends MusicBeatState
 
 		score = daRating.scoreBonus;
 		var result = 0.06;
-		switch (daNote.noteShit)
+		switch (daNote.noteShit.toLowerCase())
 		{
-			case 'mustpress':
+			case 'must press':
 				result = 0.8;
 			default:
 				result = daRating.healthBonus > 0 ? daRating.healthBonus * PlayStateChangeables.healthGain : daRating.healthBonus * PlayStateChangeables.healthLoss;
@@ -4429,7 +4421,7 @@ class PlayState extends MusicBeatState
 
 		if (lastRating != daRating.name.toLowerCase())
 		{
-			rating.loadGraphic(Paths.image(pixelShitPart1 + daRating.name.toLowerCase() + pixelShitPart2, pixelShitPart3));
+			rating.loadGraphic(Paths.image(pixelShitPart1 + daRating.name.toLowerCase() + pixelShitPart2));
 
 			if (SONG.noteStyle != 'pixel')
 			{
@@ -4469,7 +4461,7 @@ class PlayState extends MusicBeatState
 		currentTimingShown.text = msTiming + "ms";
 		currentTimingShown.size = 20;
 
-		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2, pixelShitPart3));
+		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2));
 		comboSpr.screenCenter();
 		comboSpr.x = rating.x;
 		comboSpr.y = rating.y + 100;
@@ -4831,7 +4823,7 @@ class PlayState extends MusicBeatState
 
 		// askl
 
-		if (daNote.isAlt)
+		if (daNote.noteShit.toLowerCase() == 'alt')
 		{
 			altAnim = '-alt';
 		}
@@ -4969,7 +4961,7 @@ class PlayState extends MusicBeatState
 				}
 			}
 
-			switch (note.noteShit)
+			switch (note.noteShit.toLowerCase())
 			{
 				case 'hurt':
 					if (FlxG.save.data.notesplashes && !note.isSustainNote)
@@ -4984,7 +4976,7 @@ class PlayState extends MusicBeatState
 			}
 
 			var altAnim:String = "";
-			if (note.isAlt)
+			if (note.noteShit.toLowerCase() == 'alt')
 			{
 				altAnim = '-alt';
 			}
@@ -5099,9 +5091,6 @@ class PlayState extends MusicBeatState
 				if (gf != null)
 					gf.dance();
 			}
-
-			/*if (vocals.volume == 0 && !currentSection.mustHitSection)
-				vocals.volume = 1; */
 		}
 
 		// HARDCODING FOR MILF ZOOMS!
@@ -5131,8 +5120,8 @@ class PlayState extends MusicBeatState
 		{
 			if (curStep % 4 == 0)
 			{
-				iconP1.scale.set(1.2, 1.2);
-				iconP2.scale.set(1.2, 1.2);
+				iconP1.scale.set(1.1, 1.1);
+				iconP2.scale.set(1.1, 1.1);
 
 				iconP1.updateHitbox();
 				iconP2.updateHitbox();
@@ -5199,16 +5188,16 @@ class PlayState extends MusicBeatState
 			if (curBeat % idleBeat == 0)
 			{
 				if (idleToBeat && !dad.animation.curAnim.name.startsWith('sing'))
-					dad.dance(forcedToIdle, currentSection.CPUAltAnim);
+					dad.dance(forcedToIdle);
 				if (idleToBeat && !boyfriend.animation.curAnim.name.startsWith('sing'))
-					boyfriend.dance(forcedToIdle, currentSection.playerAltAnim);
+					boyfriend.dance(forcedToIdle);
 			}
 			else if (curBeat % idleBeat != 0)
 			{
 				if (boyfriend.isDancing && !boyfriend.animation.curAnim.name.startsWith('sing'))
-					boyfriend.dance(forcedToIdle, currentSection.playerAltAnim);
+					boyfriend.dance(forcedToIdle);
 				if (dad.isDancing && !dad.animation.curAnim.name.startsWith('sing'))
-					dad.dance(forcedToIdle, currentSection.CPUAltAnim);
+					dad.dance(forcedToIdle);
 			}
 		}
 
@@ -5218,12 +5207,12 @@ class PlayState extends MusicBeatState
 		{
 			if (!SONG.splitVoiceTracks)
 			{
-				if (vocals.volume == 0 && !currentSection.mustHitSection)
+				if (vocals.volume == 0 && !currentSection.playerSec)
 					vocals.volume = 1;
 			}
 			else
 			{
-				if (vocalsPlayer.volume == 0 && !currentSection.mustHitSection)
+				if (vocalsPlayer.volume == 0 && !currentSection.playerSec)
 					vocalsPlayer.volume = 1;
 			}
 		}
@@ -5242,7 +5231,7 @@ class PlayState extends MusicBeatState
 		#if FEATURE_LUAMODCHART
 		if (currentSection != null)
 			if (luaModchart != null)
-				luaModchart.setVar("mustHit", currentSection.mustHitSection);
+				luaModchart.setVar("mustHit", currentSection.playerSec);
 		#end
 
 		#if FEATURE_HSCRIPT
@@ -5261,7 +5250,7 @@ class PlayState extends MusicBeatState
 			{
 				var offsetX = 0;
 				var offsetY = 0;
-				if (!currentSection.mustHitSection
+				if (!currentSection.playerSec
 					&& (camFollow.x != dad.getMidpoint().x + dad.camPos[0] + offsetX
 						&& camFollow.y != dad.getMidpoint().y + dad.camPos[1] + offsetY))
 				{
@@ -5293,7 +5282,7 @@ class PlayState extends MusicBeatState
 					}
 				}
 
-				if (currentSection.mustHitSection
+				if (currentSection.playerSec
 					&& (camFollow.x != boyfriend.getMidpoint().x + boyfriend.camPos[0] + offsetX
 						&& camFollow.y != boyfriend.getMidpoint().y + boyfriend.camPos[1] + offsetY))
 				{
@@ -5380,23 +5369,6 @@ class PlayState extends MusicBeatState
 					boyfriend.alpha = lastAlpha;
 				}
 		}
-	}
-
-	private function newSection(lengthInSteps:Int = 16, mustHitSection:Bool = false, CPUAltAnim:Bool = true, playerAltAnim:Bool = true):SwagSection
-	{
-		var sec:SwagSection = {
-			lengthInSteps: lengthInSteps,
-			bpm: SONG.bpm,
-			changeBPM: false,
-			mustHitSection: mustHitSection,
-			sectionNotes: [],
-			typeOfSection: 0,
-			altAnim: false,
-			CPUAltAnim: CPUAltAnim,
-			playerAltAnim: playerAltAnim
-		};
-
-		return sec;
 	}
 
 	public var cleanedSong:SongData;
@@ -5656,7 +5628,7 @@ class PlayState extends MusicBeatState
 					files.push(sub);
 		}
 
-		for (_ in CoolUtil.readAssetsDirectoryFromLibrary('assets/scripts', 'TEXT', ))
+		for (_ in CoolUtil.readAssetsDirectoryFromLibrary('assets/scripts', 'TEXT'))
 			files.push(_);
 
 		if (FlxG.save.data.gen)
@@ -5928,11 +5900,11 @@ class PlayState extends MusicBeatState
 
 		var things:Array<String> = ['marv', 'sick', 'good', 'bad', 'shit'];
 		for (precaching in things)
-			Paths.image(pixelShitPart1 + precaching + pixelShitPart2, pixelShitPart3);
+			Paths.image(pixelShitPart1 + precaching + pixelShitPart2);
 
 		for (i in 0...10)
 		{
-			Paths.image(pixelShitPart1 + 'num' + i + pixelShitPart2, pixelShitPart4);
+			Paths.image(pixelShitPart1 + 'num' + i + pixelShitPart2);
 		}
 	}
 
@@ -5951,7 +5923,7 @@ class PlayState extends MusicBeatState
 		}
 
 		for (asset in introAlts)
-			Paths.image(asset, week6Bullshit);
+			Paths.image(asset);
 
 		var things:Array<String> = ['intro3', 'intro2', 'intro1', 'introGo'];
 		for (precaching in things)
@@ -6123,7 +6095,7 @@ class PlayState extends MusicBeatState
 					case true:
 						for (note in unspawnNotes)
 						{
-							if (note.mustPress && (note.noteShit == null || note.noteShit == 'normal'))
+							if (note.mustPress && (note.noteShit == null || note.noteShit.toLowerCase() == 'normal'))
 							{
 								note.texture = 'noteskins/' + texture;
 							}
@@ -6131,7 +6103,7 @@ class PlayState extends MusicBeatState
 
 						for (note in notes)
 						{
-							if (note.mustPress && (note.noteShit == null || note.noteShit == 'normal'))
+							if (note.mustPress && (note.noteShit == null || note.noteShit.toLowerCase() == 'normal'))
 							{
 								note.texture = 'noteskins/' + texture;
 							}
@@ -6139,7 +6111,7 @@ class PlayState extends MusicBeatState
 					case false:
 						for (note in unspawnNotes)
 						{
-							if (!note.mustPress && (note.noteShit == null || note.noteShit == 'normal'))
+							if (!note.mustPress && (note.noteShit == null || note.noteShit.toLowerCase() == 'normal'))
 							{
 								note.texture = 'noteskins/' + texture;
 							}
@@ -6147,7 +6119,7 @@ class PlayState extends MusicBeatState
 
 						for (note in notes)
 						{
-							if (!note.mustPress && (note.noteShit == null || note.noteShit == 'normal'))
+							if (!note.mustPress && (note.noteShit == null || note.noteShit.toLowerCase() == 'normal'))
 							{
 								note.texture = 'noteskins/' + texture;
 							}

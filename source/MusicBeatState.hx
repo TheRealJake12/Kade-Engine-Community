@@ -12,7 +12,7 @@ import flixel.input.keyboard.FlxKey;
 import Section.SwagSection;
 import Song.SongData;
 
-class MusicBeatState extends FlxUIState
+class MusicBeatState extends FlxTransitionableState
 {
 	private var lastBeat:Float = 0;
 	private var lastStep:Float = 0;
@@ -36,8 +36,6 @@ class MusicBeatState extends FlxUIState
 
 	public static var currentColor = 0;
 	public static var switchingState:Bool = false;
-
-	private var assets:Array<FlxBasic> = [];
 
 	public static var initSave:Bool = false;
 
@@ -161,7 +159,6 @@ class MusicBeatState extends FlxUIState
 			var spr:FlxSprite = cast(Object, FlxSprite);
 
 		// Debug.logTrace(Object);
-		assets.push(Object);
 		var result = super.add(Object);
 		return result;
 	}

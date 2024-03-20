@@ -508,7 +508,7 @@ class DiffOverview extends MusicBeatSubstate
 				else
 					oldNote = null;
 
-				var swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, gottaHitNote, null, daBeat);
+				var swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, gottaHitNote, daBeat);
 				swagNote.noteShit = daNoteType;
 
 				if (PlayStateChangeables.holds)
@@ -530,12 +530,6 @@ class DiffOverview extends MusicBeatSubstate
 
 				unspawnNotes.push(swagNote);
 
-				swagNote.isAlt = songNotes[3]
-					|| ((section.altAnim || section.CPUAltAnim) && !gottaHitNote)
-					|| (section.playerAltAnim && gottaHitNote)
-					|| (PlayStateChangeables.opponentMode && gottaHitNote && (section.altAnim || section.CPUAltAnim))
-					|| (PlayStateChangeables.opponentMode && !gottaHitNote && section.playerAltAnim);
-
 				var type = 0;
 
 				if (susLength > 0)
@@ -545,17 +539,12 @@ class DiffOverview extends MusicBeatSubstate
 					{
 						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 						var sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true, false,
-							gottaHitNote, null, 0);
+							gottaHitNote, 0);
 
 						sustainNote.noteShit = daNoteType;
 
 						sustainNote.scrollFactor.set();
 						unspawnNotes.push(sustainNote);
-						sustainNote.isAlt = songNotes[3]
-							|| ((section.altAnim || section.CPUAltAnim) && !gottaHitNote)
-							|| (section.playerAltAnim && gottaHitNote)
-							|| (PlayStateChangeables.opponentMode && gottaHitNote && (section.altAnim || section.CPUAltAnim))
-							|| (PlayStateChangeables.opponentMode && !gottaHitNote && section.playerAltAnim);
 
 						sustainNote.mustPress = gottaHitNote;
 

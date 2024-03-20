@@ -41,10 +41,9 @@ class Note extends FlxSprite
 	public var botplayHit:Bool = true; // if botplay should hit the note.
 	public var canRate:Bool = true; // if it should do ratings, popup score and whatnot.
 	public var missHealth:Float = 0.08; // default health you miss.
+	public var hitsoundsEditor:Bool = true; // if a note plays a hitsound in the chart editor.
 
 	public var luaID:Int = 0;
-
-	public var isAlt:Bool = false;
 
 	public var noteCharterObject:FlxSprite;
 
@@ -100,7 +99,7 @@ class Note extends FlxSprite
 	#end
 
 	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inCharter:Bool = false, ?isPlayer:Bool = false,
-			?isAlt:Bool = false, ?bet:Float = 0)
+			?bet:Float = 0)
 	{
 		super();
 		this.noteShit = noteShit; // FFFFFFFFFFFFFFFFFFFFFFUUUUUUUUUUUUUUUUUUUUUUUUUUUU
@@ -110,7 +109,6 @@ class Note extends FlxSprite
 			prevNote = this;
 
 		beat = bet;
-		this.isAlt = isAlt;
 
 		this.prevNote = prevNote;
 		isSustainNote = sustainNote;
@@ -144,7 +142,7 @@ class Note extends FlxSprite
 		if (this.strumTime < 0)
 			this.strumTime = 0;
 
-		this.noteData = Math.floor(noteData % 4);
+		this.noteData = noteData;
 
 		if (PlayStateChangeables.mirrorMode)
 		{
@@ -156,7 +154,7 @@ class Note extends FlxSprite
 
 		// x += swagWidth * (noteData);
 		var animToPlay:String = '';
-		animToPlay = dataColor[noteData] + 'Scroll';
+		animToPlay = dataColor[Std.int(noteData % 4)] + 'Scroll';
 		x += swagWidth * noteData;
 
 		originColor = noteData; // The note's origin color will be checked by its sustain notes
@@ -184,9 +182,9 @@ class Note extends FlxSprite
 			originColor = col;
 
 			localAngle -= arrowAngles[col];
-			localAngle += arrowAngles[noteData];
+			localAngle += arrowAngles[Std.int(noteData % 4)];
 			originAngle = localAngle;
-			animToPlay = dataColor[col] + 'Scroll';
+			animToPlay = dataColor[Std.int(col % 4)] + 'Scroll';
 		}
 
 		animation.play(animToPlay);
@@ -207,7 +205,7 @@ class Note extends FlxSprite
 			originColor = prevNote.originColor;
 			originAngle = prevNote.originAngle;
 
-			animation.play(dataColor[originColor] + 'holdend'); // This works both for normal colors and quantization colors
+			animation.play(dataColor[Std.int(originColor % 4)] + 'holdend'); // This works both for normal colors and quantization colors
 			updateHitbox();
 
 			x -= width / 2;
@@ -252,7 +250,7 @@ class Note extends FlxSprite
 	{
 		if (noteShit != value)
 		{
-			switch (value)
+			switch (value.toLowerCase())
 			{
 				case 'hurt':
 					canPlayAnims = false;
@@ -262,8 +260,7 @@ class Note extends FlxSprite
 					canRate = false;
 					missHealth = 0;
 					sustainActive = true;
-					// reloadNote('notetypes/hurt_Arrows');
-					// texture = 'notetypes/hurt_Arrows';
+					hitsoundsEditor = false;
 					switch (CustomNoteHelpers.Skin.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin])
 					{
 						default:
@@ -272,14 +269,13 @@ class Note extends FlxSprite
 							texture = "notetypes/hurt_Circles";
 					}
 
-				case 'mustpress':
+				case 'must press':
 					canPlayAnims = false;
 					canNoteSplash = true;
 					botplayHit = true;
 					canRate = true;
 					missHealth = 0.8;
-					// reloadNote('notetypes/mustpress_Arrows');
-					// texture = 'notetypes/mustpress_Arrows';
+					hitsoundsEditor = true;
 					switch (CustomNoteHelpers.Skin.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin])
 					{
 						default:
@@ -294,6 +290,7 @@ class Note extends FlxSprite
 					missHealth = 0.08;
 					botplayHit = true;
 					canRate = true;
+					hitsoundsEditor = true;
 			}
 			noteShit = value;
 		}

@@ -12,8 +12,8 @@ class ChartingBox extends FlxSprite
 		connectedNote = originalNote;
 
 		makeGraphic(1, 1, FlxColor.fromRGB(173, 216, 230));
-		setGraphicSize(40, 40);
+		setGraphicSize(50, 50);
 		updateHitbox();
-		alpha = 0.4;
+		alpha = 0.3;
 	}
 }

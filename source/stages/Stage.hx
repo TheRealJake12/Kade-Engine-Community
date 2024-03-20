@@ -444,8 +444,7 @@ class Stage extends MusicBeatState
 					toAdd.push(tankSky);
 					if (FlxG.save.data.distractions)
 					{
-						var tankClouds:FlxSprite = new FlxSprite(FlxG.random.int(-700, -100),
-							FlxG.random.int(-20, 20)).loadGraphic(Paths.image('tankClouds'));
+						var tankClouds:FlxSprite = new FlxSprite(FlxG.random.int(-700, -100), FlxG.random.int(-20, 20)).loadGraphic(Paths.image('tankClouds'));
 						tankClouds.velocity.x = FlxG.random.float(5, 15);
 						tankClouds.antialiasing = FlxG.save.data.antialiasing;
 						tankClouds.scrollFactor.set(0.1, 0.1);

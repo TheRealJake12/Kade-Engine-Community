@@ -156,7 +156,7 @@ class SelectEditorsState extends MusicBeatState
 				PlayState.isStoryMode = false;
 				PlayState.isSM = false;
 				PlayState.songMultiplier = 1;
-				LoadingState.loadAndSwitchState(new debug.ChartingState(true), true);
+				LoadingState.loadAndSwitchState(new debug.ChartingState(), true);
 		}
 		FlxG.sound.music.stop();
 	}

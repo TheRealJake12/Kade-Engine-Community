@@ -26,8 +26,6 @@ class BaseCache
 		cacheSound.stop();
 	}
 
-	
-
 	public static function cacheStuff(baseDirectory:String):Void
 	{
 		try

@@ -7,12 +7,10 @@ typedef SwagSection =
 	var sectionNotes:Array<Array<Dynamic>>;
 	var lengthInSteps:Null<Int>;
 	var ?typeOfSection:Int;
-	var mustHitSection:Bool;
+	var ?mustHitSection:Bool;
 	var ?bpm:Float;
 	var ?changeBPM:Bool;
-	var altAnim:Bool;
-	var CPUAltAnim:Bool;
-	var playerAltAnim:Bool;
+	var playerSec:Bool;
 }
 
 class Section
@@ -26,6 +24,7 @@ class Section
 	public var lengthInSteps:Int = 16;
 	public var typeOfSection:Int = 0;
 	public var mustHitSection:Bool = true;
+	public var playerSec = true;
 
 	/**
 	 *	Copies the first section into the second section!

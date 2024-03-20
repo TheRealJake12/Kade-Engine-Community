@@ -327,30 +327,31 @@ class AnimationDebug extends MusicBeatState
 		add(helpText);
 	}
 
-	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>)
-	{
-		if (id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper))
+	/*
+		override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>)
 		{
-			var offset:FlxUINumericStepper = cast sender;
-			var offsetName = offset.name;
-			switch (offsetName)
+			if (id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper))
 			{
-				case 'offset_x':
-					char.animOffsets.get(animList[curAnim])[0] = offset.value;
-					updateTexts();
-					genBoyOffsets(false);
-					if (animList[curAnim] != null)
-						char.playAnim(animList[curAnim]);
-				case 'offset_y':
-					char.animOffsets.get(animList[curAnim])[1] = offset.value;
-					updateTexts();
-					genBoyOffsets(false);
-					if (animList[curAnim] != null)
-						char.playAnim(animList[curAnim]);
+				var offset:FlxUINumericStepper = cast sender;
+				var offsetName = offset.name;
+				switch (offsetName)
+				{
+					case 'offset_x':
+						char.animOffsets.get(animList[curAnim])[0] = offset.value;
+						updateTexts();
+						genBoyOffsets(false);
+						if (animList[curAnim] != null)
+							char.playAnim(animList[curAnim]);
+					case 'offset_y':
+						char.animOffsets.get(animList[curAnim])[1] = offset.value;
+						updateTexts();
+						genBoyOffsets(false);
+						if (animList[curAnim] != null)
+							char.playAnim(animList[curAnim]);
+				}
 			}
 		}
-	}
-
+	 */
 	override function update(elapsed:Float)
 	{
 		if (char.animation.curAnim.name != null)

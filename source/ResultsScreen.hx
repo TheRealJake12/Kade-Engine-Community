@@ -250,7 +250,7 @@ class ResultsScreen extends MusicBeatSubstate
 	}
 
 	public function registerHit(note:Note, isMiss:Bool = false)
-	{	
+	{
 		if (FlxG.save.data.inputShow)
 		{
 			var noteRating = note.rating;

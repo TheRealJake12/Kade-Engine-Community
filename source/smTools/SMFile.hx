@@ -128,7 +128,6 @@ class SMFile
 		// init a fnf song
 
 		var song = {
-			song: header.TITLE,
 			songId: header.TITLE,
 			songName: header.TITLE,
 			notes: [],
@@ -181,7 +180,7 @@ class SMFile
 				mustHitSection: false,
 				bpm: header.getBPM(0),
 				changeBPM: false,
-				altAnim: false
+				playerSec: true
 			};
 
 			// if it's not a double always set this to true
@@ -217,10 +216,10 @@ class SMFile
 						mustHitSection: false,
 						bpm: header.getBPM(0),
 						changeBPM: false,
-						altAnim: false
+						playerSec: true
 					};
 					if (!isDouble)
-						section.mustHitSection = true;
+						section.playerSec = true;
 				}
 
 				var seg = TimingStruct.getTimingAtBeat(currentBeat);
@@ -243,7 +242,7 @@ class SMFile
 					}
 
 					// get the lane and note type
-					var lane = index;
+					var lane = index + 4; // shitty fix
 					var numba = Std.parseInt(i);
 
 					// switch through the type and add the note
@@ -251,16 +250,16 @@ class SMFile
 					switch (numba)
 					{
 						case 1: // normal
-							section.sectionNotes.push([rowTime, lane, 0, 0, 1.0]);
+							section.sectionNotes.push([rowTime, lane, 0, rowTime]);
 						case 2: // held head
-							heldNotes[lane] = [rowTime, lane, 0, 0, 1.0];
+							heldNotes[lane] = [rowTime, lane, 0, rowTime];
 						case 3: // held tail
 							var data = heldNotes[lane];
 							var timeDiff = rowTime - data[0];
-							section.sectionNotes.push([data[0], lane, timeDiff, 0, data[4]]);
+							section.sectionNotes.push([data[0], lane, timeDiff, data[4]]);
 							heldNotes[index] = [];
 						case 4: // roll head
-							heldNotes[lane] = [rowTime, lane, 0, 0, 1.0];
+							heldNotes[lane] = [rowTime, lane, 0, rowTime];
 					}
 					index++;
 				}
@@ -313,7 +312,6 @@ class SMFile
 					mustHitSection: song.notes[s].mustHitSection,
 					sectionNotes: [],
 					typeOfSection: 0,
-					altAnim: song.notes[s].altAnim
 				};
 				for(i in song.notes)
 				{

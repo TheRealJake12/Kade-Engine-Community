@@ -58,6 +58,11 @@ typedef SongData =
 	var ?offset:Int;
 	var ?splitVoiceTracks:Bool;
 	var ?audioFile:String;
+
+	/**
+	 * Directory used for the new paths system.
+	 */
+	var directory:String;
 }
 
 typedef SongMeta =
@@ -68,7 +73,7 @@ typedef SongMeta =
 
 class Song
 {
-	public static var latestChart:String = MainMenuState.kecVer;
+	public static var latestChart:String = "KEC1";
 
 	public static function loadFromJsonRAW(rawJson:String)
 	{
@@ -224,9 +229,6 @@ class Song
 
 		for (i in song.notes)
 		{
-			if (i.altAnim)
-				i.CPUAltAnim = i.altAnim;
-
 			var currentBeat = 4 * index;
 
 			var currentSeg = TimingStruct.getTimingAtBeat(currentBeat);
@@ -249,12 +251,33 @@ class Song
 			{
 				if (song.chartVersion == null)
 				{
-					ii[3] = false;
-					ii[4] = TimingStruct.getBeatFromTime(ii[0]);
+					ii[3] = TimingStruct.getBeatFromTime(ii[0]);
+					ii[4] = ii[5];
 				}
 
-				if (ii[3] == 0)
-					ii[3] == false;
+				// try not to brick the game challenge (impossible (thanks bolo))
+				if (song.chartVersion != latestChart)
+				{
+					if (i.mustHitSection)
+					{
+						var bool = false;
+						if (ii[1] <= 3)
+						{
+							ii[1] += 4;
+							bool = true;
+						}
+						if (ii[1] > 3)
+							if (!bool)
+								ii[1] -= 4;
+					}
+
+					i.playerSec = i.mustHitSection;
+
+					ii[4] = ii[5];
+
+					if (ii[4] == null || ii[4] == 'true' || ii[4] == 'false' || ii[4] == 0 || ii[4] == 0.0 || Math.isNaN(ii[4]))
+						ii[4] = 'Normal';
+				}
 			}
 
 			index++;
@@ -310,19 +333,16 @@ class Song
 		return Song.conversionChecks(songData);
 	}
 
-	private static function newSection(song:SongData, lengthInSteps:Int = 16, mustHitSection:Bool = false, CPUAltAnim:Bool = true,
-			playerAltAnim:Bool = true):SwagSection
+	private static function newSection(song:SongData, lengthInSteps:Int = 16, mustHitSection:Bool = false, playerSec:Bool = true):SwagSection
 	{
 		var sec:SwagSection = {
 			lengthInSteps: lengthInSteps,
 			bpm: song.bpm,
 			changeBPM: false,
 			mustHitSection: mustHitSection,
+			playerSec: playerSec,
 			sectionNotes: [],
 			typeOfSection: 0,
-			altAnim: false,
-			CPUAltAnim: CPUAltAnim,
-			playerAltAnim: playerAltAnim
 		};
 
 		return sec;

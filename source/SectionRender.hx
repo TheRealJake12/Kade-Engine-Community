@@ -14,7 +14,7 @@ class SectionRender extends FlxSprite
 	{
 		super(x, y);
 
-		makeGraphic(1, 1, 0xFF2F2F2F);
+		makeGraphic(1, 1, FlxColor.fromRGB(35, 35, 35));
 		scale.set(GRID_SIZE * 8, GRID_SIZE * Height);
 		updateHitbox();
 		antialiasing = false;

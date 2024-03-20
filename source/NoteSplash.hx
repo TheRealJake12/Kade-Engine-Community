@@ -66,7 +66,9 @@ class NoteSplash extends FlxSprite
 		setPosition(x - Note.swagWidth * 0.95, y - Note.swagWidth);
 		alpha = FlxG.save.data.alphaSplash;
 
-		if (note.noteShit == null || note.noteShit == 'normal' || note.noteShit == "0") // *proper* noteType checking to make sure it isn't null.
+		if (note.noteShit == null
+			|| note.noteShit.toLowerCase() == 'normal'
+			|| note.noteShit == "0") // *proper* noteType checking to make sure it isn't null.
 			noteType = '';
 
 		loadAnims(noteType);
@@ -105,7 +107,7 @@ class NoteSplash extends FlxSprite
 		switch (PlayState.SONG.noteStyle)
 		{
 			case 'pixel':
-				frames = Paths.getSparrowAtlas('weeb/pixelUI/noteSplashes-pixels', 'week6');
+				frames = Paths.getSparrowAtlas('weeb/pixelUI/noteSplashes-pixels');
 				for (i in 0...4)
 				{
 					animation.addByPrefix('splash 0 ' + i, 'note splash 1 ' + anims[i], 24, false);

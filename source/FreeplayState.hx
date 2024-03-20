@@ -957,7 +957,10 @@ class FreeplayState extends MusicBeatState
 		lastRate = rate;
 
 		if (isCharting)
-			LoadingState.loadAndSwitchState(new ChartingState(reloadSong), true);
+		{
+			ChartingState.clean = true;
+			LoadingState.loadAndSwitchState(new ChartingState(), true);
+		}
 		else
 			LoadingState.loadAndSwitchState(new PlayState(), true);
 	}

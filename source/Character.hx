@@ -375,7 +375,7 @@ class Character extends FlxSprite
 					oldNote = animationNotes[Std.int(animationNotes.length - 1)];
 				else
 					oldNote = null;
-				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, false, false, songNotes[4], daBeat);
+				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, false, false, daBeat);
 
 				animationNotes.push(swagNote);
 			}
