@@ -2691,8 +2691,6 @@ class PlayState extends MusicBeatState
 			babyArrow.loadLane();
 			arrowLanes.add(babyArrow.bgLane);
 
-			babyArrow.animation.followGlobalSpeed = false;
-
 			switch (player)
 			{
 				case 0:

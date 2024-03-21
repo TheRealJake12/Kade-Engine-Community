@@ -12,6 +12,18 @@
       "url": "https://github.com/EliteMasterEric/TJSON.git"
     },
     {
+      "name": "haxeui-core",
+      "type": "git",
+      "ref": "master",
+      "url": "https://github.com/haxeui/haxeui-core.git"
+    },
+    {
+      "name": "haxeui-flixel",
+      "type": "git",
+      "ref": "master",
+      "url": "https://github.com/haxeui/haxeui-flixel.git"
+    },
+    {
       "name": "hscript-improved",
       "type": "git",
       "ref": "master",
