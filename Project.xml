@@ -86,7 +86,6 @@
 	<assets path="assets/weeks"   library="weeks"   rename="assets" exclude="*.ogg" if="web"/>
 	<assets path="assets/weeks"   library="weeks"   rename="assets" exclude="*.mp3" unless="web"/>
 	<assets path="assets/sm"   library="sm"  if="FEATURE_STEPMANIA"/>
-	<assets path="assets/scripts"  library="scripts"  if="FEATURE_HSCRIPT"/>
 	
 	<assets path='mods' embed='false'/>
 	

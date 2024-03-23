@@ -369,7 +369,8 @@ class ChartingState extends MusicBeatState
 		helpText.text = "Help:" + "\n" + "CTRL-Left/Right : Change playback speed" + "\n" + "Ctrl+Drag Click : Select notes" + "\n" + "Ctrl+C : Copy notes"
 			+ "\n" + "Ctrl+V : Paste notes" + "\n" + "Ctrl+Z : Undo" + "\n" + "Ctrl+BACKSPACE : Delete Selected Notes" + "\n"
 			+ "Alt+Left/Right : Change Quant" + "\n" + "Shift : Disable/Enable Quant" + "\n" + "Click : Place notes" + "\n" + "Up/Down : Move selected notes"
-			+ "\n" + "Space: Play Song" + "\n" + "Enter : Load Song Into PlayState" + "\n" + "Z/X Change Notetype." + "\n" + "Press F1 to show/hide help text.";
+			+ "\n" + "Space : Play Song" + "\n" + "W-S : Go To Previous / Next Section" + "\n" + "Enter : Load Song Into PlayState" + "\n"
+			+ "Z/X Change Notetype." + "\n" + "Press F1 to show/hide help text.";
 		helpText.updateHitbox();
 		helpText.scrollFactor.set();
 		helpText.visible = FlxG.save.data.showHelp;
@@ -809,6 +810,15 @@ class ChartingState extends MusicBeatState
 				{
 					changeNoteSustain(-Conductor.stepCrochet);
 				}
+			}
+
+			if (FlxG.keys.justPressed.W && !FlxG.keys.pressed.CONTROL && !FlxG.keys.pressed.ALT)
+			{
+				goToSection(curSection - 1);
+			}
+			else if (FlxG.keys.justPressed.S && !FlxG.keys.pressed.CONTROL && !FlxG.keys.pressed.ALT)
+			{
+				goToSection(curSection + 1);
 			}
 
 			if (FlxG.keys.pressed.CONTROL && !FlxG.keys.pressed.ALT && FlxG.keys.justPressed.C)
@@ -1668,6 +1678,29 @@ class ChartingState extends MusicBeatState
 		if (SONG.notes[section] != null)
 			val = SONG.notes[section].lengthInSteps;
 		return val != null ? val : 16;
+	}
+
+	function goToSection(section:Int)
+	{
+		var beat = section * 4;
+		var data = TimingStruct.getTimingAtTimestamp(beat);
+
+		if (data == null)
+			return;
+
+		inst.time = (data.startTime + ((beat - data.startBeat) / (data.bpm / 60))) * 1000;
+		if (!SONG.splitVoiceTracks)
+			vocals.time = inst.time;
+		else
+		{
+			vocalsP.time = inst.time;
+			vocalsE.time = inst.time;
+		}
+		curSection = section;
+		if (inst.time < 0)
+			inst.time = 0;
+		else if (inst.time > inst.length)
+			inst.time = inst.length;
 	}
 
 	function updateNotetypeText()

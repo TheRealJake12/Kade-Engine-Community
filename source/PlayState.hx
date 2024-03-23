@@ -3971,7 +3971,7 @@ class PlayState extends MusicBeatState
 								}
 								else
 								{
-									switch (daNote.noteShit)
+									switch (daNote.noteShit.toLowerCase())
 									{
 										case 'hurt':
 										default:
@@ -5626,8 +5626,12 @@ class PlayState extends MusicBeatState
 					files.push(sub);
 		}
 
-		for (_ in CoolUtil.readAssetsDirectoryFromLibrary('assets/scripts', 'TEXT'))
-			files.push(_);
+		for (_ in CoolUtil.readAssetsDirectoryFromLibrary('assets/shared/data/scripts', 'TEXT', 'default', false))
+		{
+			for (ext in extensions)
+				if (_.contains(ext))
+					files.push(_);
+		}
 
 		if (FlxG.save.data.gen)
 			Debug.logTrace(files);
@@ -5653,7 +5657,9 @@ class PlayState extends MusicBeatState
 		for (scriptName => hx in scriptData)
 		{
 			if (scripts.getScriptByTag(scriptName) == null)
+			{
 				scripts.addScript(scriptName).executeString(hx);
+			}
 			else
 			{
 				scripts.getScriptByTag(scriptName).error("Duplicate Script Error!", '$scriptName: Duplicate Script');
