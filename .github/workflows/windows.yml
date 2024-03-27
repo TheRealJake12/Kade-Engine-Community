@@ -27,7 +27,6 @@ jobs:
       - name: Installing/Updating libraries
         run: |
           haxe -cp ./update -D analyzer-optimize -main Update --interp
-          haxelib --never
         shell: cmd        
       - name: Building the game
         run: |

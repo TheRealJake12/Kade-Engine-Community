@@ -7,7 +7,7 @@ jobs:
     name: Linux Build
     runs-on: ubuntu-22.04
     steps:
-      - name: hxCodec bs wtf
+      - name: hxvlc bs wtf
         run: |
           sudo apt-get update
           sudo apt-get install libvlc-dev
@@ -36,7 +36,6 @@ jobs:
       - name: Installing/Updating libraries
         run: |
           haxe -cp ./update -D analyzer-optimize -main Update --interp
-          haxelib --never
       - name: Building the game
         run: |
           haxelib run lime build linux
