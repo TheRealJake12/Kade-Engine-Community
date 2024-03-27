@@ -1,20 +1,18 @@
-# How do mods work?
+# How Does The Modding System Work?
 
-ModCore makes it easy to append, replace, or merge files without editing the game's code.
+## ModCore Info
+*KEC*'s Modding System Uses A Heavily Modified Version Of [ModCore](https://github.com/Kade-github/Kade-Engine/blob/stable/source/ModCore.hx).
 
-Kade Engine's ModCore is powered by [Polymod](https://github.com/larsiusprime/polymod). Polymod is what handles loading the relevant assets, ensuring they are injected properly. It also handles ensuring mods are loaded in the proper order.
-
-Example mod created by [Master Eric](https://twitter.com/EliteMasterEric) > [here](https://github.com/EnigmaEngine/ModCore-Tricky-Mod) <
-
+ModCore Is Built Using [PolyMod](https://polymod.io).
 ## Using mods
 
-To install a mod, place the folder inside the `mods` folder. To disable or uninstall a mod, take it out of the folder.
+To Install A Mod, Place The Folder Inside The `mods` Folder. To Disable Or Uninstall A Mod, Take It Out Of The Folder.
 
-One day, we'll probably have a modloader that lets you control what order mods are loaded in.
+Eventually In The Year 2069, There Will Be A Mod Loading System Of Some Sorts To Disable / Enable / Rearrange Mods. Someday. 
 
 ## Metadata
 
-You will want several pieces of metadata in order for Polymod to identify and display your mod. Note that only one of these is mandatory.
+You Will Want Several Pieces Of Metadata In Order For ModCore To Identify And Load Your Mod. Note That Only One Of These Is Mandatory.
 
 * _polymod_meta.json
   * This file tells Polymod all about your mod, such as name and description. This file is **MANDATORY**.
@@ -59,10 +57,11 @@ Here's what the mod folder might look like for a simple "XXX over Boyfriend" mod
 ```
 <modRoot> (name this anything)
 |- _polymod_meta.json
-|- images
-  |- characters
-    |- BOYFRIEND.xml
-    |- BOYFRIEND.png
+|- shared
+  |- images
+    |- characters
+      |- BOYFRIEND.xml
+      |- BOYFRIEND.png
 ```
 
 By the way, 
@@ -79,8 +78,9 @@ To perfrom asset appending, place the assets in the relevant subfolder under the
 <modRoot> (name this anything)
 |- _polymod_meta.json
 |- _append
-  |- data
-    |- introText.txt
+  |- shared
+    |- data
+      |- introText.txt
 ```
 
 ### Merging
@@ -95,18 +95,9 @@ Merging locates a given key in a file and replaces it with the intended value.
 * For `XML` files, you need to add a child key called `merge` which specifies the key and value to match on. All other values will be replaced. [See here for more info](https://github.com/larsiusprime/polymod#_merge-folder).
 * For `JSON` files, create a single top-level array named `merge`. Each element is an object with two keys: A key `target` like `abc.d[3].e`, and a value `payload`.
 
-## Modpacks
-
-If you have a mod with several parts that you want people to be able to install separately, the best way to do that is to make them separate mods, then make a modpack. This is an empty mod containing only a file defining the other mods that the game should load.
-
-To create a modpack, make a mod containing a `_polymod_pack.txt` file with the following text:
-
-```
-foo:1.0.0,bar:1.*.*,abc,xyz
-```
-
-ModCore will search for, and load, the mods with the IDs `foo`, `bar`, `abc`, and `xyz`, in that order. It will fail any mods that fail the version check (`foo` must be exactly `1.0.0` while `bar` allows any `1.x` version) and only load the mods which don't fail.
-
 ## Scripts
 
-Coming soon...
+Scripting Is Supported Using [hscript-improved](https://github.com/TheRealJake12/hscript-improved.git).
+### Note : You Cannot Create Custom States Or Override Source Files.
+For Scripting, You Can Create A `.hx` File In Your Song's Chart Folder Or Create A Global Script In The `data/scripts` Folder.
+For Custom Stages, You Can Create A `.hx` File In `data/stages` And Work From There.
