@@ -42,6 +42,7 @@ class Note extends FlxSprite
 	public var canRate:Bool = true; // if it should do ratings, popup score and whatnot.
 	public var missHealth:Float = 0.08; // default health you miss.
 	public var hitsoundsEditor:Bool = true; // if a note plays a hitsound in the chart editor.
+	public var gfNote:Bool = false; // if GF plays the note instead of the player / opponent.
 
 	public var luaID:Int = 0;
 
@@ -97,6 +98,81 @@ class Note extends FlxSprite
 	#if FEATURE_LUAMODCHART
 	public var LuaNote:LuaNote;
 	#end
+
+	private function set_texture(value:String):String
+	{
+		if (texture != value)
+			reloadNote(value);
+
+		texture = value;
+		return value;
+	}
+
+	private function set_noteShit(value:String):String
+	{
+		if (noteShit != value)
+		{
+			switch (value.toLowerCase())
+			{
+				case 'hurt':
+					canPlayAnims = false;
+					canNoteSplash = true;
+					causesMisses = false;
+					botplayHit = false;
+					canRate = false;
+					missHealth = 0;
+					sustainActive = true;
+					hitsoundsEditor = false;
+					switch (CustomNoteHelpers.Skin.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin])
+					{
+						default:
+							texture = "notetypes/hurt_Arrows";
+						case "Circles":
+							texture = "notetypes/hurt_Circles";
+					}
+
+				case 'must press':
+					canPlayAnims = false;
+					canNoteSplash = true;
+					botplayHit = true;
+					canRate = true;
+					missHealth = 0.8;
+					hitsoundsEditor = true;
+					switch (CustomNoteHelpers.Skin.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin])
+					{
+						default:
+							texture = "notetypes/mustpress_Arrows";
+						case "Circles":
+							texture = "notetypes/mustpress_Circles";
+					}
+				case 'no animation':
+					canPlayAnims = false;
+					canNoteSplash = true;
+					botplayHit = true;
+					canRate = true;
+					missHealth = 0.8;
+					hitsoundsEditor = true;
+				case 'gf':
+					gfNote = true;
+					canPlayAnims = true;
+					canNoteSplash = true;
+					botplayHit = true;
+					canRate = true;
+					missHealth = 0.8;
+					hitsoundsEditor = true;
+				default:
+					canPlayAnims = true;
+					canNoteSplash = true;
+					causesMisses = true;
+					missHealth = 0.08;
+					botplayHit = true;
+					canRate = true;
+					hitsoundsEditor = true;
+			}
+			noteShit = value;
+		}
+		return value;
+	}
 
 	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inCharter:Bool = false, ?isPlayer:Bool = false,
 			?bet:Float = 0)
@@ -236,66 +312,6 @@ class Note extends FlxSprite
 	}
 
 	static var _lastValidChecked:String; // optimization
-
-	private function set_texture(value:String):String
-	{
-		if (texture != value)
-			reloadNote(value);
-
-		texture = value;
-		return value;
-	}
-
-	private function set_noteShit(value:String):String
-	{
-		if (noteShit != value)
-		{
-			switch (value.toLowerCase())
-			{
-				case 'hurt':
-					canPlayAnims = false;
-					canNoteSplash = true;
-					causesMisses = false;
-					botplayHit = false;
-					canRate = false;
-					missHealth = 0;
-					sustainActive = true;
-					hitsoundsEditor = false;
-					switch (CustomNoteHelpers.Skin.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin])
-					{
-						default:
-							texture = "notetypes/hurt_Arrows";
-						case "Circles":
-							texture = "notetypes/hurt_Circles";
-					}
-
-				case 'must press':
-					canPlayAnims = false;
-					canNoteSplash = true;
-					botplayHit = true;
-					canRate = true;
-					missHealth = 0.8;
-					hitsoundsEditor = true;
-					switch (CustomNoteHelpers.Skin.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin])
-					{
-						default:
-							texture = "notetypes/mustpress_Arrows";
-						case "Circles":
-							texture = "notetypes/mustpress_Circles";
-					}
-				default:
-					canPlayAnims = true;
-					canNoteSplash = true;
-					causesMisses = true;
-					missHealth = 0.08;
-					botplayHit = true;
-					canRate = true;
-					hitsoundsEditor = true;
-			}
-			noteShit = value;
-		}
-		return value;
-	}
 
 	public function reloadNote(texture:String = '')
 	{

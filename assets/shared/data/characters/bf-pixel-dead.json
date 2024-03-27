@@ -5,7 +5,6 @@
   "scale": 6,
   "antialiasing": false,
   "startingAnim": "firstDeath",
-  "flipX": true,
   "animations": [
     {
       "name": "firstDeath",

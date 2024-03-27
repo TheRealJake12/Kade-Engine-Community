@@ -2,3 +2,5 @@ Normal
 Alt
 Hurt
 Must Press
+No Animation
+GF

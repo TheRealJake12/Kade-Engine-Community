@@ -5,7 +5,6 @@
   "startingAnim": "idle",
   "camPos": [-100, -100],
   "healthicon" : "bf",
-  "flipX": true,
   "animations": [
     {
       "name": "idle",

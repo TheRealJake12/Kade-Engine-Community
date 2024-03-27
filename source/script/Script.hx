@@ -87,7 +87,7 @@ class Script extends FlxBasic
 
 			for (extn in ScriptUtil.extns)
 			{
-				var path:String = 'assets/scripts/$scriptName.$extn';
+				var path:String = 'assets/shared/data/scripts/$scriptName.$extn';
 
 				if (OpenFlAssets.exists(path))
 				{

@@ -7,7 +7,6 @@
   "camPos": [-300, -300],
   "healthicon" : "bf-pixel",
   "startingAnim": "idle",
-  "flipX": true,
   "animations": [
     {
       "name": "idle",

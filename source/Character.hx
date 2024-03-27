@@ -1,15 +1,10 @@
 package;
 
-import flixel.util.FlxColor;
-import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFramesCollection;
-import Section.SwagSection;
 import flixel.util.FlxSort;
+import Section.SwagSection;
 import stages.TankmenBG;
-
-using StringTools;
 
 class Character extends FlxSprite
 {
@@ -36,9 +31,13 @@ class Character extends FlxSprite
 	public var rgbColorArray:Array<Int> = [255, 0, 0];
 	public var iconAnimated:Bool = false;
 
-	public static var animationNotes:Array<Note> = [];
-
+	public var specialAnim = false;
+	public var skipDance = false;
+	public var altSuffix:String = '';
 	public var deadChar:String = 'bf-dead';
+	public var flipAnimations:Bool = false;
+
+	public static var animationNotes:Array<Note> = [];
 
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
 	{
@@ -54,28 +53,6 @@ class Character extends FlxSprite
 		healthIcon = curCharacter;
 
 		parseDataFile();
-
-		if (isPlayer && frames != null)
-		{
-			flipX = !flipX;
-
-			// Doesn't flip for BF, since his are already in the right place???
-			if (!curCharacter.startsWith('bf'))
-			{
-				// var animArray
-				var oldRight = animation.getByName('singRIGHT').frames;
-				animation.getByName('singRIGHT').frames = animation.getByName('singLEFT').frames;
-				animation.getByName('singLEFT').frames = oldRight;
-
-				// IF THEY HAVE MISS ANIMATIONS??
-				if (animation.getByName('singRIGHTmiss') != null)
-				{
-					var oldMiss = animation.getByName('singRIGHTmiss').frames;
-					animation.getByName('singRIGHTmiss').frames = animation.getByName('singLEFTmiss').frames;
-					animation.getByName('singLEFTmiss').frames = oldMiss;
-				}
-			}
-		}
 	}
 
 	function parseDataFile()
@@ -179,11 +156,31 @@ class Character extends FlxSprite
 		this.healthIcon = data.healthicon == null ? curCharacter : data.healthicon;
 		this.iconAnimated = data.iconAnimated == null ? false : data.iconAnimated;
 
-		this.deadChar = data.deadChar == null ? curCharacter + '-dead' : data.deadChar;
-
 		this.rgbColorArray = data.rgbArray == null ? [255, 0, 0] : data.rgbArray;
+		this.deadChar = data.deadChar == null ? deadChar : data.deadChar;
+		this.flipAnimations = data.flipAnimations == null ? false : data.flipAnimations;
 
 		flipX = data.flipX == null ? false : data.flipX;
+
+		if (isPlayer && flipAnimations && frames != null)
+		{
+			// Doesn't flip for BF, since his are already in the right place???
+			if (!curCharacter.startsWith('bf'))
+			{
+				// var animArray
+				var oldRight = animation.getByName('singRIGHT').frames;
+				animation.getByName('singRIGHT').frames = animation.getByName('singLEFT').frames;
+				animation.getByName('singLEFT').frames = oldRight;
+
+				// IF THEY HAVE MISS ANIMATIONS??
+				if (animation.getByName('singRIGHTmiss') != null)
+				{
+					var oldMiss = animation.getByName('singRIGHTmiss').frames;
+					animation.getByName('singRIGHTmiss').frames = animation.getByName('singLEFTmiss').frames;
+					animation.getByName('singLEFTmiss').frames = oldMiss;
+				}
+			}
+		}
 
 		if (data.scale != null)
 		{
@@ -203,9 +200,33 @@ class Character extends FlxSprite
 
 	override function update(elapsed:Float)
 	{
-		if (animation.curAnim != null)
+		if (animation.curAnim != null && !debugMode)
 		{
-			if (!isPlayer)
+			if (specialAnim && animation.curAnim.finished)
+			{
+				specialAnim = false;
+				dance();
+			}
+
+			if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished)
+			{
+				dance();
+				animation.curAnim.finish();
+			}
+			if (isPlayer)
+			{
+				if (animation.curAnim.name.startsWith('sing'))
+					holdTimer += elapsed;
+				else
+					holdTimer = 0;
+
+				if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode)
+					dance();
+
+				if (animation.curAnim.name == 'firstDeath' && animation.curAnim.finished)
+					playAnim('deathLoop');
+			}
+			else
 			{
 				if (!PlayStateChangeables.opponentMode)
 				{
@@ -236,32 +257,14 @@ class Character extends FlxSprite
 				}
 			}
 
-			if (!debugMode)
+			var nextAnim = animNext.get(animation.curAnim.name);
+			var forceDanced = animDanced.get(animation.curAnim.name);
+
+			if (nextAnim != null && animation.curAnim.finished)
 			{
-				var nextAnim = animNext.get(animation.curAnim.name);
-				var forceDanced = animDanced.get(animation.curAnim.name);
-
-				if (nextAnim != null && animation.curAnim.finished)
-				{
-					if (isDancing && forceDanced != null)
-						danced = forceDanced;
-					playAnim(nextAnim);
-				}
-			}
-
-			switch (curCharacter)
-			{
-				case 'pico-speaker':
-					if (animationNotes.length > 0 && Conductor.songPosition >= animationNotes[0].strumTime)
-					{
-						var noteData:Int = 1;
-						if (2 <= animationNotes[0].noteData)
-							noteData = 3;
-
-						noteData += FlxG.random.int(0, 1);
-						playAnim('shoot' + noteData, true);
-						animationNotes.shift();
-					}
+				if (isDancing && forceDanced != null)
+					danced = forceDanced;
+				playAnim(nextAnim);
 			}
 		}
 
@@ -275,42 +278,28 @@ class Character extends FlxSprite
 	 */
 	public function dance(forced:Bool = false, altAnim:Bool = false)
 	{
-		if (!debugMode)
+		if (!debugMode && !skipDance && !specialAnim)
 		{
-			if (curCharacter != 'pico-speaker')
+			if (animation.curAnim != null)
 			{
-				if (animation.curAnim != null)
+				var canInterrupt = animInterrupt.get(animation.curAnim.name);
+
+				if (canInterrupt)
 				{
-					var canInterrupt = animInterrupt.get(animation.curAnim.name);
-
-					if (canInterrupt)
+					if (isDancing)
 					{
-						if (isDancing)
-						{
-							danced = !danced;
+						if (altAnim)
+							altSuffix = '-alt';
+						danced = !danced;
 
-							if (altAnim && animation.getByName('danceRight-alt') != null && animation.getByName('danceLeft-alt') != null)
-							{
-								if (danced)
-									playAnim('danceRight-alt');
-								else
-									playAnim('danceLeft-alt');
-							}
-							else
-							{
-								if (danced)
-									playAnim('danceRight');
-								else
-									playAnim('danceLeft');
-							}
-						}
+						if (danced)
+							playAnim('danceRight' + altSuffix);
 						else
-						{
-							if (altAnim && animation.getByName('idle-alt') != null)
-								playAnim('idle-alt', forced);
-							else
-								playAnim('idle', forced);
-						}
+							playAnim('danceLeft' + altSuffix);
+					}
+					else
+					{
+						playAnim('idle' + altSuffix, forced);
 					}
 				}
 			}
@@ -467,6 +456,7 @@ typedef CharacterData =
 	var ?replacesGF:Bool;
 
 	var ?deadChar:String;
+	var ?flipAnimations:Bool;
 }
 
 typedef AnimationData =
