@@ -11,17 +11,18 @@ If you are using mods instead of source code, go to ``YourMod/Shared/Images/Char
 If you are using source code, go to ``Assets/Shared/Images/Characters``
 add your characters image file and .XML in there
 
-Because of Kade Engine 1.7 Making Health Icons Use The Week 7 Format, Or Psych Format. Whichever you prefer.
-Make the icons in a ``300x150 px`` image. The Image must be a PNG. Put the Icons in ``YourMod/Images/icons``.
-If You're Using Source, Go To ``Assets/Preload/Images/Icons`` Instead.
+Because of Kade Engine 1.7 Making Health Icons Use The Week 7 Format, Or Psych Format. Whatever.
+Make the icons in a ``300x150 px`` image. The Image must be a PNG. Put the Icons in ``YourMod/Shared/Images/icons``.
+Note : If You Have Winning Icons, Make The Image 450x150. For Animated Icons, Make Sure You Have The `iconAnimated` Property Set To True In Your Character's JSON.
+If You're Using Source, Go To ``Assets/Shared/Images/Icons`` Instead.
 Name them what your character is called and make it ``icon-characternamehere``. ``(example: icon-garcello)``
-Make A Folder Called `_append` in Your Mod's primary folder. Then create a system like this : `_append/data/characterList.txt`.
+Make A Folder Called `_append` in Your Mod's primary folder. Then create a system like this : `_append/shared/data/characterList.txt`.
 Add your characters name.
 ### Step 2. The Code
 
-Make A Folder Like This `YourMod/Data/Characters`
-If using source code, Go to `Assets/Preload/Data/Characters`
-Copy Daddy Dearest's JSON (`Data/Characters/Dad.json`)
+Make A Folder Like This `YourMod/Shared/Data/Characters`
+If using source code, Go to `Assets/Shared/Data/Characters`
+Copy Daddy Dearest's JSON (`Shared/Data/Characters/Dad.json`)
 Replace Everything Dad Related (ie Name, Asset, etc.) With Your Character Name.
 It should look a little like this.
 ```json
@@ -64,6 +65,17 @@ It should look a little like this.
 
 The barColor is what color the health bar is for your character when you have the option of Character Colored health bars on(default is red)
 it is in hexColor Format so find what color it is in hex code and replace the barColor with that color.
+
+You Can Also Have An Array For The barColor.
+Add A `json"barType": "rgb"` 
+To The JSON And A 
+```"rgbArray": [
+    255,
+    0,
+    0
+  ]```
+  
+Then Change The Numbers To Whatever RGB You Want.  
 
 ### Step 3. Alternate Animaitons
 

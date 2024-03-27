@@ -2,29 +2,29 @@
 
 ## Requirements
 1. The Simple Ability To Copy Code.
-Not Required If You Are Using Modcore.
+Not Needed If You Are Using ModCore.
 
 
 ### Step 1. Characters
 
-Go to Assets/Shared/Characters
+Go to Assets/Shared/Data/Characters Or Assets/Shared/Images/Characters
 
 Remove all of the character files you dont need (Mom, Pico, Spookeez, etc.)
 The Code Shouldnt matter but Keep the BF, GF, And The Dad in your Character Files
 
-Go To Assets/Preload/Images/Icons
+Go To Assets/Shared/Images/Icons
 
 Delete the icons you won't need (Senpai, Monster, Tankman, etc.)
 Keep the blank face icon and the sm icon (If you wish to keep StepMania support)
 
-Go To Assets/Preload/Data/characterList.txt
+Go To Assets/Shared/Data/characterList.txt
 
 Delete the characters that you won't use.(Spirit, Pico-Speaker, Mom-car, etc.)
 
 
 ### Step 2. Charts
 
-Go To Assets/Preload/Data/Songs
+Go To Assets/Shared/Data/Songs
 
 Delete the charts you won't use. I reccomend keeping the week 1 songs for placeholders.
 
@@ -35,7 +35,6 @@ Keep one if you dont have the charts set for being used.
 Go To Assets/Songs
 
 Delete All Songs You Won't Use. I Recommend Keeping Week 1 Songs As Placeholders.
-
 
 ### Step 4. Export Files
 

@@ -1,0 +1,17 @@
+# Changelog For Update 1.9.1
+- HScript Support Using ModCore.
+- HScript Stage Support.
+- Modcore Noteskin Support.
+- Modcore Notesplash Support.
+- Note Graphic Loading Overhaul.
+- Stage Editor Improvements.
+- Sustains Are Now Slightly Longer.
+- Multi-atlas Character Support.
+- Notesplashes Use Saved Data For Alpha.
+- Change And Add Lua Functions.
+- Implement Runtime Shaders.
+- Lane Underlay Rework.
+- Improve Editor Selector.
+- Add An Option For Shaders.
+- Fix Some Boyfriend Sprite Issues.
+- Bug Fixes.
