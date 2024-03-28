@@ -5,7 +5,7 @@
 	"camPos": [-100, -100],
 	"healthicon" : "bf",
 	"startingAnim": "idle",
-	"flipX": true,
+	"deadChar": "bf-holding-gf-dead",
 	"animations": [
 		{
 			"offsets": [-5,0],

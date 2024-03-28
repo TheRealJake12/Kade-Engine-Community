@@ -10,7 +10,6 @@
       "name": "shoot1",
       "prefix": "Pico shoot 1",
       "looped": false,
-      "nextAnim": "shoot1Loop",
       "offsets": [
         0,
         0
@@ -20,7 +19,6 @@
       "name": "shoot2",
       "prefix": "Pico shoot 2",
       "looped": false,
-      "nextAnim": "shoot2Loop",
       "offsets": [
         -1,
         -128
@@ -30,7 +28,6 @@
       "name": "shoot3",
       "prefix": "Pico shoot 3",
       "looped": false,
-      "nextAnim": "shoot3Loop",
       "offsets": [
         412,
         -64
@@ -40,7 +37,6 @@
       "name": "shoot4",
       "prefix": "Pico shoot 4",
       "looped": false,
-      "nextAnim": "shoot4Loop",
       "offsets": [
         439,
         -19

@@ -37,7 +37,7 @@ class Character extends FlxSprite
 	public var deadChar:String = 'bf-dead';
 	public var flipAnimations:Bool = false;
 
-	public static var animationNotes:Array<Note> = [];
+	public var animationNotes:Array<Dynamic> = [];
 
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
 	{
@@ -53,6 +53,14 @@ class Character extends FlxSprite
 		healthIcon = curCharacter;
 
 		parseDataFile();
+
+		switch (curCharacter)
+		{
+			case 'pico-speaker':
+				skipDance = true;
+				loadMappedAnims();
+				playAnim("shoot1");
+		}
 	}
 
 	function parseDataFile()
@@ -257,14 +265,31 @@ class Character extends FlxSprite
 				}
 			}
 
-			var nextAnim = animNext.get(animation.curAnim.name);
-			var forceDanced = animDanced.get(animation.curAnim.name);
-
-			if (nextAnim != null && animation.curAnim.finished)
+			switch (curCharacter)
 			{
-				if (isDancing && forceDanced != null)
-					danced = forceDanced;
-				playAnim(nextAnim);
+				case 'pico-speaker':
+					if (animationNotes.length > 0 && Conductor.songPosition >= animationNotes[0].strumTime)
+					{
+						var noteData:Int = 1;
+						if (2 <= animationNotes[0].noteData)
+							noteData = 3;
+
+						noteData += FlxG.random.int(0, 1);
+						playAnim('shoot' + noteData, true);
+						animationNotes.shift();
+					}
+					if (animation.curAnim.finished)
+						playAnim(animation.curAnim.name + 'Loop');
+				default:
+					var nextAnim = animNext.get(animation.curAnim.name);
+					var forceDanced = animDanced.get(animation.curAnim.name);
+
+					if (nextAnim != null && animation.curAnim.finished)
+					{
+						if (isDancing && forceDanced != null)
+							danced = forceDanced;
+						playAnim(nextAnim);
+					}
 			}
 		}
 
@@ -344,7 +369,7 @@ class Character extends FlxSprite
 		}
 	}
 
-	public static function loadMappedAnims():Void
+	public function loadMappedAnims():Void
 	{
 		var noteData:Array<SwagSection> = Song.loadFromJson(PlayState.SONG.songId, 'picospeaker').notes;
 		for (section in noteData)
@@ -360,8 +385,8 @@ class Character extends FlxSprite
 
 				var oldNote:Note;
 
-				if (animationNotes.length > 0)
-					oldNote = animationNotes[Std.int(animationNotes.length - 1)];
+				if (PlayState.instance.unspawnNotes.length > 0)
+					oldNote = PlayState.instance.unspawnNotes[Std.int(PlayState.instance.unspawnNotes.length - 1)];
 				else
 					oldNote = null;
 				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, false, false, daBeat);
@@ -373,7 +398,8 @@ class Character extends FlxSprite
 		animationNotes.sort(sortAnims);
 	}
 
-	static function sortAnims(Obj1:Note, Obj2:Note):Int
+
+	function sortAnims(Obj1:Note, Obj2:Note):Int
 	{
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
 	}

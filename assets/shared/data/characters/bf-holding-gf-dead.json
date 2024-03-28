@@ -4,6 +4,7 @@
 	"camPos": [0,0],
 	"holdLength": 4,
 	"scale": 1.05,
+	
 	"startingAnim": "firstDeath",
 	"animations": [
 		{

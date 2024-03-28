@@ -696,14 +696,6 @@ class PlayState extends MusicBeatState
 
 		Stage = new Stage(stageCheck);
 
-		if (!Stage.doesExist)
-		{
-			Debug.logTrace('Stage Does Not Exist For ${Stage.curStage}. Loading Default Stage.');
-			Stage.loadStageData('stage');
-		}
-
-		Stage.inEditor = false;
-
 		var directory:String = 'shared';
 		var otherDir:String = Stage.stageDir;
 
@@ -717,6 +709,14 @@ class PlayState extends MusicBeatState
 		Stage.initStageProperties();
 
 		Stage.loadStageData(stageCheck);
+
+		if (!Stage.doesExist)
+		{
+			Debug.logTrace('Stage Does Not Exist For ${Stage.curStage}. Loading Default Stage.');
+			Stage.loadStageData('stage');
+		}
+
+		Stage.inEditor = false;
 
 		// pissed me off that having non existent stages just load black instead of default stage
 
@@ -835,18 +835,6 @@ class PlayState extends MusicBeatState
 			for (i in Stage.toAdd)
 			{
 				add(i);
-			}
-
-			if (FlxG.save.data.distractions)
-			{
-				if (SONG.songId == 'stress' && gf != null)
-				{
-					switch (gf.curCharacter)
-					{
-						case 'pico-speaker':
-							Character.loadMappedAnims();
-					}
-				}
 			}
 
 			for (index => array in Stage.layInFront)
@@ -1269,12 +1257,12 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.save.data.distractions && FlxG.save.data.background)
 		{
-			if (gfCheck == 'pico-speaker' && Stage.curStage == 'tank' && gf != null)
+			if (gf.curCharacter == 'pico-speaker' && Stage.curStage == 'tank' && gf != null)
 			{
 				if (FlxG.save.data.distractions)
 				{
 					var firstTank:TankmenBG = new TankmenBG(20, 500, true);
-					firstTank.resetShit(20, 600, true);
+					firstTank.resetShit(20, 1500, true);
 					firstTank.strumTime = 10;
 					if (Stage.swagBacks['tankmanRun'] != null)
 					{
@@ -2326,7 +2314,7 @@ class PlayState extends MusicBeatState
 
 		songLength = ((inst.length / songMultiplier) / 1000);
 
-		if (allowedToHeadbang && gf != null && gf.curCharacter != 'pico-speaker')
+		if (allowedToHeadbang && gf != null)
 		{
 			for (g in gfGroup.members)
 			{

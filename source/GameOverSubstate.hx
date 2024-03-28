@@ -113,7 +113,7 @@ class GameOverSubstate extends MusicBeatSubstate
 			if (PlayState.SONG.stage == 'tank')
 			{
 				FlxG.sound.playMusic(Paths.music('gameOver' + stageSuffix), 0.2);
-				FlxG.sound.play(Paths.sound('jeffGameover/jeffGameover-' + FlxG.random.int(1, 25), 'week7'), 1, false, null, true, function()
+				FlxG.sound.play(Paths.sound('jeffGameover/jeffGameover-' + FlxG.random.int(1, 25)), 1, false, null, true, function()
 				{
 					if (!isEnding)
 					{

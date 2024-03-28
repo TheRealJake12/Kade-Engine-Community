@@ -181,9 +181,6 @@ class KadeEngineData
 		if (FlxG.save.data.borderless == null)
 			FlxG.save.data.borderless = false;
 
-		if (FlxG.save.data.rateStack == null)
-			FlxG.save.data.rateStack = true;
-
 		if (FlxG.save.data.resolution == null)
 			FlxG.save.data.resolution = 5;
 
