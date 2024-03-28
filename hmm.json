@@ -57,11 +57,6 @@
       "url": "https://github.com/superpowers04/linc_luajit"
     },
     {
-      "name": "flixel-ui",
-      "type": "haxelib",
-      "version": null
-    },
-    {
       "name": "flixel-tools",
       "type": "haxelib",
       "version": null

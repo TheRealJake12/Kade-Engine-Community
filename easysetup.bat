@@ -9,7 +9,6 @@ haxelib install lime
 haxelib install openfl
 haxelib install flixel 5.6.1
 haxelib install flixel-tools
-haxelib install flixel-ui
 haxelib install flixel-addons
 haxelib install hxcpp-debug-server
 haxelib install polymod 1.7.0

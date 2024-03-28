@@ -66,7 +66,6 @@ haxelib install lime
 haxelib install openfl
 haxelib install flixel
 haxelib install flixel-tools
-haxelib install flixel-ui
 haxelib install hscript
 haxelib install flixel-addons
 haxelib install actuate
