@@ -27,36 +27,47 @@ Replace Everything Dad Related (ie Name, Asset, etc.) With Your Character Name.
 It should look a little like this.
 ```json
 {
-  "name": "Your Character",
-  "asset": "characters/Character_Name",
+  "name": "Your Character Name",
+  "asset": ["characters/yourChar"],
   "barColor": "#AF66CE",
+  "barType": "rgb",
+  "rgbArray": [
+    175, 
+    102, 
+    206
+  ],
+  "iconAnimated": false,
+  "flipX":false,
+  "flipAnimations":false,
+  "deadChar": "",
   "startingAnim": "idle",
   "holdLength": 6.1,
-  "camPos": [400, 0],
+  "camPos": [150, -100],
+  "healthicon" : "face",
   "animations": [
     {
       "name": "idle",
-      "prefix": "characterIdle",
+      "prefix": "idle dance",
       "offsets": [0, 0]
     },
     {
       "name": "singUP",
-      "prefix": "characterUp",
-      "offsets": [0,0]
+      "prefix": "Sing Note UP",
+      "offsets": [0, 0]
     },
     {
       "name": "singLEFT",
-      "prefix": "characterLeft",
-      "offsets": [0,0]
+      "prefix": "Sing Note LEFT",
+      "offsets": [0, 0]
     },
     {
       "name": "singRIGHT",
-      "prefix": "characterRight",
-      "offsets": [0,0]
+      "prefix": "Sing Note RIGHT",
+      "offsets": [0, 0]
     },
     {
       "name": "singDOWN",
-      "prefix": "characterDown",
+      "prefix": "Sing Note DOWN",
       "offsets": [0, 0]
     }
   ]
@@ -66,15 +77,7 @@ It should look a little like this.
 The barColor is what color the health bar is for your character when you have the option of Character Colored health bars on(default is red)
 it is in hexColor Format so find what color it is in hex code and replace the barColor with that color.
 
-You Can Also Have An Array For The barColor.
-Add A `json"barType": "rgb"` 
-To The JSON And A 
-```"rgbArray": [
-    255,
-    0,
-    0
-  ]```
-  
+If You Have `barType` set to `RGB`, then it will use RGB instead. Remove it for using hex colors.
 Then Change The Numbers To Whatever RGB You Want.  
 
 ### Step 3. Alternate Animaitons
