@@ -105,6 +105,12 @@ class GameplayCustomizeState extends MusicBeatState
 
 		Stage = new Stage(freeplayStage);
 
+		if (!Stage.doesExist)
+		{
+			Debug.logTrace('Stage Does Not Exist For ${Stage.curStage}. Loading Default Stage.');
+			Stage.loadStageData('stage');
+		}
+
 		Stage.inEditor = false;
 
 		var directory:String = 'shared';
@@ -246,10 +252,9 @@ class GameplayCustomizeState extends MusicBeatState
 			pixelShitPart1 = 'weeb/pixelUI/';
 			pixelShitPart2 = '-pixel';
 			pixelShitPart3 = 'week6';
-			pixelShitPart4 = 'week6';
 		}
 
-		sick = new FlxExtendedMouseSprite(0, 0, Paths.image(pixelShitPart1 + 'sick' + pixelShitPart2, pixelShitPart3));
+		sick = new FlxExtendedMouseSprite(0, 0, Paths.image(pixelShitPart1 + 'sick' + pixelShitPart2));
 		if (freeplayNoteStyle != 'pixel')
 		{
 			sick.setGraphicSize(Std.int(sick.width * 0.7));
@@ -410,6 +415,7 @@ class GameplayCustomizeState extends MusicBeatState
 		{
 			FlxG.save.data.changedHitX = sick.x;
 			FlxG.save.data.changedHitY = sick.y;
+			FlxG.save.data.changedHit = true;
 
 			currentTimingShown.x = sick.x + 100;
 			currentTimingShown.y = sick.y + 100;
@@ -419,6 +425,8 @@ class GameplayCustomizeState extends MusicBeatState
 		{
 			sick.x = defaultX;
 			sick.y = defaultY;
+			currentTimingShown.x = sick.x + 100;
+			currentTimingShown.y = sick.y + 100;
 			FlxG.save.data.zoom = 1;
 			camHUD.zoom = FlxG.save.data.zoom;
 			FlxG.save.data.changedHitX = sick.x;

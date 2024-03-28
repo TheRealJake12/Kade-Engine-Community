@@ -22,9 +22,6 @@ class StageJSON
 	{
 		var weekData:StageData = cast json;
 
-		if (weekData.directory == null)
-			weekData.directory = 'week${PlayState.storyWeek}';
-
 		return weekData;
 	}
 }

@@ -72,11 +72,6 @@ class Stage extends MusicBeatState
 
 		this.curStage = daStage;
 		stageJSON = StageJSON.loadJSONFile(daStage);
-		if (stageJSON != null)
-		{
-			stageDir = stageJSON.directory;
-			Paths.setCurrentLevel(stageDir);
-		}
 			
 		#if FEATURE_HSCRIPT
 		scripts = new ScriptGroup();
@@ -90,6 +85,11 @@ class Stage extends MusicBeatState
 	{
 		if (FlxG.save.data.background)
 		{
+			if (stageJSON != null)
+			{
+				stageDir = stageJSON.directory;
+				Paths.setCurrentLevel(stageDir);
+			}
 			#if FEATURE_HSCRIPT
 			scripts.executeAllFunc("create");
 			#end

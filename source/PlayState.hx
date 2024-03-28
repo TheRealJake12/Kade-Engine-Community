@@ -696,6 +696,12 @@ class PlayState extends MusicBeatState
 
 		Stage = new Stage(stageCheck);
 
+		if (!Stage.doesExist)
+		{
+			Debug.logTrace('Stage Does Not Exist For ${Stage.curStage}. Loading Default Stage.');
+			Stage.loadStageData('stage');
+		}
+
 		Stage.inEditor = false;
 
 		var directory:String = 'shared';
@@ -780,12 +786,6 @@ class PlayState extends MusicBeatState
 				#end
 				dad = new Character(100, 100, 'dad');
 			}
-		}
-
-		if (!Stage.doesExist)
-		{
-			Debug.logTrace('Stage Does Not Exist For ${Stage.curStage}. Loading Default Stage.');
-			Stage.loadStageData('stage');
 		}
 
 		Stage.initCamPos();
