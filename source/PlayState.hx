@@ -1257,7 +1257,7 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.save.data.distractions && FlxG.save.data.background)
 		{
-			if (gf.curCharacter == 'pico-speaker' && Stage.curStage == 'tank' && gf != null)
+			if (Stage.curStage == 'tank' && gf != null && gf.curCharacter == 'pico-speaker')
 			{
 				if (FlxG.save.data.distractions)
 				{
