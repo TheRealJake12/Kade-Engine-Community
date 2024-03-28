@@ -37,6 +37,8 @@ class Stage extends MusicBeatState
 	public var tankmanRun:FlxTypedGroup<TankmenBG>;
 	public var foregroundSprites:FlxTypedGroup<TankBGSprite>;
 	public var doesExist = false;
+	public var stageDir:String = '';
+	public var inEditor:Bool = false; // stop events from triggering and crashing the editor.
 
 	public static var instance:Stage = null;
 
@@ -70,6 +72,12 @@ class Stage extends MusicBeatState
 
 		this.curStage = daStage;
 		stageJSON = StageJSON.loadJSONFile(daStage);
+		if (stageJSON != null)
+		{
+			stageDir = stageJSON.directory;
+			Paths.setCurrentLevel(stageDir);
+		}
+			
 		#if FEATURE_HSCRIPT
 		scripts = new ScriptGroup();
 		scripts.onAddScript.push(onAddScript);
@@ -641,33 +649,43 @@ class Stage extends MusicBeatState
 			case 'halloween':
 				camZoom = 1.05;
 				doesExist = true;
+				stageDir = "week2";
 			case 'philly':
 				camZoom = 1.05;
 				doesExist = true;
+				stageDir = "week3";
 			case 'limo':
 				camZoom = 0.9;
 				doesExist = true;
+				stageDir = "week4";
 			case 'mall':
 				camZoom = 0.8;
 				doesExist = true;
+				stageDir = "week5";
 			case 'mallEvil':
 				camZoom = 1.05;
 				doesExist = true;
+				stageDir = "week5";
 			case 'school':
 				camZoom = 1.05;
 				doesExist = true;
+				stageDir = "week6";
 			case 'schoolEvil':
 				camZoom = 1.05;
 				doesExist = true;
+				stageDir = "week6";
 			case 'tank':
 				camZoom = 0.9;
 				doesExist = true;
+				stageDir = "week7";
 			case 'void':
 				camZoom = 0.9;
 				doesExist = true;
 			default:
 				camZoom = 1.05;
+				stageDir = "shared";
 		}
+		Paths.setCurrentLevel(stageDir);
 
 		overridePropertiesFromJSON();
 	}
@@ -733,22 +751,25 @@ class Stage extends MusicBeatState
 			if (scripts != null)
 				scripts.executeAllFunc("update", [elapsed]);
 			#end
-			switch (curStage)
+			if (!inEditor)
 			{
-				case 'philly':
-					if (trainMoving)
-					{
-						trainFrameTiming += elapsed;
-
-						if (trainFrameTiming >= 1 / 24)
+				switch (curStage)
+				{
+					case 'philly':
+						if (trainMoving)
 						{
-							updateTrainPos();
-							trainFrameTiming = 0;
+							trainFrameTiming += elapsed;
+
+							if (trainFrameTiming >= 1 / 24)
+							{
+								updateTrainPos();
+								trainFrameTiming = 0;
+							}
 						}
-					}
-				// phillyCityLights.members[curLight].alpha -= (Conductor.crochet / 1000) * FlxG.elapsed;
-				case 'tank':
-					moveTank();
+					// phillyCityLights.members[curLight].alpha -= (Conductor.crochet / 1000) * FlxG.elapsed;
+					case 'tank':
+						moveTank();
+				}
 			}
 		}
 
@@ -823,7 +844,7 @@ class Stage extends MusicBeatState
 			switch (curStage)
 			{
 				case 'halloween':
-					if (FlxG.random.bool(Conductor.bpm > 320 ? 100 : 10) && curBeat > lightningStrikeBeat + lightningOffset)
+					if (FlxG.random.bool(Conductor.bpm > 320 ? 100 : 10) && curBeat > lightningStrikeBeat + lightningOffset && !inEditor)
 					{
 						if (FlxG.save.data.distractions)
 						{
@@ -843,7 +864,7 @@ class Stage extends MusicBeatState
 							dancer.dance();
 						});
 
-						if (FlxG.random.bool(10) && fastCarCanDrive)
+						if (FlxG.random.bool(10) && fastCarCanDrive && !inEditor)
 							fastCarDrive();
 					}
 				case "philly":
@@ -867,7 +888,11 @@ class Stage extends MusicBeatState
 						}
 					}
 
-					if (curBeat % 8 == 4 && FlxG.random.bool(Conductor.bpm > 320 ? 150 : 30) && !trainMoving && trainCooldown > 8)
+					if (curBeat % 8 == 4
+						&& FlxG.random.bool(Conductor.bpm > 320 ? 150 : 30)
+						&& !trainMoving
+						&& trainCooldown > 8
+						&& !inEditor)
 					{
 						if (FlxG.save.data.distractions)
 						{
@@ -1167,28 +1192,13 @@ class Stage extends MusicBeatState
 		swagBacks.clear();
 
 		while (toAdd.length > 0)
-		{
-			toAdd.remove(toAdd[0]);
-			if (toAdd[0] != null)
-				toAdd[0].destroy();
-		}
-
+			toAdd.pop().destroy();
 		while (animatedBacks.length > 0)
-		{
-			animatedBacks.remove(animatedBacks[0]);
-			if (animatedBacks[0] != null)
-				animatedBacks[0].destroy();
-		}
-
+			animatedBacks.pop().destroy();
 		for (array in layInFront)
-		{
-			for (sprite in array)
-			{
-				if (sprite != null)
-					sprite.destroy();
-				array.remove(sprite);
-			}
-		}
+			while (array.length > 0)
+				array.pop().destroy();
+		// thanks sword		
 
 		for (swag in swagGroup.keys())
 		{

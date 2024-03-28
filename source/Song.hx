@@ -58,11 +58,6 @@ typedef SongData =
 	var ?offset:Int;
 	var ?splitVoiceTracks:Bool;
 	var ?audioFile:String;
-
-	/**
-	 * Directory used for the new paths system.
-	 */
-	var directory:String;
 }
 
 typedef SongMeta =

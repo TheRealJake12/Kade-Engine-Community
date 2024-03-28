@@ -211,21 +211,6 @@ class LoadingState extends MusicBeatState
 
 	static function getNextState(target:FlxState, stopMusic = false):FlxState
 	{
-		var directory:String = 'shared';
-		var otherDir:String = 'week' + PlayState.storyWeek;
-		var weekDir:String = PlayState.SONG.directory;
-
-		if (weekDir == null)
-		{
-			directory = otherDir;
-		}
-		else if (weekDir != null && weekDir.length > 0 && weekDir != '')
-		{
-			directory = weekDir;
-		}
-
-		Paths.setCurrentLevel(directory);
-
 		if (stopMusic && FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 

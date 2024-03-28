@@ -9,8 +9,8 @@ import flixel.util.FlxTimer;
 
 class SelectEditorsState extends MusicBeatState
 {
-	var editors:Array<String> = ['Character Editor', 'Stage Editor', 'Chart Editor'];
-	var icons = ['face', 'tankman', 'sm'];
+	var editors:Array<String> = ['Stage Editor', 'Chart Editor'];
+	var icons = ['tankman', 'sm'];
 
 	private var grpTexts:FlxTypedGroup<Alphabet>;
 
@@ -142,9 +142,6 @@ class SelectEditorsState extends MusicBeatState
 	{
 		switch (editors[curSelected])
 		{
-			case 'Character Editor':
-				debug.AnimationDebug.fromEditor = true;
-				LoadingState.loadAndSwitchState(new debug.AnimationDebug());
 			case 'Stage Editor':
 				PlayState.SONG = Song.loadFromJson('test', '');
 				debug.StageDebugState.fromEditor = true;
@@ -177,10 +174,8 @@ class SelectEditorsState extends MusicBeatState
 		switch (curSelected)
 		{
 			case 0:
-				info.text = "Character Editor, Edit Character Offsets.";
-			case 1:
 				info.text = "Stage Editor, Move The Positions Of Stage Assets.";
-			case 2:
+			case 1:
 				info.text = "Chart Editor, Place Notes And Create Charts.";
 		}
 		info.updateHitbox();

@@ -1,9 +1,7 @@
 package;
 
 import flixel.FlxG;
-import flixel.addons.ui.FlxUIState;
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.addons.ui.FlxUI;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -152,9 +150,6 @@ class MusicBeatState extends FlxTransitionableState
 
 	override function add(Object:FlxBasic):FlxBasic
 	{
-		if (Std.isOfType(Object, FlxUI))
-			return null;
-
 		if (Std.isOfType(Object, FlxSprite))
 			var spr:FlxSprite = cast(Object, FlxSprite);
 

@@ -7,7 +7,6 @@ import Controls.KeyboardScheme;
 import flixel.FlxG;
 import openfl.display.FPS;
 import openfl.Lib;
-import debug.AnimationDebug;
 
 class Option
 {
@@ -1829,27 +1828,6 @@ class LaneUnderlayOption extends Option
 			FlxG.save.data.laneTransparency = 1;
 
 		return true;
-	}
-}
-
-class DebugMode extends Option
-{
-	public function new(desc:String)
-	{
-		description = desc;
-		super();
-		acceptType = true;
-	}
-
-	public override function press():Bool
-	{
-		MusicBeatState.switchState(new AnimationDebug());
-		return false;
-	}
-
-	private override function updateDisplay():String
-	{
-		return "Animation Debug";
 	}
 }
 

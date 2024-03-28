@@ -59,8 +59,6 @@ class ChartingState extends MusicBeatState
 	var songName:TextField;
 	var audioFileName:TextField;
 
-	var songDirectory:TextField;
-
 	var loadAutoSave:Button;
 	var reloadJson:Button;
 	var reloadSong:Button;
@@ -275,7 +273,6 @@ class ChartingState extends MusicBeatState
 				songId: 'test',
 				songName: 'Test',
 				audioFile: 'test',
-				directory: 'shared',
 				splitVoiceTracks: false,
 				notes: [],
 				eventObjects: [],
@@ -1383,8 +1380,6 @@ class ChartingState extends MusicBeatState
 	{
 		destroyBoxes();
 
-		lastNote = note;
-
 		var section = getSectionByTime(note.strumTime);
 
 		var found = false;
@@ -1393,8 +1388,10 @@ class ChartingState extends MusicBeatState
 		{
 			for (i in section.sectionNotes)
 			{
-				if (i[0] == note.strumTime && i[1] == note.rawNoteData)
+				if (i[0] == note.strumTime && i[1] == note.noteData)
 				{
+					if (i == curSelectedNote)
+						curSelectedNote = null;
 					section.sectionNotes.remove(i);
 					found = true;
 				}
@@ -1414,7 +1411,6 @@ class ChartingState extends MusicBeatState
 		curRenderedNotes.remove(note);
 
 		susLength.pos = 0;
-		curSelectedNote = null;
 
 		if (note.sustainLength > 0)
 			curRenderedSustains.remove(note.noteCharterObject);
@@ -1918,7 +1914,6 @@ class ChartingState extends MusicBeatState
 		SONG.songId = song.text;
 		SONG.audioFile = audioFileName.text;
 		SONG.songName = songName.text;
-		SONG.directory = songDirectory.text;
 
 		if (curSelectedNote != null)
 		{
@@ -2296,14 +2291,6 @@ class ChartingState extends MusicBeatState
 		audioFile.text = "Audio File";
 		audioFile.verticalAlign = "center";
 
-		songDirectory = new TextField();
-		songDirectory.text = SONG.directory;
-		songDirectory.width = 100;
-
-		var dirLabel = new Label();
-		dirLabel.text = "Week Directory";
-		dirLabel.verticalAlign = "center";
-
 		saveSong = new Button();
 		saveSong.text = "Save JSON";
 		saveSong.onClick = function(e)
@@ -2561,9 +2548,6 @@ class ChartingState extends MusicBeatState
 
 		grid.addComponent(audioFileName);
 		grid.addComponent(audioFile);
-
-		grid.addComponent(songDirectory);
-		grid.addComponent(dirLabel);
 
 		grid2.addComponent(bpm);
 		grid2.addComponent(bpmLabel);

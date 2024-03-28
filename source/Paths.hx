@@ -618,13 +618,7 @@ class Paths
 
 	public static function runGC()
 	{
-		#if cpp
-		Gc.run(true);
-		Gc.compact();
-		Gc.run(false);
-		#else
 		System.gc();
-		#end
 	}
 
 	static public function getSparrowAtlas(key:String, ?library:String, ?isCharacter:Bool = false, ?gpuRender:Bool)

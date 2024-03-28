@@ -13,6 +13,9 @@ import openfl.display.StageQuality;
 #if FEATURE_DISCORD
 import Discord;
 #end
+#if FEATURE_MODCORE
+import polymod.Polymod;
+#end
 import openfl.Lib;
 import openfl.display.FPS;
 import openfl.display.Sprite;
@@ -125,17 +128,8 @@ class Main extends Sprite
 
 		FlxG.fixedTimestep = false;
 
-		FlxG.signals.preStateSwitch.add(function()
-		{
-			var cache = cast(Assets.cache, AssetCache);
-			for (key => font in cache.font)
-				cache.removeFont(key);
-			if (FlxG.save.data.unload)
-			{
-				for (key => sound in cache.sound)
-					cache.removeSound(key);
-			}
-		});
+		FlxG.signals.preStateCreate.add(onPreStateCreate);
+		FlxG.signals.postStateSwitch.add(onPostStateSwitch);
 
 		#if !mobile
 		addChild(fpsCounter);
@@ -154,6 +148,34 @@ class Main extends Sprite
 		Application.current.window.onFocusOut.add(onWindowFocusOut);
 		Application.current.window.onFocusIn.add(onWindowFocusIn);
 		#end
+	}
+
+	private inline function onPreStateCreate(state:FlxState):Void
+	{
+		var cache:AssetCache = cast(Assets.cache, AssetCache);
+
+		for (key in cache.bitmapData.keys())
+		{
+			if (!FlxG.bitmap.checkCache(key))
+				cache.bitmapData.remove(key);
+		}
+
+		for (key in cache.sound.keys())
+			cache.sound.remove(key);
+
+		for (key in cache.font.keys())
+			cache.font.remove(key);
+
+		#if FEATURE_MODCORE
+		Polymod.clearCache();
+		#end
+
+		// thanks MAJigsaw
+	}
+
+	private inline function onPostStateSwitch():Void
+	{
+		System.gc();
 	}
 
 	// motherfucker had to be special and have to be in main. smh.

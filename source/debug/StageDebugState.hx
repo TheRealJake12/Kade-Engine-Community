@@ -1,32 +1,29 @@
 package debug;
 
-import flixel.util.FlxColor;
-import flixel.FlxState;
-import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.group.FlxGroup;
-import flixel.text.FlxText;
-import flixel.FlxCamera;
-import flixel.FlxSprite;
 import flixel.util.FlxCollision;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import openfl.net.FileReference;
 import stages.Stage;
+/*
+	>stage editor
+	>uses stage object.
+ */
 import flixel.tweens.FlxTween;
-import flixel.addons.ui.FlxInputText;
-import flixel.addons.ui.FlxUI9SliceSprite;
-import flixel.addons.ui.FlxUI;
-import flixel.addons.ui.FlxUIState;
-import flixel.addons.ui.FlxUICheckBox;
-import flixel.addons.ui.FlxUIDropDownMenu;
-import flixel.addons.ui.FlxUIInputText;
-import flixel.addons.ui.FlxUINumericStepper;
-import flixel.addons.ui.FlxUITabMenu;
-import flixel.addons.ui.FlxUITooltip.FlxUITooltipStyle;
-import flixel.addons.ui.FlxUIButton;
-
-using StringTools;
+import haxe.ui.Toolkit;
+import haxe.ui.dragdrop.DragManager;
+import haxe.ui.components.Button;
+import haxe.ui.components.CheckBox;
+import haxe.ui.components.DropDown;
+import haxe.ui.components.Label;
+import haxe.ui.components.TextField;
+import haxe.ui.containers.ContinuousHBox;
+import haxe.ui.containers.Grid;
+import haxe.ui.containers.HBox;
+import haxe.ui.containers.TabView;
+import haxe.ui.containers.VBox;
+import haxe.ui.data.ArrayDataSource;
 
 class StageDebugState extends MusicBeatState
 {
@@ -37,12 +34,11 @@ class StageDebugState extends MusicBeatState
 
 	private var camEditor:FlxCamera;
 	private var camHUD:FlxCamera;
-	private var camMenu:FlxCamera;
 
 	var _file:FileReference;
 
 	var gf:Character;
-	var boyfriend:Boyfriend;
+	var boyfriend:Character;
 	var dad:Character;
 
 	public static var Stage:Stage;
@@ -64,16 +60,27 @@ class StageDebugState extends MusicBeatState
 	var oldMousePosY:Int;
 	var charMode:Bool = true;
 	var usedObjects:Array<FlxSprite> = [];
+	var ui:TabView;
+	var box:ContinuousHBox;
+	var box2:ContinuousHBox;
+	var vbox1:VBox;
+	var vbox3:VBox;
+	var grid:Grid;
 
-	var UI_box:FlxUITabMenu;
-	var UI_options:FlxUITabMenu;
-	var stageDropDown:FlxUIDropDownMenu;
-	var player1Drop:FlxUIDropDownMenu;
-	var player2Drop:FlxUIDropDownMenu;
-	var gfDrop:FlxUIDropDownMenu;
-	var hasGF:FlxUICheckBox;
-	var staticCam:FlxUICheckBox;
-	var resetPos:FlxUIButton;
+	var playerDrop:DropDown;
+	var opponentDrop:DropDown;
+	var stageDrop:DropDown;
+	var gfDrop:DropDown;
+
+	var hasGF:CheckBox;
+	var staticCam:CheckBox;
+	var resetCharPos:Button;
+
+	var stageDirectory:TextField;
+
+	var moveEditorToggle:CheckBox;
+	var saveEditor:Button;
+	var resetEditor:Button;
 
 	var idleToBeat:Bool = true; // change if bf and dad would idle to the beat of the song
 	var idleBeat:Int = 2; // how frequently bf and dad would play their idle animation(1 - every beat, 2 - every 2 beats and so on)
@@ -97,6 +104,11 @@ class StageDebugState extends MusicBeatState
 	override function create()
 	{
 		Paths.clearUnusedMemory();
+
+		Toolkit.init();
+
+		Toolkit.theme = "DARK";
+
 		FlxG.sound.music.stop();
 
 		FlxG.sound.playMusic(Paths.inst(PlayState.SONG.audioFile));
@@ -106,6 +118,10 @@ class StageDebugState extends MusicBeatState
 		#if FEATURE_DISCORD
 		Discord.changePresence("Stage Editor", null, null, true);
 		#end
+
+		stageList = CoolUtil.coolTextFile(Paths.txt('data/stageList'));
+		charList = CoolUtil.coolTextFile(Paths.txt('data/characterList'));
+		gfList = CoolUtil.coolTextFile(Paths.txt('data/gfVersionList'));
 
 		gf = new Character(400, 130, daGf);
 		boyfriend = new Boyfriend(770, 450, daBf);
@@ -146,37 +162,29 @@ class StageDebugState extends MusicBeatState
 		camEditor = new FlxCamera();
 		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
-		camMenu = new FlxCamera();
-		camMenu.bgColor.alpha = 0;
 
 		FlxG.cameras.reset(camEditor);
 		FlxG.cameras.add(camHUD, false);
-		FlxG.cameras.add(camMenu, false);
 
 		FlxG.cameras.setDefaultDrawTarget(camEditor, true);
 		FlxG.camera.follow(camFollow);
 
-		stageList = CoolUtil.coolTextFile(Paths.txt('data/stageList'));
-		charList = CoolUtil.coolTextFile(Paths.txt('data/characterList'));
-		gfList = CoolUtil.coolTextFile(Paths.txt('data/gfVersionList'));
+		ui = new TabView();
+		ui.text = "huh";
+		ui.draggable = FlxG.save.data.moveEditor;
+		ui.width = 250;
+		ui.height = 200;
+		ui.x = 1030;
+		ui.y = 490;
+		ui.camera = camHUD;
 
-		var tabs = [
-			{name: "Stage", label: 'Select Stage'},
-			{name: "Characters", label: 'Select Characters'}
-		];
+		addTabs();
+		addAssetUI();
+		addPropertyUI();
+
+		add(ui);
 
 		// var opt_tabs = [{name: "test", label: 'test'}];
-
-		UI_options = new FlxUITabMenu(null, tabs, true);
-		UI_options.camera = camMenu;
-
-		UI_options.scrollFactor.set();
-		UI_options.resize(300, 200);
-		UI_options.x = FlxG.width - UI_options.width - 20;
-		UI_options.y = FlxG.height - 300;
-		UI_options.color = FlxColor.fromRGB(40, 40, 40);
-		add(UI_options);
-
 		posText = new FlxText(0, 690);
 		posText.setFormat(Paths.font('vcr.ttf'), 26, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 		posText.scrollFactor.set();
@@ -191,80 +199,173 @@ class StageDebugState extends MusicBeatState
 		add(posText);
 
 		addHelpText();
-		addEditorUI();
-		addCharacterUI();
 
 		Conductor.changeBPM(PlayState.SONG.bpm);
 	}
 
-	function addEditorUI():Void
+	inline function addTabs()
 	{
-		var tab_group = new FlxUI(null, UI_options);
-		tab_group.name = "Stage";
-		stageDropDown = new FlxUIDropDownMenu(10, 20, FlxUIDropDownMenu.makeStrIdLabelArray(stageList, true), function(stage:String)
-		{
-			newStage = stageList[Std.parseInt(stage)];
-			Debug.logTrace('Selected Stage : ${newStage}');
-		});
-		stageDropDown.selectedLabel = newStage;
+		box = new ContinuousHBox();
+		box.padding = 5;
+		box.width = 300;
+		box.text = "Assets";
 
-		hasGF = new FlxUICheckBox(150, 20, null, null, "Stage Has GF", 100);
-		hasGF.checked = Stage.hasGF;
-		hasGF.callback = function()
-		{
-			Stage.hasGF = !Stage.hasGF;
-		};
+		box2 = new ContinuousHBox();
+		box2.width = 300;
+		box2.padding = 5;
+		box2.text = "Properties";
 
-		staticCam = new FlxUICheckBox(150, 40, null, null, "Static Camera", 100);
-		staticCam.checked = Stage.staticCam;
-		staticCam.callback = function()
-		{
-			Stage.staticCam = !Stage.staticCam;
-		};
-
-		resetPos = new FlxUIButton(150, 75, "Reset Character Positions", function()
-		{
-			resetPositions();
-		});
-
-		tab_group.add(stageDropDown);
-		tab_group.add(hasGF);
-		tab_group.add(staticCam);
-		tab_group.add(resetPos);
-
-		UI_options.addGroup(tab_group);
+		ui.addComponent(box);
+		ui.addComponent(box2);
 	}
 
-	function addCharacterUI():Void
+	inline function addAssetUI()
 	{
-		var char = new FlxUI(null, UI_options);
-		char.name = "Characters";
-		player1Drop = new FlxUIDropDownMenu(10, 10, FlxUIDropDownMenu.makeStrIdLabelArray(charList, true), function(char:String)
+		var vbox1:VBox = new VBox();
+		var vbox2:VBox = new VBox();
+		var grid = new Grid();
+
+		var playerLabel = new Label();
+		playerLabel.text = "Player";
+
+		var opLabel = new Label();
+		opLabel.text = "Opponent";
+
+		var gfLabel = new Label();
+		gfLabel.text = "GF";
+
+		playerDrop = new DropDown();
+		playerDrop.width = 100;
+		playerDrop.text = daBf;
+
+		opponentDrop = new DropDown();
+		opponentDrop.width = 100;
+		opponentDrop.text = opponent;
+
+		gfDrop = new DropDown();
+		gfDrop.width = 100;
+		gfDrop.text = daGf;
+
+		var ds = new ArrayDataSource<Dynamic>();
+		for (c in 0...charList.length)
 		{
-			daBf = charList[Std.parseInt(char)];
-			Debug.logTrace('Player 1 : ${daBf}');
-		});
-		player1Drop.selectedLabel = daBf;
-
-		player2Drop = new FlxUIDropDownMenu(150, 10, FlxUIDropDownMenu.makeStrIdLabelArray(charList, true), function(char:String)
+			ds.add(charList[c]);
+		}
+		playerDrop.dataSource = ds;
+		playerDrop.selectItemBy(item -> item == daBf, true);
+		playerDrop.onChange = function(e)
 		{
-			opponent = charList[Std.parseInt(char)];
-			Debug.logTrace('Player 2 : ${opponent}');
-		});
-		player2Drop.selectedLabel = opponent;
+			daBf = charList[playerDrop.selectedIndex];
+		}
 
-		gfDrop = new FlxUIDropDownMenu(10, 100, FlxUIDropDownMenu.makeStrIdLabelArray(gfList, true), function(char:String)
+		opponentDrop.dataSource = ds;
+		opponentDrop.selectItemBy(item -> item == opponent, true);
+		opponentDrop.onChange = function(e)
 		{
-			daGf = gfList[Std.parseInt(char)];
-			Debug.logTrace('GF : ${daGf}');
-		});
-		gfDrop.selectedLabel = daGf;
+			opponent = charList[opponentDrop.selectedIndex];
+		}
 
-		char.add(gfDrop);
-		char.add(player2Drop);
-		char.add(player1Drop);
+		var gfs = new ArrayDataSource<Dynamic>();
+		for (g in 0...gfList.length)
+		{
+			gfs.add(gfList[g]);
+		}
 
-		UI_options.addGroup(char);
+		gfDrop.dataSource = gfs;
+		gfDrop.selectItemBy(item -> item == daGf, true);
+		gfDrop.onChange = function(e)
+		{
+			daGf = gfList[gfDrop.selectedIndex];
+		}
+
+		vbox1.addComponent(playerLabel);
+		vbox1.addComponent(playerDrop);
+		vbox2.addComponent(opLabel);
+		vbox2.addComponent(opponentDrop);
+		vbox1.addComponent(gfLabel);
+		vbox1.addComponent(gfDrop);
+
+		grid.addComponent(vbox1);
+		grid.addComponent(vbox2);
+
+		box.addComponent(grid);
+	}
+
+	inline function addPropertyUI()
+	{
+		var grid = new Grid();
+		var vbox1:VBox = new VBox();
+		var vbox2:VBox = new VBox();
+
+		stageDrop = new DropDown();
+		stageDrop.text = daStage;
+		stageDrop.width = 100;
+
+		stageDirectory = new TextField();
+		stageDirectory.width = 100;
+		stageDirectory.text = Stage.stageDir;
+
+		var sdLabel = new Label();
+		sdLabel.text = "Stage Directory";
+
+		var stages = new ArrayDataSource<Dynamic>();
+		for (stage in 0...stageList.length)
+		{
+			stages.add(stageList[stage]);
+		}
+		stageDrop.dataSource = stages;
+		stageDrop.selectItemBy(item -> item == daStage, true);
+		stageDrop.onChange = function(e)
+		{
+			newStage = stageList[stageDrop.selectedIndex];
+			Debug.logTrace(newStage);
+		}
+
+		hasGF = new CheckBox();
+		hasGF.text = "Stage Has GF";
+		hasGF.selected = Stage.hasGF;
+		hasGF.onClick = function(e)
+		{
+			Stage.hasGF = hasGF.selected;
+		}
+
+		staticCam = new CheckBox();
+		staticCam.text = "Static Camera";
+		staticCam.selected = Stage.staticCam;
+		staticCam.onClick = function(e)
+		{
+			Stage.staticCam = staticCam.selected;
+		}
+
+		resetCharPos = new Button();
+		resetCharPos.text = "Reset Char Positions";
+		resetCharPos.onClick = function(e)
+		{
+			resetPositions();
+			Debug.logTrace('${ui.x} ${ui.y}');
+		}
+
+		moveEditorToggle = new CheckBox();
+		moveEditorToggle.text = "Drag Editor?";
+		moveEditorToggle.selected = FlxG.save.data.moveEditor;
+		moveEditorToggle.onClick = function(e)
+		{
+			FlxG.save.data.moveEditor = !FlxG.save.data.moveEditor;
+			ui.draggable = FlxG.save.data.moveEditor;
+		}
+
+		vbox1.addComponent(stageDrop);
+		vbox2.addComponent(sdLabel);
+		vbox2.addComponent(stageDirectory);
+		vbox2.addComponent(hasGF);
+		vbox2.addComponent(staticCam);
+		vbox2.addComponent(resetCharPos);
+		vbox2.addComponent(moveEditorToggle);
+
+		grid.addComponent(vbox1);
+		grid.addComponent(vbox2);
+
+		box2.addComponent(grid);
 	}
 
 	function reloadStage(leStage:String)
@@ -274,13 +375,13 @@ class StageDebugState extends MusicBeatState
 		curChars = [];
 		for (i in Stage.toAdd)
 		{
-			remove(i);
+			remove(i, true);
 		}
 
 		for (i => array in Stage.layInFront)
 		{
 			for (bg in array)
-				remove(bg);
+				remove(bg, true);
 		}
 
 		Stage.destroy();
@@ -289,8 +390,8 @@ class StageDebugState extends MusicBeatState
 		remove(boyfriend);
 		remove(gf);
 
-		Paths.runGC();
 		Paths.clearUnusedMemory();
+		Paths.runGC();
 
 		if (FlxG.save.data.gen)
 			Debug.logTrace('Removing Characters...');
@@ -301,9 +402,13 @@ class StageDebugState extends MusicBeatState
 
 		Stage = new Stage(leStage);
 
+		Stage.inEditor = true;
+
 		Stage.loadStageData(leStage);
 
 		Stage.initStageProperties();
+
+		stageDirectory.text = Stage.stageDir;
 
 		Stage.initCamPos();
 
@@ -314,7 +419,7 @@ class StageDebugState extends MusicBeatState
 			dad.setPosition(gf.x, gf.y);
 		}
 
-		hasGF.checked = Stage.hasGF;
+		hasGF.selected = Stage.hasGF;
 
 		if (!gf.visible || !Stage.hasGF) // for when gf is an opponent
 			curChars.pop();
@@ -349,7 +454,7 @@ class StageDebugState extends MusicBeatState
 			switch (index)
 			{
 				case 0:
-					if (Stage.hasGF && hasGF.checked)
+					if (Stage.hasGF && hasGF.selected)
 						add(gf);
 					for (bg in array)
 						add(bg);
@@ -365,6 +470,7 @@ class StageDebugState extends MusicBeatState
 		}
 
 		Paths.clearUnusedMemory();
+		Paths.runGC();
 
 		Debug.logTrace('Stage Loaded.');
 
@@ -374,6 +480,8 @@ class StageDebugState extends MusicBeatState
 	function loadStage(leStage:String)
 	{
 		Stage = new Stage(leStage);
+
+		Stage.inEditor = true;
 
 		Stage.loadStageData(leStage);
 
@@ -532,17 +640,19 @@ class StageDebugState extends MusicBeatState
 				getNextObject();
 			}
 		}
-
-		if (FlxG.mouse.pressed && FlxG.mouse.overlaps(curChar) && !dragging)
+		@:privateAccess
 		{
-			dragging = true;
-			updateMousePos();
-		}
+			if (FlxG.mouse.pressed && FlxG.mouse.overlaps(curChar) && !dragging && DragManager.instance._currentComponent == null)
+			{
+				dragging = true;
+				updateMousePos();
+			}
 
-		if (dragging && FlxG.mouse.justMoved)
-		{
-			curChar.setPosition(-(oldMousePosX - FlxG.mouse.x) + curChar.x, -(oldMousePosY - FlxG.mouse.y) + curChar.y);
-			updateMousePos();
+			if (dragging && FlxG.mouse.justMoved && DragManager.instance._currentComponent == null)
+			{
+				curChar.setPosition(-(oldMousePosX - FlxG.mouse.x) + curChar.x, -(oldMousePosY - FlxG.mouse.y) + curChar.y);
+				updateMousePos();
+			}
 		}
 
 		if (dragging && FlxG.mouse.justReleased || FlxG.keys.justPressed.TAB)
@@ -579,7 +689,6 @@ class StageDebugState extends MusicBeatState
 		if (FlxG.keys.justPressed.F4)
 		{
 			camHUD.visible = !camHUD.visible;
-			camMenu.visible = !camMenu.visible;
 		}
 
 		if (FlxG.keys.justPressed.F11)
@@ -665,11 +774,12 @@ class StageDebugState extends MusicBeatState
 		var g = gf.curCharacter;
 		var d = dad.curCharacter;
 		var json:stages.StageData = {
-			staticCam: staticCam.checked,
+			staticCam: staticCam.selected,
 			camZoom: fakeZoom,
-			hasGF: hasGF.checked,
+			hasGF: hasGF.selected,
 			camPosition: [camFollow.x, camFollow.y],
-			positions: [b => [boyfriend.x, boyfriend.y], g => [gf.x, gf.y], d => [dad.x, dad.y]]
+			positions: [b => [boyfriend.x, boyfriend.y], g => [gf.x, gf.y], d => [dad.x, dad.y]],
+			directory: stageDirectory.text
 		};
 
 		// weirdest fuckin code for jsons ever

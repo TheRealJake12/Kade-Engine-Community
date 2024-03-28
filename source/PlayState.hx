@@ -72,7 +72,6 @@ import script.ScriptUtil;
 #end
 // Orginization Imports
 import debug.StageDebugState;
-import debug.AnimationDebug;
 import debug.ChartingState;
 #if VIDEOS
 import hxvlc.flixel.FlxVideo as VideoHandler;
@@ -696,6 +695,18 @@ class PlayState extends MusicBeatState
 		}
 
 		Stage = new Stage(stageCheck);
+
+		Stage.inEditor = false;
+
+		var directory:String = 'shared';
+		var otherDir:String = Stage.stageDir;
+
+		if (otherDir != null)
+			directory = otherDir;
+
+		Paths.setCurrentLevel(directory);
+
+		Debug.logTrace(directory);
 
 		Stage.initStageProperties();
 
@@ -3271,23 +3282,6 @@ class PlayState extends MusicBeatState
 			LoadingState.loadAndSwitchState(new ChartingState());
 		}
 
-		/* if (FlxG.keys.justPressed.NINE)
-			FlxG.switchState(new Charting()); */
-
-		if (FlxG.keys.justPressed.SIX)
-		{
-			LoadingState.loadAndSwitchState(new AnimationDebug(dad.curCharacter));
-			PlayState.stageTesting = false;
-			inDaPlay = false;
-			#if FEATURE_LUAMODCHART
-			if (luaModchart != null)
-			{
-				luaModchart.die();
-				luaModchart = null;
-			}
-			#end
-		}
-
 		if (FlxG.keys.justPressed.EIGHT && songStarted && FlxG.save.data.background)
 		{
 			paused = true;
@@ -3315,20 +3309,6 @@ class PlayState extends MusicBeatState
 			StageDebugState.fromEditor = false;
 			LoadingState.loadAndSwitchState(new StageDebugState(Stage.curStage, if (gf != null) gf.curCharacter else "gf", boyfriend.curCharacter,
 				dad.curCharacter));
-			#if FEATURE_LUAMODCHART
-			if (luaModchart != null)
-			{
-				luaModchart.die();
-				luaModchart = null;
-			}
-			#end
-		}
-
-		if (FlxG.keys.justPressed.NUMPADSEVEN)
-		{
-			LoadingState.loadAndSwitchState(new AnimationDebug(boyfriend.curCharacter));
-			PlayState.stageTesting = false;
-			inDaPlay = false;
 			#if FEATURE_LUAMODCHART
 			if (luaModchart != null)
 			{

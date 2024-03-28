@@ -1,8 +1,8 @@
 import flixel.addons.display.FlxExtendedMouseSprite;
-import flixel.addons.ui.FlxUI;
-import flixel.addons.ui.FlxUICheckBox;
-import flixel.addons.ui.FlxUIDropDownMenu;
-import flixel.addons.ui.FlxUITabMenu;
+import haxe.ui.components.CheckBox;
+import haxe.ui.containers.VBox;
+import haxe.ui.Toolkit;
+import haxe.ui.containers.Box;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
@@ -63,10 +63,11 @@ class GameplayCustomizeState extends MusicBeatState
 	public static var freeplaySong:String = 'bopeebo';
 	public static var freeplayWeek:Int = 1;
 
-	var daBox:FlxUITabMenu;
-	var daRating:FlxUICheckBox;
-	var daCombo:FlxUICheckBox;
-	var daTiming:FlxUICheckBox;
+	var ui:Box;
+	var box:VBox;
+	var daRating:CheckBox;
+	var daCombo:CheckBox;
+	var daTiming:CheckBox;
 
 	var currentTimingShown:FlxText = new FlxText(0, 0, 0, "0ms");
 
@@ -78,6 +79,9 @@ class GameplayCustomizeState extends MusicBeatState
 		// Updating Discord Rich Presence
 		Discord.changePresence("Customizing Gameplay Modules", null);
 		#end
+
+		Toolkit.init();
+		Toolkit.theme = "DARK";
 
 		instance = this;
 
@@ -100,6 +104,16 @@ class GameplayCustomizeState extends MusicBeatState
 		}
 
 		Stage = new Stage(freeplayStage);
+
+		Stage.inEditor = false;
+
+		var directory:String = 'shared';
+		var otherDir:String = Stage.stageDir;
+
+		if (otherDir != null)
+			directory = otherDir;
+
+		Paths.setCurrentLevel(directory);
 
 		Stage.loadStageData(freeplayStage);
 		Stage.initStageProperties();
@@ -132,17 +146,16 @@ class GameplayCustomizeState extends MusicBeatState
 		FlxG.camera.zoom = Stage.camZoom;
 		FlxG.camera.focusOn(camFollow.getPosition());
 
-		var tabs = [{name: "Ratings", label: 'Ratings'}];
-
-		daBox = new FlxUITabMenu(null, tabs, true);
-		daBox.camera = camOverlay;
-
-		daBox.scrollFactor.set();
-		daBox.resize(150, 100);
-		daBox.x = FlxG.width - daBox.width - 20;
-		daBox.y = FlxG.height - 250;
-		daBox.color = FlxColor.fromRGB(40, 40, 40);
-		add(daBox);
+		ui = new VBox();
+		ui.padding = 5;
+		ui.backgroundColor = "darkslategray";
+		ui.text = "huh";
+		ui.width = 200;
+		ui.height = 100;
+		ui.draggable = true;
+		ui.x = 1080;
+		ui.y = 600;
+		ui.camera = camOverlay;
 
 		dad = new Character(100, 100, freeplayDad);
 
@@ -261,9 +274,7 @@ class GameplayCustomizeState extends MusicBeatState
 		currentTimingShown.text = "0ms";
 		currentTimingShown.size = 20;
 
-		currentTimingShown.x = sick.x + 100;
 		currentTimingShown.alignment = FlxTextAlign.RIGHT;
-		currentTimingShown.y = sick.y + 85;
 		currentTimingShown.visible = FlxG.save.data.showMs;
 		add(currentTimingShown);
 
@@ -318,45 +329,51 @@ class GameplayCustomizeState extends MusicBeatState
 		sick.x = FlxG.save.data.changedHitX;
 		sick.y = FlxG.save.data.changedHitY;
 
-		FlxG.mouse.visible = true;
+		currentTimingShown.x = sick.x + 100;
+		currentTimingShown.y = sick.y + 100;
 
 		addMenuUI();
+
+		add(ui);
+
+		FlxG.mouse.visible = true;
 		Paths.clearUnusedMemory();
 	}
 
-	function addMenuUI():Void
+	inline function addMenuUI():Void
 	{
-		var tab_group = new FlxUI(null, daBox);
-		tab_group.name = "Ratings";
-
-		daRating = new FlxUICheckBox(10, 0, null, null, "Show Rating", 100);
-		daRating.checked = FlxG.save.data.showRating;
-		daRating.callback = function()
+		box = new VBox();
+		daRating = new CheckBox();
+		daRating.text = "Show Rating";
+		daRating.selected = FlxG.save.data.showRating;
+		daRating.onClick = function(e)
 		{
 			FlxG.save.data.showRating = !FlxG.save.data.showRating;
 			sick.visible = FlxG.save.data.showRating;
 		};
 
-		daCombo = new FlxUICheckBox(10, 25, null, null, "Show Combo Number", 100);
-		daCombo.checked = FlxG.save.data.showNum;
-		daCombo.callback = function()
+		daCombo = new CheckBox();
+		daCombo.text = "Show Combo Number";
+		daCombo.selected = FlxG.save.data.showNum;
+		daCombo.onClick = function(e)
 		{
 			FlxG.save.data.showNum = !FlxG.save.data.showNum;
 		};
 
-		daTiming = new FlxUICheckBox(10, 50, null, null, "Show MS Timing", 100);
-		daTiming.checked = FlxG.save.data.showMs;
-		daTiming.callback = function()
+		daTiming = new CheckBox();
+		daTiming.text = "Show MS Timing";
+		daTiming.selected = FlxG.save.data.showMs;
+		daTiming.onClick = function(e)
 		{
 			FlxG.save.data.showMs = !FlxG.save.data.showMs;
 			currentTimingShown.visible = FlxG.save.data.showMs;
 		};
 
-		tab_group.add(daRating);
-		tab_group.add(daCombo);
-		tab_group.add(daTiming);
+		box.addComponent(daRating);
+		box.addComponent(daCombo);
+		box.addComponent(daTiming);
 
-		daBox.addGroup(tab_group);
+		ui.addComponent(box);
 	}
 
 	override function update(elapsed:Float)

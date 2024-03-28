@@ -114,7 +114,6 @@
 
 	<haxelib name="flixel" />
 	<haxelib name="flixel-addons" />
-	<haxelib name="flixel-ui" />
 	<haxelib name="haxeui-flixel" />
 	<haxelib name="haxeui-core" />
 	<!-- APIs -->

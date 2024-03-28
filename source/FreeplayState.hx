@@ -37,7 +37,6 @@ import sys.io.File;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxTimer;
 import flixel.FlxCamera;
-import debug.AnimationDebug;
 import debug.ChartingState;
 
 using StringTools;
@@ -635,9 +634,7 @@ class FreeplayState extends MusicBeatState
 		var upP = controls.UP_P;
 		var downP = controls.DOWN_P;
 		var accepted = FlxG.keys.justPressed.ENTER && !FlxG.keys.pressed.ALT;
-		var dadDebug = FlxG.keys.justPressed.SIX;
 		var charting = FlxG.keys.justPressed.SEVEN;
-		var bfDebug = FlxG.keys.justPressed.ZERO;
 
 		if (!openMod && !MusicBeatState.switchingState)
 		{
@@ -794,16 +791,8 @@ class FreeplayState extends MusicBeatState
 				else if (charting)
 					loadSong(true);
 
-			// AnimationDebug and StageDebug are only enabled in debug builds.
+			// StageDebug are only enabled in debug builds.
 			// Liar
-			if (dadDebug)
-			{
-				loadAnimDebug(true);
-			}
-			if (bfDebug)
-			{
-				loadAnimDebug(false);
-			}
 		}
 
 		if (openMod)
@@ -877,27 +866,6 @@ class FreeplayState extends MusicBeatState
 			currentSongPlaying = songs[curSelected].songName;
 		}
 		#end
-	}
-
-	function loadAnimDebug(dad:Bool = true)
-	{
-		// First, get the song data.
-		var hmm;
-		try
-		{
-			hmm = songData.get(songs[curSelected].songName)[curDifficulty];
-			if (hmm == null)
-				return;
-		}
-		catch (ex)
-		{
-			return;
-		}
-		PlayState.SONG = hmm;
-
-		var character = dad ? PlayState.SONG.player2 : PlayState.SONG.player1;
-
-		LoadingState.loadAndSwitchState(new AnimationDebug(character));
 	}
 
 	function loadSong(isCharting:Bool = false)
