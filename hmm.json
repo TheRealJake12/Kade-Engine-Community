@@ -60,16 +60,16 @@
       "url": "https://github.com/MAJigsaw77/hxdiscord_rpc.git"
     },
     {
-      "name": "haxeui-core",
-      "type": "git",
-      "ref": "master",
-      "url": "https://github.com/haxeui/haxeui-core.git"
-    },
-    {
       "name": "haxeui-flixel",
       "type": "git",
       "ref": "master",
       "url": "https://github.com/haxeui/haxeui-flixel.git"
+    },
+    {
+      "name": "haxeui-core",
+      "type": "git",
+      "ref": "master",
+      "url": "https://github.com/haxeui/haxeui-core.git"
     },
     {
       "name": "hxvlc",
