@@ -6,10 +6,58 @@
       "version": null
     },
     {
+      "name": "lime",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "openfl",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "flixel-tools",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "flixel-addons",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "hxcpp-debug-server",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "polymod",
+      "type": "haxelib",
+      "version": "1.7.0"
+    },
+    {
+      "name": "linc_luajit",
+      "type": "git",
+      "ref": "master",
+      "url": "https://github.com/superpowers04/linc_luajit"
+    },
+    {
       "name": "tjson",
       "type": "git",
       "ref": "master",
       "url": "https://github.com/EliteMasterEric/TJSON.git"
+    },
+    {
+      "name": "hscript-improved",
+      "type": "git",
+      "ref": "master",
+      "url": "https://github.com/TheRealJake12/hscript-improved.git"
+    },
+    {
+      "name": "hxdiscord_rpc",
+      "type": "git",
+      "ref": "main",
+      "url": "https://github.com/MAJigsaw77/hxdiscord_rpc.git"
     },
     {
       "name": "haxeui-core",
@@ -24,63 +72,10 @@
       "url": "https://github.com/haxeui/haxeui-flixel.git"
     },
     {
-      "name": "hscript-improved",
-      "type": "git",
-      "ref": "master",
-      "url": "https://github.com/TheRealJake12/hscript-improved.git"
-    },
-    {
-      "name": "hxcpp-debug-server",
-      "type": "haxelib",
-      "version": null
-    },
-    {
-      "name": "hscript",
-      "type": "haxelib",
-      "version": null
-    },
-    {
       "name": "hxvlc",
       "type": "git",
       "ref": "main",
       "url": "https://github.com/MAJigsaw77/hxvlc.git"
-    },
-    {
-      "name": "polymod",
-      "type": "haxelib",
-      "version": "1.7.0"
-    },
-    {
-      "name": "linc_luajit",
-      "type": "git",
-      "ref": "master",
-      "url": "https://github.com/superpowers04/linc_luajit"
-    },
-    {
-      "name": "flixel-tools",
-      "type": "haxelib",
-      "version": null
-    },
-    {
-      "name": "flixel-addons",
-      "type": "haxelib",
-      "version": null
-    },
-    {
-      "name": "lime",
-      "type": "haxelib",
-      "version": null
-    },
-    {
-      "name": "hxdiscord_rpc",
-      "type": "git",
-      "ref": "main",
-      "url": "https://github.com/MAJigsaw77/hxdiscord_rpc.git"
-    },
-    {
-      "name": "openfl",
-      "type": "haxelib",
-      "version": null
     }
   ]
 }
