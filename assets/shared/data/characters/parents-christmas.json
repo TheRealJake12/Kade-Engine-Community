@@ -16,22 +16,22 @@
       "prefix": "Parent Christmas Idle",
       "nextAnim": "idleLoop",
       "offsets": [
-       2,
-      0
+        2,
+        0
       ]
     },
     {
       "name": "idleLoop",
       "prefix": "Parent Christmas Idle",
-      "offsets": [
-       10,
-      11,
-      12,
-      13
-      ],
       "frameIndices": [
+        10,
         11,
-        12
+        12,
+        13
+      ],
+      "offsets": [
+        2,
+        0
       ],
       "frameRate": 12,
       "looped": true
@@ -40,16 +40,16 @@
       "name": "singUP",
       "prefix": "Parent Up Note Dad",
       "offsets": [
-       -47,
-      24
+        -47,
+        24
       ]
     },
     {
       "name": "singLEFT",
       "prefix": "Parent Left Note Dad",
       "offsets": [
-       -30,
-      16
+        -30,
+        16
       ]
     },
     {
@@ -72,8 +72,8 @@
       "name": "singUP-alt",
       "prefix": "Parent Up Note Mom",
       "offsets": [
-       -47,
-      24
+        -47,
+        24
       ]
     },
     {
@@ -88,16 +88,16 @@
       "name": "singRIGHT-alt",
       "prefix": "Parent Right Note Mom",
       "offsets": [
-       -1,
-      -24
+        -1,
+        -24
       ]
     },
     {
       "name": "singDOWN-alt",
       "prefix": "Parent Down Note Mom",
       "offsets": [
-       -30,
-      -27
+        -30,
+        -27
       ]
     }
   ]

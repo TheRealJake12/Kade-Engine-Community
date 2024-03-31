@@ -7,7 +7,7 @@ title KEC Setup - Installing libraries
 echo Installing haxelib libraries...
 haxelib install lime
 haxelib install openfl
-haxelib install flixel 5.6.1
+haxelib install flixel
 haxelib install flixel-tools
 haxelib install flixel-addons
 haxelib install hxcpp-debug-server

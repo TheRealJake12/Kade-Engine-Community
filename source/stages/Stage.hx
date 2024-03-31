@@ -31,11 +31,9 @@ class Stage extends MusicBeatState
 
 	public var stageJSON:StageData;
 	public var curStage:String = '';
-	public var ground:FlxSprite;
-	public var tankWatchtower:FlxSprite;
-	public var tankGround:FlxSprite;
-	public var tankmanRun:FlxTypedGroup<TankmenBG>;
-	public var foregroundSprites:FlxTypedGroup<TankBGSprite>;
+
+	private var phillyWindow:FlxSprite;
+
 	public var doesExist = false;
 	public var stageDir:String = '';
 	public var inEditor:Bool = false; // stop events from triggering and crashing the editor.
@@ -59,8 +57,11 @@ class Stage extends MusicBeatState
 	public var layInFront:Array<Array<FlxSprite>> = [[], [], []]; // BG layering, format: first [0] - in front of GF, second [1] - in front of opponent, third [2] - in front of boyfriend(and technically also opponent since Haxe layering moment)
 	public var slowBacks:Map<Int,
 		Array<FlxSprite>> = []; // Change/add/remove backgrounds mid song! Format: "slowBacks[StepToBeActivated] = [Sprites,To,Be,Changed,Or,Added];"
+
 	// BGs still must be added by using toAdd Array for them to show in game after slowBacks take effect!!
 	// BGs still must be added by using toAdd Array for them to show in game after slowBacks take effect!!
+	var phillyLightsColors:Array<FlxColor>; // colors for week3 stage
+
 	// All of the above must be set or used in your stage case code block!!
 	public var positions:Map<String, Map<String, Array<Float>>> = [
 		// Assign your characters positions on stage here! Or use the json system.
@@ -126,6 +127,7 @@ class Stage extends MusicBeatState
 					}
 				case 'philly':
 					{
+						phillyLightsColors = [0xFF31A2FD, 0xFF31FD8C, 0xFFFB33F5, 0xFFFD4531, 0xFFFBA633];
 						var bg:FlxSprite = new FlxSprite(-100).loadGraphic(Paths.image('philly/sky'));
 						bg.scrollFactor.set(0.1, 0.1);
 						bg.antialiasing = FlxG.save.data.antialiasing;
@@ -140,22 +142,15 @@ class Stage extends MusicBeatState
 						swagBacks['city'] = city;
 						toAdd.push(city);
 
-						var phillyCityLights = new FlxTypedGroup<FlxSprite>();
 						if (FlxG.save.data.distractions)
 						{
-							swagGroup['phillyCityLights'] = phillyCityLights;
-							toAdd.push(phillyCityLights);
-						}
-
-						for (i in 0...5)
-						{
-							var light:FlxSprite = new FlxSprite(city.x).loadGraphic(Paths.image('philly/win' + i));
-							light.scrollFactor.set(0.3, 0.3);
-							light.visible = false;
-							light.setGraphicSize(Std.int(light.width * 0.85));
-							light.updateHitbox();
-							light.antialiasing = FlxG.save.data.antialiasing;
-							phillyCityLights.add(light);
+							phillyWindow = new FlxSprite(city.x, city.y).loadGraphic(Paths.image('philly/window'));
+							phillyWindow.scrollFactor.set(0.3, 0.3);
+							phillyWindow.setGraphicSize(Std.int(phillyWindow.width * 0.85));
+							phillyWindow.updateHitbox();
+							phillyWindow.alpha = 0.000001;
+							swagBacks['phillyWindow'] = phillyWindow;
+							toAdd.push(phillyWindow);
 						}
 
 						var streetBehind:FlxSprite = new FlxSprite(-40, 50).loadGraphic(Paths.image('philly/behindTrain'));
@@ -172,8 +167,6 @@ class Stage extends MusicBeatState
 
 						trainSound = new FlxSound().loadEmbedded(Paths.sound('train_passes', 'shared'));
 						FlxG.sound.list.add(trainSound);
-
-						// var cityLights:FlxSprite = new FlxSprite().loadGraphic(AssetPaths.win0.png);
 
 						var street:FlxSprite = new FlxSprite(-40, streetBehind.y).loadGraphic(Paths.image('philly/street'));
 						street.antialiasing = FlxG.save.data.antialiasing;
@@ -291,7 +284,8 @@ class Stage extends MusicBeatState
 
 						var bottomBoppers = new FlxSprite(-300, 140);
 						bottomBoppers.frames = Paths.getSparrowAtlas('christmas/bottomBop');
-						bottomBoppers.animation.addByPrefix('idle', 'Bottom Level Boppers', Std.int(24 * PlayState.songMultiplier), false);
+						bottomBoppers.animation.addByPrefix('idle', 'Bottom Level Boppers Idle', Std.int(24 * PlayState.songMultiplier), false);
+						bottomBoppers.animation.addByPrefix('hey', 'Bottom Level Boppers HEY', Std.int(24 * PlayState.songMultiplier), false);
 						bottomBoppers.antialiasing = FlxG.save.data.antialiasing;
 						bottomBoppers.scrollFactor.set(0.9, 0.9);
 						bottomBoppers.setGraphicSize(Std.int(bottomBoppers.width * 1));
@@ -491,7 +485,7 @@ class Stage extends MusicBeatState
 						smokeLeft.antialiasing = FlxG.save.data.antialiasing;
 						smokeLeft.scrollFactor.set(0.4, 0.4);
 						smokeLeft.frames = Paths.getSparrowAtlas('smokeLeft');
-						smokeLeft.animation.addByPrefix('idle', 'SmokeBlurLeft instance ', Std.int(24 * PlayState.songMultiplier), true);
+						smokeLeft.animation.addByPrefix('idle', 'SmokeBlurLeft', Std.int(24 * PlayState.songMultiplier), true);
 						smokeLeft.animation.play('idle');
 						swagBacks['smokeLeft'] = smokeLeft;
 						toAdd.push(smokeLeft);
@@ -500,7 +494,7 @@ class Stage extends MusicBeatState
 						smokeRight.antialiasing = FlxG.save.data.antialiasing;
 						smokeRight.scrollFactor.set(0.4, 0.4);
 						smokeRight.frames = Paths.getSparrowAtlas('smokeRight');
-						smokeRight.animation.addByPrefix('idle', 'SmokeRight instance ', Std.int(24 * PlayState.songMultiplier), true);
+						smokeRight.animation.addByPrefix('idle', 'SmokeRight', Std.int(24 * PlayState.songMultiplier), true);
 						smokeRight.animation.play('idle');
 						swagBacks['smokeRight'] = smokeRight;
 						toAdd.push(smokeRight);
@@ -508,7 +502,7 @@ class Stage extends MusicBeatState
 						var tankWatchTower:FlxSprite = new FlxSprite(100, 50);
 						tankWatchTower.antialiasing = FlxG.save.data.antialiasing;
 						tankWatchTower.frames = Paths.getSparrowAtlas('tankWatchtower');
-						tankWatchTower.animation.addByPrefix('idle', 'watchtower gradient color instance ', Std.int(24 * PlayState.songMultiplier));
+						tankWatchTower.animation.addByPrefix('idle', 'watchtower gradient color', Std.int(24 * PlayState.songMultiplier));
 						tankWatchTower.animation.play('idle');
 						tankWatchTower.scrollFactor.set(0.5, 0.5);
 						tankWatchTower.active = true;
@@ -519,7 +513,7 @@ class Stage extends MusicBeatState
 					tankGround.scrollFactor.set(0.5, 0.5);
 					tankGround.antialiasing = FlxG.save.data.antialiasing;
 					tankGround.frames = Paths.getSparrowAtlas('tankRolling');
-					tankGround.animation.addByPrefix('idle', 'BG tank w lighting instance ', Std.int(24 * PlayState.songMultiplier), true);
+					tankGround.animation.addByPrefix('idle', 'BG tank w lighting', Std.int(24 * PlayState.songMultiplier), true);
 					tankGround.animation.play('idle');
 					swagBacks['tankGround'] = tankGround;
 					toAdd.push(tankGround);
@@ -539,7 +533,7 @@ class Stage extends MusicBeatState
 					foreGround0.scrollFactor.set(1.7, 1.5);
 					foreGround0.antialiasing = FlxG.save.data.antialiasing;
 					foreGround0.frames = Paths.getSparrowAtlas('tank0');
-					foreGround0.animation.addByPrefix('idle', 'fg tankhead far right instance ', Std.int(24 * PlayState.songMultiplier));
+					foreGround0.animation.addByPrefix('idle', 'fg tankhead far right', Std.int(24 * PlayState.songMultiplier));
 					foreGround0.animation.play('idle');
 					swagBacks['foreGround0'] = foreGround0;
 					layInFront[2].push(foreGround0);
@@ -550,7 +544,7 @@ class Stage extends MusicBeatState
 						foreGround1.scrollFactor.set(2, 0.2);
 						foreGround1.antialiasing = FlxG.save.data.antialiasing;
 						foreGround1.frames = Paths.getSparrowAtlas('tank1');
-						foreGround1.animation.addByPrefix('idle', 'fg tankhead 5 instance ', Std.int(24 * PlayState.songMultiplier));
+						foreGround1.animation.addByPrefix('idle', 'fg tankhead', Std.int(24 * PlayState.songMultiplier));
 						foreGround1.animation.play('idle');
 						swagBacks['foreGround1'] = foreGround1;
 						layInFront[2].push(foreGround1);
@@ -560,7 +554,7 @@ class Stage extends MusicBeatState
 					foreGround2.scrollFactor.set(1.5, 1.5);
 					foreGround2.antialiasing = FlxG.save.data.antialiasing;
 					foreGround2.frames = Paths.getSparrowAtlas('tank2');
-					foreGround2.animation.addByPrefix('idle', 'foreground man 3 instance ', Std.int(24 * PlayState.songMultiplier));
+					foreGround2.animation.addByPrefix('idle', 'foreground man', Std.int(24 * PlayState.songMultiplier));
 					foreGround2.animation.play('idle');
 					swagBacks['foreGround2'] = foreGround2;
 					layInFront[2].push(foreGround2);
@@ -571,7 +565,7 @@ class Stage extends MusicBeatState
 						foreGround3.scrollFactor.set(1.5, 1.5);
 						foreGround3.antialiasing = FlxG.save.data.antialiasing;
 						foreGround3.frames = Paths.getSparrowAtlas('tank4');
-						foreGround3.animation.addByPrefix('idle', 'fg tankman bobbin 3 instance ', Std.int(24 * PlayState.songMultiplier));
+						foreGround3.animation.addByPrefix('idle', 'fg tankman', Std.int(24 * PlayState.songMultiplier));
 						foreGround3.animation.play('idle');
 						swagBacks['foreGround3'] = foreGround3;
 						layInFront[2].push(foreGround3);
@@ -581,7 +575,7 @@ class Stage extends MusicBeatState
 					foreGround4.scrollFactor.set(1.5, 1.5);
 					foreGround4.antialiasing = FlxG.save.data.antialiasing;
 					foreGround4.frames = Paths.getSparrowAtlas('tank5');
-					foreGround4.animation.addByPrefix('idle', 'fg tankhead far right instance ', Std.int(24 * PlayState.songMultiplier));
+					foreGround4.animation.addByPrefix('idle', 'fg tankhead far right', Std.int(24 * PlayState.songMultiplier));
 					foreGround4.animation.play('idle');
 					swagBacks['foreGround4'] = foreGround4;
 					layInFront[2].push(foreGround4);
@@ -592,7 +586,7 @@ class Stage extends MusicBeatState
 						foreGround5.scrollFactor.set(1.5, 1.5);
 						foreGround5.antialiasing = FlxG.save.data.antialiasing;
 						foreGround5.frames = Paths.getSparrowAtlas('tank3');
-						foreGround5.animation.addByPrefix('idle', 'fg tankhead 4 instance ', Std.int(24 * PlayState.songMultiplier));
+						foreGround5.animation.addByPrefix('idle', 'fg tankhead', Std.int(24 * PlayState.songMultiplier));
 						foreGround5.animation.play('idle');
 						swagBacks['foreGround5'] = foreGround5;
 						layInFront[2].push(foreGround5);
@@ -867,6 +861,27 @@ class Stage extends MusicBeatState
 						if (FlxG.random.bool(10) && fastCarCanDrive && !inEditor)
 							fastCarDrive();
 					}
+				case 'mall':
+					if (!inEditor)
+					{
+						switch (PlayState.SONG.songId)
+						{
+							case 'cocoa':
+								switch (curBeat)
+								{
+									case 15 | 31 | 47 | 63 | 143:
+										swagBacks['bottomBoppers'].animation.play('hey', true);
+								}
+							case 'eggnog':
+								switch (curBeat)
+								{
+									case 15 | 23 | 31 | 39 | 47 | 55 | 63 | 79 | 87 | 95 | 103 | 119 | 127 | 135 | 143 | 151 | 159 | 167 | 175 | 191 | 199 |
+										207 | 215:
+										swagBacks['bottomBoppers'].animation.play('hey', true);
+								}
+								// I'm not happy with the amount of heys there are in these songs.
+						}
+					}
 				case "philly":
 					if (FlxG.save.data.distractions)
 					{
@@ -875,16 +890,9 @@ class Stage extends MusicBeatState
 
 						if (curBeat % 4 == 0)
 						{
-							var phillyCityLights = swagGroup['phillyCityLights'];
-							phillyCityLights.forEach(function(light:FlxSprite)
-							{
-								light.visible = false;
-							});
-
-							curLight = FlxG.random.int(0, phillyCityLights.length - 1);
-
-							phillyCityLights.members[curLight].visible = true;
-							// phillyCityLights.members[curLight].alpha = 1;
+							curLight = FlxG.random.int(0, phillyLightsColors.length - 1, [curLight]);
+							phillyWindow.color = phillyLightsColors[curLight];
+							phillyWindow.alpha = 1;
 						}
 					}
 

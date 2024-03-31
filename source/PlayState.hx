@@ -1741,7 +1741,6 @@ class PlayState extends MusicBeatState
 
 		var red:FlxSprite = new FlxSprite(-100, -100).makeGraphic(FlxG.width * 2, FlxG.height * 2, 0xFFff1b31);
 		red.scrollFactor.set();
-
 		var senpaiEvil:FlxSprite = new FlxSprite();
 		senpaiEvil.frames = Paths.getSparrowAtlas('weeb/senpaiCrazy');
 		senpaiEvil.animation.addByPrefix('idle', 'Senpai Pre Explosion', 24, false);
@@ -3094,46 +3093,8 @@ class PlayState extends MusicBeatState
 			{
 				if ((inst.length / songMultiplier) - Conductor.songPosition <= 0)
 				{
-					inst.volume = 0;
-					if (!SONG.splitVoiceTracks)
-					{
-						vocals.volume = 0;
-						vocals.stop();
-					}
-					else
-					{
-						vocalsPlayer.volume = 0;
-						vocalsPlayer.stop();
-						vocalsEnemy.volume = 0;
-						vocalsEnemy.stop();
-					}
-					inst.stop();
 					endingSong = true;
-					if (FlxG.save.data.songPosition)
-					{
-						createTween(songName, {alpha: 0}, 1, {ease: FlxEase.circIn});
-						createTween(songPosBar, {alpha: 0}, 1, {ease: FlxEase.circIn});
-						createTween(bar, {alpha: 0}, 1, {ease: FlxEase.circIn});
-					}
-					createTween(judgementCounter, {alpha: 0}, 1, {ease: FlxEase.circIn});
-					createTween(scoreTxt, {alpha: 0}, 1, {ease: FlxEase.circIn});
-					createTween(healthBar, {alpha: 0}, 1, {ease: FlxEase.circIn});
-					createTween(healthBarBG, {alpha: 0}, 1, {ease: FlxEase.circIn});
-					createTween(iconP1, {alpha: 0}, 1, {ease: FlxEase.circIn});
-					createTween(iconP2, {alpha: 0}, 1, {ease: FlxEase.circIn});
-					for (note in 0...strumLineNotes.length)
-						createTween(strumLineNotes.members[note], {y: strumLineNotes.members[note].y - 10, alpha: 0}, 0.5, {
-							ease: FlxEase.circOut,
-							startDelay: 0.5 + (0.2 * note),
-							onComplete: function(t)
-							{
-								if (note == 7)
-								{
-									Debug.logTrace("we're fuckin ending the song ");
-									endSong();
-								}
-							}
-						});
+					endSong();
 				}
 			}
 		}
@@ -4149,11 +4110,47 @@ class PlayState extends MusicBeatState
 			Highscore.saveLetter(PlayState.SONG.songId, Ratings.GenerateLetterRank(accuracy), storyDifficulty, songMultiplier);
 		}
 
+		storyPlaylist.remove(storyPlaylist[0]);
+
 		#if FEATURE_HSCRIPT
 		if (ScriptUtil.hasPause(scripts.executeAllFunc("endSong")))
 			return;
 		#end
 
+		if (!isStoryMode || storyPlaylist.length <= 0)
+		{
+			if (FlxG.save.data.songPosition)
+			{
+				createTween(songName, {alpha: 0}, 1, {ease: FlxEase.circIn});
+				createTween(songPosBar, {alpha: 0}, 1, {ease: FlxEase.circIn});
+				createTween(bar, {alpha: 0}, 1, {ease: FlxEase.circIn});
+			}
+			createTween(judgementCounter, {alpha: 0}, 1, {ease: FlxEase.circIn});
+			createTween(scoreTxt, {alpha: 0}, 1, {ease: FlxEase.circIn});
+			createTween(healthBar, {alpha: 0}, 1, {ease: FlxEase.circIn});
+			createTween(healthBarBG, {alpha: 0}, 1, {ease: FlxEase.circIn});
+			createTween(iconP1, {alpha: 0}, 1, {ease: FlxEase.circIn});
+			createTween(iconP2, {alpha: 0}, 1, {ease: FlxEase.circIn});
+			for (note in 0...strumLineNotes.length)
+				createTween(strumLineNotes.members[note], {y: strumLineNotes.members[note].y - 10, alpha: 0}, 0.5, {
+					ease: FlxEase.circOut,
+					startDelay: 0.5 + (0.2 * note),
+					onComplete: function(t)
+					{
+						if (note == 7)
+						{
+							Debug.logTrace("we're fuckin ending the song ");
+							songEnd();
+						}
+					}
+				});
+		}
+		else
+			songEnd();
+	}
+
+	inline function songEnd()
+	{
 		if (isStoryMode)
 		{
 			campaignAccuracy += HelperFunctions.truncateFloat(accuracy, 2) / initStoryLength;
@@ -4164,8 +4161,6 @@ class PlayState extends MusicBeatState
 			campaignGoods += goods;
 			campaignBads += bads;
 			campaignShits += shits;
-
-			storyPlaylist.remove(storyPlaylist[0]);
 
 			if (storyPlaylist.length <= 0)
 			{
@@ -4253,6 +4248,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 	}
+
 
 	function percentageOfSong():Float
 	{
@@ -4560,7 +4556,7 @@ class PlayState extends MusicBeatState
 		{
 			for (i in seperatedScore)
 			{
-				var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2, pixelShitPart4));
+				var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2));
 				numScore.screenCenter();
 				numScore.cameras = [camHUD];
 

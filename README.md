@@ -125,7 +125,7 @@ It will take a while to build for both versions.
 
 - LunarCleint - Hscript code, like, all of it.
 
-- [ShadowMario](https://github.com/ShadowMario) - The Memory Leak Fix. And A Few Other Things. (thanks)
+- [ShadowMario](https://github.com/ShadowMario) - Stolen Code And Some Assets Borrowed From Psych Engine (thanks)
 
 - [TposeJank](https://github.com/tposejank) Epic friend that gave me ideas and helped :epicttrooll:
 
