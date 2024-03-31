@@ -70,7 +70,6 @@ haxelib install flixel-addons
 haxelib install actuate
 haxelib install hxcpp-debug-server
 haxelib install polymod 1.7.0
-haxelib install tjson
 haxelib install hxvlc
 haxelib run lime setup
 haxelib run lime setup flixel
@@ -78,9 +77,11 @@ haxelib run flixel-tools setup
 ```
 When its finished, you will need to download these like you did with the Libraries above.
 ```cmd
+haxelib git tjson https://github.com/EliteMasterEric/TJSON.git
 haxelib git hscript-improved https://github.com/TheRealJake12/hscript-improved.git
-haxelib git linc_luajit https://github.com/superpowers04/linc_luajit
-haxelib git faxe https://github.com/uhrobots/faxe
+haxelib git haxeui-core https://github.com/haxeui/haxeui-core.git
+haxelib git haxeui-flixel https://github.com/haxeui/haxeui-flixel.git
+haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
 haxelib git hxdiscord_rpc https://github.com/MAJigsaw77/hxdiscord_rpc.git
 ```
 

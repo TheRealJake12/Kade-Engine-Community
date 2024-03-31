@@ -24,8 +24,8 @@ pause >nul
 title KEC Setup - Installing libraries
 haxelib git tjson https://github.com/EliteMasterEric/TJSON.git
 haxelib git hscript-improved https://github.com/TheRealJake12/hscript-improved.git
-haxelib git haxeui-core https://github.com/haxeui/haxeui-core.git
-haxelib git haxeui-flixel https://github.com/haxeui/haxeui-flixel.git
+haxelib git haxeui-core https://github.com/haxeui/haxeui-core.git --skip-dependencies
+haxelib git haxeui-flixel https://github.com/haxeui/haxeui-flixel.git --skip-dependencies
 haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit.git
 haxelib git hxdiscord_rpc https://github.com/MAJigsaw77/hxdiscord_rpc.git
 cls
