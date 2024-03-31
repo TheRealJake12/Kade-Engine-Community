@@ -1308,13 +1308,13 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.save.data.showMs)
 		{
-			add(currentTimingShown);
+			insert(PlayState.instance.members.indexOf(notes), currentTimingShown);
 			currentTimingShown.alpha = 0;
 		}
 
 		if (FlxG.save.data.showRating)
 		{
-			add(rating);
+			insert(PlayState.instance.members.indexOf(notes), rating);
 			rating.alpha = 0;
 		}
 
@@ -3094,18 +3094,46 @@ class PlayState extends MusicBeatState
 			{
 				if ((inst.length / songMultiplier) - Conductor.songPosition <= 0)
 				{
-					if (FlxG.save.data.gen)
-						Debug.logTrace("we're fuckin ending the song ");
+					inst.volume = 0;
+					if (!SONG.splitVoiceTracks)
+					{
+						vocals.volume = 0;
+						vocals.stop();
+					}
+					else
+					{
+						vocalsPlayer.volume = 0;
+						vocalsPlayer.stop();
+						vocalsEnemy.volume = 0;
+						vocalsEnemy.stop();
+					}
+					inst.stop();
+					endingSong = true;
 					if (FlxG.save.data.songPosition)
 					{
-						createTween(judgementCounter, {alpha: 0}, 1, {ease: FlxEase.circIn});
-						createTween(scoreTxt, {alpha: 0}, 1, {ease: FlxEase.circIn});
 						createTween(songName, {alpha: 0}, 1, {ease: FlxEase.circIn});
 						createTween(songPosBar, {alpha: 0}, 1, {ease: FlxEase.circIn});
 						createTween(bar, {alpha: 0}, 1, {ease: FlxEase.circIn});
 					}
-					endingSong = true;
-					endSong();
+					createTween(judgementCounter, {alpha: 0}, 1, {ease: FlxEase.circIn});
+					createTween(scoreTxt, {alpha: 0}, 1, {ease: FlxEase.circIn});
+					createTween(healthBar, {alpha: 0}, 1, {ease: FlxEase.circIn});
+					createTween(healthBarBG, {alpha: 0}, 1, {ease: FlxEase.circIn});
+					createTween(iconP1, {alpha: 0}, 1, {ease: FlxEase.circIn});
+					createTween(iconP2, {alpha: 0}, 1, {ease: FlxEase.circIn});
+					for (note in 0...strumLineNotes.length)
+						createTween(strumLineNotes.members[note], {y: strumLineNotes.members[note].y - 10, alpha: 0}, 0.5, {
+							ease: FlxEase.circOut,
+							startDelay: 0.5 + (0.2 * note),
+							onComplete: function(t)
+							{
+								if (note == 7)
+								{
+									Debug.logTrace("we're fuckin ending the song ");
+									endSong();
+								}
+							}
+						});
 				}
 			}
 		}
@@ -4557,7 +4585,7 @@ class PlayState extends MusicBeatState
 				numScore.velocity.x = FlxG.random.float(-5, 5);
 
 				lastScore.push(numScore);
-				add(numScore);
+				insert(PlayState.instance.members.indexOf(notes), numScore);
 
 				createTween(numScore, {alpha: 0}, 0.2, {
 					onComplete: function(tween:FlxTween)
@@ -4688,11 +4716,6 @@ class PlayState extends MusicBeatState
 
 		scrollMult = mult;
 	}
-
-	public var fuckingVolume:Float = 1;
-	public var useVideo = false;
-	public var playingDathing = false;
-	public var videoSprite:FlxSprite;
 
 	function noteMiss(direction:Int = 1, ?daNote:Note):Void
 	{

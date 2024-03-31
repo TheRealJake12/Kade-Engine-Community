@@ -398,7 +398,6 @@ class Character extends FlxSprite
 		animationNotes.sort(sortAnims);
 	}
 
-
 	function sortAnims(Obj1:Note, Obj2:Note):Int
 	{
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);

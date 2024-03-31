@@ -72,7 +72,7 @@ class Stage extends MusicBeatState
 
 		this.curStage = daStage;
 		stageJSON = StageJSON.loadJSONFile(daStage);
-			
+
 		#if FEATURE_HSCRIPT
 		scripts = new ScriptGroup();
 		scripts.onAddScript.push(onAddScript);
@@ -1198,7 +1198,7 @@ class Stage extends MusicBeatState
 		for (array in layInFront)
 			while (array.length > 0)
 				array.pop().destroy();
-		// thanks sword		
+		// thanks sword
 
 		for (swag in swagGroup.keys())
 		{

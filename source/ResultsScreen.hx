@@ -202,7 +202,6 @@ class ResultsScreen extends MusicBeatSubstate
 
 		// Debug.logTrace('$legitTimings ${!PlayState.usedBot} ${!FlxG.save.data.practice} ${PlayStateChangeables.holds} ${!PlayState.wentToChartEditor} ${HelperFunctions.truncateFloat(PlayStateChangeables.healthGain, 2) <= 1} ${HelperFunctions.truncateFloat(PlayStateChangeables.healthLoss, 2) >= 1}');
 
-		Debug.logTrace('$superMegaConditionShit');
 		mean = HelperFunctions.truncateFloat(mean / PlayState.instance.playerNotes, 2);
 		var acceptShit:String = (superMegaConditionShit ? '| Accepted' : '| Rejected');
 
