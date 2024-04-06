@@ -28,7 +28,6 @@ class Paths
 
 	public static var currentLevel:String;
 	public static var localTrackedAssets:Array<String> = [];
-	public static var currentTrackedTextures:Map<String, Texture> = [];
 	public static var currentTrackedAssets:Map<String, FlxGraphic> = [];
 	public static var currentTrackedSounds:Map<String, Sound> = [];
 
@@ -521,18 +520,37 @@ class Paths
 			@:privateAccess
 			for (key in FlxG.bitmap._cache.keys())
 			{
-				var obj = FlxG.bitmap._cache.get(key);
-				if (obj != null)
+				var obj = cast(FlxG.bitmap._cache.get(key), FlxGraphic);
+				if (obj != null && !currentTrackedAssets.exists(key))
 				{
+					obj.persist = false;
+					obj.destroyOnNoUse = true;
+
 					OpenFlAssets.cache.removeBitmapData(key);
-					OpenFlAssets.cache.clearBitmapData(key);
-					OpenFlAssets.cache.clear(key);
+
 					FlxG.bitmap._cache.remove(key);
+
+					FlxG.bitmap.removeByKey(key);
+
+					if (obj.bitmap.__texture != null)
+					{
+						obj.bitmap.__texture.dispose();
+						obj.bitmap.__texture = null;
+					}
+
+					FlxG.bitmap.remove(obj);
+
+					obj.dump();
+
+					obj.bitmap.disposeImage();
+					FlxDestroyUtil.dispose(obj.bitmap);
+					obj.bitmap = null;
+
 					obj.destroy();
+					obj = null;
 				}
 			}
 
-			#if !html5
 			// clear all sounds that are cached
 			for (key in currentTrackedSounds.keys())
 			{
@@ -541,11 +559,11 @@ class Paths
 					// trace('test: ' + dumpExclusions, key);
 					OpenFlAssets.cache.clear(key);
 					OpenFlAssets.cache.removeSound(key);
-					OpenFlAssets.cache.clearSounds(key);
 					currentTrackedSounds.remove(key);
 				}
 			}
 
+			#if !html5
 			openfl.Assets.cache.clear("songs");
 			#end
 			// flags everything to be cleared out next unused memory clear
@@ -575,29 +593,27 @@ class Paths
 				if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key))
 				{
 					// get rid of it
-					var obj = currentTrackedAssets.get(key);
+					var obj = cast(currentTrackedAssets.get(key), FlxGraphic);
 					@:privateAccess
 					if (obj != null)
 					{
 						obj.persist = false;
 						obj.destroyOnNoUse = true;
-
-						OpenFlAssets.cache.removeBitmapData(key);
-
-						FlxG.bitmap._cache.remove(key);
-						FlxG.bitmap.removeByKey(key);
-						var isTexture:Bool = currentTrackedTextures.exists(key);
-						if (isTexture)
-						{
-							var texture = currentTrackedTextures.get(key);
-							texture.dispose();
-							texture = null;
-							currentTrackedTextures.remove(key);
-						}
 						OpenFlAssets.cache.removeBitmapData(key);
 						OpenFlAssets.cache.clearBitmapData(key);
 						OpenFlAssets.cache.clear(key);
+
 						FlxG.bitmap._cache.remove(key);
+						FlxG.bitmap.removeByKey(key);
+
+						if (obj.bitmap.__texture != null)
+						{
+							obj.bitmap.__texture.dispose();
+							obj.bitmap.__texture = null;
+						}
+
+						FlxG.bitmap.remove(obj);
+
 						obj.dump();
 						obj.bitmap.disposeImage();
 						FlxDestroyUtil.dispose(obj.bitmap);
@@ -607,6 +623,7 @@ class Paths
 						obj.destroy();
 
 						obj = null;
+
 						currentTrackedAssets.remove(key);
 					}
 				}

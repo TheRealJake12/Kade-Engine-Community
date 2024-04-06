@@ -68,9 +68,7 @@ class DiffOverview extends MusicBeatSubstate
 		try
 		{
 			currentSongData = Song.loadFromJson(FreeplayState.instance.songs[FreeplayState.curSelected].songName,
-				CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[
-					CoolUtil.difficultyArray.indexOf(FreeplayState.instance.songs[FreeplayState.curSelected].diffs[FreeplayState.curDifficulty])
-				]));
+				CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[CoolUtil.difficultyArray.indexOf(FreeplayState.instance.songs[FreeplayState.curSelected].diffs[FreeplayState.curDifficulty])]));
 		}
 		catch (ex)
 		{

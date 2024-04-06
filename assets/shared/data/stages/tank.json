@@ -16,7 +16,7 @@
         "pico-speaker": [
             320,
             -60
-        ],
+        ]
     },
     "camZoom": 0.9,
     "hasGF": true,

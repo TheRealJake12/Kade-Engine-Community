@@ -3259,7 +3259,7 @@ class PlayState extends MusicBeatState
 			LoadingState.loadAndSwitchState(new ChartingState());
 		}
 
-		if (FlxG.keys.justPressed.EIGHT && songStarted && FlxG.save.data.background)
+		if (FlxG.keys.justPressed.EIGHT && FlxG.save.data.background)
 		{
 			paused = true;
 			new FlxTimer().start(0.3, function(tmr:FlxTimer)
@@ -4217,7 +4217,7 @@ class PlayState extends MusicBeatState
 					CustomFadeTransition.nextCamera = null;
 				}
 
-				Debug.logInfo('PlayState: Loading next story song ${PlayState.storyPlaylist[0]}-${diff}');
+				Debug.logInfo('Loading Next Story Song ${PlayState.storyPlaylist[0]}${diff}');
 
 				PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0], diff);
 				inst.stop();
@@ -4248,7 +4248,6 @@ class PlayState extends MusicBeatState
 			}
 		}
 	}
-
 
 	function percentageOfSong():Float
 	{
@@ -5167,7 +5166,7 @@ class PlayState extends MusicBeatState
 				camStrums.visible = false;
 
 				FlxG.sound.play(Paths.sound('Lights_Shut_off'));
-				createTimer(2, function(tmr)
+				createTimer(3, function(tmr)
 				{
 					endSong();
 				});

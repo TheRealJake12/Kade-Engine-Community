@@ -165,8 +165,8 @@ class StageDebugState extends MusicBeatState
 
 		FlxG.cameras.reset(camEditor);
 		FlxG.cameras.add(camHUD, false);
-
 		FlxG.cameras.setDefaultDrawTarget(camEditor, true);
+
 		FlxG.camera.follow(camFollow);
 
 		ui = new TabView();

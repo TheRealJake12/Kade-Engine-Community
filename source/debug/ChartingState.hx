@@ -244,8 +244,8 @@ class ChartingState extends MusicBeatState
 		}
 
 		Toolkit.init();
-
 		Toolkit.theme = "DARK";
+		Toolkit.autoScale = false;
 
 		ui = new TabView();
 		ui.text = "huh";
@@ -2583,7 +2583,7 @@ class ChartingState extends MusicBeatState
 		box4.addComponent(vbox3);
 	}
 
-	inline function addEventUI()
+	function addEventUI()
 	{
 		var vbox:VBox = new VBox();
 		var vbox2 = new VBox();
@@ -2628,12 +2628,10 @@ class ChartingState extends MusicBeatState
 		eventDrop.width = 125;
 
 		eventDrop.selectedIndex = 0;
-		eventIndex = eventDrop.selectedIndex;
+		eventDrop.dataSource = existingEvents;
 		eventDrop.onChange = function(e)
 		{
-			if (!eventDrop.dropDownOpen)
-			{
-				eventIndex = eventDrop.selectedIndex;
+			eventIndex = eventDrop.selectedIndex;
 				var event = containsName(eventList[eventIndex].name, SONG.eventObjects);
 				if (event == null)
 					return;
@@ -2646,11 +2644,10 @@ class ChartingState extends MusicBeatState
 				eventVal1.text = event.value + "";
 				eventVal2.text = event.value2 + "";
 				currentEventPosition = event.position;
-				eventTypes.selectItemBy(item -> item == savedType, true);
 				Debug.logTrace('$currentSelectedEventName $savedType $savedValue $savedValue2 $currentEventPosition');
-			}
+				eventTypes.selectItemBy(item -> item == savedType, true);
 		}
-		eventDrop.dataSource = existingEvents;
+		eventIndex = eventDrop.selectedIndex;
 
 		eventTypes = new DropDown();
 		eventTypes.width = 125;
@@ -2683,13 +2680,19 @@ class ChartingState extends MusicBeatState
 			}
 
 			eventName.text = pog.name;
-			eventDrop.dataSource = existingEvents;
-			eventDrop.selectItemBy(item -> item == pog.name, true);
 			eventVal1.text = pog.value + "";
 			eventVal2.text = pog.value2 + "";
 			eventPosition.text = pog.position + "";
 			currentSelectedEventName = pog.name;
 			currentEventPosition = pog.position;
+			savedValue = pog.value;
+			savedValue2 = pog.value2;
+			savedType = pog.type;
+
+			eventDrop.dataSource = existingEvents;
+			
+			Debug.logTrace(currentSelectedEventName);
+			eventDrop.selectItemBy(item -> item == currentSelectedEventName, true);
 
 			TimingStruct.clearTimings();
 
@@ -2817,6 +2820,7 @@ class ChartingState extends MusicBeatState
 			}
 
 			eventDrop.dataSource = existingEvents;
+			eventIndex = eventList.length - 1;
 			eventDrop.selectItemBy(item -> item == pog.name, true);
 			autosaveSong();
 
@@ -2850,16 +2854,16 @@ class ChartingState extends MusicBeatState
 				eventList.push(SONG.eventObjects[event]);
 			}
 
+			eventIndex = eventList.length - 1;
 			eventDrop.dataSource = existingEvents;
 
 			eventName.text = firstEvent.name;
-			eventDrop.selectItemBy(item -> item == firstEvent.name, true);
-			eventTypes.selectItemBy(item -> item == firstEvent.type, true);
 			eventVal1.text = firstEvent.value + "";
 			eventVal2.text = firstEvent.value2 + "";
 			eventPosition.text = firstEvent.position + "";
 			currentSelectedEventName = firstEvent.name;
 			currentEventPosition = firstEvent.position;
+			eventDrop.selectItemBy(item -> item == firstEvent.name, true);
 
 			TimingStruct.clearTimings();
 
@@ -2939,6 +2943,7 @@ class ChartingState extends MusicBeatState
 		{
 			savedValue2 = eventVal2.text;
 		}
+		
 
 		vbox.addComponent(existingLabel);
 		vbox.addComponent(eventDrop);

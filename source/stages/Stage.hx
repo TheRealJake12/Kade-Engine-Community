@@ -643,35 +643,27 @@ class Stage extends MusicBeatState
 			case 'halloween':
 				camZoom = 1.05;
 				doesExist = true;
-				stageDir = "week2";
 			case 'philly':
 				camZoom = 1.05;
 				doesExist = true;
-				stageDir = "week3";
 			case 'limo':
 				camZoom = 0.9;
 				doesExist = true;
-				stageDir = "week4";
 			case 'mall':
 				camZoom = 0.8;
 				doesExist = true;
-				stageDir = "week5";
 			case 'mallEvil':
 				camZoom = 1.05;
 				doesExist = true;
-				stageDir = "week5";
 			case 'school':
 				camZoom = 1.05;
 				doesExist = true;
-				stageDir = "week6";
 			case 'schoolEvil':
 				camZoom = 1.05;
 				doesExist = true;
-				stageDir = "week6";
 			case 'tank':
 				camZoom = 0.9;
 				doesExist = true;
-				stageDir = "week7";
 			case 'void':
 				camZoom = 0.9;
 				doesExist = true;
