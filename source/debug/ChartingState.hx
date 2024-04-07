@@ -3,6 +3,7 @@ package debug;
 import Section.SwagSection;
 import Song.SongData;
 import Song.SongMeta;
+import haxe.ui.events.UIEvent;
 import haxe.ui.Toolkit;
 import haxe.ui.focus.FocusManager;
 import haxe.ui.components.Button;
@@ -2629,24 +2630,26 @@ class ChartingState extends MusicBeatState
 
 		eventDrop.selectedIndex = 0;
 		eventDrop.dataSource = existingEvents;
-		eventDrop.onChange = function(e)
+		eventDrop.registerEvent(UIEvent.CLOSE, function(e:UIEvent)
 		{
 			eventIndex = eventDrop.selectedIndex;
-				var event = containsName(eventList[eventIndex].name, SONG.eventObjects);
-				if (event == null)
-					return;
+			var event = containsName(eventList[eventIndex].name, SONG.eventObjects);
+			if (event == null)
+				return;
 
-				savedValue = event.value;
-				savedValue2 = event.value2;
-				savedType = event.type;
-				currentSelectedEventName = event.name;
-				eventName.text = currentSelectedEventName;
-				eventVal1.text = event.value + "";
-				eventVal2.text = event.value2 + "";
-				currentEventPosition = event.position;
-				Debug.logTrace('$currentSelectedEventName $savedType $savedValue $savedValue2 $currentEventPosition');
-				eventTypes.selectItemBy(item -> item == savedType, true);
-		}
+			savedValue = event.value;
+			savedValue2 = event.value2;
+			savedType = event.type;
+			currentSelectedEventName = event.name;
+			eventName.text = currentSelectedEventName;
+			eventVal1.text = event.value + "";
+			eventVal2.text = event.value2 + "";
+			currentEventPosition = event.position;
+			eventPosition.text = Std.string(currentEventPosition);
+			eventVal2.text = event.value2 + "";
+			Debug.logTrace('$currentSelectedEventName $savedType $savedValue $savedValue2 $currentEventPosition');
+			eventTypes.selectItemBy(item -> item == savedType, true);
+		});
 		eventIndex = eventDrop.selectedIndex;
 
 		eventTypes = new DropDown();
@@ -2690,7 +2693,7 @@ class ChartingState extends MusicBeatState
 			savedType = pog.type;
 
 			eventDrop.dataSource = existingEvents;
-			
+
 			Debug.logTrace(currentSelectedEventName);
 			eventDrop.selectItemBy(item -> item == currentSelectedEventName, true);
 
@@ -2943,7 +2946,6 @@ class ChartingState extends MusicBeatState
 		{
 			savedValue2 = eventVal2.text;
 		}
-		
 
 		vbox.addComponent(existingLabel);
 		vbox.addComponent(eventDrop);
