@@ -2973,6 +2973,7 @@ class PlayState extends MusicBeatState
 
 	public var pastScrollChanges:Array<Song.Event> = [];
 	public var pastAnimationPlays:Array<Song.Event> = [];
+	public var pastZooms:Array<Song.Event> = [];
 
 	var currentLuaIndex = 0;
 
@@ -3146,7 +3147,9 @@ class PlayState extends MusicBeatState
 							var char:Character = dad;
 							switch (i.value.toLowerCase())
 							{
-								case 'bf' | 'boyfriend':
+								case 'dad' | 'opponent':	
+									char = dad;
+								case 'bf' | 'boyfriend' | 'player':
 									char = boyfriend;
 								case 'gf' | 'girlfriend':
 									if (gf != null) char = gf;
@@ -3159,6 +3162,21 @@ class PlayState extends MusicBeatState
 								char.playAnim(i.value2, true);
 							}
 						}
+					case "Change Camera Zoom":
+						if (i.position <= curDecimalBeat && !pastZooms.contains(i))
+						{
+							pastZooms.push(i);
+							var camToZoom = camGame;
+							switch (i.value.toLowerCase())
+							{
+								case 'hud' | 'camhud':
+									zoomForHUDTweens += i.value2;
+								case 'game' | 'main' | 'camgame':
+									zoomForTweens += i.value2;
+								default:
+									zoomForTweens += i.value2;	
+							}
+						}	
 				}
 			}
 		}

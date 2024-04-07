@@ -686,9 +686,6 @@ class ChartingState extends MusicBeatState
 			iconP2.scale.set(mult, mult);
 		iconP2.updateHitbox();
 
-		if (FlxG.keys.justPressed.SHIFT)
-			doSnapShit = !doSnapShit;
-
 		if (FlxG.mouse.justPressed && !waitingForRelease)
 		{
 			if (FlxG.mouse.overlaps(curRenderedNotes))
@@ -797,6 +794,9 @@ class ChartingState extends MusicBeatState
 				FlxG.save.data.showHelp = !FlxG.save.data.showHelp;
 				helpText.visible = FlxG.save.data.showHelp;
 			}
+
+			if (FlxG.keys.justPressed.SHIFT)
+				doSnapShit = !doSnapShit;
 
 			if (curSelectedNote != null && curSelectedNote[2] > -1)
 			{
