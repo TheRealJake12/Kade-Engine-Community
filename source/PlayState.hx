@@ -3015,13 +3015,8 @@ class PlayState extends MusicBeatState
 			while (unspawnNotes.length > 0 && unspawnNotes[0].strumTime - Conductor.songPosition < time)
 			{
 				var dunceNote:Note = unspawnNotes[0];
-
-				var tex = dunceNote.texture;
+				
 				notes.insert(0, dunceNote);
-
-				// post process notes to look gud
-				dunceNote.texture = tex;
-				dunceNote.updateHitbox();
 
 				#if FEATURE_LUAMODCHART
 				if (executeModchart)
@@ -5140,12 +5135,15 @@ class PlayState extends MusicBeatState
 		// HARDCODING FOR MILF ZOOMS!
 		if (PlayState.SONG.songId == 'milf' && curStep >= 672 && curStep < 800 && camZooming)
 		{
+			zoomMultiplier += 0.02;
 			if (curStep % 4 == 0)
 			{
-				FlxG.camera.zoom += 0.015;
-				camHUD.zoom += 0.03;
+				FlxG.camera.zoom += 0.015 * zoomMultiplier;
+				camHUD.zoom += 0.05 * zoomMultiplier;
 			}
 		}
+		if (PlayState.SONG.songId == 'milf' && curStep >= 800)
+			zoomMultiplier = 1;
 
 		#if FEATURE_LUAMODCHART
 		if (executeModchart && luaModchart != null)

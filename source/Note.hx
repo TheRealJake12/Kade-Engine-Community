@@ -459,7 +459,7 @@ class Note extends FlxSprite
 
 			if (mustPress)
 			{
-				switch (noteShit)
+				switch (noteShit.toLowerCase())
 				{
 					case 'hurt':
 						if (strumTime - Conductor.songPosition <= ((Ratings.timingWindows[0].timingWindow) * 0.2)

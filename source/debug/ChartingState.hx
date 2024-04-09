@@ -78,7 +78,6 @@ class ChartingState extends MusicBeatState
 	var diffDrop:DropDown;
 
 	// Note
-	var susLength:NumberStepper;
 	var strumTime:TextField;
 	var noteShitDrop:DropDown;
 
@@ -261,6 +260,8 @@ class ChartingState extends MusicBeatState
 
 		FlxG.mouse.visible = true;
 
+		PlayState.inDaPlay = false;
+
 		TimingStruct.clearTimings();
 
 		if (PlayState.SONG != null)
@@ -361,13 +362,13 @@ class ChartingState extends MusicBeatState
 		if (FlxG.save.data.showHelp == null)
 			FlxG.save.data.showHelp = true;
 
-		helpText = new CoolUtil.CoolText(985, 515, 12, 12, Paths.bitmapFont('fonts/vcr'));
+		helpText = new CoolUtil.CoolText(985, 500, 12, 12, Paths.bitmapFont('fonts/vcr'));
 		helpText.autoSize = true;
 		helpText.antialiasing = true;
 		helpText.text = "Help:" + "\n" + "CTRL-Left/Right : Change playback speed" + "\n" + "Ctrl+Drag Click : Select notes" + "\n" + "Ctrl+C : Copy notes"
 			+ "\n" + "Ctrl+V : Paste notes" + "\n" + "Ctrl+Z : Undo" + "\n" + "Ctrl+BACKSPACE : Delete Selected Notes" + "\n"
 			+ "Alt+Left/Right : Change Quant" + "\n" + "Shift : Disable/Enable Quant" + "\n" + "Click : Place notes" + "\n" + "Up/Down : Move selected notes"
-			+ "\n" + "Space : Play Song" + "\n" + "W-S : Go To Previous / Next Section" + "\n" + "Enter : Load Song Into PlayState" + "\n"
+			+ "\n" + "Space : Play Song" + "\n" + "W-S : Go To Previous / Next Section" + "\n" + "Q-E : Change Sustain Amount" + "\n" + "Enter : Load Song Into PlayState" + "\n"
 			+ "Z/X Change Notetype." + "\n" + "Press F1 to show/hide help text.";
 		helpText.updateHitbox();
 		helpText.scrollFactor.set();
@@ -1369,7 +1370,6 @@ class ChartingState extends MusicBeatState
 							selectedBoxes.add(box);
 							note.charterSelected = true;
 							curSelectedNoteObject.charterSelected = true;
-							susLength.pos = curSelectedNoteObject.sustainLength;
 						}
 					}
 					swagNum += 1;
@@ -1410,8 +1410,6 @@ class ChartingState extends MusicBeatState
 		}
 
 		curRenderedNotes.remove(note);
-
-		susLength.pos = 0;
 
 		if (note.sustainLength > 0)
 			curRenderedSustains.remove(note.noteCharterObject);
@@ -1465,7 +1463,6 @@ class ChartingState extends MusicBeatState
 					curRenderedSustains.add(sustainVis);
 				}
 			}
-			susLength.pos = curSelectedNoteObject.sustainLength;
 		}
 	}
 
@@ -2016,27 +2013,6 @@ class ChartingState extends MusicBeatState
 
 	inline function addNoteUI()
 	{
-		susLength = new NumberStepper();
-		susLength.max = Math.POSITIVE_INFINITY;
-		susLength.min = 0;
-		susLength.precision = 2;
-		susLength.step = Conductor.stepCrochet;
-		susLength.pos = 0;
-		// susLength.decimalSeparator = ".";
-		susLength.onChange = function(e)
-		{
-			if (curSelectedNote != null)
-			{
-				curSelectedNote[2] = susLength.pos;
-				updateNotes();
-			}
-		}
-
-		var susLabel = new Label();
-		susLabel.text = "Note Sustain Length";
-		// susLabel.textAlign = "center";
-		susLabel.verticalAlign = "center";
-
 		strumTime = new TextField();
 		strumTime.text = "0";
 		strumTime.onChange = function(e)
@@ -2072,9 +2048,7 @@ class ChartingState extends MusicBeatState
 		var typeLabel = new Label();
 		typeLabel.text = "Note Type";
 		typeLabel.verticalAlign = "center";
-
-		box2.addComponent(susLength);
-		box2.addComponent(susLabel);
+		
 		box2.addComponent(strumTime);
 		box2.addComponent(timeLabel);
 		box2.addComponent(noteShitDrop);
