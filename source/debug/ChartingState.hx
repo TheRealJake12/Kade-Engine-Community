@@ -785,7 +785,7 @@ class ChartingState extends MusicBeatState
 				}
 			}
 			selectBox.destroy();
-			remove(selectBox);
+			remove(selectBox, true);
 		}
 
 		if (doInput)
@@ -1409,10 +1409,10 @@ class ChartingState extends MusicBeatState
 			}
 		}
 
-		curRenderedNotes.remove(note);
+		curRenderedNotes.remove(note, true);
 
 		if (note.sustainLength > 0)
-			curRenderedSustains.remove(note.noteCharterObject);
+			curRenderedSustains.remove(note.noteCharterObject, true);
 
 		for (i in 0...selectedBoxes.members.length)
 		{
@@ -1446,11 +1446,11 @@ class ChartingState extends MusicBeatState
 				curSelectedNote[2] = Math.max(curSelectedNote[2], 0);
 
 				if (curSelectedNoteObject.noteCharterObject != null)
-					curRenderedSustains.remove(curSelectedNoteObject.noteCharterObject);
+					curRenderedSustains.remove(curSelectedNoteObject.noteCharterObject, true);
 
 				if (curSelectedNote[2] > 0)
 				{
-					remove(curSelectedNoteObject.noteCharterObject);
+					remove(curSelectedNoteObject.noteCharterObject, true);
 					var sustainVis:FlxSprite = new FlxSprite(curSelectedNoteObject.x + (noteSize * size) - 2, curSelectedNoteObject.y + noteSize);
 					sustainVis.makeGraphic(1, 1);
 					sustainVis.setGraphicSize(8,
