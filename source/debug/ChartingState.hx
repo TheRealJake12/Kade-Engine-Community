@@ -105,6 +105,7 @@ class ChartingState extends MusicBeatState
 	var hitsoundsVol:NumberStepper;
 	var hitsoundsP:CheckBox;
 	var hitsoundsE:CheckBox;
+	var oppMode:CheckBox;
 
 	var daHitSound:FlxSound;
 
@@ -747,7 +748,12 @@ class ChartingState extends MusicBeatState
 		{
 			if (!waitingForRelease)
 			{
-				destroyBoxes();
+				while (selectedBoxes.members.length != 0)
+				{
+					selectedBoxes.members[0].connectedNote.charterSelected = false;
+					selectedBoxes.members[0].destroy();
+					selectedBoxes.members.remove(selectedBoxes.members[0]);
+				}
 
 				waitingForRelease = true;
 				selectBox = new FlxSprite(FlxG.mouse.x, FlxG.mouse.y);
@@ -1303,7 +1309,7 @@ class ChartingState extends MusicBeatState
 		var noteSus = 0;
 		var noteShit = noteTypes[noteShitDrop.selectedIndex];
 		if (FlxG.save.data.gen)
-			Debug.logTrace("Adding note with " + noteStrum + " from dummyArrow with data " + noteData + " With A Notetype Of " + noteShit);
+			Debug.logTrace("Adding note with " + noteStrum + " with data " + noteData + " With A Notetype Of " + noteShit);
 
 		section.sectionNotes.push([noteStrum, noteData, noteSus, TimingStruct.getBeatFromTime(noteStrum), noteShit]);
 
@@ -1384,29 +1390,12 @@ class ChartingState extends MusicBeatState
 		var section = getSectionByTime(note.strumTime);
 
 		var found = false;
-
-		if (section != null)
+		
+		for (i in SONG.notes)
 		{
-			for (i in section.sectionNotes)
-			{
-				if (i[0] == note.strumTime && i[1] == note.noteData)
-				{
-					if (i == curSelectedNote)
-						curSelectedNote = null;
-					section.sectionNotes.remove(i);
-					found = true;
-				}
-			}
-		}
-
-		if (!found) // backup check
-		{
-			for (i in SONG.notes)
-			{
-				for (n in i.sectionNotes)
-					if (n[0] == note.strumTime && n[1] == note.rawNoteData)
-						i.sectionNotes.remove(n);
-			}
+			for (n in i.sectionNotes)
+				if (n[0] == note.strumTime && n[1] == note.noteData)
+					i.sectionNotes.remove(n);
 		}
 
 		curRenderedNotes.remove(note, true);
@@ -1511,6 +1500,8 @@ class ChartingState extends MusicBeatState
 					note.updateHitbox();
 					note.x = Math.floor(originalNote.rawNoteData * noteSize) + notePos;
 					note.y = Math.floor(getYfromStrum(strum) * size);
+
+					note.charterSelected = true;
 
 					var box = new ChartingBox(note.x, note.y, note);
 					box.connectedNoteData = thing;
@@ -3001,6 +2992,14 @@ class ChartingState extends MusicBeatState
 			FlxG.save.data.playHitsoundsE = !FlxG.save.data.playHitsoundsE;
 		}
 
+		oppMode = new CheckBox();
+		oppMode.text = "Opponent Mode?";
+		oppMode.selected = FlxG.save.data.opponent;
+		oppMode.onClick = function(e)
+		{
+			FlxG.save.data.opponent = !FlxG.save.data.opponent;
+		}
+
 		hitsoundsVol = new NumberStepper();
 		hitsoundsVol.max = 1;
 		hitsoundsVol.min = 0;
@@ -3024,6 +3023,7 @@ class ChartingState extends MusicBeatState
 		vbox2.addComponent(hitsoundsP);
 		vbox2.addComponent(hitsoundsE);
 		vbox.addComponent(hitsoundsVol);
+		vbox.addComponent(oppMode);
 		vbox.addComponent(hitLabel);
 		vbox.addComponent(metronome);
 
