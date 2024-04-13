@@ -714,6 +714,7 @@ class PlayState extends MusicBeatState
 		{
 			Debug.logTrace('Stage Does Not Exist For ${Stage.curStage}. Loading Default Stage.');
 			Stage.loadStageData('stage');
+			Stage.initStageProperties();
 		}
 
 		Stage.inEditor = false;

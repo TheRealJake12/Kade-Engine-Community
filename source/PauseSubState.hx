@@ -125,6 +125,9 @@ class PauseSubState extends MusicBeatSubstate
 
 		super.update(elapsed);
 
+		if (pauseMusic.volume < 0.5)
+			pauseMusic.volume += 0.01 * elapsed;
+
 		#if !mobile
 		if (FlxG.mouse.wheel != 0)
 			#if desktop
@@ -137,22 +140,18 @@ class PauseSubState extends MusicBeatSubstate
 			#end
 		#end
 
-		for (i in FlxG.sound.list)
-		{
-			if (i.playing && i.ID != 9000)
-				i.pause();
-		}
-
 		if (bg.alpha > 0.6)
 			bg.alpha = 0.6;
 
 		if (controls.UP_P)
 		{
 			changeSelection(-1);
+			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 		}
 		else if (controls.DOWN_P)
 		{
 			changeSelection(1);
+			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 		}
 
 		if ((controls.ACCEPT && !FlxG.keys.pressed.ALT) || FlxG.mouse.pressed)
@@ -225,6 +224,7 @@ class PauseSubState extends MusicBeatSubstate
 	{
 		tweenManager.clear();
 		tweenManager.destroy();
+		pauseMusic.destroy();
 
 		super.destroy();
 	}
@@ -259,8 +259,6 @@ class PauseSubState extends MusicBeatSubstate
 	function changeSelection(change:Int = 0):Void
 	{
 		curSelected += change;
-
-		// FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
 		if (curSelected < 0)
 			curSelected = menuItems.length - 1;

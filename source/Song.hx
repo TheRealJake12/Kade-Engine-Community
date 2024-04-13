@@ -183,6 +183,17 @@ class Song
 
 		song.eventObjects = convertedStuff;
 
+		if (song.chartVersion != latestChart)
+		{
+			if (song.songName == null)
+			{
+				if (song.song != null)
+					song.songName = song.song;
+				else
+					song.songName = song.songId;
+			}
+		}
+
 		if (song.noteStyle == null)
 			song.noteStyle = "normal";
 
@@ -268,10 +279,12 @@ class Song
 
 					i.playerSec = i.mustHitSection;
 
-					ii[4] = ii[5];
-
 					if (ii[4] == null || ii[4] == 'true' || ii[4] == 'false' || ii[4] == 0 || ii[4] == 0.0 || Math.isNaN(ii[4]))
 						ii[4] = 'Normal';
+
+					ii[4] = ii[5];
+
+					ii[5] = null;
 				}
 			}
 
@@ -290,14 +303,6 @@ class Song
 		if (songData.songId == null)
 			songData.songId = songId;
 
-		if (songData.songName == null)
-		{
-			if (songData.song != null)
-				songData.songName = songData.song;
-			else
-				songData.songName = songId;
-		}
-
 		if (songData.audioFile == null)
 			songData.audioFile = songId;
 
@@ -309,20 +314,7 @@ class Song
 		var songMetaData:SongMeta = cast jsonMetaData;
 		if (songMetaData != null)
 		{
-			if (songMetaData.name != null)
-			{
-				songData.songName = songMetaData.name;
-			}
-			else
-			{
-				songData.songName = songData.songName.split('-').join(' ');
-			}
-
 			songData.offset = songMetaData.offset != null ? songMetaData.offset : 0;
-		}
-		else
-		{
-			songData.songName = songData.songName.split('-').join(' ');
 		}
 
 		return Song.conversionChecks(songData);
