@@ -141,11 +141,11 @@ class GameOverSubstate extends MusicBeatSubstate
 		{
 			if (PlayStateChangeables.opponentMode)
 			{
-				dad.playAnim('deathLoop', true);
+				dad.playAnim('deathLoop', dad.animForces.get(dad.animation.curAnim.name));
 			}
 			else
 			{
-				bf.playAnim('deathLoop', true);
+				bf.playAnim('deathLoop', bf.animForces.get(bf.animation.curAnim.name));
 			}
 		}
 	}

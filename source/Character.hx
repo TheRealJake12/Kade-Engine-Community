@@ -10,6 +10,7 @@ class Character extends FlxSprite
 {
 	public var animOffsets:Map<String, Array<Dynamic>>;
 	public var animInterrupt:Map<String, Bool>;
+	public var animForces:Map<String, Bool>; // primarily for dead characters if you don't want it to be beat based.
 	public var animNext:Map<String, String>;
 	public var animDanced:Map<String, Bool>;
 	public var debugMode:Bool = false;
@@ -46,6 +47,7 @@ class Character extends FlxSprite
 		barColor = isPlayer ? 0xFF66FF33 : 0xFFFF0000;
 		animOffsets = new Map<String, Array<Dynamic>>();
 		animInterrupt = new Map<String, Bool>();
+		animForces = new Map<String, Bool>();
 		animNext = new Map<String, String>();
 		animDanced = new Map<String, Bool>();
 		curCharacter = character;
@@ -146,6 +148,7 @@ class Character extends FlxSprite
 
 				animOffsets[anim.name] = anim.offsets == null ? [0, 0] : anim.offsets;
 				animInterrupt[anim.name] = anim.interrupt == null ? true : anim.interrupt;
+				animForces[anim.name] = anim.forceAnim == null ? true : anim.forceAnim;
 
 				if (data.isDancing && anim.isDanced != null)
 					animDanced[anim.name] = anim.isDanced;
@@ -489,6 +492,7 @@ typedef AnimationData =
 	var name:String;
 	var prefix:String;
 	var ?offsets:Array<Int>;
+	var ?forceAnim:Bool;
 
 	/**
 	 * Whether this animation is looped.

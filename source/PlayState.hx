@@ -4145,9 +4145,9 @@ class PlayState extends MusicBeatState
 			createTween(iconP1, {alpha: 0}, 1, {ease: FlxEase.circIn});
 			createTween(iconP2, {alpha: 0}, 1, {ease: FlxEase.circIn});
 			for (note in 0...strumLineNotes.length)
-				createTween(strumLineNotes.members[note], {y: strumLineNotes.members[note].y - 10, alpha: 0}, 0.5, {
+				createTween(strumLineNotes.members[note], {y: strumLineNotes.members[note].y - 10, alpha: 0}, 0.4, {
 					ease: FlxEase.circOut,
-					startDelay: 0.5 + (0.2 * note),
+					startDelay: 0.2 + (0.2 * note),
 					onComplete: function(t)
 					{
 						if (note == 7)
@@ -4766,6 +4766,10 @@ class PlayState extends MusicBeatState
 			#end
 
 			health -= (daNote.missHealth * PlayStateChangeables.healthLoss);
+			if (!SONG.splitVoiceTracks)
+				vocals.volume = 0;
+			else	
+				vocalsPlayer.volume = 0;
 			updateAccuracy();
 			updateScoreText();
 		}
