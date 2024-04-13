@@ -4030,6 +4030,7 @@ class PlayState extends MusicBeatState
 								{
 									// there should be a ! infront of the wasGoodHit one but it'd cause a miss per every sustain note.
 									// now it just misses on the slightest sustain end for some reason.
+									// nvm I fixed it a long time ago
 									Debug.logTrace("User released key while playing a sustain at: " + daNote.spotInLine);
 									for (i in daNote.parent.children)
 									{
@@ -4739,7 +4740,10 @@ class PlayState extends MusicBeatState
 				combo = 0;
 			}
 
-			misses++;
+			if (!endingSong)
+			{
+				misses++;
+			}
 
 			daNote.rating = Ratings.timingWindows[0];
 

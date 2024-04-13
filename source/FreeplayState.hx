@@ -3,6 +3,7 @@ package;
 import openfl.utils.Future;
 import CoolUtil.CoolText;
 import openfl.media.Sound;
+import flixel.effects.FlxFlicker;
 import flixel.sound.FlxSound;
 #if FEATURE_STEPMANIA
 import smTools.SMFile;
@@ -101,6 +102,7 @@ class FreeplayState extends MusicBeatState
 	public static var songRating:Map<String, Dynamic> = [];
 
 	public static var songRatingOp:Map<String, Dynamic> = [];
+	public static var doUpdateText:Bool = true;
 
 	function loadDiff(diff:Int, songId:String, array:Array<SongData>)
 		array.push(Song.loadFromJson(songId, CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[diff])));
@@ -781,15 +783,20 @@ class FreeplayState extends MusicBeatState
 			for (item in grpSongs.members)
 				if (accepted
 					|| (((FlxG.mouse.overlaps(item) && item.targetY == curSelected) || (FlxG.mouse.overlaps(iconArray[curSelected])))
-						&& FlxG.mouse.pressed))
+						&& FlxG.mouse.justPressed))
 				{
-					loadSong();
+					doUpdateText = false;
+					fard();
 					break;
 				}
 					// Going to charting state via Freeplay is only enable in debug builds.
 				// Liar
 				else if (charting)
-					loadSong(true);
+				{
+					doUpdateText = false;
+					fard(true);
+					break;
+				}
 
 			// StageDebug are only enabled in debug builds.
 			// Liar
@@ -868,9 +875,17 @@ class FreeplayState extends MusicBeatState
 		#end
 	}
 
-	function loadSong(isCharting:Bool = false)
+	function fard(farding:Bool = false)
 	{
-		loadSongInFreePlay(songs[curSelected].songName, curDifficulty, isCharting);
+		FlxFlicker.flicker(grpSongs.members[curSelected], 1, 0.05, false, false, function(flick:FlxFlicker)
+		{
+			loadSongInFreePlay(songs[curSelected].songName, curDifficulty, farding);
+			doUpdateText = true;
+		});
+
+		FlxFlicker.flicker(iconArray[curSelected], 1, 0.05, false, false);
+
+		FlxG.sound.play(Paths.sound('confirmMenu'), 0.4);
 	}
 
 	/**
@@ -1082,26 +1097,29 @@ class FreeplayState extends MusicBeatState
 
 	public function updateTexts(elapsed:Float = 0.0)
 	{
-		lerpSelected = FlxMath.lerp(lerpSelected, curSelected, CoolUtil.boundTo(elapsed * 9.6, 0, 1));
-		for (i in _lastVisibles)
+		if (doUpdateText)
 		{
-			grpSongs.members[i].visible = grpSongs.members[i].active = false;
-			iconArray[i].visible = iconArray[i].active = false;
-		}
-		_lastVisibles = [];
+			lerpSelected = FlxMath.lerp(lerpSelected, curSelected, CoolUtil.boundTo(elapsed * 9.6, 0, 1));
+			for (i in _lastVisibles)
+			{
+				grpSongs.members[i].visible = grpSongs.members[i].active = false;
+				iconArray[i].visible = iconArray[i].active = false;
+			}
+			_lastVisibles = [];
 
-		var min:Int = Math.round(Math.max(0, Math.min(songs.length, lerpSelected - _drawDistance)));
-		var max:Int = Math.round(Math.max(0, Math.min(songs.length, lerpSelected + _drawDistance)));
-		for (i in min...max)
-		{
-			var item:Alphabet = grpSongs.members[i];
-			item.visible = item.active = true;
-			item.x = ((item.targetY - lerpSelected) * item.distancePerItem.x) + item.startPosition.x;
-			item.y = ((item.targetY - lerpSelected) * 1.3 * item.distancePerItem.y) + item.startPosition.y;
+			var min:Int = Math.round(Math.max(0, Math.min(songs.length, lerpSelected - _drawDistance)));
+			var max:Int = Math.round(Math.max(0, Math.min(songs.length, lerpSelected + _drawDistance)));
+			for (i in min...max)
+			{
+				var item:Alphabet = grpSongs.members[i];
+				item.visible = item.active = true;
+				item.x = ((item.targetY - lerpSelected) * item.distancePerItem.x) + item.startPosition.x;
+				item.y = ((item.targetY - lerpSelected) * 1.3 * item.distancePerItem.y) + item.startPosition.y;
 
-			var icon:HealthIcon = iconArray[i];
-			icon.visible = icon.active = true;
-			_lastVisibles.push(i);
+				var icon:HealthIcon = iconArray[i];
+				icon.visible = icon.active = true;
+				_lastVisibles.push(i);
+			}
 		}
 	}
 }
