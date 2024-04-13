@@ -1400,6 +1400,8 @@ class ChartingState extends MusicBeatState
 
 		curRenderedNotes.remove(note, true);
 
+		curSelectedNote = null;
+
 		if (note.sustainLength > 0)
 			curRenderedSustains.remove(note.noteCharterObject, true);
 
@@ -3005,13 +3007,9 @@ class ChartingState extends MusicBeatState
 		hitsoundsVol.min = 0;
 		hitsoundsVol.precision = 2;
 		hitsoundsVol.step = 0.05;
-		hitsoundsVol.pos = FlxG.save.data.hitVolume;
+		hitsoundsVol.pos = 0.5; // pissed me off so badly
 		hitsoundsVol.decimalSeparator = ".";
 		hitsoundsVol.autoCorrect = true;
-		hitsoundsVol.onChange = function(e)
-		{
-			FlxG.save.data.hitVolume = hitsoundsVol.pos;
-		}
 
 		var hitLabel:Label = new Label();
 		hitLabel.text = "Hitsound Volume";

@@ -216,6 +216,7 @@ class PauseSubState extends MusicBeatSubstate
 					{
 						MusicBeatState.switchState(new FreeplayState());
 					}
+					pauseMusic.pause();
 			}
 		}
 	}
