@@ -281,6 +281,8 @@ class KadeEngineData
 
 		FlxSprite.defaultAntialiasing = FlxG.save.data.antialiasing;
 
+		FlxObject.defaultMoves = false;
+
 		// if (FlxG.save.data.volume == null)
 		// FlxG.save.data.volume = 1;
 		PlayerSettings.player1.controls.loadKeyBinds();

@@ -772,8 +772,11 @@ class Stage extends MusicBeatState
 		super.stepHit();
 
 		#if FEATURE_HSCRIPT
-		scripts.setAll("curStep", curStep);
-		scripts.executeAllFunc("stepHit", [curStep]);
+		if (scripts != null)
+		{
+			scripts.setAll("curStep", curStep);
+			scripts.executeAllFunc("stepHit", [curStep]);
+		}
 		#end
 
 		if (FlxG.save.data.background)

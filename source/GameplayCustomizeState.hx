@@ -104,14 +104,9 @@ class GameplayCustomizeState extends MusicBeatState
 		}
 
 		Stage = new Stage(freeplayStage);
-
-		if (!Stage.doesExist)
-		{
-			Debug.logTrace('Stage Does Not Exist For ${Stage.curStage}. Loading Default Stage.');
-			Stage.loadStageData('stage');
-		}
-
-		Stage.inEditor = false;
+		Stage.inEditor = true;
+		Stage.loadStageData(freeplayStage);
+		Stage.initStageProperties();
 
 		var directory:String = 'shared';
 		var otherDir:String = Stage.stageDir;
@@ -119,10 +114,12 @@ class GameplayCustomizeState extends MusicBeatState
 		if (otherDir != null)
 			directory = otherDir;
 
-		Paths.setCurrentLevel(directory);
-
-		Stage.loadStageData(freeplayStage);
-		Stage.initStageProperties();
+		if (!Stage.doesExist)
+		{
+			Debug.logTrace('Stage Does Not Exist For ${Stage.curStage}. Loading Default Stage.');
+			Stage.loadStageData('tellylr');
+			Stage.initStageProperties();
+		}
 
 		camHUD = new SwagCamera();
 		camHUD.bgColor.alpha = 0;
