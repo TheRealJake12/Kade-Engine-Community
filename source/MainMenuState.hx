@@ -129,6 +129,7 @@ class MainMenuState extends MusicBeatState
 		bg.updateHitbox();
 		bg.screenCenter();
 		bg.velocity.set(240, 0);
+		bg.moves = true;
 		bg.antialiasing = FlxG.save.data.antialiasing;
 		add(bg);
 
@@ -145,6 +146,7 @@ class MainMenuState extends MusicBeatState
 		magenta.updateHitbox();
 		magenta.screenCenter();
 		magenta.visible = false;
+		magenta.moves = true;
 		magenta.velocity.set(240, 0);
 		magenta.antialiasing = FlxG.save.data.antialiasing;
 		magenta.color = 0xFFfd719b;

@@ -1333,7 +1333,13 @@ class CacheNow extends Option
 	public function new(desc:String)
 	{
 		super();
-		description = desc;
+		if (OptionsMenu.isInPause)
+		{
+			blocked = true;
+			description = pauseDesc;
+		}
+		else
+			description = desc;
 		acceptType = true;
 	}
 

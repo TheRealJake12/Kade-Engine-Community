@@ -4181,30 +4181,13 @@ class PlayState extends MusicBeatState
 			{
 				paused = true;
 				inst.stop();
+				
 				if (!SONG.splitVoiceTracks)
 					vocals.stop();
 				else
 				{
 					vocalsPlayer.stop();
 					vocalsEnemy.stop();
-				}
-				if (FlxG.save.data.scoreScreen)
-				{
-					persistentUpdate = false;
-					inResults = true;
-					openSubState(subStates[1]);
-				}
-				else
-				{
-					GameplayCustomizeState.freeplayNoteStyle = 'normal';
-					GameplayCustomizeState.freeplayWeek = 1;
-					FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
-					MainMenuState.freakyPlaying = true;
-					Conductor.changeBPM(102);
-					createTimer(2, function(tmr:FlxTimer)
-					{
-						MusicBeatState.switchState(new StoryMenuState());
-					});
 				}
 
 				#if FEATURE_LUAMODCHART
@@ -4218,6 +4201,22 @@ class PlayState extends MusicBeatState
 				if (SONG.validScore)
 				{
 					Highscore.saveWeekScore(storyWeek, campaignScore, storyDifficulty, 1);
+				}
+				
+				if (FlxG.save.data.scoreScreen)
+				{
+					persistentUpdate = false;
+					inResults = true;
+					openSubState(subStates[1]);
+				}
+				else
+				{
+					GameplayCustomizeState.freeplayNoteStyle = 'normal';
+					GameplayCustomizeState.freeplayWeek = 1;
+					FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
+					MainMenuState.freakyPlaying = true;
+					Conductor.changeBPM(102);
+					MusicBeatState.switchState(new StoryMenuState());
 				}
 			}
 			else
