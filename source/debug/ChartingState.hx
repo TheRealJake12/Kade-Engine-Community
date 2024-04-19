@@ -132,10 +132,6 @@ class ChartingState extends MusicBeatState
 
 	var noteType:String = "Normal"; // idfk
 
-	var typingShit:TextField;
-	var typingShit2:TextField;
-	var typingShit3:TextField;
-
 	public var SONG:SongData;
 	public var lastUpdatedSection:SwagSection = null;
 
@@ -218,6 +214,7 @@ class ChartingState extends MusicBeatState
 	public var selectInitialY:Float = 0;
 
 	public var infoText:CoolUtil.CoolText;
+	var sustainQuant:Float = 1.0;
 	public var infoBG:FlxSprite;
 	public var notetypetext:CoolUtil.CoolText;
 	public var helpText:CoolUtil.CoolText;
@@ -363,13 +360,13 @@ class ChartingState extends MusicBeatState
 		if (FlxG.save.data.showHelp == null)
 			FlxG.save.data.showHelp = true;
 
-		helpText = new CoolUtil.CoolText(985, 500, 12, 12, Paths.bitmapFont('fonts/vcr'));
+		helpText = new CoolUtil.CoolText(985, 485, 12, 12, Paths.bitmapFont('fonts/vcr'));
 		helpText.autoSize = true;
 		helpText.antialiasing = true;
 		helpText.text = "Help:" + "\n" + "CTRL-Left/Right : Change playback speed" + "\n" + "Ctrl+Drag Click : Select notes" + "\n" + "Ctrl+C : Copy notes"
 			+ "\n" + "Ctrl+V : Paste notes" + "\n" + "Ctrl+Z : Undo" + "\n" + "Ctrl+BACKSPACE : Delete Selected Notes" + "\n"
 			+ "Alt+Left/Right : Change Quant" + "\n" + "Shift : Disable/Enable Quant" + "\n" + "Click : Place notes" + "\n" + "Up/Down : Move selected notes"
-			+ "\n" + "Space : Play Song" + "\n" + "W-S : Go To Previous / Next Section" + "\n" + "Q-E : Change Sustain Amount" + "\n" + "Enter : Load Song Into PlayState" + "\n"
+			+ "\n" + "Space : Play Song" + "\n" + "W-S : Go To Previous / Next Section" + "\n" + "Q-E : Change Sustain Amount" + "\n" + "C-V : Change Sustain Change Quant" + "\n" + "Enter : Load Song Into PlayState" + "\n"
 			+ "Z/X Change Notetype." + "\n" + "Press F1 to show/hide help text.";
 		helpText.updateHitbox();
 		helpText.scrollFactor.set();
@@ -809,11 +806,11 @@ class ChartingState extends MusicBeatState
 			{
 				if (FlxG.keys.justPressed.E)
 				{
-					changeNoteSustain(Conductor.stepCrochet);
+					changeNoteSustain(Conductor.stepCrochet * sustainQuant);
 				}
 				if (FlxG.keys.justPressed.Q)
 				{
-					changeNoteSustain(-Conductor.stepCrochet);
+					changeNoteSustain(-Conductor.stepCrochet * sustainQuant);
 				}
 			}
 
@@ -824,6 +821,17 @@ class ChartingState extends MusicBeatState
 			else if (FlxG.keys.justPressed.S && !FlxG.keys.pressed.CONTROL && !FlxG.keys.pressed.ALT)
 			{
 				goToSection(curSection + 1);
+			}
+
+			if (FlxG.keys.justPressed.C)
+			{
+				if (sustainQuant > 0.1)
+					sustainQuant -= 0.1;
+			}
+			if (FlxG.keys.justPressed.V)
+			{
+				if (sustainQuant < 3) // realistically, why would you need anything higher than 2.
+					sustainQuant += 0.1;
 			}
 
 			if (FlxG.keys.pressed.CONTROL && !FlxG.keys.pressed.ALT && FlxG.keys.justPressed.C)
@@ -1150,6 +1158,8 @@ class ChartingState extends MusicBeatState
 			+ HelperFunctions.truncateFloat(curDecimalBeat, 3)
 			+ "\nCurStep : "
 			+ curStep
+			+ "\nSustain Quant : "
+			+ HelperFunctions.truncateFloat(sustainQuant, 2)
 			+ "\nQuant : "
 			+ quantizations[curQuant]
 			+ "\n"
@@ -2016,6 +2026,7 @@ class ChartingState extends MusicBeatState
 			if (Math.isNaN(value))
 				value = 0;
 			curSelectedNote[0] = value;
+			// updateNotes();
 		}
 
 		var timeLabel = new Label();
@@ -2239,8 +2250,6 @@ class ChartingState extends MusicBeatState
 		songId.text = "Song ID";
 		songId.verticalAlign = "center";
 
-		typingShit = song;
-
 		songName = new TextField();
 		songName.text = SONG.songName;
 		songName.width = 100;
@@ -2248,8 +2257,6 @@ class ChartingState extends MusicBeatState
 		var displayName = new Label();
 		displayName.text = "Display Name";
 		displayName.verticalAlign = "center";
-
-		typingShit2 = songName;
 
 		audioFileName = new TextField();
 		audioFileName.text = SONG.audioFile;
@@ -2505,8 +2512,6 @@ class ChartingState extends MusicBeatState
 		var veVolLabel = new Label();
 		veVolLabel.text = "Vocals (Enemy) Volume";
 		veVolLabel.verticalAlign = "center";
-
-		typingShit3 = audioFileName;
 
 		grid.addComponent(song);
 		grid.addComponent(songId);

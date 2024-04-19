@@ -68,39 +68,6 @@ class MusicBeatState extends FlxTransitionableState
 		Main.gameContainer.setFPSCap(FlxG.save.data.fpsCap);
 	}
 
-	override function remove(Object:FlxBasic, Splice:Bool = false):FlxBasic
-	{
-		var result = super.remove(Object, Splice);
-		return result;
-	}
-
-	public function destroyObject(Object:Dynamic):Void
-	{
-		if (Std.isOfType(Object, FlxSprite))
-		{
-			var spr:FlxSprite = cast(Object, FlxSprite);
-			spr.kill();
-			remove(spr, true);
-			spr.destroy();
-			spr = null;
-		}
-		else if (Std.isOfType(Object, FlxTypedGroup))
-		{
-			var grp:FlxTypedGroup<Dynamic> = cast(Object, FlxTypedGroup<Dynamic>);
-			for (ObjectGroup in grp.members)
-			{
-				if (Std.isOfType(ObjectGroup, FlxSprite))
-				{
-					var spr:FlxSprite = cast(ObjectGroup, FlxSprite);
-					spr.kill();
-					remove(spr, true);
-					spr.destroy();
-					spr = null;
-				}
-			}
-		}
-	}
-
 	override function destroy()
 	{
 		super.destroy();

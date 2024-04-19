@@ -103,6 +103,7 @@ class StageDebugState extends MusicBeatState
 
 	override function create()
 	{
+		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 
 		Toolkit.init();
@@ -176,7 +177,7 @@ class StageDebugState extends MusicBeatState
 		ui.height = 200;
 		ui.x = 1030;
 		ui.y = 490;
-		ui.camera = camHUD;
+		ui.cameras = [camHUD];
 
 		addTabs();
 		addAssetUI();

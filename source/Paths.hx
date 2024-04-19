@@ -115,6 +115,7 @@ class Paths
 						bitmap.disposeImage();
 						bitmap.image.data = null;
 						bitmap.image = null;
+						bitmap.readable = true;
 					}
 				}
 
@@ -122,11 +123,6 @@ class Paths
 				graph.persist = true;
 
 				currentTrackedAssets.set(key, graph);
-			}
-			else
-			{
-				// Get data from cache.
-				// Debug.logTrace('Loading existing image from cache: $key');
 			}
 
 			localTrackedAssets.push(key);
@@ -563,6 +559,34 @@ class Paths
 				}
 			}
 
+			FlxG.sound.list.forEachAlive(function(sound:flixel.sound.FlxSound):Void
+			{
+				FlxG.sound.list.remove(sound, true);
+				sound.stop();
+				sound.destroy();
+			});
+			FlxG.sound.list.clear();
+
+			// this totally isn't copied from polymod/backends/LimeBackend.hx trust me
+			
+			var lime_cache:lime.utils.AssetCache = cast lime.utils.Assets.cache;
+
+			for (key in lime_cache.image.keys())
+				lime_cache.image.remove(key);
+			for (key in lime_cache.font.keys())
+				lime_cache.font.remove(key);
+			for (key in lime_cache.audio.keys())
+			{
+				lime_cache.audio.get(key).dispose();
+				lime_cache.audio.remove(key);
+			};
+
+			// thanks vortex from the FNF thread
+
+			#if FEATURE_MODCORE
+			polymod.Polymod.clearCache();
+			#end
+
 			#if !html5
 			openfl.Assets.cache.clear("songs");
 			#end
@@ -635,7 +659,13 @@ class Paths
 
 	public static function runGC()
 	{
-		System.gc();
+		#if cpp
+		cpp.vm.Gc.enable(true);
+		#end
+		// Run built-in garbage collector
+		#if sys
+		openfl.system.System.gc();
+		#end
 	}
 
 	static public function getSparrowAtlas(key:String, ?library:String, ?isCharacter:Bool = false, ?gpuRender:Bool)

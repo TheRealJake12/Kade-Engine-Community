@@ -130,9 +130,10 @@ class Note extends FlxSprite
 						case "Circles":
 							texture = "notetypes/hurt_Circles";
 					}
-
+				case 'mustpress':
+					set_noteShit('Must Press'); // backwards compatabilty for charts before the KEC1 format.
 				case 'must press':
-					canPlayAnims = false;
+					canPlayAnims = true;
 					canNoteSplash = true;
 					botplayHit = true;
 					canRate = true;
@@ -148,17 +149,19 @@ class Note extends FlxSprite
 				case 'no animation':
 					canPlayAnims = false;
 					canNoteSplash = true;
+					causesMisses = true;
+					missHealth = 0.08;
 					botplayHit = true;
 					canRate = true;
-					missHealth = 0.8;
 					hitsoundsEditor = true;
 				case 'gf':
 					gfNote = true;
 					canPlayAnims = true;
 					canNoteSplash = true;
+					causesMisses = true;
+					missHealth = 0.08;
 					botplayHit = true;
 					canRate = true;
-					missHealth = 0.8;
 					hitsoundsEditor = true;
 				default:
 					canPlayAnims = true;

@@ -4482,6 +4482,7 @@ class PlayState extends MusicBeatState
 
 		rating.velocity.y -= FlxG.random.int(140, 175);
 		rating.velocity.x -= FlxG.random.int(0, 10);
+		rating.moves = true;
 		rating.acceleration.y = 550;
 
 		if (FlxG.save.data.showMs)
@@ -4507,6 +4508,7 @@ class PlayState extends MusicBeatState
 		comboSpr.y = rating.y + 100;
 		comboSpr.acceleration.y = 600;
 		comboSpr.velocity.y -= 150;
+		comboSpr.moves = true;
 
 		currentTimingShown.screenCenter();
 		if (!PlayStateChangeables.middleScroll)
@@ -4592,6 +4594,7 @@ class PlayState extends MusicBeatState
 				numScore.acceleration.y = FlxG.random.int(200, 300);
 				numScore.velocity.y -= FlxG.random.int(140, 160);
 				numScore.velocity.x = FlxG.random.float(-5, 5);
+				numScore.moves = true;
 
 				lastScore.push(numScore);
 				insert(PlayState.instance.members.indexOf(notes), numScore);
