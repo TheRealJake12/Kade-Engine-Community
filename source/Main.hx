@@ -128,9 +128,6 @@ class Main extends Sprite
 
 		FlxG.fixedTimestep = false;
 
-		FlxG.signals.preStateCreate.add(onPreStateCreate);
-		FlxG.signals.postStateSwitch.add(onPostStateSwitch);
-
 		#if !mobile
 		addChild(fpsCounter);
 		toggleFPS(FlxG.save.data.fps);
@@ -148,59 +145,6 @@ class Main extends Sprite
 		Application.current.window.onFocusOut.add(onWindowFocusOut);
 		Application.current.window.onFocusIn.add(onWindowFocusIn);
 		#end
-	}
-
-	private inline function onPreStateCreate(state:FlxState):Void
-	{
-		var cache:AssetCache = cast(Assets.cache, AssetCache);
-
-		for (key in cache.bitmapData.keys())
-		{
-			if (!FlxG.bitmap.checkCache(key))
-				cache.bitmapData.remove(key);
-		}
-
-		for (key in cache.sound.keys())
-			cache.sound.remove(key);
-
-		for (key in cache.font.keys())
-			cache.font.remove(key);
-
-		#if FEATURE_MODCORE
-		Polymod.clearCache();
-		#end
-
-		// thanks MAJigsaw
-	}
-
-	private inline function onPostStateSwitch():Void
-	{
-		System.gc();
-	}
-
-	// motherfucker had to be special and have to be in main. smh.
-	public static function dumpCache()
-	{
-		if (FlxG.save.data.unload && !FlxG.save.data.gpuRender)
-		{
-			#if PRELOAD_ALL
-			@:privateAccess
-			for (key in FlxG.bitmap._cache.keys())
-			{
-				var obj = FlxG.bitmap._cache.get(key);
-				if (obj != null)
-				{
-					Assets.cache.removeBitmapData(key);
-					FlxG.bitmap._cache.remove(key);
-					obj.destroy();
-				}
-			}
-			#if cpp
-			cpp.vm.Gc.run(true);
-			#end
-			Assets.cache.clear("songs");
-			#end
-		}
 	}
 
 	public function checkInternetConnection()

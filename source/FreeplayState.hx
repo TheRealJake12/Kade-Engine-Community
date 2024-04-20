@@ -114,8 +114,6 @@ class FreeplayState extends MusicBeatState
 		instance = this;
 		PlayState.SONG = null;
 		FlxG.mouse.visible = true;
-		if (!FlxG.save.data.gpuRender)
-			Main.dumpCache();
 
 		#if desktop
 		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';

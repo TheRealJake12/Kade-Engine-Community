@@ -467,8 +467,6 @@ class PlayState extends MusicBeatState
 		if (curSong != SONG.songId)
 		{
 			curSong = SONG.songId;
-			if (!FlxG.save.data.gpuRender)
-				Main.dumpCache();
 		}
 
 		// Set Rating Amounts To 0.
@@ -3894,10 +3892,7 @@ class PlayState extends MusicBeatState
 					{
 						// daNote.y = (strumY + Math.sin(angleDir) * daNote.distance) - (daNote.height - Note.swagWidth);
 
-						if ((PlayStateChangeables.botPlay
-							|| !daNote.mustPress
-							|| daNote.wasGoodHit
-							|| holdArray[Math.floor(Math.abs(daNote.noteData))]))
+						if (daNote.sustainActive)
 						{
 							if ((daNote.causesMisses) && daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= origin)
 							{
@@ -3911,10 +3906,7 @@ class PlayState extends MusicBeatState
 					}
 					else
 					{
-						if ((PlayStateChangeables.botPlay
-							|| !daNote.mustPress
-							|| daNote.wasGoodHit
-							|| holdArray[Math.floor(Math.abs(daNote.noteData))]))
+						if (daNote.sustainActive)
 						{
 							// Clip to strumline
 							if ((daNote.causesMisses) && daNote.y + daNote.offset.y * daNote.scale.y <= origin)

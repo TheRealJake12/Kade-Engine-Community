@@ -1173,15 +1173,10 @@ class ChartingState extends MusicBeatState
 
 	function updateNotes()
 	{
-		while (curRenderedNotes.members.length > 0)
-		{
-			curRenderedNotes.remove(curRenderedNotes.members[0], true);
-		}
-
-		while (curRenderedSustains.members.length > 0)
-		{
-			curRenderedSustains.remove(curRenderedSustains.members[0], true);
-		}
+		curRenderedNotes.forEachAlive(function(spr:Note) spr.destroy());
+		curRenderedNotes.clear();
+		curRenderedSustains.forEachAlive(function(spr:FlxSprite) spr.destroy());
+		curRenderedSustains.clear();
 
 		var curSection = 0;
 
@@ -1401,14 +1396,30 @@ class ChartingState extends MusicBeatState
 
 		var found = false;
 		
-		for (i in SONG.notes)
+		if (section != null)
 		{
-			for (n in i.sectionNotes)
-				if (n[0] == note.strumTime && n[1] == note.noteData)
-					i.sectionNotes.remove(n);
+			for (i in section.sectionNotes)
+			{
+				if (i[0] == note.strumTime && i[1] == note.rawNoteData)
+				{
+					section.sectionNotes.remove(i);
+					found = true;
+				}
+			}
 		}
 
-		curRenderedNotes.remove(note, true);
+		if (!found) // backup check
+		{
+			for (i in SONG.notes)
+			{
+				for (n in i.sectionNotes)
+					if (n[0] == note.strumTime && n[1] == note.rawNoteData)
+						i.sectionNotes.remove(n);
+			}
+		}
+
+		if (curRenderedNotes.members.contains(note))
+			curRenderedNotes.remove(note, true);
 
 		curSelectedNote = null;
 
@@ -1451,7 +1462,6 @@ class ChartingState extends MusicBeatState
 
 				if (curSelectedNote[2] > 0)
 				{
-					remove(curSelectedNoteObject.noteCharterObject, true);
 					var sustainVis:FlxSprite = new FlxSprite(curSelectedNoteObject.x + (noteSize * size) - 2, curSelectedNoteObject.y + noteSize);
 					sustainVis.makeGraphic(1, 1);
 					sustainVis.setGraphicSize(8,
