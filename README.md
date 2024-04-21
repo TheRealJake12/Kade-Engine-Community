@@ -9,6 +9,8 @@
 
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/TheRealJake12/Kade-Engine-Community?include_prereleases&label=latest%20version) 
 
+*"Loads Faster Than Uno" - TheRealJake_12*
+
 Hey you!
 Thanks for visiting this Repo!
 Versions Below 1.4 Were Made With Kade Engine 1.7.1 Pre-Release With 0 Modsupport.
