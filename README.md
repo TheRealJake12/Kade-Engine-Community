@@ -57,7 +57,7 @@ So I will now do a guide to build the game.
 
 
 ### Installing the needed things
-1. Install the latest Haxe. Instead of using Haxe 4.1.5, as the original game used, we will update to Haxe 4.3.3 (or the latest version)
+1. Install the latest Haxe. Instead of using Haxe 4.1.5, as the original game used, we will update to Haxe 4.3.4 (or the latest version)
 You will first need to go to this link to download [Haxe](https://haxe.org/download/) Choose your platform and just do the normal download proccess.
 2. Install HaxeFlixel. Once Haxe is installed, you can download HaxeFlixel. Open a Command Prompt (Windows is right click windows icon and hit command prompt or windows powershell).
 3. You will need [Git](https://git-scm.com/downloads) 
