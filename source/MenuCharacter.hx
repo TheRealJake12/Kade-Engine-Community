@@ -11,6 +11,7 @@ typedef MenuCharData =
 	var idle_anim:String;
 	var confirm_anim:String;
 	var flipped:Bool;
+	var ?frameRate:Int;
 }
 
 class MenuCharacter extends FlxSprite
@@ -50,14 +51,15 @@ class MenuCharacter extends FlxSprite
 				var jsonPath:String = 'menuCharacters/' + character;
 
 				var charJson:MenuCharData = cast Paths.loadJSON(jsonPath);
+				var frameRate = charJson.frameRate == null ? 24 : charJson.frameRate;
 
 				frames = Paths.getSparrowAtlas('menuCharacters/' + charJson.image);
-				animation.addByPrefix('idle', charJson.idle_anim, 24);
+				animation.addByPrefix('idle', charJson.idle_anim, frameRate);
 
 				var confirmAnim:String = charJson.confirm_anim;
 				if (confirmAnim != null && confirmAnim.length > 0 && confirmAnim != charJson.idle_anim)
 				{
-					animation.addByPrefix('confirm', confirmAnim, 24, false);
+					animation.addByPrefix('confirm', confirmAnim, frameRate, false);
 					if (animation.getByName('confirm') != null) // check for invalid animation
 						hasConfirmAnimation = true;
 				}
