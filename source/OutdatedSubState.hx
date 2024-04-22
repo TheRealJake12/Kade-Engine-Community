@@ -41,7 +41,7 @@ class OutdatedSubState extends MusicBeatState
 			+ "\n\nPress Space to view the full changelog and update\nor ENTER to ignore this",
 			32);
 
-		if (MainMenuState.nightly != "")
+		if (MainMenuState.kecVer.contains("PRE-RELEASE"))
 			txt.text = "You are on\n"
 				+ MainMenuState.kecVer
 				+ "\nWhich is a PRE-RELEASE BUILD!"
@@ -64,12 +64,6 @@ class OutdatedSubState extends MusicBeatState
 			+ currChanges
 			+ "\n\nPress Space to view the full changelog and update\nor ENTER to ignore this",
 			32);
-
-		if (MainMenuState.nightly != "")
-			txt.text = "You are on\n"
-				+ MainMenuState.kecVer
-				+ "\nWhich is a PRE-RELEASE BUILD!"
-				+ "\n\nReport all bugs to the author of the pre-release.\nSpace/Escape ignores this.";
 
 		mom.setFormat("VCR OSD Mono", 23, FlxColor.fromRGB(200, 200, 200), CENTER);
 		mom.borderColor = FlxColor.BLACK;
@@ -102,7 +96,7 @@ class OutdatedSubState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		if (FlxG.keys.justPressed.SPACE && MainMenuState.nightly == "")
+		if (FlxG.keys.justPressed.SPACE && !MainMenuState.kecVer.contains("PRE-RELEASE"))
 		{
 			fancyOpenURL("https://therealjake12.github.io/Kade-Engine-Community/changelogs/changelog-" + needVer);
 		}

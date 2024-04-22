@@ -1422,6 +1422,7 @@ class ChartingState extends MusicBeatState
 			curRenderedNotes.remove(note, true);
 
 		curSelectedNote = null;
+		strumTime.text = "0";
 
 		if (note.sustainLength > 0)
 			curRenderedSustains.remove(note.noteCharterObject, true);
