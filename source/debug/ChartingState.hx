@@ -929,7 +929,8 @@ class ChartingState extends MusicBeatState
 				if (FlxG.keys.justPressed.DOWN)
 					offset += offsetSeconds;
 
-				offsetSelectedNotes(offset);
+				if (selectedBoxes.members.length > 0)
+					offsetSelectedNotes(offset);
 			}
 
 			if (FlxG.keys.pressed.CONTROL)
@@ -1288,6 +1289,7 @@ class ChartingState extends MusicBeatState
 
 		var targetY = getYfromStrum(inst.length);
 
+
 		for (awfgaw in 0...Math.round(targetY / 600)) // grids/steps
 		{
 			var renderer = new SectionRender(sectionPos, 600 * awfgaw, 50);
@@ -1301,8 +1303,10 @@ class ChartingState extends MusicBeatState
 		}
 	}
 
-	private function addNote():Void
+	private function addNote(?n:Note):Void
 	{
+		destroyBoxes();
+		
 		var strum = getStrumTime(dummyArrow.y) / 0.5;
 
 		var section = getSectionByTime(strum);
@@ -1313,14 +1317,35 @@ class ChartingState extends MusicBeatState
 		var noteData = Std.int(Math.floor(dummyArrow.x - sectionPos) / 50);
 		var noteSus = 0;
 		var noteShit = noteTypes[noteShitDrop.selectedIndex];
+
+		for (note in section.sectionNotes)
+		{
+			if (note[0] == noteStrum && note[1] == noteData)
+			{
+				Debug.logWarn('A note is already in this place. Deleting...');
+
+				for (otherNote in curRenderedNotes)
+				{
+					if (otherNote.strumTime == noteStrum && otherNote.rawNoteData == noteData)
+						deleteNote(otherNote);
+				}
+				return;
+			}
+		}
+
+		if (n != null)
+			section.sectionNotes.push([
+				n.strumTime,
+				n.noteData,
+				n.sustainLength,
+				TimingStruct.getBeatFromTime(n.strumTime),
+				n.noteShit
+			]);
+		else
+			section.sectionNotes.push([noteStrum, noteData, noteSus, TimingStruct.getBeatFromTime(noteStrum), noteShit]);
+
 		if (FlxG.save.data.gen)
 			Debug.logTrace("Adding note with " + noteStrum + " with data " + noteData + " With A Notetype Of " + noteShit);
-
-		section.sectionNotes.push([noteStrum, noteData, noteSus, TimingStruct.getBeatFromTime(noteStrum), noteShit]);
-
-		var thingy = section.sectionNotes[section.sectionNotes.length - 1];
-
-		curSelectedNote = thingy;
 
 		var seg = TimingStruct.getTimingAtTimestamp(noteStrum);
 
@@ -1330,29 +1355,47 @@ class ChartingState extends MusicBeatState
 		else if (noteData <= 3)
 			gottaHitNote = false;
 
-		var note:Note = new Note(noteStrum, noteData, null, false, true, gottaHitNote, TimingStruct.getBeatFromTime(noteStrum));
-		note.rawNoteData = noteData;
-		note.sustainLength = noteSus;
-		note.noteShit = noteShit;
-		note.setGraphicSize(Math.floor(noteSize), Math.floor(noteSize));
-		note.updateHitbox();
-		note.x = Math.floor(note.rawNoteData * noteSize) + notePos;
+		if (n == null)
+		{
+			var note:Note = new Note(noteStrum, noteData, null, false, true, gottaHitNote, TimingStruct.getBeatFromTime(noteStrum));
+			note.rawNoteData = noteData;
+			note.sustainLength = noteSus;
+			note.noteShit = noteShit;
+			note.setGraphicSize(Math.floor(noteSize), Math.floor(noteSize));
+			note.updateHitbox();
+			note.x = Math.floor(note.rawNoteData * noteSize) + notePos;
 
-		if (curSelectedNoteObject != null)
-			curSelectedNoteObject.charterSelected = false;
-		curSelectedNoteObject = note;
+			if (curSelectedNoteObject != null)
+				curSelectedNoteObject.charterSelected = false;
+			curSelectedNoteObject = note;
 
-		destroyBoxes();
+			curSelectedNoteObject.charterSelected = true;
+			note.y = Math.floor(getYfromStrum(noteStrum) * size);
+			curRenderedNotes.add(note);	
+			selectNote(note);
+		}
+		else
+		{
+			var note:Note = new Note(n.strumTime, n.noteData, null, false, true, gottaHitNote, TimingStruct.getBeatFromTime(n.strumTime));
+			note.rawNoteData = n.noteData;
+			note.sustainLength = noteSus;
+			note.noteShit = noteShit;
+			note.setGraphicSize(Math.floor(noteSize), Math.floor(noteSize));
+			note.updateHitbox();
+			note.x = Math.floor(note.rawNoteData * noteSize) + notePos;
 
-		curSelectedNoteObject.charterSelected = true;
+			if (curSelectedNoteObject != null)
+				curSelectedNoteObject.charterSelected = false;
+			curSelectedNoteObject = note;
 
-		note.y = Math.floor(getYfromStrum(noteStrum) * size);
+			curSelectedNoteObject.charterSelected = true;
+			note.y = Math.floor(getYfromStrum(noteStrum) * size);
+			curRenderedNotes.add(note);	
+			selectNote(note);
+		}
+		var thingy = section.sectionNotes[section.sectionNotes.length - 1];
 
-		var box = new ChartingBox(note.x, note.y, note);
-		box.connectedNoteData = thingy;
-		selectedBoxes.add(box);
-
-		curRenderedNotes.add(note);
+		curSelectedNote = thingy;
 
 		autosaveSong();
 	}
@@ -1417,9 +1460,7 @@ class ChartingState extends MusicBeatState
 						i.sectionNotes.remove(n);
 			}
 		}
-
-		if (curRenderedNotes.members.contains(note))
-			curRenderedNotes.remove(note, true);
+		curRenderedNotes.remove(note, true);
 
 		curSelectedNote = null;
 		strumTime.text = "0";
@@ -1437,6 +1478,10 @@ class ChartingState extends MusicBeatState
 				return;
 			}
 		}
+
+		note.kill();
+		note.destroy();
+		note = null;
 	}
 
 	inline function destroyBoxes()
@@ -1546,7 +1591,7 @@ class ChartingState extends MusicBeatState
 						curRenderedSustains.add(sustainVis);
 					}
 
-					selectNote(note);
+					// selectNote(note);
 					continue;
 				}
 			}
