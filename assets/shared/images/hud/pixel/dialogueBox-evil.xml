@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="dialogueBox-evil.png">
+	<!-- Created with Adobe Animate version 20.0.0.17400 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="Spirit Textbox spawn0000" x="0" y="0" width="249" height="145"/>
+	<SubTexture name="Spirit Textbox spawn0001" x="0" y="0" width="249" height="145"/>
+	<SubTexture name="Spirit Textbox spawn0002" x="259" y="0" width="249" height="145"/>
+	<SubTexture name="Spirit Textbox spawn0003" x="259" y="0" width="249" height="145"/>
+	<SubTexture name="Spirit Textbox spawn0004" x="0" y="155" width="249" height="145"/>
+	<SubTexture name="Spirit Textbox spawn0005" x="0" y="155" width="249" height="145"/>
+	<SubTexture name="Spirit Textbox spawn0006" x="259" y="155" width="249" height="145"/>
+	<SubTexture name="Spirit Textbox spawn0007" x="259" y="155" width="249" height="145"/>
+	<SubTexture name="Spirit Textbox spawn0008" x="0" y="310" width="249" height="145"/>
+	<SubTexture name="Spirit Textbox spawn0009" x="0" y="310" width="249" height="145"/>
+	<SubTexture name="Spirit Textbox spawn0010" x="259" y="310" width="249" height="145"/>
+	<SubTexture name="Spirit Textbox spawn0011" x="259" y="310" width="249" height="145"/>
+</TextureAtlas>

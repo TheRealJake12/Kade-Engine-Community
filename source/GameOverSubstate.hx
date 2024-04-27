@@ -29,6 +29,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		instance = this;
 
 		var daBf:String = '';
+		var styleShit:String = (PlayState.STYLE.style == null ? 'default' : PlayState.STYLE.style).toLowerCase();
 		switch (PlayState.instance.boyfriend.curCharacter)
 		{
 			case 'bf-pixel':
@@ -50,19 +51,19 @@ class GameOverSubstate extends MusicBeatSubstate
 		if (PlayStateChangeables.opponentMode)
 		{
 			dad = new Character(PlayState.instance.dad.getScreenPosition().x, PlayState.instance.dad.getScreenPosition().y, leDad);
-			camFollow = new FlxObject(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y, 1, 1);
+			camFollow = new FlxObject(dad.getMidpoint().x + dad.camPos[0], dad.getMidpoint().y + dad.camPos[1], 1, 1);
 			add(dad);
 		}
 		else
 		{
 			bf = new Boyfriend(PlayState.instance.boyfriend.getScreenPosition().x, PlayState.instance.boyfriend.getScreenPosition().y, daBf);
-			camFollow = new FlxObject(bf.getGraphicMidpoint().x, bf.getGraphicMidpoint().y, 1, 1);
+			camFollow = new FlxObject(bf.getMidpoint().x + bf.camPos[0], bf.getMidpoint().y + bf.camPos[1], 1, 1);
 			add(bf);
 		}
 
 		add(camFollow);
 
-		FlxG.sound.play(Paths.sound('fnf_loss_sfx' + stageSuffix));
+		FlxG.sound.play(Paths.sound('styles/$styleShit/fnf_loss_sfx'));
 		Conductor.changeBPM(100);
 
 		// FlxG.camera.followLerp = 1;

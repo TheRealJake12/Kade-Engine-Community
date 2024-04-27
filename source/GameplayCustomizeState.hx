@@ -1,6 +1,7 @@
+import haxe.ui.containers.VBox;
 import flixel.addons.display.FlxExtendedMouseSprite;
 import haxe.ui.components.CheckBox;
-import haxe.ui.containers.VBox;
+import haxe.ui.containers.Panel;
 import haxe.ui.Toolkit;
 import haxe.ui.containers.Box;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -8,6 +9,7 @@ import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import openfl.ui.Keyboard;
 import stages.Stage;
+import Song.Style;
 #if FEATURE_DISCORD
 import Discord;
 #end
@@ -63,7 +65,7 @@ class GameplayCustomizeState extends MusicBeatState
 	public static var freeplaySong:String = 'bopeebo';
 	public static var freeplayWeek:Int = 1;
 
-	var ui:Box;
+	var ui:Panel;
 	var box:VBox;
 	var daRating:CheckBox;
 	var daCombo:CheckBox;
@@ -85,6 +87,14 @@ class GameplayCustomizeState extends MusicBeatState
 
 		instance = this;
 
+		if (PlayState.STYLE == null)
+			PlayState.STYLE = Style.loadJSONFile('default');
+
+		var styleShit:String = (PlayState.STYLE.style == null ? 'default' : PlayState.STYLE.style).toLowerCase();
+
+		if (styleShit == null)
+			styleShit = 'default';
+
 		// Conductor.changeBPM(102);
 		persistentUpdate = true;
 
@@ -92,15 +102,14 @@ class GameplayCustomizeState extends MusicBeatState
 
 		super.create();
 
-		if (freeplayNoteStyle == 'pixel')
+		switch (styleShit)
 		{
-			PlayState.noteskinPixelSprite = CustomNoteHelpers.Skin.generatePixelSprite(FlxG.save.data.noteskin);
-			PlayState.noteskinPixelSpriteEnds = CustomNoteHelpers.Skin.generatePixelSprite(FlxG.save.data.noteskin, true);
-		}
-		else
-		{
-			PlayState.noteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.noteskin);
-			PlayState.cpuNoteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.cpuNoteskin);
+			case 'pixel':
+				PlayState.noteskinPixelSprite = CustomNoteHelpers.Skin.generatePixelSprite(FlxG.save.data.noteskin);
+				PlayState.noteskinPixelSpriteEnds = CustomNoteHelpers.Skin.generatePixelSprite(FlxG.save.data.noteskin, true);
+			case 'default':
+				PlayState.noteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.noteskin);
+				PlayState.cpuNoteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.cpuNoteskin);
 		}
 
 		Stage = new Stage(freeplayStage);
@@ -117,7 +126,7 @@ class GameplayCustomizeState extends MusicBeatState
 		if (!Stage.doesExist)
 		{
 			Debug.logTrace('Stage Does Not Exist For ${Stage.curStage}. Loading Default Stage.');
-			Stage.loadStageData('tellylr');
+			Stage.loadStageData('stage');
 			Stage.initStageProperties();
 		}
 
@@ -149,10 +158,9 @@ class GameplayCustomizeState extends MusicBeatState
 		FlxG.camera.zoom = Stage.camZoom;
 		FlxG.camera.focusOn(camFollow.getPosition());
 
-		ui = new VBox();
+		ui = new Panel();
 		ui.padding = 5;
-		ui.backgroundColor = "darkslategray";
-		ui.text = "huh";
+		ui.text = "Gameplay Modules";
 		ui.width = 200;
 		ui.height = 100;
 		ui.draggable = true;
@@ -251,19 +259,12 @@ class GameplayCustomizeState extends MusicBeatState
 			pixelShitPart3 = 'week6';
 		}
 
-		sick = new FlxExtendedMouseSprite(0, 0, Paths.image(pixelShitPart1 + 'sick' + pixelShitPart2));
-		if (freeplayNoteStyle != 'pixel')
-		{
-			sick.setGraphicSize(Std.int(sick.width * 0.7));
-			sick.antialiasing = FlxG.save.data.antialiasing;
-		}
-		else
-		{
-			sick.antialiasing = false;
-			sick.setGraphicSize(Std.int(sick.width * CoolUtil.daPixelZoom * 0.7));
-		}
-		sick.scrollFactor.set();
+		sick = new FlxExtendedMouseSprite(0, 0, Paths.image('hud/$styleShit/sick'));
+		sick.setGraphicSize(Std.int(sick.width * PlayState.STYLE.scale * 0.7));
 		sick.updateHitbox();
+		sick.scrollFactor.set();
+		if (PlayState.STYLE.antialiasing == false)
+			sick.antialiasing = false;
 		sick.visible = FlxG.save.data.showRating;
 		sick.enableMouseDrag();
 		add(sick);

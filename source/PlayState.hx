@@ -1,5 +1,7 @@
 package;
 
+import Song.StyleData;
+import Song.Style;
 import lime.utils.Assets as LimeAssets;
 import flixel.group.FlxSpriteGroup;
 import shader.Shaders;
@@ -108,6 +110,9 @@ class PlayState extends MusicBeatState
 	// I shit my pants
 	// Song Data. Very Useful Uses Like SONG.songId Or Some Shit.
 	public static var SONG:SongData;
+
+	// Style Data. Like Pixel Or Default Or Something. Controls The UI Basically.
+	public static var STYLE:StyleData;
 
 	// Better To Use SONG.songId But Works Too Ig.
 	private var curSong:String = "";
@@ -372,8 +377,6 @@ class PlayState extends MusicBeatState
 	// Dialogue For Week 6 And Whatnot.
 	public var dialogue:Array<String> = [];
 
-	// Used For Alt Animations (Up-Alt, etc.)
-	var altSuffix:String = "";
 	// I'm Not Sure Why This Exists.
 	var wiggleShit:WiggleEffect = new WiggleEffect();
 
@@ -445,11 +448,20 @@ class PlayState extends MusicBeatState
 		// Change The Application Title To The Engine Version, Song Name, And Difficulty.
 		Application.current.window.title = '${MainMenuState.kecVer}: ${SONG.songName} - [${CoolUtil.difficultyArray[storyDifficulty]}]';
 
+		STYLE = Style.loadJSONFile(SONG.style.toLowerCase());
+
+		if (STYLE == null)
+		{
+			STYLE = Style.loadJSONFile('default');
+			Debug.logTrace("No Style Found. Loading Default.");
+		}
+		STYLE.style = SONG.style;
+
 		// grab variables here too or else its gonna break stuff later on
 		GameplayCustomizeState.freeplayBf = SONG.player1;
 		GameplayCustomizeState.freeplayDad = SONG.player2;
 		GameplayCustomizeState.freeplayGf = SONG.gfVersion;
-		GameplayCustomizeState.freeplayNoteStyle = SONG.noteStyle;
+		GameplayCustomizeState.freeplayNoteStyle = SONG.style.toLowerCase();
 		GameplayCustomizeState.freeplayStage = SONG.stage;
 		GameplayCustomizeState.freeplaySong = SONG.songId;
 		GameplayCustomizeState.freeplayWeek = storyWeek;
@@ -967,15 +979,14 @@ class PlayState extends MusicBeatState
 		playerStrums = new FlxTypedGroup<StaticArrow>();
 		cpuStrums = new FlxTypedGroup<StaticArrow>();
 
-		if (SONG.noteStyle == 'pixel')
+		switch (STYLE.style.toLowerCase())
 		{
-			noteskinPixelSprite = CustomNoteHelpers.Skin.generatePixelSprite(FlxG.save.data.noteskin);
-			noteskinPixelSpriteEnds = CustomNoteHelpers.Skin.generatePixelSprite(FlxG.save.data.noteskin, true);
-		}
-		else
-		{
-			noteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.noteskin);
-			cpuNoteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.cpuNoteskin);
+			case 'pixel':
+				noteskinPixelSprite = CustomNoteHelpers.Skin.generatePixelSprite(FlxG.save.data.noteskin);
+				noteskinPixelSpriteEnds = CustomNoteHelpers.Skin.generatePixelSprite(FlxG.save.data.noteskin, true);
+			case 'default':
+				noteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.noteskin);
+				cpuNoteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.cpuNoteskin);
 		}
 
 		notesplashSprite = CustomNoteHelpers.Splash.generateNotesplashSprite(FlxG.save.data.notesplash, '');
@@ -1063,7 +1074,12 @@ class PlayState extends MusicBeatState
 
 		createBar();
 
-		RatingWindow.createRatings('');
+		var ratingStyle = "Default";
+
+		if (SONG.style != null)
+			ratingStyle = SONG.style;
+
+		RatingWindow.createRatings(ratingStyle);
 
 		judgementCounter = new FlxText(20, 0, 0, "", 20);
 		judgementCounter.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -1242,9 +1258,11 @@ class PlayState extends MusicBeatState
 			});
 		}
 
-		precacheThing('missnote1', 'sound', 'shared');
-		precacheThing('missnote2', 'sound', 'shared');
-		precacheThing('missnote3', 'sound', 'shared');
+		var styleShit:String = (STYLE.style == null ? 'default' : STYLE.style).toLowerCase();
+		for (i in 1...3)
+		{
+			precacheThing('styles/$styleShit/missnote$i', 'sound', 'shared');
+		}
 
 		// This allow arrow key to be detected by flixel. See https://github.com/HaxeFlixel/flixel/issues/2190
 		FlxG.keys.preventDefaultKeys = [];
@@ -1928,25 +1946,13 @@ class PlayState extends MusicBeatState
 						d.dance();
 				}
 			}
-
-			var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
-			introAssets.set('default', ['ready', "set", "go"]);
-			introAssets.set('pixel', ['weeb/pixelUI/ready-pixel', 'weeb/pixelUI/set-pixel', 'weeb/pixelUI/date-pixel']);
-
-			var introAlts:Array<String> = introAssets.get('default');
-			var week6Bullshit:String = 'shared';
-
-			if (SONG.noteStyle == 'pixel')
-			{
-				introAlts = introAssets.get('pixel');
-				altSuffix = '-pixel';
-				week6Bullshit = 'week6';
-			}
+			var styleShit:String = (STYLE.style == null ? 'default' : STYLE.style).toLowerCase();
+			var introAlts = ['hud/$styleShit/ready', 'hud/$styleShit/set', 'hud/$styleShit/go'];
 
 			switch (swagCounter)
 			{
 				case 0:
-					FlxG.sound.play(Paths.sound('intro3' + altSuffix), 0.6);
+					FlxG.sound.play(Paths.sound('styles/$styleShit/intro3'), 0.6);
 				case 1:
 					var ready:FlxSprite = new FlxSprite().loadGraphic(Paths.image(introAlts[0]));
 					ready.scrollFactor.set();
@@ -1954,11 +1960,10 @@ class PlayState extends MusicBeatState
 					ready.cameras = [camHUD];
 					ready.updateHitbox();
 
-					if (SONG.noteStyle == 'pixel')
-					{
-						ready.setGraphicSize(Std.int(ready.width * CoolUtil.daPixelZoom));
+					if (STYLE.antialiasing == false)
 						ready.antialiasing = false;
-					}
+
+					ready.setGraphicSize(Std.int(ready.width * STYLE.scale));
 
 					ready.screenCenter();
 					add(ready);
@@ -1969,18 +1974,16 @@ class PlayState extends MusicBeatState
 							ready.destroy();
 						}
 					});
-					FlxG.sound.play(Paths.sound('intro2' + altSuffix), 0.6);
+					FlxG.sound.play(Paths.sound('styles/$styleShit/intro2'), 0.6);
 				case 2:
 					var set:FlxSprite = new FlxSprite().loadGraphic(Paths.image(introAlts[1]));
 					set.scrollFactor.set();
 					set.scale.set(0.7, 0.7);
-					if (SONG.noteStyle == 'pixel')
-					{
-						set.setGraphicSize(Std.int(set.width * CoolUtil.daPixelZoom));
-						set.antialiasing = false;
-					}
+					set.setGraphicSize(Std.int(set.width * STYLE.scale));
 					set.cameras = [camHUD];
 					set.screenCenter();
+					if (STYLE.antialiasing == false)
+						set.antialiasing = false;
 					add(set);
 					createTween(set, {alpha: 0}, Conductor.crochet / 1000, {
 						ease: FlxEase.cubeInOut,
@@ -1989,17 +1992,15 @@ class PlayState extends MusicBeatState
 							set.destroy();
 						}
 					});
-					FlxG.sound.play(Paths.sound('intro1' + altSuffix), 0.6);
+					FlxG.sound.play(Paths.sound('styles/$styleShit/intro1'), 0.6);
 				case 3:
 					var go:FlxSprite = new FlxSprite().loadGraphic(Paths.image(introAlts[2]));
 					go.scrollFactor.set();
 					go.scale.set(0.7, 0.7);
 					go.cameras = [camHUD];
-					if (SONG.noteStyle == 'pixel')
-					{
-						go.setGraphicSize(Std.int(go.width * CoolUtil.daPixelZoom));
+					go.setGraphicSize(Std.int(go.width * STYLE.scale));
+					if (STYLE.antialiasing == false)
 						go.antialiasing = false;
-					}
 
 					go.updateHitbox();
 
@@ -2012,7 +2013,7 @@ class PlayState extends MusicBeatState
 							go.destroy();
 						}
 					});
-					FlxG.sound.play(Paths.sound('introGo' + altSuffix), 0.6);
+					FlxG.sound.play(Paths.sound('styles/$styleShit/introGo'), 0.6);
 			}
 			#if FEATURE_HSCRIPT
 			scripts.executeAllFunc("countTick", [swagCounter]);
@@ -2182,8 +2183,6 @@ class PlayState extends MusicBeatState
 
 			if (songStarted && !inCutscene && !paused)
 				keyShit();
-
-			// Conductor.songPosition = Conductor.rawPosition;
 		}
 	}
 
@@ -2263,7 +2262,8 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.save.data.missSounds)
 		{
-			FlxG.sound.play(Paths.soundRandom('missnote' + altSuffix, 1, 3), FlxG.random.float(0.1, 0.2));
+			var styleShit:String = (STYLE.style == null ? 'default' : STYLE.style).toLowerCase();
+			FlxG.sound.play(Paths.soundRandom('styles/$styleShit/missnote', 1, 3), FlxG.random.float(0.1, 0.2));
 		}
 		boyfriend.playAnim('sing' + dataSuffix[direction] + 'miss', true);
 		if (!SONG.splitVoiceTracks)
@@ -2843,6 +2843,9 @@ class PlayState extends MusicBeatState
 
 			if (!startTimer.finished)
 				startTimer.active = true;
+
+			if (!PlayStateChangeables.botPlay)
+				keyShit();
 			paused = false;
 
 			#if FEATURE_DISCORD
@@ -3014,7 +3017,7 @@ class PlayState extends MusicBeatState
 			while (unspawnNotes.length > 0 && unspawnNotes[0].strumTime - Conductor.songPosition < time)
 			{
 				var dunceNote:Note = unspawnNotes[0];
-				
+
 				notes.insert(0, dunceNote);
 
 				#if FEATURE_LUAMODCHART
@@ -3076,8 +3079,6 @@ class PlayState extends MusicBeatState
 		if ((cutscene != null && cutscene.isPlaying && inCutscene) && FlxG.keys.justPressed.ANY)
 			cutscene.onEndReached.dispatch();
 		#end
-
-		super.update(elapsed);
 
 		if (FlxG.save.data.background)
 			Stage.update(elapsed);
@@ -3141,7 +3142,7 @@ class PlayState extends MusicBeatState
 							var char:Character = dad;
 							switch (i.value.toLowerCase())
 							{
-								case 'dad' | 'opponent':	
+								case 'dad' | 'opponent':
 									char = dad;
 								case 'bf' | 'boyfriend' | 'player':
 									char = boyfriend;
@@ -3168,9 +3169,9 @@ class PlayState extends MusicBeatState
 								case 'game' | 'main' | 'camgame':
 									zoomForTweens += i.value2;
 								default:
-									zoomForTweens += i.value2;	
+									zoomForTweens += i.value2;
 							}
-						}	
+						}
 				}
 			}
 		}
@@ -3810,9 +3811,6 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (!inCutscene && songStarted)
-			keyShit();
-
 		if (generatedMusic && !(inCutscene || inCinematic))
 		{
 			var holdArray:Array<Bool> = [controls.LEFT, controls.DOWN, controls.UP, controls.RIGHT];
@@ -3866,7 +3864,7 @@ class PlayState extends MusicBeatState
 				else
 					daNote.x = strumX + Math.cos(angleDir) * daNote.distance;
 
-				if (SONG.noteStyle == 'pixel' && daNote.isSustainNote)
+				if (SONG.style.toLowerCase() == 'pixel' && daNote.isSustainNote)
 					daNote.x -= 5;
 
 				daNote.y = strumY + Math.sin(angleDir) * daNote.distance;
@@ -4043,6 +4041,8 @@ class PlayState extends MusicBeatState
 		for (i in shaderUpdates)
 			i(elapsed);
 
+		super.update(elapsed);
+
 		#if FEATURE_LUAMODCHART
 		if (executeModchart && luaModchart != null)
 		{
@@ -4173,7 +4173,7 @@ class PlayState extends MusicBeatState
 			{
 				paused = true;
 				inst.stop();
-				
+
 				if (!SONG.splitVoiceTracks)
 					vocals.stop();
 				else
@@ -4194,7 +4194,7 @@ class PlayState extends MusicBeatState
 				{
 					Highscore.saveWeekScore(storyWeek, campaignScore, storyDifficulty, 1);
 				}
-				
+
 				if (FlxG.save.data.scoreScreen)
 				{
 					persistentUpdate = false;
@@ -4346,6 +4346,7 @@ class PlayState extends MusicBeatState
 	private function popUpScore(daNote:Note):Void
 	{
 		var noteDiff:Float = (daNote.strumTime - Conductor.songPosition);
+		var styleShit:String = (STYLE.style == null ? 'default' : STYLE.style).toLowerCase();
 		var noteDiffAbs = Math.abs(noteDiff);
 		if (!PlayStateChangeables.botPlay)
 		{
@@ -4438,36 +4439,17 @@ class PlayState extends MusicBeatState
 
 		songScore += Math.round(score);
 
-		var pixelShitPart1:String = "";
-		var pixelShitPart2:String = '';
-		var pixelShitPart3:String = 'shared';
-		var pixelShitPart4:String = null;
-
-		if (SONG.noteStyle == 'pixel')
-		{
-			pixelShitPart1 = 'weeb/pixelUI/';
-			pixelShitPart2 = '-pixel';
-			pixelShitPart3 = 'week6';
-			pixelShitPart4 = 'week6';
-		}
-
 		if (lastRating != daRating.name.toLowerCase())
 		{
-			rating.loadGraphic(Paths.image(pixelShitPart1 + daRating.name.toLowerCase() + pixelShitPart2));
+			rating.loadGraphic(Paths.image('hud/$styleShit/' + daRating.name.toLowerCase()));
+			rating.setGraphicSize(Std.int(rating.width * STYLE.scale * 0.7));
 
-			if (SONG.noteStyle != 'pixel')
-			{
-				rating.setGraphicSize(Std.int(rating.width * 0.7));
-				rating.antialiasing = FlxG.save.data.antialiasing;
-			}
-			else
-			{
-				rating.setGraphicSize(Std.int(rating.width * CoolUtil.daPixelZoom * 0.7));
+			if (STYLE.antialiasing == false)
 				rating.antialiasing = false;
-			}
 		}
 
 		lastRating = daRating.name.toLowerCase();
+		rating.updateHitbox();
 
 		rating.x = FlxG.save.data.changedHitX;
 		rating.y = FlxG.save.data.changedHitY;
@@ -4494,25 +4476,20 @@ class PlayState extends MusicBeatState
 		currentTimingShown.text = msTiming + "ms";
 		currentTimingShown.size = 20;
 
-		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2));
+		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image('hud/$styleShit/combo'));
 		comboSpr.screenCenter();
-		comboSpr.x = rating.x;
-		comboSpr.y = rating.y + 100;
+		currentTimingShown.x = rating.x + 150;
+		currentTimingShown.y = rating.y + 85;
 		comboSpr.acceleration.y = 600;
 		comboSpr.velocity.y -= 150;
 		comboSpr.moves = true;
 
 		currentTimingShown.screenCenter();
-		if (!PlayStateChangeables.middleScroll)
-			currentTimingShown.x = comboSpr.x + 100;
-		else
-		{
-			currentTimingShown.x = rating.x + 100;
-			currentTimingShown.alignment = FlxTextAlign.RIGHT;
-		}
+		currentTimingShown.x = rating.x + 100;
+		currentTimingShown.alignment = FlxTextAlign.RIGHT;
 		currentTimingShown.y = rating.y + 100;
 
-		if (SONG.noteStyle == 'pixel')
+		if (STYLE.style == 'Pixel')
 		{
 			currentTimingShown.x -= 15;
 			currentTimingShown.y -= 15;
@@ -4563,25 +4540,19 @@ class PlayState extends MusicBeatState
 		{
 			for (i in seperatedScore)
 			{
-				var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2));
-				numScore.screenCenter();
+				var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image('hud/$styleShit/' + 'num' + Std.int(i)));
+				numScore.setGraphicSize(Std.int(numScore.width * STYLE.scale));
 				numScore.cameras = [camHUD];
 
-				numScore.x = rating.x + (43 * daLoop) - (16.67 * seperatedScore.length);
-				numScore.y = rating.y + 100;
-
-				if (SONG.noteStyle != 'pixel')
-				{
-					numScore.antialiasing = FlxG.save.data.antialiasing;
-					numScore.setGraphicSize(Std.int(numScore.width * 0.5));
-				}
-				else
-				{
-					numScore.setGraphicSize(Std.int(numScore.width * CoolUtil.daPixelZoom));
-					numScore.antialiasing = false;
-				}
+				numScore.setGraphicSize(Std.int(numScore.width * STYLE.scale));
 
 				numScore.updateHitbox();
+
+				numScore.x = rating.x + (43 * daLoop) - ((numScore.width * seperatedScore.length) / 2) + 25;
+				numScore.y = rating.y + 100;
+
+				if (STYLE.antialiasing == false)
+					numScore.antialiasing = false;
 
 				numScore.acceleration.y = FlxG.random.int(200, 300);
 				numScore.velocity.y -= FlxG.random.int(140, 160);
@@ -4748,7 +4719,8 @@ class PlayState extends MusicBeatState
 
 			if (FlxG.save.data.missSounds)
 			{
-				FlxG.sound.play(Paths.soundRandom('missnote' + altSuffix, 1, 3), FlxG.random.float(0.1, 0.2));
+				var styleShit:String = (STYLE.style == null ? 'default' : STYLE.style).toLowerCase();
+				FlxG.sound.play(Paths.soundRandom('styles/$styleShit/missnote', 1, 3), FlxG.random.float(0.1, 0.2));
 			}
 
 			if (!PlayStateChangeables.opponentMode)
@@ -4767,7 +4739,7 @@ class PlayState extends MusicBeatState
 			health -= (daNote.missHealth * PlayStateChangeables.healthLoss);
 			if (!SONG.splitVoiceTracks)
 				vocals.volume = 0;
-			else	
+			else
 				vocalsPlayer.volume = 0;
 			updateAccuracy();
 			updateScoreText();
@@ -5949,26 +5921,14 @@ class PlayState extends MusicBeatState
 	// Seems like a good pull request. Credits: Raltyro.
 	private function cachePopUpScore()
 	{
-		var pixelShitPart1:String = '';
-		var pixelShitPart2:String = '';
-		var pixelShitPart3:String = 'shared';
-		var pixelShitPart4:String = null;
+		var styleShit:String = (STYLE.style == null ? 'default' : STYLE.style).toLowerCase();
 
-		if (SONG.noteStyle == 'pixel')
-		{
-			pixelShitPart1 = 'weeb/pixelUI/';
-			pixelShitPart2 = '-pixel';
-			pixelShitPart3 = 'week6';
-			pixelShitPart4 = 'week6';
-		}
-
-		var things:Array<String> = ['marv', 'sick', 'good', 'bad', 'shit'];
-		for (precaching in things)
-			Paths.image(pixelShitPart1 + precaching + pixelShitPart2);
+		for (precaching in Ratings.timingWindows)
+			Paths.image('hud/$styleShit/${precaching.name.toLowerCase()}', 'shared');
 
 		for (i in 0...10)
 		{
-			Paths.image(pixelShitPart1 + 'num' + i + pixelShitPart2);
+			Paths.image('hud/$styleShit/num$i', 'shared');
 		}
 	}
 
@@ -5976,22 +5936,16 @@ class PlayState extends MusicBeatState
 	{
 		var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
 		introAssets.set('default', ['ready', 'set', 'go']);
-		introAssets.set('pixel', ['weeb/pixelUI/ready-pixel', 'weeb/pixelUI/set-pixel', 'weeb/pixelUI/date-pixel']);
 
-		var week6Bullshit = 'shared';
-		var introAlts:Array<String> = introAssets.get('default');
-		if (SONG.noteStyle == 'pixel')
-		{
-			introAlts = introAssets.get('pixel');
-			week6Bullshit = 'week6';
-		}
+		var styleShit:String = (STYLE.style == null ? 'default' : STYLE.style).toLowerCase();
+		var introAlts = ['hud/$styleShit/ready', 'hud/$styleShit/set', 'hud/$styleShit/go'];
 
 		for (asset in introAlts)
 			Paths.image(asset);
 
 		var things:Array<String> = ['intro3', 'intro2', 'intro1', 'introGo'];
 		for (precaching in things)
-			Paths.sound(precaching + altSuffix);
+			Paths.sound('styles/$styleShit/$precaching');
 	}
 
 	public static function getFlxEaseByString(?ease:String = '')

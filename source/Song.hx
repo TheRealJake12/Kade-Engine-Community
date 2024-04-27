@@ -23,6 +23,33 @@ class Event
 	}
 }
 
+typedef StyleData =
+{
+	var style:String;
+	var scale:Float;
+	var antialiasing:Bool;
+	var noteskinP:String;
+	var noteskinE:String;
+	var notesplash:String;
+	var hudStyle:String;
+}
+
+class Style
+{
+	public static function loadJSONFile(style:String):StyleData
+	{
+		var rawJson = Paths.loadJSON('styles/$style');
+		return parseWeek(rawJson);
+	}
+
+	public static function parseWeek(json:Dynamic):StyleData
+	{
+		var styleData:StyleData = cast json;
+
+		return styleData;
+	}
+}
+
 typedef SongData =
 {
 	/**
@@ -52,7 +79,8 @@ typedef SongData =
 	var player1:String;
 	var player2:String;
 	var gfVersion:String;
-	var noteStyle:String;
+	var ?noteStyle:String;
+	var style:String;
 	var stage:String;
 	var ?validScore:Bool;
 	var ?offset:Int;
@@ -192,10 +220,15 @@ class Song
 				else
 					song.songName = song.songId;
 			}
+
+			if (song.noteStyle == 'pixel')
+			{
+				song.style = "Pixel";
+			}
 		}
 
-		if (song.noteStyle == null)
-			song.noteStyle = "normal";
+		if (song.style == null)
+			song.style = "Default";
 
 		if (song.gfVersion == null)
 			song.gfVersion = "gf";

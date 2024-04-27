@@ -183,7 +183,7 @@ class RatingWindow
 	{
 		Ratings.timingWindows = [];
 
-		switch (judgeStyle)
+		switch (judgeStyle.toLowerCase())
 		{
 			default:
 				var ratings:Array<String> = ['Shit', 'Bad', 'Good', 'Sick', 'Marv'];
@@ -212,6 +212,7 @@ class RatingWindow
 					rClass.pluralSuffix = suffixes[i];
 					Ratings.timingWindows.push(rClass);
 				}
+				// its bad to have defaults for shit like this. esp for modcore compat
 		}
 
 		if (Ratings.timingWindows.length == 0)

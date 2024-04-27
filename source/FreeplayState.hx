@@ -2,6 +2,7 @@ package;
 
 import openfl.utils.Future;
 import CoolUtil.CoolText;
+import Song.Style;
 import openfl.media.Sound;
 import flixel.effects.FlxFlicker;
 import flixel.sound.FlxSound;
@@ -916,6 +917,7 @@ class FreeplayState extends MusicBeatState
 		}
 
 		PlayState.SONG = currentSongData;
+		PlayState.STYLE = Style.loadJSONFile(PlayState.SONG.style.toLowerCase());
 		PlayState.storyDifficulty = CoolUtil.difficultyArray.indexOf(instance.songs[curSelected].diffs[difficulty]);
 		PlayState.storyWeek = instance.songs[curSelected].week;
 		PlayState.isStoryMode = false;

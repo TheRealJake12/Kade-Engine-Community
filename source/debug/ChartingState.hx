@@ -214,7 +214,9 @@ class ChartingState extends MusicBeatState
 	public var selectInitialY:Float = 0;
 
 	public var infoText:CoolUtil.CoolText;
+
 	var sustainQuant:Float = 1.0;
+
 	public var infoBG:FlxSprite;
 	public var notetypetext:CoolUtil.CoolText;
 	public var helpText:CoolUtil.CoolText;
@@ -281,7 +283,7 @@ class ChartingState extends MusicBeatState
 				player1: 'bf',
 				player2: 'dad',
 				gfVersion: 'gf',
-				noteStyle: 'normal',
+				style: 'Default',
 				stage: 'stage',
 				speed: 1,
 				validScore: true
@@ -324,7 +326,7 @@ class ChartingState extends MusicBeatState
 		gfs = CoolUtil.coolTextFile(Paths.txt('data/gfVersionList'));
 		stages = CoolUtil.coolTextFile(Paths.txt('data/stageList'));
 		noteTypes = CoolUtil.coolTextFile(Paths.txt('data/noteTypeList'));
-		noteStyles = CoolUtil.coolTextFile(Paths.txt('data/noteStyleList'));
+		noteStyles = CoolUtil.coolTextFile(Paths.txt('data/songStyleList'));
 		events = CoolUtil.coolTextFile(Paths.txt('data/eventList'));
 
 		player = new Character(0, 0, SONG.player1, true);
@@ -366,8 +368,9 @@ class ChartingState extends MusicBeatState
 		helpText.text = "Help:" + "\n" + "CTRL-Left/Right : Change playback speed" + "\n" + "Ctrl+Drag Click : Select notes" + "\n" + "Ctrl+C : Copy notes"
 			+ "\n" + "Ctrl+V : Paste notes" + "\n" + "Ctrl+Z : Undo" + "\n" + "Ctrl+BACKSPACE : Delete Selected Notes" + "\n"
 			+ "Alt+Left/Right : Change Quant" + "\n" + "Shift : Disable/Enable Quant" + "\n" + "Click : Place notes" + "\n" + "Up/Down : Move selected notes"
-			+ "\n" + "Space : Play Song" + "\n" + "W-S : Go To Previous / Next Section" + "\n" + "Q-E : Change Sustain Amount" + "\n" + "C-V : Change Sustain Change Quant" + "\n" + "Enter : Load Song Into PlayState" + "\n"
-			+ "Z/X Change Notetype." + "\n" + "Press F1 to show/hide help text.";
+			+ "\n" + "Space : Play Song" + "\n" + "W-S : Go To Previous / Next Section" + "\n" + "Q-E : Change Sustain Amount" + "\n"
+			+ "C-V : Change Sustain Change Quant" + "\n" + "Enter : Load Song Into PlayState" + "\n" + "Z/X Change Notetype." + "\n"
+			+ "Press F1 to show/hide help text.";
 		helpText.updateHitbox();
 		helpText.scrollFactor.set();
 		helpText.visible = FlxG.save.data.showHelp;
@@ -1289,7 +1292,6 @@ class ChartingState extends MusicBeatState
 
 		var targetY = getYfromStrum(inst.length);
 
-
 		for (awfgaw in 0...Math.round(targetY / 600)) // grids/steps
 		{
 			var renderer = new SectionRender(sectionPos, 600 * awfgaw, 50);
@@ -1306,7 +1308,7 @@ class ChartingState extends MusicBeatState
 	private function addNote(?n:Note):Void
 	{
 		destroyBoxes();
-		
+
 		var strum = getStrumTime(dummyArrow.y) / 0.5;
 
 		var section = getSectionByTime(strum);
@@ -1371,7 +1373,7 @@ class ChartingState extends MusicBeatState
 
 			curSelectedNoteObject.charterSelected = true;
 			note.y = Math.floor(getYfromStrum(noteStrum) * size);
-			curRenderedNotes.add(note);	
+			curRenderedNotes.add(note);
 			selectNote(note);
 		}
 		else
@@ -1390,7 +1392,7 @@ class ChartingState extends MusicBeatState
 
 			curSelectedNoteObject.charterSelected = true;
 			note.y = Math.floor(getYfromStrum(noteStrum) * size);
-			curRenderedNotes.add(note);	
+			curRenderedNotes.add(note);
 			selectNote(note);
 		}
 		var thingy = section.sectionNotes[section.sectionNotes.length - 1];
@@ -1438,7 +1440,7 @@ class ChartingState extends MusicBeatState
 		var section = getSectionByTime(note.strumTime);
 
 		var found = false;
-		
+
 		if (section != null)
 		{
 			for (i in section.sectionNotes)
@@ -1966,7 +1968,7 @@ class ChartingState extends MusicBeatState
 		SONG.player2 = opponentDrop.text;
 		SONG.gfVersion = gfDrop.text;
 		SONG.stage = stageDrop.text;
-		SONG.noteStyle = noteStyleDrop.text;
+		SONG.style = noteStyleDrop.text;
 
 		SONG.songId = song.text;
 		SONG.audioFile = audioFileName.text;
@@ -2017,7 +2019,7 @@ class ChartingState extends MusicBeatState
 		stageLabel.verticalAlign = "center";
 
 		noteStyleDrop = new DropDown();
-		noteStyleDrop.text = SONG.noteStyle;
+		noteStyleDrop.text = SONG.style;
 		noteStyleDrop.width = 100;
 
 		var nsLabel = new Label();
@@ -2108,7 +2110,7 @@ class ChartingState extends MusicBeatState
 		var typeLabel = new Label();
 		typeLabel.text = "Note Type";
 		typeLabel.verticalAlign = "center";
-		
+
 		box2.addComponent(strumTime);
 		box2.addComponent(timeLabel);
 		box2.addComponent(noteShitDrop);

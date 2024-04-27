@@ -354,7 +354,7 @@ class Note extends FlxSprite
 			skinPostfix = '';
 
 		if (PlayState.SONG != null)
-			noteTypeCheck = PlayState.SONG.noteStyle;
+			noteTypeCheck = PlayState.STYLE.style.toLowerCase();
 		else
 			noteTypeCheck = 'normal';
 

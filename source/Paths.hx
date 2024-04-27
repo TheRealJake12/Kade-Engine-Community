@@ -568,7 +568,7 @@ class Paths
 			FlxG.sound.list.clear();
 
 			// this totally isn't copied from polymod/backends/LimeBackend.hx trust me
-			
+
 			var lime_cache:lime.utils.AssetCache = cast lime.utils.Assets.cache;
 
 			for (key in lime_cache.image.keys())

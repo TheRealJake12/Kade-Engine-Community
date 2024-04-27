@@ -234,7 +234,7 @@ class TitleState extends MusicBeatState
 							if (!MainMenuState.kecVer.contains("PRE-RELEASE"))
 								Debug.logTrace('The Latest Github Version Is ' + returnedData[0] + ' While Your Version Is ' + MainMenuState.kecVer);
 							else
-								Debug.logTrace('You Are On A Pre-Release Build. Report Any Bugs You Encounter. Version : ${MainMenuState.kecVer}');	
+								Debug.logTrace('You Are On A Pre-Release Build. Report Any Bugs You Encounter. Version : ${MainMenuState.kecVer}');
 							OutdatedSubState.needVer = returnedData[0];
 							OutdatedSubState.currChanges = returnedData[1];
 							MusicBeatState.switchState(new OutdatedSubState());

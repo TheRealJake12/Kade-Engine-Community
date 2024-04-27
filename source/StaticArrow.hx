@@ -83,7 +83,7 @@ class StaticArrow extends FlxSprite
 			lastAnim = animation.curAnim.name;
 
 		if (PlayState.SONG != null)
-			noteTypeCheck = PlayState.SONG.noteStyle;
+			noteTypeCheck = PlayState.STYLE.style.toLowerCase();
 		switch (noteTypeCheck)
 		{
 			case 'pixel':
