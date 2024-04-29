@@ -24,6 +24,9 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 import lime.app.Application;
+#if VIDEOS
+import hxvlc.util.Handle;
+#end
 #if desktop
 // crash handler stuff
 import openfl.events.UncaughtErrorEvent;
@@ -137,6 +140,8 @@ class Main extends Sprite
 		FlxG.autoPause = false;
 		FlxG.mouse.visible = false;
 		#end
+
+		Handle.initAsync();
 
 		// Finish up loading debug tools.
 		Debug.onGameStart();

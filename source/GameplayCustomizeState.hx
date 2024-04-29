@@ -60,7 +60,7 @@ class GameplayCustomizeState extends MusicBeatState
 	public static var freeplayBf:String = 'bf';
 	public static var freeplayDad:String = 'dad';
 	public static var freeplayGf:String = 'gf';
-	public static var freeplayNoteStyle:String = 'normal';
+	public static var freeplayNoteStyle:String = 'default';
 	public static var freeplayStage:String = 'stage';
 	public static var freeplaySong:String = 'bopeebo';
 	public static var freeplayWeek:Int = 1;
@@ -250,13 +250,6 @@ class GameplayCustomizeState extends MusicBeatState
 					for (bg in array)
 						add(bg);
 			}
-		}
-
-		if (freeplayNoteStyle == 'pixel')
-		{
-			pixelShitPart1 = 'weeb/pixelUI/';
-			pixelShitPart2 = '-pixel';
-			pixelShitPart3 = 'week6';
 		}
 
 		sick = new FlxExtendedMouseSprite(0, 0, Paths.image('hud/$styleShit/sick'));

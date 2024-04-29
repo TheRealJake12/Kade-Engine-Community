@@ -4203,7 +4203,7 @@ class PlayState extends MusicBeatState
 				}
 				else
 				{
-					GameplayCustomizeState.freeplayNoteStyle = 'normal';
+					GameplayCustomizeState.freeplayNoteStyle = 'default';
 					GameplayCustomizeState.freeplayWeek = 1;
 					FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
 					MainMenuState.freakyPlaying = true;
@@ -6293,45 +6293,39 @@ class PlayState extends MusicBeatState
 	function playCutscene(name:String, ?atend:Bool)
 	{
 		#if VIDEOS
-		Handle.initAsync([], function(success:Bool):Void
+		inCutscene = true;
+		inCinematic = true;
+		var diff:String = CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[storyDifficulty]);
+		cutscene = new VideoHandler();
+		cutscene.load(Paths.video(name));
+		inst.stop();
+		cutscene.onEndReached.add(function()
 		{
-			if (!success)
-				return;
-
-			inCutscene = true;
-			inCinematic = true;
-			var diff:String = CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[storyDifficulty]);
-			cutscene = new VideoHandler();
-			cutscene.load(Paths.video(name));
-			inst.stop();
-			cutscene.onEndReached.add(function()
+			inCutscene = false;
+			if (atend == true)
 			{
-				inCutscene = false;
-				if (atend == true)
-				{
-					if (storyPlaylist.length <= 0)
-						LoadingState.loadAndSwitchState(new StoryMenuState());
-					else
-					{
-						SONG = Song.loadFromJson(storyPlaylist[0].toLowerCase(), diff);
-						LoadingState.loadAndSwitchState(new PlayState());
-					}
-				}
+				if (storyPlaylist.length <= 0)
+					LoadingState.loadAndSwitchState(new StoryMenuState());
 				else
 				{
-					createTimer(0.5, function(timer)
-					{
-						startCountdown();
-					});
+					SONG = Song.loadFromJson(storyPlaylist[0].toLowerCase(), diff);
+					LoadingState.loadAndSwitchState(new PlayState());
 				}
-
-				cutscene.dispose();
-			});
-
-			new FlxTimer().start(0.001, function(tmr:FlxTimer):Void
+			}
+			else
 			{
-				cutscene.play();
-			});
+				createTimer(0.5, function(timer)
+				{
+					startCountdown();
+				});
+			}
+
+			cutscene.dispose();
+		});
+
+		new FlxTimer().start(0.001, function(tmr:FlxTimer):Void
+		{
+			cutscene.play();
 		});
 		#else
 		FlxG.log.warn("Platform Not Supported.");

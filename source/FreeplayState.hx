@@ -879,7 +879,6 @@ class FreeplayState extends MusicBeatState
 		FlxFlicker.flicker(grpSongs.members[curSelected], 1, 0.05, false, false, function(flick:FlxFlicker)
 		{
 			loadSongInFreePlay(songs[curSelected].songName, curDifficulty, farding);
-			doUpdateText = true;
 		});
 
 		FlxFlicker.flicker(iconArray[curSelected], 1, 0.05, false, false);
@@ -938,6 +937,10 @@ class FreeplayState extends MusicBeatState
 
 		PlayState.songMultiplier = rate;
 		lastRate = rate;
+		
+		doUpdateText = true;
+		instance.updateTexts();
+		openMod = false;
 
 		if (isCharting)
 		{

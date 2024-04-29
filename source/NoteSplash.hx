@@ -82,7 +82,7 @@ class NoteSplash extends FlxSprite
 		var data:SplashData = cast rawJson;
 		var minFps = 24;
 		var maxFps = 26;
-		switch (PlayState.SONG.noteStyle)
+		switch (PlayState.STYLE.style)
 		{
 			case 'pixel':
 				minFps = 22;
@@ -104,7 +104,7 @@ class NoteSplash extends FlxSprite
 	function loadAnims(?noteType:String = '')
 	{
 		var data:SplashData = cast rawJson;
-		switch (PlayState.SONG.noteStyle)
+		switch (PlayState.STYLE.style)
 		{
 			case 'pixel':
 				frames = Paths.getSparrowAtlas('weeb/pixelUI/noteSplashes-pixels');

@@ -222,21 +222,18 @@ class CoolUtil
 		#if VIDEOS
 		if (FileSystem.exists(Paths.video(name)))
 		{
-			Handle.initAsync([], function(success:Bool):Void
+			if (!loadedVideos.contains(name))
 			{
-				if (!loadedVideos.contains(name))
-				{
-					var cache:VideoHandler = new VideoHandler();
-					cache.mute = true;
-					cache.load(Paths.video(name));
-					loadedVideos.push(name);
-					FlxG.log.add('Video file has been cached: ' + name);
-				}
-				else
-				{
-					FlxG.log.add('Video file has already been cached: ' + name);
-				}
-			});
+				var cache:VideoHandler = new VideoHandler();
+				cache.mute = true;
+				cache.load(Paths.video(name));
+				loadedVideos.push(name);
+				FlxG.log.add('Video file has been cached: ' + name);
+			}
+			else
+			{
+				FlxG.log.add('Video file has already been cached: ' + name);
+			}
 		}
 		else
 		{
