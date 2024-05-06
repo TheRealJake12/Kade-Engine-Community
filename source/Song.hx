@@ -272,6 +272,9 @@ class Song
 
 			var currentSeg = TimingStruct.getTimingAtBeat(currentBeat);
 
+			if (i.lengthInSteps == null)
+				i.lengthInSteps = 16;
+
 			if (currentSeg == null)
 				continue;
 
@@ -282,9 +285,6 @@ class Song
 				ba = i.bpm;
 				song.eventObjects.push(new Song.Event("FNF BPM Change " + index, beat, '${i.bpm}', "1", "BPM Change"));
 			}
-
-			if (i.lengthInSteps == null)
-				i.lengthInSteps = 16;
 
 			for (ii in i.sectionNotes)
 			{
@@ -353,16 +353,14 @@ class Song
 		return Song.conversionChecks(songData);
 	}
 
-	private static function newSection(song:SongData, lengthInSteps:Int = 16, mustHitSection:Bool = false, playerSec:Bool = true):SwagSection
+	private static function newSection(song:SongData, playerSec:Bool = true):SwagSection
 	{
 		var sec:SwagSection = {
-			lengthInSteps: lengthInSteps,
 			bpm: song.bpm,
 			changeBPM: false,
-			mustHitSection: mustHitSection,
 			playerSec: playerSec,
+			lengthInSteps: 16,
 			sectionNotes: [],
-			typeOfSection: 0,
 		};
 
 		return sec;

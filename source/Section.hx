@@ -6,7 +6,6 @@ typedef SwagSection =
 	var ?endTime:Null<Float>;
 	var sectionNotes:Array<Array<Dynamic>>;
 	var lengthInSteps:Null<Int>;
-	var ?typeOfSection:Int;
 	var ?mustHitSection:Bool;
 	var ?bpm:Float;
 	var ?changeBPM:Bool;

@@ -250,8 +250,6 @@ class ChartingState extends MusicBeatState
 		ui = new TabView();
 		ui.text = "huh";
 		ui.draggable = FlxG.save.data.moveEditor;
-		ui.x = FlxG.save.data.editorPos[0];
-		ui.y = FlxG.save.data.editorPos[1];
 		ui.height = 300;
 
 		#if FEATURE_DISCORD
@@ -486,6 +484,8 @@ class ChartingState extends MusicBeatState
 		add(helpText);
 
 		add(ui);
+		ui.x = 0;
+		ui.y = 420;
 
 		if (FlxG.save.data.autoSaving)
 			openfl.Lib.setInterval(autosaveSong, 5 * 60 * 1000); // <arubz> * 60 * 1000
@@ -1906,12 +1906,6 @@ class ChartingState extends MusicBeatState
 
 	private function saveLevel()
 	{
-		for (i in SONG.notes)
-		{
-			if (i.startTime > inst.length)
-				SONG.notes.remove(i);
-		}
-
 		SONG.chartVersion = Song.latestChart;
 
 		var json = {
@@ -3181,13 +3175,11 @@ class ChartingState extends MusicBeatState
 		var sec:SwagSection = {
 			startTime: daPos,
 			endTime: Math.POSITIVE_INFINITY,
-			lengthInSteps: lengthInSteps,
 			bpm: SONG.bpm,
 			changeBPM: false,
-			mustHitSection: mustHitSection,
+			lengthInSteps: 16,
 			playerSec: true,
 			sectionNotes: [],
-			typeOfSection: 0,
 		};
 
 		return sec;

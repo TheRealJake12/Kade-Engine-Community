@@ -493,12 +493,15 @@ class DiffOverview extends MusicBeatSubstate
 				var daNoteType:String = songNotes[5];
 				var daBeat = TimingStruct.getBeatFromTime(daStrumTime);
 
-				var gottaHitNote:Bool = section.mustHitSection;
+				var gottaHitNote:Bool = false;
 
-				if (songNotes[1] > 3 && !PlayStateChangeables.opponentMode)
-					gottaHitNote = !section.mustHitSection;
-				else if (songNotes[1] <= 3 && PlayStateChangeables.opponentMode)
-					gottaHitNote = !section.mustHitSection;
+				if (songNotes[1] > 3)
+					gottaHitNote = true;
+				else if (songNotes[1] <= 3)
+					gottaHitNote = false;
+
+				if (PlayStateChangeables.opponentMode)
+					gottaHitNote = !gottaHitNote;
 
 				var oldNote:Note;
 				if (unspawnNotes.length > 0)
