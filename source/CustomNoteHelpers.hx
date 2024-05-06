@@ -40,7 +40,14 @@ class Skin
 
 	public static function getNoteskinByID(id:Int)
 	{
-		return noteskinArray[id];
+		if (noteskinArray[id] != null)
+			return noteskinArray[id];
+		else
+		{
+			FlxG.save.data.noteskin = 0;
+			FlxG.save.data.cpuNoteskin = 0;
+			return noteskinArray[0];
+		}
 	}
 
 	static public function generateNoteskinSprite(id:Int)
@@ -84,7 +91,13 @@ class Splash
 
 	public static function getNotesplashByID(id:Int)
 	{
-		return notesplashArray[id];
+		if (notesplashArray[id] != null)
+			return notesplashArray[id];
+		else
+		{
+			FlxG.save.data.notesplash = 0;
+			return notesplashArray[0];
+		}
 	}
 
 	static public function generateNotesplashSprite(id:Int, ?type:String = '')
