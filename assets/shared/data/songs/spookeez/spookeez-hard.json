@@ -1,6 +1,6 @@
 {
  "song": {
-  "splitVoiceTracks": false,
+  "splitVoiceTracks": true,
   "songName": "Spookeez",
   "songId": "spookeez",
   "player1": "bf",

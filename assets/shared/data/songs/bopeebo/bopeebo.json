@@ -1,6 +1,6 @@
 {
  "song": {
-  "splitVoiceTracks": false,
+  "splitVoiceTracks": true,
   "songName": "Bopeebo",
   "songId": "bopeebo",
   "player1": "bf",

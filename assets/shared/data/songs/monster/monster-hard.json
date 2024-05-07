@@ -1,6 +1,6 @@
 {
  "song": {
-  "splitVoiceTracks": false,
+  "splitVoiceTracks": true,
   "songName": "Monster",
   "songId": "monster",
   "player1": "bf",

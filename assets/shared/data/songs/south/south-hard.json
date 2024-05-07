@@ -1,6 +1,6 @@
 {
  "song": {
-  "splitVoiceTracks": false,
+  "splitVoiceTracks": true,
   "songName": "South",
   "songId": "south",
   "player1": "bf",

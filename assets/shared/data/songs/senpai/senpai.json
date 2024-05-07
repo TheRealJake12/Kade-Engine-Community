@@ -1,6 +1,6 @@
 {
  "song": {
-  "splitVoiceTracks": false,
+  "splitVoiceTracks": true,
   "songName": "Senpai",
   "songId": "senpai",
   "player1": "bf-pixel",

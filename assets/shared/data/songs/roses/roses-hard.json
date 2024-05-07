@@ -1,6 +1,6 @@
 {
  "song": {
-  "splitVoiceTracks": false,
+  "splitVoiceTracks": true,
   "songName": "Roses",
   "songId": "roses",
   "player1": "bf-pixel",

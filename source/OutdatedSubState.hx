@@ -54,27 +54,28 @@ class OutdatedSubState extends MusicBeatState
 		txt.screenCenter();
 		add(txt);
 
-		var mom:FlxText = new FlxText(0, 0, FlxG.width,
-			"Your MOM is outdated!\nYou are on "
-			+ MainMenuState.kecVer
-			+ "\nwhile the most recent version is "
-			+ needVer
-			+ "."
-			+ "\n\nWhat's new:\n\n"
-			+ currChanges
-			+ "\n\nPress Space to view the full changelog and update\nor ENTER to ignore this",
-			32);
-
-		mom.setFormat("VCR OSD Mono", 23, FlxColor.fromRGB(200, 200, 200), CENTER);
-		mom.borderColor = FlxColor.BLACK;
-		mom.borderSize = 3;
-		mom.borderStyle = FlxTextBorderStyle.OUTLINE;
-		mom.screenCenter();
+		
 
 		// 6% chance of MOM appearing instead of KEC
-		if (FlxG.random.bool(6))
+		if (FlxG.random.bool(6) && !MainMenuState.kecVer.contains("PRE-RELEASE"))
 			// YOU KNOW WHO ELSE IS OUTDATED? MY MOM!
 		{
+			var mom:FlxText = new FlxText(0, 0, FlxG.width,
+				"Your MOM is outdated!\nYou are on "
+				+ MainMenuState.kecVer
+				+ "\nwhile the most recent version is "
+				+ needVer
+				+ "."
+				+ "\n\nWhat's new:\n\n"
+				+ currChanges
+				+ "\n\nPress Space to view the full changelog and update\nor ENTER to ignore this",
+				32);
+
+			mom.setFormat("VCR OSD Mono", 23, FlxColor.fromRGB(200, 200, 200), CENTER);
+			mom.borderColor = FlxColor.BLACK;
+			mom.borderSize = 3;
+			mom.borderStyle = FlxTextBorderStyle.OUTLINE;
+			mom.screenCenter();
 			remove(txt);
 
 			add(mom);

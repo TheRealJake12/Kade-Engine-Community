@@ -3,7 +3,7 @@
   "player1": "bf-christmas",
   "songId": "eggnog",
   "songName": "Eggnog",
-  "splitVoiceTracks": false,
+  "splitVoiceTracks": true,
   "notes": [
    {
     "sectionNotes": [],

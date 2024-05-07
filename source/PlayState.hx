@@ -427,7 +427,11 @@ class PlayState extends MusicBeatState
 
 	override public function create()
 	{
-		Paths.clearStoredMemory();
+		if (curSong != SONG.songId)
+		{
+			curSong = SONG.songId;
+			Paths.clearStoredMemory();
+		}
 
 		// Initialize The Scripts.
 		#if FEATURE_HSCRIPT
@@ -476,10 +480,6 @@ class PlayState extends MusicBeatState
 			FlxG.sound.music.stop();
 
 		inDaPlay = true;
-		if (curSong != SONG.songId)
-		{
-			curSong = SONG.songId;
-		}
 
 		// Set Rating Amounts To 0.
 		marvs = 0;

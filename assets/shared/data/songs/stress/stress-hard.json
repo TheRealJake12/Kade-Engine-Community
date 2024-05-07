@@ -3,7 +3,7 @@
         "songName": "Stress",
         "songId": "stress",
         "player1": "bf-holding-gf",
-        "splitVoiceTracks": false,
+        "splitVoiceTracks": true,
         "notes": [
             {
                 "endTime": 1348.31460674157,

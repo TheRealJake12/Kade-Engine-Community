@@ -3,7 +3,7 @@
   "player1": "bf-christmas",
   "songId": "cocoa",
   "songName": "Cocoa",
-  "splitVoiceTracks": false,
+  "splitVoiceTracks": true,
   "notes": [
    {
     "playerSec": false,

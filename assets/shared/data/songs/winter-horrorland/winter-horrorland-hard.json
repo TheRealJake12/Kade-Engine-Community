@@ -1,6 +1,6 @@
 {
  "song": {
-  "splitVoiceTracks": false,
+  "splitVoiceTracks": true,
   "songName": "Winter Horrorland",
   "songId": "winter-horrorland",
   "player1": "bf-christmas",

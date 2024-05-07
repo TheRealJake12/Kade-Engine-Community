@@ -1,6 +1,6 @@
 {
  "song": {
-  "splitVoiceTracks": false,
+  "splitVoiceTracks": true,
   "songName": "Tutorial",
   "songId": "tutorial",
   "player1": "bf",
@@ -920,7 +920,7 @@
    }
   ],
   "stage": "stage",
-  "needsVoices": false,
+  "needsVoices": true,
   "sections": 0,
   "bpm": 100,
   "noteStyle": "normal"

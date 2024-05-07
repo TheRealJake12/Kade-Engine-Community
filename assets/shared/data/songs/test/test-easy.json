@@ -3,7 +3,7 @@
   "player1": "bf",
   "songId": "test",
   "songName": "test",
-  "splitVoiceTracks": false,
+  "splitVoiceTracks": true,
   "player2": "dad",
   "notes": [
    {
