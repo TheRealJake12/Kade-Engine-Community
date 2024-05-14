@@ -4,8 +4,11 @@ import Section.SwagSection;
 import Song.SongData;
 import Song.SongMeta;
 import haxe.ui.events.UIEvent;
-import haxe.ui.Toolkit;
+import openfl.Lib;
+import haxe.ui.notifications.NotificationType;
+import haxe.ui.notifications.NotificationManager;
 import haxe.ui.focus.FocusManager;
+import haxe.ui.components.Spacer;
 import haxe.ui.components.Button;
 import haxe.ui.components.CheckBox;
 import haxe.ui.components.DropDown;
@@ -26,6 +29,11 @@ import haxe.ui.util.Color;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import openfl.net.FileReference;
+import haxe.ui.containers.menus.MenuBar;
+import haxe.ui.containers.menus.Menu;
+import haxe.ui.containers.menus.MenuCheckBox;
+import haxe.ui.containers.menus.MenuItem;
+import haxe.ui.components.HorizontalSlider;
 #if FEATURE_FILESYSTEM
 import sys.FileSystem;
 import sys.io.File;
@@ -36,13 +44,13 @@ class ChartingState extends MusicBeatState
 	public static var instance:ChartingState = null;
 
 	var ui:TabView;
+	var menu:MenuBar;
 
 	var box:ContinuousHBox;
 	var box2:ContinuousHBox;
 	var box3:ContinuousHBox;
 	var box4:HBox;
 	var box5:ContinuousHBox;
-	var box6:ContinuousHBox;
 
 	var vbox1:VBox;
 	var vbox3:VBox;
@@ -59,12 +67,6 @@ class ChartingState extends MusicBeatState
 	var song:TextField;
 	var songName:TextField;
 	var audioFileName:TextField;
-
-	var loadAutoSave:Button;
-	var reloadJson:Button;
-	var reloadSong:Button;
-	var saveSong:Button;
-	var cleanSong:Button;
 
 	var hasVoices:CheckBox;
 	var isSplit:CheckBox;
@@ -98,14 +100,11 @@ class ChartingState extends MusicBeatState
 	var secGrid2:Grid;
 
 	// Personal
-	var moveEditorToggle:CheckBox;
-	var saveEditor:Button;
-	var resetEditor:Button;
-	var metronome:CheckBox;
-	var hitsoundsVol:NumberStepper;
-	var hitsoundsP:CheckBox;
-	var hitsoundsE:CheckBox;
-	var oppMode:CheckBox;
+	var metronome:MenuCheckBox;
+	var hitsoundsVol:HorizontalSlider;
+	var hitsoundsP:MenuCheckBox;
+	var hitsoundsE:MenuCheckBox;
+	var oppMode:MenuCheckBox;
 
 	var daHitSound:FlxSound;
 
@@ -222,6 +221,7 @@ class ChartingState extends MusicBeatState
 	public var helpText:CoolUtil.CoolText;
 
 	var _file:FileReference;
+	public var id:Int = -1;
 
 	// one does not realize how much flixel-ui is used until one sees an FNF chart editor. 💀
 
@@ -243,14 +243,15 @@ class ChartingState extends MusicBeatState
 			clean = false;
 		}
 
-		Toolkit.init();
-		Toolkit.theme = "DARK";
-		Toolkit.autoScale = false;
-
 		ui = new TabView();
 		ui.text = "huh";
 		ui.draggable = FlxG.save.data.moveEditor;
 		ui.height = 300;
+
+		menu = new MenuBar();
+		menu.continuous = true;
+		menu.height = 30;
+		menu.width = FlxG.width;
 
 		#if FEATURE_DISCORD
 		Discord.changePresence("Chart Editor", null, null, true);
@@ -304,7 +305,7 @@ class ChartingState extends MusicBeatState
 
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.scrollFactor.set();
-		bg.color = 0xFF0C0C0C;
+		bg.color = 0xFF111111;
 		add(bg);
 
 		lines = new FlxTypedGroup<FlxSprite>();
@@ -339,16 +340,16 @@ class ChartingState extends MusicBeatState
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
 
-		iconP1.setPosition(850, -10);
-		iconP2.setPosition(350, -10);
+		iconP1.setPosition(850, 35);
+		iconP2.setPosition(350, 35);
 
-		infoText = new CoolUtil.CoolText(970, 10, 16, 16, Paths.bitmapFont('fonts/vcr'));
+		infoText = new CoolUtil.CoolText(970, 40, 16, 16, Paths.bitmapFont('fonts/vcr'));
 		infoText.autoSize = true;
 		infoText.antialiasing = true;
 		infoText.updateHitbox();
 		infoText.scrollFactor.set();
 
-		infoBG = new FlxSprite(infoText.x - 5, infoText.y - 15).makeGraphic(335, 240, FlxColor.fromRGB(35, 35, 35));
+		infoBG = new FlxSprite(infoText.x - 5, infoText.y - 10).makeGraphic(335, 240, FlxColor.fromRGB(35, 35, 35));
 		infoBG.scrollFactor.set();
 
 		notetypetext = new CoolUtil.CoolText(970, infoText.y + 200, 20, 20, Paths.bitmapFont('fonts/vcr'));
@@ -378,8 +379,8 @@ class ChartingState extends MusicBeatState
 		dummyArrow.updateHitbox();
 
 		strumLine = new FlxSprite(sectionPos, -100);
-		strumLine.makeGraphic(Std.int(50 * 8), 4, FlxColor.GRAY);
-		strumLine.alpha = 0.9;
+		strumLine.makeGraphic(Std.int(50 * 8), 4, FlxColor.fromRGB(255, 25, 25));
+		strumLine.alpha = 0.8;
 
 		gridBG = new FlxSprite(notePos, 0).makeGraphic(50 * 8, 50 * 16);
 
@@ -463,15 +464,14 @@ class ChartingState extends MusicBeatState
 
 		add(iconP1);
 		add(iconP2);
+		menuBarShit();
 
 		addTabs();
-
 		addAssetUI();
 		addNoteUI();
 		addSectionUI();
 		addSongUI();
 		addEventUI();
-		addPersonalUI();
 
 		selectedBoxes = new FlxTypedGroup();
 		add(selectedBoxes);
@@ -484,12 +484,12 @@ class ChartingState extends MusicBeatState
 		add(helpText);
 
 		add(ui);
+		add(menu);
+
+		id = Lib.setInterval(autosaveSong, 5 * 60 * 1000);
+
 		ui.x = 0;
 		ui.y = 420;
-
-		if (FlxG.save.data.autoSaving)
-			openfl.Lib.setInterval(autosaveSong, 5 * 60 * 1000); // <arubz> * 60 * 1000
-
 		super.create();
 	}
 
@@ -1004,6 +1004,7 @@ class ChartingState extends MusicBeatState
 					vocalsE.stop();
 				}
 				MusicBeatState.switchState(new PlayState());
+				Lib.clearInterval(id);
 			}
 
 			if (FlxG.keys.justPressed.ESCAPE)
@@ -1018,6 +1019,7 @@ class ChartingState extends MusicBeatState
 					vocalsE.stop();
 				}
 				MusicBeatState.switchState(new FreeplayState());
+				Lib.clearInterval(id);
 			}
 
 			if (FlxG.keys.justPressed.SPACE)
@@ -1101,7 +1103,10 @@ class ChartingState extends MusicBeatState
 					}
 				}
 				else
-					inst.time -= (FlxG.mouse.wheel * Conductor.stepCrochet * 0.4);
+				{
+					if (amount < 0)
+						inst.time -= (FlxG.mouse.wheel * Conductor.stepCrochet * 0.4);
+				}
 
 				if (!SONG.splitVoiceTracks)
 					vocals.time = inst.time;
@@ -1877,12 +1882,8 @@ class ChartingState extends MusicBeatState
 		}
 
 		PlayState.SONG = Song.parseJSONshit(data.songId, data, meta);
-		for (i in SONG.notes)
-		{
-			if (i.startTime > inst.length)
-				SONG.notes.remove(i);
-		}
 		LoadingState.loadAndSwitchState(new ChartingState());
+		Lib.clearInterval(id);
 	}
 
 	function loadJson(songId:String, diff:String):Void
@@ -1896,9 +1897,15 @@ class ChartingState extends MusicBeatState
 			// mustCleanMem = true;
 
 			LoadingState.loadAndSwitchState(new ChartingState());
+			Lib.clearInterval(id);
 		}
 		catch (e)
 		{
+			NotificationManager.instance.addNotification({
+				title: "Error Changing Difficulty.",
+				body: "Make Sure A Difficulty Exists For The One You Want To Change To.",
+				type: NotificationType.Error
+			});
 			Debug.logError('Make Sure You Have A Valid JSON To Load. A Possible Solution Is Setting The Difficulty To Normal. Error: $e');
 			return;
 		}
@@ -1917,7 +1924,7 @@ class ChartingState extends MusicBeatState
 		if ((data != null) && (data.length > 0))
 		{
 			_file = new FileReference();
-			_file.addEventListener(Event.COMPLETE, onSaveComplete);
+			_file.addEventListener(#if desktop Event.SELECT #else Event.COMPLETE #end, onSaveComplete);
 			_file.addEventListener(Event.CANCEL, onSaveCancel);
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 			_file.save(data.trim(), SONG.songId.toLowerCase() + CoolUtil.getSuffixFromDiff(curDiff) + ".json");
@@ -1931,6 +1938,11 @@ class ChartingState extends MusicBeatState
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
 		FlxG.log.notice("Successfully saved LEVEL DATA.");
+		NotificationManager.instance.addNotification({
+			title: "Chart Saved Successfully.",
+			body: "Your Chart Was Saved Without Error.",
+			type: NotificationType.Success
+		});
 	}
 
 	/**
@@ -1942,6 +1954,11 @@ class ChartingState extends MusicBeatState
 		_file.removeEventListener(Event.CANCEL, onSaveCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
+		NotificationManager.instance.addNotification({
+			title: "Chart Save Cancelled.",
+			body: "Cancelled Saving Chart.",
+			type: NotificationType.Info
+		});
 	}
 
 	/**
@@ -1954,6 +1971,11 @@ class ChartingState extends MusicBeatState
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 		_file = null;
 		FlxG.log.error("Problem saving Level data");
+		NotificationManager.instance.addNotification({
+			title: "Error Saving Chart.",
+			body: "There Has Been An Error Saving The Chart.",
+			type: NotificationType.Error
+		});
 	}
 
 	inline function songShit()
@@ -2318,60 +2340,6 @@ class ChartingState extends MusicBeatState
 		audioFile.text = "Audio File";
 		audioFile.verticalAlign = "center";
 
-		saveSong = new Button();
-		saveSong.text = "Save JSON";
-		saveSong.onClick = function(e)
-		{
-			saveLevel();
-		}
-
-		cleanSong = new Button();
-		cleanSong.text = "Clear Song";
-		cleanSong.onClick = function(e)
-		{
-			for (daSection in 0...SONG.notes.length)
-			{
-				SONG.notes[daSection].sectionNotes = [];
-			}
-
-			updateNotes();
-		}
-
-		loadAutoSave = new Button();
-		loadAutoSave.text = "Load Autosave";
-		loadAutoSave.width = 80;
-		loadAutoSave.onClick = function(e)
-		{
-			loadAutosave();
-		}
-
-		reloadJson = new Button();
-		reloadJson.text = "Reload JSON";
-		reloadJson.onClick = function(e)
-		{
-			clean = false;
-			loadJson(SONG.songId.toLowerCase(), curDiff);
-		}
-
-		reloadSong = new Button();
-		reloadSong.text = "Reload Song";
-		reloadSong.onClick = function(e)
-		{
-			if (inst.playing)
-			{
-				inst.stop();
-				if (!SONG.splitVoiceTracks)
-					vocals.stop();
-				else
-				{
-					vocalsP.stop();
-					vocalsE.stop();
-				}
-			}
-			loadSong(SONG.audioFile.toLowerCase(), false);
-			// goofy song overlapping and raping your ears
-		}
-
 		hasVoices = new CheckBox();
 		hasVoices.selected = SONG.needsVoices;
 		hasVoices.text = "Use Vocals";
@@ -2595,11 +2563,6 @@ class ChartingState extends MusicBeatState
 		vbox1.addComponent(grid);
 		vbox1.addComponent(grid2);
 
-		vbox3.addComponent(saveSong);
-		vbox3.addComponent(loadAutoSave);
-		vbox3.addComponent(reloadSong);
-		vbox3.addComponent(reloadJson);
-		vbox3.addComponent(cleanSong);
 		vbox3.addComponent(hasVoices);
 		vbox3.addComponent(isSplit);
 		vbox3.addComponent(diffDrop);
@@ -2994,100 +2957,6 @@ class ChartingState extends MusicBeatState
 		// dfjk
 	}
 
-	inline function addPersonalUI()
-	{
-		var vbox:VBox = new VBox();
-		var vbox2:VBox = new VBox();
-		var pGrid:Grid = new Grid();
-
-		moveEditorToggle = new CheckBox();
-		moveEditorToggle.text = "Drag Editor?";
-		moveEditorToggle.selected = FlxG.save.data.moveEditor;
-		moveEditorToggle.onClick = function(e)
-		{
-			FlxG.save.data.moveEditor = !FlxG.save.data.moveEditor;
-			ui.draggable = FlxG.save.data.moveEditor;
-		}
-
-		saveEditor = new Button();
-		saveEditor.text = "Save Editor Position";
-		saveEditor.onClick = function(e)
-		{
-			FlxG.save.data.editorPos = [ui.x, ui.y];
-		}
-
-		resetEditor = new Button();
-		resetEditor.text = "Reset Editor Position";
-		resetEditor.onClick = function(e)
-		{
-			FlxG.save.data.editorPos = [0, 420];
-			ui.x = 0;
-			ui.y = 420;
-		}
-
-		metronome = new CheckBox();
-		metronome.text = "Metronome";
-		if (FlxG.save.data.chart_metronome == null)
-			FlxG.save.data.chart_metronome = false;
-		metronome.selected = FlxG.save.data.chart_metronome;
-
-		hitsoundsP = new CheckBox();
-		hitsoundsP.text = "Hitsounds (Player)";
-		if (FlxG.save.data.playHitsounds == null)
-			FlxG.save.data.playHitsounds = false;
-		hitsoundsP.selected = FlxG.save.data.playHitsounds;
-		hitsoundsP.onClick = function(e)
-		{
-			FlxG.save.data.playHitsounds = !FlxG.save.data.playHitsounds;
-		}
-
-		hitsoundsE = new CheckBox();
-		hitsoundsE.text = "Hitsounds (Opponent)";
-		if (FlxG.save.data.playHitsoundsE == null)
-			FlxG.save.data.playHitsoundsE = false;
-		hitsoundsE.selected = FlxG.save.data.playHitsoundsE;
-		hitsoundsE.onClick = function(e)
-		{
-			FlxG.save.data.playHitsoundsE = !FlxG.save.data.playHitsoundsE;
-		}
-
-		oppMode = new CheckBox();
-		oppMode.text = "Opponent Mode?";
-		oppMode.selected = FlxG.save.data.opponent;
-		oppMode.onClick = function(e)
-		{
-			FlxG.save.data.opponent = !FlxG.save.data.opponent;
-		}
-
-		hitsoundsVol = new NumberStepper();
-		hitsoundsVol.max = 1;
-		hitsoundsVol.min = 0;
-		hitsoundsVol.precision = 2;
-		hitsoundsVol.step = 0.05;
-		hitsoundsVol.pos = 0.5; // pissed me off so badly
-		hitsoundsVol.decimalSeparator = ".";
-		hitsoundsVol.autoCorrect = true;
-
-		var hitLabel:Label = new Label();
-		hitLabel.text = "Hitsound Volume";
-		hitLabel.verticalAlign = "center";
-
-		vbox2.addComponent(moveEditorToggle);
-		vbox.addComponent(saveEditor);
-		vbox.addComponent(resetEditor);
-		vbox2.addComponent(hitsoundsP);
-		vbox2.addComponent(hitsoundsE);
-		vbox.addComponent(hitsoundsVol);
-		vbox.addComponent(oppMode);
-		vbox.addComponent(hitLabel);
-		vbox.addComponent(metronome);
-
-		pGrid.addComponent(vbox);
-		pGrid.addComponent(vbox2);
-
-		box6.addComponent(pGrid);
-	}
-
 	inline function addTabs()
 	{
 		box = new ContinuousHBox();
@@ -3116,13 +2985,6 @@ class ChartingState extends MusicBeatState
 		box5.padding = 5;
 		box5.text = "Events";
 		// box5.color = daColor;
-
-		box6 = new ContinuousHBox();
-		box6.width = 300;
-		box6.padding = 5;
-		box6.text = "Personal";
-		// box6.color = daColor;
-
 		// ignore
 
 		ui.addComponent(box);
@@ -3130,7 +2992,195 @@ class ChartingState extends MusicBeatState
 		ui.addComponent(box3);
 		ui.addComponent(box4);
 		ui.addComponent(box5);
-		ui.addComponent(box6);
+	}
+
+	inline function menuBarShit()
+	{
+		var spac = new Spacer();
+		spac.width = 210;
+		var file = new Menu();
+		file.text = "Chart";
+		var personal = new Menu();
+		personal.text = "Preferences";
+		
+		var box = new VBox();
+
+		var saveSong = new MenuItem();
+		saveSong.text = "Save Chart";
+		saveSong.shortcutText = "Ctrl+S";
+		saveSong.onClick = function(e)
+		{
+			saveLevel();
+		}
+
+		var loadAuto = new MenuItem();
+		loadAuto.text = "Load Autosave";
+		loadAuto.shortcutText = "Ctrl+A+S";
+		loadAuto.onClick = function(e)
+		{
+			loadAutosave();
+		}
+
+		var reload = new MenuItem();
+		reload.text = "Reload Audio";
+		reload.onClick = function(e)
+		{
+			if (inst.playing)
+			{
+				inst.stop();
+				if (!SONG.splitVoiceTracks)
+					vocals.stop();
+				else
+				{
+					vocalsP.stop();
+					vocalsE.stop();
+				}
+			}
+			loadSong(SONG.audioFile.toLowerCase(), false);
+			// goofy song overlapping and raping your ears
+		}
+
+		var reloadChart = new MenuItem();
+		reloadChart.text = "Reload Chart";
+		reloadChart.onClick = function(e)
+		{
+			var clean = false;
+			loadJson(SONG.songId.toLowerCase(), curDiff);
+		}
+
+		var cleanSong = new MenuItem();
+		cleanSong.text = "Clear Chart";
+		cleanSong.onClick = function(e)
+		{
+			NotificationManager.instance.addNotification({
+				title: "Are You Sure You Want To Clear The Chart?",
+				body: "All Notes Will Be Cleared.",
+				type: NotificationType.Error,
+				actions: [
+					{
+						text: "Clear",
+						callback: (data) ->
+						{
+							for (daSection in 0...SONG.notes.length)
+							{
+								SONG.notes[daSection].sectionNotes = [];
+							}
+
+							updateNotes();
+							NotificationManager.instance.addNotification({
+								title: "Chart Cleared.",
+								body: "All Notes Cleared.",
+								type: NotificationType.Success,
+							});	
+							return true;
+						}
+					},
+					{
+						text: "Nevermind",
+						callback: (data) ->
+						{
+							return true;
+						}
+					}
+				]
+			});
+		}
+
+		file.addComponent(saveSong);
+		file.addComponent(reloadChart);
+		file.addComponent(reload);
+		file.addComponent(loadAuto);
+		file.addComponent(cleanSong);
+
+		var dragTabs = new MenuCheckBox();
+		dragTabs.text = "Drag Tablist";
+		dragTabs.selected = FlxG.save.data.moveEditor;
+		dragTabs.onClick = function(e)
+		{
+			FlxG.save.data.moveEditor = !FlxG.save.data.moveEditor;
+			ui.draggable = FlxG.save.data.moveEditor;
+		}
+
+		metronome = new MenuCheckBox();
+		metronome.text = "Metronome";
+		if (FlxG.save.data.chart_metronome == null)
+			FlxG.save.data.chart_metronome = false;
+		metronome.selected = FlxG.save.data.chart_metronome;
+		metronome.onClick = function(e)
+		{
+			FlxG.save.data.chart_metronome = !FlxG.save.data.chart_metronome;
+		}
+		var hsv = new Label();
+		hsv.text = "Hitsound Volume";
+		hsv.horizontalAlign = "center";
+
+		hitsoundsVol = new HorizontalSlider();
+		hitsoundsVol.max = 1;
+		hitsoundsVol.min = 0;
+		hitsoundsVol.precision = 2;
+		hitsoundsVol.step = 0.05;
+		hitsoundsVol.minorTicks = 0.05;
+		hitsoundsVol.majorTicks = 0.25;
+		hitsoundsVol.pos = 0.5; // pissed me off so badly
+
+		hitsoundsP = new MenuCheckBox();
+		hitsoundsP.text = "Hitsounds (Player)";
+		if (FlxG.save.data.playHitsounds == null)
+			FlxG.save.data.playHitsounds = false;
+		hitsoundsP.selected = FlxG.save.data.playHitsounds;
+		hitsoundsP.onClick = function(e)
+		{
+			FlxG.save.data.playHitsounds = !FlxG.save.data.playHitsounds;
+		}
+
+		hitsoundsE = new MenuCheckBox();
+		hitsoundsE.text = "Hitsounds (Opponent)";
+		if (FlxG.save.data.playHitsoundsE == null)
+			FlxG.save.data.playHitsoundsE = false;
+		hitsoundsE.selected = FlxG.save.data.playHitsoundsE;
+		hitsoundsE.onClick = function(e)
+		{
+			FlxG.save.data.playHitsoundsE = !FlxG.save.data.playHitsoundsE;
+		}
+
+		oppMode = new MenuCheckBox();
+		oppMode.text = "Opponent Mode";
+		oppMode.selected = FlxG.save.data.opponent;
+		oppMode.onClick = function(e)
+		{
+			FlxG.save.data.opponent = !FlxG.save.data.opponent;
+		}
+
+		var savePos = new MenuItem();
+		savePos.text = "Save Tablist Position";
+		savePos.onClick = function(e)
+		{
+			FlxG.save.data.editorPos = [ui.x, ui.y];
+		}
+
+		var resetPos = new MenuItem();
+		resetPos.text = "Reset Tablist Position";
+		resetPos.onClick = function(e)
+		{
+			FlxG.save.data.editorPos = [0, 420];
+			ui.x = 0;
+			ui.y = 420;
+		}
+
+		personal.addComponent(dragTabs);
+		box.addComponent(hsv);
+		personal.addComponent(box);
+		personal.addComponent(hitsoundsVol);
+		personal.addComponent(hitsoundsP);
+		personal.addComponent(hitsoundsE);
+		personal.addComponent(metronome);
+		personal.addComponent(oppMode);
+
+		
+		
+		menu.addComponent(spac);
+		menu.addComponent(file);
+		menu.addComponent(personal);
 	}
 
 	override function beatHit()

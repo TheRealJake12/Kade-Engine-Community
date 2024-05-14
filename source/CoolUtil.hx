@@ -89,6 +89,49 @@ class CoolUtil
 		return FlxMath.bound(ratio * 60 * FlxG.elapsed, 0, 1);
 	}
 
+	/**
+	 * Linearly interpolate between two values.
+	 *
+	 * @param base The starting value, when `progress <= 0`.
+	 * @param target The ending value, when `progress >= 1`.
+	 * @param progress Value used to interpolate between `base` and `target`.
+	 * @return The interpolated value.
+	 */
+	public static function lerp(base:Float, target:Float, progress:Float):Float
+	{
+		return base + progress * (target - base);
+	}
+
+	/**
+	 * Perform a framerate-independent linear interpolation between the base value and the target.
+	 * @param current The current value.
+	 * @param target The target value.
+	 * @param elapsed The time elapsed since the last frame.
+	 * @param duration The total duration of the interpolation. Nominal duration until remaining distance is less than `precision`.
+	 * @param precision The target precision of the interpolation. Defaults to 1% of distance remaining.
+	 * @see https://twitter.com/FreyaHolmer/status/1757918211679650262
+	 *
+	 * @return A value between the current value and the target value.
+	 */
+	public static function smoothLerp(current:Float, target:Float, elapsed:Float, duration:Float, precision:Float = 1 / 100):Float
+	{
+		// An alternative algorithm which uses a separate half-life value:
+		// var halfLife:Float = -duration / logBase(2, precision);
+		// lerp(current, target, 1 - exp2(-elapsed / halfLife));
+
+		if (current == target)
+			return target;
+
+		var result:Float = lerp(current, target, 1 - Math.pow(precision, elapsed / duration));
+
+		// TODO: Is there a better way to ensure a lerp which actually reaches the target?
+		// Research a framerate-independent PID lerp.
+		if (Math.abs(result - target) < (precision * target))
+			result = target;
+
+		return result;
+	}
+
 	public static function listFromString(string:String):Array<String>
 	{
 		var daList:Array<String> = [];

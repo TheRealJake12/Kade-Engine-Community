@@ -274,6 +274,11 @@ class Paths
 		return sound;
 	}
 
+	public static function soundOld(key:String, ?library:String):String
+	{
+		return getPath('sounds/$key.${SOUND_EXT}', SOUND, library);
+	}
+
 	static public function soundRandom(key:String, min:Int, max:Int, ?library:String)
 	{
 		return sound(key + FlxG.random.int(min, max), library);

@@ -31,7 +31,7 @@
 	<!-- Defines whether the Thread class can be used. -->
 	<define name="FEATURE_MULTITHREADING" if="cpp" />
 	<!-- Videos -->
-	<define name="VIDEOS" if="cpp"/>
+	<define name="VIDEOS" if="desktop || mobile"/>
 	<!-- Defines if hscript are enabled. Might Work In Browser. -->
 	<define name="FEATURE_HSCRIPT" />
 	<!-- Defines whether modcore can be used. -->
@@ -87,7 +87,7 @@
 	<assets path="assets/weeks"   library="weeks"   rename="assets" exclude="*.mp3" unless="web"/>
 	<assets path="assets/sm"   library="sm"  if="FEATURE_STEPMANIA"/>
 	
-	<assets path='mods' embed='false'/>
+	<assets path='mods' embed='false' if="FEATURE_MODCORE"/>
 	
 	<assets path='art/readme.txt' rename='do NOT readme.txt' />
 	<assets path='LICENSE' rename='LICENSE.txt' />
@@ -129,7 +129,7 @@
 	<haxelib name="tjson"/>
 	<haxelib name="hxcpp-debug-server" if="desktop"/>
 	<section if="cpp">
-		<haxelib name="hxvlc" if="desktop || android" />
+		<haxelib name="hxvlc" if="VIDEOS" />
 	</section>
 
 	<!-- ______________________________ Haxedefines _____________________________ -->

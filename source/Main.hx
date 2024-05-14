@@ -10,6 +10,7 @@ import openfl.display.Bitmap;
 import openfl.filters.ShaderFilter;
 import flixel.system.FlxAssets.FlxShader;
 import openfl.display.StageQuality;
+import haxe.ui.Toolkit;
 #if FEATURE_DISCORD
 import Discord;
 #end
@@ -115,6 +116,8 @@ class Main extends Sprite
 
 		gameContainer = this;
 
+		initHaxeUI();
+
 		// Run this first so we can see logs.
 		Debug.onInitProgram();
 
@@ -126,8 +129,12 @@ class Main extends Sprite
 
 		// FlxTransitionableState.skipNextTransIn = true;
 		game.framerate = 60;
-		addChild(new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate,
-			game.skipSplash, game.startFullscreen));
+		var fard:FlxGame = new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom, #end game.framerate,
+			game.framerate, game.skipSplash, game.startFullscreen);
+
+		@:privateAccess
+		fard._customSoundTray = flixel.FunkinSoundTray;	
+		addChild(fard);
 
 		FlxG.fixedTimestep = false;
 
@@ -141,7 +148,9 @@ class Main extends Sprite
 		FlxG.mouse.visible = false;
 		#end
 
+		#if VIDEOS
 		Handle.initAsync();
+		#end
 
 		// Finish up loading debug tools.
 		Debug.onGameStart();
@@ -313,5 +322,12 @@ class Main extends Sprite
 	public function getFPS():Float
 	{
 		return fpsCounter.currentFPS;
+	}
+
+	function initHaxeUI():Void
+	{
+		Toolkit.init();
+		Toolkit.theme = 'dark'; // don't be cringe
+		Toolkit.autoScale = false;
 	}
 }

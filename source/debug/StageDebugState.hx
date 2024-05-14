@@ -11,7 +11,6 @@ import stages.Stage;
 	>uses stage object.
  */
 import flixel.tweens.FlxTween;
-import haxe.ui.Toolkit;
 import haxe.ui.dragdrop.DragManager;
 import haxe.ui.components.Button;
 import haxe.ui.components.CheckBox;
@@ -105,10 +104,6 @@ class StageDebugState extends MusicBeatState
 	{
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
-
-		Toolkit.init();
-
-		Toolkit.theme = "DARK";
 
 		FlxG.sound.music.stop();
 

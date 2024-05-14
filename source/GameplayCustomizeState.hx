@@ -2,7 +2,6 @@ import haxe.ui.containers.VBox;
 import flixel.addons.display.FlxExtendedMouseSprite;
 import haxe.ui.components.CheckBox;
 import haxe.ui.containers.Panel;
-import haxe.ui.Toolkit;
 import haxe.ui.containers.Box;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
@@ -81,10 +80,6 @@ class GameplayCustomizeState extends MusicBeatState
 		// Updating Discord Rich Presence
 		Discord.changePresence("Customizing Gameplay Modules", null);
 		#end
-
-		Toolkit.init();
-		Toolkit.theme = "DARK";
-
 		instance = this;
 
 		if (PlayState.STYLE == null)

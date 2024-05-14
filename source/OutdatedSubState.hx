@@ -54,8 +54,6 @@ class OutdatedSubState extends MusicBeatState
 		txt.screenCenter();
 		add(txt);
 
-		
-
 		// 6% chance of MOM appearing instead of KEC
 		if (FlxG.random.bool(6) && !MainMenuState.kecVer.contains("PRE-RELEASE"))
 			// YOU KNOW WHO ELSE IS OUTDATED? MY MOM!

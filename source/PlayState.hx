@@ -4737,6 +4737,9 @@ class PlayState extends MusicBeatState
 			#end
 
 			health -= (daNote.missHealth * PlayStateChangeables.healthLoss);
+
+			if (PlayStateChangeables.skillIssue)
+				health = 0;
 			if (!SONG.splitVoiceTracks)
 				vocals.volume = 0;
 			else
@@ -5376,7 +5379,7 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	function changeChar(type:Int, value:String, x:Float, y:Float)
+	public function changeChar(type:Int, value:String, x:Float, y:Float)
 	{
 		switch (type)
 		{

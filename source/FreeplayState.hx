@@ -637,7 +637,7 @@ class FreeplayState extends MusicBeatState
 		var accepted = FlxG.keys.justPressed.ENTER && !FlxG.keys.pressed.ALT;
 		var charting = FlxG.keys.justPressed.SEVEN;
 
-		if (!openMod && !MusicBeatState.switchingState)
+		if (!openMod && !MusicBeatState.switchingState && doUpdateText)
 		{
 			if (FlxG.mouse.wheel != 0)
 			{
@@ -651,11 +651,11 @@ class FreeplayState extends MusicBeatState
 				#end
 			}
 
-			if (upP || controls.UP_P)
+			if (upP)
 			{
 				changeSelection(-1);
 			}
-			if (downP || controls.DOWN_P)
+			if (downP)
 			{
 				changeSelection(1);
 			}
@@ -670,14 +670,14 @@ class FreeplayState extends MusicBeatState
 		previewtext.updateHitbox();
 		previewtext.alpha = 1;
 
-		if (FlxG.keys.justPressed.CONTROL && !openMod && !MusicBeatState.switchingState)
+		if (FlxG.keys.justPressed.CONTROL && !openMod && !MusicBeatState.switchingState && doUpdateText)
 		{
 			openMod = true;
 			FlxG.sound.play(Paths.sound('scrollMenu'));
 			openSubState(new FreeplaySubState.ModMenu());
 		}
 
-		if (!openMod && !MusicBeatState.switchingState)
+		if (!openMod && !MusicBeatState.switchingState && doUpdateText)
 		{
 			if (FlxG.keys.pressed.SHIFT) // && songs[curSelected].songName.toLowerCase() != "tutorial")
 			{
@@ -937,7 +937,7 @@ class FreeplayState extends MusicBeatState
 
 		PlayState.songMultiplier = rate;
 		lastRate = rate;
-		
+
 		doUpdateText = true;
 		instance.updateTexts();
 		openMod = false;
