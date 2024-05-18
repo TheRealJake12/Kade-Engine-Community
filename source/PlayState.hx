@@ -207,7 +207,7 @@ class PlayState extends MusicBeatState
 	// BotPlay text
 	public var addedBotplay:Bool = false;
 
-	private var botPlayState:FlxText;
+	public var botPlayState:FlxText;
 
 	// All The Notes
 	public var notes:FlxTypedGroup<Note>;
@@ -1839,7 +1839,6 @@ class PlayState extends MusicBeatState
 	}
 
 	var startTimer:FlxTimer;
-	var perfectMode:Bool = false;
 	var luaWiggles:Array<WiggleEffect> = [];
 
 	#if FEATURE_LUAMODCHART
@@ -2981,23 +2980,6 @@ class PlayState extends MusicBeatState
 
 	override public function update(elapsed:Float)
 	{
-		#if !debug
-		perfectMode = false;
-		#end
-
-		if (!addedBotplay && PlayStateChangeables.botPlay)
-		{
-			PlayStateChangeables.botPlay = true;
-			addedBotplay = true;
-			uiGroup.add(botPlayState);
-		}
-
-		if (addedBotplay && PlayStateChangeables.botPlay == false)
-		{
-			uiGroup.remove(botPlayState);
-			addedBotplay = false;
-		}
-
 		if (FlxG.save.data.borderless)
 		{
 			FlxG.stage.window.borderless = true;
@@ -3545,160 +3527,6 @@ class PlayState extends MusicBeatState
 		else if (health >= 2)
 			health = 2;
 
-		if (!usedBot && PlayStateChangeables.botPlay)
-		{
-			usedBot = true;
-			add(botPlayState);
-		}
-
-		if (FlxG.save.data.smoothHealthbar)
-			shownHealth = FlxMath.lerp(shownHealth, health, CoolUtil.boundTo(elapsed * 15 * songMultiplier, 0, 1));
-		else
-			shownHealth = health;
-
-		var mult:Float = FlxMath.lerp(1, iconP1.scale.x, FlxMath.bound(1 - (elapsed * 9 * songMultiplier), 0, 1));
-		if (!FlxG.save.data.motion)
-			iconP1.scale.set(mult, mult);
-		iconP1.updateHitbox();
-
-		var mult:Float = FlxMath.lerp(1, iconP2.scale.x, FlxMath.bound(1 - (elapsed * 9 * songMultiplier), 0, 1));
-		if (!FlxG.save.data.motion)
-			iconP2.scale.set(mult, mult);
-		iconP2.updateHitbox();
-
-		var iconOffset:Int = 26;
-
-		iconP1.x = healthBar.x
-			+ (healthBar.width * (FlxMath.remapToRange(PlayStateChangeables.opponentMode ? 100 - healthBar.percent : healthBar.percent, 0, 100, 100, 0) * 0.01)
-				- iconOffset);
-		iconP2.x = healthBar.x
-			+ (healthBar.width * (FlxMath.remapToRange(PlayStateChangeables.opponentMode ? 100 - healthBar.percent : healthBar.percent, 0, 100, 100, 0) * 0.01))
-			- (iconP2.width - iconOffset);
-		try
-		{
-			if (iconP1.isAnimated)
-			{
-				if (!PlayStateChangeables.opponentMode)
-				{
-					if (healthBar.percent < 20 && icon1AnimArray[1])
-					{
-						animName = 'Lose';
-					}
-					else
-					{
-						animName = 'Idle';
-					}
-
-					if (iconP1.animation.curAnim.finished || (animName != iconP1.animation.curAnim.name))
-					{
-						iconP1.playAnim(animName, true);
-					}
-				}
-				else
-				{
-					if (healthBar.percent > 80 && icon1AnimArray[0])
-					{
-						animName = 'Lose';
-					}
-					else
-					{
-						animName = 'Idle';
-					}
-
-					if (iconP1.animation.curAnim.finished || (animName != iconP1.animation.curAnim.name))
-					{
-						iconP1.playAnim(animName, true);
-					}
-				}
-			}
-			else
-			{
-				if (!PlayStateChangeables.opponentMode)
-				{
-					if (healthBar.percent < 20)
-						iconP1.animation.curAnim.curFrame = 1;
-					else if (healthBar.percent > 80 && iconP1.hasWinningIcon)
-						iconP1.animation.curAnim.curFrame = 2;
-					else
-						iconP1.animation.curAnim.curFrame = 0;
-				}
-				else
-				{
-					if (healthBar.percent > 80)
-						iconP1.animation.curAnim.curFrame = 1;
-					else if (healthBar.percent < 20 && iconP1.hasWinningIcon)
-						iconP1.animation.curAnim.curFrame = 2;
-					else
-						iconP1.animation.curAnim.curFrame = 0;
-				}
-			}
-
-			if (iconP2.isAnimated)
-			{
-				if (!PlayStateChangeables.opponentMode)
-				{
-					if (healthBar.percent > 80 && icon2AnimArray[0])
-					{
-						animName = 'Lose';
-					}
-					else
-					{
-						animName = 'Idle';
-					}
-
-					if (iconP2.animation.curAnim.finished || (animName != iconP2.animation.curAnim.name))
-					{
-						iconP2.playAnim(animName, true);
-					}
-				}
-				else
-				{
-					if (healthBar.percent < 20 && icon2AnimArray[0])
-					{
-						animName = 'Lose';
-					}
-					else
-					{
-						animName = 'Idle';
-					}
-
-					if (iconP2.animation.curAnim.finished || (animName != iconP2.animation.curAnim.name))
-					{
-						iconP2.playAnim(animName, true);
-					}
-				}
-			}
-			else
-			{
-				if (PlayStateChangeables.opponentMode)
-				{
-					if (healthBar.percent < 20)
-						iconP2.animation.curAnim.curFrame = 1;
-					else if (healthBar.percent > 80 && iconP2.hasWinningIcon)
-						iconP2.animation.curAnim.curFrame = 2;
-					else
-						iconP2.animation.curAnim.curFrame = 0;
-				}
-				else
-				{
-					if (healthBar.percent > 80)
-						iconP2.animation.curAnim.curFrame = 1;
-					else if (healthBar.percent < 20 && iconP2.hasWinningIcon)
-						iconP2.animation.curAnim.curFrame = 2;
-					else
-						iconP2.animation.curAnim.curFrame = 0;
-				}
-			}
-
-			// Debug.logTrace(healthBar.percent);
-		}
-		catch (e)
-		{
-			Debug.logTrace(e);
-		}
-
-		// I don't wanna talk about the code above.
-
 		if (songStarted)
 		{
 			var bpmRatio = Conductor.bpm / 100;
@@ -4042,6 +3870,154 @@ class PlayState extends MusicBeatState
 			i(elapsed);
 
 		super.update(elapsed);
+
+		if (FlxG.save.data.smoothHealthbar)
+			shownHealth = FlxMath.lerp(shownHealth, health, CoolUtil.boundTo(elapsed * 15 * songMultiplier, 0, 1));
+		else
+			shownHealth = health;
+
+		var mult:Float = FlxMath.lerp(1, iconP1.scale.x, FlxMath.bound(1 - (elapsed * 9 * songMultiplier), 0, 1));
+		if (!FlxG.save.data.motion)
+			iconP1.scale.set(mult, mult);
+		iconP1.updateHitbox();
+
+		var mult:Float = FlxMath.lerp(1, iconP2.scale.x, FlxMath.bound(1 - (elapsed * 9 * songMultiplier), 0, 1));
+		if (!FlxG.save.data.motion)
+			iconP2.scale.set(mult, mult);
+		iconP2.updateHitbox();
+
+		var iconOffset:Int = 26;
+
+		iconP1.x = healthBar.x
+			+ (healthBar.width * (FlxMath.remapToRange(PlayStateChangeables.opponentMode ? 100 - healthBar.percent : healthBar.percent, 0, 100, 100, 0) * 0.01)
+				- iconOffset);
+		iconP2.x = healthBar.x
+			+ (healthBar.width * (FlxMath.remapToRange(PlayStateChangeables.opponentMode ? 100 - healthBar.percent : healthBar.percent, 0, 100, 100, 0) * 0.01))
+			- (iconP2.width - iconOffset);
+		try
+		{
+			if (iconP1.isAnimated)
+			{
+				if (!PlayStateChangeables.opponentMode)
+				{
+					if (healthBar.percent < 20 && icon1AnimArray[1])
+					{
+						animName = 'Lose';
+					}
+					else
+					{
+						animName = 'Idle';
+					}
+
+					if (iconP1.animation.curAnim.finished || (animName != iconP1.animation.curAnim.name))
+					{
+						iconP1.playAnim(animName, true);
+					}
+				}
+				else
+				{
+					if (healthBar.percent > 80 && icon1AnimArray[0])
+					{
+						animName = 'Lose';
+					}
+					else
+					{
+						animName = 'Idle';
+					}
+
+					if (iconP1.animation.curAnim.finished || (animName != iconP1.animation.curAnim.name))
+					{
+						iconP1.playAnim(animName, true);
+					}
+				}
+			}
+			else
+			{
+				if (!PlayStateChangeables.opponentMode)
+				{
+					if (healthBar.percent < 20)
+						iconP1.animation.curAnim.curFrame = 1;
+					else if (healthBar.percent > 80 && iconP1.hasWinningIcon)
+						iconP1.animation.curAnim.curFrame = 2;
+					else
+						iconP1.animation.curAnim.curFrame = 0;
+				}
+				else
+				{
+					if (healthBar.percent > 80)
+						iconP1.animation.curAnim.curFrame = 1;
+					else if (healthBar.percent < 20 && iconP1.hasWinningIcon)
+						iconP1.animation.curAnim.curFrame = 2;
+					else
+						iconP1.animation.curAnim.curFrame = 0;
+				}
+			}
+
+			if (iconP2.isAnimated)
+			{
+				if (!PlayStateChangeables.opponentMode)
+				{
+					if (healthBar.percent > 80 && icon2AnimArray[0])
+					{
+						animName = 'Lose';
+					}
+					else
+					{
+						animName = 'Idle';
+					}
+
+					if (iconP2.animation.curAnim.finished || (animName != iconP2.animation.curAnim.name))
+					{
+						iconP2.playAnim(animName, true);
+					}
+				}
+				else
+				{
+					if (healthBar.percent < 20 && icon2AnimArray[0])
+					{
+						animName = 'Lose';
+					}
+					else
+					{
+						animName = 'Idle';
+					}
+
+					if (iconP2.animation.curAnim.finished || (animName != iconP2.animation.curAnim.name))
+					{
+						iconP2.playAnim(animName, true);
+					}
+				}
+			}
+			else
+			{
+				if (PlayStateChangeables.opponentMode)
+				{
+					if (healthBar.percent < 20)
+						iconP2.animation.curAnim.curFrame = 1;
+					else if (healthBar.percent > 80 && iconP2.hasWinningIcon)
+						iconP2.animation.curAnim.curFrame = 2;
+					else
+						iconP2.animation.curAnim.curFrame = 0;
+				}
+				else
+				{
+					if (healthBar.percent > 80)
+						iconP2.animation.curAnim.curFrame = 1;
+					else if (healthBar.percent < 20 && iconP2.hasWinningIcon)
+						iconP2.animation.curAnim.curFrame = 2;
+					else
+						iconP2.animation.curAnim.curFrame = 0;
+				}
+			}
+
+			// Debug.logTrace(healthBar.percent);
+		}
+		catch (e)
+		{
+			Debug.logTrace(e);
+		}
+
+		// I don't wanna talk about the code above.
 
 		#if FEATURE_LUAMODCHART
 		if (executeModchart && luaModchart != null)
@@ -6234,6 +6210,13 @@ class PlayState extends MusicBeatState
 				return;
 			}
 		}
+
+		for (i in uiGroup)
+		{
+			i.kill();
+			uiGroup.remove(i);
+		}
+		uiGroup.clear();
 
 		boyfriendGroup.clear();
 		dadGroup.clear();

@@ -499,9 +499,9 @@ class Paths
 	}
 
 	public static var dumpExclusions:Array<String> = [
-		'assets/music/freakyMenu.$SOUND_EXT',
+		'assets/shared/music/freakyMenu.$SOUND_EXT',
 		'assets/shared/music/breakfast.$SOUND_EXT',
-		'assets/music/ke_freakyMenu.$SOUND_EXT'
+		'assets/shared/music/ke_freakyMenu.$SOUND_EXT'
 	];
 
 	public static function clearStoredMemory(?cleanUnused:Bool = false)
