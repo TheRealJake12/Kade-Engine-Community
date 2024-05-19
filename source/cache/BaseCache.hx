@@ -11,11 +11,11 @@ class BaseCache
 	public static var cacheAmount:Int = 0;
 	public static var loadedBefore = false;
 
-	public static function addImage(image:String):Void
-	{ // There we go. Much better than before
-		var cacheImage:FlxSprite = cast new FlxSprite().loadGraphic(image);
-		cacheImage.graphic.persist = cacheImage.graphic.destroyOnNoUse = !cacheImage.graphic.destroyOnNoUse;
-		FlxG.bitmap.add(image, false, image); // Literally the only way
+	public static function addImage(image:String)
+	{
+		var placebo = cast new FlxSprite().loadGraphic(Paths.image(image));
+		placebo.graphic.persist = true;
+		placebo.graphic.destroyOnNoUse = false;
 	}
 
 	public static function addSound(sound:String):Void
@@ -30,23 +30,6 @@ class BaseCache
 	{
 		try
 		{
-			for (image in CoolUtil.readAssetsDirectoryFromLibrary(baseDirectory, 'IMAGE'))
-			{
-				var filePath:String = '$image';
-
-				// Debug.logTrace('$filePath ' + OpenFlAssets.exists(filePath, IMAGE));
-
-				if (image.endsWith('.png'))
-				{
-					if (OpenFlAssets.exists(filePath, IMAGE))
-					{
-						BaseCache.addImage(filePath);
-						Debug.logTrace('Caching Image $filePath...');
-						cacheAmount++;
-					}
-				}
-			}
-
 			for (sound in CoolUtil.readAssetsDirectoryFromLibrary(baseDirectory, 'SOUND'))
 			{
 				var filePath:String = '$sound';
@@ -58,7 +41,23 @@ class BaseCache
 					if (OpenFlAssets.exists(filePath, SOUND))
 					{
 						BaseCache.addSound(filePath);
-						Debug.logTrace('Caching Sound $filePath...');
+						// Debug.logTrace('Caching Sound $filePath...');
+						cacheAmount++;
+					}
+				}
+			}
+
+			for (image in CoolUtil.readAssetsDirectoryFromLibrary(baseDirectory, 'IMAGE'))
+			{
+				var filePath:String = image;
+				if (filePath.endsWith('.png'))
+				{
+					if (OpenFlAssets.exists(filePath, IMAGE))
+					{
+						var bruh = filePath.replace('assets/shared/images/', '');
+						var fard = bruh.replace('.png', '');
+						addImage(fard);
+						// Debug.logTrace('Caching Image $fard');
 						cacheAmount++;
 					}
 				}

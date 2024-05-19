@@ -129,11 +129,11 @@ class Main extends Sprite
 
 		// FlxTransitionableState.skipNextTransIn = true;
 		game.framerate = 60;
-		var fard:FlxGame = new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom, #end game.framerate,
-			game.framerate, game.skipSplash, game.startFullscreen);
+		var fard:FlxGame = new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate,
+			game.skipSplash, game.startFullscreen);
 
 		@:privateAccess
-		fard._customSoundTray = flixel.FunkinSoundTray;	
+		fard._customSoundTray = flixel.FunkinSoundTray;
 		addChild(fard);
 
 		FlxG.fixedTimestep = false;
@@ -227,49 +227,28 @@ class Main extends Sprite
 		focused = false;
 
 		// Lower global volume when unfocused
-		if (Type.getClass(FlxG.state) != PlayState) // imagine stealing my code smh
+		oldVol = FlxG.sound.volume;
+		if (oldVol > 0.3)
 		{
-			oldVol = FlxG.sound.volume;
-			if (oldVol > 0.3)
+			newVol = 0.3;
+		}
+		else
+		{
+			if (oldVol > 0.1)
 			{
-				newVol = 0.3;
+				newVol = 0.1;
 			}
 			else
 			{
-				if (oldVol > 0.1)
-				{
-					newVol = 0.1;
-				}
-				else
-				{
-					newVol = 0;
-				}
+				newVol = 0;
 			}
-
-			if (focusMusicTween != null)
-				focusMusicTween.cancel();
-			focusMusicTween = FlxTween.tween(FlxG.sound, {volume: newVol}, 0.5);
-
-			if (PlayState.inDaPlay)
-			{
-				PlayState.instance.openSubState(new PauseSubState());
-
-				PlayState.instance.persistentUpdate = false;
-				PlayState.instance.persistentDraw = true;
-				PlayState.instance.paused = true;
-
-				if (!PlayState.SONG.splitVoiceTracks)
-					PlayState.vocals.pause();
-				else
-				{
-					PlayState.vocalsPlayer.pause();
-					PlayState.vocalsEnemy.pause();
-				}
-				PlayState.inst.pause();
-			}
-
-			// Conserve power by lowering draw framerate when unfocuced
 		}
+
+		if (focusMusicTween != null)
+			focusMusicTween.cancel();
+		focusMusicTween = FlxTween.tween(FlxG.sound, {volume: newVol}, 0.5);
+
+		// Conserve power by lowering draw framerate when unfocuced
 		FlxG.drawFramerate = 30;
 	}
 
@@ -281,17 +260,14 @@ class Main extends Sprite
 		});
 
 		// Lower global volume when unfocused
-		if (Type.getClass(FlxG.state) != PlayState)
-		{
-			// Normal global volume when focused
-			if (focusMusicTween != null)
-				focusMusicTween.cancel();
+		// Normal global volume when focused
+		if (focusMusicTween != null)
+			focusMusicTween.cancel();
 
-			focusMusicTween = FlxTween.tween(FlxG.sound, {volume: oldVol}, 0.5);
+		focusMusicTween = FlxTween.tween(FlxG.sound, {volume: oldVol}, 0.5);
 
-			// Bring framerate back when focused
-			FlxG.drawFramerate = FlxG.save.data.fpsCap;
-		}
+		// Bring framerate back when focused
+		FlxG.drawFramerate = FlxG.save.data.fpsCap;
 		gameContainer.setFPSCap(FlxG.save.data.fpsCap);
 	}
 	#end

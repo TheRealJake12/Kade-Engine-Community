@@ -2679,7 +2679,7 @@ class PlayState extends MusicBeatState
 
 	private function generateStaticArrows(player:Int, ?tween:Bool = true):Void
 	{
-		var seX:Float = PlayStateChangeables.middleScroll ? -278 : 42;
+		var seX:Float = !PlayStateChangeables.opponentMode ? (PlayStateChangeables.middleScroll ? -278 : 42) : (PlayStateChangeables.middleScroll ? 366 : 42);
 		var seY:Float = strumLine.y;
 		for (i in 0...4)
 		{
@@ -2706,6 +2706,7 @@ class PlayState extends MusicBeatState
 					if (player == 0)
 					{
 						targAlpha = 0;
+
 					}
 				}
 			}
@@ -2747,9 +2748,10 @@ class PlayState extends MusicBeatState
 			}
 			babyArrow.playAnim('static');
 			// babyArrow.x += 98.5; // Tryna make it not offset because it was pissing me off + Psych Engine has it somewhat like this.
-			// babyArrow.x += ((FlxG.width / 2) * player);
 			babyArrow.x += 50;
 			babyArrow.x += ((FlxG.width / 2) * player);
+
+			Debug.logTrace(babyArrow.x);
 
 			strumLineNotes.add(babyArrow);
 		}
@@ -3527,23 +3529,6 @@ class PlayState extends MusicBeatState
 		else if (health >= 2)
 			health = 2;
 
-		if (songStarted)
-		{
-			var bpmRatio = Conductor.bpm / 100;
-
-			if (PlayStateChangeables.zoom < 0.8)
-				PlayStateChangeables.zoom = 0.8;
-			if (PlayStateChangeables.zoom > 1.2)
-				PlayStateChangeables.zoom = 1.2;
-			// this motherfucker fucks me so much.
-
-			FlxG.camera.zoom = FlxMath.lerp(zoomForTweens, FlxG.camera.zoom,
-				CoolUtil.boundTo(1 - (elapsed * 3.125 * bpmRatio * songMultiplier * zoomMultiplier), 0, 1));
-			camHUD.zoom = FlxMath.lerp(PlayStateChangeables.zoom * zoomForHUDTweens, camHUD.zoom,
-				CoolUtil.boundTo(1 - (elapsed * 3.125 * bpmRatio * songMultiplier * zoomMultiplier), 0, 1));
-			camStrums.zoom = camHUD.zoom;
-		}
-
 		FlxG.watch.addQuick("curBPM", Conductor.bpm);
 		FlxG.watch.addQuick("beatShit", curBeat);
 		FlxG.watch.addQuick("secShit", curSection);
@@ -3637,6 +3622,25 @@ class PlayState extends MusicBeatState
 					+ misses, iconRPC);
 				#end
 			}
+		}
+
+		super.update(elapsed);
+
+		if (songStarted)
+		{
+			var bpmRatio = Conductor.bpm / 100;
+
+			if (PlayStateChangeables.zoom < 0.8)
+				PlayStateChangeables.zoom = 0.8;
+			if (PlayStateChangeables.zoom > 1.2)
+				PlayStateChangeables.zoom = 1.2;
+			// this motherfucker fucks me so much.
+
+			FlxG.camera.zoom = FlxMath.lerp(zoomForTweens, FlxG.camera.zoom,
+				CoolUtil.boundTo(1 - (elapsed * 3.125 * bpmRatio * songMultiplier * zoomMultiplier), 0, 1));
+			camHUD.zoom = FlxMath.lerp(PlayStateChangeables.zoom * zoomForHUDTweens, camHUD.zoom,
+				CoolUtil.boundTo(1 - (elapsed * 3.125 * bpmRatio * songMultiplier * zoomMultiplier), 0, 1));
+			camStrums.zoom = camHUD.zoom;
 		}
 
 		if (generatedMusic && !(inCutscene || inCinematic))
@@ -3868,8 +3872,6 @@ class PlayState extends MusicBeatState
 			endSong();
 		for (i in shaderUpdates)
 			i(elapsed);
-
-		super.update(elapsed);
 
 		if (FlxG.save.data.smoothHealthbar)
 			shownHealth = FlxMath.lerp(shownHealth, health, CoolUtil.boundTo(elapsed * 15 * songMultiplier, 0, 1));

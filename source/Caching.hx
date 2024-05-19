@@ -45,18 +45,12 @@ class Caching extends MusicBeatState
 
 		add(kadeLogo);
 		add(text);
-		for (imageDir in ['assets/images/', 'assets/shared/images/'])
+		for (imageDir in ['assets/shared/images/'])
 		{
 			list('image', imageDir);
 		}
 
-		for (soundDir in [
-			'assets/songs/',
-			'assets/shared/sounds/',
-			'assets/shared/music/',
-			'assets/music/',
-			'assets/sounds/'
-		])
+		for (soundDir in ['assets/songs/', 'assets/shared/sounds/', 'assets/shared/music/',])
 		{
 			list('sound', soundDir);
 		}
@@ -84,7 +78,10 @@ class Caching extends MusicBeatState
 			});
 
 			// cache thread
-			start();
+			haxe.Timer.delay(function() // this is fine
+			{
+				start();
+			}, 600);
 		}
 		else
 		{
@@ -103,28 +100,7 @@ class Caching extends MusicBeatState
 			switch (cache.BaseCache.loadedBefore)
 			{
 				case false:
-					FlxG.autoPause = false;
-					new lime.app.Future<Void>(function()
-					{
-						for (directory in [
-							'assets/images/',
-							'assets/songs/',
-							'assets/shared/images/',
-							'assets/shared/sounds/',
-							'assets/shared/music/'
-						])
-						{
-							cache.BaseCache.cacheStuff(directory);
-						}
-						haxe.Timer.delay(function() // this is fine
-						{
-							cache.BaseCache.loadedBefore = true;
-							FlxG.autoPause = FlxG.save.data.autoPause;
-							loaded = true;
-							MusicBeatState.switchState(new OptionsDirect());
-							Debug.logTrace("Done");
-						}, 600);
-					}, true);
+					actuallyCache(FlxG.save.data.gpuRender); // gpu rendering fucks me in the ass again
 				case true:
 					MusicBeatState.switchState(new OptionsDirect());
 					Debug.logTrace("Loaded Before, No Need To Load Again.");
@@ -132,6 +108,53 @@ class Caching extends MusicBeatState
 		}
 		else
 			MusicBeatState.switchState(new OptionsDirect());
+	}
+
+	function actuallyCache(gpuRender:Bool)
+	{
+		FlxG.autoPause = false;
+		switch (gpuRender)
+		{
+			case true:
+				for (directory in [
+					'assets/songs/',
+					'assets/shared/images/',
+					'assets/shared/sounds/',
+					'assets/shared/music/'
+				])
+				{
+					cache.BaseCache.cacheStuff(directory);
+				}
+				haxe.Timer.delay(function() // this is fine
+				{
+					cache.BaseCache.loadedBefore = true;
+					FlxG.autoPause = FlxG.save.data.autoPause;
+					loaded = true;
+					MusicBeatState.switchState(new OptionsDirect());
+					Debug.logTrace("Done");
+				}, 600);
+			case false:
+				new lime.app.Future<Void>(function()
+				{
+					for (directory in [
+						'assets/songs/',
+						'assets/shared/images/',
+						'assets/shared/sounds/',
+						'assets/shared/music/'
+					])
+					{
+						cache.BaseCache.cacheStuff(directory);
+					}
+					haxe.Timer.delay(function() // this is fine
+					{
+						cache.BaseCache.loadedBefore = true;
+						FlxG.autoPause = FlxG.save.data.autoPause;
+						loaded = true;
+						MusicBeatState.switchState(new OptionsDirect());
+						Debug.logTrace("Done");
+					}, 600);
+				}, true);
+		}
 	}
 
 	var calledDone = false;
