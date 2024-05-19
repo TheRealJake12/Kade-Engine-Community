@@ -1,6 +1,7 @@
 package;
 
 import cache.BaseCache;
+import haxe.Timer;
 
 using StringTools;
 
@@ -113,6 +114,7 @@ class Caching extends MusicBeatState
 	function actuallyCache(gpuRender:Bool)
 	{
 		FlxG.autoPause = false;
+		var stamp = Timer.stamp();
 		switch (gpuRender)
 		{
 			case true:
@@ -132,6 +134,7 @@ class Caching extends MusicBeatState
 					loaded = true;
 					MusicBeatState.switchState(new OptionsDirect());
 					Debug.logTrace("Done");
+					Debug.logTrace(Timer.stamp() - stamp);
 				}, 600);
 			case false:
 				new lime.app.Future<Void>(function()
@@ -152,6 +155,7 @@ class Caching extends MusicBeatState
 						loaded = true;
 						MusicBeatState.switchState(new OptionsDirect());
 						Debug.logTrace("Done");
+						Debug.logTrace(Timer.stamp() - stamp);
 					}, 600);
 				}, true);
 		}

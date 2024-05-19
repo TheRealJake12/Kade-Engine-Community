@@ -413,6 +413,9 @@ class PlayState extends MusicBeatState
 
 	var tweenBoolshit = true;
 
+	// Default Note X Positions (Non Middlescroll). Used For Modcharts If You Want.
+	var notePositions:Array<Float> = [92, 204, 316, 428, 732, 844, 956, 1068];
+
 	// Adding Objects Using Lua
 	public function addObject(object:FlxBasic)
 	{
@@ -427,6 +430,7 @@ class PlayState extends MusicBeatState
 
 	override public function create()
 	{
+		var stamp:Float = haxe.Timer.stamp();
 		if (curSong != SONG.songId)
 		{
 			curSong = SONG.songId;
@@ -1352,6 +1356,8 @@ class PlayState extends MusicBeatState
 		#end
 
 		Paths.clearUnusedMemory();
+
+		Debug.logTrace("Took " + Std.string(FlxMath.roundDecimal(haxe.Timer.stamp() - stamp, 3)) + " Seconds To Load.");
 	}
 
 	function createBar()
@@ -2465,6 +2471,7 @@ class PlayState extends MusicBeatState
 
 	public function generateSong(dataPath:String):Void
 	{
+		var chartStamp = haxe.Timer.stamp();
 		var songData = SONG;
 
 		activeSong = SONG;
@@ -2650,7 +2657,7 @@ class PlayState extends MusicBeatState
 
 		generatedMusic = true;
 		if (FlxG.save.data.gen)
-			Debug.logInfo('Generated Chart');
+			Debug.logInfo('Generated Chart With A Time Of ' + Std.string(FlxMath.roundDecimal(haxe.Timer.stamp() - chartStamp, 3)) + " Seconds.");
 	}
 
 	function sortByShit(Obj1:Note, Obj2:Note):Int
@@ -2706,7 +2713,6 @@ class PlayState extends MusicBeatState
 					if (player == 0)
 					{
 						targAlpha = 0;
-
 					}
 				}
 			}
@@ -2750,8 +2756,6 @@ class PlayState extends MusicBeatState
 			// babyArrow.x += 98.5; // Tryna make it not offset because it was pissing me off + Psych Engine has it somewhat like this.
 			babyArrow.x += 50;
 			babyArrow.x += ((FlxG.width / 2) * player);
-
-			Debug.logTrace(babyArrow.x);
 
 			strumLineNotes.add(babyArrow);
 		}

@@ -104,10 +104,10 @@ class NoteSplash extends FlxSprite
 	function loadAnims(?noteType:String = '')
 	{
 		var data:SplashData = cast rawJson;
-		switch (PlayState.STYLE.style)
+		switch (PlayState.STYLE.style.toLowerCase())
 		{
 			case 'pixel':
-				frames = Paths.getSparrowAtlas('weeb/pixelUI/noteSplashes-pixels');
+				frames = Paths.getSparrowAtlas('hud/pixel/noteSplashes-pixels');
 				for (i in 0...4)
 				{
 					animation.addByPrefix('splash 0 ' + i, 'note splash 1 ' + anims[i], 24, false);

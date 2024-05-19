@@ -221,6 +221,7 @@ class ChartingState extends MusicBeatState
 	public var helpText:CoolUtil.CoolText;
 
 	var _file:FileReference;
+
 	public var id:Int = -1;
 
 	// one does not realize how much flixel-ui is used until one sees an FNF chart editor. 💀
@@ -1130,7 +1131,7 @@ class ChartingState extends MusicBeatState
 					var playerNote = note.noteData >= 4;
 					if (!playedSound[data])
 					{
-						if ((hitsoundsP.selected && playerNote) || (hitsoundsE.selected && !playerNote))
+						if ((FlxG.save.data.playHitsounds && playerNote) || (FlxG.save.data.playHitsoundsE && !playerNote))
 						{
 							if (FlxG.save.data.hitSound == 0)
 							{
@@ -1803,30 +1804,39 @@ class ChartingState extends MusicBeatState
 			SONG = PlayState.SONG;
 		}
 		// WONT WORK FOR TUTORIAL OR TEST SONG!!! REDO LATER
-		if (!SONG.splitVoiceTracks)
+		try
 		{
-			if (SONG.needsVoices)
-				vocals = FlxG.sound.load(Paths.voices(SONG.audioFile));
+			if (!SONG.splitVoiceTracks)
+			{
+				if (SONG.needsVoices)
+					vocals = FlxG.sound.load(Paths.voices(SONG.audioFile));
+				else
+					vocals = new FlxSound();
+				FlxG.sound.list.add(vocals);
+			}
 			else
-				vocals = new FlxSound();
+			{
+				if (SONG.needsVoices)
+				{
+					vocalsP = FlxG.sound.load(Paths.voices(SONG.audioFile, 'P'));
+					vocalsE = FlxG.sound.load(Paths.voices(SONG.audioFile, 'E'));
+				}
+				else
+				{
+					vocalsP = new FlxSound();
+					vocalsE = new FlxSound();
+				}
+				FlxG.sound.list.add(vocalsP);
+				FlxG.sound.list.add(vocalsE);
+			}
+		}
+		catch (e)
+		{
+			vocals = new FlxSound();
 			FlxG.sound.list.add(vocals);
+			SONG.splitVoiceTracks = false;
+			Debug.logTrace("Your Song Doesn't Have A Voice File Or Something Else. Make Sure Your Song Has The Correct Audio." + e);
 		}
-		else
-		{
-			if (SONG.needsVoices)
-			{
-				vocalsP = FlxG.sound.load(Paths.voices(SONG.audioFile, 'P'));
-				vocalsE = FlxG.sound.load(Paths.voices(SONG.audioFile, 'E'));
-			}
-			else
-			{
-				vocalsP = new FlxSound();
-				vocalsE = new FlxSound();
-			}
-			FlxG.sound.list.add(vocalsP);
-			FlxG.sound.list.add(vocalsE);
-		}
-
 		FlxG.sound.list.add(inst);
 
 		inst.play();
@@ -3002,7 +3012,7 @@ class ChartingState extends MusicBeatState
 		file.text = "Chart";
 		var personal = new Menu();
 		personal.text = "Preferences";
-		
+
 		var box = new VBox();
 
 		var saveSong = new MenuItem();
@@ -3025,18 +3035,25 @@ class ChartingState extends MusicBeatState
 		reload.text = "Reload Audio";
 		reload.onClick = function(e)
 		{
-			if (inst.playing)
+			try
 			{
-				inst.stop();
-				if (!SONG.splitVoiceTracks)
-					vocals.stop();
-				else
+				if (inst.playing)
 				{
-					vocalsP.stop();
-					vocalsE.stop();
+					inst.stop();
+					if (!SONG.splitVoiceTracks)
+						vocals.stop();
+					else
+					{
+						vocalsP.stop();
+						vocalsE.stop();
+					}
 				}
+				loadSong(SONG.audioFile.toLowerCase(), false);
 			}
-			loadSong(SONG.audioFile.toLowerCase(), false);
+			catch (e)
+			{
+				Debug.logTrace(e);
+			}
 			// goofy song overlapping and raping your ears
 		}
 
@@ -3071,7 +3088,7 @@ class ChartingState extends MusicBeatState
 								title: "Chart Cleared.",
 								body: "All Notes Cleared.",
 								type: NotificationType.Success,
-							});	
+							});
 							return true;
 						}
 					},
@@ -3176,8 +3193,6 @@ class ChartingState extends MusicBeatState
 		personal.addComponent(metronome);
 		personal.addComponent(oppMode);
 
-		
-		
 		menu.addComponent(spac);
 		menu.addComponent(file);
 		menu.addComponent(personal);
@@ -3195,7 +3210,7 @@ class ChartingState extends MusicBeatState
 			iconP2.updateHitbox();
 		}
 
-		if (metronome.selected)
+		if (FlxG.save.data.chart_metronome)
 			FlxG.sound.play(Paths.sound('Metronome_Tick'));
 	}
 
