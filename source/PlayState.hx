@@ -2473,42 +2473,44 @@ class PlayState extends MusicBeatState
 	{
 		var chartStamp = haxe.Timer.stamp();
 		var songData = SONG;
-
-		activeSong = SONG;
-
-		Conductor.changeBPM(songData.bpm);
-
-		curSong = songData.songId;
-
-		if (!SONG.splitVoiceTracks)
+		try
 		{
-			if (SONG.needsVoices)
-				vocals = new FlxSound().loadEmbedded(Paths.voices(SONG.audioFile));
-			else
-				vocals = new FlxSound();
-			if (FlxG.save.data.gen)
-				trace('loaded vocals');
-
-			FlxG.sound.list.add(vocals);
-		}
-		else
-		{
-			if (SONG.needsVoices)
+			if (!SONG.splitVoiceTracks)
 			{
-				vocalsPlayer = new FlxSound().loadEmbedded(Paths.voices(SONG.audioFile, 'P'));
-				vocalsEnemy = new FlxSound().loadEmbedded(Paths.voices(SONG.audioFile, 'E'));
+				if (SONG.needsVoices)
+					vocals = new FlxSound().loadEmbedded(Paths.voices(SONG.audioFile));
+				else
+					vocals = new FlxSound();
+				if (FlxG.save.data.gen)
+					trace('loaded vocals');
+
+				FlxG.sound.list.add(vocals);
+				vocals.play();
+				vocals.pause();
 			}
 			else
 			{
-				vocalsEnemy = new FlxSound();
-				vocalsPlayer = new FlxSound();
+				if (SONG.needsVoices)
+				{
+					vocalsPlayer = new FlxSound().loadEmbedded(Paths.voices(SONG.audioFile, 'P'));
+					vocalsEnemy = new FlxSound().loadEmbedded(Paths.voices(SONG.audioFile, 'E'));
+				}
+				else
+				{
+					vocalsEnemy = new FlxSound();
+					vocalsPlayer = new FlxSound();
+				}
+
+				if (FlxG.save.data.gen)
+					trace('loaded vocals');
+
+				FlxG.sound.list.add(vocalsPlayer);
+				FlxG.sound.list.add(vocalsEnemy);
+				vocalsPlayer.play();
+				vocalsPlayer.pause();
+				vocalsEnemy.play();
+				vocalsEnemy.pause();
 			}
-
-			if (FlxG.save.data.gen)
-				trace('loaded vocals');
-
-			FlxG.sound.list.add(vocalsPlayer);
-			FlxG.sound.list.add(vocalsEnemy);
 		}
 
 		if (!isStoryMode && isSM)
@@ -2524,22 +2526,19 @@ class PlayState extends MusicBeatState
 		{
 			inst = new FlxSound().loadEmbedded(Paths.inst(PlayState.SONG.audioFile));
 		}
-
+		inst.play();
 		inst.pause();
 
 		FlxG.sound.list.add(inst);
 
+		activeSong = SONG;
+		curSong = songData.songId;
+
+		Conductor.changeBPM(SONG.bpm);
+
 		addSongTiming();
 
-		Conductor.changeBPM(SONG.bpm * songMultiplier);
-
-		Conductor.bpm = SONG.bpm * songMultiplier;
-
-		Conductor.crochet = ((60 / (SONG.bpm * songMultiplier) * 1000));
-		Conductor.stepCrochet = Conductor.crochet / 4;
-
 		fakeCrochet = Conductor.crochet;
-
 		fakeNoteStepCrochet = fakeCrochet / 4;
 
 		#if FEATURE_HSCRIPT

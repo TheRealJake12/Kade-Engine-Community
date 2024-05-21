@@ -159,8 +159,6 @@ class GameplayCustomizeState extends MusicBeatState
 		ui.width = 200;
 		ui.height = 100;
 		ui.draggable = true;
-		ui.x = 1080;
-		ui.y = 600;
 		ui.camera = camOverlay;
 
 		dad = new Character(100, 100, freeplayDad);
@@ -324,6 +322,8 @@ class GameplayCustomizeState extends MusicBeatState
 		currentTimingShown.y = sick.y + 100;
 
 		addMenuUI();
+		ui.x = 1080;
+		ui.y = 600;
 
 		add(ui);
 

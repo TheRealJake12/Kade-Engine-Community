@@ -248,7 +248,7 @@ class OptionsMenu extends MusicBeatSubstate
 				new DistractionsAndEffectsOption("Toggles Extra Assets Be Loaded To Improve Quality At The Cost Of Performance"),
 				new Shaders("Should Shaders Be Enabled? (High GPU and CPU Usage.)"),
 				#if desktop
-				new UnloadSongs("Should Assets Be Unloaded To Improve Memory Usage (At The Cost Of Loading Times)."),
+				new UnloadSongs("Persistent Memory Means That No Assets Will Be Unloaded. This Will Cause High Memory Usage With Improved Reloading Times."),
 				new UnloadNow("Clears All Cache We Can Remove."),
 				#end
 
