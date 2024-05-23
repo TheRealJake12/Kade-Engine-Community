@@ -24,16 +24,16 @@
       "name": "deathLoop",
       "prefix": "Retry Loop",
       "offsets": [
-        -5,
-        -2
+        -30,
+        -12
       ]
     },
     {
       "name": "deathConfirm",
       "prefix": "RETRY CONFIRM",
       "offsets": [
-        -5,
-        -2
+        -30,
+        -12
       ]
     }
   ]
