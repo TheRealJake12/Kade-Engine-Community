@@ -80,6 +80,22 @@ class Main extends Sprite
 	{
 		super();
 
+		#if mobile
+		#if android
+		SUtil.doPermissionsShit();
+		#end
+		Sys.setCwd(SUtil.getStorageDirectory());
+		#end
+
+		#if windows
+		@:functionCode("
+		#include <windows.h>
+		#include <winuser.h>
+		setProcessDPIAware() // allows for more crisp visuals
+		DisableProcessWindowsGhosting() // lets you move the window and such if it's not responding
+		")
+		#end
+
 		if (stage != null)
 		{
 			init();
@@ -102,6 +118,7 @@ class Main extends Sprite
 
 	private function setupGame():Void
 	{
+		#if !mobile
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
 
@@ -113,6 +130,7 @@ class Main extends Sprite
 			game.width = Math.ceil(stageWidth / game.zoom);
 			game.height = Math.ceil(stageHeight / game.zoom);
 		}
+		#end
 
 		gameContainer = this;
 
@@ -121,11 +139,9 @@ class Main extends Sprite
 		// Run this first so we can see logs.
 		Debug.onInitProgram();
 
-		#if !mobile
 		fpsCounter = new KadeEngineFPS(10, 3, 0xFFFFFF);
 		bitmapFPS = ImageOutline.renderImage(fpsCounter, 1, 0x000000, true);
 		bitmapFPS.smoothing = true;
-		#end
 
 		// FlxTransitionableState.skipNextTransIn = true;
 		game.framerate = 60;
@@ -138,10 +154,8 @@ class Main extends Sprite
 
 		FlxG.fixedTimestep = false;
 
-		#if !mobile
 		addChild(fpsCounter);
 		toggleFPS(FlxG.save.data.fps);
-		#end
 
 		#if html5
 		FlxG.autoPause = false;
@@ -154,8 +168,8 @@ class Main extends Sprite
 
 		// Finish up loading debug tools.
 		Debug.onGameStart();
-		#if desktop
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
+		#if desktop
 		Application.current.window.onFocusOut.add(onWindowFocusOut);
 		Application.current.window.onFocusIn.add(onWindowFocusIn);
 		#end
@@ -187,7 +201,6 @@ class Main extends Sprite
 		http.request();
 	}
 
-	#if desktop
 	function onCrash(e:UncaughtErrorEvent):Void
 	{
 		var errMsg:String = "";
@@ -222,6 +235,7 @@ class Main extends Sprite
 		Sys.exit(1);
 	}
 
+	#if desktop
 	function onWindowFocusOut()
 	{
 		focused = false;

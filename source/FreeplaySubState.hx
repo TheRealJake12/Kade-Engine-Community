@@ -201,7 +201,6 @@ class ModMenu extends MusicBeatSubstate
 		any = FlxG.keys.justPressed.ANY;
 		escape = FlxG.keys.justPressed.ESCAPE;
 
-		#if !mobile
 		if (FlxG.mouse.wheel != 0)
 		{
 			if (FlxG.mouse.wheel < 0)
@@ -209,7 +208,6 @@ class ModMenu extends MusicBeatSubstate
 			else if (FlxG.mouse.wheel > 0)
 				up = true;
 		}
-		#end
 
 		if (selectedModifier != null)
 			if (selectedModifier.acceptType)

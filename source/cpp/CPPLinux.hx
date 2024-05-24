@@ -12,7 +12,7 @@ import cpp.UInt64;
 class CPPLinux
 {
 	#if cpp
-	#if linux
+	#if (linux || android)
 	@:functionCode('
 		FILE *meminfo = fopen("/proc/meminfo", "r");
 

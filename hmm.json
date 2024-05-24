@@ -72,6 +72,11 @@
       "url": "https://github.com/haxeui/haxeui-core.git --skip-dependencies"
     },
     {
+      "name": "extension-androidtools",
+      "type": "haxelib",
+      "version": null
+    },
+    {
       "name": "hxvlc",
       "type": "haxelib",
       "version": null

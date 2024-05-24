@@ -630,7 +630,6 @@ class OptionsMenu extends MusicBeatSubstate
 					}
 				}
 
-			#if !mobile
 			if (FlxG.mouse.wheel != 0)
 			{
 				if (FlxG.mouse.wheel < 0)
@@ -638,7 +637,6 @@ class OptionsMenu extends MusicBeatSubstate
 				else if (FlxG.mouse.wheel > 0)
 					up = true;
 			}
-			#end
 
 			var bullShit:Int = 0;
 
@@ -790,7 +788,6 @@ class OptionsMenu extends MusicBeatSubstate
 			}
 		}
 
-		#if !mobile
 		if (!isInPause)
 		{
 			for (i in 0...options.length - 1)
@@ -811,7 +808,6 @@ class OptionsMenu extends MusicBeatSubstate
 				}
 			}
 		}
-		#end
 	}
 
 	override function destroy():Void

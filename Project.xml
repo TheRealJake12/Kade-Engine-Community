@@ -61,7 +61,7 @@
 	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" vsync="false"/>
 
 	<!--Mobile-specific-->
-	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" resizable="false"/>
+	<window if="mobile" orientation="landscape" fullscreen="true" resizable="false" allow-shaders="true" require-shaders="true" allow-high-dpi="true" />
 
 	<!--Switch-specific-->
 	<window if="switch" orientation="landscape" fullscreen="true" width="0" height="0" resizable="true" />
@@ -89,8 +89,8 @@
 	
 	<assets path='mods' embed='false' if="FEATURE_MODCORE"/>
 	
-	<assets path='art/readme.txt' rename='do NOT readme.txt' />
-	<assets path='LICENSE' rename='LICENSE.txt' />
+	<assets path='art/readme.txt' rename='do NOT readme.txt' unless="mobile" />
+	<assets path='LICENSE' rename='LICENSE.txt' unless="mobile" />
 
 	<library name="videos"        preload="true" if="VIDEOS"/>
 	<library name="songs"         preload="true" />
@@ -131,6 +131,7 @@
 	<section if="cpp">
 		<haxelib name="hxvlc" if="VIDEOS" />
 	</section>
+	<haxelib name="extension-androidtools" if="android"/>
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
@@ -147,8 +148,7 @@
 	<!-- <haxedef name="FLX_NO_MOUSE" if="mobile" /> -->
 	<!-- <haxedef name="FLX_NO_KEYBOARD" if="mobile" /> -->
 	<!--<haxedef name="FLX_NO_GAMEPAD" />-->
-	
-	<haxedef name="FLX_NO_TOUCH" if="desktop" />
+	<!--<haxedef name="FLX_NO_TOUCH" if="desktop" />-->
 
 	<!--Disable the Flixel core sound tray-->
 	<!--<haxedef name="FLX_NO_SOUND_TRAY" />-->
@@ -170,6 +170,8 @@
 	<haxedef name="HXCPP_STACK_LINE" if="desktop" />
 	
 	<haxedef name="no_deprecation_warnings" />
+	
+	<haxedef name="message.reporting" value="pretty" />
 
 	<haxeflag name="-D no-traces" unless="debug" />
 	<haxedef name="queue_experimental_optimization"/>
@@ -179,6 +181,23 @@
 
 	<!--Basically Allows Videos To Render In Higher Quality On Higher Resoluttions-->
 	<haxedef name="openfl_dpi_aware" unless="web" />
+
+	<section if="android">
+			<!--Target SDK-->
+			<android target-sdk-version="31" />
+
+			<config:android permission="android.permission.MANAGE_EXTERNAL_STORAGE" />
+			<config:android permission="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+			<!-- Fix Networking -->
+			<config:android permission="android.permission.INTERNET" />
+			<config:android permission="android.permission.ACCESS_NETWORK_STATE" />
+		</section>
+
+		<!--<section if="ios">
+			<define name='objc' />
+			<ios linker-flags='-ObjC' />
+		</section>-->
 
 	<!-- _________________________________ Custom _______________________________ -->
 

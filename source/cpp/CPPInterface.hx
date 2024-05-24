@@ -38,7 +38,7 @@ class CPPInterface
 	{
 		return CPPWindows.obtainRAM();
 	}
-	#elseif linux
+	#elseif (linux || android)
 	public static function getRam():UInt64
 	{
 		return CPPLinux.obtainRAM();

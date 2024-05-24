@@ -189,9 +189,9 @@ class FreeplayState extends MusicBeatState
 		bottomBG.alpha = 0.6;
 		add(bottomBG);
 
-		var bottomText:String = #if !mobile #if PRELOAD_ALL "  Press SPACE to listen to the Song Instrumental / Click and scroll through the songs with your MOUSE /"
+		var bottomText:String = #if PRELOAD_ALL "  Press SPACE to listen to the Song Instrumental / Click and scroll through the songs with your MOUSE /"
 			+ #else "  Click and scroll through the songs with your MOUSE /"
-			+ #end #end
+			+ #end
 		" Your offset is " + FlxG.save.data.offset + "ms " + (FlxG.save.data.optimize ? "/ Optimized" : "");
 
 		var scoreBG:FlxSprite = new FlxSprite(scoreText.x - 6, 0).makeGraphic(Std.int(FlxG.width * 0.4), 337, 0xFF000000);

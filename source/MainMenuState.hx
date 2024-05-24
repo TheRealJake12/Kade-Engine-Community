@@ -263,7 +263,6 @@ class MainMenuState extends MusicBeatState
 
 			var shiftMult:Int = 1;
 
-			#if !mobile
 			if (FlxG.mouse.overlaps(menuItems, FlxG.camera))
 			{
 				menuItems.forEach(function(daSprite:FlxSprite)
@@ -280,7 +279,6 @@ class MainMenuState extends MusicBeatState
 			{
 				changeItem(-shiftMult * FlxG.mouse.wheel);
 			}
-			#end
 
 			if (FlxG.keys.justPressed.SEVEN)
 			{

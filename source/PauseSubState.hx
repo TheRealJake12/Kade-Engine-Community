@@ -115,9 +115,7 @@ class PauseSubState extends MusicBeatSubstate
 		super.create();
 	}
 
-	#if !mobile
 	var oldPos = FlxG.mouse.getScreenPosition();
-	#end
 
 	override function update(elapsed:Float)
 	{
@@ -128,17 +126,8 @@ class PauseSubState extends MusicBeatSubstate
 		if (pauseMusic.volume < 0.5)
 			pauseMusic.volume += 0.01 * elapsed;
 
-		#if !mobile
 		if (FlxG.mouse.wheel != 0)
-			#if desktop
 			changeSelection(-FlxG.mouse.wheel);
-			#else
-			if (FlxG.mouse.wheel < 0)
-				changeSelection(1);
-			if (FlxG.mouse.wheel > 0)
-				changeSelection(-1);
-			#end
-		#end
 
 		if (bg.alpha > 0.6)
 			bg.alpha = 0.6;
