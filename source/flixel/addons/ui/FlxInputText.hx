@@ -306,6 +306,7 @@ class FlxInputText extends FlxText
 			var hadFocus:Bool = hasFocus;
 			if (FlxG.mouse.overlaps(this, camera))
 			{
+				FlxG.stage.window.textInputEnabled = true;
 				caretIndex = getCaretIndex();
 				hasFocus = true;
 				if (!hadFocus && focusGained != null)
