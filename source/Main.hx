@@ -168,8 +168,8 @@ class Main extends Sprite
 
 		// Finish up loading debug tools.
 		Debug.onGameStart();
-		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 		#if desktop
+		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 		Application.current.window.onFocusOut.add(onWindowFocusOut);
 		Application.current.window.onFocusIn.add(onWindowFocusIn);
 		#end
@@ -177,8 +177,8 @@ class Main extends Sprite
 
 	public function checkInternetConnection()
 	{
-		Debug.logInfo('Checking Internet connection Through URL: "https://www.google.com".');
-		var http = new haxe.Http("https://www.google.com");
+		Debug.logInfo('Checking Internet connection Through URL: "https://www.example.com".');
+		var http = new haxe.Http("https://www.example.com");
 		http.onStatus = function(status:Int)
 		{
 			switch status
@@ -201,6 +201,7 @@ class Main extends Sprite
 		http.request();
 	}
 
+	#if desktop
 	function onCrash(e:UncaughtErrorEvent):Void
 	{
 		var errMsg:String = "";
@@ -235,7 +236,6 @@ class Main extends Sprite
 		Sys.exit(1);
 	}
 
-	#if desktop
 	function onWindowFocusOut()
 	{
 		focused = false;

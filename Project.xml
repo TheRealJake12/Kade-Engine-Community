@@ -21,7 +21,7 @@
 	<!-- Allowed inputs are mobile,desktop,web,ios,android,windows,mac,linux,switch,html5,cpp,neko,flash,js -->
 
 	<!-- Defines whether the Discord client should be enabled. Only works on desktop. -->
-	<define name="FEATURE_DISCORD" if="cpp" />
+	<define name="FEATURE_DISCORD" if="cpp desktop" />
 	<!-- Defines whether the file system can be read/written directly. Does not work in browser. -->
 	<define name="FEATURE_FILESYSTEM" if="cpp" />
 	<!-- Defines whether Lua Modcharts should be enabled. Does not work in browser. -->

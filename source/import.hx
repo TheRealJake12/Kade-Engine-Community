@@ -25,8 +25,9 @@ import android.Settings as AndroidSettings;
 import android.Tools as AndroidTools;
 import android.os.BatteryManager as AndroidBatteryManager;
 import android.os.Build as AndroidBuild;
+import android.os.Build.VERSION as AndroidVersion;
 #end
-import mobile.backend.SUtil;
+import mobile.SUtil;
 #end
 
 using StringTools;

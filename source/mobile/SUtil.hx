@@ -1,8 +1,12 @@
 package mobile;
 
+#if sys
 import lime.system.System as LimeSystem;
 import haxe.Exception;
 import lime.app.Application;
+import sys.io.File;
+import sys.FileSystem;
+import openfl.utils.Assets;
 
 /**
  * A storage class for mobile.
@@ -10,18 +14,17 @@ import lime.app.Application;
  */
 class SUtil
 {
-	#if sys
 	public static function getStorageDirectory():String
 	{
 		var daPath:String = '';
 		#if android
-		daPath = AndroidBuild.VERSION.SDK_INT > 30 ? AndroidContext.getObbDir() : AndroidContext.getExternalFilesDir()
+		daPath = AndroidVersion.SDK_INT > 30 ? AndroidContext.getObbDir() : AndroidContext.getExternalFilesDir();
 		daPath = haxe.io.Path.addTrailingSlash(daPath);
 		#elseif ios
 		daPath = LimeSystem.documentsDirectory;
 		#else
-        daPath = Sys.getCwd();
-        #end
+		daPath = Sys.getCwd();
+		#end
 
 		return daPath;
 	}
@@ -79,8 +82,8 @@ class SUtil
 		{
 			AndroidPermissions.requestPermission('READ_EXTERNAL_STORAGE');
 			AndroidPermissions.requestPermission('WRITE_EXTERNAL_STORAGE');
-			Application.current.window.alert('If you accepted the permissions you are all good!' + '\nIf you didn\'t then expect a crash' + '\nPress Ok to see what happens',
-				'Notice!');
+			Application.current.window.alert('If you accepted the permissions you are all good!' + '\nIf you didn\'t then expect a crash'
+				+ '\nPress Ok to see what happens', 'Notice!');
 			if (!AndroidEnvironment.isExternalStorageManager())
 				AndroidSettings.requestSetting('MANAGE_APP_ALL_FILES_ACCESS_PERMISSION');
 		}
@@ -93,33 +96,35 @@ class SUtil
 			}
 			catch (e:Dynamic)
 			{
-				Application.current.window.alert('Please create folder to\n' + SUtil.getStorageDirectory(true) + '\nPress OK to close the game', 'Error!');
+				Application.current.window.alert('Please create folder to\n' + SUtil.getStorageDirectory() + '\nPress OK to close the game', 'Error!');
 				LimeSystem.exit(1);
 			}
 		}
-    }
+	}
 	#end
 
-    public static function readDirectory(directory:String):Array<String>
-        {
-            #if desktop
-            return FileSystem.readDirectory(directory);
-            #else
-            var dirsWithNoLibrary = Assets.list().filter(folder -> folder.startsWith(directory));
-            var dirsWithLibrary:Array<String> = [];
-            for(dir in dirsWithNoLibrary)
-            {
-                @:privateAccess
-                for(library in lime.utils.Assets.libraries.keys())
-                {
-                    if(Assets.exists('$library:$dir') && library != 'default' && (!dirsWithLibrary.contains('$library:$dir') || !dirsWithLibrary.contains(dir)))
-                        dirsWithLibrary.push('$library:$dir');
-                    else if(Assets.exists(dir) && !dirsWithLibrary.contains(dir))
-                            dirsWithLibrary.push(dir);
-                }
-            }
-            return dirsWithLibrary;
-            #end
-        }
-	#end
+	public static function readDirectory(directory:String):Array<String>
+	{
+		#if desktop
+		return FileSystem.readDirectory(directory);
+		#else
+		var dirsWithNoLibrary = Assets.list().filter(folder -> folder.startsWith(directory));
+		var dirsWithLibrary:Array<String> = [];
+		for (dir in dirsWithNoLibrary)
+		{
+			@:privateAccess
+			for (library in lime.utils.Assets.libraries.keys())
+			{
+				if (Assets.exists('$library:$dir')
+					&& library != 'default'
+					&& (!dirsWithLibrary.contains('$library:$dir') || !dirsWithLibrary.contains(dir)))
+					dirsWithLibrary.push('$library:$dir');
+				else if (Assets.exists(dir) && !dirsWithLibrary.contains(dir))
+					dirsWithLibrary.push(dir);
+			}
+		}
+		return dirsWithLibrary;
+		#end
+	}
 }
+#end
