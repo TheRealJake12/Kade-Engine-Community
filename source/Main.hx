@@ -39,9 +39,6 @@ import sys.io.Process;
 import openfl.system.System;
 #end
 import openfl.utils.AssetCache;
-#if mobile
-import mobile.CopyState;
-#end
 
 using StringTools;
 
@@ -148,7 +145,7 @@ class Main extends Sprite
 
 		// FlxTransitionableState.skipNextTransIn = true;
 		game.framerate = 60;
-		var fard:FlxGame = new FlxGame(game.width, game.height, #if mobile !CopyState.checkExistingFiles() ? CopyState : #end game.initialState, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate,
+		var fard:FlxGame = new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate,
 			game.skipSplash, game.startFullscreen);
 
 		@:privateAccess
