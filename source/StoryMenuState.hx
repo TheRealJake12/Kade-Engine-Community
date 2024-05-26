@@ -303,7 +303,7 @@ class StoryMenuState extends MusicBeatState
 					changeDifficulty(-1);
 			}
 
-			if (controls.ACCEPT îf !mobile || FlxG.mouse.justPressed #end)
+			if (controls.ACCEPT #if !mobile || FlxG.mouse.justPressed #end)
 			{
 				selectWeek();
 			}
