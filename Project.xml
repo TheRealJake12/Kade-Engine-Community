@@ -27,7 +27,7 @@
 	<!-- Defines whether Lua Modcharts should be enabled. Does not work in browser. -->
 	<define name="FEATURE_LUAMODCHART" if="FEATURE_FILESYSTEM" />
 	<!-- Defines whether StepMania files can be loaded. -->
-	<define name="FEATURE_STEPMANIA" if="FEATURE_FILESYSTEM" unless="mobile" />
+	<define name="FEATURE_STEPMANIA" if="FEATURE_FILESYSTEM" />
 	<!-- Defines whether the Thread class can be used. -->
 	<define name="FEATURE_MULTITHREADING" if="cpp" />
 	<!-- Videos -->

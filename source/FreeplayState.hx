@@ -396,6 +396,8 @@ class FreeplayState extends MusicBeatState
 		#elseif FEATURE_STEPMANIA
 		// TODO: Refactor this to multiple difficulties.
 		// trace("tryin to load sm files");
+		if (!FileSystem.exists("assets/sm/"))
+			FileSystem.createDirectory("assets/sm/");
 		for (i in FileSystem.readDirectory("assets/sm/"))
 		{
 			// trace(i);

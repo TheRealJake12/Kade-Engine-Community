@@ -303,7 +303,7 @@ class StoryMenuState extends MusicBeatState
 					changeDifficulty(-1);
 			}
 
-			if (controls.ACCEPT || FlxG.mouse.justPressed && FlxG.mouse.overlaps(grpWeekText, grpWeekText.camera))
+			if (controls.ACCEPT îf !mobile || FlxG.mouse.justPressed #end)
 			{
 				selectWeek();
 			}
@@ -312,11 +312,6 @@ class StoryMenuState extends MusicBeatState
 			{
 				changeDifficulty(1);
 			}
-
-			if (FlxG.mouse.overlaps(leftArrow, leftArrow.camera) && FlxG.mouse.justPressed)
-				changeDifficulty(-1);
-			else if (FlxG.mouse.overlaps(rightArrow, rightArrow.camera) && FlxG.mouse.justPressed)
-				changeDifficulty(1);
 
 			if (controls.BACK && !movedBack && !selectedWeek)
 			{
