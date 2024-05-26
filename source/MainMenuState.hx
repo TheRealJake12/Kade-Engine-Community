@@ -104,9 +104,7 @@ class MainMenuState extends MusicBeatState
 		#end
 
 		FlxG.mouse.visible = true;
-		#if desktop
 		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
-		#end
 
 		if (!freakyPlaying)
 		{

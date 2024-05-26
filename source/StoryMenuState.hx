@@ -93,9 +93,7 @@ class StoryMenuState extends MusicBeatState
 
 		weekUnlocked = unlockWeeks();
 
-		#if desktop
 		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
-		#end
 
 		PlayState.SONG = null;
 
@@ -305,7 +303,7 @@ class StoryMenuState extends MusicBeatState
 					changeDifficulty(-1);
 			}
 
-			if (controls.ACCEPT #if !mobile || FlxG.mouse.justPressed #end)
+			if (controls.ACCEPT || FlxG.mouse.justPressed && FlxG.mouse.overlaps(grpWeekText, grpWeekText.camera))
 			{
 				selectWeek();
 			}
@@ -314,6 +312,11 @@ class StoryMenuState extends MusicBeatState
 			{
 				changeDifficulty(1);
 			}
+
+			if (FlxG.mouse.overlaps(leftArrow, leftArrow.camera) && FlxG.mouse.justPressed)
+				changeDifficulty(-1);
+			else if (FlxG.mouse.overlaps(rightArrow, rightArrow.camera) && FlxG.mouse.justPressed)
+				changeDifficulty(1);
 
 			if (controls.BACK && !movedBack && !selectedWeek)
 			{

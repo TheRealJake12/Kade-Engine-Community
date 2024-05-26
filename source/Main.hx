@@ -168,11 +168,8 @@ class Main extends Sprite
 
 		// Finish up loading debug tools.
 		Debug.onGameStart();
-		#if desktop
-		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 		Application.current.window.onFocusOut.add(onWindowFocusOut);
 		Application.current.window.onFocusIn.add(onWindowFocusIn);
-		#end
 	}
 
 	public function checkInternetConnection()
@@ -235,6 +232,7 @@ class Main extends Sprite
 		Application.current.window.alert(errMsg, "Error!");
 		Sys.exit(1);
 	}
+	#end
 
 	function onWindowFocusOut()
 	{
@@ -284,7 +282,6 @@ class Main extends Sprite
 		FlxG.drawFramerate = FlxG.save.data.fpsCap;
 		gameContainer.setFPSCap(FlxG.save.data.fpsCap);
 	}
-	#end
 
 	var fpsCounter:KadeEngineFPS;
 

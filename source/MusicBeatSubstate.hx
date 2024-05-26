@@ -15,10 +15,8 @@ class MusicBeatSubstate extends FlxSubState
 
 	override function destroy()
 	{
-		#if desktop
 		/*Application.current.window.onFocusIn.remove(onWindowFocusOut);
 			Application.current.window.onFocusIn.remove(onWindowFocusIn); */
-		#end
 		super.destroy();
 	}
 
@@ -26,10 +24,8 @@ class MusicBeatSubstate extends FlxSubState
 	{
 		FlxG.mouse.enabled = true;
 		super.create();
-		#if desktop
 		/*Application.current.window.onFocusIn.add(onWindowFocusIn);
 			Application.current.window.onFocusOut.add(onWindowFocusOut); */
-		#end
 	}
 
 	private var curStep:Int = 0;

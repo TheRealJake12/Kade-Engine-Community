@@ -189,9 +189,7 @@ class OptionsMenu extends MusicBeatSubstate
 			new OptionCata(345, 40, "Appearance", [
 				new NoteskinOption("Change your Noteskin"),
 				new CPUNoteskinOption("Change the CPU Noteskin"),
-				#if desktop
 				new NotesplashOption("Change your Notesplash"), // new CPUNotesplashOption("Change the CPU Notesplash"),
-				#end
 				new CPUSplash("Allows The Opponent To Do Notesplashes"),
 				new NotesplashesOption("Uses Notesplashes."),
 				new StepManiaOption("Sets the colors of the arrows depending on quantization instead of direction."),
@@ -233,7 +231,7 @@ class OptionsMenu extends MusicBeatSubstate
 			]),
 			new OptionCata(50, 104, "Perf", [
 				new FPSOption("Toggle the FPS Counter"),
-				#if desktop
+				#if !html5
 				new FPSCapOption("Change your FPS Cap."), new Memory("Toggle the Memory Counter"),
 				#end
 				new ShowState("Shows The Current Game State In The FPS Counter. Makes Debugging Easier."),
