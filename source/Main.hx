@@ -168,6 +168,9 @@ class Main extends Sprite
 
 		// Finish up loading debug tools.
 		Debug.onGameStart();
+		#if desktop
+		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
+		#end
 		Application.current.window.onFocusOut.add(onWindowFocusOut);
 		Application.current.window.onFocusIn.add(onWindowFocusIn);
 	}
