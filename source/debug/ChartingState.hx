@@ -120,7 +120,6 @@ class ChartingState extends MusicBeatState
 	var eventPos:Button;
 	var eventSave:Button;
 
-	// fard
 	// dfjk
 	var characters:Array<String>;
 	var stages:Array<String>;
@@ -263,32 +262,7 @@ class ChartingState extends MusicBeatState
 		PlayState.inDaPlay = false;
 
 		TimingStruct.clearTimings();
-
-		if (PlayState.SONG != null)
-		{
-			SONG = PlayState.SONG;
-		}
-		else
-		{
-			SONG = {
-				chartVersion: MainMenuState.kecVer,
-				songId: 'test',
-				songName: 'Test',
-				audioFile: 'test',
-				splitVoiceTracks: false,
-				notes: [],
-				eventObjects: [],
-				bpm: 150,
-				needsVoices: true,
-				player1: 'bf',
-				player2: 'dad',
-				gfVersion: 'gf',
-				style: 'Default',
-				stage: 'stage',
-				speed: 1,
-				validScore: true
-			};
-		}
+		SONG = PlayState.SONG;
 
 		loadSong(SONG.audioFile, false);
 
@@ -601,7 +575,7 @@ class ChartingState extends MusicBeatState
 
 			if (currentBPM != Conductor.bpm)
 			{
-				Conductor.changeBPM(currentBPM, false);
+				Conductor.changeBPM(currentBPM);
 			}
 
 			var pog:Float = (curDecimalBeat - timingSeg.startBeat) / (Conductor.bpm / 60);
@@ -1797,13 +1771,8 @@ class ChartingState extends MusicBeatState
 		if (reloadFromFile)
 		{
 			var diff:String = CoolUtil.getSuffixFromDiff(curDiff);
-			SONG = Song.conversionChecks(Song.loadFromJson(PlayState.SONG.songId, diff));
+			SONG = Song.conversionChecks(Song.loadFromJson(SONG.songId, diff));
 		}
-		else
-		{
-			SONG = PlayState.SONG;
-		}
-		// WONT WORK FOR TUTORIAL OR TEST SONG!!! REDO LATER
 		try
 		{
 			if (!SONG.splitVoiceTracks)
@@ -1890,6 +1859,8 @@ class ChartingState extends MusicBeatState
 		{
 			meta = autoSaveData.songMeta != null ? cast autoSaveData.songMeta : {};
 		}
+
+		// fard
 
 		PlayState.SONG = Song.parseJSONshit(data.songId, data, meta);
 		LoadingState.loadAndSwitchState(new ChartingState());
@@ -1990,19 +1961,25 @@ class ChartingState extends MusicBeatState
 
 	inline function songShit()
 	{
-		SONG.player1 = playerDrop.text;
-		SONG.player2 = opponentDrop.text;
-		SONG.gfVersion = gfDrop.text;
-		SONG.stage = stageDrop.text;
-		SONG.style = noteStyleDrop.text;
-
-		SONG.songId = song.text;
-		SONG.audioFile = audioFileName.text;
-		SONG.songName = songName.text;
-
-		if (curSelectedNote != null)
+		try
 		{
-			strumTime.text = curSelectedNote[0];
+			if (SONG != null)
+			{
+				SONG.player1 = playerDrop.text;
+				SONG.player2 = opponentDrop.text;
+				SONG.gfVersion = gfDrop.text;
+				SONG.stage = stageDrop.text;
+				SONG.style = noteStyleDrop.text;
+
+				SONG.songId = song.text;
+				SONG.audioFile = audioFileName.text;
+				SONG.songName = songName.text;
+
+				if (curSelectedNote != null)
+				{
+					strumTime.text = curSelectedNote[0];
+				}
+			}
 		}
 	}
 
@@ -2621,7 +2598,6 @@ class ChartingState extends MusicBeatState
 		posLabel.text = "Event Position";
 
 		// existing events
-		// fard
 		eventDrop = new DropDown();
 		eventDrop.width = 125;
 
@@ -3012,6 +2988,8 @@ class ChartingState extends MusicBeatState
 		file.text = "Chart";
 		var personal = new Menu();
 		personal.text = "Preferences";
+		var game = new Menu();
+		game.text = "Game";
 
 		var box = new VBox();
 
@@ -3103,11 +3081,50 @@ class ChartingState extends MusicBeatState
 			});
 		}
 
+		var create = new MenuItem();
+		create.text = "Create Blank Chart";
+		create.onClick = function(e)
+		{
+			var cleaned = {
+				songId: 'test',
+				songName: 'Test',
+				audioFile: 'test',
+				chartVersion: "KEC1",
+				splitVoiceTracks: true,
+				notes: [],
+				eventObjects: [],
+				bpm: 150,
+				needsVoices: true,
+				player1: 'bf',
+				player2: 'dad',
+				gfVersion: 'gf',
+				style: 'Default',
+				stage: 'stage',
+				speed: 1,
+				validScore: true
+			};
+
+			var cleanedData = Json.parse(haxe.Json.stringify({
+				"song": cleaned
+			}));
+
+			var data:SongData = cast cleanedData;
+			var meta:SongMeta = {};
+			if (cleanedData.song != null)
+			{
+				meta = cleanedData.songMeta != null ? cast cleanedData.songMeta : {};
+			}
+			PlayState.SONG = Song.parseJSONshit(data.songId, data, meta);
+			MusicBeatState.switchState(new ChartingState());
+			// doo doo fard
+		}
+
 		file.addComponent(saveSong);
 		file.addComponent(reloadChart);
 		file.addComponent(reload);
 		file.addComponent(loadAuto);
 		file.addComponent(cleanSong);
+		file.addComponent(create);
 
 		var dragTabs = new MenuCheckBox();
 		dragTabs.text = "Drag Tablist";
@@ -3193,9 +3210,30 @@ class ChartingState extends MusicBeatState
 		personal.addComponent(metronome);
 		personal.addComponent(oppMode);
 
+		var playHere = new MenuItem();
+		playHere.text = "Playtest At Timestamp";
+		playHere.onClick = function(e)
+		{
+			PlayState.SONG = SONG;
+
+			PlayState.startTime = inst.time;
+			inst.stop();
+			if (!SONG.splitVoiceTracks)
+				vocals.stop();
+			else
+			{
+				vocalsP.stop();
+				vocalsE.stop();
+			}
+			MusicBeatState.switchState(new PlayState());
+			Lib.clearInterval(id);
+		}
+		game.addComponent(playHere);
+
 		menu.addComponent(spac);
 		menu.addComponent(file);
 		menu.addComponent(personal);
+		menu.addComponent(game);
 	}
 
 	override function beatHit()

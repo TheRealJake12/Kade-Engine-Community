@@ -112,7 +112,7 @@ class MainMenuState extends MusicBeatState
 		{
 			FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
 			freakyPlaying = true;
-			Conductor.changeBPM(102, false);
+			Conductor.changeBPM(102);
 		}
 
 		if (!FlxG.save.data.watermark)

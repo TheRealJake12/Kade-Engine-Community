@@ -700,7 +700,7 @@ class StageDebugState extends MusicBeatState
 			FlxG.sound.music.stop();
 			FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
 			MainMenuState.freakyPlaying = true;
-			Conductor.changeBPM(102, false);
+			Conductor.changeBPM(102);
 			if (!fromEditor)
 				MusicBeatState.switchState(new FreeplayState());
 			else

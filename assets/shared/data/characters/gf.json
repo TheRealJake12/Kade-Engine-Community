@@ -43,6 +43,7 @@
     {
       "name": "cheer",
       "prefix": "GF Cheer",
+      "interrupt": false,
       "offsets": [0, 0]
     },
     {

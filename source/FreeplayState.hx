@@ -111,8 +111,7 @@ class FreeplayState extends MusicBeatState
 	public static var list:Array<String> = [];
 
 	override function create()
-	{
-		var stamp = haxe.Timer.stamp();
+	{var stamp = haxe.Timer.stamp();
 		instance = this;
 		PlayState.SONG = null;
 		FlxG.mouse.visible = true;
@@ -192,7 +191,10 @@ class FreeplayState extends MusicBeatState
 		var bottomText:String = #if !mobile #if PRELOAD_ALL "  Press SPACE to listen to the Song Instrumental / Click and scroll through the songs with your MOUSE /"
 			+ #else "  Click and scroll through the songs with your MOUSE /"
 			+ #end #end
-		" Your offset is " + FlxG.save.data.offset + "ms " + (FlxG.save.data.optimize ? "/ Optimized" : "");
+		" Your offset is "
+		+ FlxG.save.data.offset
+		+ "ms "
+		+ (FlxG.save.data.optimize ? "/ Optimized" : "");
 
 		var scoreBG:FlxSprite = new FlxSprite(scoreText.x - 6, 0).makeGraphic(Std.int(FlxG.width * 0.4), 337, 0xFF000000);
 		scoreBG.alpha = 0.6;
@@ -276,7 +278,7 @@ class FreeplayState extends MusicBeatState
 			if (!FlxG.sound.music.playing)
 				FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
 			MainMenuState.freakyPlaying = true;
-			Conductor.changeBPM(102, false);
+			Conductor.changeBPM(102);
 		}
 
 		if (!FlxG.sound.music.playing && !MainMenuState.freakyPlaying)
@@ -752,7 +754,7 @@ class FreeplayState extends MusicBeatState
 					if (curBPM != Conductor.bpm)
 					{
 						Debug.logInfo("BPM CHANGE to " + curBPM);
-						Conductor.changeBPM(curBPM, false);
+						Conductor.changeBPM(curBPM);
 					}
 				}
 			}
@@ -1036,7 +1038,7 @@ class FreeplayState extends MusicBeatState
 			hmm = songData.get(songs[curSelected].songName)[curDifficulty];
 			if (hmm != null)
 			{
-				Conductor.changeBPM(hmm.bpm, false);
+				Conductor.changeBPM(hmm.bpm);
 				GameplayCustomizeState.freeplayBf = hmm.player1;
 				GameplayCustomizeState.freeplayDad = hmm.player2;
 				GameplayCustomizeState.freeplayGf = hmm.gfVersion;

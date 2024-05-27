@@ -33,7 +33,7 @@ class Conductor
 		Conductor.timeScale = Conductor.safeZoneOffset / 166;
 	}
 
-	public static function changeBPM(newBpm:Float, ?recalcLength = true)
+	public static function changeBPM(newBpm:Float)
 	{
 		bpm = newBpm * PlayState.songMultiplier;
 
