@@ -3,18 +3,14 @@ package debug;
 import Section.SwagSection;
 import Song.SongData;
 import Song.SongMeta;
-import haxe.ui.events.UIEvent;
-import openfl.Lib;
-import haxe.ui.notifications.NotificationType;
-import haxe.ui.notifications.NotificationManager;
-import haxe.ui.focus.FocusManager;
-import haxe.ui.components.Spacer;
 import haxe.ui.components.Button;
 import haxe.ui.components.CheckBox;
 import haxe.ui.components.DropDown;
+import haxe.ui.components.HorizontalSlider;
 import haxe.ui.components.Label;
 import haxe.ui.components.NumberStepper;
 import haxe.ui.components.OptionBox;
+import haxe.ui.components.Spacer;
 import haxe.ui.components.TextField;
 import haxe.ui.components.Toggle;
 import haxe.ui.containers.ContinuousHBox;
@@ -22,18 +18,22 @@ import haxe.ui.containers.Grid;
 import haxe.ui.containers.HBox;
 import haxe.ui.containers.TabView;
 import haxe.ui.containers.VBox;
+import haxe.ui.containers.menus.Menu;
+import haxe.ui.containers.menus.MenuBar;
+import haxe.ui.containers.menus.MenuCheckBox;
+import haxe.ui.containers.menus.MenuItem;
 import haxe.ui.data.ArrayDataSource;
+import haxe.ui.events.UIEvent;
+import haxe.ui.focus.FocusManager;
+import haxe.ui.notifications.NotificationManager;
+import haxe.ui.notifications.NotificationType;
 import haxe.ui.styles.Style;
 import haxe.ui.themes.Theme;
 import haxe.ui.util.Color;
+import openfl.Lib;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import openfl.net.FileReference;
-import haxe.ui.containers.menus.MenuBar;
-import haxe.ui.containers.menus.Menu;
-import haxe.ui.containers.menus.MenuCheckBox;
-import haxe.ui.containers.menus.MenuItem;
-import haxe.ui.components.HorizontalSlider;
 #if FEATURE_FILESYSTEM
 import sys.FileSystem;
 import sys.io.File;
@@ -1418,30 +1418,6 @@ class ChartingState extends MusicBeatState
 		destroyBoxes();
 
 		var section = getSectionByTime(note.strumTime);
-
-		var found = false;
-
-		if (section != null)
-		{
-			for (i in section.sectionNotes)
-			{
-				if (i[0] == note.strumTime && i[1] == note.rawNoteData)
-				{
-					section.sectionNotes.remove(i);
-					found = true;
-				}
-			}
-		}
-
-		if (!found) // backup check
-		{
-			for (i in SONG.notes)
-			{
-				for (n in i.sectionNotes)
-					if (n[0] == note.strumTime && n[1] == note.rawNoteData)
-						i.sectionNotes.remove(n);
-			}
-		}
 		curRenderedNotes.remove(note, true);
 
 		curSelectedNote = null;
@@ -1461,9 +1437,35 @@ class ChartingState extends MusicBeatState
 			}
 		}
 
-		note.kill();
-		note.destroy();
-		note = null;
+		var found = false;
+
+		if (section != null)
+		{
+			for (i in section.sectionNotes)
+			{
+				if (i[0] == note.strumTime && i[1] == note.noteData)
+				{
+					section.sectionNotes.remove(i);
+					found = true;
+					Debug.logTrace(section.sectionNotes.length);
+					break;
+				}
+			}
+		}
+
+		if (!found) // backup check
+		{
+			for (i in SONG.notes)
+			{
+				for (n in i.sectionNotes)
+					if (n[0] == note.strumTime && n[1] == note.noteData)
+					{
+						i.sectionNotes.remove(n);
+						Debug.logTrace(i.sectionNotes.length);
+						break;
+					}
+			}
+		}
 	}
 
 	inline function destroyBoxes()
@@ -2114,10 +2116,20 @@ class ChartingState extends MusicBeatState
 		typeLabel.text = "Note Type";
 		typeLabel.verticalAlign = "center";
 
+		var quantiNotes = new CheckBox();
+		quantiNotes.text = "Color Quant";
+		quantiNotes.selected = FlxG.save.data.stepMania;
+		quantiNotes.onClick = function(e)
+		{
+			FlxG.save.data.stepMania = !FlxG.save.data.stepMania;
+			updateNotes();
+		}
+
 		box2.addComponent(strumTime);
 		box2.addComponent(timeLabel);
 		box2.addComponent(noteShitDrop);
 		box2.addComponent(typeLabel);
+		box2.addComponent(quantiNotes);
 	}
 
 	inline function addSectionUI()
@@ -3115,6 +3127,7 @@ class ChartingState extends MusicBeatState
 				meta = cleanedData.songMeta != null ? cast cleanedData.songMeta : {};
 			}
 			PlayState.SONG = Song.parseJSONshit(data.songId, data, meta);
+			clean = true;
 			MusicBeatState.switchState(new ChartingState());
 			// doo doo fard
 		}
