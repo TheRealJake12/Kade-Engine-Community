@@ -2156,7 +2156,7 @@ class PlayState extends MusicBeatState
 		activeSong = SONG;
 		curSong = songData.songId;
 
-		Conductor.changeBPM(SONG.bpm);
+		Conductor.changeBPM(SONG.bpm * songMultiplier);
 
 		addSongTiming();
 
@@ -2714,15 +2714,13 @@ class PlayState extends MusicBeatState
 
 				if (timingSegBpm != Conductor.bpm)
 				{
-					Debug.logInfo('Timing Struct BPM: ${timingSeg.bpm} | Current Conductor BPM: ${Conductor.bpm}');
-					Debug.logInfo("BPM CHANGE to " + timingSegBpm);
-
+					Debug.logInfo('BEFORE TimingStruct: ${timingSeg.bpm} | Current Conductor BPM: ${Conductor.bpm}');
 					Conductor.changeBPM(timingSegBpm);
 
 					Conductor.crochet = ((60 / (timingSegBpm) * 1000)) / songMultiplier;
 					Conductor.stepCrochet = Conductor.crochet / 4;
 
-					Debug.logInfo('Timing Struct BPM: ${timingSeg.bpm} | Current Conductor BPM: ${Conductor.bpm}');
+					Debug.logInfo('AFTER TimingStruct BPM: ${timingSeg.bpm} | Current Conductor BPM: ${Conductor.bpm}');
 
 					recalculateAllSectionTimes();
 				}
@@ -4704,7 +4702,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (!endingSong && currentSection != null)
+		if (currentSection != null)
 		{
 			if (allowedToHeadbang && curStep % 4 == 0)
 			{

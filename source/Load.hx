@@ -7,14 +7,14 @@ import lime.app.Future;
 
 class Load extends MusicBeatState
 {
-	var load:FlxSprite = new FlxSprite(0);
+	var load:FlxSprite = new FlxSprite(0,0);
 
 	override public function create()
 	{
 		FlxG.sound.music.stop();
 		load.loadGraphic(Paths.image('funkay'));
-		load.setGraphicSize(1280, 720);
-		load.screenCenter();
+		load.setGraphicSize(0, FlxG.height);
+		load.updateHitbox();
 		add(load);
 		super.create();
 

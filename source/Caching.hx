@@ -1,6 +1,7 @@
 package;
 
 import cache.BaseCache;
+import flixel.math.FlxMath;
 import haxe.Timer;
 
 using StringTools;
@@ -30,19 +31,16 @@ class Caching extends MusicBeatState
 		text.alignment = FlxTextAlign.CENTER;
 		text.alpha = 1;
 		text.font = Paths.font("vcr.ttf");
+		text.screenCenter(X);
 
-		kadeLogo = new FlxSprite(FlxG.width / 2, FlxG.height / 2).loadGraphic(Paths.image('KadeEngineLogoOld'));
-		kadeLogo.screenCenter();
-		text.y -= kadeLogo.height / 2 - 125;
-		text.x -= 170;
-
-		kadeLogo.setGraphicSize(Std.int(kadeLogo.width * 0.6));
-		if (FlxG.save.data.antialiasing != null)
-			kadeLogo.antialiasing = FlxG.save.data.antialiasing;
-		else
-			kadeLogo.antialiasing = true;
-
+		kadeLogo = new FlxSprite(0,0).loadGraphic(Paths.image('KEClogoP'));
+		kadeLogo.setGraphicSize(Std.int(kadeLogo.width * 0.3));
+		kadeLogo.updateHitbox();
 		kadeLogo.alpha = 0;
+
+		kadeLogo.screenCenter();
+		text.y = kadeLogo.y + 425;
+		text.x -= 75;
 
 		add(kadeLogo);
 		add(text);
@@ -155,7 +153,7 @@ class Caching extends MusicBeatState
 						loaded = true;
 						MusicBeatState.switchState(new OptionsDirect());
 						Debug.logTrace("Done");
-						Debug.logTrace(Timer.stamp() - stamp);
+						Debug.logTrace("Took " + Std.string(FlxMath.roundDecimal(Timer.stamp() - stamp, 3)) + " Seconds To Load.");
 					}, 600);
 				}, true);
 		}

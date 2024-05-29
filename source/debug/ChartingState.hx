@@ -270,8 +270,6 @@ class ChartingState extends MusicBeatState
 
 		// Song.sortSectionNotes(SONG);
 
-		activeSong = SONG;
-
 		Conductor.changeBPM(SONG.bpm);
 
 		PlayState.noteskinSprite = CustomNoteHelpers.Skin.generateNoteskinSprite(FlxG.save.data.noteskin);
@@ -424,6 +422,8 @@ class ChartingState extends MusicBeatState
 
 		regenerateLines();
 		updateNotes();
+
+		activeSong = SONG;
 
 		middleLine = new FlxSprite(660, 0).makeGraphic(4, FlxG.height, FlxColor.GRAY);
 		middleLine.scrollFactor.x = 0;
@@ -1295,7 +1295,7 @@ class ChartingState extends MusicBeatState
 
 		if (section == null)
 			return;
-		var noteStrum = strum;
+		var noteStrum = Math.abs(strum);
 		var noteData = Std.int(Math.floor(dummyArrow.x - sectionPos) / 50);
 		var noteSus = 0;
 		var noteShit = noteTypes[noteShitDrop.selectedIndex];
@@ -1317,7 +1317,7 @@ class ChartingState extends MusicBeatState
 
 		if (n != null)
 			section.sectionNotes.push([
-				n.strumTime,
+				Math.abs(n.strumTime),
 				n.noteData,
 				n.sustainLength,
 				TimingStruct.getBeatFromTime(n.strumTime),
@@ -1326,8 +1326,7 @@ class ChartingState extends MusicBeatState
 		else
 			section.sectionNotes.push([noteStrum, noteData, noteSus, TimingStruct.getBeatFromTime(noteStrum), noteShit]);
 
-		if (FlxG.save.data.gen)
-			Debug.logTrace("Adding note with " + noteStrum + " with data " + noteData + " With A Notetype Of " + noteShit);
+		Debug.logTrace("Note Data : " + noteData + " StrumTime : " + noteStrum + " Section Length : " + section.sectionNotes.length);	
 
 		var seg = TimingStruct.getTimingAtTimestamp(noteStrum);
 
@@ -1415,27 +1414,11 @@ class ChartingState extends MusicBeatState
 
 	function deleteNote(note:Note):Void
 	{
-		destroyBoxes();
-
 		var section = getSectionByTime(note.strumTime);
-		curRenderedNotes.remove(note, true);
-
 		curSelectedNote = null;
 		strumTime.text = "0";
 
-		if (note.sustainLength > 0)
-			curRenderedSustains.remove(note.noteCharterObject, true);
-
-		for (i in 0...selectedBoxes.members.length)
-		{
-			var box = selectedBoxes.members[i];
-			if (box.connectedNote == note)
-			{
-				selectedBoxes.members.remove(box);
-				box.destroy();
-				return;
-			}
-		}
+		Debug.logTrace("Deleted StrumTime : " + note.strumTime);
 
 		var found = false;
 
@@ -1447,6 +1430,7 @@ class ChartingState extends MusicBeatState
 				{
 					section.sectionNotes.remove(i);
 					found = true;
+					curRenderedNotes.remove(note, true);
 					Debug.logTrace(section.sectionNotes.length);
 					break;
 				}
@@ -1461,9 +1445,26 @@ class ChartingState extends MusicBeatState
 					if (n[0] == note.strumTime && n[1] == note.noteData)
 					{
 						i.sectionNotes.remove(n);
+						curRenderedNotes.remove(note, true);
 						Debug.logTrace(i.sectionNotes.length);
 						break;
 					}
+			}
+		}
+
+		if (note.sustainLength > 0)
+			curRenderedSustains.remove(note.noteCharterObject, true);
+
+		destroyBoxes();	
+
+		for (i in 0...selectedBoxes.members.length)
+		{
+			var box = selectedBoxes.members[i];
+			if (box.connectedNote == note)
+			{
+				selectedBoxes.members.remove(box);
+				box.destroy();
+				return;
 			}
 		}
 	}
@@ -1852,7 +1853,7 @@ class ChartingState extends MusicBeatState
 			"song": SONG
 		};
 
-		var data:String = haxe.Json.stringify(json, null, " ");
+		var data:String = haxe.Json.stringify(json, null);
 
 		var data:SongData = cast autoSaveData;
 		var meta:SongMeta = {};
@@ -1902,7 +1903,7 @@ class ChartingState extends MusicBeatState
 			"song": SONG
 		};
 
-		var data:String = haxe.Json.stringify(json, null, " ");
+		var data:String = haxe.Json.stringify(json, null);
 
 		if ((data != null) && (data.length > 0))
 		{
