@@ -153,7 +153,7 @@ class Caching extends MusicBeatState
 						loaded = true;
 						MusicBeatState.switchState(new OptionsDirect());
 						Debug.logTrace("Done");
-						Debug.logTrace("Took " + Std.string(FlxMath.roundDecimal(Timer.stamp() - stamp, 3)) + " Seconds To Load.");
+						// Debug.logTrace("Took " + Std.string(FlxMath.roundDecimal(Timer.stamp() - stamp, 3)) + " Seconds To Load.");
 					}, 600);
 				}, true);
 		}

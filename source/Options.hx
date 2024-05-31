@@ -2272,6 +2272,7 @@ class UnloadSongs extends Option
 	public override function left():Bool
 	{
 		FlxG.save.data.unload = !FlxG.save.data.unload;
+		cache.BaseCache.loadedBefore = false;
 		display = updateDisplay();
 		return true;
 	}

@@ -2856,15 +2856,7 @@ class PlayState extends MusicBeatState
 			persistentUpdate = false;
 			persistentDraw = true;
 			paused = true;
-
-			// 1 / 1000000 chance for Gitaroo Man easter egg
-			// happened to me way to frequently. Annoying
-			if (FlxG.random.bool(0.0001))
-			{
-				FlxG.switchState(new GitarooPause());
-			}
-			else
-				openSubState(subStates[0]);
+			openSubState(subStates[0]);
 		}
 
 		if (FlxG.keys.justPressed.SEVEN)
