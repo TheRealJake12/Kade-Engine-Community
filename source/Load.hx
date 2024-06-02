@@ -7,7 +7,7 @@ import lime.app.Future;
 
 class Load extends MusicBeatState
 {
-	var load:FlxSprite = new FlxSprite(0,0);
+	var load:FlxSprite = new FlxSprite(0, 0);
 
 	override public function create()
 	{

@@ -33,7 +33,7 @@ class Caching extends MusicBeatState
 		text.font = Paths.font("vcr.ttf");
 		text.screenCenter(X);
 
-		kadeLogo = new FlxSprite(0,0).loadGraphic(Paths.image('KEClogoP'));
+		kadeLogo = new FlxSprite(0, 0).loadGraphic(Paths.image('KEClogoP'));
 		kadeLogo.setGraphicSize(Std.int(kadeLogo.width * 0.3));
 		kadeLogo.updateHitbox();
 		kadeLogo.alpha = 0;
@@ -112,7 +112,7 @@ class Caching extends MusicBeatState
 	function actuallyCache(gpuRender:Bool)
 	{
 		FlxG.autoPause = false;
-		var stamp = Timer.stamp();
+		// var stamp = Timer.stamp();
 		switch (gpuRender)
 		{
 			case true:
@@ -132,7 +132,6 @@ class Caching extends MusicBeatState
 					loaded = true;
 					MusicBeatState.switchState(new OptionsDirect());
 					Debug.logTrace("Done");
-					Debug.logTrace(Timer.stamp() - stamp);
 				}, 600);
 			case false:
 				new lime.app.Future<Void>(function()

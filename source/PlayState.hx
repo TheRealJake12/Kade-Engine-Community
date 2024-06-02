@@ -5830,37 +5830,6 @@ class PlayState extends MusicBeatState
 		Stage = null;
 	}
 
-	public function playVideo(name:String)
-	{
-		#if VIDEOS
-		inCutscene = true;
-		inCinematic = true;
-
-		var filepath:String = Paths.video(name);
-		if (!OpenFlAssets.exists(filepath))
-		{
-			FlxG.log.warn('Couldnt find video file: ' + name);
-			startAndEnd();
-			return;
-		}
-
-		var video:VideoHandler = new VideoHandler();
-		video.load(filepath);
-		// Recent versions
-		video.play();
-		video.onEndReached.add(function()
-		{
-			video.dispose();
-			startAndEnd();
-			return;
-		}, true);
-		#else
-		FlxG.log.warn('Platform not supported!');
-		startAndEnd();
-		return;
-		#end
-	}
-
 	public function startAndEnd()
 	{
 		if (endingSong)
@@ -5875,8 +5844,17 @@ class PlayState extends MusicBeatState
 		inCutscene = true;
 		inCinematic = true;
 		var diff:String = CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[storyDifficulty]);
-		cutscene = new VideoHandler();
-		cutscene.load(Paths.video(name));
+		OpenFlAssets.loadBytes(Paths.video(name)).onComplete(function(bytes:openfl.utils.ByteArray):Void
+		{
+			if (cutscene.load(bytes))
+			{
+				new FlxTimer().start(0.001, function(tmr:FlxTimer):Void
+				{
+					cutscene.play();
+				});
+				Debug.logTrace("Fard");
+			}
+		});
 		inst.stop();
 		cutscene.onEndReached.add(function()
 		{
@@ -5900,11 +5878,6 @@ class PlayState extends MusicBeatState
 			}
 
 			cutscene.dispose();
-		});
-
-		new FlxTimer().start(0.001, function(tmr:FlxTimer):Void
-		{
-			cutscene.play();
 		});
 		#else
 		FlxG.log.warn("Platform Not Supported.");

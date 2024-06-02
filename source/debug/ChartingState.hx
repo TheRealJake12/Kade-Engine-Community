@@ -1326,7 +1326,7 @@ class ChartingState extends MusicBeatState
 		else
 			section.sectionNotes.push([noteStrum, noteData, noteSus, TimingStruct.getBeatFromTime(noteStrum), noteShit]);
 
-		Debug.logTrace("Note Data : " + noteData + " StrumTime : " + noteStrum + " Section Length : " + section.sectionNotes.length);	
+		Debug.logTrace("Note Data : " + noteData + " StrumTime : " + noteStrum + " Section Length : " + section.sectionNotes.length);
 
 		var seg = TimingStruct.getTimingAtTimestamp(noteStrum);
 
@@ -1455,7 +1455,7 @@ class ChartingState extends MusicBeatState
 		if (note.sustainLength > 0)
 			curRenderedSustains.remove(note.noteCharterObject, true);
 
-		destroyBoxes();	
+		destroyBoxes();
 
 		for (i in 0...selectedBoxes.members.length)
 		{

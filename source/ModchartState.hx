@@ -586,25 +586,6 @@ class ModchartState
 			hideTheHUD(hidden);
 		});
 
-		Lua_helper.add_callback(lua, "playVideo", function(videoFile:String)
-		{
-			#if VIDEOS
-			if (sys.FileSystem.exists(Paths.video(videoFile)))
-			{
-				PlayState.instance.playVideo(videoFile);
-				return true;
-			}
-			else
-			{
-				Debug.logTrace('playVideo: Video file not found: ' + videoFile);
-			}
-			return false;
-			#else
-			PlayState.instance.startAndEnd();
-			return true;
-			#end
-		});
-
 		// sprites
 
 		Lua_helper.add_callback(lua, "createWiggle", function(freq:Float, amplitude:Float, speed:Float)
