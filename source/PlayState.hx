@@ -2167,10 +2167,14 @@ class PlayState extends MusicBeatState
 		scripts.setAll("bpm", Conductor.bpm);
 		#end
 
-		add(grpNoteSplashes);
-
 		notes = new FlxTypedGroup<Note>();
 		add(notes);
+
+		add(grpNoteSplashes);
+
+		for (i in 0...15)
+			notes.add(new Note()).kill();
+		// something something preallocation	
 
 		var noteData:Array<SwagSection>;
 
@@ -2210,7 +2214,11 @@ class PlayState extends MusicBeatState
 				else
 					oldNote = null;
 
-				var swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, gottaHitNote, daBeat);
+				//var swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, gottaHitNote, daBeat);
+				var swagNote = notes.recycle(Note);
+				swagNote.setup(daStrumTime, daNoteData, oldNote, false);
+				swagNote.beat - daBeat;
+				swagNote.isPlayer = gottaHitNote;
 				swagNote.noteShit = daNoteType;
 
 				if (PlayStateChangeables.holds)
@@ -2229,7 +2237,6 @@ class PlayState extends MusicBeatState
 				var anotherCrochet:Float = Conductor.crochet;
 				var anotherStepCrochet:Float = anotherCrochet / 4;
 				susLength = susLength / anotherStepCrochet;
-
 				unspawnNotes.push(swagNote);
 
 				var type = 0;
@@ -2240,9 +2247,11 @@ class PlayState extends MusicBeatState
 					for (susNote in 0...Std.int(Math.max(susLength, 2)))
 					{
 						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
-						var sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true, false,
-							gottaHitNote, 0);
-
+						// var sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true, false,gottaHitNote, 0);
+						var sustainNote = notes.recycle(Note);
+						sustainNote.setup(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true);
+						sustainNote.beat = 0;
+						sustainNote.isPlayer = gottaHitNote;
 						sustainNote.noteShit = daNoteType;
 
 						sustainNote.scrollFactor.set();
@@ -5759,9 +5768,6 @@ class PlayState extends MusicBeatState
 		daNote.active = false;
 		daNote.visible = false;
 		daNote.kill();
-		notes.remove(daNote, true);
-		daNote.destroy();
-		daNote = null;
 	}
 
 	private function cleanPlayObjects()

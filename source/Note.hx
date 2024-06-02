@@ -90,7 +90,7 @@ class Note extends FlxSprite
 
 	public var texture(default, set):String = null;
 
-	var isPlayer:Bool = true;
+	public var isPlayer:Bool = true;
 
 	// defaults if no noteStyle was found in chart
 	var noteTypeCheck:String = 'normal';
@@ -177,57 +177,33 @@ class Note extends FlxSprite
 		return value;
 	}
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inCharter:Bool = false, ?isPlayer:Bool = false,
-			?bet:Float = 0)
+	public function setup(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false)
 	{
-		super();
-		this.noteShit = noteShit; // FFFFFFFFFFFFFFFFFFFFFFUUUUUUUUUUUUUUUUUUUUUUUUUUUU
-		insideCharter = inCharter;
-		this.isPlayer = isPlayer;
 		if (prevNote == null)
 			prevNote = this;
-
-		beat = bet;
-
-		this.prevNote = prevNote;
+		moves = false;	
+		this.noteData = noteData;
+		this.strumTime = strumTime;
+		rStrumTime = strumTime;
 		isSustainNote = sustainNote;
-		moves = false;
-		lateHitMult = isSustainNote ? 0.5 : 1;
-
-		x += 50;
-		// MAKE SURE ITS DEFINITELY OFF SCREEN?
-		y -= 2000;
-
-		if (inCharter)
-		{
-			this.strumTime = strumTime;
-			rStrumTime = strumTime;
-		}
-		else
-		{
-			this.strumTime = strumTime;
-			rStrumTime = strumTime;
-		}
+		this.prevNote = prevNote;
+		texture = '';
 
 		if (this.strumTime < 0)
 			this.strumTime = 0;
 
-		this.noteData = noteData;
-
+		x += 50;
+		y -= 2000;
+		lateHitMult = isSustainNote ? 0.5 : 1;
+		
 		if (PlayStateChangeables.mirrorMode)
 		{
 			this.noteData = Std.int(Math.abs(3 - noteData));
 			noteData = Std.int(Math.abs(3 - noteData));
 		}
 
-		texture = '';
-
-		// x += swagWidth * (noteData);
-		var animToPlay:String = '';
-		animToPlay = dataColor[Std.int(noteData % 4)] + 'Scroll';
 		x += swagWidth * noteData;
-
-		originColor = noteData; // The note's origin color will be checked by its sustain notes
+		originColor = noteData;
 
 		if (FlxG.save.data.stepMania && !isSustainNote && !(PlayState.instance != null ? PlayState.instance.executeModchart : false))
 		{
@@ -254,10 +230,9 @@ class Note extends FlxSprite
 			localAngle -= arrowAngles[col];
 			localAngle += arrowAngles[Std.int(noteData % 4)];
 			originAngle = localAngle;
-			animToPlay = dataColor[Std.int(col % 4)] + 'Scroll';
 		}
 
-		animation.play(animToPlay);
+		animation.play(dataColor[Std.int(originColor % 4)] + 'Scroll');
 
 		if (isSustainNote && prevNote != null)
 		{
@@ -280,10 +255,7 @@ class Note extends FlxSprite
 
 			x -= width / 2;
 
-			// if (noteTypeCheck == 'pixel')
-			//	x += 30;
-
-			if (inCharter)
+			if (insideCharter)
 				x += 30;
 
 			if (prevNote.isSustainNote)
@@ -303,6 +275,26 @@ class Note extends FlxSprite
 			centerOffsets();
 			centerOrigin();
 		}
+	}
+
+	public function new(?strumTime:Float, ?noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inCharter:Bool = false, ?isPlayer:Bool = false,
+			?bet:Float = 0)
+	{
+		super();
+
+		if (PlayState.SONG != null)
+			noteTypeCheck = PlayState.STYLE.style.toLowerCase();
+		else
+			noteTypeCheck = 'normal';
+
+		if (prevNote == null)
+			prevNote = this;
+		moves = false;
+		this.noteData = noteData;
+		this.strumTime = strumTime;
+		rStrumTime = strumTime;
+		isSustainNote = sustainNote;
+		this.prevNote = prevNote;
 	}
 
 	static var _lastValidChecked:String; // optimization
@@ -343,12 +335,6 @@ class Note extends FlxSprite
 		}
 		else
 			skinPostfix = '';
-
-		if (PlayState.SONG != null)
-			noteTypeCheck = PlayState.STYLE.style.toLowerCase();
-		else
-			noteTypeCheck = 'normal';
-
 		switch (noteTypeCheck)
 		{
 			case 'pixel':
