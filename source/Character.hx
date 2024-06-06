@@ -392,7 +392,8 @@ class Character extends FlxSprite
 					oldNote = PlayState.instance.unspawnNotes[Std.int(PlayState.instance.unspawnNotes.length - 1)];
 				else
 					oldNote = null;
-				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, false, false, daBeat);
+				var swagNote:Note = new Note();
+				swagNote.setup(daStrumTime, daNoteData, false, oldNote, false);
 
 				animationNotes.push(swagNote);
 			}

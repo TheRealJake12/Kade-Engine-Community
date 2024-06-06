@@ -509,7 +509,8 @@ class DiffOverview extends MusicBeatSubstate
 				else
 					oldNote = null;
 
-				var swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, gottaHitNote, daBeat);
+				var swagNote = new Note();
+				swagNote.setup(daStrumTime, daNoteData, false, oldNote, gottaHitNote);
 				swagNote.noteShit = daNoteType;
 
 				if (PlayStateChangeables.holds)
@@ -539,8 +540,9 @@ class DiffOverview extends MusicBeatSubstate
 					for (susNote in 0...Std.int(Math.max(susLength, 2)))
 					{
 						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
-						var sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true, false,
-							gottaHitNote, 0);
+						var sustainNote = new Note();
+						sustainNote.setup(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, true, oldNote, gottaHitNote);
+						sustainNote.beat = 0;	
 
 						sustainNote.noteShit = daNoteType;
 

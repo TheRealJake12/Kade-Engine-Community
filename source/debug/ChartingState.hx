@@ -1341,7 +1341,6 @@ class ChartingState extends MusicBeatState
 		note.mustPress = gottaHitNote;
 		note.sustainLength = noteSus;
 		note.noteShit = noteShit;
-		Debug.logTrace(note.rawNoteData);
 		note.setGraphicSize(Math.floor(noteSize), Math.floor(noteSize));
 		note.updateHitbox();
 
@@ -1525,7 +1524,9 @@ class ChartingState extends MusicBeatState
 					else if (originalNote.noteData <= 3)
 						gottaHitNote = false;
 
-					var note:Note = new Note(strum, originalNote.noteData, originalNote.prevNote, false, true, gottaHitNote, originalNote.beat);
+					var note:Note = new Note();
+					note.setup(strum, originalNote.noteData, false, originalNote.prevNote, gottaHitNote);
+					note.beat = originalNote.beat;
 					note.rawNoteData = originalNote.rawNoteData;
 					note.sustainLength = originalNote.sustainLength;
 					note.noteShit = originalNote.noteShit;
@@ -1607,7 +1608,9 @@ class ChartingState extends MusicBeatState
 							gottaHitNote = true;
 						else if (i[1] <= 3)
 							gottaHitNote = false;
-						var note:Note = new Note(strum, newData[1], null, false, true, gottaHitNote, newData[3]);
+						var note:Note = new Note();
+						note.setup(strum, newData[1], false, null, gottaHitNote);
+						note.beat = TimingStruct.getBeatFromTime(strum);
 						note.rawNoteData = newData[1];
 						note.sustainLength = newData[2];
 						note.noteShit = newData[4];

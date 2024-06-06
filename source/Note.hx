@@ -286,13 +286,13 @@ class Note extends FlxSprite
 			centerOrigin();
 		}
 		sustainActive = false;
+		
 
 		clipRect = FlxDestroyUtil.put(clipRect);
 		updateHitbox();
 	}
 
-	public function new(?strumTime:Float, ?noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inCharter:Bool = false, ?isPlayer:Bool = false,
-			?bet:Float = 0)
+	public function new()
 	{
 		super();
 		texture = '';
