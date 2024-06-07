@@ -31,7 +31,6 @@ class Note extends FlxSprite
 	public var sustainLength:Float = 0;
 	public var isSustainNote:Bool = false;
 	public var originColor:Int = 0; // The sustain note's original note's color
-	public var noteSection:Int = 0;
 	public var isSustainEnd:Bool = false;
 
 	public var noteShit(default, set):String = null;
@@ -99,110 +98,21 @@ class Note extends FlxSprite
 	public var LuaNote:LuaNote;
 	#end
 
-	private function set_texture(value:String):String
+	public function setup(strumTime:Float, noteData:Int, ?sustainNote:Bool = false, ?prevNote:Note = null, ?isPlayer:Bool = false)
 	{
-		if (texture != value)
-			reloadNote(value);
-
-		texture = value;
-		return value;
-	}
-
-	private function set_noteShit(value:String):String
-	{
-		if (noteShit != value)
-		{
-			switch (value.toLowerCase())
-			{
-				case 'hurt':
-					canPlayAnims = false;
-					canNoteSplash = true;
-					causesMisses = false;
-					botplayHit = false;
-					canRate = false;
-					missHealth = 0;
-					sustainActive = true;
-					hitsoundsEditor = false;
-					switch (CustomNoteHelpers.Skin.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin])
-					{
-						default:
-							texture = "notetypes/hurt_Arrows";
-						case "Circles":
-							texture = "notetypes/hurt_Circles";
-					}
-				case 'mustpress':
-					set_noteShit('Must Press'); // backwards compatabilty for charts before the KEC1 format.
-				case 'must press':
-					canPlayAnims = true;
-					canNoteSplash = true;
-					botplayHit = true;
-					canRate = true;
-					missHealth = 0.8;
-					hitsoundsEditor = true;
-					switch (CustomNoteHelpers.Skin.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin])
-					{
-						default:
-							texture = "notetypes/mustpress_Arrows";
-						case "Circles":
-							texture = "notetypes/mustpress_Circles";
-					}
-				case 'no animation':
-					canPlayAnims = false;
-					canNoteSplash = true;
-					causesMisses = true;
-					missHealth = 0.08;
-					botplayHit = true;
-					canRate = true;
-					hitsoundsEditor = true;
-				case 'gf':
-					gfNote = true;
-					canPlayAnims = true;
-					canNoteSplash = true;
-					causesMisses = true;
-					missHealth = 0.08;
-					botplayHit = true;
-					canRate = true;
-					hitsoundsEditor = true;
-				default:
-					canPlayAnims = true;
-					canNoteSplash = true;
-					causesMisses = true;
-					missHealth = 0.08;
-					botplayHit = true;
-					canRate = true;
-					hitsoundsEditor = true;
-			}
-			noteShit = value;
-		}
-		return value;
-	}
-
-	public function setup(strumTime:Float, noteData:Int, ?sustainNote:Bool = false, ?prevNote:Note, ?isPlayer:Bool = false)
-	{
-		if (prevNote == null)
-			prevNote = this;
-		moves = false;
+		resetProperties();
 		this.noteData = noteData;
 		this.strumTime = strumTime;
 		rStrumTime = strumTime;
 		this.prevNote = prevNote;
 		this.isPlayer = isPlayer;
 		isSustainNote = sustainNote;
-		scale.y = 0.7;
-		modAlpha = 1;
-		alpha = 1;
-		isParent = false;
-		parent = null;
-		tooLate = false;
-		canBeHit = false;
-		wasGoodHit = false;
-		isSustainEnd = false;
-
-		children = [];
+		rawNoteData = this.noteData;
+		reloadNote(null);
 
 		if (this.strumTime < 0)
 			this.strumTime = 0;
-		
+
 		y -= 2000;
 		lateHitMult = isSustainNote ? 0.5 : 1;
 
@@ -285,11 +195,127 @@ class Note extends FlxSprite
 			centerOffsets();
 			centerOrigin();
 		}
-		sustainActive = false;
-		
-
 		clipRect = FlxDestroyUtil.put(clipRect);
 		updateHitbox();
+	}
+
+	public function resetProperties()
+	{
+		// something something recycle no like existing properties 
+		
+		this.noteData = 0;
+		this.rawNoteData = 0;
+		this.strumTime = 0;
+		noteShit = "Normal";
+		beat = 0;
+		moves = false;
+		stepHeight = 0;
+		spotInLine = 0;
+		luaID = 0;
+		lateHitMult =  1;
+		noteYOff = 0;
+		distance = 2000;
+		modifiedByLua = false;
+		sustainLength = 0;
+		insideCharter = false;
+		charterSelected = false;
+		earlyHitMult = 1;
+		modAlpha = 1;
+		alpha = 1;
+		isParent = false;
+		prevNote = null;
+		parent = null;
+		mustPress = false;
+		isPlayer = true;
+		tooLate = false;
+		canBeHit = false;
+		wasGoodHit = false;
+		isSustainNote = false;
+		isSustainEnd = false;
+		sustainActive = false;
+		modAngle = localAngle = originAngle = 0;
+		scale.y = 0.7;
+		rating = null;
+		// children = [];
+		flipY = false;
+	}
+
+	private function set_texture(value:String):String
+	{
+		if (texture != value)
+			reloadNote(value);
+
+		texture = value;
+		return value;
+	}
+
+	private function set_noteShit(value:String):String
+	{
+		if (noteShit != value)
+		{
+			switch (value.toLowerCase())
+			{
+				case 'hurt':
+					canPlayAnims = false;
+					canNoteSplash = true;
+					causesMisses = false;
+					botplayHit = false;
+					canRate = false;
+					missHealth = 0;
+					sustainActive = true;
+					hitsoundsEditor = false;
+					switch (CustomNoteHelpers.Skin.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin])
+					{
+						default:
+							texture = "notetypes/hurt_Arrows";
+						case "Circles":
+							texture = "notetypes/hurt_Circles";
+					}
+				case 'mustpress':
+					set_noteShit('Must Press'); // backwards compatabilty for charts before the KEC1 format.
+				case 'must press':
+					canPlayAnims = true;
+					canNoteSplash = true;
+					botplayHit = true;
+					canRate = true;
+					missHealth = 0.8;
+					hitsoundsEditor = true;
+					switch (CustomNoteHelpers.Skin.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin])
+					{
+						default:
+							texture = "notetypes/mustpress_Arrows";
+						case "Circles":
+							texture = "notetypes/mustpress_Circles";
+					}
+				case 'no animation':
+					canPlayAnims = false;
+					canNoteSplash = true;
+					causesMisses = true;
+					missHealth = 0.08;
+					botplayHit = true;
+					canRate = true;
+					hitsoundsEditor = true;
+				case 'gf':
+					gfNote = true;
+					canPlayAnims = true;
+					canNoteSplash = true;
+					causesMisses = true;
+					missHealth = 0.08;
+					botplayHit = true;
+					canRate = true;
+					hitsoundsEditor = true;
+				default:
+					canPlayAnims = true;
+					canNoteSplash = true;
+					causesMisses = true;
+					missHealth = 0.08;
+					botplayHit = true;
+					canRate = true;
+					hitsoundsEditor = true;
+			}
+			noteShit = value;
+		}
+		return value;
 	}
 
 	public function new()
@@ -476,11 +502,11 @@ class Note extends FlxSprite
 		if (noteCharterObject != null)
 			noteCharterObject.destroy();
 
-		super.destroy();
-
 		frames = null;
 
 		_lastValidChecked = '';
+
+		super.destroy();
 	}
 
 	@:noCompletion

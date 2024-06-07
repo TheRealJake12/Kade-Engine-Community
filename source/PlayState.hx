@@ -1769,7 +1769,7 @@ class PlayState extends MusicBeatState
 						{
 							trace('found a stacked/really close note ' + (note.strumTime - coolNote.strumTime));
 							// just fuckin remove it since it's a stacked note and shouldn't be there
-							destroyNote(note);
+							note.kill();
 						}
 					}
 				}
@@ -2810,7 +2810,7 @@ class PlayState extends MusicBeatState
 						daNote.active = false;
 						daNote.visible = false;
 
-						destroyNote(daNote);
+						daNote.kill();
 					}
 				});
 
@@ -3126,7 +3126,7 @@ class PlayState extends MusicBeatState
 		while (noteCounter < noteStruct.length)
 		{
 			var note = noteStruct[noteCounter];
-			var shit:Float = 1800;
+			var shit:Float = 2000;
 			var speed:Float = FlxMath.roundDecimal(scrollSpeed, 2);
 			if (speed < 1)
 				shit /= speed;
@@ -3135,9 +3135,8 @@ class PlayState extends MusicBeatState
 
 			if (note.strumTime - Conductor.songPosition > time)
 				break;
-
-			var spot:Int = 0;
-			var lastNote = notes.members[noteCounter];
+			
+			var lastNote:Note = null;
 			var daStrumTime:Float = (note.strumTime - FlxG.save.data.offset - SONG.offset) / songMultiplier;
 			if (daStrumTime < 0)
 				daStrumTime = 0;
@@ -3151,11 +3150,14 @@ class PlayState extends MusicBeatState
 				gottaHitNote = false;
 
 			var newNote:Note = notes.recycle(Note);
-			newNote.setup(daStrumTime, daNoteData, false, null, gottaHitNote);
+			newNote.setup(daStrumTime, daNoteData, false, lastNote, gottaHitNote);
 			newNote.beat = daBeat;
 			newNote.noteShit = daNoteType;
 			newNote.mustPress = gottaHitNote;
 			newNote.sustainLength = note.length;
+			newNote.parent = newNote;
+			newNote.isParent = false;
+			newNote.isSustainNote = false;
 			newNote.insideCharter = false;
 			lastNote = newNote;
 			newNote.scrollFactor.set();
@@ -3165,6 +3167,7 @@ class PlayState extends MusicBeatState
 			var anotherCrochet:Float = Conductor.crochet;
 			var anotherStepCrochet:Float = anotherCrochet / 4;
 			susLength = susLength / anotherStepCrochet;
+			var spot:Int = 0;
 			if (susLength > 0)
 			{
 				newNote.isParent = true;
@@ -3174,18 +3177,19 @@ class PlayState extends MusicBeatState
 					sustainNote.setup(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, true, lastNote, gottaHitNote);
 					sustainNote.beat = 0;
 					sustainNote.noteShit = newNote.noteShit;
-					sustainNote.parent = newNote;
 					sustainNote.mustPress = gottaHitNote;
+					sustainNote.parent = newNote;
+					sustainNote.isParent = false;
 					sustainNote.spotInLine = spot;
-					sustainNote.prevNote = lastNote;
 					sustainNote.insideCharter = false;
-					lastNote = sustainNote;
 					sustainNote.scrollFactor.set();
-					newNote.children.push(sustainNote);
+					lastNote = sustainNote;
 					notes.add(sustainNote);
+					newNote.children.push(sustainNote); 
 					spot++;
 				}
 			}
+			
 			notes.add(newNote);
 			noteCounter++;
 		}
@@ -3211,7 +3215,6 @@ class PlayState extends MusicBeatState
 		{
 			var holdArray:Array<Bool> = [controls.LEFT, controls.DOWN, controls.UP, controls.RIGHT];
 			var leSpeed = scrollSpeed == 1 ? SONG.speed : scrollSpeed;
-			var stepHeight = (0.45 * fakeNoteStepCrochet * FlxMath.roundDecimal((SONG.speed * Math.pow(PlayState.songMultiplier, 2)), 2));
 
 			// hell
 			// note scroll code (mostly)
@@ -3221,13 +3224,7 @@ class PlayState extends MusicBeatState
 				if (daNote.noteData == -1)
 				{
 					Debug.logWarn('Weird Note detected! Note Data = "${daNote.rawNoteData}" is not valid, deleting...');
-					destroyNote(daNote);
-				}
-
-				if (!daNote.active)
-				{
-					destroyNote(daNote);
-					return;
+					daNote.kill();
 				}
 
 				var strum:FlxTypedGroup<StaticArrow> = playerStrums;
@@ -3354,7 +3351,7 @@ class PlayState extends MusicBeatState
 					{
 						if (daNote.isSustainNote && daNote.wasGoodHit && Conductor.songPosition >= daNote.strumTime)
 						{
-							destroyNote(daNote);
+							daNote.kill();
 						}
 						if (daNote != null)
 						{
@@ -3362,7 +3359,7 @@ class PlayState extends MusicBeatState
 							{
 								if (daNote.isSustainNote && daNote.wasGoodHit && daNote.causesMisses)
 								{
-									destroyNote(daNote);
+									daNote.kill();
 								}
 								else
 								{
@@ -3398,7 +3395,7 @@ class PlayState extends MusicBeatState
 												}
 											}
 									}
-									destroyNote(daNote);
+									daNote.kill();
 								}
 							}
 						}
@@ -3418,10 +3415,10 @@ class PlayState extends MusicBeatState
 									// there should be a ! infront of the wasGoodHit one but it'd cause a miss per every sustain note.
 									// now it just misses on the slightest sustain end for some reason.
 									// nvm I fixed it a long time ago
-									Debug.logTrace("User released key while playing a sustain at: " + daNote.spotInLine);
 									for (i in daNote.parent.children)
 									{
 										i.sustainActive = false;
+										Debug.logTrace('${daNote.wasGoodHit} + ${daNote.isSustainNote} + ${daNote.sustainActive} + ${daNote.isSustainEnd} + ${daNote.causesMisses} + ${daNote.mustPress}');
 										health -= (daNote.missHealth * PlayStateChangeables.healthLoss) / daNote.parent.children.length;
 									}
 									noteMiss(daNote.noteData, daNote);
@@ -4459,7 +4456,7 @@ class PlayState extends MusicBeatState
 			#end
 
 			if (!daNote.isSustainNote)
-				destroyNote(daNote);
+				daNote.kill();
 
 			daNote.wasGoodHit = true;
 		}
@@ -4568,7 +4565,7 @@ class PlayState extends MusicBeatState
 
 			if (!note.isSustainNote)
 			{
-				destroyNote(note);
+				note.kill();
 				updateAccuracy();
 				updateScoreText();
 			}
@@ -5681,14 +5678,6 @@ class PlayState extends MusicBeatState
 			}
 		}
 		recalculateAllSectionTimes();
-	}
-
-	private function destroyNote(daNote:Note)
-	{
-		if (daNote == null)
-			return;
-		
-		daNote.kill();
 	}
 
 	private function cleanPlayObjects()
