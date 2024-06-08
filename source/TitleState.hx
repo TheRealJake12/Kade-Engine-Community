@@ -229,7 +229,7 @@ class TitleState extends MusicBeatState
 						returnedData[0] = data.substring(0, data.indexOf(';'));
 						Debug.logTrace('Github Version : ' + returnedData[0]);
 						returnedData[1] = data.substring(data.indexOf('-'), data.length);
-						if (!MainMenuState.kecVer.contains(returnedData[0].trim()) && !OutdatedSubState.leftState)
+						if (!MainMenuState.kecVer.contains(returnedData[0].trim()) && !OutdatedSubState.leftState && !FlxG.save.data.developer)
 						{
 							if (!MainMenuState.kecVer.contains("PRE-RELEASE"))
 								Debug.logTrace('The Latest Github Version Is ' + returnedData[0] + ' While Your Version Is ' + MainMenuState.kecVer);

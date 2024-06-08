@@ -2868,6 +2868,34 @@ class SmoothHealthOption extends Option
 	}
 }
 
+class DeveloperMode extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function left():Bool
+	{
+		FlxG.save.data.developer = !FlxG.save.data.developer;
+
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Developer Mode: < " + (FlxG.save.data.developer ? "Enabled" : "Disabled") + " >";
+	}
+}
+
 class ResetSettings extends Option
 {
 	var confirm:Bool = false;
@@ -2951,6 +2979,10 @@ class ResetSettings extends Option
 		FlxG.save.data.showRating = null;
 		FlxG.save.data.showNum = null;
 		FlxG.save.data.showMs = null;
+		FlxG.save.data.moveEditor = null;
+		FlxG.save.data.editorPos = null;
+		FlxG.save.data.developer = null;
+
 
 		KadeEngineData.initSave();
 		confirm = false;

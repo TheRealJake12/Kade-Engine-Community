@@ -279,6 +279,10 @@ class KadeEngineData
 		if (FlxG.save.data.editorPos == null)
 			FlxG.save.data.editorPos = [0, 420];
 
+		if (FlxG.save.data.developer == null)
+			FlxG.save.data.developer = false;
+		// skips the outdated text and enables some debug shit that's not meant to be used for average players.		
+
 		FlxSprite.defaultAntialiasing = FlxG.save.data.antialiasing;
 
 		FlxObject.defaultMoves = false;

@@ -26,7 +26,7 @@ class Note extends FlxSprite
 	public var canBeHit:Bool = false;
 	public var tooLate:Bool = false;
 	public var wasGoodHit:Bool = false;
-	public var prevNote:Note;
+	public var prevNote:Note = null;
 	public var modifiedByLua:Bool = false;
 	public var sustainLength:Float = 0;
 	public var isSustainNote:Bool = false;
@@ -89,7 +89,7 @@ class Note extends FlxSprite
 
 	public var texture(default, set):String = null;
 
-	public var isPlayer:Bool = true;
+	public var isPlayer:Bool = false;
 
 	// defaults if no noteStyle was found in chart
 	var noteTypeCheck:String = 'normal';
@@ -105,7 +105,7 @@ class Note extends FlxSprite
 		this.strumTime = strumTime;
 		rStrumTime = strumTime;
 		this.prevNote = prevNote;
-		this.isPlayer = isPlayer;
+		this.isPlayer = this.mustPress = isPlayer;
 		isSustainNote = sustainNote;
 		rawNoteData = this.noteData;
 		reloadNote(null);
@@ -215,6 +215,7 @@ class Note extends FlxSprite
 		lateHitMult =  1;
 		noteYOff = 0;
 		distance = 2000;
+		speedMultiplier = 1.0;
 		modifiedByLua = false;
 		sustainLength = 0;
 		insideCharter = false;
@@ -236,7 +237,6 @@ class Note extends FlxSprite
 		modAngle = localAngle = originAngle = 0;
 		scale.y = 0.7;
 		rating = null;
-		// children = [];
 		flipY = false;
 	}
 

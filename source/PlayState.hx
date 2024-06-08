@@ -418,6 +418,7 @@ class PlayState extends MusicBeatState
 
 	public var noteCounter:Int = 0;
 	public var noteStruct:Array<NoteStruct> = [];
+	public var lastNote:Note = null;
 
 	// idk
 	// Adding Objects Using Lua
@@ -2789,7 +2790,7 @@ class PlayState extends MusicBeatState
 			#end
 		}
 
-		if (FlxG.keys.justPressed.TWO && songStarted)
+		if (FlxG.keys.justPressed.TWO && songStarted && FlxG.save.data.developer)
 		{
 			if (!usedTimeTravel && Conductor.songPosition + 10000 < inst.length)
 			{
@@ -3131,12 +3132,10 @@ class PlayState extends MusicBeatState
 			if (speed < 1)
 				shit /= speed;
 			var time = shit * songMultiplier;
-			
 
 			if (note.strumTime - Conductor.songPosition > time)
 				break;
 			
-			var lastNote:Note = null;
 			var daStrumTime:Float = (note.strumTime - FlxG.save.data.offset - SONG.offset) / songMultiplier;
 			if (daStrumTime < 0)
 				daStrumTime = 0;
@@ -3153,13 +3152,19 @@ class PlayState extends MusicBeatState
 			newNote.setup(daStrumTime, daNoteData, false, lastNote, gottaHitNote);
 			newNote.beat = daBeat;
 			newNote.noteShit = daNoteType;
-			newNote.mustPress = gottaHitNote;
-			newNote.sustainLength = note.length;
-			newNote.parent = newNote;
+			if (PlayStateChangeables.holds)
+			{
+				newNote.sustainLength = note.length / songMultiplier;
+			}
+			else
+			{
+				newNote.sustainLength = 0;
+			}
 			newNote.isParent = false;
 			newNote.isSustainNote = false;
 			newNote.insideCharter = false;
 			lastNote = newNote;
+			notes.add(newNote);
 			newNote.scrollFactor.set();
 
 			var susLength:Float = newNote.sustainLength;
@@ -3173,24 +3178,23 @@ class PlayState extends MusicBeatState
 				newNote.isParent = true;
 				for (susNote in 0...Std.int(Math.max(susLength, 2)))
 				{
+					
 					var sustainNote:Note = notes.recycle(Note);
 					sustainNote.setup(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, true, lastNote, gottaHitNote);
 					sustainNote.beat = 0;
-					sustainNote.noteShit = newNote.noteShit;
 					sustainNote.mustPress = gottaHitNote;
+					sustainNote.noteShit = newNote.noteShit;
 					sustainNote.parent = newNote;
 					sustainNote.isParent = false;
 					sustainNote.spotInLine = spot;
 					sustainNote.insideCharter = false;
 					sustainNote.scrollFactor.set();
-					lastNote = sustainNote;
 					notes.add(sustainNote);
+					lastNote = sustainNote;
 					newNote.children.push(sustainNote); 
 					spot++;
 				}
 			}
-			
-			notes.add(newNote);
 			noteCounter++;
 		}
 
@@ -3430,7 +3434,7 @@ class PlayState extends MusicBeatState
 
 		charactersDance();
 
-		if (FlxG.keys.justPressed.ONE)
+		if (FlxG.keys.justPressed.ONE && FlxG.save.data.developer)
 			endSong();
 		for (i in shaderUpdates)
 			i(elapsed);
@@ -4249,6 +4253,8 @@ class PlayState extends MusicBeatState
 			{
 				misses++;
 			}
+
+			Debug.logTrace(daNote.mustPress);
 
 			daNote.rating = Ratings.timingWindows[0];
 
