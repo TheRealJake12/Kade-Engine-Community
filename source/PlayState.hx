@@ -4383,6 +4383,11 @@ class PlayState extends MusicBeatState
 
 	function updateScoreText()
 	{
+		#if FEATURE_HSCRIPT
+		if (ScriptUtil.hasPause(scripts.executeAllFunc("updateScoreText")))
+			return;
+		#end
+
 		scoreTxt.text = Ratings.CalculateRanking(songScore, songScoreDef, nps, maxNPS,
 			(FlxG.save.data.roundAccuracy ? FlxMath.roundDecimal(accuracy, 0) : accuracy));
 		scoreTxt.screenCenter(X);
@@ -5374,6 +5379,14 @@ class PlayState extends MusicBeatState
 		{
 		}); // ! HAS PAUSE
 
+		script.set("updateScoreText", function()
+		{
+		});
+
+		script.set("updateAccuracy", function()
+		{
+		});
+
 		//  MISC
 		script.set("update", function(elapsed:Float)
 		{
@@ -5381,9 +5394,6 @@ class PlayState extends MusicBeatState
 		script.set("updatePost", function(elapsed:Float)
 		{
 		});
-		script.set("updateScore", function(?miss:Bool = false)
-		{
-		}); // ! HAS PAUSE
 
 		// VARIABLES
 
