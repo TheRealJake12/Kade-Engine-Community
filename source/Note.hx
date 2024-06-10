@@ -220,6 +220,9 @@ class Note extends FlxSprite
 			noteData = Std.int(Math.abs(3 - noteData));
 		}
 
+		if (PlayStateChangeables.opponentMode)
+			this.isPlayer = !this.isPlayer;
+
 		texture = '';
 
 		// x += swagWidth * (noteData);
