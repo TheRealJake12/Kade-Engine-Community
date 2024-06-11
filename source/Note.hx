@@ -219,7 +219,7 @@ class Note extends FlxSprite
 			this.noteData = Std.int(Math.abs(3 - noteData));
 			noteData = Std.int(Math.abs(3 - noteData));
 		}
-		
+
 		texture = '';
 
 		// x += swagWidth * (noteData);

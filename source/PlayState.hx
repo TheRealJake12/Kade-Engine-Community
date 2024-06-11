@@ -84,6 +84,8 @@ import stages.Stage;
 import stages.TankmenBG;
 import Ratings.RatingWindow;
 import MusicBeatState.subStates;
+import ui.Rating;
+import ui.IntroSprite;
 
 using StringTools;
 
@@ -187,7 +189,6 @@ class PlayState extends MusicBeatState
 	// HScript And Lua Stuff. If There's A File, It'll Be True.
 	public var executeModchart = false;
 	public var executeHScript = false;
-	public var runHscript = false;
 
 	// Character Animation Related
 	var currentFrames:Int = 0;
@@ -216,9 +217,6 @@ class PlayState extends MusicBeatState
 
 	// MS Timing For Notes?
 	var notesHitArray:Array<Float> = [];
-
-	// Array that should make some notes easier to hit
-	public static var lowPriorityNotes:Array<String> = CoolUtil.noteShitArray;
 
 	// Noteskin And Notesplash Related Stuff.
 	public static var noteskinSprite:String;
@@ -283,7 +281,6 @@ class PlayState extends MusicBeatState
 	public var gf:Character = null;
 	public var boyfriend:Character = null;
 
-	// I'll come back to this later but basically is unused for now.
 	public var boyfriendMap:Map<String, Character> = new Map<String, Character>();
 	public var dadMap:Map<String, Character> = new Map<String, Character>();
 	public var gfMap:Map<String, Character> = new Map<String, Character>();
@@ -416,6 +413,12 @@ class PlayState extends MusicBeatState
 	// Default Note X Positions (Non Middlescroll). Used For Modcharts If You Want.
 	var notePositions:Array<Float> = [92, 204, 316, 428, 732, 844, 956, 1068];
 
+	public var styleName = "default";
+
+	private var currentTimingShown:FlxText = new FlxText(0, 0, 0, "0ms");
+	private var rating:Rating;
+	private var introGroup:FlxTypedGroup<IntroSprite>;
+
 	// Adding Objects Using Lua
 	public function addObject(object:FlxBasic)
 	{
@@ -456,23 +459,7 @@ class PlayState extends MusicBeatState
 		// Change The Application Title To The Engine Version, Song Name, And Difficulty.
 		Application.current.window.title = '${MainMenuState.kecVer}: ${SONG.songName} - [${CoolUtil.difficultyArray[storyDifficulty]}]';
 
-		STYLE = Style.loadJSONFile(SONG.style.toLowerCase());
-
-		if (STYLE == null)
-		{
-			STYLE = Style.loadJSONFile('default');
-			Debug.logTrace("No Style Found. Loading Default.");
-		}
-		STYLE.style = SONG.style;
-
-		// grab variables here too or else its gonna break stuff later on
-		GameplayCustomizeState.freeplayBf = SONG.player1;
-		GameplayCustomizeState.freeplayDad = SONG.player2;
-		GameplayCustomizeState.freeplayGf = SONG.gfVersion;
-		GameplayCustomizeState.freeplayNoteStyle = SONG.style.toLowerCase();
-		GameplayCustomizeState.freeplayStage = SONG.stage;
-		GameplayCustomizeState.freeplaySong = SONG.songId;
-		GameplayCustomizeState.freeplayWeek = storyWeek;
+		initStyle();
 
 		previousRate = songMultiplier - 0.05;
 
@@ -496,41 +483,7 @@ class PlayState extends MusicBeatState
 		highestCombo = 0;
 		inResults = false;
 
-		// Initialize PlayStateChangeables Options For Later.
-		PlayStateChangeables.useDownscroll = FlxG.save.data.downscroll;
-		PlayStateChangeables.middleScroll = FlxG.save.data.middleScroll;
-		PlayStateChangeables.safeFrames = FlxG.save.data.frames;
-		if (FlxG.save.data.scrollSpeed == 1)
-			scrollSpeed = SONG.speed;
-		else
-			scrollSpeed = FlxG.save.data.scrollSpeed;
-		PlayStateChangeables.zoom = FlxG.save.data.zoom;
-		PlayStateChangeables.botPlay = FlxG.save.data.botplay;
-
-		if (!isStoryMode)
-		{
-			PlayStateChangeables.modchart = FlxG.save.data.modcharts;
-			PlayStateChangeables.opponentMode = FlxG.save.data.opponent;
-			PlayStateChangeables.mirrorMode = FlxG.save.data.mirror;
-			PlayStateChangeables.holds = FlxG.save.data.sustains;
-			PlayStateChangeables.healthDrain = FlxG.save.data.hdrain;
-			PlayStateChangeables.healthGain = FlxG.save.data.hgain;
-			PlayStateChangeables.healthLoss = FlxG.save.data.hloss;
-			PlayStateChangeables.practiceMode = FlxG.save.data.practice;
-			PlayStateChangeables.skillIssue = FlxG.save.data.noMisses;
-		}
-		else
-		{
-			PlayStateChangeables.modchart = true;
-			PlayStateChangeables.opponentMode = false;
-			PlayStateChangeables.mirrorMode = false;
-			PlayStateChangeables.holds = true;
-			PlayStateChangeables.healthDrain = false;
-			PlayStateChangeables.healthGain = 1;
-			PlayStateChangeables.healthLoss = 1;
-			PlayStateChangeables.practiceMode = false;
-			PlayStateChangeables.skillIssue = false;
-		}
+		initGameplaySettings();
 
 		usedBot = false;
 
@@ -549,7 +502,6 @@ class PlayState extends MusicBeatState
 		if (FlxG.save.data.gen)
 		{
 			Debug.logInfo('Searching for Lua Modchart? ($executeModchart) at ${Paths.lua('songs/${PlayState.SONG.songId}/modchart')}');
-			// Debug.logInfo('Searching for HScript? ($executeHScript) at ${Paths.hscript('songs/${PlayState.SONG.songId}/script')}');
 		}
 
 		if (executeModchart)
@@ -650,6 +602,16 @@ class PlayState extends MusicBeatState
 			dialogue = CoolUtil.coolTextFile(Paths.txt('data/songs/${PlayState.SONG.songId}/dialogue'));
 		}
 
+		introGroup = new FlxTypedGroup<IntroSprite>();
+		IntroSprite.style = STYLE;
+		for (i in 0...IntroSprite.images.length)
+		{
+			var sprite = new IntroSprite(IntroSprite.images[i], i);
+			introGroup.add(sprite);
+		}
+
+		// fard
+
 		if (isStoryMode)
 		{
 			switch (storyWeek)
@@ -716,8 +678,6 @@ class PlayState extends MusicBeatState
 
 		Paths.setCurrentLevel(directory);
 
-		Debug.logTrace(directory);
-
 		Stage.initStageProperties();
 
 		Stage.loadStageData(stageCheck);
@@ -736,70 +696,7 @@ class PlayState extends MusicBeatState
 		if (isStoryMode)
 			songMultiplier = 1;
 
-		// defaults if no gf was found in chart
-		var gfCheck:String = 'gf';
-
-		if (SONG.gfVersion == null)
-		{
-			switch (storyWeek)
-			{
-				case 4:
-					gfCheck = 'gf-car';
-				case 5:
-					gfCheck = 'gf-christmas';
-				case 6:
-					gfCheck = 'gf-pixel';
-				case 7:
-					gfCheck = 'gfTank';
-			}
-		}
-		else
-		{
-			gfCheck = SONG.gfVersion;
-		}
-
-		gfGroup = new FlxTypedGroup<Character>();
-		boyfriendGroup = new FlxTypedGroup<Character>();
-		dadGroup = new FlxTypedGroup<Character>();
-
-		// Load Characters.
-		if (!stageTesting)
-		{
-			if (Stage.hasGF)
-			{
-				gf = new Character(400, 130, gfCheck);
-
-				if (gf.frames == null)
-				{
-					#if debug
-					FlxG.log.warn(["Couldn't load gf: " + gfCheck + ". Loading default gf"]);
-					#end
-					gf = new Character(400, 130, 'gf');
-				}
-			}
-			else
-				gf = null;
-
-			boyfriend = new Boyfriend(770, 450, SONG.player1);
-
-			if (boyfriend.frames == null)
-			{
-				#if debug
-				FlxG.log.warn(["Couldn't load boyfriend: " + SONG.player1 + ". Loading default boyfriend"]);
-				#end
-				boyfriend = new Boyfriend(770, 450, 'bf');
-			}
-
-			dad = new Character(100, 100, SONG.player2);
-
-			if (dad.frames == null)
-			{
-				#if debug
-				FlxG.log.warn(["Couldn't load opponent: " + SONG.player2 + ". Loading default opponent"]);
-				#end
-				dad = new Character(100, 100, 'dad');
-			}
-		}
+		initCharacters();
 
 		Stage.initCamPos();
 
@@ -1076,13 +973,6 @@ class PlayState extends MusicBeatState
 
 		createBar();
 
-		var ratingStyle = "Default";
-
-		if (SONG.style != null)
-			ratingStyle = SONG.style;
-
-		RatingWindow.createRatings(ratingStyle);
-
 		judgementCounter = new FlxText(20, 0, 0, "", 20);
 		judgementCounter.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		judgementCounter.borderSize = 2;
@@ -1171,17 +1061,18 @@ class PlayState extends MusicBeatState
 		grpNoteSplashes.add(splash);
 		splash.alpha = 0.00001;
 
-		strumLineNotes.cameras = [camHUD];
-		grpNoteSplashes.cameras = [camHUD];
-		notes.cameras = [camHUD];
+		strumLineNotes.camera = camHUD;
+		grpNoteSplashes.camera = camHUD;
+		notes.camera = camHUD;
 
-		uiGroup.cameras = [camHUD];
-		rating.cameras = [camHUD];
-		currentTimingShown.cameras = [camHUD];
+		uiGroup.camera = camHUD;
+		introGroup.camera = camHUD;
+		rating.camera = camHUD;
+		currentTimingShown.camera = camHUD;
 		// sfjl
 
 		if (isStoryMode)
-			doof.cameras = [camHUD];
+			doof.camera = camHUD;
 
 		startingSong = true;
 		for (da in dadGroup.members)
@@ -1192,8 +1083,6 @@ class PlayState extends MusicBeatState
 
 		for (goil in gfGroup.members)
 			goil.dance();
-
-		cacheCountdown();
 
 		if (inCutscene)
 			removeStaticArrows(true);
@@ -1259,11 +1148,10 @@ class PlayState extends MusicBeatState
 				startCountdown();
 			});
 		}
-
-		var styleShit:String = (STYLE.style == null ? 'default' : STYLE.style).toLowerCase();
+		
 		for (i in 1...3)
 		{
-			precacheThing('styles/$styleShit/missnote$i', 'sound', 'shared');
+			precacheThing('styles/$styleName/missnote$i', 'sound', 'shared');
 		}
 
 		// This allow arrow key to be detected by flixel. See https://github.com/HaxeFlixel/flixel/issues/2190
@@ -1302,6 +1190,8 @@ class PlayState extends MusicBeatState
 			}
 		}
 
+		add(introGroup);
+
 		if (PlayStateChangeables.skillIssue)
 		{
 			var redVignette:FlxSprite = new FlxSprite().loadGraphic(Paths.image('nomisses_vignette'));
@@ -1309,15 +1199,12 @@ class PlayState extends MusicBeatState
 			redVignette.cameras = [overlayCam];
 			add(redVignette);
 		}
-
+		cachePopUpScore();
 		precacheThing('alphabet', 'image', null);
-
 		precacheThing('breakfast', 'music');
 
 		if (FlxG.save.data.hitSound != 0)
 			precacheThing("hitsounds/" + HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase(), 'sound', 'shared');
-
-		cachePopUpScore();
 
 		if (isStoryMode)
 			initStoryLength = StoryMenuState.weekData()[storyWeek].songs.length;
@@ -1331,7 +1218,6 @@ class PlayState extends MusicBeatState
 		if (FlxG.save.data.showRating)
 		{
 			insert(PlayState.instance.members.indexOf(notes), rating);
-			rating.alpha = 0;
 		}
 
 		subStates.push(new PauseSubState());
@@ -1355,7 +1241,7 @@ class PlayState extends MusicBeatState
 		Debug.logTrace("Took " + Std.string(FlxMath.roundDecimal(haxe.Timer.stamp() - stamp, 3)) + " Seconds To Load.");
 	}
 
-	inline function createBar()
+	public function createBar()
 	{
 		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(barImage);
 		if (PlayStateChangeables.useDownscroll)
@@ -1502,8 +1388,13 @@ class PlayState extends MusicBeatState
 		return value;
 	}
 
-	function startCountdown():Void
+	public function startCountdown():Void
 	{
+		#if FEATURE_HSCRIPT
+		if (ScriptUtil.hasPause(scripts.executeAllFunc("startCountdown")))
+			return;
+		#end
+
 		if (inCinematic || inCutscene)
 		{
 			if (!arrowsGenerated)
@@ -1513,11 +1404,6 @@ class PlayState extends MusicBeatState
 				generateStaticArrows(0, true);
 			}
 		}
-
-		#if FEATURE_HSCRIPT
-		if (ScriptUtil.hasPause(scripts.executeAllFunc("startCountdown")))
-			return;
-		#end
 
 		inCinematic = false;
 		inCutscene = false;
@@ -1573,74 +1459,20 @@ class PlayState extends MusicBeatState
 						d.dance();
 				}
 			}
-			var styleShit:String = (STYLE.style == null ? 'default' : STYLE.style).toLowerCase();
-			var introAlts = ['hud/$styleShit/ready', 'hud/$styleShit/set', 'hud/$styleShit/go'];
 
 			switch (swagCounter)
 			{
 				case 0:
-					FlxG.sound.play(Paths.sound('styles/$styleShit/intro3'), 0.6);
+					FlxG.sound.play(Paths.sound('styles/$styleName/intro3'), 0.6);
 				case 1:
-					var ready:FlxSprite = new FlxSprite().loadGraphic(Paths.image(introAlts[0]));
-					ready.scrollFactor.set();
-					ready.scale.set(0.7, 0.7);
-					ready.cameras = [camHUD];
-					ready.updateHitbox();
-
-					if (STYLE.antialiasing == false)
-						ready.antialiasing = false;
-
-					ready.setGraphicSize(Std.int(ready.width * STYLE.scale));
-
-					ready.screenCenter();
-					add(ready);
-					createTween(ready, {alpha: 0}, Conductor.crochet / 1000, {
-						ease: FlxEase.cubeInOut,
-						onComplete: function(twn:FlxTween)
-						{
-							ready.destroy();
-						}
-					});
-					FlxG.sound.play(Paths.sound('styles/$styleShit/intro2'), 0.6);
+					introGroup.members[0].appear();
+					FlxG.sound.play(Paths.sound('styles/$styleName/intro2'), 0.6);
 				case 2:
-					var set:FlxSprite = new FlxSprite().loadGraphic(Paths.image(introAlts[1]));
-					set.scrollFactor.set();
-					set.scale.set(0.7, 0.7);
-					set.setGraphicSize(Std.int(set.width * STYLE.scale));
-					set.cameras = [camHUD];
-					set.screenCenter();
-					if (STYLE.antialiasing == false)
-						set.antialiasing = false;
-					add(set);
-					createTween(set, {alpha: 0}, Conductor.crochet / 1000, {
-						ease: FlxEase.cubeInOut,
-						onComplete: function(twn:FlxTween)
-						{
-							set.destroy();
-						}
-					});
-					FlxG.sound.play(Paths.sound('styles/$styleShit/intro1'), 0.6);
+					introGroup.members[1].appear();
+					FlxG.sound.play(Paths.sound('styles/$styleName/intro1'), 0.6);
 				case 3:
-					var go:FlxSprite = new FlxSprite().loadGraphic(Paths.image(introAlts[2]));
-					go.scrollFactor.set();
-					go.scale.set(0.7, 0.7);
-					go.cameras = [camHUD];
-					go.setGraphicSize(Std.int(go.width * STYLE.scale));
-					if (STYLE.antialiasing == false)
-						go.antialiasing = false;
-
-					go.updateHitbox();
-
-					go.screenCenter();
-					add(go);
-					createTween(go, {alpha: 0}, Conductor.crochet / 1000, {
-						ease: FlxEase.cubeInOut,
-						onComplete: function(twn:FlxTween)
-						{
-							go.destroy();
-						}
-					});
-					FlxG.sound.play(Paths.sound('styles/$styleShit/introGo'), 0.6);
+					introGroup.members[2].appear();
+					FlxG.sound.play(Paths.sound('styles/$styleName/introGo'), 0.6);
 			}
 			#if FEATURE_HSCRIPT
 			scripts.executeAllFunc("countTick", [swagCounter]);
@@ -1889,8 +1721,7 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.save.data.missSounds)
 		{
-			var styleShit:String = (STYLE.style == null ? 'default' : STYLE.style).toLowerCase();
-			FlxG.sound.play(Paths.soundRandom('styles/$styleShit/missnote', 1, 3), FlxG.random.float(0.1, 0.2));
+			FlxG.sound.play(Paths.soundRandom('styles/$styleName/missnote', 1, 3), FlxG.random.float(0.1, 0.2));
 		}
 		boyfriend.playAnim('sing' + dataSuffix[direction] + 'miss', true);
 		if (!SONG.splitVoiceTracks)
@@ -3666,7 +3497,6 @@ class PlayState extends MusicBeatState
 			luaModchart = null;
 		}
 		#end
-		poggers(true);
 
 		canPause = false;
 		inst.volume = 0;
@@ -3749,7 +3579,7 @@ class PlayState extends MusicBeatState
 			songEnd();
 	}
 
-	inline function songEnd()
+	private function songEnd()
 	{
 		if (isStoryMode)
 		{
@@ -3930,16 +3760,9 @@ class PlayState extends MusicBeatState
 		return actualScore;
 	}
 
-	var timeShown = 0;
-	var currentTimingShown:FlxText = new FlxText(0, 0, 0, "0ms");
-	var rating:FlxSprite = new FlxSprite();
-
-	var lastRating:String = '';
-
 	private function popUpScore(daNote:Note):Void
 	{
 		var noteDiff:Float = (daNote.strumTime - Conductor.songPosition);
-		var styleShit:String = (STYLE.style == null ? 'default' : STYLE.style).toLowerCase();
 		var noteDiffAbs = Math.abs(noteDiff);
 		if (!PlayStateChangeables.botPlay)
 		{
@@ -3949,11 +3772,8 @@ class PlayState extends MusicBeatState
 				tweenManager.cancelTweensOf(currentTimingShown);
 				currentTimingShown.alpha = 1;
 			}
-
-			rating.velocity.y = 0;
-			rating.velocity.x = 0;
+			rating.setup();
 			tweenManager.cancelTweensOf(rating);
-			rating.alpha = 1;
 		}
 
 		if (PlayStateChangeables.botPlay)
@@ -4032,25 +3852,7 @@ class PlayState extends MusicBeatState
 
 		songScore += Math.round(score);
 
-		if (lastRating != daRating.name.toLowerCase())
-		{
-			rating.loadGraphic(Paths.image('hud/$styleShit/' + daRating.name.toLowerCase()));
-			rating.setGraphicSize(Std.int(rating.width * STYLE.scale * 0.7));
-
-			if (STYLE.antialiasing == false)
-				rating.antialiasing = false;
-		}
-
-		lastRating = daRating.name.toLowerCase();
-		rating.updateHitbox();
-
-		rating.x = FlxG.save.data.changedHitX;
-		rating.y = FlxG.save.data.changedHitY;
-
-		rating.velocity.y -= FlxG.random.int(140, 175);
-		rating.velocity.x -= FlxG.random.int(0, 10);
-		rating.moves = true;
-		rating.acceleration.y = 550;
+		rating.loadRating(daRating.name.toLowerCase());
 
 		if (FlxG.save.data.showMs)
 		{
@@ -4058,8 +3860,6 @@ class PlayState extends MusicBeatState
 			if (PlayStateChangeables.botPlay)
 				msTiming = 0;
 		}
-
-		timeShown = 0;
 
 		currentTimingShown.color = daRating.displayColor;
 		currentTimingShown.font = Paths.font('vcr.ttf');
@@ -4069,7 +3869,7 @@ class PlayState extends MusicBeatState
 		currentTimingShown.text = msTiming + "ms";
 		currentTimingShown.size = 20;
 
-		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image('hud/$styleShit/combo'));
+		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image('hud/$styleName/combo'));
 		comboSpr.screenCenter();
 		currentTimingShown.x = rating.x + 150;
 		currentTimingShown.y = rating.y + 85;
@@ -4094,7 +3894,6 @@ class PlayState extends MusicBeatState
 
 		currentTimingShown.updateHitbox();
 		comboSpr.updateHitbox();
-		rating.updateHitbox();
 
 		var seperatedScore:Array<Int> = [];
 
@@ -4133,7 +3932,7 @@ class PlayState extends MusicBeatState
 		{
 			for (i in seperatedScore)
 			{
-				var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image('hud/$styleShit/' + 'num' + Std.int(i)));
+				var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image('hud/$styleName/' + 'num' + Std.int(i)));
 				numScore.setGraphicSize(Std.int(numScore.width * STYLE.scale));
 				numScore.cameras = [camHUD];
 
@@ -4168,13 +3967,10 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		createTween(rating, {alpha: 0}, 0.2, {
-			startDelay: (Conductor.crochet * Math.pow(songMultiplier, 2)) * 0.001
-		});
-
 		createTween(currentTimingShown, {alpha: 0}, 0.1, {
 			startDelay: (Conductor.crochet * Math.pow(songMultiplier, 2)) * 0.0005
 		});
+		rating.fadeOut();
 	}
 
 	public function NearlyEquals(value1:Float, value2:Float, unimportantDifference:Float = 10):Bool
@@ -4312,8 +4108,7 @@ class PlayState extends MusicBeatState
 
 			if (FlxG.save.data.missSounds)
 			{
-				var styleShit:String = (STYLE.style == null ? 'default' : STYLE.style).toLowerCase();
-				FlxG.sound.play(Paths.soundRandom('styles/$styleShit/missnote', 1, 3), FlxG.random.float(0.1, 0.2));
+				FlxG.sound.play(Paths.soundRandom('styles/$styleName/missnote', 1, 3), FlxG.random.float(0.1, 0.2));
 			}
 
 			if (!PlayStateChangeables.opponentMode)
@@ -4392,15 +4187,6 @@ class PlayState extends MusicBeatState
 			(FlxG.save.data.roundAccuracy ? FlxMath.roundDecimal(accuracy, 0) : accuracy));
 		scoreTxt.screenCenter(X);
 		scoreTxt.updateHitbox();
-	}
-
-	function receptorTween()
-	{
-		for (i in 0...strumLineNotes.length)
-		{
-			createTween(strumLineNotes.members[i], {modAngle: strumLineNotes.members[i].modAngle + 360}, 0.5 / songMultiplier,
-				{ease: FlxEase.smootherStepInOut});
-		}
 	}
 
 	function getKeyPresses(note:Note):Int
@@ -5002,108 +4788,6 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	public var cleanedSong:SongData;
-
-	function poggers(?cleanTheSong = false)
-	{
-		var notes = [];
-
-		if (cleanTheSong)
-		{
-			cleanedSong = SONG;
-
-			for (section in cleanedSong.notes)
-			{
-				var removed = [];
-
-				for (note in section.sectionNotes)
-				{
-					var old = note[0];
-					if (note[0] < section.startTime)
-					{
-						notes.push(note);
-						removed.push(note);
-					}
-					if (note[0] > section.endTime)
-					{
-						notes.push(note);
-						removed.push(note);
-					}
-				}
-
-				for (i in removed)
-				{
-					section.sectionNotes.remove(i);
-				}
-			}
-
-			for (section in cleanedSong.notes)
-			{
-				var saveRemove = [];
-
-				for (i in notes)
-				{
-					if (i[0] >= section.startTime && i[0] < section.endTime)
-					{
-						saveRemove.push(i);
-						section.sectionNotes.push(i);
-					}
-				}
-
-				for (i in saveRemove)
-					notes.remove(i);
-			}
-
-			SONG = cleanedSong;
-		}
-		else
-		{
-			for (section in SONG.notes)
-			{
-				var removed = [];
-
-				for (note in section.sectionNotes)
-				{
-					var old = note[0];
-					if (note[0] < section.startTime)
-					{
-						notes.push(note);
-						removed.push(note);
-					}
-					if (note[0] > section.endTime)
-					{
-						notes.push(note);
-						removed.push(note);
-					}
-				}
-
-				for (i in removed)
-				{
-					section.sectionNotes.remove(i);
-				}
-			}
-
-			for (section in SONG.notes)
-			{
-				var saveRemove = [];
-
-				for (i in notes)
-				{
-					if (i[0] >= section.startTime && i[0] < section.endTime)
-					{
-						saveRemove.push(i);
-						section.sectionNotes.push(i);
-					}
-				}
-
-				for (i in saveRemove)
-					notes.remove(i);
-			}
-
-			SONG = cleanedSong;
-		}
-	}
-
 	override function destroy()
 	{
 		#if FEATURE_HSCRIPT
@@ -5140,7 +4824,7 @@ class PlayState extends MusicBeatState
 		super.destroy();
 	}
 
-	public function updateSettings():Void
+	public inline function updateSettings():Void
 	{
 		scoreTxt.y = healthBarBG.y;
 		if (FlxG.save.data.colour)
@@ -5486,7 +5170,7 @@ class PlayState extends MusicBeatState
 		return timer.start(Time, OnComplete, Loops);
 	}
 
-	public function precacheThing(target:String, type:String, ?library:String = null)
+	public inline function precacheThing(target:String, type:String, ?library:String = null)
 	{
 		switch (type)
 		{
@@ -5501,33 +5185,15 @@ class PlayState extends MusicBeatState
 
 	// https://github.com/ShadowMario/FNF-PsychEngine/pull/9015
 	// Seems like a good pull request. Credits: Raltyro.
-	private function cachePopUpScore()
+	private inline function cachePopUpScore()
 	{
-		var styleShit:String = (STYLE.style == null ? 'default' : STYLE.style).toLowerCase();
-
 		for (precaching in Ratings.timingWindows)
-			Paths.image('hud/$styleShit/${precaching.name.toLowerCase()}', 'shared');
+			Paths.image('hud/$styleName/${precaching.name.toLowerCase()}', 'shared');
 
 		for (i in 0...10)
 		{
-			Paths.image('hud/$styleShit/num$i', 'shared');
+			Paths.image('hud/$styleName/num$i', 'shared');
 		}
-	}
-
-	function cacheCountdown()
-	{
-		var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
-		introAssets.set('default', ['ready', 'set', 'go']);
-
-		var styleShit:String = (STYLE.style == null ? 'default' : STYLE.style).toLowerCase();
-		var introAlts = ['hud/$styleShit/ready', 'hud/$styleShit/set', 'hud/$styleShit/go'];
-
-		for (asset in introAlts)
-			Paths.image(asset);
-
-		var things:Array<String> = ['intro3', 'intro2', 'intro1', 'introGo'];
-		for (precaching in things)
-			Paths.sound('styles/$styleShit/$precaching');
 	}
 
 	public static function getFlxEaseByString(?ease:String = '')
@@ -5777,7 +5443,6 @@ class PlayState extends MusicBeatState
 	private function cleanPlayObjects()
 	{
 		timerManager.clear();
-
 		tweenManager.clear();
 
 		while (unspawnNotes.length > 0)
@@ -5821,20 +5486,21 @@ class PlayState extends MusicBeatState
 		}
 		uiGroup.clear();
 
+		rating.destroy();
+		for (i in introGroup)
+		{
+			i.destroy();
+			introGroup.remove(i);
+		}
+		introGroup.clear();
 		boyfriendGroup.clear();
 		dadGroup.clear();
 		if (gfGroup != null)
 			gfGroup.clear();
-
-		boyfriend.destroy();
-		dad.destroy();
-		if (gf != null)
-			gf.destroy();
-
-		boyfriend = null;
-		dad = null;
-		if (gf != null)
-			gf = null;
+		
+		FlxDestroyUtil.destroy(boyfriend);
+		FlxDestroyUtil.destroy(dad);
+		FlxDestroyUtil.destroy(gf);
 
 		Stage.destroy();
 		Stage = null;
@@ -5892,5 +5558,142 @@ class PlayState extends MusicBeatState
 		#else
 		FlxG.log.warn("Platform Not Supported.");
 		#end
+	}
+
+	private function initGameplaySettings()
+	{
+		// Initialize PlayStateChangeables Options For Later.
+		PlayStateChangeables.useDownscroll = FlxG.save.data.downscroll;
+		PlayStateChangeables.middleScroll = FlxG.save.data.middleScroll;
+		PlayStateChangeables.safeFrames = FlxG.save.data.frames;
+		if (FlxG.save.data.scrollSpeed == 1)
+			scrollSpeed = SONG.speed;
+		else
+			scrollSpeed = FlxG.save.data.scrollSpeed;
+		PlayStateChangeables.zoom = FlxG.save.data.zoom;
+		PlayStateChangeables.botPlay = FlxG.save.data.botplay;
+
+		if (!isStoryMode)
+		{
+			PlayStateChangeables.modchart = FlxG.save.data.modcharts;
+			PlayStateChangeables.opponentMode = FlxG.save.data.opponent;
+			PlayStateChangeables.mirrorMode = FlxG.save.data.mirror;
+			PlayStateChangeables.holds = FlxG.save.data.sustains;
+			PlayStateChangeables.healthDrain = FlxG.save.data.hdrain;
+			PlayStateChangeables.healthGain = FlxG.save.data.hgain;
+			PlayStateChangeables.healthLoss = FlxG.save.data.hloss;
+			PlayStateChangeables.practiceMode = FlxG.save.data.practice;
+			PlayStateChangeables.skillIssue = FlxG.save.data.noMisses;
+		}
+		else
+		{
+			PlayStateChangeables.modchart = true;
+			PlayStateChangeables.opponentMode = false;
+			PlayStateChangeables.mirrorMode = false;
+			PlayStateChangeables.holds = true;
+			PlayStateChangeables.healthDrain = false;
+			PlayStateChangeables.healthGain = 1;
+			PlayStateChangeables.healthLoss = 1;
+			PlayStateChangeables.practiceMode = false;
+			PlayStateChangeables.skillIssue = false;
+		}
+	}
+
+	private function initGPC()
+	{
+		// grab variables here too or else its gonna break stuff later on
+		GameplayCustomizeState.freeplayBf = SONG.player1;
+		GameplayCustomizeState.freeplayDad = SONG.player2;
+		GameplayCustomizeState.freeplayGf = SONG.gfVersion;
+		GameplayCustomizeState.freeplayNoteStyle = SONG.style.toLowerCase();
+		GameplayCustomizeState.freeplayStage = SONG.stage;
+		GameplayCustomizeState.freeplaySong = SONG.songId;
+		GameplayCustomizeState.freeplayWeek = storyWeek;
+	}
+
+	private function initStyle()
+	{
+		STYLE = Style.loadJSONFile(SONG.style.toLowerCase());
+
+		if (STYLE == null)
+		{
+			STYLE = Style.loadJSONFile('default');
+			Debug.logTrace("No Style Found. Loading Default.");
+		}
+		STYLE.style = SONG.style;
+		styleName = STYLE.style.toLowerCase();
+
+		RatingWindow.createRatings(STYLE.style);
+
+		rating = new Rating('marv', Ratings.timingWindows[0]);
+		rating.setup();
+		rating.style = STYLE;
+		rating.styleName = styleName;
+		Debug.logTrace(styleName);
+	}
+
+	private function initCharacters()
+	{
+		// defaults if no gf was found in chart
+		var gfCheck:String = 'gf';
+
+		if (SONG.gfVersion == null)
+		{
+			switch (storyWeek)
+			{
+				case 4:
+					gfCheck = 'gf-car';
+				case 5:
+					gfCheck = 'gf-christmas';
+				case 6:
+					gfCheck = 'gf-pixel';
+				case 7:
+					gfCheck = 'gfTank';
+			}
+		}
+		else
+		{
+			gfCheck = SONG.gfVersion;
+		}
+
+		gfGroup = new FlxTypedGroup<Character>();
+		boyfriendGroup = new FlxTypedGroup<Character>();
+		dadGroup = new FlxTypedGroup<Character>();
+
+		// Load Characters.
+		if (Stage.hasGF)
+		{
+			gf = new Character(400, 130, gfCheck);
+
+			if (gf.frames == null)
+			{
+				#if debug
+				FlxG.log.warn(["Couldn't load gf: " + gfCheck + ". Loading default gf"]);
+				#end
+				gf = new Character(400, 130, 'gf');
+			}
+		}
+		else
+			gf = null;
+
+		boyfriend = new Boyfriend(770, 450, SONG.player1);
+
+		if (boyfriend.frames == null)
+		{
+			#if debug
+			FlxG.log.warn(["Couldn't load boyfriend: " + SONG.player1 + ". Loading default boyfriend"]);
+			#end
+			boyfriend = new Boyfriend(770, 450, 'bf');
+		}
+
+		dad = new Character(100, 100, SONG.player2);
+
+		if (dad.frames == null)
+		{
+			#if debug
+			FlxG.log.warn(["Couldn't load opponent: " + SONG.player2 + ". Loading default opponent"]);
+			#end
+			dad = new Character(100, 100, 'dad');
+		}
 	}
 }
