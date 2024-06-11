@@ -8,13 +8,13 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Pulling the new commit
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4.1.6
       - name: Setting up Haxe
         uses: krdlab/setup-haxe@v1.5.1
         with:
           haxe-version: 4.3.4
       - name: Restore existing build cache for faster compilation
-        uses: actions/cache@v4
+        uses: actions/cache@v4.0.2
         with:
           # not caching the bin folder to prevent asset duplication and stuff like that
           key: cache-build-windows
@@ -33,12 +33,12 @@ jobs:
           haxelib run lime build windows
 
       - name: Uploading artifact (entire build)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.3
         with:
           name: Kade Engine Community
           path: export/release/windows/bin
       - name: Clearing already existing cache
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7.0.1
         with:
           script: |
             const caches = await github.rest.actions.getActionsCacheList({
@@ -57,7 +57,7 @@ jobs:
               }
             }
       - name: Uploading new cache
-        uses: actions/cache@v4
+        uses: actions/cache@v4.0.2
         with:
           # caching again since for some reason it doesnt work with the first post cache shit
           key: cache-build-windows
