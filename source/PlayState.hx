@@ -606,7 +606,7 @@ class PlayState extends MusicBeatState
 		IntroSprite.style = STYLE;
 		for (i in 0...IntroSprite.images.length)
 		{
-			var sprite = new IntroSprite(IntroSprite.images[i], i);
+			var sprite = new IntroSprite(IntroSprite.images[i]);
 			introGroup.add(sprite);
 		}
 

@@ -288,12 +288,6 @@ class Song
 
 			for (ii in i.sectionNotes)
 			{
-				if (song.chartVersion == null)
-				{
-					ii[3] = TimingStruct.getBeatFromTime(ii[0]);
-					ii[4] = ii[5];
-				}
-
 				// try not to brick the game challenge (impossible (thanks bolo))
 				if (song.chartVersion != latestChart)
 				{
@@ -312,12 +306,14 @@ class Song
 
 					i.playerSec = i.mustHitSection;
 
-					if (ii[4] == null || ii[4] == 'true' || ii[4] == 'false' || ii[4] == 0 || ii[4] == 0.0 || Math.isNaN(ii[4]))
+					if (ii[4] == null || !Std.isOfType(ii[4], String))
 						ii[4] = 'Normal';
 
-					ii[4] = ii[5];
+					ii[3] = ii[4];
+					if (ii[5] != null)
+						ii.remove(ii[5]);
 
-					ii[5] = null;
+					ii.remove(ii[4]);
 				}
 			}
 

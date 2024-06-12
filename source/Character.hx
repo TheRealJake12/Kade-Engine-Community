@@ -374,6 +374,8 @@ class Character extends FlxSprite
 
 	public function loadMappedAnims():Void
 	{
+		if (!FlxG.save.data.background)
+			return;
 		var noteData:Array<SwagSection> = Song.loadFromJson(PlayState.SONG.songId, 'picospeaker').notes;
 		for (section in noteData)
 		{

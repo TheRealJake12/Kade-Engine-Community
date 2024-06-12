@@ -1395,8 +1395,8 @@ class ChartingState extends MusicBeatState
 				if (n[0] == Math.abs(note.strumTime) && n[1] == note.noteData)
 				{
 					i.sectionNotes.remove(n);
-					curRenderedNotes.remove(note, true);
-					Debug.logTrace("Removed " + i.sectionNotes.length + " Note Data " + [1]);
+					curRenderedNotes.remove(note);
+					Debug.logTrace("Removed " + i.sectionNotes.length + " Note Data " + n[1]);
 					break;
 				}
 		}

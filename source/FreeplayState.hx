@@ -394,10 +394,9 @@ class FreeplayState extends MusicBeatState
 			meta.diffs = diffsThatExist;
 			songs.push(meta);
 		}
-
-		#if !FEATURE_STEPMANIA
+		
 		// trace("FEATURE_STEPMANIA was not specified during build, sm file loading is disabled.");
-		#elseif FEATURE_STEPMANIA
+		#if FEATURE_STEPMANIA
 		// TODO: Refactor this to multiple difficulties.
 		// trace("tryin to load sm files");
 		for (i in FileSystem.readDirectory("assets/sm/"))
