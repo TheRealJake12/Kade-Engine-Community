@@ -44,8 +44,8 @@ class GameplayCustomizeState extends MusicBeatState
 	var pixelShitPart3:String = 'shared';
 	var pixelShitPart4:String = null;
 
-	private var camHUD:SwagCamera;
-	private var camGame:SwagCamera;
+	private var camHUD:FlxCamera;
+	private var camGame:FlxCamera;
 	private var camOverlay:FlxCamera;
 	private var camFollow:FlxObject;
 	private var dataSuffix:Array<String> = ['LEFT', 'DOWN', 'UP', 'RIGHT'];
@@ -125,10 +125,10 @@ class GameplayCustomizeState extends MusicBeatState
 			Stage.initStageProperties();
 		}
 
-		camHUD = new SwagCamera();
+		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
 
-		camOverlay = new SwagCamera();
+		camOverlay = new FlxCamera();
 		camOverlay.bgColor.alpha = 0;
 
 		Stage.initCamPos();

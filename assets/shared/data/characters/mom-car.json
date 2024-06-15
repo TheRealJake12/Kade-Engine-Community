@@ -3,7 +3,7 @@
   "asset": ["characters/momCar"],
   "barColor": "#D8558E",
   "startingAnim": "idle",
-  "camFollow": [0, 100],
+  "camFollow": [0, 0],
   "healthicon" : "mom",
   "animations": [
     {

@@ -444,7 +444,7 @@ class Note extends FlxSprite
 						noteYOff = -stepHeight + swagWidth * 0.5;
 					}
 				}
-				
+
 				flipY = PlayStateChangeables.useDownscroll;
 			}
 

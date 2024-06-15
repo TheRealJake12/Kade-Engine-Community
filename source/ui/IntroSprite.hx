@@ -24,12 +24,12 @@ class IntroSprite extends FlxSprite
 		screenCenter();
 	}
 
-    public inline function appear()
-    {
-        alpha = 1;
+	public inline function appear()
+	{
+		alpha = 1;
 		velocity.set(0, 150);
 		PlayState.instance.createTween(this, {alpha: 0}, Conductor.crochet / 1000, {
 			ease: FlxEase.cubeInOut,
 		});
-    }
+	}
 }

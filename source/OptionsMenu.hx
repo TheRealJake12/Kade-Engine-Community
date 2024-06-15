@@ -181,6 +181,7 @@ class OptionsMenu extends MusicBeatSubstate
 				new HitSoundMode("Set at what condition you want the hitsound to play."),
 				new ResetButtonOption("Toggle pressing R to gameover."),
 				new InstantRespawn("Toggle if you instantly respawn after dying."),
+				new NoteCamMovement("If Hitting Notes Moves The Camera At All."),
 				new CamZoomOption("Toggle the camera zoom in-game."),
 				new DFJKOption(),
 				new Judgement("Create a custom judgement preset"),

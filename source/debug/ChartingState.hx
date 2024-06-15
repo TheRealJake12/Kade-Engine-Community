@@ -331,9 +331,6 @@ class ChartingState extends MusicBeatState
 		notetypetext.updateHitbox();
 		notetypetext.scrollFactor.set();
 
-		if (FlxG.save.data.showHelp == null)
-			FlxG.save.data.showHelp = true;
-
 		helpText = new CoolUtil.CoolText(985, 485, 12, 12, Paths.bitmapFont('fonts/vcr'));
 		helpText.autoSize = true;
 		helpText.antialiasing = true;
@@ -3106,8 +3103,6 @@ class ChartingState extends MusicBeatState
 
 		metronome = new MenuCheckBox();
 		metronome.text = "Metronome";
-		if (FlxG.save.data.chart_metronome == null)
-			FlxG.save.data.chart_metronome = false;
 		metronome.selected = FlxG.save.data.chart_metronome;
 		metronome.onClick = function(e)
 		{
@@ -3128,8 +3123,6 @@ class ChartingState extends MusicBeatState
 
 		hitsoundsP = new MenuCheckBox();
 		hitsoundsP.text = "Hitsounds (Player)";
-		if (FlxG.save.data.playHitsounds == null)
-			FlxG.save.data.playHitsounds = false;
 		hitsoundsP.selected = FlxG.save.data.playHitsounds;
 		hitsoundsP.onClick = function(e)
 		{
@@ -3138,8 +3131,7 @@ class ChartingState extends MusicBeatState
 
 		hitsoundsE = new MenuCheckBox();
 		hitsoundsE.text = "Hitsounds (Opponent)";
-		if (FlxG.save.data.playHitsoundsE == null)
-			FlxG.save.data.playHitsoundsE = false;
+
 		hitsoundsE.selected = FlxG.save.data.playHitsoundsE;
 		hitsoundsE.onClick = function(e)
 		{

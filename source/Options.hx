@@ -2868,6 +2868,34 @@ class SmoothHealthOption extends Option
 	}
 }
 
+class NoteCamMovement extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function left():Bool
+	{
+		FlxG.save.data.noteCamera = !FlxG.save.data.noteCamera;
+
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Note Camera Movement: < " + (FlxG.save.data.noteCamera ? "Enabled" : "Disabled") + " >";
+	}
+}
+
 class ResetSettings extends Option
 {
 	var confirm:Bool = false;
@@ -2951,6 +2979,10 @@ class ResetSettings extends Option
 		FlxG.save.data.showRating = null;
 		FlxG.save.data.showNum = null;
 		FlxG.save.data.showMs = null;
+		FlxG.save.data.noteCamera = null;
+		FlxG.save.data.showHelp = null;
+		FlxG.save.data.playHitsounds = null;
+		FlxG.save.data.playHitsoundsE = null;
 
 		KadeEngineData.initSave();
 		confirm = false;

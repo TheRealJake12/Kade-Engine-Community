@@ -701,8 +701,6 @@ class ModchartState
 		{
 			case 'camhud' | 'hud':
 				return PlayState.instance.camHUD;
-			case 'camStrums' | 'strums':
-				return PlayState.instance.camStrums;
 			case 'camGame' | 'game':
 				return PlayState.instance.camGame;
 			case 'overlayCam' | 'overlay':

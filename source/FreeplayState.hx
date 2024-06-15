@@ -47,7 +47,7 @@ class FreeplayState extends MusicBeatState
 {
 	public var songs:Array<FreeplaySongMetadata> = [];
 
-	private var camGame:SwagCamera;
+	private var camGame:FlxCamera;
 	var lerpSelected:Float = 0;
 
 	public static var rate:Float = 1.0;
@@ -145,8 +145,8 @@ class FreeplayState extends MusicBeatState
 		isDebug = true;
 		#end
 
-		camGame = new SwagCamera();
-		FlxG.cameras.reset(new SwagCamera());
+		camGame = new FlxCamera();
+		FlxG.cameras.reset(new FlxCamera());
 
 		persistentUpdate = persistentDraw = true;
 
