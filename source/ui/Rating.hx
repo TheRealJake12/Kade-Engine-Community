@@ -28,6 +28,8 @@ class Rating extends FlxSprite
 
 	public inline function loadRating(ratingName:String)
 	{
+		if (PlayStateChangeables.botPlay)
+			return;
 		if (lastRating != ratingName)
 		{
 			loadGraphic(Paths.image('hud/$styleName/' + ratingName));
@@ -46,6 +48,8 @@ class Rating extends FlxSprite
 
 	public inline function fadeOut()
 	{
+		if (PlayStateChangeables.botPlay)
+			return;
 		PlayState.instance.createTween(this, {alpha: 0}, 0.2, {
 			startDelay: (Conductor.crochet * Math.pow(PlayState.songMultiplier, 2)) * 0.001,
 		});

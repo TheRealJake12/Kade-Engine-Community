@@ -187,44 +187,26 @@ class Song
 
 	public static function conversionChecks(song:SongData):SongData
 	{
+		if (song.chartVersion == latestChart)
+		{
+			return song;
+		}
+
 		var ba = song.bpm;
 
 		var index = 0;
-		var convertedStuff:Array<Song.Event> = [];
 
-		if (song.eventObjects == null)
-			song.eventObjects = [new Song.Event("Init BPM", 0, song.bpm, "1", "BPM Change")];
-
-		for (i in song.eventObjects)
+		if (song.songName == null)
 		{
-			var name = Reflect.field(i, "name");
-			var type = Reflect.field(i, "type");
-			var pos = Reflect.field(i, "position");
-			var value = Reflect.field(i, "value");
-			var value2 = Reflect.field(i, "value2");
-
-			if (value2 == null)
-				value2 = "1";
-
-			convertedStuff.push(new Song.Event(name, pos, value, value2, type));
+			if (song.song != null)
+				song.songName = song.song;
+			else
+				song.songName = song.songId;
 		}
 
-		song.eventObjects = convertedStuff;
-
-		if (song.chartVersion != latestChart)
+		if (song.noteStyle == 'pixel')
 		{
-			if (song.songName == null)
-			{
-				if (song.song != null)
-					song.songName = song.song;
-				else
-					song.songName = song.songId;
-			}
-
-			if (song.noteStyle == 'pixel')
-			{
-				song.style = "Pixel";
-			}
+			song.style = "Pixel";
 		}
 
 		if (song.style == null)
@@ -289,32 +271,40 @@ class Song
 			for (ii in i.sectionNotes)
 			{
 				// try not to brick the game challenge (impossible (thanks bolo))
-				if (song.chartVersion != latestChart)
+				if (i.mustHitSection)
 				{
-					if (i.mustHitSection)
+					var bool = false;
+					if (ii[1] <= 3)
 					{
-						var bool = false;
-						if (ii[1] <= 3)
-						{
-							ii[1] += 4;
-							bool = true;
-						}
-						if (ii[1] > 3)
-							if (!bool)
-								ii[1] -= 4;
+						ii[1] += 4;
+						bool = true;
 					}
-
-					i.playerSec = i.mustHitSection;
-
-					if (ii[4] == null || !Std.isOfType(ii[4], String))
-						ii[4] = 'Normal';
-
-					ii[3] = ii[4];
-					if (ii[5] != null)
-						ii.remove(ii[5]);
-
-					ii.remove(ii[4]);
+					if (ii[1] > 3)
+						if (!bool)
+							ii[1] -= 4;
 				}
+
+				i.playerSec = i.mustHitSection;
+
+				var strumTime = ii[0];
+				var noteData = ii[1];
+				var length = ii[2];
+
+				if (ii[3] == null || !Std.isOfType(ii[3], String))
+					ii[3] = 'Normal';
+				var type = ii[3];
+
+				ii.resize(0);
+
+				ii.push(strumTime);
+				ii.push(noteData);
+				ii.push(length);
+				ii.push(type);
+				// simple conversion
+				// nvm, retarded conversion
+
+				if (ii[4] != null && Std.isOfType(ii[4], String))
+					ii[3] = ii[4];
 			}
 
 			index++;

@@ -17,4 +17,5 @@ class PlayStateChangeables
 	public static var botPlay:Bool;
 	public static var zoom:Float;
 	public static var scrollSpeed:Float = 1.0;
+	public static var noteCamera:Bool;
 }

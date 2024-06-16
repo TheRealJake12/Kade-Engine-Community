@@ -820,7 +820,6 @@ class ChartingState extends MusicBeatState
 							i.connectedNote.strumTime,
 							i.connectedNote.rawNoteData,
 							i.connectedNote.sustainLength,
-							i.connectedNote.beat,
 							i.connectedNote.noteShit
 						]);
 					}
@@ -880,7 +879,6 @@ class ChartingState extends MusicBeatState
 						selectedBoxes.members[i].connectedNote.strumTime,
 						selectedBoxes.members[i].connectedNote.rawNoteData,
 						selectedBoxes.members[i].connectedNote.sustainLength,
-						selectedBoxes.members[i].connectedNote.beat,
 						selectedBoxes.members[i].connectedNote.noteShit
 					]);
 					notesToBeDeleted.push(selectedBoxes.members[i].connectedNote);
@@ -1481,7 +1479,6 @@ class ChartingState extends MusicBeatState
 						strum,
 						originalNote.rawNoteData,
 						originalNote.sustainLength,
-						originalNote.beat,
 						originalNote.noteShit
 					];
 					ii.sectionNotes.push(newData);
@@ -2378,7 +2375,7 @@ class ChartingState extends MusicBeatState
 		scrollSpeed = new NumberStepper();
 		scrollSpeed.max = 10;
 		scrollSpeed.min = 0.1;
-		scrollSpeed.precision = 2;
+		scrollSpeed.precision = 3;
 		scrollSpeed.step = 0.1;
 		scrollSpeed.pos = SONG.speed;
 		scrollSpeed.decimalSeparator = ".";
