@@ -18,7 +18,7 @@ class Load extends MusicBeatState
 		add(load);
 		super.create();
 
-		start();
+		LoadingState.loadAndSwitchState(new PlayState());
 	}
 
 	override function update(elapsed:Float)
@@ -28,39 +28,6 @@ class Load extends MusicBeatState
 
 	function start()
 	{
-		if (!FlxG.save.data.unload)
-		{
-			switch (cache.BaseCache.loadedBefore)
-			{
-				case false:
-					FlxG.autoPause = false;
-					new lime.app.Future<Void>(function()
-					{
-						// Finally, the loading screen doesn't crash a lot now.
-						for (directory in [
-							/* Regular stuff */ 'assets/images/',
-							'assets/songs/',
-							/* Shared stuff */ 'assets/shared/images/',
-							'assets/shared/sounds/',
-							'assets/shared/music/'
-						])
-						{
-							cache.BaseCache.cacheStuff(directory);
-						}
-						haxe.Timer.delay(function() // this is fine
-						{
-							cache.BaseCache.loadedBefore = true;
-							FlxG.autoPause = FlxG.save.data.autoPause;
-							LoadingState.loadAndSwitchState(new PlayState());
-							Debug.logTrace("Done");
-						}, 600);
-					}, true);
-				case true:
-					LoadingState.loadAndSwitchState(new PlayState());
-					Debug.logTrace("Loaded Before, No Need To Load Again.");
-			}
-		}
-		else
-			LoadingState.loadAndSwitchState(new PlayState());
+		LoadingState.loadAndSwitchState(new PlayState());
 	}
 }

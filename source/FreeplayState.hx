@@ -1,11 +1,9 @@
 package;
 
-import openfl.utils.Future;
 import CoolUtil.CoolText;
 import Song.Style;
 import openfl.media.Sound;
 import flixel.effects.FlxFlicker;
-import flixel.sound.FlxSound;
 #if FEATURE_STEPMANIA
 import smTools.SMFile;
 #end
@@ -15,17 +13,9 @@ import sys.io.File;
 #end
 import Song.SongData;
 import lime.app.Application;
-import flixel.input.gamepad.FlxGamepad;
 import flash.text.TextField;
-import flixel.FlxState;
-import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.addons.display.FlxGridOverlay;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
-import flixel.text.FlxText;
-import flixel.util.FlxColor;
-import flixel.tweens.FlxTween;
 import openfl.utils.Assets as OpenFlAssets;
 #if FEATURE_DISCORD
 import Discord;
@@ -36,9 +26,6 @@ import Modifiers;
 import sys.FileSystem;
 import sys.io.File;
 #end
-import flixel.tweens.FlxEase;
-import flixel.util.FlxTimer;
-import flixel.FlxCamera;
 import debug.ChartingState;
 
 using StringTools;
@@ -169,14 +156,9 @@ class FreeplayState extends MusicBeatState
 
 			songText.visible = songText.active = songText.isMenuItem = false;
 			icon.visible = icon.active = false;
-
-			// using a FlxGroup is too much fuss!
+			
 			iconArray.push(icon);
 			add(icon);
-
-			// songText.x += 40;
-			// DONT PUT X IN THE FIRST PARAMETER OF new ALPHABET() !!
-			// songText.screenCenter(X);
 		}
 
 		scoreText = new CoolText(FlxG.width * 0.6525, 10, 31, 31, Paths.bitmapFont('fonts/vcr'));
@@ -256,9 +238,6 @@ class FreeplayState extends MusicBeatState
 		bg.color = songs[curSelected].color;
 		intendedColor = bg.color;
 		lerpSelected = curSelected;
-
-		// FlxG.sound.playMusic(Paths.music('title'), 0);
-		// FlxG.sound.music.fadeIn(2, 0, 0.8);
 
 		PlayStateChangeables.modchart = FlxG.save.data.modcharts;
 		PlayStateChangeables.botPlay = FlxG.save.data.botplay;
@@ -618,9 +597,6 @@ class FreeplayState extends MusicBeatState
 		{
 			FlxG.sound.music.volume -= 0.5 * FlxG.elapsed;
 		}
-
-		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
-
 		var upP = controls.UP_P;
 		var downP = controls.DOWN_P;
 		var accepted = FlxG.keys.justPressed.ENTER && !FlxG.keys.pressed.ALT;
@@ -822,8 +798,6 @@ class FreeplayState extends MusicBeatState
 		{
 			FlxG.sound.music.stop();
 
-			// playinSong = Song.loadFromJson(songs[curSelected].songName,CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[CoolUtil.difficultyArray.indexOf(songs[curSelected].diffs[curDifficulty])]));
-
 			activeSong = playinSong;
 
 			if (currentSongPlaying != songs[curSelected].songName)
@@ -841,10 +815,6 @@ class FreeplayState extends MusicBeatState
 				}
 
 				FlxG.sound.playMusic(songPath, 0.7, true);
-
-				// Conductor.changeBPM();
-
-				// Debug.logTrace(songPath);
 
 				songPath = null;
 			}

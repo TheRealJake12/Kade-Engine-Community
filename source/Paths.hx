@@ -2,7 +2,6 @@ package;
 
 import flash.media.Sound;
 import haxe.ui.ToolkitAssets;
-import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFramesCollection;
 import animateatlas.AtlasFrameMaker;

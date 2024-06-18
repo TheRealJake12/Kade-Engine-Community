@@ -7,36 +7,23 @@ import LuaClass.LuaSprite;
 import LuaClass.LuaCamera;
 import LuaClass.LuaReceptor;
 import LuaClass.LuaNote;
-import openfl.display3D.textures.VideoTexture;
-import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.tweens.FlxEase;
-import openfl.filters.ShaderFilter;
-import flixel.tweens.FlxTween;
-import flixel.util.FlxColor;
+import flixel.graphics.FlxGraphic;
 import openfl.geom.Matrix;
 import openfl.display.BitmapData;
 import lime.app.Application;
-import flixel.FlxSprite;
 import llua.Convert;
 import llua.Lua;
 import llua.State;
 import llua.LuaL;
-import flixel.FlxBasic;
-import flixel.FlxCamera;
-import flixel.FlxG;
 import openfl.Lib;
-import shader.Shaders;
 import openfl.utils.Assets as OpenFlAssets;
 #if FEATURE_FILESYSTEM
 import sys.io.File;
 #end
 
-using StringTools;
-
 class ModchartState
 {
-	// public static var shaders:Array<LuaShader> = null;
 	public static var lua:State = null;
 
 	public static var shownNotes:Array<LuaNote> = [];
@@ -425,8 +412,6 @@ class ModchartState
 		trace("LuaJIT version: " + Lua.versionJIT());
 		Lua.init_callbacks(lua);
 
-		// shaders = new Array<LuaShader>();
-
 		// pre lowercasing the song name (new)
 		var songLowercase = StringTools.replace(PlayState.SONG.songId, " ", "-").toLowerCase();
 		switch (songLowercase)
@@ -587,33 +572,6 @@ class ModchartState
 		});
 
 		// sprites
-
-		Lua_helper.add_callback(lua, "createWiggle", function(freq:Float, amplitude:Float, speed:Float)
-		{
-			var wiggle = new WiggleEffect();
-			wiggle.waveAmplitude = amplitude;
-			wiggle.waveSpeed = speed;
-			wiggle.waveFrequency = freq;
-
-			var id = Lambda.count(luaWiggles) + 1 + "";
-
-			luaWiggles.set(id, wiggle);
-			return id;
-		});
-
-		Lua_helper.add_callback(lua, "setWiggleTime", function(wiggleId:String, time:Float)
-		{
-			var wiggle = luaWiggles.get(wiggleId);
-
-			wiggle.shader.uTime.value = [time];
-		});
-
-		Lua_helper.add_callback(lua, "setWiggleAmplitude", function(wiggleId:String, amp:Float)
-		{
-			var wiggle = luaWiggles.get(wiggleId);
-
-			wiggle.waveAmplitude = amp;
-		});
 
 		Lua_helper.add_callback(lua, "setStrumlineY", function(y:Float)
 		{

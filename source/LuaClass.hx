@@ -1,11 +1,9 @@
 #if FEATURE_LUAMODCHART
-import flixel.FlxG;
 import llua.Convert;
 import llua.Lua;
 import llua.State;
 import llua.LuaL;
 import flixel.util.FlxAxes;
-import flixel.FlxSprite;
 import lime.app.Application;
 import openfl.Lib;
 #if FEATURE_FILESYSTEM
@@ -14,9 +12,6 @@ import sys.FileSystem;
 #end
 import flash.display.BitmapData;
 import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.FlxCamera;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
 import haxe.DynamicAccess;
 import stages.Stage;
 

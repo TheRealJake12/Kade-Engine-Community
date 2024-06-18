@@ -1,5 +1,3 @@
-import flixel.FlxG;
-
 class TimingStruct
 {
 	public static var AllTimings:Array<TimingStruct> = [];

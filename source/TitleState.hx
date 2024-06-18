@@ -4,7 +4,6 @@ import lime.app.Application;
 #if FEATURE_DISCORD
 import Discord;
 #end
-import flixel.FlxBasic;
 #if FEATURE_STEPMANIA
 import smTools.SMFile;
 #end
@@ -12,14 +11,8 @@ import smTools.SMFile;
 import sys.FileSystem;
 import sys.io.File;
 #end
-import flixel.FlxG;
-import flixel.FlxSprite;
 import openfl.Assets;
 import flixel.group.FlxGroup;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
-import flixel.util.FlxColor;
-import flixel.util.FlxTimer;
 #if FEATURE_MULTITHREADING
 import sys.thread.Mutex;
 #end
