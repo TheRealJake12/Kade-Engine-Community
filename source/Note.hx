@@ -270,7 +270,7 @@ class Note extends FlxSprite
 			if (PlayStateChangeables.useDownscroll)
 				flipY = true;
 
-			x += width / 2;
+			x += width * 0.5;
 
 			originColor = prevNote.originColor;
 			originAngle = prevNote.originAngle;
@@ -278,10 +278,7 @@ class Note extends FlxSprite
 			animation.play(dataColor[Std.int(originColor % 4)] + 'holdend'); // This works both for normal colors and quantization colors
 			updateHitbox();
 
-			x -= width / 2;
-
-			// if (noteTypeCheck == 'pixel')
-			//	x += 30;
+			x -= width * 0.5;
 
 			if (inCharter)
 				x += 30;
@@ -479,7 +476,7 @@ class Note extends FlxSprite
 			{
 				isSustainEnd = spotInLine == parent.children.length - 1;
 				alpha = !sustainActive
-					&& (parent.tooLate || parent.wasGoodHit) ? (modAlpha * FlxG.save.data.alpha) / 2 : modAlpha * FlxG.save.data.alpha; // This is the correct way
+					&& (parent.tooLate || parent.wasGoodHit) ? (modAlpha * FlxG.save.data.alpha) * 0.5 : modAlpha * FlxG.save.data.alpha; // This is the correct way
 			}
 			else if (tooLate && !wasGoodHit)
 			{

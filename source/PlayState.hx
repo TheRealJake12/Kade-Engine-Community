@@ -738,12 +738,8 @@ class PlayState extends MusicBeatState
 		{
 			if (FlxG.save.data.distractions)
 			{
-				// trailArea.scrollFactor.set();
 				var evilTrail = new FlxTrail(dad, null, 4, 24, 0.3, 0.069);
-				// evilTrail.changeValuesEnabled(false, false, false, false);
-				// evilTrail.changeGraphic()
 				add(evilTrail);
-				// evilTrail.scrollFactor.set(1.1, 1.1);
 			}
 		}
 
@@ -966,10 +962,10 @@ class PlayState extends MusicBeatState
 		addedBotplay = PlayStateChangeables.botPlay;
 
 		iconP1 = new HealthIcon(boyfriend.healthIcon, boyfriend.iconAnimated, true);
-		iconP1.y = healthBar.y - (iconP1.height / 2);
+		iconP1.y = healthBar.y - (iconP1.height * 0.5);
 
 		iconP2 = new HealthIcon(dad.healthIcon, dad.iconAnimated, false);
-		iconP2.y = healthBar.y - (iconP2.height / 2);
+		iconP2.y = healthBar.y - (iconP2.height * 0.5);
 
 		if (FlxG.save.data.healthBar)
 		{
@@ -992,7 +988,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		scoreTxt = new FlxText(FlxG.width / 2 - 235, healthBarBG.y + 50, 0, "", 16);
+		scoreTxt = new FlxText(FlxG.width * 0.5 - 235, healthBarBG.y + 50, 0, "", 16);
 		scoreTxt.screenCenter(X);
 		scoreTxt.scrollFactor.set();
 		scoreTxt.borderQuality = 2;
@@ -1706,7 +1702,7 @@ class PlayState extends MusicBeatState
 			vocalsEnemy.play();
 		}
 
-		songLength = ((inst.length / songMultiplier) / 1000);
+		songLength = ((inst.length / songMultiplier) * 0.001);
 
 		if (allowedToHeadbang && gf != null)
 		{
@@ -1794,7 +1790,7 @@ class PlayState extends MusicBeatState
 
 		songPosBG.screenCenter(X);
 		songPosBG.scrollFactor.set();
-		songPosBar = new FlxBar(640 - (Std.int(songPosBG.width - 100) / 2), songPosBG.y + 4, LEFT_TO_RIGHT, Std.int(songPosBG.width - 100),
+		songPosBar = new FlxBar(640 - (Std.int(songPosBG.width - 100) * 0.5), songPosBG.y + 4, LEFT_TO_RIGHT, Std.int(songPosBG.width - 100),
 			Std.int(songPosBG.height + 6), this, 'songPositionBar', 0, songLength);
 		songPosBar.alpha = 0;
 		songPosBar.scrollFactor.set();
@@ -1811,7 +1807,7 @@ class PlayState extends MusicBeatState
 
 		songPosBG.width = songPosBar.width;
 
-		songName = new FlxText(songPosBG.x + (songPosBG.width / 2) - (SONG.songName.length * 5), songPosBG.y - 15, 0, SONG.songName, 16);
+		songName = new FlxText(songPosBG.x + (songPosBG.width * 0.5) - (SONG.songName.length * 5), songPosBG.y - 15, 0, SONG.songName, 16);
 		songName.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		songName.scrollFactor.set();
 
@@ -1930,7 +1926,7 @@ class PlayState extends MusicBeatState
 		addSongTiming();
 
 		fakeCrochet = Conductor.crochet;
-		fakeNoteStepCrochet = fakeCrochet / 4;
+		fakeNoteStepCrochet = fakeCrochet * 0.25;
 
 		#if FEATURE_HSCRIPT
 		scripts.setAll("bpm", Conductor.bpm);
@@ -1993,7 +1989,7 @@ class PlayState extends MusicBeatState
 				var susLength:Float = swagNote.sustainLength;
 
 				var anotherCrochet:Float = Conductor.crochet;
-				var anotherStepCrochet:Float = anotherCrochet / 4;
+				var anotherStepCrochet:Float = anotherCrochet * 0.25;
 				susLength = susLength / anotherStepCrochet;
 
 				unspawnNotes.push(swagNote);
@@ -2034,7 +2030,7 @@ class PlayState extends MusicBeatState
 
 				if (swagNote.mustPress)
 				{
-					swagNote.x += FlxG.width / 2; // general offset
+					swagNote.x += FlxG.width * 0.5; // general offset
 				}
 			}
 			daBeats += 1;
@@ -2142,7 +2138,7 @@ class PlayState extends MusicBeatState
 			babyArrow.playAnim('static');
 			// babyArrow.x += 98.5; // Tryna make it not offset because it was pissing me off + Psych Engine has it somewhat like this.
 			babyArrow.x += 50;
-			babyArrow.x += ((FlxG.width / 2) * player);
+			babyArrow.x += ((FlxG.width * 0.5) * player);
 
 			strumLineNotes.add(babyArrow);
 		}
@@ -2164,7 +2160,7 @@ class PlayState extends MusicBeatState
 
 	function tweenCamIn():Void
 	{
-		createTween(camGame, {zoom: 1.3}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.elasticInOut});
+		createTween(camGame, {zoom: 1.3}, (Conductor.stepCrochet * 4 * 0.001), {ease: FlxEase.elasticInOut});
 	}
 
 	override function openSubState(SubState:FlxSubState)
@@ -2481,7 +2477,7 @@ class PlayState extends MusicBeatState
 					Conductor.changeBPM(timingSegBpm);
 
 					Conductor.crochet = ((60 / (timingSegBpm) * 1000)) / songMultiplier;
-					Conductor.stepCrochet = Conductor.crochet / 4;
+					Conductor.stepCrochet = Conductor.crochet * 0.25;
 
 					Debug.logInfo('AFTER TimingStruct BPM: ${timingSeg.bpm} | Current Conductor BPM: ${Conductor.bpm}');
 
@@ -2774,22 +2770,18 @@ class PlayState extends MusicBeatState
 			Conductor.songPosition += FlxG.elapsed * 1000;
 			Conductor.rawPosition = inst.time;
 
-			songPositionBar = (Conductor.songPosition - songLength) / 1000;
-			// currentSection = getSectionByTime(Conductor.songPosition / songMultiplier);
+			songPositionBar = (Conductor.songPosition - songLength) * 0.001;
 			if (!paused)
 			{
-				// Interpolation type beat
 				if (Conductor.lastSongPos != Conductor.songPosition)
 				{
 					Conductor.lastSongPos = Conductor.songPosition;
-					// Conductor.songPosition += FlxG.elapsed * 1000;
-					// trace('MISSED FRAME');
 				}
 				var curTime:Float = inst.time / songMultiplier;
 
 				if (curTime < 0)
 					curTime = 0;
-				var secondsTotal:Int = Math.floor(((curTime - songLength) / 1000));
+				var secondsTotal:Int = Math.floor(((curTime - songLength) * 0.001));
 
 				if (secondsTotal < 0)
 					secondsTotal = 0;
@@ -3006,7 +2998,7 @@ class PlayState extends MusicBeatState
 
 		// Camera Related Stuff.
 
-		var bpmRatio = Conductor.bpm / 100;
+		var bpmRatio = Conductor.bpm * 0.01;
 		var lerpVal:Float = CoolUtil.boundTo(1 - (elapsed * 3.125 * bpmRatio * songMultiplier * zoomMultiplier), 0, 1);
 		camGame.zoom = FlxMath.lerp(zoomForTweens, camGame.zoom, lerpVal);
 		camHUD.zoom = FlxMath.lerp(PlayStateChangeables.zoom * zoomForHUDTweens, camHUD.zoom, lerpVal);
@@ -3059,7 +3051,7 @@ class PlayState extends MusicBeatState
 
 				var angleDir = strumDirection * Math.PI / 180;
 
-				var origin = strumY + Note.swagWidth / 2;
+				var origin = strumY + Note.swagWidth * 0.5;
 
 				if (daNote.isSustainNote)
 					daNote.x = (strumX + Math.cos(angleDir) * daNote.distance) + (Note.swagWidth / 3);
@@ -3177,13 +3169,12 @@ class PlayState extends MusicBeatState
 										default:
 											if (daNote.isSustainNote)
 											{
-												// totalNotesHit += 1;
+												
 											}
 											else
 											{
 												if (daNote.isParent && daNote.visible)
 												{
-													// health -= 0.15; // give a health punishment for failing a LN
 													Debug.logTrace("User failed Sustain note at the start of sustain.");
 													for (i in daNote.children)
 													{
@@ -3809,7 +3800,7 @@ class PlayState extends MusicBeatState
 
 				numScore.updateHitbox();
 
-				numScore.x = rating.x + (43 * daLoop) - ((numScore.width * seperatedScore.length) / 2) + 25;
+				numScore.x = rating.x + (43 * daLoop) - ((numScore.width * seperatedScore.length) * 0.5) + 25;
 				numScore.y = rating.y + 100;
 
 				if (STYLE.antialiasing == false)
@@ -4083,10 +4074,7 @@ class PlayState extends MusicBeatState
 	{
 		if (SONG.songId != 'tutorial')
 			camZooming = FlxG.save.data.camzoom;
-		// come back to this later
 		var altAnim:String = "";
-
-		// askl
 
 		if (daNote.noteShit.toLowerCase() == 'alt')
 		{
@@ -4348,7 +4336,7 @@ class PlayState extends MusicBeatState
 		super.stepHit();
 		if (!paused)
 		{
-			var bpmRatio:Float = Conductor.bpm / 100;
+			var bpmRatio:Float = Conductor.bpm * 0.01;
 			if (Math.abs(Conductor.songPosition * songMultiplier) > Math.abs(inst.time + (25 * bpmRatio))
 				|| Math.abs(Conductor.songPosition * songMultiplier) < Math.abs(inst.time - (25 * bpmRatio)))
 			{
@@ -4456,7 +4444,7 @@ class PlayState extends MusicBeatState
 		scripts.executeAllFunc("beatHit", [beatHit]);
 		#end
 
-		var bpmRatio = SONG.bpm / 100;
+		var bpmRatio = SONG.bpm * 0.01;
 		if (currentSection != null)
 		{
 			if (curBeat % idleBeat == 0)
@@ -5176,7 +5164,7 @@ class PlayState extends MusicBeatState
 					var data = TimingStruct.AllTimings[currentIndex - 1];
 					data.endBeat = beat;
 					data.length = ((data.endBeat - (data.startBeat)) / (data.bpm / 60));
-					var step = ((60 / (data.bpm)) * 1000) / 4;
+					var step = ((60 / (data.bpm)) * 1000) * 0.25;
 					TimingStruct.AllTimings[currentIndex].startStep = Math.floor((((data.endBeat / (data.bpm / 60)) * 1000) / step));
 					TimingStruct.AllTimings[currentIndex].startTime = data.startTime + data.length;
 				}
