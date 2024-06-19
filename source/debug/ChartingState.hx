@@ -354,8 +354,7 @@ class ChartingState extends MusicBeatState
 
 		gridBG = new FlxSprite(notePos, 0).makeGraphic(50 * 8, 50 * 16);
 
-		if (SONG.eventObjects == null || SONG.eventObjects.length == 0)
-			SONG.eventObjects = [new Song.Event("Init BPM", 0, '${SONG.bpm}', "1", "BPM Change")];
+		initEvents();
 
 		var currentIndex = 0;
 
@@ -3245,5 +3244,29 @@ class ChartingState extends MusicBeatState
 		};
 
 		return sec;
+	}
+
+	private function initEvents()
+	{
+		var eventObjects:Array<Song.Event> = [];
+
+		if (SONG.eventObjects == null)
+			SONG.eventObjects = [new Song.Event("Init BPM", 0, SONG.bpm, "1", "BPM Change")];
+
+		for (i in SONG.eventObjects)
+		{
+			var name = Reflect.field(i, "name");
+			var type = Reflect.field(i, "type");
+			var pos = Reflect.field(i, "position");
+			var value = Reflect.field(i, "value");
+			var value2 = Reflect.field(i, "value2");
+
+			if (value2 == null)
+				value2 = "1";
+
+			eventObjects.push(new Song.Event(name, pos, value, value2, type));
+		}
+
+		SONG.eventObjects = eventObjects;
 	}
 }

@@ -156,7 +156,7 @@ class FreeplayState extends MusicBeatState
 
 			songText.visible = songText.active = songText.isMenuItem = false;
 			icon.visible = icon.active = false;
-			
+
 			iconArray.push(icon);
 			add(icon);
 		}

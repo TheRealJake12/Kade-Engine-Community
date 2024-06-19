@@ -3169,7 +3169,6 @@ class PlayState extends MusicBeatState
 										default:
 											if (daNote.isSustainNote)
 											{
-												
 											}
 											else
 											{
