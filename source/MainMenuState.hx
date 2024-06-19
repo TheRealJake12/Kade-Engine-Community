@@ -29,14 +29,14 @@ using StringTools;
 
 class MainMenuState extends MusicBeatState
 {
-	public static var nightly:String = "";
-	public static var kecVer:String = 'Kade Engine Community 1.9.4 PRE-RELEASE 1';
-	public static var keVer:String = "Kade Engine 1.8.1";
+	public static final nightly:String = "";
+	public static final kecVer:String = 'Kade Engine Community 1.9.4 PRE-RELEASE 1';
+	public static final keVer:String = "Kade Engine 1.8.1";
 	public static var curSelected:Int = 0;
 	public static var freakyPlaying:Bool = true;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
-	var colorArray:Array<FlxColor> = [
+	final colorArray:Array<FlxColor> = [
 		FlxColor.fromRGB(148, 0, 211),
 		FlxColor.fromRGB(75, 0, 130),
 		FlxColor.fromRGB(0, 0, 200),
@@ -46,7 +46,7 @@ class MainMenuState extends MusicBeatState
 		FlxColor.fromRGB(160, 0, 0)
 	];
 
-	public static var textArray:Array<String> = [
+	public static final textArray:Array<String> = [
 		// thanks bolo, I find these ones really funny (I am sorry for stealing code)
 		"Yeah I use Kade Engine *insert gay fat guy dancing* (-Bolo)",
 		"Kade engine *insert burning PC gif* (-Bolo)",

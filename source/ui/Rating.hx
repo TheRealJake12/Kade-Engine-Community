@@ -16,7 +16,7 @@ class Rating extends FlxSprite
 		y = FlxG.save.data.changedHitY;
 		velocity.set(0, 0);
 		acceleration.set(0, 0);
-		alpha = 0;
+		alpha = 0.001;
 	}
 
 	public function new(image:String = "marv", rating:RatingWindow)
