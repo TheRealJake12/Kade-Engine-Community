@@ -215,16 +215,6 @@ class Stage extends MusicBeatState
 							resetFastCar();
 						}
 
-						var overlayShit:FlxSprite = new FlxSprite(-500, -600).loadGraphic(Paths.image('limo/limoOverlay'));
-						overlayShit.alpha = 0.5;
-						// add(overlayShit);
-
-						// var shaderBullshit = new BlendModeEffect(new OverlayShader(), FlxColor.RED);
-
-						// FlxG.camera.setFilters([new ShaderFilter(cast shaderBullshit.shader)]);
-
-						// overlayShit.shader = shaderBullshit;
-
 						var limoTex = Paths.getSparrowAtlas('limo/limoDrive');
 
 						var limo = new FlxSprite(-120, 550);
