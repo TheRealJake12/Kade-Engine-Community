@@ -1732,17 +1732,18 @@ class ChartingState extends MusicBeatState
 			if (!SONG.splitVoiceTracks)
 			{
 				if (SONG.needsVoices)
-					vocals = FlxG.sound.load(Paths.voices(SONG.audioFile));
+					vocals = new FlxSound().loadEmbedded(Paths.voices(SONG.audioFile));
 				else
 					vocals = new FlxSound();
+					
 				FlxG.sound.list.add(vocals);
 			}
 			else
 			{
 				if (SONG.needsVoices)
 				{
-					vocalsP = FlxG.sound.load(Paths.voices(SONG.audioFile, 'P'));
-					vocalsE = FlxG.sound.load(Paths.voices(SONG.audioFile, 'E'));
+					vocalsP = new FlxSound().loadEmbedded(Paths.voices(SONG.audioFile, 'P'));
+					vocalsE = new FlxSound().loadEmbedded(Paths.voices(SONG.audioFile, 'E'));
 				}
 				else
 				{
