@@ -2547,6 +2547,7 @@ class BackgroundsOption extends Option
 
 class HitSoundOption extends Option
 {
+	var daHitSound:FlxSound = new FlxSound();
 	public function new(desc:String)
 	{
 		super();
@@ -2559,6 +2560,12 @@ class HitSoundOption extends Option
 		if (FlxG.save.data.hitSound < 0)
 			FlxG.save.data.hitSound = HitSounds.getSound().length - 1;
 		display = updateDisplay();
+		if (FlxG.save.data.hitSound != 0)
+		{
+			daHitSound.loadEmbedded(Paths.sound('hitsounds/${HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase()}', 'shared'));
+			daHitSound.volume = FlxG.save.data.hitVolume;
+			daHitSound.play();
+		}
 		return true;
 	}
 
@@ -2568,11 +2575,18 @@ class HitSoundOption extends Option
 		if (FlxG.save.data.hitSound > HitSounds.getSound().length - 1)
 			FlxG.save.data.hitSound = 0;
 		display = updateDisplay();
+		if (FlxG.save.data.hitSound != 0)
+		{
+			daHitSound.loadEmbedded(Paths.sound('hitsounds/${HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase()}', 'shared'));
+			daHitSound.volume = FlxG.save.data.hitVolume;
+			daHitSound.play();
+		}
 		return true;
 	}
 
 	public override function getValue():String
 	{
+		
 		return "Hitsound Style: < " + HitSounds.getSoundByID(FlxG.save.data.hitSound) + " >";
 	}
 }
@@ -2896,6 +2910,34 @@ class NoteCamMovement extends Option
 	}
 }
 
+class DeveloperMode extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function left():Bool
+	{
+		FlxG.save.data.developer = !FlxG.save.data.developer;
+
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		left();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Developer Mode: < " + (FlxG.save.data.developer ? "Enabled" : "Disabled") + " >";
+	}
+}
+
 class ResetSettings extends Option
 {
 	var confirm:Bool = false;
@@ -2983,6 +3025,7 @@ class ResetSettings extends Option
 		FlxG.save.data.showHelp = null;
 		FlxG.save.data.playHitsounds = null;
 		FlxG.save.data.playHitsoundsE = null;
+		FlxG.save.data.developer = null;
 
 		KadeEngineData.initSave();
 		confirm = false;

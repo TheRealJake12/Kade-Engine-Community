@@ -294,6 +294,9 @@ class KadeEngineData
 		if (FlxG.save.data.playHitsoundsE == null)
 			FlxG.save.data.playHitsoundsE = false;
 
+		if (FlxG.save.data.developer == null)
+			FlxG.save.data.developer = false;	
+
 		FlxSprite.defaultAntialiasing = FlxG.save.data.antialiasing;
 		FlxObject.defaultMoves = false;
 		PlayerSettings.player1.controls.loadKeyBinds();

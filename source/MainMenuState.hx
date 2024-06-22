@@ -254,8 +254,8 @@ class MainMenuState extends MusicBeatState
 
 			if (FlxG.keys.justPressed.F7)
 			{
-				PlayState.storyDifficulty = 2;
-				PlayState.SONG = Song.loadFromJson('salvation', '-hard');
+				PlayState.storyDifficulty = 1;
+				PlayState.SONG = Song.loadFromJson('salvation', '');
 				PlayState.isStoryMode = false;
 				PlayState.isSM = false;
 				LoadingState.loadAndSwitchState(new PlayState());

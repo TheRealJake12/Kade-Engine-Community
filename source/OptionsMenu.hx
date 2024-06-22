@@ -255,6 +255,7 @@ class OptionsMenu extends MusicBeatSubstate
 
 			]),
 			new OptionCata(345, 104, "Experimental", [
+				new DeveloperMode('Enables Some "Cheaty" Tools To Assist With Developing. Also Disables Update Screen.'),
 				new OpenGLStatsOption("In The FPS Display, It Will Display The Draw Calls For The Game."),
 				new CacheNow("Cache EVERYTHING."),
 			]),

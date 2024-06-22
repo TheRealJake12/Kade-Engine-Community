@@ -194,6 +194,27 @@ class Song
 
 		var ba = song.bpm;
 
+		var eventObjects:Array<Song.Event> = [];
+
+		if (song.eventObjects == null)
+			song.eventObjects = [new Song.Event("Init BPM", 0, ba, "1", "BPM Change")];
+
+		for (i in song.eventObjects)
+		{
+			var name = Reflect.field(i, "name");
+			var type = Reflect.field(i, "type");
+			var pos = Reflect.field(i, "position");
+			var value = Reflect.field(i, "value");
+			var value2 = Reflect.field(i, "value2");
+
+			if (value2 == null)
+				value2 = "1";
+
+			eventObjects.push(new Song.Event(name, pos, value, value2, type));
+		}
+
+		song.eventObjects = eventObjects;
+
 		var index = 0;
 
 		if (song.songName == null)

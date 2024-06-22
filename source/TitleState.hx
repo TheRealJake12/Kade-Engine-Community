@@ -212,7 +212,7 @@ class TitleState extends MusicBeatState
 			transitioning = true;
 			new FlxTimer().start(2, function(tmr:FlxTimer)
 			{
-				if (Main.gameContainer.hasWifi)
+				if (Main.gameContainer.hasWifi && !FlxG.save.data.developer)
 				{
 					var http = new haxe.Http("https://raw.githubusercontent.com/TheRealJake12/Kade-Engine-Community/master/version.downloadMe");
 					var returnedData:Array<String> = [];
