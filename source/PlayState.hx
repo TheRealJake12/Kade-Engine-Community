@@ -447,7 +447,7 @@ class PlayState extends MusicBeatState
 
 		initGameplaySettings();
 
-		usedBot = false;
+		usedBot = PlayStateChangeables.botPlay;
 
 		// Search For Lua Modcharts
 		#if (FEATURE_FILESYSTEM && FEATURE_LUAMODCHART)
@@ -2264,64 +2264,25 @@ class PlayState extends MusicBeatState
 	{
 		if (endingSong)
 			return;
-		inst.pause();
-		inst.resume();
+		
+		inst.play();
+		inst.pitch = songMultiplier;
 		inst.time = Conductor.songPosition * songMultiplier;
-		if (!SONG.splitVoiceTracks)
+
+		var checkVocals = [];
+		if (SONG.needsVoices)
 		{
-			if (!vocals.playing || vocals.time != Conductor.songPosition * songMultiplier)
-			{
-				vocals.pause();
-
-				if (!(vocals.length < inst.time))
-				{
-					vocals.play();
-
-					vocals.time = Conductor.songPosition * songMultiplier;
-				}
-			}
-		}
-		else
-		{
-			if (!vocalsPlayer.playing || vocalsPlayer.time != Conductor.songPosition * songMultiplier)
-			{
-				vocalsPlayer.pause();
-
-				if (!(vocalsPlayer.length < inst.time))
-				{
-					vocalsPlayer.play();
-
-					vocalsPlayer.time = Conductor.songPosition * songMultiplier;
-				}
-			}
-
-			if (!vocalsEnemy.playing || vocalsEnemy.time != Conductor.songPosition * songMultiplier)
-			{
-				vocalsEnemy.pause();
-
-				if (!(vocalsEnemy.length < inst.time))
-				{
-					vocalsEnemy.play();
-
-					vocalsEnemy.time = Conductor.songPosition * songMultiplier;
-				}
-			}
-		}
-
-		if (inst.playing)
-		{
-			inst.pitch = songMultiplier;
 			if (!SONG.splitVoiceTracks)
-			{
-				if (vocals.playing)
-					vocals.pitch = songMultiplier;
-			}
+				checkVocals = [vocals];
 			else
+				checkVocals = [vocalsPlayer, vocalsEnemy];
+			for (voc in checkVocals)
 			{
-				if (vocalsPlayer.playing && vocalsEnemy.playing)
+				if (Conductor.songPosition <= voc.length)
 				{
-					vocalsPlayer.pitch = songMultiplier;
-					vocalsEnemy.pitch = songMultiplier;
+					voc.time = Conductor.songPosition * songMultiplier;
+					voc.pitch = songMultiplier;
+					voc.play();
 				}
 			}
 		}
@@ -2666,17 +2627,9 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.keys.justPressed.TWO && songStarted && FlxG.save.data.developer)
 		{
-			if (!usedTimeTravel && Conductor.songPosition + 10000 < inst.length)
+			if (!usedTimeTravel && Conductor.songPosition + 10000 < inst.length / songMultiplier)
 			{
 				usedTimeTravel = true;
-				inst.pause();
-				if (!SONG.splitVoiceTracks)
-					vocals.pause();
-				else
-				{
-					vocalsPlayer.pause();
-					vocalsEnemy.pause();
-				}
 				Conductor.songPosition += 10000;
 				notes.forEachAlive(function(daNote:Note)
 				{
@@ -2689,20 +2642,6 @@ class PlayState extends MusicBeatState
 					}
 				});
 
-				inst.time = Conductor.songPosition;
-				inst.resume();
-				if (!SONG.splitVoiceTracks)
-				{
-					vocals.time = Conductor.songPosition;
-					vocals.resume();
-				}
-				else
-				{
-					vocalsPlayer.time = Conductor.songPosition;
-					vocalsPlayer.resume();
-					vocalsEnemy.time = Conductor.songPosition;
-					vocalsEnemy.resume();
-				}
 				new FlxTimer().start(0.5, function(tmr:FlxTimer)
 				{
 					usedTimeTravel = false;
@@ -2728,20 +2667,6 @@ class PlayState extends MusicBeatState
 			}
 			Conductor.songPosition = skipTo;
 			Conductor.rawPosition = skipTo;
-			inst.time = Conductor.songPosition;
-			inst.resume();
-			if (!SONG.splitVoiceTracks)
-			{
-				vocals.time = Conductor.songPosition;
-				vocals.resume();
-			}
-			else
-			{
-				vocalsPlayer.time = Conductor.songPosition;
-				vocalsPlayer.resume();
-				vocalsEnemy.time = Conductor.songPosition;
-				vocalsEnemy.resume();
-			}
 			createTween(skipText, {alpha: 0}, 0.2, {
 				onComplete: function(tw)
 				{
@@ -3433,7 +3358,7 @@ class PlayState extends MusicBeatState
 		}
 
 		var superMegaConditionShit:Bool = legitTimings
-			&& !PlayState.usedBot
+			&& !usedBot
 			&& !FlxG.save.data.practice
 			&& PlayStateChangeables.holds
 			&& !PlayState.wentToChartEditor
