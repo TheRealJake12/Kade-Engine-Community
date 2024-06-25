@@ -1,29 +1,18 @@
 package;
 
 import flixel.graphics.FlxGraphic;
-import flixel.FlxG;
 import flixel.FlxGame;
-import flixel.FlxState;
 import openfl.Assets;
-import flixel.util.FlxColor;
 import openfl.display.Bitmap;
-import openfl.filters.ShaderFilter;
-import flixel.system.FlxAssets.FlxShader;
-import openfl.display.StageQuality;
 import haxe.ui.Toolkit;
+import kec.objects.KadeEngineFPS;
 #if FEATURE_DISCORD
-import Discord;
-#end
-#if FEATURE_MODCORE
-import polymod.Polymod;
+import kec.backend.Discord;
 #end
 import openfl.Lib;
 import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.tweens.FlxTween;
-import flixel.util.FlxTimer;
 import lime.app.Application;
 #if VIDEOS
 import hxvlc.util.Handle;
@@ -119,15 +108,14 @@ class Main extends Sprite
 		initHaxeUI();
 
 		// Run this first so we can see logs.
-		Debug.onInitProgram();
+		kec.backend.Debug.onInitProgram();
 
 		#if !mobile
 		fpsCounter = new KadeEngineFPS(10, 3, 0xFFFFFF);
-		bitmapFPS = ImageOutline.renderImage(fpsCounter, 1, 0x000000, true);
+		bitmapFPS = kec.backend.ImageOutline.renderImage(fpsCounter, 1, 0x000000, true);
 		bitmapFPS.smoothing = true;
 		#end
-
-		// FlxTransitionableState.skipNextTransIn = true;
+		
 		game.framerate = 60;
 		var fard:FlxGame = new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate,
 			game.skipSplash, game.startFullscreen);

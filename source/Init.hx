@@ -1,15 +1,10 @@
 package;
 
 #if cpp
-import cpp.CPPInterface;
+import kec.backend.cpp.CPPInterface;
 #end
-import flixel.FlxG;
-import flixel.input.gamepad.FlxGamepad;
 import openfl.Lib;
 import flixel.graphics.FlxGraphic;
-#if FEATURE_MULTITHREADING
-import sys.thread.Mutex;
-#end
 
 class Init extends MusicBeatState
 {
@@ -23,14 +18,14 @@ class Init extends MusicBeatState
 
 		FlxG.save.bind('kec' #if (flixel < "5.0.0"), 'therealjake12' #end);
 
-		PlayerSettings.init();
+		kec.backend.PlayerSettings.init();
 
-		KadeEngineData.initSave();
+		kec.backend.KadeEngineData.initSave();
 
-		KeyBinds.keyCheck();
+		kec.backend.KeyBinds.keyCheck();
 
-		CustomNoteHelpers.Skin.updateNoteskins();
-		CustomNoteHelpers.Splash.updateNotesplashes();
+		kec.backend.util.NoteStyleHelper.updateNoteskins();
+		kec.backend.util.NoteStyleHelper.updateNotesplashes();
 
 		if (FlxG.save.data.volDownBind == null)
 			FlxG.save.data.volDownBind = "MINUS";
@@ -45,13 +40,13 @@ class Init extends MusicBeatState
 
 		Paths.setCurrentLevel('shared');
 
-		MusicBeatState.initSave = true;
+		kec.states.MusicBeatState.initSave = true;
 
-		Highscore.load();
+		kec.backend.util.Highscore.load();
 
 		// Gotta run this before any assets get loaded.
 		if (FlxG.save.data.loadMods)
-			ModCore.initialize();
+			kec.backend.modding.ModCore.initialize();
 
 		FlxG.autoPause = FlxG.save.data.autoPause;
 		FlxG.mouse.visible = true;
