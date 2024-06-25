@@ -1,6 +1,7 @@
 package kec.backend.cpp;
 
 import cpp.UInt64;
+import cpp.ConstCharStar;
 
 /**
  * ! LITTERLY THE ONLY REASON THIS EXIST IS BECAUSE IF YOU NATIVELY INTERACT WITH THE CPPWindows.hx FILE 
