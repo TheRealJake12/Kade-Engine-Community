@@ -91,7 +91,7 @@ class Stage extends MusicBeatState
 				case 'halloween':
 					{
 						hasGF = true;
-						if (FlxG.save.data.distractions)
+						if (FlxG.save.data.quality)
 						{
 							var hallowTex = Paths.getSparrowAtlas('halloween_bg');
 
@@ -134,7 +134,7 @@ class Stage extends MusicBeatState
 						swagBacks['city'] = city;
 						toAdd.push(city);
 
-						if (FlxG.save.data.distractions)
+						if (FlxG.save.data.quality)
 						{
 							phillyWindow = new FlxSprite(city.x, city.y).loadGraphic(Paths.image('philly/window'));
 							phillyWindow.scrollFactor.set(0.3, 0.3);
@@ -151,7 +151,7 @@ class Stage extends MusicBeatState
 						toAdd.push(streetBehind);
 
 						var phillyTrain = new FlxSprite(2000, 360).loadGraphic(Paths.image('philly/train'));
-						if (FlxG.save.data.distractions)
+						if (FlxG.save.data.quality)
 						{
 							swagBacks['phillyTrain'] = phillyTrain;
 							toAdd.push(phillyTrain);
@@ -189,7 +189,7 @@ class Stage extends MusicBeatState
 						fastCar.moves = true;
 						var grpLimoDancers = new FlxTypedGroup<BackgroundDancer>();
 
-						if (FlxG.save.data.distractions)
+						if (FlxG.save.data.quality)
 						{
 							swagGroup['grpLimoDancers'] = grpLimoDancers;
 							toAdd.push(grpLimoDancers);
@@ -217,7 +217,7 @@ class Stage extends MusicBeatState
 						layInFront[0].push(limo);
 						swagBacks['limo'] = limo;
 
-						if (!FlxG.save.data.distractions)
+						if (!FlxG.save.data.quality)
 						{
 							grpLimoDancers.kill();
 							grpLimoDancers.destroy();
@@ -243,7 +243,7 @@ class Stage extends MusicBeatState
 						upperBoppers.scrollFactor.set(0.33, 0.33);
 						upperBoppers.setGraphicSize(Std.int(upperBoppers.width * 0.85));
 						upperBoppers.updateHitbox();
-						if (FlxG.save.data.distractions)
+						if (FlxG.save.data.quality)
 						{
 							swagBacks['upperBoppers'] = upperBoppers;
 							toAdd.push(upperBoppers);
@@ -273,7 +273,7 @@ class Stage extends MusicBeatState
 						bottomBoppers.scrollFactor.set(0.9, 0.9);
 						bottomBoppers.setGraphicSize(Std.int(bottomBoppers.width * 1));
 						bottomBoppers.updateHitbox();
-						if (FlxG.save.data.distractions)
+						if (FlxG.save.data.quality)
 						{
 							swagBacks['bottomBoppers'] = bottomBoppers;
 							toAdd.push(bottomBoppers);
@@ -290,13 +290,13 @@ class Stage extends MusicBeatState
 						santa.frames = Paths.getSparrowAtlas('christmas/santa');
 						santa.animation.addByPrefix('idle', 'santa idle in fear', Std.int(24 * PlayState.songMultiplier), false);
 						santa.antialiasing = FlxG.save.data.antialiasing;
-						if (FlxG.save.data.distractions)
+						if (FlxG.save.data.quality)
 						{
 							swagBacks['santa'] = santa;
 							toAdd.push(santa);
 							animatedBacks.push(santa);
 						}
-						if (!FlxG.save.data.distractions)
+						if (!FlxG.save.data.quality)
 						{
 							upperBoppers.kill();
 							bottomBoppers.kill();
@@ -390,7 +390,7 @@ class Stage extends MusicBeatState
 						bgTrees.updateHitbox();
 						treeLeaves.updateHitbox();
 
-						if (FlxG.save.data.distractions)
+						if (FlxG.save.data.quality)
 						{
 							var bgGirls = new BackgroundGirls(-100, 190);
 							bgGirls.scrollFactor.set(0.9, 0.9);
@@ -427,7 +427,7 @@ class Stage extends MusicBeatState
 					tankSky.scrollFactor.set(0, 0);
 					swagBacks['tankSky'] = tankSky;
 					toAdd.push(tankSky);
-					if (FlxG.save.data.distractions)
+					if (FlxG.save.data.quality)
 					{
 						var tankClouds:FlxSprite = new FlxSprite(FlxG.random.int(-700, -100), FlxG.random.int(-20, 20)).loadGraphic(Paths.image('tankClouds'));
 						tankClouds.velocity.x = FlxG.random.float(5, 15);
@@ -463,7 +463,7 @@ class Stage extends MusicBeatState
 					swagBacks['tankRuins'] = tankRuins;
 					toAdd.push(tankRuins);
 
-					if (FlxG.save.data.distractions)
+					if (FlxG.save.data.quality)
 					{
 						var smokeLeft:FlxSprite = new FlxSprite(-200, -100);
 						smokeLeft.antialiasing = FlxG.save.data.antialiasing;
@@ -522,7 +522,7 @@ class Stage extends MusicBeatState
 					swagBacks['foreGround0'] = foreGround0;
 					layInFront[2].push(foreGround0);
 
-					if (FlxG.save.data.distractions)
+					if (FlxG.save.data.quality)
 					{
 						var foreGround1 = new FlxSprite(-300, 750);
 						foreGround1.scrollFactor.set(2, 0.2);
@@ -543,7 +543,7 @@ class Stage extends MusicBeatState
 					swagBacks['foreGround2'] = foreGround2;
 					layInFront[2].push(foreGround2);
 
-					if (FlxG.save.data.distractions)
+					if (FlxG.save.data.quality)
 					{
 						var foreGround3 = new FlxSprite(1300, 900);
 						foreGround3.scrollFactor.set(1.5, 1.5);
@@ -564,7 +564,7 @@ class Stage extends MusicBeatState
 					swagBacks['foreGround4'] = foreGround4;
 					layInFront[2].push(foreGround4);
 
-					if (FlxG.save.data.distractions)
+					if (FlxG.save.data.quality)
 					{
 						var foreGround5 = new FlxSprite(1400, 1290);
 						foreGround5.scrollFactor.set(1.5, 1.5);
@@ -600,7 +600,7 @@ class Stage extends MusicBeatState
 						swagBacks['stageFront'] = stageFront;
 						toAdd.push(stageFront);
 
-						if (FlxG.save.data.distractions)
+						if (FlxG.save.data.quality)
 						{
 							var stageCurtains:FlxSprite = new FlxSprite(-500, -300).loadGraphic(Paths.image('stagecurtains'));
 							stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
@@ -806,31 +806,31 @@ class Stage extends MusicBeatState
 		scripts.executeAllFunc("beatHit", [beatHit]);
 		#end
 
-		if (FlxG.save.data.distractions && animatedBacks.length > 0 && FlxG.save.data.background)
+		if (FlxG.save.data.quality && animatedBacks.length > 0 && FlxG.save.data.background)
 		{
 			for (bg in animatedBacks)
 				bg.animation.play('idle', true);
 		}
 
-		if (FlxG.save.data.distractions && FlxG.save.data.background)
+		if (FlxG.save.data.quality && FlxG.save.data.background)
 		{
 			switch (curStage)
 			{
 				case 'halloween':
 					if (FlxG.random.bool(Conductor.bpm > 320 ? 100 : 10) && curBeat > lightningStrikeBeat + lightningOffset && !inEditor)
 					{
-						if (FlxG.save.data.distractions)
+						if (FlxG.save.data.quality)
 						{
 							lightningStrikeShit();
 						}
 					}
 				case 'school':
-					if (FlxG.save.data.distractions)
+					if (FlxG.save.data.quality)
 					{
 						swagBacks['bgGirls'].dance();
 					}
 				case 'limo':
-					if (FlxG.save.data.distractions)
+					if (FlxG.save.data.quality)
 					{
 						swagGroup['grpLimoDancers'].forEach(function(dancer:BackgroundDancer)
 						{
@@ -862,7 +862,7 @@ class Stage extends MusicBeatState
 						}
 					}
 				case "philly":
-					if (FlxG.save.data.distractions)
+					if (FlxG.save.data.quality)
 					{
 						if (!trainMoving)
 							trainCooldown += 1;
@@ -881,7 +881,7 @@ class Stage extends MusicBeatState
 						&& trainCooldown > 8
 						&& !inEditor)
 					{
-						if (FlxG.save.data.distractions)
+						if (FlxG.save.data.quality)
 						{
 							trainCooldown = FlxG.random.int(-4, 0);
 							trainStart();
@@ -1063,7 +1063,7 @@ class Stage extends MusicBeatState
 
 	function trainStart():Void
 	{
-		if (FlxG.save.data.distractions && FlxG.save.data.background && curStage == 'philly')
+		if (FlxG.save.data.quality && FlxG.save.data.background && curStage == 'philly')
 		{
 			trainMoving = true;
 			trainSound.play(true);
@@ -1074,7 +1074,7 @@ class Stage extends MusicBeatState
 
 	function updateTrainPos():Void
 	{
-		if (FlxG.save.data.distractions && curStage == 'philly')
+		if (FlxG.save.data.quality && curStage == 'philly')
 		{
 			if (trainSound.time >= 4700)
 			{
@@ -1106,7 +1106,7 @@ class Stage extends MusicBeatState
 
 	function trainReset():Void
 	{
-		if (FlxG.save.data.distractions && curStage == 'philly')
+		if (FlxG.save.data.quality && curStage == 'philly')
 		{
 			if (PlayState.instance.gf != null && PlayState.instance.gf.curCharacter == 'gftrain')
 				PlayState.instance.gf.playAnim('hairFall');
@@ -1125,7 +1125,7 @@ class Stage extends MusicBeatState
 
 	function resetFastCar():Void
 	{
-		if (FlxG.save.data.distractions && curStage == 'limo')
+		if (FlxG.save.data.quality && curStage == 'limo')
 		{
 			var fastCar = swagBacks['fastCar'];
 			fastCar.x = -12600;
@@ -1138,7 +1138,7 @@ class Stage extends MusicBeatState
 
 	function fastCarDrive()
 	{
-		if (FlxG.save.data.distractions && curStage == 'limo')
+		if (FlxG.save.data.quality && curStage == 'limo')
 		{
 			FlxG.sound.play(Paths.soundRandom('carPass', 0, 1, 'shared'), 0.7);
 

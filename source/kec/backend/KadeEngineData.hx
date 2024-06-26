@@ -60,8 +60,8 @@ class KadeEngineData
 		if (FlxG.save.data.ghost == null)
 			FlxG.save.data.ghost = true;
 
-		if (FlxG.save.data.distractions == null)
-			FlxG.save.data.distractions = true;
+		if (FlxG.save.data.quality == null)
+			FlxG.save.data.quality = true;
 
 		if (FlxG.save.data.colour == null)
 			FlxG.save.data.colour = true;

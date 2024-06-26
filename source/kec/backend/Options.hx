@@ -611,7 +611,7 @@ class SongPositionOption extends Option
 	}
 }
 
-class DistractionsAndEffectsOption extends Option
+class QualityOption extends Option
 {
 	public function new(desc:String)
 	{
@@ -629,7 +629,7 @@ class DistractionsAndEffectsOption extends Option
 	{
 		if (OptionsMenu.isInPause)
 			return false;
-		FlxG.save.data.distractions = !FlxG.save.data.distractions;
+		FlxG.save.data.quality = !FlxG.save.data.quality;
 		display = updateDisplay();
 		return true;
 	}
@@ -642,7 +642,7 @@ class DistractionsAndEffectsOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Distractions: < " + (!FlxG.save.data.distractions ? "Disabled" : "Enabled") + " >";
+		return "Stage Quality: < " + (FlxG.save.data.quality ? "High" : "Low") + " >";
 	}
 }
 
@@ -2566,6 +2566,7 @@ class HitSoundOption extends Option
 
 class HitSoundVolume extends Option
 {
+	var daHitSound:FlxSound = new FlxSound();
 	public function new(desc:String)
 	{
 		super();
@@ -2593,6 +2594,13 @@ class HitSoundVolume extends Option
 
 		if (FlxG.save.data.hitVolume > 1)
 			FlxG.save.data.hitVolume = 1;
+
+		if (FlxG.save.data.hitSound != 0)
+		{
+			daHitSound.loadEmbedded(Paths.sound('hitsounds/${HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase()}', 'shared'));
+			daHitSound.volume = FlxG.save.data.hitVolume;
+			daHitSound.play();
+		}
 		return true;
 	}
 
@@ -2610,6 +2618,13 @@ class HitSoundVolume extends Option
 
 		if (FlxG.save.data.hitVolume > 1)
 			FlxG.save.data.hitVolume = 1;
+
+		if (FlxG.save.data.hitSound != 0)
+		{
+			daHitSound.loadEmbedded(Paths.sound('hitsounds/${HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase()}', 'shared'));
+			daHitSound.volume = FlxG.save.data.hitVolume;
+			daHitSound.play();
+		}	
 
 		return true;
 	}
@@ -2955,7 +2970,7 @@ class ResetSettings extends Option
 		FlxG.save.data.accuracyMod = null;
 		FlxG.save.data.watermark = null;
 		FlxG.save.data.ghost = null;
-		FlxG.save.data.distractions = null;
+		FlxG.save.data.quality = null;
 		FlxG.save.data.colour = null;
 		FlxG.save.data.stepMania = null;
 		FlxG.save.data.flashing = null;

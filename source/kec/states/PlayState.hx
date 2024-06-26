@@ -745,7 +745,7 @@ class PlayState extends MusicBeatState
 
 		if (dad.hasTrail)
 		{
-			if (FlxG.save.data.distractions)
+			if (FlxG.save.data.quality)
 			{
 				var evilTrail = new FlxTrail(dad, null, 4, 24, 0.3, 0.069);
 				add(evilTrail);
@@ -1128,11 +1128,11 @@ class PlayState extends MusicBeatState
 
 		super.create();
 
-		if (FlxG.save.data.distractions && FlxG.save.data.background)
+		if (FlxG.save.data.quality && FlxG.save.data.background)
 		{
 			if (Stage.curStage == 'tank' && gf != null && gf.curCharacter == 'pico-speaker')
 			{
-				if (FlxG.save.data.distractions)
+				if (FlxG.save.data.quality)
 				{
 					var firstTank:TankmenBG = new TankmenBG(20, 500, true);
 					firstTank.resetShit(20, 1500, true);

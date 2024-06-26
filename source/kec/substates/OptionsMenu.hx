@@ -227,10 +227,10 @@ class OptionsMenu extends MusicBeatSubstate
 				new AntialiasingOption("Toggle antialiasing, improving graphics quality at a slight performance penalty."),
 				new GPURendering("Makes All Sprites Load Into VRAM, Reducing Normal RAM Usage. (Not Recommended For ~3GB VRAM)"), // Ill come back to this. I'm tired asf
 				new BackgroundsOption("Toggles Backrounds From Being Visible. (Good Performance Booster.)"),
-				new DistractionsAndEffectsOption("Toggles Extra Assets Be Loaded To Improve Quality At The Cost Of Performance"),
+				new QualityOption("Toggle If Extra Stage Background Assets Get Loaded (And Other Distractions)"),
 				new Shaders("Should Shaders Be Enabled? (High GPU and CPU Usage.)"),
 				#if desktop
-				new UnloadSongs("Persistent Memory Means That No Assets Will Be Unloaded. This Will Cause High Memory Usage With Improved Reloading Times."),
+				new UnloadSongs("Toggle If Assets Get Unloaded. Off Will Have Higher Memory Usage But With Better Reload Times."),
 				new UnloadNow("Clears All Cache We Can Remove."),
 				#end
 
@@ -293,7 +293,7 @@ class OptionsMenu extends MusicBeatSubstate
 		selectedOption = selectedCat.options[0];
 		descText = new CoolText(65, 648, 20, 20, Paths.bitmapFont('fonts/vcr'));
 		descText.autoSize = false;
-		descText.fieldWidth = 1750;
+		descText.fieldWidth = 4000;
 		descText.antialiasing = FlxG.save.data.antialiasing;
 		descText.borderStyle = FlxTextBorderStyle.OUTLINE;
 		descText.borderSize = 2;

@@ -264,16 +264,13 @@ class ChartingState extends MusicBeatState
 		menu.height = 30;
 		menu.width = FlxG.width;
 
-		#if FEATURE_DISCORD
-		kec.backend.Discord.changePresence("Chart Editor", null, null, true);
-		#end
-
 		FlxG.mouse.visible = true;
 
 		PlayState.inDaPlay = false;
 
 		TimingStruct.clearTimings();
 		SONG = PlayState.SONG;
+		activeSong = SONG;
 
 		loadSong(SONG.audioFile, false);
 
@@ -367,6 +364,8 @@ class ChartingState extends MusicBeatState
 
 		initEvents();
 
+		
+
 		var currentIndex = 0;
 
 		for (i in SONG.eventObjects)
@@ -430,8 +429,6 @@ class ChartingState extends MusicBeatState
 		regenerateLines();
 		updateNotes();
 
-		activeSong = SONG;
-
 		middleLine = new FlxSprite(660, 0).makeGraphic(4, FlxG.height, FlxColor.GRAY);
 		middleLine.scrollFactor.x = 0;
 		// middleLine.camera = camGrid;
@@ -472,6 +469,11 @@ class ChartingState extends MusicBeatState
 
 		ui.x = 0;
 		ui.y = 420;
+
+		#if FEATURE_DISCORD
+		kec.backend.Discord.changePresence("Chart Editor", "Charting : " + SONG.songName, null, true);
+		#end
+
 		super.create();
 	}
 
@@ -479,7 +481,8 @@ class ChartingState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		Conductor.songPosition = inst.time;
+		super.update(elapsed);
+
 		if (inst != null)
 			if (inst.time > inst.length - 85)
 			{
@@ -657,9 +660,6 @@ class ChartingState extends MusicBeatState
 			}
 		}
 
-		// I hate having things run in update all the time but fuck it
-		songShit();
-
 		var mult:Float = FlxMath.lerp(0.75, iconP1.scale.x, FlxMath.bound(1 - (elapsed * 9 * PlayState.songMultiplier), 0, 1));
 		if (!FlxG.save.data.motion)
 			iconP1.scale.set(mult, mult);
@@ -692,8 +692,8 @@ class ChartingState extends MusicBeatState
 			else
 			{
 				if ((FlxG.mouse.justPressed && !FlxG.keys.pressed.CONTROL)
-					&& FlxG.mouse.x > notePos - 1
-					&& FlxG.mouse.x < gridBG.width + notePos
+					&& FlxG.mouse.x > notePos
+					&& FlxG.mouse.x < notePos + gridBG.width
 					&& FlxG.mouse.y > 0
 					&& FlxG.mouse.y < 0 + sectionY)
 				{
@@ -987,6 +987,8 @@ class ChartingState extends MusicBeatState
 				Lib.clearInterval(id);
 			}
 
+			Conductor.songPosition = inst.time;
+
 			if (FlxG.keys.justPressed.ESCAPE)
 			{
 				PlayState.SONG = SONG;
@@ -1084,8 +1086,8 @@ class ChartingState extends MusicBeatState
 				}
 				else
 				{
-					if (amount < 0)
-						inst.time -= (FlxG.mouse.wheel * Conductor.stepCrochet * 0.4);
+					if (amount != 0)
+						inst.time -= (FlxG.mouse.wheel * Conductor.stepCrochet * 0.45);
 				}
 
 				if (!SONG.splitVoiceTracks)
@@ -1157,7 +1159,8 @@ class ChartingState extends MusicBeatState
 		infoText.updateHitbox();
 		lastConductorPos = Conductor.songPosition;
 
-		super.update(elapsed);
+		// I hate having things run in update all the time but fuck it
+		songShit();
 	}
 
 	function updateNotes()
@@ -1188,7 +1191,7 @@ class ChartingState extends MusicBeatState
 					if (PlayStateChangeables.opponentMode)
 						gottaHitNote = !gottaHitNote;
 
-					var note:Note = new Note(daStrumTime, daNoteInfo, null, false, true, gottaHitNote, daBeat);
+					var note:Note = new Note(daStrumTime, daNoteInfo % 4, null, false, true, gottaHitNote, daBeat);
 					note.rawNoteData = daNoteInfo;
 					note.noteShit = daType;
 					note.sustainLength = daSus;
@@ -1334,7 +1337,7 @@ class ChartingState extends MusicBeatState
 		if (PlayStateChangeables.opponentMode)
 			gottaHitNote = !gottaHitNote;
 
-		var note:Note = new Note(noteStrum, noteData, null, false, true, gottaHitNote, TimingStruct.getBeatFromTime(noteStrum));
+		var note:Note = new Note(noteStrum, noteData % 4, null, false, true, gottaHitNote, TimingStruct.getBeatFromTime(noteStrum));
 		note.rawNoteData = noteData;
 		note.sustainLength = noteSus;
 		note.noteShit = noteShit;
@@ -1390,26 +1393,50 @@ class ChartingState extends MusicBeatState
 
 	function deleteNote(note:Note):Void
 	{
-		Debug.logTrace("Deleted StrumTime : " + Math.abs(note.strumTime) + " Note Data " + note.noteData);
+		while (selectedBoxes.members.length != 0)
+		{
+			selectedBoxes.members[0].connectedNote.charterSelected = false;
+			selectedBoxes.members[0].destroy();
+			selectedBoxes.members.remove(selectedBoxes.members[0]);
+			selectedBoxes.clear();
+		}
+
+		lastNote = note;
+
+		var section = getSectionByTime(note.strumTime);
 
 		var found = false;
 
-		for (i in SONG.notes)
+		if (section != null)
 		{
-			for (n in i.sectionNotes)
-				if (n[0] == Math.abs(note.strumTime) && n[1] == note.noteData)
+			for (i in section.sectionNotes)
+			{
+				if (i[0] == note.strumTime && i[1] == note.rawNoteData)
 				{
-					i.sectionNotes.remove(n);
+					section.sectionNotes.remove(i);
+					found = true;
+					Debug.logTrace("Notes In Section " + section.sectionNotes.length + " Note Data " + i[1]);
 					curRenderedNotes.remove(note);
-					Debug.logTrace("Removed " + i.sectionNotes.length + " Note Data " + n[1]);
-					break;
 				}
+			}
+		}
+
+		if (!found) // backup check
+		{
+			for (i in SONG.notes)
+			{
+				for (n in i.sectionNotes)
+				{
+					if (n[0] == note.strumTime && n[1] == note.rawNoteData)
+						i.sectionNotes.remove(n);
+					Debug.logTrace("BACKUP Notes In Section " + i.sectionNotes.length + " Note Data " + n[1]);
+					curRenderedNotes.remove(note);
+				}
+			}
 		}
 
 		if (note.sustainLength > 0)
 			curRenderedSustains.remove(note.noteCharterObject, true);
-
-		destroyBoxes();
 
 		curSelectedNote = null;
 		strumTime.text = "0";
@@ -1479,7 +1506,6 @@ class ChartingState extends MusicBeatState
 
 			var strum = originalNote.strumTime + offset;
 			// Remove the old note.
-			// Find the position in the song to put the new note.
 			for (ii in SONG.notes)
 			{
 				if (ii.startTime <= strum && ii.endTime > strum)
@@ -1577,7 +1603,7 @@ class ChartingState extends MusicBeatState
 					if (ii.startTime <= strum && ii.endTime > strum)
 					{
 						// alright we're in this section lets paste the note here.
-						var newData:Array<Any> = [strum, i[1], i[2], i[3]];
+						var newData = [strum, i[1], i[2], i[3]];
 						ii.sectionNotes.push(newData);
 
 						var thing = ii.sectionNotes[ii.sectionNotes.length - 1];
@@ -1589,10 +1615,11 @@ class ChartingState extends MusicBeatState
 
 						if (PlayStateChangeables.opponentMode)
 							gottaHitNote = !gottaHitNote;
-						var note:Note = new Note(strum, newData[1], null, false, true, gottaHitNote, newData[3]);
-						note.rawNoteData = newData[1];
-						note.sustainLength = newData[2];
-						note.noteShit = newData[3];
+
+						var note:Note = new Note(strum, Math.floor(i[1] % 4), null, false, true, gottaHitNote, i[3]);
+						note.rawNoteData = i[1];
+						note.sustainLength = i[2];
+						note.noteShit = i[3];
 						note.setGraphicSize(Math.floor(noteSize), Math.floor(noteSize));
 						note.updateHitbox();
 						note.x = Math.floor(note.rawNoteData * noteSize) + notePos;
