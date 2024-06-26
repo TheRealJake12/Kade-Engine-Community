@@ -2,20 +2,46 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Build + Debug",
-      "type": "lime",
-      "request": "launch"
-    },
-    {
-      "name": "Debug",
-      "type": "lime",
+      "name": "Windows (Debug)",
+      "type": "hxcpp",
+      "preLaunchTask": "Build Windows (Debug)",
       "request": "launch",
-      "preLaunchTask": ""
+      "program": "${workspaceFolder}/export/debug/windows/bin/Kade Engine Community.exe"
     },
     {
-      "name": "Macro",
-      "type": "haxe-eval",
-      "request": "launch"
-    }
-  ]
+      "name": "Windows (Release)",
+      "type": "hxcpp",
+      "preLaunchTask": "Build Windows (Release)",
+      "request": "launch",
+      "program": "${workspaceFolder}/export/release/windows/bin/Kade Engine Community.exe"
+    },
+    {
+      "name": "HTML5 (Debug)",
+      "request": "launch",
+      "preLaunchTask": "Build HTML5 (Debug)",
+      "type": "node-terminal",
+      "command": "npx live-server \"${workspaceFolder}/export/debug/html5/bin/\""
+    },
+    {
+      "name": "HTML5 (Release)",
+      "request": "launch",
+      "preLaunchTask": "Build HTML5 (Release)",
+      "type": "node-terminal",
+      "command": "npx live-server \"${workspaceFolder}/export/release/html5/bin/\""
+    },
+    {
+      "name": "Linux (Debug)",
+      "type": "hxcpp",
+      "preLaunchTask": "Build Linux (Debug)",
+      "request": "launch",
+      "program": "${workspaceFolder}/export/debug/linux/bin/Kade Engine Community"
+    },
+    {
+      "name": "Linux (Release)",
+      "type": "hxcpp",
+      "preLaunchTask": "Build Linux (Release)",
+      "request": "launch",
+      "program": "${workspaceFolder}/export/release/linux/bin/Kade Engine Community"
+    },
+  ],
 }
