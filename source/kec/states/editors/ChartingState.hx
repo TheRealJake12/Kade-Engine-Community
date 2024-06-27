@@ -1189,7 +1189,7 @@ class ChartingState extends MusicBeatState
 					if (PlayStateChangeables.opponentMode)
 						gottaHitNote = !gottaHitNote;
 
-					var note:Note = new Note(daStrumTime, daNoteInfo % 4, gottaHitNote);
+					var note:Note = new Note(daStrumTime, daNoteInfo % 4, null, false, true, gottaHitNote, daBeat);
 					note.rawNoteData = daNoteInfo;
 					note.noteShit = daType;
 					note.sustainLength = daSus;
@@ -1335,7 +1335,7 @@ class ChartingState extends MusicBeatState
 		if (PlayStateChangeables.opponentMode)
 			gottaHitNote = !gottaHitNote;
 
-		var note:Note = new Note(noteStrum, noteData % 4, true, gottaHitNote, TimingStruct.getBeatFromTime(noteStrum));
+		var note:Note = new Note(noteStrum, noteData % 4, null, false, true, gottaHitNote, TimingStruct.getBeatFromTime(noteStrum));
 		note.rawNoteData = noteData;
 		note.sustainLength = noteSus;
 		note.noteShit = noteShit;
@@ -1528,7 +1528,7 @@ class ChartingState extends MusicBeatState
 					if (PlayStateChangeables.opponentMode)
 						gottaHitNote = !gottaHitNote;
 
-					var note:Note = new Note(strum, originalNote.noteData, gottaHitNote, originalNote.beat);
+					var note:Note = new Note(strum, originalNote.noteData, originalNote.prevNote, false, true, gottaHitNote, originalNote.beat);
 					note.rawNoteData = originalNote.rawNoteData;
 					note.sustainLength = originalNote.sustainLength;
 					note.noteShit = originalNote.noteShit;
@@ -1614,7 +1614,7 @@ class ChartingState extends MusicBeatState
 						if (PlayStateChangeables.opponentMode)
 							gottaHitNote = !gottaHitNote;
 
-						var note:Note = new Note(strum, Math.floor(i[1] % 4), true, gottaHitNote, i[3]);
+						var note:Note = new Note(strum, Math.floor(i[1] % 4), null, false, true, gottaHitNote, i[3]);
 						note.rawNoteData = i[1];
 						note.sustainLength = i[2];
 						note.noteShit = i[3];

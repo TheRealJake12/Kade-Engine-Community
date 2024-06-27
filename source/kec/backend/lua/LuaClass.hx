@@ -251,11 +251,11 @@ class LuaNote extends LuaClass
 				setter: SetNumProperty
 			},
 
-			"isPlayer" => {
+			"mustPress" => {
 				defaultValue: 1,
 				getter: function(l:State, data:Any):Int
 				{
-					Lua.pushboolean(l, connectedNote.isPlayer);
+					Lua.pushboolean(l, connectedNote.mustPress);
 					return 1;
 				},
 				setter: SetNumProperty
@@ -271,6 +271,16 @@ class LuaNote extends LuaClass
 				setter: SetNumProperty
 			},
 
+			"isSustain" => {
+				defaultValue: 0,
+				getter: function(l:State, data:Any):Int
+				{
+					Lua.pushboolean(l, connectedNote.isSustainNote);
+					return 1;
+				},
+				setter: SetNumProperty
+			},
+
 			"isParent" => {
 				defaultValue: 1,
 				getter: function(l:State, data:Any):Int
@@ -281,6 +291,20 @@ class LuaNote extends LuaClass
 				setter: function(l:State)
 				{
 					LuaL.error(l, "isParent is read-only.");
+					return 0;
+				}
+			},
+
+			"getParent" => {
+				defaultValue: 1,
+				getter: function(l:State, data:Any):Int
+				{
+					Lua.pushstring(l, "note_" + connectedNote.parent.luaID);
+					return 1;
+				},
+				setter: function(l:State)
+				{
+					LuaL.error(l, "getParent is read-only.");
 					return 0;
 				}
 			},

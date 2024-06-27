@@ -151,7 +151,7 @@ class StaticArrow extends FlxSprite
 
 		bgLane.angle = direction - 90;
 		if (laneFollowsReceptor)
-			bgLane.x = (x - 2) - (bgLane.angle / 2);
+			bgLane.x = (x - 2) - (bgLane.angle * 0.5);
 
 		bgLane.alpha = FlxG.save.data.laneTransparency * alpha;
 		bgLane.visible = visible;
@@ -165,7 +165,7 @@ class StaticArrow extends FlxSprite
 
 		if (frames != null)
 		{
-			offset.set(frameWidth / 2, frameHeight / 2);
+			offset.set(frameWidth * 0.5, frameHeight * 0.5);
 
 			offset.x -= 54;
 			offset.y -= 56;

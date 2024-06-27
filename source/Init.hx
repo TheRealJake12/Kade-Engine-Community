@@ -5,6 +5,7 @@ import kec.backend.cpp.CPPInterface;
 #end
 import openfl.Lib;
 import flixel.graphics.FlxGraphic;
+import kec.backend.util.NoteStyleHelper;
 
 class Init extends MusicBeatState
 {
@@ -47,6 +48,9 @@ class Init extends MusicBeatState
 		// Gotta run this before any assets get loaded.
 		if (FlxG.save.data.loadMods)
 			kec.backend.modding.ModCore.initialize();
+
+		NoteStyleHelper.updateNoteskins();
+		NoteStyleHelper.updateNotesplashes();
 
 		FlxG.autoPause = FlxG.save.data.autoPause;
 		FlxG.mouse.visible = true;

@@ -1,27 +1,35 @@
 package kec.backend;
 
-typedef NoteData =
+@:structInit
+class NoteData
 {
 	/**
 	 * Note Position In A Chart In MS
 	 */
-	var strumTime:Float;
+	public var strumTime:Float;
 
 	/**
 	 * What Direction / Player A Note Is. Kind Of Like An ID.
 	 */
-	var noteData:Int;
+	public var noteData:Int;
 
 	/**
 	 * If Sustain Length Is Greater Than 0, It's A Sustain Note. General Sustain Length.
 	 */
-	var sustainLength:Float;
+	public var sustainLength:Float;
 
 	/**
 	 * The Type Of Note It Is (Normal, Hurt, Must Press, Alt, GF, etc.)
 	 */
-	var noteType:String;
+	public var noteType:String;
 
-	var ?isPlayer:Bool;
-	var ?beat:Float;
+	/**
+	 * Is The Note A Player Note
+	 */
+	public var isPlayer:Bool;
+
+	/**
+	 * What Beat The Note Is At.
+	 */
+	public var beat:Float;
 }

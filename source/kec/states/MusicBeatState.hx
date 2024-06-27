@@ -146,7 +146,7 @@ class MusicBeatState extends FlxTransitionableState
 				{
 					Debug.logTrace('Current Timing ended, checking for next Timing...');
 					curTiming = TimingStruct.getTimingAtTimestamp(Conductor.songPosition);
-					step = ((60 / curTiming.bpm) * 1000) / 4;
+					step = ((0.01666666666 * curTiming.bpm) * 1000) * 0.25;
 					startInMS = (curTiming.startTime * 1000);
 				}
 
@@ -198,7 +198,7 @@ class MusicBeatState extends FlxTransitionableState
 			}
 			else
 			{
-				curDecimalBeat = (((Conductor.songPosition / 1000))) * (Conductor.bpm / 60);
+				curDecimalBeat = (((Conductor.songPosition * 0.001))) * (Conductor.bpm * 0.01666666666);
 
 				curBeat = Math.floor(curDecimalBeat);
 				curStep = Math.floor(curDecimalBeat * 4);
@@ -290,10 +290,10 @@ class MusicBeatState extends FlxTransitionableState
 
 			var currentBeat:Float = 0.0;
 
-			currentBeat = (section.lengthInSteps / 4) * (i + 1);
+			currentBeat = (section.lengthInSteps * 0.25) * (i + 1);
 
 			for (k in 0...i)
-				currentBeat -= ((section.lengthInSteps / 4) - (activeSong.notes[k].lengthInSteps / 4));
+				currentBeat -= ((section.lengthInSteps * 0.25) - (activeSong.notes[k].lengthInSteps * 0.25));
 
 			section.endTime = TimingStruct.getTimeFromBeat(currentBeat);
 
@@ -309,7 +309,7 @@ class MusicBeatState extends FlxTransitionableState
 		curTiming = TimingStruct.getTimingAtTimestamp(Conductor.songPosition);
 		if (curTiming != null)
 		{
-			step = ((60 / curTiming.bpm) * 1000) / 4;
+			step = ((0.01666666666 * curTiming.bpm) * 1000) * 0.25;
 			startInMS = (curTiming.startTime * 1000);
 		}
 	}
