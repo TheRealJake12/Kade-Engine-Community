@@ -196,12 +196,11 @@ class Note extends FlxSprite
 			centerOffsets();
 			centerOrigin();
 		}
-		clipRect = FlxDestroyUtil.put(clipRect);
-		updateHitbox();
 	}
 
 	public function resetNote()
 	{
+		setPosition(0, 2000);
 		this.noteData = 0;
 		this.rawNoteData = 0;
 		this.strumTime = 0;
@@ -234,6 +233,8 @@ class Note extends FlxSprite
 		this.modifiedByLua = false;
 		this.lateHitMult = 1;
 		this.prevNote = null;
+		clipRect = FlxDestroyUtil.put(clipRect);
+		updateHitbox();
 	}
 
 	private function set_texture(value:String):String

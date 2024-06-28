@@ -2971,12 +2971,13 @@ class PlayState extends MusicBeatState
 							+ daNote.noteYOff;
 				}
 
-				var swagRect:FlxRect = daNote.clipRect;
-				if (swagRect == null)
-					swagRect = new FlxRect(0, 0, daNote.frameWidth, daNote.frameHeight);
+				
 
 				if (daNote.isSustainNote && daNote.prevNote.wasGoodHit)
 				{
+					var swagRect:FlxRect = daNote.clipRect;
+					if (swagRect == null)
+						swagRect = FlxRect.get(0, 0, daNote.frameWidth, daNote.frameHeight);
 					if (strumScrollType)
 					{
 						// daNote.y = (strumY + Math.sin(angleDir) * daNote.distance) - (daNote.height - Note.swagWidth);
@@ -3004,6 +3005,7 @@ class PlayState extends MusicBeatState
 								swagRect.width = daNote.width / daNote.scale.x;
 								swagRect.height = (daNote.height / daNote.scale.y) - swagRect.y;
 								daNote.clipRect = swagRect;
+								
 							}
 						}
 					}
