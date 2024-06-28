@@ -100,17 +100,15 @@ class Note extends FlxSprite
 
 	public function setup(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?isPlayer:Bool = true, ?beat:Float = 0)
 	{
+		resetNote();
 		if (strumTime < 0)
 			strumTime = 0;
 		this.strumTime = strumTime;
 		this.noteData = noteData;
 		this.isPlayer = this.mustPress = isPlayer;
-		if (prevNote == null)
-			prevNote = this;
-
 		this.beat = beat;
-		this.prevNote = prevNote;
 		isSustainNote = sustainNote;
+		this.prevNote = prevNote;
 		moves = false;
 		lateHitMult = isSustainNote ? 0.5 : 1;
 		x += 50;
@@ -120,7 +118,7 @@ class Note extends FlxSprite
 			this.noteData = Std.int(Math.abs(3 - noteData));
 			noteData = Std.int(Math.abs(3 - noteData));
 		}
-
+		
 		var animToPlay:String = '';
 		animToPlay = dataColor[Std.int(noteData % 4)] + 'Scroll';
 		x += swagWidth * noteData;
@@ -198,40 +196,44 @@ class Note extends FlxSprite
 			centerOffsets();
 			centerOrigin();
 		}
+		clipRect = FlxDestroyUtil.put(clipRect);
+		updateHitbox();
 	}
 
 	public function resetNote()
 	{
-		scale.y = 0.7;
-		mustPress = false;
-		noteShit = 'Normal';
-		sustainLength = 0;
-		distance = 2000;
-		// MAKE SURE ITS DEFINITELY OFF SCREEN?
-		y -= 2000;
-		children.resize(0);
-		isParent = false;
-		parent = null;
-		spotInLine = 0;
-		stepHeight = 0;
-		noteYOff = 0;
-		beat = 0;
-		wasGoodHit = false;
-		canBeHit = false;
-		tooLate = false;
-		prevNote = null;
-		originColor = 0;
-		rating = null;
-		modAngle = localAngle = originAngle = 0;
-		alpha = 1;
-		modAlpha = 1;
-		clipRect = FlxDestroyUtil.put(clipRect);
-		isSustainNote = false;
-		isSustainEnd = false;
-		sustainActive = false;
-		centerOffsets();
-		centerOrigin();
-		updateHitbox();
+		this.noteData = 0;
+		this.rawNoteData = 0;
+		this.strumTime = 0;
+		this.scale.y = 0.7;
+		this.mustPress = false;
+		this.noteShit = 'Normal';
+		this.sustainLength = 0;
+		this.distance = 2000;
+		this.children = [];
+		this.isParent = false;
+		this.parent = null;
+		this.spotInLine = 0;
+		this.stepHeight = 0;
+		this.noteYOff = 0;
+		this.beat = 0;
+		this.wasGoodHit = false;
+		this.canBeHit = false;
+		this.tooLate = false;
+		this.originColor = 0;
+		this.rating = null;
+		this.modAngle = localAngle = originAngle = 0;
+		this.alpha = 1;
+		this.modAlpha = 1;
+		this.isSustainNote = false;
+		this.isSustainEnd = false;
+		this.sustainActive = false;
+		this.insideCharter = false;
+		this.charterSelected = false;
+		this.earlyHitMult = 1;
+		this.modifiedByLua = false;
+		this.lateHitMult = 1;
+		this.prevNote = null;
 	}
 
 	private function set_texture(value:String):String
