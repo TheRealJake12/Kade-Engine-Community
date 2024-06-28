@@ -98,7 +98,7 @@ class Note extends FlxSprite
 	public var LuaNote:LuaNote;
 	#end
 
-	public function setup(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?isPlayer:Bool = true, ?beat:Float = 0)
+	public function setup(strumTime:Float, noteData:Int, noteType:String = 'Normal', ?prevNote:Note, ?sustainNote:Bool = false, ?isPlayer:Bool = true, ?beat:Float = 0)
 	{
 		resetNote();
 		if (strumTime < 0)
@@ -111,7 +111,9 @@ class Note extends FlxSprite
 		this.prevNote = prevNote;
 		moves = false;
 		lateHitMult = isSustainNote ? 0.5 : 1;
-		x += 50;
+		this.noteShit = noteType;
+		// MAKE SURE ITS DEFINITELY OFF SCREEN?
+		y -= 2000;
 
 		if (PlayStateChangeables.mirrorMode)
 		{
@@ -166,18 +168,11 @@ class Note extends FlxSprite
 			if (PlayStateChangeables.useDownscroll)
 				flipY = true;
 
-			x += width * 0.5;
-
 			originColor = prevNote.originColor;
 			originAngle = prevNote.originAngle;
 
 			animation.play(dataColor[Std.int(originColor % 4)] + 'holdend'); // This works both for normal colors and quantization colors
 			updateHitbox();
-
-			x -= width * 0.5;
-
-			if (insideCharter)
-				x += 30;
 
 			if (prevNote.isSustainNote)
 			{
@@ -191,48 +186,45 @@ class Note extends FlxSprite
 				prevNote.updateHitbox();
 			}
 		}
-		else if (!isSustainNote)
-		{
-			centerOffsets();
-			centerOrigin();
-		}
+		centerOffsets();
+		centerOrigin();
 	}
 
 	public function resetNote()
 	{
-		setPosition(0, 2000);
-		this.noteData = 0;
-		this.rawNoteData = 0;
-		this.strumTime = 0;
-		this.scale.y = 0.7;
-		this.mustPress = false;
-		this.noteShit = 'Normal';
-		this.sustainLength = 0;
-		this.distance = 2000;
-		this.children = [];
-		this.isParent = false;
-		this.parent = null;
-		this.spotInLine = 0;
-		this.stepHeight = 0;
-		this.noteYOff = 0;
-		this.beat = 0;
-		this.wasGoodHit = false;
-		this.canBeHit = false;
-		this.tooLate = false;
-		this.originColor = 0;
-		this.rating = null;
-		this.modAngle = localAngle = originAngle = 0;
-		this.alpha = 1;
-		this.modAlpha = 1;
-		this.isSustainNote = false;
-		this.isSustainEnd = false;
-		this.sustainActive = false;
-		this.insideCharter = false;
-		this.charterSelected = false;
-		this.earlyHitMult = 1;
-		this.modifiedByLua = false;
-		this.lateHitMult = 1;
-		this.prevNote = null;
+		noteData = 0;
+		rawNoteData = 0;
+		strumTime = 0;
+		scale.y = 0.7;
+		mustPress = false;
+		texture = '';
+		noteShit = 'Normal';
+		sustainLength = 0;
+		distance = 2000;
+		children = [];
+		isParent = false;
+		parent = null;
+		spotInLine = 0;
+		stepHeight = 0;
+		noteYOff = 0;
+		beat = 0;
+		wasGoodHit = false;
+		canBeHit = false;
+		tooLate = false;
+		originColor = 0;
+		rating = null;
+		modAngle = localAngle = originAngle = 0;
+		alpha = 1;
+		modAlpha = 1;
+		isSustainNote = false;
+		isSustainEnd = false;
+		sustainActive = false;
+		insideCharter = false;
+		charterSelected = false;
+		earlyHitMult = 1;
+		modifiedByLua = false;
+		lateHitMult = 1;
+		prevNote = null;
 		clipRect = FlxDestroyUtil.put(clipRect);
 		updateHitbox();
 	}

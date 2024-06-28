@@ -394,6 +394,7 @@ class PlayState extends MusicBeatState
 	private var rating:Rating;
 	private var introGroup:FlxTypedGroup<IntroSprite>;
 	private var spawnNotes:Array<NoteData> = [];
+	private var prevNote:Note = null;
 
 	// Adding Objects Using Lua
 	public function addObject(object:FlxBasic)
@@ -2295,10 +2296,8 @@ class PlayState extends MusicBeatState
 			{
 				var data:NoteData = spawnNotes[0];
 				var note:Note = notes.recycle(Note);
-				var prevNote:Note = null;
-				if (notes.members.length > 0)
-					prevNote = notes.members[Std.int(notes.members.length - 1)];
-				note.setup(data.strumTime, data.noteData, prevNote, false, data.isPlayer, data.beat);
+				note.setup(data.strumTime, data.noteData, data.noteType, prevNote, false, data.isPlayer, data.beat);
+				prevNote = note;
 				note.sustainLength = data.sustainLength;
 				note.noteShit = data.noteType;
 				var susLength = note.sustainLength;
@@ -2306,23 +2305,20 @@ class PlayState extends MusicBeatState
 				anotherCrochet = Conductor.crochet;
 				anotherStepCrochet = anotherCrochet * 0.25;
 				susLength = susLength / anotherStepCrochet;
-				notes.insert(0, note);
-				
 				if (susLength > 0)
 				{
 					var spotInLine = 0;
 					note.isParent = true;
 					for (susNote in 0...Std.int(Math.max(susLength, 2)))
 					{
-						prevNote = notes.members[Std.int(notes.members.length - 1)];
 						var sustain:Note = notes.recycle(Note);
-						sustain.setup(data.strumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, data.noteData, prevNote, true, data.isPlayer, 0);
-						sustain.noteShit = data.noteType;
-						notes.insert(0, sustain);
+						sustain.setup(data.strumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, data.noteData, data.noteType, prevNote, true, data.isPlayer, 0);
 						sustain.parent = note;
+						sustain.noteShit = sustain.parent.noteShit;
 						sustain.spotInLine = spotInLine;
 						sustain.parent.children.push(sustain);
 						spotInLine++;
+						prevNote = sustain;
 					}
 				}	
 
@@ -2949,13 +2945,13 @@ class PlayState extends MusicBeatState
 				var angleDir = strumDirection * Math.PI / 180;
 
 				var origin = strumY + Note.swagWidth * 0.5;
-
+				
 				if (daNote.isSustainNote)
 					daNote.x = (strumX + Math.cos(angleDir) * daNote.distance) + (Note.swagWidth / 3);
 				else
 					daNote.x = strumX + Math.cos(angleDir) * daNote.distance;
 
-				if (SONG.style.toLowerCase() == 'pixel' && daNote.isSustainNote)
+				if (SONG.noteStyle == 'pixel' && daNote.isSustainNote)
 					daNote.x -= 5;
 
 				daNote.y = strumY + Math.sin(angleDir) * daNote.distance;
