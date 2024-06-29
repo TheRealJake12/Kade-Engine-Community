@@ -2330,8 +2330,7 @@ class PlayState extends MusicBeatState
 				}
 				#end
 
-				var index:Int = spawnNotes.indexOf(data);
-				spawnNotes.splice(index, 1);
+				spawnNotes.shift();
 				currentLuaIndex++;
 			}
 		}

@@ -186,8 +186,7 @@ class Note extends FlxSprite
 				prevNote.updateHitbox();
 			}
 		}
-		centerOffsets();
-		centerOrigin();
+		updateHitbox();
 	}
 
 	public function resetNote()
