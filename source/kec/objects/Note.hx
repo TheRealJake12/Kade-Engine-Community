@@ -98,7 +98,8 @@ class Note extends FlxSprite
 	public var LuaNote:LuaNote;
 	#end
 
-	public function setup(strumTime:Float, noteData:Int, noteType:String = 'Normal', ?prevNote:Note, ?sustainNote:Bool = false, ?isPlayer:Bool = true, ?beat:Float = 0)
+	public function setup(strumTime:Float, noteData:Int, noteType:String = 'Normal', ?prevNote:Note, ?sustainNote:Bool = false, ?isPlayer:Bool = true,
+			?beat:Float = 0)
 	{
 		resetNote();
 		if (strumTime < 0)
@@ -111,6 +112,7 @@ class Note extends FlxSprite
 		this.prevNote = prevNote;
 		moves = false;
 		lateHitMult = isSustainNote ? 0.5 : 1;
+		reloadNote(null);
 		this.noteShit = noteType;
 		// MAKE SURE ITS DEFINITELY OFF SCREEN?
 		y -= 2000;
@@ -120,7 +122,7 @@ class Note extends FlxSprite
 			this.noteData = Std.int(Math.abs(3 - noteData));
 			noteData = Std.int(Math.abs(3 - noteData));
 		}
-		
+
 		var animToPlay:String = '';
 		animToPlay = dataColor[Std.int(noteData % 4)] + 'Scroll';
 		x += swagWidth * noteData;
@@ -186,6 +188,7 @@ class Note extends FlxSprite
 				prevNote.updateHitbox();
 			}
 		}
+		clipRect = null;
 		updateHitbox();
 	}
 
@@ -196,7 +199,6 @@ class Note extends FlxSprite
 		strumTime = 0;
 		scale.y = 0.7;
 		mustPress = false;
-		texture = '';
 		noteShit = 'Normal';
 		sustainLength = 0;
 		distance = 2000;
@@ -223,8 +225,6 @@ class Note extends FlxSprite
 		earlyHitMult = 1;
 		modifiedByLua = false;
 		lateHitMult = 1;
-		prevNote = null;
-		clipRect = FlxDestroyUtil.put(clipRect);
 		updateHitbox();
 	}
 
@@ -306,7 +306,7 @@ class Note extends FlxSprite
 		return value;
 	}
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inCharter:Bool = false, ?isPlayer:Bool = false,
+	public function new(?strumTime:Float, ?noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inCharter:Bool = false, ?isPlayer:Bool = false,
 			?bet:Float = 0)
 	{
 		super();

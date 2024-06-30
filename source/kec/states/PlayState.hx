@@ -2285,56 +2285,6 @@ class PlayState extends MusicBeatState
 			FlxG.stage.window.borderless = false;
 		}
 
-		if (spawnNotes[0] != null)
-		{
-			var shit:Float = 2000;
-			if (SONG.speed < 1 || scrollSpeed < 1)
-				shit /= scrollSpeed == 1 ? SONG.speed : scrollSpeed;
-			var time:Float = shit * songMultiplier;
-
-			while (spawnNotes.length > 0 && spawnNotes[0].strumTime - Conductor.songPosition < time)
-			{
-				var data:NoteData = spawnNotes[0];
-				var note:Note = notes.recycle(Note);
-				note.setup(data.strumTime, data.noteData, data.noteType, prevNote, false, data.isPlayer, data.beat);
-				prevNote = note;
-				note.sustainLength = data.sustainLength;
-				note.noteShit = data.noteType;
-				var susLength = note.sustainLength;
-
-				anotherCrochet = Conductor.crochet;
-				anotherStepCrochet = anotherCrochet * 0.25;
-				susLength = susLength / anotherStepCrochet;
-				if (susLength > 0)
-				{
-					var spotInLine = 0;
-					note.isParent = true;
-					for (susNote in 0...Std.int(Math.max(susLength, 2)))
-					{
-						var sustain:Note = notes.recycle(Note);
-						sustain.setup(data.strumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, data.noteData, data.noteType, prevNote, true, data.isPlayer, 0);
-						sustain.parent = note;
-						sustain.noteShit = sustain.parent.noteShit;
-						sustain.spotInLine = spotInLine;
-						sustain.parent.children.push(sustain);
-						spotInLine++;
-						prevNote = sustain;
-					}
-				}	
-
-				#if FEATURE_LUAMODCHART
-				if (executeModchart)
-				{
-					new LuaNote(note, currentLuaIndex);
-					note.luaID = currentLuaIndex;
-				}
-				#end
-
-				spawnNotes.shift();
-				currentLuaIndex++;
-			}
-		}
-
 		// uhhh dont comment out. It breaks everything
 		if (!paused)
 		{
@@ -2897,6 +2847,59 @@ class PlayState extends MusicBeatState
 
 		camFollowPos.setPosition(camFollow.x, camFollow.y);
 
+		if (spawnNotes[0] != null)
+		{
+			var shit:Float = 2000;
+			if (SONG.speed < 1 || scrollSpeed < 1)
+				shit /= scrollSpeed == 1 ? SONG.speed : scrollSpeed;
+			var time:Float = shit * songMultiplier;
+
+			while (spawnNotes.length > 0 && spawnNotes[0].strumTime - Conductor.songPosition < time)
+			{
+				var data:NoteData = spawnNotes[0];
+				var note:Note = notes.recycle(Note);
+				note.setup(data.strumTime, data.noteData, data.noteType, null, false, data.isPlayer, data.beat);
+				prevNote = note;
+				note.sustainLength = data.sustainLength;
+				note.noteShit = data.noteType;
+				note.parent = null;
+				var susLength = note.sustainLength;
+
+				anotherCrochet = Conductor.crochet;
+				anotherStepCrochet = anotherCrochet * 0.25;
+				susLength = susLength / anotherStepCrochet;
+				if (susLength > 0)
+				{
+					var spotInLine = 0;
+					note.isParent = true;
+					for (susNote in 0...Std.int(Math.max(susLength, 2)))
+					{
+						var sustain:Note = notes.recycle(Note);
+						sustain.setup(data.strumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, data.noteData, data.noteType, prevNote, true,
+							data.isPlayer, 0);
+						sustain.parent = note;
+						sustain.noteShit = sustain.parent.noteShit;
+						sustain.spotInLine = spotInLine;
+						note.children.push(sustain);
+						spotInLine++;
+						prevNote = sustain;
+					}
+				}
+				#if FEATURE_LUAMODCHART
+				if (executeModchart)
+				{
+					new LuaNote(note, currentLuaIndex);
+					note.luaID = currentLuaIndex;
+				}
+				#end
+
+				notes.sort(FlxSort.byY, (PlayStateChangeables.useDownscroll ? FlxSort.ASCENDING : FlxSort.DESCENDING));
+
+				spawnNotes.shift();
+				currentLuaIndex++;
+			}
+		}
+
 		if (generatedMusic && !(inCutscene || inCinematic))
 		{
 			var holdArray:Array<Bool> = [controls.LEFT, controls.DOWN, controls.UP, controls.RIGHT];
@@ -2944,7 +2947,7 @@ class PlayState extends MusicBeatState
 				var angleDir = strumDirection * Math.PI / 180;
 
 				var origin = strumY + Note.swagWidth * 0.5;
-				
+
 				if (daNote.isSustainNote)
 					daNote.x = (strumX + Math.cos(angleDir) * daNote.distance) + (Note.swagWidth / 3);
 				else
@@ -2965,8 +2968,6 @@ class PlayState extends MusicBeatState
 						daNote.distance = (-0.45 * ((Conductor.songPosition - daNote.strumTime)) * (FlxMath.roundDecimal(leSpeed, 2)) * daNote.speedMultiplier)
 							+ daNote.noteYOff;
 				}
-
-				
 
 				if (daNote.isSustainNote && daNote.prevNote.wasGoodHit)
 				{
@@ -3000,7 +3001,6 @@ class PlayState extends MusicBeatState
 								swagRect.width = daNote.width / daNote.scale.x;
 								swagRect.height = (daNote.height / daNote.scale.y) - swagRect.y;
 								daNote.clipRect = swagRect;
-								
 							}
 						}
 					}
@@ -3095,6 +3095,7 @@ class PlayState extends MusicBeatState
 
 					if (!PlayStateChangeables.botPlay)
 						if (daNote != null)
+						{
 							if (daNote.mustPress)
 							{
 								if (!daNote.wasGoodHit
@@ -3102,7 +3103,7 @@ class PlayState extends MusicBeatState
 									&& daNote.sustainActive
 									&& !daNote.isSustainEnd
 									&& daNote.causesMisses
-									&& !holdArray[Std.int(Math.abs(daNote.noteData))])
+									&& !holdArray[daNote.noteData])
 								{
 									// there should be a ! infront of the wasGoodHit one but it'd cause a miss per every sustain note.
 									// now it just misses on the slightest sustain end for some reason.
@@ -3116,6 +3117,7 @@ class PlayState extends MusicBeatState
 									noteMiss(daNote.noteData, daNote);
 								}
 							}
+						}
 				}
 			});
 		}
@@ -4344,11 +4346,6 @@ class PlayState extends MusicBeatState
 	override function beatHit()
 	{
 		super.beatHit();
-
-		if (generatedMusic)
-		{
-			notes.sort(FlxSort.byY, (PlayStateChangeables.useDownscroll ? FlxSort.ASCENDING : FlxSort.DESCENDING));
-		}
 
 		#if FEATURE_LUAMODCHART
 		if (executeModchart && luaModchart != null)

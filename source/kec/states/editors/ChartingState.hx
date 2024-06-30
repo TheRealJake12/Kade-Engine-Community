@@ -1189,12 +1189,11 @@ class ChartingState extends MusicBeatState
 					if (PlayStateChangeables.opponentMode)
 						gottaHitNote = !gottaHitNote;
 
-					var note:Note = new Note(daStrumTime, daNoteInfo % 4, null, false, true, gottaHitNote, daBeat);
+					var note:Note = new Note();
+					note.setup(daStrumTime, daNoteInfo % 4, daType, null, gottaHitNote, daBeat);
+					note.insideCharter = true;
 					note.rawNoteData = daNoteInfo;
-					note.noteShit = daType;
 					note.sustainLength = daSus;
-					note.strumTime = daStrumTime;
-
 					note.setGraphicSize(Math.floor(noteSize), Math.floor(noteSize));
 					note.updateHitbox();
 					note.x = Math.floor(note.rawNoteData * noteSize) + notePos;
@@ -1335,10 +1334,11 @@ class ChartingState extends MusicBeatState
 		if (PlayStateChangeables.opponentMode)
 			gottaHitNote = !gottaHitNote;
 
-		var note:Note = new Note(noteStrum, noteData % 4, null, false, true, gottaHitNote, TimingStruct.getBeatFromTime(noteStrum));
+		var note:Note = new Note();
+		note.setup(noteStrum, noteData % 4, noteShit, null, gottaHitNote, TimingStruct.getBeatFromTime(noteStrum));
+		note.insideCharter = true;
 		note.rawNoteData = noteData;
 		note.sustainLength = noteSus;
-		note.noteShit = noteShit;
 		note.setGraphicSize(Math.floor(noteSize), Math.floor(noteSize));
 		note.updateHitbox();
 		note.x = Math.floor(note.rawNoteData * noteSize) + notePos;
@@ -1528,10 +1528,11 @@ class ChartingState extends MusicBeatState
 					if (PlayStateChangeables.opponentMode)
 						gottaHitNote = !gottaHitNote;
 
-					var note:Note = new Note(strum, originalNote.noteData, originalNote.prevNote, false, true, gottaHitNote, originalNote.beat);
+					var note:Note = new Note();
+					note.setup(strum, originalNote.noteData, originalNote.noteShit, null, gottaHitNote, originalNote.beat);
+					note.insideCharter = true;
 					note.rawNoteData = originalNote.rawNoteData;
 					note.sustainLength = originalNote.sustainLength;
-					note.noteShit = originalNote.noteShit;
 					note.setGraphicSize(Math.floor(noteSize), Math.floor(noteSize));
 					note.updateHitbox();
 					note.x = Math.floor(originalNote.rawNoteData * noteSize) + notePos;
@@ -1614,10 +1615,11 @@ class ChartingState extends MusicBeatState
 						if (PlayStateChangeables.opponentMode)
 							gottaHitNote = !gottaHitNote;
 
-						var note:Note = new Note(strum, Math.floor(i[1] % 4), null, false, true, gottaHitNote, i[3]);
+						var note:Note = new Note();
+						note.setup(strum, Math.floor(i[1] % 4), i[3], null, gottaHitNote, TimingStruct.getBeatFromTime(strum));
+						note.insideCharter = true;
 						note.rawNoteData = i[1];
 						note.sustainLength = i[2];
-						note.noteShit = i[3];
 						note.setGraphicSize(Math.floor(noteSize), Math.floor(noteSize));
 						note.updateHitbox();
 						note.x = Math.floor(note.rawNoteData * noteSize) + notePos;
