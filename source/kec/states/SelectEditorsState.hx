@@ -2,7 +2,7 @@ package kec.states;
 
 import kec.objects.Alphabet;
 import kec.objects.CoolText;
-import kec.objects.HealthIcon;
+import kec.objects.ui.HealthIcon;
 import kec.backend.chart.Song;
 
 class SelectEditorsState extends MusicBeatState

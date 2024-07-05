@@ -17,7 +17,7 @@ import kec.backend.chart.Song;
 class MainMenuState extends MusicBeatState
 {
 	public static final nightly:String = "";
-	public static final kecVer:String = 'Kade Engine Community 1.9.4 PRE-RELEASE 1';
+	public static final kecVer:String = 'Kade Engine Community 1.9.4 PRE-RELEASE 2';
 	public static final keVer:String = "Kade Engine 1.8.1";
 	public static var curSelected:Int = 0;
 	public static var freakyPlaying:Bool = true;
@@ -87,7 +87,7 @@ class MainMenuState extends MusicBeatState
 
 		#if FEATURE_MODCORE
 		if (FlxG.save.data.loadMods)
-			Polymod.loadOnlyMods(kec.backend.modding.ModCore.modsToLoad);
+			Polymod.loadOnlyMods(kec.backend.modding.ModCore.getAllMods());
 		#end
 
 		FlxG.mouse.visible = true;
@@ -248,10 +248,12 @@ class MainMenuState extends MusicBeatState
 				LoadingState.loadAndSwitchState(new PlayState());
 			}
 
+			#if FEATURE_MODCORE
 			if (FlxG.keys.justPressed.M)
 			{
 				MusicBeatState.switchState(new ModMenuState());
 			}
+			#end
 
 			var shiftMult:Int = 1;
 
@@ -361,7 +363,7 @@ class MainMenuState extends MusicBeatState
 		if (curSelected >= menuItems.length)
 			curSelected = 0;
 		if (curSelected < 0)
-			curSelected = menuItems.length - 1;
+			curSelected = menuItems.length - 1;	
 
 		menuItems.forEach(function(spr:FlxSprite)
 		{
@@ -372,6 +374,7 @@ class MainMenuState extends MusicBeatState
 			{
 				spr.animation.play('selected');
 				spr.centerOffsets();
+				spr.x += 50;
 			}
 		});
 	}

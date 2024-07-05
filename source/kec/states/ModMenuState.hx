@@ -1,12 +1,10 @@
 package kec.states;
-
+#if FEATURE_MODCORE
 import haxe.ui.components.Button;
 import kec.backend.modding.ModCore;
 import flixel.group.FlxSpriteGroup;
-#if FEATURE_MODCORE
 import polymod.Polymod.ModMetadata;
 import polymod.Polymod;
-#end
 #if FEATURE_FILESYSTEM
 import sys.FileSystem;
 import sys.io.File;
@@ -129,3 +127,4 @@ class ModMenuState extends MusicBeatState
 		return list;
 	}
 }
+#end

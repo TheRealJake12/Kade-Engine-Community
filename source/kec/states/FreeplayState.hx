@@ -29,7 +29,7 @@ import sys.io.File;
 #end
 import kec.states.editors.ChartingState;
 import kec.objects.Alphabet;
-import kec.objects.HealthIcon;
+import kec.objects.ui.HealthIcon;
 import kec.backend.chart.Song;
 import kec.backend.util.Highscore;
 import kec.backend.util.HelperFunctions;

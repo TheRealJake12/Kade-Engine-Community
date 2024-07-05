@@ -8,7 +8,7 @@ import kec.backend.chart.Song.Event;
 import kec.backend.chart.TimingStruct;
 import kec.objects.CoolText;
 import kec.states.editors.ChartingBox;
-import kec.objects.HealthIcon;
+import kec.objects.ui.HealthIcon;
 import kec.objects.Note;
 import kec.states.editors.SectionRender;
 import kec.objects.Character;
@@ -484,6 +484,7 @@ class ChartingState extends MusicBeatState
 		super.update(elapsed);
 
 		if (inst != null)
+		{
 			if (inst.time > inst.length - 85)
 			{
 				inst.pause();
@@ -501,9 +502,6 @@ class ChartingState extends MusicBeatState
 					vocalsE.time = vocalsE.length - 85;
 				}
 			}
-
-		if (inst != null)
-		{
 			if (inst.playing)
 			{
 				inst.pitch = pitch;
@@ -536,7 +534,9 @@ class ChartingState extends MusicBeatState
 					Debug.logTrace("failed to pitch vocals (probably cuz they don't exist)");
 				}
 			}
+			Conductor.songPosition = inst.time;
 		}
+
 		if (updateFrame == 4)
 		{
 			TimingStruct.clearTimings();
@@ -987,8 +987,6 @@ class ChartingState extends MusicBeatState
 				Lib.clearInterval(id);
 			}
 
-			Conductor.songPosition = inst.time;
-
 			if (FlxG.keys.justPressed.ESCAPE)
 			{
 				PlayState.SONG = SONG;
@@ -1099,7 +1097,7 @@ class ChartingState extends MusicBeatState
 				}
 			}
 		}
-
+		
 		var playedSound:Array<Bool> = [false, false, false, false, false, false, false, false];
 		curRenderedNotes.forEachAlive(function(note:Note)
 		{
@@ -1107,9 +1105,10 @@ class ChartingState extends MusicBeatState
 			{
 				if (note.strumTime > lastConductorPos && inst.playing && note.noteData > -1 && note.hitsoundsEditor)
 				{
-					var data:Int = note.noteData;
-					var noteDataToCheck:Int = note.noteData;
-					var playerNote = note.noteData >= 4;
+					var data:Int = note.rawNoteData;
+					var noteDataToCheck:Int = data;
+					Debug.logTrace(noteDataToCheck);
+					var playerNote = noteDataToCheck >= 4;
 					if (!playedSound[data])
 					{
 						if ((FlxG.save.data.playHitsounds && playerNote) || (FlxG.save.data.playHitsoundsE && !playerNote))
@@ -1124,10 +1123,10 @@ class ChartingState extends MusicBeatState
 									.loadEmbedded(Paths.sound('hitsounds/${HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase()}', 'shared'));
 							}
 							daHitSound.volume = hitsoundsVol.pos;
-							daHitSound.play().pan = note.noteData < 4 ? -0.3 : 0.3;
+							daHitSound.play().pan = noteDataToCheck < 4 ? -0.3 : 0.3;
 							playedSound[data] = true;
 						}
-						data = note.noteData;
+						data = noteDataToCheck;
 					}
 				}
 			}
@@ -1429,7 +1428,6 @@ class ChartingState extends MusicBeatState
 				{
 					if (n[0] == note.strumTime && n[1] == note.rawNoteData)
 						i.sectionNotes.remove(n);
-					Debug.logTrace("BACKUP Notes In Section " + i.sectionNotes.length + " Note Data " + n[1]);
 					curRenderedNotes.remove(note);
 				}
 			}

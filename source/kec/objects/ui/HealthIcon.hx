@@ -1,4 +1,4 @@
-package kec.objects;
+package kec.objects.ui;
 
 class HealthIcon extends FlxSprite
 {

@@ -89,7 +89,7 @@ class Note extends FlxSprite
 
 	public var texture(default, set):String = null;
 
-	var isPlayer:Bool = true;
+	public var isPlayer:Bool = true;
 
 	// defaults if no noteStyle was found in chart
 	var noteTypeCheck:String = 'normal';

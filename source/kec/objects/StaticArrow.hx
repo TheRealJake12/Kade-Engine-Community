@@ -30,6 +30,8 @@ class StaticArrow extends FlxSprite
 	private var player:Int;
 	private var noteData:Int = 0;
 
+	public var resetAnim:Float = 0;
+
 	public var noteTypeCheck:String = 'normal';
 
 	private function set_texture(value:String):String
@@ -68,6 +70,7 @@ class StaticArrow extends FlxSprite
 		texture = skin; // Load texture and anims
 		updateHitbox();
 		scrollFactor.set();
+		playAnim('static');
 	}
 
 	public function reloadNote()
@@ -144,14 +147,47 @@ class StaticArrow extends FlxSprite
 			angle = localAngle + modAngle;
 		else
 			angle = modAngle;
+		if (resetAnim > 0)
+		{
+			resetAnim -= elapsed;
+			if (resetAnim <= 0)
+			{
+				localAngle = 0;
+				if (!kec.backend.PlayStateChangeables.opponentMode)
+				{
+					switch (player)
+					{
+						case 0:
+							playAnim('static');
+						default:
+							if (!kec.backend.PlayStateChangeables.botPlay)
+								playAnim('pressed');
+							else
+								playAnim('static');
+							// VANILLA FRIDAY NIGHT FUNKIN REFERENCE ?!?!??!
+					}
+				}
+				else
+				{
+					switch (player)
+					{
+						case 1:
+							playAnim('static');
+						default:
+							if (!kec.backend.PlayStateChangeables.botPlay)
+								playAnim('pressed');
+							else
+								playAnim('static');
+							// VANILLA FRIDAY NIGHT FUNKIN REFERENCE ?!?!??!
+					}
+				}
+				resetAnim = 0;
+			}
+		}
 		super.update(elapsed);
-
-		if (FlxG.keys.justPressed.THREE)
-			localAngle += 10;
-
 		bgLane.angle = direction - 90;
 		if (laneFollowsReceptor)
-			bgLane.x = (x - 2) - (bgLane.angle / 2);
+			bgLane.x = (x - 2) - (bgLane.angle * 0.5);
 
 		bgLane.alpha = FlxG.save.data.laneTransparency * alpha;
 		bgLane.visible = visible;
@@ -160,15 +196,10 @@ class StaticArrow extends FlxSprite
 	public function playAnim(AnimName:String, ?force:Bool = false):Void
 	{
 		animation.play(AnimName, force);
-
-		updateHitbox();
-
-		if (frames != null)
+		if (animation.curAnim != null)
 		{
-			offset.set(frameWidth / 2, frameHeight / 2);
-
-			offset.x -= 54;
-			offset.y -= 56;
+			centerOffsets();
+			centerOrigin();
 		}
 
 		angle = localAngle + modAngle;

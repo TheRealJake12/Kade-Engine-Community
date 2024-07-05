@@ -293,7 +293,10 @@ class KadeEngineData
 			FlxG.save.data.playHitsoundsE = false;
 
 		if (FlxG.save.data.developer == null)
-			FlxG.save.data.developer = false;	
+			FlxG.save.data.developer = false;
+
+		if (FlxG.save.data.maxRatings == null)
+			FlxG.save.data.maxRatings = 4;	
 
 		FlxSprite.defaultAntialiasing = FlxG.save.data.antialiasing;
 		FlxObject.defaultMoves = false;

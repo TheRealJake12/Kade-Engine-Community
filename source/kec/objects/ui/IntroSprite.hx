@@ -1,4 +1,4 @@
-package kec.objects;
+package kec.objects.ui;
 
 import kec.backend.chart.Song.StyleData;
 

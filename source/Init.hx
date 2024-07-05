@@ -14,9 +14,10 @@ class Init extends MusicBeatState
 		CPPInterface.darkMode();
 		#end
 
-		FlxG.mouse.load(Paths.oldImage('curser'));
-
 		FlxG.save.bind('kec' #if (flixel < "5.0.0"), 'therealjake12' #end);
+
+		// Gotta run this before any assets get loaded.
+		kec.backend.modding.ModCore.initialize();
 
 		kec.backend.PlayerSettings.init();
 
@@ -40,13 +41,11 @@ class Init extends MusicBeatState
 
 		Paths.setCurrentLevel('shared');
 
+		FlxG.mouse.load(Paths.oldImage('curser'));
+
 		kec.states.MusicBeatState.initSave = true;
 
 		kec.backend.util.Highscore.load();
-
-		// Gotta run this before any assets get loaded.
-		if (FlxG.save.data.loadMods)
-			kec.backend.modding.ModCore.initialize();
 
 		FlxG.autoPause = FlxG.save.data.autoPause;
 		FlxG.mouse.visible = true;

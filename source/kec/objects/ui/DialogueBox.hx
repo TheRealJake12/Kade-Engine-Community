@@ -1,4 +1,4 @@
-package kec.objects;
+package kec.objects.ui;
 
 import flixel.addons.text.FlxTypeText;
 import flixel.graphics.frames.FlxAtlasFrames;
