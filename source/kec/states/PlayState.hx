@@ -1188,12 +1188,12 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.save.data.showRating)
 		{
-			add(ratingGroup);
+			insert(members.indexOf(notes),ratingGroup);
 		}
 
 		if (FlxG.save.data.showNum)
 		{
-			add(numGroup);
+			insert(members.indexOf(notes),numGroup);
 		}
 
 		subStates.push(new PauseSubState());
