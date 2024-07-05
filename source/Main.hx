@@ -115,7 +115,7 @@ class Main extends Sprite
 		bitmapFPS = kec.backend.ImageOutline.renderImage(fpsCounter, 1, 0x000000, true);
 		bitmapFPS.smoothing = true;
 		#end
-		
+
 		game.framerate = 60;
 		var fard:FlxGame = new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate,
 			game.skipSplash, game.startFullscreen);

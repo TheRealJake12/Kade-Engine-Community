@@ -1,4 +1,5 @@
 package kec.states.editors;
+
 import kec.backend.chart.Section.SwagSection;
 
 class SectionRender extends FlxSprite

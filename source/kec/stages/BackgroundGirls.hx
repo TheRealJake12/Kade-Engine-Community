@@ -1,4 +1,5 @@
 package kec.stages;
+
 import flixel.graphics.frames.FlxAtlasFrames;
 
 class BackgroundGirls extends FlxSprite

@@ -364,8 +364,6 @@ class ChartingState extends MusicBeatState
 
 		initEvents();
 
-		
-
 		var currentIndex = 0;
 
 		for (i in SONG.eventObjects)
@@ -1097,7 +1095,7 @@ class ChartingState extends MusicBeatState
 				}
 			}
 		}
-		
+
 		var playedSound:Array<Bool> = [false, false, false, false, false, false, false, false];
 		curRenderedNotes.forEachAlive(function(note:Note)
 		{
@@ -1771,7 +1769,7 @@ class ChartingState extends MusicBeatState
 					vocals = new FlxSound().loadEmbedded(Paths.voices(SONG.audioFile));
 				else
 					vocals = new FlxSound();
-					
+
 				FlxG.sound.list.add(vocals);
 			}
 			else
@@ -2637,8 +2635,8 @@ class ChartingState extends MusicBeatState
 		eventAdd.text = "Add Event";
 		eventAdd.onClick = function(e)
 		{
-			var pog:Event = new Event("New Event " + HelperFunctions.truncateFloat(curDecimalBeat, 2),
-				HelperFunctions.truncateFloat(curDecimalBeat, 3), '${SONG.bpm}', "1", "BPM Change");
+			var pog:Event = new Event("New Event " + HelperFunctions.truncateFloat(curDecimalBeat, 2), HelperFunctions.truncateFloat(curDecimalBeat, 3),
+				'${SONG.bpm}', "1", "BPM Change");
 
 			var obj = containsName(pog.name, SONG.eventObjects);
 

@@ -88,7 +88,7 @@ class KeyBindMenu extends FlxSubState
 					FlxG.sound.play(Paths.sound('scrollMenu'));
 					changeItem(1);
 				}
-				
+
 				if (FlxG.keys.justPressed.ENTER)
 				{
 					FlxG.sound.play(Paths.sound('scrollMenu'));
@@ -104,30 +104,30 @@ class KeyBindMenu extends FlxSubState
 				}
 
 			case "input":
-					tempKey = keys[curSelected];
-					keys[curSelected] = "?";
+				tempKey = keys[curSelected];
+				keys[curSelected] = "?";
 				textUpdate();
 				state = "waiting";
 
 			case "waiting":
-					if (FlxG.keys.justPressed.ESCAPE)
-					{
-						keys[curSelected] = tempKey;
-						state = "select";
-						FlxG.sound.play(Paths.sound('confirmMenu'));
-					}
-					else if (FlxG.keys.justPressed.ENTER)
-					{
-						addKey(defaultKeys[curSelected]);
-						save();
-						state = "select";
-					}
-					else if (FlxG.keys.justPressed.ANY)
-					{
-						addKey(FlxG.keys.getIsDown()[0].ID.toString());
-						save();
-						state = "select";
-					}
+				if (FlxG.keys.justPressed.ESCAPE)
+				{
+					keys[curSelected] = tempKey;
+					state = "select";
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+				}
+				else if (FlxG.keys.justPressed.ENTER)
+				{
+					addKey(defaultKeys[curSelected]);
+					save();
+					state = "select";
+				}
+				else if (FlxG.keys.justPressed.ANY)
+				{
+					addKey(FlxG.keys.getIsDown()[0].ID.toString());
+					save();
+					state = "select";
+				}
 
 			case "exiting":
 
@@ -144,25 +144,25 @@ class KeyBindMenu extends FlxSubState
 	function textUpdate()
 	{
 		keyTextDisplay.text = "\n\n";
-		
-			for (i in 0...4)
-			{
-				var textStart = (i == curSelected) ? "> " : "  ";
-				keyTextDisplay.text += textStart + keyText[i] + ": " + ((keys[i] != keyText[i]) ? (keys[i] + " / ") : "") + keyText[i] + " ARROW\n";
-			}
-			var textStartPause = (4 == curSelected) ? "> " : "  ";
-			keyTextDisplay.text += textStartPause + keyText[4] + ": " + (keys[4]) + "\n";
 
-			var textStartReset = (5 == curSelected) ? "> " : "  ";
-			keyTextDisplay.text += textStartReset + keyText[5] + ": " + (keys[5]) + "\n";
+		for (i in 0...4)
+		{
+			var textStart = (i == curSelected) ? "> " : "  ";
+			keyTextDisplay.text += textStart + keyText[i] + ": " + ((keys[i] != keyText[i]) ? (keys[i] + " / ") : "") + keyText[i] + " ARROW\n";
+		}
+		var textStartPause = (4 == curSelected) ? "> " : "  ";
+		keyTextDisplay.text += textStartPause + keyText[4] + ": " + (keys[4]) + "\n";
 
-			for (i in 6...9)
-			{
-				var textStart = (i == curSelected) ? "> " : "  ";
-				keyTextDisplay.text += textStart + keyText[i] + ": " + keys[i] + "\n";
-			}
-			var textStartReset = (9 == curSelected) ? "> " : "  ";
-			keyTextDisplay.text += textStartReset + keyText[9] + ": " + (keys[9]) + "\n";
+		var textStartReset = (5 == curSelected) ? "> " : "  ";
+		keyTextDisplay.text += textStartReset + keyText[5] + ": " + (keys[5]) + "\n";
+
+		for (i in 6...9)
+		{
+			var textStart = (i == curSelected) ? "> " : "  ";
+			keyTextDisplay.text += textStart + keyText[i] + ": " + keys[i] + "\n";
+		}
+		var textStartReset = (9 == curSelected) ? "> " : "  ";
+		keyTextDisplay.text += textStartReset + keyText[9] + ": " + (keys[9]) + "\n";
 
 		keyTextDisplay.screenCenter();
 	}

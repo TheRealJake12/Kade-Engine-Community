@@ -628,7 +628,7 @@ class Paths
 		}
 		return FlxAtlasFrames.fromSpriteSheetPacker(loadImage(key, library, gpuRender), file('images/$key.txt', library));
 	}
-	
+
 	static public function getJSONAtlas(key:String, ?library:String, ?isCharacter:Bool = false, ?gpuRender:Bool)
 	{
 		gpuRender = gpuRender != null ? gpuRender : FlxG.save.data.gpuRender;

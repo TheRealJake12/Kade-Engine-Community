@@ -1,4 +1,5 @@
 package kec.states;
+
 import flixel.addons.transition.FlxTransitionableState;
 import kec.backend.util.NoteStyleHelper;
 

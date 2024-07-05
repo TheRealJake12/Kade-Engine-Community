@@ -1,20 +1,21 @@
 package kec.objects.ui;
 
 import kec.backend.chart.Song.StyleData;
+
 /**
  * Class Used For UI Components Like Ratings And Combo Numbers.
  * Exists Only Because Of Sorting And Recycling.
  */
 class UIComponent extends FlxSprite
 {
-    public var startTime:Float;
-    // Conductor Song Position. The Meat And Potatos Of Sorting.
+	public var startTime:Float;
+	// Conductor Song Position. The Meat And Potatos Of Sorting.
 	public var style:StyleData = null;
-    // The Style. Used For Scaling, Antialiasing, And Image Pathing.
+	// The Style. Used For Scaling, Antialiasing, And Image Pathing.
 	public var lastName:String = null;
-    // To Avoid Loading The Same Image Multiple Times. lol.
 
-    // Handles The Fading Out.
+	// To Avoid Loading The Same Image Multiple Times. lol.
+	// Handles The Fading Out.
 
 	public function new()
 	{

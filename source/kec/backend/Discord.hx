@@ -1,4 +1,5 @@
 package kec.backend;
+
 #if FEATURE_DISCORD
 import hxdiscord_rpc.Discord as RichPresence;
 import hxdiscord_rpc.Types;

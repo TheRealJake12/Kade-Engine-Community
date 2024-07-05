@@ -1,4 +1,5 @@
 package kec.backend.modding;
+
 #if FEATURE_MODCORE
 import polymod.backends.OpenFLBackend;
 import polymod.backends.PolymodAssets.PolymodAssetType;
@@ -18,7 +19,7 @@ import flixel.FlxG;
 class ModCore
 {
 	private static final MOD_DIR:String = 'mods';
-	
+
 	static final API_VERSION = "0.1.0";
 
 	#if FEATURE_MODCORE
@@ -32,7 +33,7 @@ class ModCore
 		'otf' => FONT,
 		'mp4' => VIDEO
 	];
-	
+
 	public static var modsToLoad:Array<String> = [];
 	#end
 
@@ -84,7 +85,7 @@ class ModCore
 	public static function getAllMods():Array<String>
 	{
 		var daList:Array<String> = [];
-		
+
 		#if FEATURE_FILESYSTEM
 		if (!FileSystem.exists('mods'))
 		{

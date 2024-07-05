@@ -1,4 +1,5 @@
 package kec.states;
+
 #if FEATURE_MODCORE
 import haxe.ui.components.Button;
 import kec.backend.modding.ModCore;
@@ -23,9 +24,9 @@ class ModMenuState extends MusicBeatState
 	public static var existMods:Array<String> = []; // mods polymod detected in the folder
 
 	private var button:Button; // remove 1 mod
-    private var saveMods:Button; // save to file
-    private var bg:FlxSprite;
-    private var icons:FlxSpriteGroup; // modmenuicons
+	private var saveMods:Button; // save to file
+	private var bg:FlxSprite;
+	private var icons:FlxSpriteGroup; // modmenuicons
 
 	override function create()
 	{
@@ -50,22 +51,22 @@ class ModMenuState extends MusicBeatState
 	function createHUI()
 	{
 		button = new Button();
-        button.x += 400;
+		button.x += 400;
 		button.text = "Mods";
 		button.onClick = function(e)
 		{
 			eList.pop();
-            Debug.logTrace(eList.length);
+			Debug.logTrace(eList.length);
 		}
 		saveMods = new Button();
 		saveMods.x += 500;
 		saveMods.text = "Save Mods";
 		saveMods.onClick = function(e)
-        {
-            var fileStr = '';
+		{
+			var fileStr = '';
 			for (mod in eList)
 			{
-                mod.trim();
+				mod.trim();
 				if (fileStr.length > 0)
 					fileStr += '\n';
 
@@ -77,31 +78,31 @@ class ModMenuState extends MusicBeatState
 			File.saveContent('assets/shared/data/modList.txt', fileStr);
 			#end
 			Debug.logTrace(eList.length);
-        }
+		}
 		add(button);
-        add(saveMods);
+		add(saveMods);
 	}
 
-    function createMUI()
-    {
-        icons = new FlxSpriteGroup();
+	function createMUI()
+	{
+		icons = new FlxSpriteGroup();
 		bg = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
 		bg.updateHitbox();
 		bg.screenCenter();
-        add(bg);
+		add(bg);
 
 		for (i in 0...existMods.length)
-        {
+		{
 			var modIcon:FlxSprite = new FlxSprite().loadGraphic(Paths.image('missingMod'));
-            modIcon.setGraphicSize(Std.int(modIcon.width * 0.25));
+			modIcon.setGraphicSize(Std.int(modIcon.width * 0.25));
 			modIcon.updateHitbox();
-            modIcon.setPosition(50, 25);
-            modIcon.y += 200 * i;
+			modIcon.setPosition(50, 25);
+			modIcon.y += 200 * i;
 			icons.add(modIcon);
-        }
-        add(icons);
-    }
+		}
+		add(icons);
+	}
 
 	public static function parseList()
 	{

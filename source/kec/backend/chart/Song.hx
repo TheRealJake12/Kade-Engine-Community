@@ -1,4 +1,5 @@
 package kec.backend.chart;
+
 import kec.backend.chart.Section.SwagSection;
 
 class Event

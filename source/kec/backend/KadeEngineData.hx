@@ -1,4 +1,5 @@
 package kec.backend;
+
 import lime.app.Application;
 import openfl.Lib;
 
@@ -296,7 +297,7 @@ class KadeEngineData
 			FlxG.save.data.developer = false;
 
 		if (FlxG.save.data.maxRatings == null)
-			FlxG.save.data.maxRatings = 4;	
+			FlxG.save.data.maxRatings = 4;
 
 		FlxSprite.defaultAntialiasing = FlxG.save.data.antialiasing;
 		FlxObject.defaultMoves = false;

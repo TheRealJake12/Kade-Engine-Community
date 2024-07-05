@@ -40,7 +40,6 @@ import hxvlc.flixel.FlxVideo as VideoHandler;
 import hxvlc.flixel.FlxVideoSprite as VideoSprite;
 import hxvlc.util.Handle;
 #end
-
 import kec.stages.Stage;
 import kec.stages.TankmenBG;
 import kec.backend.Ratings.RatingWindow;
@@ -70,6 +69,7 @@ import kec.substates.*;
 import kec.backend.PlayerSettings;
 import kec.objects.ui.ComboNumber;
 import kec.objects.ui.UIComponent;
+
 class PlayState extends MusicBeatState
 {
 	// PlayState But Static.
@@ -572,7 +572,7 @@ class PlayState extends MusicBeatState
 			var sprite = new IntroSprite(IntroSprite.images[i]);
 			introGroup.add(sprite);
 		}
-		
+
 		numGroup = new FlxTypedGroup<ComboNumber>(Std.int(FlxG.save.data.maxRatings * 3));
 		ratingGroup = new FlxTypedGroup<Rating>(FlxG.save.data.maxRatings);
 
@@ -2319,7 +2319,7 @@ class PlayState extends MusicBeatState
 	{
 		if (endingSong)
 			return;
-		
+
 		inst.play();
 		inst.pitch = songMultiplier;
 		inst.time = Conductor.songPosition * songMultiplier;
@@ -3684,7 +3684,9 @@ class PlayState extends MusicBeatState
 
 		daRating.count++;
 
-		if ((daRating.doNoteSplash && daNote.canNoteSplash) && (PlayStateChangeables.botPlay && FlxG.save.data.cpuStrums) && FlxG.save.data.notesplashes)
+		if ((daRating.doNoteSplash && daNote.canNoteSplash)
+			&& (PlayStateChangeables.botPlay && FlxG.save.data.cpuStrums)
+			&& FlxG.save.data.notesplashes)
 		{
 			spawnNoteSplashOnNote(daNote);
 		}
@@ -3781,7 +3783,7 @@ class PlayState extends MusicBeatState
 		createTween(currentTimingShown, {alpha: 0}, 0.1, {
 			startDelay: (Conductor.crochet * Math.pow(songMultiplier, 2)) * 0.0005
 		});
-		
+
 		rating.fadeOut();
 	}
 
@@ -4214,7 +4216,6 @@ class PlayState extends MusicBeatState
 				pressArrow(playerStrums.members[note.noteData], note, Conductor.stepCrochet * 1.25 * 0.0015);
 			else if (FlxG.save.data.cpuStrums)
 				pressArrow(playerStrums.members[note.noteData], note, Conductor.stepCrochet * 1.25 * 0.001);
-
 
 			if (!note.isSustainNote)
 			{
@@ -5148,7 +5149,7 @@ class PlayState extends MusicBeatState
 			uiGroup.remove(i);
 		}
 		uiGroup.clear();
-		
+
 		for (i in introGroup)
 		{
 			i.destroy();

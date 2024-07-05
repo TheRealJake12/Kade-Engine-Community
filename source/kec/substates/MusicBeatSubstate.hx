@@ -54,7 +54,7 @@ class MusicBeatSubstate extends FlxSubState
 			stepHit();
 			oldStep = curStep;
 		}
-		
+
 		super.update(elapsed);
 
 		var fullscreenBind = FlxKey.fromString(FlxG.save.data.fullscreenBind);

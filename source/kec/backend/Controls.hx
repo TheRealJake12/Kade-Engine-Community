@@ -51,6 +51,7 @@ enum abstract Action(String) to String from String
 	var CHEAT = "cheat";
 }
 #end
+
 enum Device
 {
 	Keys;
@@ -111,7 +112,7 @@ class Controls extends FlxActionSet
 	#else
 	var byName:Map<String, FlxActionDigital> = new Map<String, FlxActionDigital>();
 	#end
-	
+
 	public var keyboardScheme = KeyboardScheme.None;
 
 	public var UP(get, never):Bool;

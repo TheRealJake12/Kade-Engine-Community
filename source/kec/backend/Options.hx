@@ -2521,6 +2521,7 @@ class BackgroundsOption extends Option
 class HitSoundOption extends Option
 {
 	var daHitSound:FlxSound = new FlxSound();
+
 	public function new(desc:String)
 	{
 		super();
@@ -2559,7 +2560,6 @@ class HitSoundOption extends Option
 
 	public override function getValue():String
 	{
-		
 		return "Hitsound Style: < " + HitSounds.getSoundByID(FlxG.save.data.hitSound) + " >";
 	}
 }
@@ -2567,6 +2567,7 @@ class HitSoundOption extends Option
 class HitSoundVolume extends Option
 {
 	var daHitSound:FlxSound = new FlxSound();
+
 	public function new(desc:String)
 	{
 		super();
@@ -2624,7 +2625,7 @@ class HitSoundVolume extends Option
 			daHitSound.loadEmbedded(Paths.sound('hitsounds/${HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase()}', 'shared'));
 			daHitSound.volume = FlxG.save.data.hitVolume;
 			daHitSound.play();
-		}	
+		}
 
 		return true;
 	}
