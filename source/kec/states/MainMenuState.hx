@@ -374,7 +374,6 @@ class MainMenuState extends MusicBeatState
 			{
 				spr.animation.play('selected');
 				spr.centerOffsets();
-				spr.x += 50;
 			}
 		});
 	}
