@@ -242,8 +242,6 @@ class Character extends FlxSprite
 			}
 			else
 			{
-				if (!PlayStateChangeables.opponentMode)
-				{
 					if (animation.curAnim.name.startsWith('sing'))
 					{
 						holdTimer += elapsed;
@@ -255,20 +253,12 @@ class Character extends FlxSprite
 
 						holdTimer = 0;
 					}
-				}
-				else
-				{
-					if (animation.curAnim.name.startsWith('sing'))
-						holdTimer += elapsed;
-					else
-						holdTimer = 0;
 
-					if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode)
-						dance();
+				if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode)
+					dance();
 
-					if (animation.curAnim.name == 'firstDeath' && animation.curAnim.finished)
-						playAnim('deathLoop');
-				}
+				if (animation.curAnim.name == 'firstDeath' && animation.curAnim.finished)
+					playAnim('deathLoop');
 			}
 
 			switch (curCharacter)

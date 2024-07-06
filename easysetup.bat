@@ -14,6 +14,7 @@ haxelib install hxcpp-debug-server
 haxelib install polymod 1.7.0
 haxelib install hxvlc
 haxelib install hscript
+haxelib install flixel-text-input
 haxelib run lime setup
 haxelib run lime setup flixel
 haxelib run flixel-tools setup

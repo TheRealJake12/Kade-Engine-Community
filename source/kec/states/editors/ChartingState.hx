@@ -138,8 +138,10 @@ class ChartingState extends MusicBeatState
 	var stages:Array<String>;
 	var gfs:Array<String>;
 	var noteStyles:Array<String>; // noteStyles basically
-	var noteTypes:Array<String>; // noteShit basically
+	var noteTypes:Array<String>; // noteTypes basically
 	var events:Array<String>; // even- you already know
+
+	// fard
 
 	var noteType:String = "Normal"; // idfk
 
@@ -479,8 +481,6 @@ class ChartingState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		super.update(elapsed);
-
 		if (inst != null)
 		{
 			if (inst.time > inst.length - 85)
@@ -828,7 +828,7 @@ class ChartingState extends MusicBeatState
 							i.connectedNote.strumTime,
 							i.connectedNote.rawNoteData,
 							i.connectedNote.sustainLength,
-							i.connectedNote.noteShit
+							i.connectedNote.noteType
 						]);
 					}
 
@@ -887,7 +887,7 @@ class ChartingState extends MusicBeatState
 						selectedBoxes.members[i].connectedNote.strumTime,
 						selectedBoxes.members[i].connectedNote.rawNoteData,
 						selectedBoxes.members[i].connectedNote.sustainLength,
-						selectedBoxes.members[i].connectedNote.noteShit
+						selectedBoxes.members[i].connectedNote.noteType
 					]);
 					notesToBeDeleted.push(selectedBoxes.members[i].connectedNote);
 				}
@@ -1082,7 +1082,7 @@ class ChartingState extends MusicBeatState
 				}
 				else
 				{
-					if (amount != 0)
+					if (inst.time < 0)
 						inst.time -= (FlxG.mouse.wheel * Conductor.stepCrochet * 0.45);
 				}
 
@@ -1105,7 +1105,6 @@ class ChartingState extends MusicBeatState
 				{
 					var data:Int = note.rawNoteData;
 					var noteDataToCheck:Int = data;
-					Debug.logTrace(noteDataToCheck);
 					var playerNote = noteDataToCheck >= 4;
 					if (!playedSound[data])
 					{
@@ -1158,6 +1157,8 @@ class ChartingState extends MusicBeatState
 
 		// I hate having things run in update all the time but fuck it
 		songShit();
+
+		super.update(elapsed);
 	}
 
 	function updateNotes()
@@ -1190,7 +1191,7 @@ class ChartingState extends MusicBeatState
 
 					var note:Note = new Note(daStrumTime, daNoteInfo % 4, null, false, true, gottaHitNote, daBeat);
 					note.rawNoteData = daNoteInfo;
-					note.noteShit = daType;
+					note.noteType = daType;
 					note.sustainLength = daSus;
 					note.strumTime = daStrumTime;
 
@@ -1215,17 +1216,11 @@ class ChartingState extends MusicBeatState
 
 	function regenerateLines()
 	{
-		while (lines.members.length > 0)
-		{
-			lines.members[0].destroy();
-			lines.members.remove(lines.members[0]);
-		}
+		lines.forEachAlive(function(spr:FlxSprite) spr.destroy());
+		lines.clear();
 
-		while (texts.members.length > 0)
-		{
-			texts.members[0].destroy();
-			texts.members.remove(texts.members[0]);
-		}
+		texts.forEachAlive(function(spr:FlxText) spr.destroy());
+		texts.clear();
 
 		if (SONG.eventObjects != null)
 		{
@@ -1304,7 +1299,7 @@ class ChartingState extends MusicBeatState
 		var noteStrum = Math.abs(strum);
 		var noteData = Std.int(Math.floor(dummyArrow.x - sectionPos) / 50);
 		var noteSus = 0;
-		var noteShit = noteTypes[noteShitDrop.selectedIndex];
+		var noteType = noteTypes[noteShitDrop.selectedIndex];
 
 		for (note in section.sectionNotes)
 		{
@@ -1321,7 +1316,7 @@ class ChartingState extends MusicBeatState
 			}
 		}
 
-		section.sectionNotes.push([Math.abs(noteStrum), noteData, noteSus, noteShit]);
+		section.sectionNotes.push([Math.abs(noteStrum), noteData, noteSus, noteType]);
 
 		Debug.logTrace("Note Data : " + noteData + " StrumTime : " + noteStrum + " Section Length : " + section.sectionNotes.length);
 
@@ -1337,7 +1332,7 @@ class ChartingState extends MusicBeatState
 		var note:Note = new Note(noteStrum, noteData % 4, null, false, true, gottaHitNote, TimingStruct.getBeatFromTime(noteStrum));
 		note.rawNoteData = noteData;
 		note.sustainLength = noteSus;
-		note.noteShit = noteShit;
+		note.noteType = noteType;
 		note.setGraphicSize(Math.floor(noteSize), Math.floor(noteSize));
 		note.updateHitbox();
 		note.x = Math.floor(note.rawNoteData * noteSize) + notePos;
@@ -1402,6 +1397,8 @@ class ChartingState extends MusicBeatState
 
 		var section = getSectionByTime(note.strumTime);
 
+		Debug.logTrace('${note.strumTime} ${note.noteData} ${note.rawNoteData}');
+
 		var found = false;
 
 		if (section != null)
@@ -1425,10 +1422,14 @@ class ChartingState extends MusicBeatState
 				for (n in i.sectionNotes)
 				{
 					if (n[0] == note.strumTime && n[1] == note.rawNoteData)
+					{
+						Debug.logTrace(n[1]);
 						i.sectionNotes.remove(n);
-					curRenderedNotes.remove(note);
+						curRenderedNotes.remove(note);
+					}
 				}
 			}
+			Debug.logTrace("Note Not Found. Scanning All Sections.");
 		}
 
 		if (note.sustainLength > 0)
@@ -1449,7 +1450,7 @@ class ChartingState extends MusicBeatState
 		}
 	}
 
-	inline function destroyBoxes()
+	function destroyBoxes()
 	{
 		while (selectedBoxes.members.length != 0)
 		{
@@ -1457,6 +1458,30 @@ class ChartingState extends MusicBeatState
 			selectedBoxes.members[0].destroy();
 			selectedBoxes.members.remove(selectedBoxes.members[0]);
 		}
+	}
+
+	override function destroy()
+	{
+		curRenderedNotes.forEachAlive(function(spr:Note) spr.destroy());
+		curRenderedNotes.clear();
+		curRenderedSustains.forEachAlive(function(spr:FlxSprite) spr.destroy());
+		curRenderedSustains.clear();
+		copiedNotes = null;
+		pastedNotes = null;
+		deletedNotes = null;
+		curSelectedNoteObject = null;
+		selectBox = null;
+		events = null;
+		characters = null;
+		stages = null;
+		gfs = null;
+		noteStyles = null;
+		noteTypes = null;
+
+		// fard
+		destroyBoxes();
+		FlxG.save.flush();
+		super.destroy();
 	}
 
 	function changeNoteSustain(value:Float):Void
@@ -1511,7 +1536,7 @@ class ChartingState extends MusicBeatState
 						strum,
 						originalNote.rawNoteData,
 						originalNote.sustainLength,
-						originalNote.noteShit
+						originalNote.noteType
 					];
 					ii.sectionNotes.push(newData);
 
@@ -1529,7 +1554,7 @@ class ChartingState extends MusicBeatState
 					var note:Note = new Note(strum, originalNote.noteData, originalNote.prevNote, false, true, gottaHitNote, originalNote.beat);
 					note.rawNoteData = originalNote.rawNoteData;
 					note.sustainLength = originalNote.sustainLength;
-					note.noteShit = originalNote.noteShit;
+					note.noteType = originalNote.noteType;
 					note.setGraphicSize(Math.floor(noteSize), Math.floor(noteSize));
 					note.updateHitbox();
 					note.x = Math.floor(originalNote.rawNoteData * noteSize) + notePos;
@@ -1615,7 +1640,7 @@ class ChartingState extends MusicBeatState
 						var note:Note = new Note(strum, Math.floor(i[1] % 4), null, false, true, gottaHitNote, i[3]);
 						note.rawNoteData = i[1];
 						note.sustainLength = i[2];
-						note.noteShit = i[3];
+						note.noteType = i[3];
 						note.setGraphicSize(Math.floor(noteSize), Math.floor(noteSize));
 						note.updateHitbox();
 						note.x = Math.floor(note.rawNoteData * noteSize) + notePos;
@@ -1791,6 +1816,10 @@ class ChartingState extends MusicBeatState
 		catch (e)
 		{
 			vocals = new FlxSound();
+			vocalsP = new FlxSound();
+			vocalsE = new FlxSound();
+			FlxG.sound.list.add(vocalsP);
+			FlxG.sound.list.add(vocalsE);
 			FlxG.sound.list.add(vocals);
 			SONG.splitVoiceTracks = false;
 			Debug.logTrace("Your Song Doesn't Have A Voice File Or Something Else. Make Sure Your Song Has The Correct Audio." + e);
@@ -3130,6 +3159,7 @@ class ChartingState extends MusicBeatState
 		{
 			FlxG.save.data.moveEditor = !FlxG.save.data.moveEditor;
 			ui.draggable = FlxG.save.data.moveEditor;
+			dragTabs.selected = FlxG.save.data.moveEditor;
 		}
 
 		metronome = new MenuCheckBox();
@@ -3138,6 +3168,7 @@ class ChartingState extends MusicBeatState
 		metronome.onClick = function(e)
 		{
 			FlxG.save.data.chart_metronome = !FlxG.save.data.chart_metronome;
+			metronome.selected = FlxG.save.data.chart_metronome;
 		}
 		var hsv = new Label();
 		hsv.text = "Hitsound Volume";
@@ -3158,6 +3189,7 @@ class ChartingState extends MusicBeatState
 		hitsoundsP.onClick = function(e)
 		{
 			FlxG.save.data.playHitsounds = !FlxG.save.data.playHitsounds;
+			hitsoundsP.selected = FlxG.save.data.playHitsounds;
 		}
 
 		hitsoundsE = new MenuCheckBox();
@@ -3167,6 +3199,7 @@ class ChartingState extends MusicBeatState
 		hitsoundsE.onClick = function(e)
 		{
 			FlxG.save.data.playHitsoundsE = !FlxG.save.data.playHitsoundsE;
+			hitsoundsE.selected = FlxG.save.data.playHitsoundsE;
 		}
 
 		oppMode = new MenuCheckBox();

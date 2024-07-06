@@ -33,7 +33,7 @@ class Note extends FlxSprite
 	public var noteSection:Int = 0;
 	public var isSustainEnd:Bool = false;
 
-	public var noteShit(default, set):String = null;
+	public var noteType(default, set):String = null;
 	public var canPlayAnims:Bool = true; // if a note plays the sing animations
 	public var canNoteSplash:Bool = true; // if a note can notesplash on Sick! and Marv!
 	public var causesMisses:Bool = true; // if a note will do noteMiss or something.
@@ -107,9 +107,9 @@ class Note extends FlxSprite
 		return value;
 	}
 
-	private function set_noteShit(value:String):String
+	private function set_noteType(value:String):String
 	{
-		if (noteShit != value)
+		if (noteType != value)
 		{
 			switch (value.toLowerCase())
 			{
@@ -130,7 +130,7 @@ class Note extends FlxSprite
 							texture = "notetypes/hurt_Circles";
 					}
 				case 'mustpress':
-					set_noteShit('Must Press'); // backwards compatabilty for charts before the KEC1 format.
+					set_noteType('Must Press'); // backwards compatabilty for charts before the KEC1 format.
 				case 'must press':
 					canPlayAnims = true;
 					canNoteSplash = true;
@@ -171,7 +171,7 @@ class Note extends FlxSprite
 					canRate = true;
 					hitsoundsEditor = true;
 			}
-			noteShit = value;
+			noteType = value;
 		}
 		return value;
 	}
@@ -180,7 +180,7 @@ class Note extends FlxSprite
 			?bet:Float = 0)
 	{
 		super();
-		this.noteShit = noteShit; // FFFFFFFFFFFFFFFFFFFFFFUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+		this.noteType = noteType; // FFFFFFFFFFFFFFFFFFFFFFUUUUUUUUUUUUUUUUUUUUUUUUUUUU
 		insideCharter = inCharter;
 		this.isPlayer = isPlayer;
 		if (prevNote == null)
@@ -446,7 +446,7 @@ class Note extends FlxSprite
 
 			if (mustPress)
 			{
-				switch (noteShit.toLowerCase())
+				switch (noteType.toLowerCase())
 				{
 					case 'hurt':
 						if (strumTime - Conductor.songPosition <= ((Ratings.timingWindows[0].timingWindow) * 0.2)

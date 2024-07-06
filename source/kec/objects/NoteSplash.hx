@@ -65,9 +65,9 @@ class NoteSplash extends FlxSprite
 		setPosition(x - Note.swagWidth * 0.95, y - Note.swagWidth);
 		alpha = FlxG.save.data.alphaSplash;
 
-		if (note.noteShit == null
-			|| note.noteShit.toLowerCase() == 'normal'
-			|| note.noteShit == "0") // *proper* noteType checking to make sure it isn't null.
+		if (note.noteType == null
+			|| note.noteType.toLowerCase() == 'normal'
+			|| note.noteType == "0") // *proper* noteType checking to make sure it isn't null.
 			noteType = '';
 
 		loadAnims(noteType);

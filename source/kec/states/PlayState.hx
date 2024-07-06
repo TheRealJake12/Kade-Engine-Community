@@ -2027,7 +2027,7 @@ class PlayState extends MusicBeatState
 					oldNote = null;
 
 				var swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, gottaHitNote, daBeat);
-				swagNote.noteShit = daNoteType;
+				swagNote.noteType = daNoteType;
 
 				if (PlayStateChangeables.holds)
 				{
@@ -2059,7 +2059,7 @@ class PlayState extends MusicBeatState
 						var sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true, false,
 							gottaHitNote, 0);
 
-						sustainNote.noteShit = daNoteType;
+						sustainNote.noteType = daNoteType;
 
 						sustainNote.scrollFactor.set();
 						unspawnNotes.push(sustainNote);
@@ -2105,7 +2105,7 @@ class PlayState extends MusicBeatState
 	public function spawnNoteSplash(x:Float, y:Float, note:Note)
 	{
 		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
-		splash.noteType = note.noteShit;
+		splash.noteType = note.noteType;
 		splash.setupNoteSplash(x, y, note);
 		grpNoteSplashes.add(splash);
 	}
@@ -3143,7 +3143,7 @@ class PlayState extends MusicBeatState
 								}
 								else
 								{
-									switch (daNote.noteShit.toLowerCase())
+									switch (daNote.noteType.toLowerCase())
 									{
 										case 'hurt':
 										default:
@@ -3604,23 +3604,6 @@ class PlayState extends MusicBeatState
 		var noteDiff:Float = (daNote.strumTime - Conductor.songPosition);
 		var noteDiffAbs = Math.abs(noteDiff);
 		var daRating:RatingWindow = Ratings.judgeNote(noteDiff);
-		if (!PlayStateChangeables.botPlay)
-		{
-			if (FlxG.save.data.showMs)
-			{
-				currentTimingShown.alpha = 1;
-				tweenManager.cancelTweensOf(currentTimingShown);
-				currentTimingShown.alpha = 1;
-			}
-		}
-
-		var rating:Rating = ratingGroup.recycle(Rating);
-		rating.style = STYLE;
-		tweenManager.cancelTweensOf(rating);
-		rating.setup();
-		rating.x = FlxG.save.data.changedHitX;
-		rating.y = FlxG.save.data.changedHitY;
-		rating.loadRating(daRating.name.toLowerCase());
 
 		if (PlayStateChangeables.botPlay)
 			noteDiff = 0;
@@ -3672,7 +3655,7 @@ class PlayState extends MusicBeatState
 
 		score = daRating.scoreBonus;
 		var result = 0.06;
-		switch (daNote.noteShit.toLowerCase())
+		switch (daNote.noteType.toLowerCase())
 		{
 			case 'must press':
 				result = 0.8;
@@ -3705,40 +3688,6 @@ class PlayState extends MusicBeatState
 				msTiming = 0;
 		}
 
-		currentTimingShown.color = daRating.displayColor;
-		currentTimingShown.font = Paths.font('vcr.ttf');
-		currentTimingShown.borderStyle = OUTLINE_FAST;
-		currentTimingShown.borderSize = 1;
-		currentTimingShown.borderColor = FlxColor.BLACK;
-		currentTimingShown.text = msTiming + "ms";
-		currentTimingShown.size = 20;
-
-		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image('hud/$styleName/combo'));
-		comboSpr.screenCenter();
-		currentTimingShown.x = rating.x + 150;
-		currentTimingShown.y = rating.y + 85;
-		comboSpr.acceleration.y = 600;
-		comboSpr.velocity.y -= 150;
-		comboSpr.moves = true;
-
-		currentTimingShown.screenCenter();
-		currentTimingShown.x = rating.x + 100;
-		currentTimingShown.alignment = FlxTextAlign.RIGHT;
-		currentTimingShown.y = rating.y + 100;
-
-		if (STYLE.style == 'Pixel')
-		{
-			currentTimingShown.x -= 15;
-			currentTimingShown.y -= 15;
-			comboSpr.x += 5.5;
-			comboSpr.y += 29.5;
-		}
-
-		comboSpr.velocity.x += FlxG.random.int(1, 10);
-
-		currentTimingShown.updateHitbox();
-		comboSpr.updateHitbox();
-
 		var seperatedScore:Array<Int> = [];
 
 		var comboSplit:Array<String> = (combo + "").split('');
@@ -3764,6 +3713,39 @@ class PlayState extends MusicBeatState
 		var daLoop:Int = 0;
 		if (!PlayStateChangeables.botPlay)
 		{
+			var rating:Rating = ratingGroup.recycle(Rating);
+			rating.style = STYLE;
+			rating.setup();
+			rating.x = FlxG.save.data.changedHitX;
+			rating.y = FlxG.save.data.changedHitY;
+			rating.loadRating(daRating.name.toLowerCase());
+
+			if (FlxG.save.data.showMs)
+			{
+				currentTimingShown.alpha = 1;
+				tweenManager.cancelTweensOf(currentTimingShown);
+				currentTimingShown.alpha = 1;
+			}
+			tweenManager.cancelTweensOf(rating);
+			currentTimingShown.color = daRating.displayColor;
+			currentTimingShown.font = Paths.font('vcr.ttf');
+			currentTimingShown.borderStyle = OUTLINE_FAST;
+			currentTimingShown.borderSize = 1;
+			currentTimingShown.borderColor = FlxColor.BLACK;
+			currentTimingShown.text = msTiming + "ms";
+			currentTimingShown.size = 20;
+			currentTimingShown.screenCenter();
+			currentTimingShown.x = rating.x + 100;
+			currentTimingShown.alignment = FlxTextAlign.RIGHT;
+			currentTimingShown.y = rating.y + 100;
+
+			if (STYLE.style == 'Pixel')
+			{
+				currentTimingShown.x -= 15;
+				currentTimingShown.y -= 15;
+			}
+			currentTimingShown.updateHitbox();
+
 			for (i in seperatedScore)
 			{
 				var num:ComboNumber = numGroup.recycle(ComboNumber);
@@ -3777,14 +3759,12 @@ class PlayState extends MusicBeatState
 				daLoop++;
 			}
 			numGroup.sort(sortingMethod, -1);
+			ratingGroup.sort(sortingMethod, -1);
+			rating.fadeOut();
+			createTween(currentTimingShown, {alpha: 0}, 0.1, {
+				startDelay: (Conductor.crochet * Math.pow(songMultiplier, 2)) * 0.0005
+			});
 		}
-		ratingGroup.sort(sortingMethod, -1);
-
-		createTween(currentTimingShown, {alpha: 0}, 0.1, {
-			startDelay: (Conductor.crochet * Math.pow(songMultiplier, 2)) * 0.0005
-		});
-
-		rating.fadeOut();
 	}
 
 	inline function sortingMethod(order:Int, a:UIComponent, b:UIComponent):Int
@@ -4030,7 +4010,7 @@ class PlayState extends MusicBeatState
 			camZooming = FlxG.save.data.camzoom;
 		var altAnim:String = "";
 
-		if (daNote.noteShit.toLowerCase() == 'alt')
+		if (daNote.noteType.toLowerCase() == 'alt')
 		{
 			altAnim = '-alt';
 		}
@@ -4064,7 +4044,7 @@ class PlayState extends MusicBeatState
 					if (PlayStateChangeables.opponentMode)
 						char = boyfriend;
 
-					if (daNote.noteShit.toLowerCase() == 'gf' && gf != null)
+					if (daNote.noteType.toLowerCase() == 'gf' && gf != null)
 						char = gf;
 
 					char.playAnim('sing' + dataSuffix[daNote.noteData] + altAnim, true);
@@ -4167,7 +4147,7 @@ class PlayState extends MusicBeatState
 				}
 			}
 
-			switch (note.noteShit.toLowerCase())
+			switch (note.noteType.toLowerCase())
 			{
 				case 'hurt':
 					if (FlxG.save.data.notesplashes && !note.isSustainNote)
@@ -4182,7 +4162,7 @@ class PlayState extends MusicBeatState
 			}
 
 			var altAnim:String = "";
-			if (note.noteShit.toLowerCase() == 'alt')
+			if (note.noteType.toLowerCase() == 'alt')
 			{
 				altAnim = '-alt';
 			}
@@ -4193,7 +4173,7 @@ class PlayState extends MusicBeatState
 				if (PlayStateChangeables.opponentMode)
 					char = dad;
 
-				if (note.noteShit.toLowerCase() == 'gf' && gf != null)
+				if (note.noteType.toLowerCase() == 'gf' && gf != null)
 					char = gf;
 
 				char.playAnim('sing' + dataSuffix[note.noteData] + altAnim, true);
@@ -5025,7 +5005,7 @@ class PlayState extends MusicBeatState
 					case true:
 						for (note in unspawnNotes)
 						{
-							if (note.mustPress && (note.noteShit == null || note.noteShit.toLowerCase() == 'normal'))
+							if (note.mustPress && (note.noteType == null || note.noteType.toLowerCase() == 'normal'))
 							{
 								note.texture = 'noteskins/' + texture;
 							}
@@ -5033,7 +5013,7 @@ class PlayState extends MusicBeatState
 
 						for (note in notes)
 						{
-							if (note.mustPress && (note.noteShit == null || note.noteShit.toLowerCase() == 'normal'))
+							if (note.mustPress && (note.noteType == null || note.noteType.toLowerCase() == 'normal'))
 							{
 								note.texture = 'noteskins/' + texture;
 							}
@@ -5041,7 +5021,7 @@ class PlayState extends MusicBeatState
 					case false:
 						for (note in unspawnNotes)
 						{
-							if (!note.mustPress && (note.noteShit == null || note.noteShit.toLowerCase() == 'normal'))
+							if (!note.mustPress && (note.noteType == null || note.noteType.toLowerCase() == 'normal'))
 							{
 								note.texture = 'noteskins/' + texture;
 							}
@@ -5049,7 +5029,7 @@ class PlayState extends MusicBeatState
 
 						for (note in notes)
 						{
-							if (!note.mustPress && (note.noteShit == null || note.noteShit.toLowerCase() == 'normal'))
+							if (!note.mustPress && (note.noteType == null || note.noteType.toLowerCase() == 'normal'))
 							{
 								note.texture = 'noteskins/' + texture;
 							}

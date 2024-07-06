@@ -36,6 +36,11 @@
       "version": "1.7.0"
     },
     {
+      "name": "flixel-text-input",
+      "type": "haxelib",
+      "version": null
+    },
+    {
       "name": "linc_luajit",
       "type": "git",
       "ref": "master",

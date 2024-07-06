@@ -116,6 +116,7 @@
 	<haxelib name="flixel-addons" />
 	<haxelib name="haxeui-flixel" />
 	<haxelib name="haxeui-core" />
+	<haxelib name="flixel-text-input" /> <!--Stupid Ass Text Layering In The Editors-->
 	<!-- APIs -->
 
 	<haxelib name="hxdiscord_rpc" if="FEATURE_DISCORD"/>
