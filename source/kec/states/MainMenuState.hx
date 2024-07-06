@@ -17,7 +17,7 @@ import kec.backend.chart.Song;
 class MainMenuState extends MusicBeatState
 {
 	public static final nightly:String = "";
-	public static final kecVer:String = 'Kade Engine Community 1.9.4 PRE-RELEASE 2';
+	public static final kecVer:String = 'Kade Engine Community 1.9.4 PRE-RELEASE 3';
 	public static final keVer:String = "Kade Engine 1.8.1";
 	public static var curSelected:Int = 0;
 	public static var freakyPlaying:Bool = true;
