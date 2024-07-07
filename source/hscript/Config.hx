@@ -1,4 +1,4 @@
-package _hscript;
+package hscript;
 
 class Config
 {

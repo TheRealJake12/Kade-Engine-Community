@@ -6,9 +6,9 @@ import haxe.CallStack;
 import haxe.Json;
 import haxe.Log;
 #if FEATURE_HSCRIPT
-import _hscript.Interp;
-import _hscript.Parser;
-import _hscript.Expr;
+import hscript.Interp;
+import hscript.Parser;
+import hscript.Expr;
 #end
 import openfl.Lib;
 #if FEATURE_FILESYSTEM
@@ -25,7 +25,7 @@ enum ScriptReturn
 	CONTINUE;
 }
 
-@:access(_hscript.Interp)
+@:access(hscript.Interp)
 class Script extends FlxBasic
 {
 	public var variables(get, null):Map<String, Dynamic>;

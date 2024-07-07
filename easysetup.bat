@@ -11,7 +11,6 @@ haxelib install flixel
 haxelib install flixel-tools
 haxelib install flixel-addons
 haxelib install hxcpp-debug-server
-haxelib install polymod 1.7.0
 haxelib install hxvlc
 haxelib install hscript
 haxelib install flixel-text-input
@@ -24,6 +23,7 @@ echo Make sure you have git installed. You can download it here: https://git-scm
 echo Press any key to install the git libraries.
 pause >nul
 title KEC Setup - Installing libraries
+haxelib git polymod https://github.com/swordcube/scriptless-polymod.git
 haxelib git tjson https://github.com/EliteMasterEric/TJSON.git
 haxelib git hscript-improved https://github.com/TheRealJake12/hscript-improved.git
 haxelib git haxeui-core https://github.com/haxeui/haxeui-core.git --skip-dependencies

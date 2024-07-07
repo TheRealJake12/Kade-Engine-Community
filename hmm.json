@@ -32,8 +32,8 @@
     },
     {
       "name": "polymod",
-      "type": "haxelib",
-      "version": "1.7.0"
+      "type": "git",
+      "url": "haxelib git polymod https://github.com/swordcube/scriptless-polymod.git"
     },
     {
       "name": "flixel-text-input",
