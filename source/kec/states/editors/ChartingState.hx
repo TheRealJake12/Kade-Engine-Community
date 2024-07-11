@@ -1388,7 +1388,6 @@ class ChartingState extends MusicBeatState
 					var sustainVis:FlxSprite = new FlxSprite(curSelectedNoteObject.x + 20, curSelectedNoteObject.y + gridSize).makeGraphic(1, 1);
 					sustainVis.setGraphicSize(8, Math.floor((getYfromStrum(curSelectedNoteObject.strumTime + curSelectedNote[2])) - curSelectedNoteObject.y));
 					sustainVis.updateHitbox();
-					note.noteCharterObject = sustainVis;
 					curSelectedNoteObject.sustainLength = curSelectedNote[2];
 					curSelectedNoteObject.noteCharterObject = sustainVis;
 
