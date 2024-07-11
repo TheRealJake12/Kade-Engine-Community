@@ -94,6 +94,7 @@ class FreeplayState extends MusicBeatState
 
 	public static var songRatingOp:Map<String, Dynamic> = [];
 	public static var doUpdateText:Bool = true;
+	public static var alreadyPressed:Bool = false;
 
 	function loadDiff(diff:Int, songId:String, array:Array<SongData>)
 		array.push(Song.loadFromJson(songId, CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[diff])));
@@ -105,6 +106,8 @@ class FreeplayState extends MusicBeatState
 		instance = this;
 		PlayState.SONG = null;
 		FlxG.mouse.visible = true;
+		alreadyPressed = false;
+		doUpdateText = true;
 
 		#if desktop
 		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
@@ -832,14 +835,18 @@ class FreeplayState extends MusicBeatState
 
 	function fard(farding:Bool = false)
 	{
-		FlxFlicker.flicker(grpSongs.members[curSelected], 1, 0.05, false, false, function(flick:FlxFlicker)
+		if (!alreadyPressed)
 		{
-			loadSongInFreePlay(songs[curSelected].songName, curDifficulty, farding);
-		});
+			FlxFlicker.flicker(grpSongs.members[curSelected], 1, 0.05, false, false, function(flick:FlxFlicker)
+			{
+				loadSongInFreePlay(songs[curSelected].songName, curDifficulty, farding);
+			});
 
-		FlxFlicker.flicker(iconArray[curSelected], 1, 0.05, false, false);
+			FlxFlicker.flicker(iconArray[curSelected], 1, 0.05, false, false);
 
-		FlxG.sound.play(Paths.sound('confirmMenu'), 0.4);
+			FlxG.sound.play(Paths.sound('confirmMenu'), 0.4);
+			alreadyPressed = true;
+		}
 	}
 
 	/**
@@ -893,8 +900,7 @@ class FreeplayState extends MusicBeatState
 
 		PlayState.songMultiplier = rate;
 		lastRate = rate;
-
-		doUpdateText = true;
+		
 		instance.updateTexts();
 		openMod = false;
 

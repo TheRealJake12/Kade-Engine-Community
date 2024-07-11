@@ -1185,7 +1185,7 @@ class ChartingState extends MusicBeatState
 
 		if (section == null)
 			return;
-		var noteStrum = Math.abs(strum);
+		var noteStrum = strum;
 		var noteData:Int = Math.floor((mouseCursor.x - editorArea.x) / gridSize);
 		var noteSus = 0;
 		var noteType = noteTypes[noteShitDrop.selectedIndex];
@@ -1281,6 +1281,8 @@ class ChartingState extends MusicBeatState
 		lastNote = note;
 
 		var section = getSectionByTime(note.strumTime);
+
+		Debug.logTrace(section);
 
 		Debug.logTrace('${note.strumTime} ${note.noteData} ${note.rawNoteData}');
 
@@ -1383,11 +1385,10 @@ class ChartingState extends MusicBeatState
 
 				if (curSelectedNote[2] > 0)
 				{
-					var sustainVis:FlxSprite = new FlxSprite(curSelectedNoteObject.x - 2, curSelectedNoteObject.y + gridSize);
-					sustainVis.makeGraphic(1, 1);
+					var sustainVis:FlxSprite = new FlxSprite(curSelectedNoteObject.x + 20, curSelectedNoteObject.y + gridSize).makeGraphic(1, 1);
 					sustainVis.setGraphicSize(8, Math.floor((getYfromStrum(curSelectedNoteObject.strumTime + curSelectedNote[2])) - curSelectedNoteObject.y));
 					sustainVis.updateHitbox();
-
+					note.noteCharterObject = sustainVis;
 					curSelectedNoteObject.sustainLength = curSelectedNote[2];
 					curSelectedNoteObject.noteCharterObject = sustainVis;
 
@@ -3275,7 +3276,7 @@ class ChartingState extends MusicBeatState
 		if (section == null)
 			return;
 		var noteData:Int = Math.floor((mouseCursor.x - editorArea.x) / gridSize);
-		var existingNote:Note = curRenderedNotes.getFirst((n) -> n.alive && n.strumTime == strumTime && n.rawNoteData == noteData && FlxG.mouse.overlaps(n));
+		var existingNote:Note = curRenderedNotes.getFirst((n) -> n.alive && n.rawNoteData == noteData && FlxG.mouse.overlaps(n));
 		if (existingNote == null)
 		{
 			addNote();
