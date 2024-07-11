@@ -1446,8 +1446,6 @@ class ChartingState extends MusicBeatState
 						note.x -= separatorWidth;
 					note.y = Math.floor(getYfromStrum(strum));
 
-					note.charterSelected = true;
-
 					var box = new ChartingBox(note.x, note.y, note);
 					box.connectedNoteData = thing;
 					// Add to selection after the fact to avoid tomfuckery.
@@ -1467,8 +1465,8 @@ class ChartingState extends MusicBeatState
 
 						curRenderedSustains.add(sustainVis);
 					}
-
-					// selectNote(note);
+					curSelectedNoteObject = note;
+					curSelectedNoteObject.charterSelected = true;
 					continue;
 				}
 			}
