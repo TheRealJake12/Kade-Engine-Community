@@ -573,8 +573,17 @@ class PlayState extends MusicBeatState
 			introGroup.add(sprite);
 		}
 
-		numGroup = new FlxTypedGroup<ComboNumber>(Std.int(FlxG.save.data.maxRatings * 3));
-		ratingGroup = new FlxTypedGroup<Rating>(FlxG.save.data.maxRatings);
+		numGroup = new FlxTypedGroup<ComboNumber>();
+		for (i in 0...9)
+		{
+			var num:ComboNumber = new ComboNumber();
+			num.style = STYLE;
+			num.setup();
+			num.loadNum(i);
+			numGroup.add(num);
+			num.kill();
+		}
+		ratingGroup = new FlxTypedGroup<Rating>();
 
 		// fard
 
@@ -1188,12 +1197,12 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.save.data.showRating)
 		{
-			insert(members.indexOf(notes),ratingGroup);
+			insert(members.indexOf(notes), ratingGroup);
 		}
 
 		if (FlxG.save.data.showNum)
 		{
-			insert(members.indexOf(notes),numGroup);
+			insert(members.indexOf(notes), numGroup);
 		}
 
 		subStates.push(new PauseSubState());
@@ -3058,7 +3067,7 @@ class PlayState extends MusicBeatState
 				if (swagRect == null)
 					swagRect = new FlxRect(0, 0, daNote.frameWidth, daNote.frameHeight);
 
-				if (daNote.isSustainNote && daNote.prevNote.wasGoodHit)
+				if (daNote.isSustainNote)
 				{
 					if (strumScrollType)
 					{
@@ -3668,7 +3677,7 @@ class PlayState extends MusicBeatState
 		daRating.count++;
 
 		if ((daRating.doNoteSplash && daNote.canNoteSplash)
-			&& (PlayStateChangeables.botPlay && FlxG.save.data.cpuStrums)
+			&& (!PlayStateChangeables.botPlay || FlxG.save.data.cpuStrums)
 			&& FlxG.save.data.notesplashes)
 		{
 			spawnNoteSplashOnNote(daNote);
@@ -5185,6 +5194,29 @@ class PlayState extends MusicBeatState
 				{
 					cutscene.play();
 				});
+				FlxG.addChildBelowMouse(cutscene);
+			}
+			else
+			{
+				Debug.logWarn("Video File Not Found. Check Your Video Path And Extension.");
+				inCutscene = false;
+				if (atend == true)
+				{
+					if (storyPlaylist.length <= 0)
+						LoadingState.loadAndSwitchState(new StoryMenuState());
+					else
+					{
+						SONG = Song.loadFromJson(storyPlaylist[0].toLowerCase(), diff);
+						LoadingState.loadAndSwitchState(new PlayState());
+					}
+				}
+				else
+				{
+					createTimer(0.5, function(timer)
+					{
+						startCountdown();
+					});
+				}
 			}
 		});
 		inst.stop();
@@ -5210,6 +5242,7 @@ class PlayState extends MusicBeatState
 			}
 
 			cutscene.dispose();
+			FlxG.removeChild(cutscene);
 		});
 		#else
 		FlxG.log.warn("Platform Not Supported.");

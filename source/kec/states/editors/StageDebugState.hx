@@ -596,7 +596,8 @@ class StageDebugState extends MusicBeatState
 
 		FlxG.watch.addQuick('Camera Zoom', FlxG.camera.zoom);
 
-		FlxG.camera.zoom = FlxMath.lerp(fakeZoom, FlxG.camera.zoom, 0.95);
+		var lerpVal:Float = CoolUtil.boundTo(1 - (elapsed * 4), 0, 1);
+		FlxG.camera.zoom = FlxMath.lerp(fakeZoom, FlxG.camera.zoom, lerpVal);
 
 		if (FlxG.keys.justPressed.SHIFT)
 		{

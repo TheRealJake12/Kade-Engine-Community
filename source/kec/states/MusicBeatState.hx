@@ -13,9 +13,6 @@ import kec.backend.util.NoteStyleHelper;
 
 class MusicBeatState extends FlxTransitionableState
 {
-	private var lastBeat:Float = 0;
-	private var lastStep:Float = 0;
-
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
 	var step = 0.0;
@@ -49,14 +46,7 @@ class MusicBeatState extends FlxTransitionableState
 	override function create()
 	{
 		destroySubStates = false;
-		var skip:Bool = FlxTransitionableState.skipNextTransOut;
-
-		if (!skip)
-		{
-			openSubState(new CustomFadeTransition(0.6, true));
-		}
 		fullscreenBind = FlxKey.fromString(Std.string(FlxG.save.data.fullscreenBind));
-		FlxTransitionableState.skipNextTransOut = false;
 
 		super.create();
 		TimingStruct.clearTimings();
@@ -321,27 +311,19 @@ class MusicBeatState extends FlxTransitionableState
 	public static function switchState(nextState:FlxState)
 	{
 		MusicBeatState.switchingState = true;
-		// Custom made Trans in
 		Main.mainClassState = Type.getClass(nextState);
 		var curState:Dynamic = FlxG.state;
 		var leState:MusicBeatState = curState;
 		if (!FlxTransitionableState.skipNextTransIn)
 		{
-			leState.openSubState(new CustomFadeTransition(0.3, false));
 			if (nextState == FlxG.state)
 			{
-				CustomFadeTransition.finishCallback = function()
-				{
-					resetState();
-				};
+				resetState();
 			}
 			else
 			{
-				CustomFadeTransition.finishCallback = function()
-				{
-					MusicBeatState.switchingState = false;
-					FlxG.switchState(nextState);
-				};
+				MusicBeatState.switchingState = false;
+				FlxG.switchState(nextState);
 			}
 			return;
 		}

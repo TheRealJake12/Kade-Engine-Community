@@ -37,7 +37,8 @@
 	<!-- Defines whether modcore can be used. -->
 	<define name="FEATURE_MODCORE" />
 
-	<define name="CUSTOM_CLASSES" />
+	<define name="CUSTOM_CLASSES" if="FEATURE_HSCRIPT"/>
+	<define name="COMPILE_ALL_CLASSES" if="FEATURE_HSCRIPT"/>
 
 	<define name="haxeui_allow_drag_any_component" value="true"/>
 	<define name="haxeui_flixel_no_custom_cursors" value="true"/>
@@ -183,8 +184,11 @@
 	<haxeflag name="-D no-traces" unless="debug" />
 	<haxedef name="queue_experimental_optimization"/>
 
-	<haxeflag name="-dce" value="no" if="release"/>
-	<!--I'm Crying So Hard Right Now.-->
+	<section if="COMPILE_ALL_CLASSES">
+		<haxeflag name="-dce" value="no" />
+		<haxeflag name="--macro" value="ClassMacro.addAdditionalClasses()" />
+		<!--I'm Crying So Hard Right Now.-->
+	</section>
 
 	<!--Basically Allows Videos To Render In Higher Quality On Higher Resoluttions-->
 	<haxedef name="openfl_dpi_aware" unless="web" />

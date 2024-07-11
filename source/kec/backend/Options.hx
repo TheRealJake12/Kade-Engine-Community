@@ -819,6 +819,7 @@ class AntialiasingOption extends Option
 			return false;
 		FlxG.save.data.antialiasing = !FlxG.save.data.antialiasing;
 		display = updateDisplay();
+		FlxSprite.defaultAntialiasing = FlxG.save.data.antialiasing;
 		return true;
 	}
 

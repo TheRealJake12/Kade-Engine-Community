@@ -31,8 +31,10 @@ class ModMenuState extends MusicBeatState
 	override function create()
 	{
 		super.create();
+		#if FEATURE_MODCORE
 		existMods = ModCore.getAllMods();
 		Polymod.loadOnlyMods(existMods);
+		#end
 		eList = parseList();
 		createMUI();
 		createHUI();

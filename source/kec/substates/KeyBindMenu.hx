@@ -3,7 +3,8 @@ package kec.substates;
 /// Code created by Rozebud for FPS Plus (thanks rozebud)
 // modified by KadeDev for use in Kade Engine/Tricky
 import flixel.util.FlxAxes;
-import Options.Option;
+import kec.backend.Options.Option;
+import kec.backend.PlayerSettings;
 import flixel.input.FlxInput;
 import flixel.effects.FlxFlicker;
 import flixel.input.FlxKeyManager;

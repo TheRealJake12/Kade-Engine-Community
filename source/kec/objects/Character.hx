@@ -30,7 +30,6 @@ class Character extends FlxSprite
 	public var holdLength:Float;
 	public var charPos:Array<Int>;
 	public var camPos:Array<Int>;
-	public var camFollow:Array<Int>;
 	public var healthIcon:String = 'face';
 	public var rgbColorArray:Array<Int> = [255, 0, 0];
 	public var iconAnimated:Bool = false;
@@ -57,14 +56,28 @@ class Character extends FlxSprite
 		this.isPlayer = isPlayer;
 		healthIcon = curCharacter;
 
-		parseDataFile();
-
 		switch (curCharacter)
 		{
 			case 'pico-speaker':
+				parseDataFile();
 				skipDance = true;
 				loadMappedAnims();
 				playAnim("shoot1");
+			default:
+				parseDataFile();	
+		}
+
+		// hardcode your character above
+		
+	}
+
+	function hardCodeCharacter()
+	{
+		Debug.logInfo("CREATING HARDCODED CHARACTER FOR THE FIRST TIME IN 3 YEARS! " + curCharacter);
+		// me when I can easily just do a json
+		// use addOffset and addInterrupt, then set the properties manually, blah blah blah JUST USE A JSON.
+		switch (curCharacter)
+		{
 		}
 	}
 
@@ -165,7 +178,6 @@ class Character extends FlxSprite
 		this.isDancing = data.isDancing == null ? false : data.isDancing;
 		this.charPos = data.charPos == null ? [0, 0] : data.charPos;
 		this.camPos = data.camPos == null ? [0, 0] : data.camPos;
-		this.camFollow = data.camFollow == null ? [0, 0] : data.camFollow;
 		this.holdLength = data.holdLength == null ? 4 : data.holdLength;
 		this.healthIcon = data.healthicon == null ? curCharacter : data.healthicon;
 		this.iconAnimated = data.iconAnimated == null ? false : data.iconAnimated;
@@ -242,17 +254,17 @@ class Character extends FlxSprite
 			}
 			else
 			{
-					if (animation.curAnim.name.startsWith('sing'))
-					{
-						holdTimer += elapsed;
-					}
+				if (animation.curAnim.name.startsWith('sing'))
+				{
+					holdTimer += elapsed;
+				}
 
-					if (holdTimer >= Conductor.stepCrochet * 0.0011 * holdLength * PlayState.songMultiplier)
-					{
-						dance();
+				if (holdTimer >= Conductor.stepCrochet * 0.0011 * holdLength * PlayState.songMultiplier)
+				{
+					dance();
 
-						holdTimer = 0;
-					}
+					holdTimer = 0;
+				}
 
 				if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode)
 					dance();
@@ -405,6 +417,11 @@ class Character extends FlxSprite
 	{
 		animOffsets[name] = [x, y];
 	}
+
+	public function addInterrupt(name:String, value:Bool = true)
+	{
+		animInterrupt[name] = value;
+	}
 }
 
 typedef CharacterData =
@@ -417,7 +434,6 @@ typedef CharacterData =
 	var ?iconAnimated:Bool;
 	var ?charPos:Array<Int>;
 	var ?camPos:Array<Int>;
-	var ?camFollow:Array<Int>;
 	var ?holdLength:Float;
 
 	/**
