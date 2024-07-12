@@ -72,13 +72,6 @@ class StoryMenuState extends MusicBeatState
 		for (i in 0...weeksLoaded.length)
 			weeks.push(true);
 		return weeks;
-
-		weeks.push(true);
-
-		for (i in 0...FlxG.save.data.weekUnlocked)
-			weeks.push(true);
-
-		return weeks;
 	}
 
 	override function create()
