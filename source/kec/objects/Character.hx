@@ -33,6 +33,7 @@ class Character extends FlxSprite
 	public var healthIcon:String = 'face';
 	public var rgbColorArray:Array<Int> = [255, 0, 0];
 	public var iconAnimated:Bool = false;
+	public var isAlt:Bool = false; // re-add alt idle support, but in a new way
 
 	public var specialAnim = false;
 	public var skipDance = false;
@@ -309,7 +310,7 @@ class Character extends FlxSprite
 	/**
 	 * FOR GF DANCING SHIT
 	 */
-	public function dance(forced:Bool = false, altAnim:Bool = false)
+	public function dance(forced:Bool = false)
 	{
 		if (!debugMode && !skipDance && !specialAnim)
 		{
@@ -319,10 +320,10 @@ class Character extends FlxSprite
 
 				if (canInterrupt)
 				{
+					if (isAlt)
+						altSuffix = '-alt';
 					if (isDancing)
 					{
-						if (altAnim)
-							altSuffix = '-alt';
 						danced = !danced;
 
 						if (danced)
@@ -343,9 +344,6 @@ class Character extends FlxSprite
 	{
 		if (AnimName.endsWith('alt') && animation.getByName(AnimName) == null)
 		{
-			#if debug
-			FlxG.log.warn(['Such alt animation doesnt exist: ' + AnimName]);
-			#end
 			AnimName = AnimName.split('-')[0];
 		}
 
