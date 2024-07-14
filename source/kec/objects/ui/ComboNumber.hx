@@ -4,7 +4,10 @@ class ComboNumber extends UIComponent
 {
 	public function loadNum(num:Int)
 	{
-		loadGraphic(Paths.image('hud/${style.style.toLowerCase()}/num$num'));
+		if (Paths.fileExists('hud/${style.style.toLowerCase()}/num$num', IMAGE))
+			loadGraphic(Paths.image('hud/${style.style.toLowerCase()}/num$num'));
+		else
+			loadGraphic(Paths.image('hud/default/num$num'));
 		setGraphicSize(Std.int(width * style.scale));
 		updateHitbox();
 		alpha = 1;

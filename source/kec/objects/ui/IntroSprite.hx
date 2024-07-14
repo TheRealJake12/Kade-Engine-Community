@@ -10,7 +10,10 @@ class IntroSprite extends FlxSprite
 	public function new(image:String)
 	{
 		super();
-		loadGraphic(Paths.image('hud/${style.style.toLowerCase()}/$image'));
+		if (Paths.fileExists('hud/${style.style.toLowerCase()}/$image', IMAGE))
+			loadGraphic(Paths.image('hud/${style.style.toLowerCase()}/$image'));
+		else
+			loadGraphic(Paths.image('hud/default/$image'));	
 		alpha = 0.0001;
 		scrollFactor.set();
 		scale.set(0.8, 0.8);

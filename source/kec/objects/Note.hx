@@ -343,7 +343,7 @@ class Note extends FlxSprite
 		if (PlayState.SONG != null && PlayState.STYLE != null)
 			noteTypeCheck = PlayState.STYLE.style.toLowerCase();
 		else
-			noteTypeCheck = 'normal';
+			noteTypeCheck = 'default';
 
 		switch (noteTypeCheck)
 		{
