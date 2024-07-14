@@ -153,34 +153,7 @@ class StaticArrow extends FlxSprite
 			if (resetAnim <= 0)
 			{
 				localAngle = 0;
-				if (!kec.backend.PlayStateChangeables.opponentMode)
-				{
-					switch (player)
-					{
-						case 0:
-							playAnim('static');
-						default:
-							if (!kec.backend.PlayStateChangeables.botPlay)
-								playAnim('pressed');
-							else
-								playAnim('static');
-							// VANILLA FRIDAY NIGHT FUNKIN REFERENCE ?!?!??!
-					}
-				}
-				else
-				{
-					switch (player)
-					{
-						case 1:
-							playAnim('static');
-						default:
-							if (!kec.backend.PlayStateChangeables.botPlay)
-								playAnim('pressed');
-							else
-								playAnim('static');
-							// VANILLA FRIDAY NIGHT FUNKIN REFERENCE ?!?!??!
-					}
-				}
+				playAnim('static');
 				resetAnim = 0;
 			}
 		}

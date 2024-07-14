@@ -3067,7 +3067,7 @@ class PlayState extends MusicBeatState
 				if (swagRect == null)
 					swagRect = new FlxRect(0, 0, daNote.frameWidth, daNote.frameHeight);
 
-				if (daNote.isSustainNote)
+				if (daNote.isSustainNote && daNote.prevNote.wasGoodHit)
 				{
 					if (strumScrollType)
 					{
@@ -4201,10 +4201,20 @@ class PlayState extends MusicBeatState
 			scripts.executeAllFunc("goodNoteHit", [note]);
 			#end
 
-			if (!PlayStateChangeables.botPlay)
-				pressArrow(playerStrums.members[note.noteData], note, Conductor.stepCrochet * 1.25 * 0.0015);
-			else if (FlxG.save.data.cpuStrums)
+			if (PlayStateChangeables.botPlay && FlxG.save.data.cpuStrums)
 				pressArrow(playerStrums.members[note.noteData], note, Conductor.stepCrochet * 1.25 * 0.001);
+			else
+			{	
+				var spr = playerStrums.members[note.noteData];
+				if (spr != null)
+					if (!FlxG.save.data.stepMania)
+						spr.playAnim('confirm', true);
+					else
+					{
+						spr.localAngle = note.originAngle;
+						spr.playAnim('dirCon' + note.originColor, true);
+					}
+			}
 
 			if (!note.isSustainNote)
 			{

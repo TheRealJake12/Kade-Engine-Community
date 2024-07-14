@@ -882,12 +882,15 @@ class ChartingState extends MusicBeatState
 			{
 				PlayState.SONG = SONG;
 				inst.stop();
-				if (!SONG.splitVoiceTracks)
-					vocals.stop();
-				else
+				try
 				{
-					vocalsP.stop();
-					vocalsE.stop();
+					if (!SONG.splitVoiceTracks)
+						vocals.stop();
+					else
+					{
+						vocalsP.stop();
+						vocalsE.stop();
+					}
 				}
 				MusicBeatState.switchState(new PlayState());
 				Lib.clearInterval(id);
@@ -897,12 +900,15 @@ class ChartingState extends MusicBeatState
 			{
 				PlayState.SONG = SONG;
 				inst.stop();
-				if (!SONG.splitVoiceTracks)
-					vocals.stop();
-				else
+				try
 				{
-					vocalsP.stop();
-					vocalsE.stop();
+					if (!SONG.splitVoiceTracks)
+						vocals.stop();
+					else
+					{
+						vocalsP.stop();
+						vocalsE.stop();
+					}
 				}
 				MusicBeatState.switchState(new FreeplayState());
 				Lib.clearInterval(id);
@@ -1097,6 +1103,8 @@ class ChartingState extends MusicBeatState
 
 					note.setGraphicSize(gridSize, gridSize);
 					note.updateHitbox();
+					note.width += 5;
+					note.height += 5;
 					note.x = editorArea.x + Math.floor(note.rawNoteData * gridSize) + separatorWidth;
 					if (note.rawNoteData < 4)
 						note.x -= separatorWidth;
@@ -1222,8 +1230,10 @@ class ChartingState extends MusicBeatState
 		note.rawNoteData = noteData;
 		note.sustainLength = noteSus;
 		note.noteType = noteType;
-		note.setGraphicSize(Math.floor(gridSize), Math.floor(gridSize));
+		note.setGraphicSize(gridSize, gridSize);
 		note.updateHitbox();
+		note.width += 5;
+		note.height += 5;
 		note.x = editorArea.x + Math.floor(note.rawNoteData * gridSize) + separatorWidth;
 		if (note.rawNoteData < 4)
 			note.x -= separatorWidth;
@@ -1281,11 +1291,6 @@ class ChartingState extends MusicBeatState
 		lastNote = note;
 
 		var section = getSectionByTime(note.strumTime);
-
-		Debug.logTrace(section);
-
-		Debug.logTrace('${note.strumTime} ${note.noteData} ${note.rawNoteData}');
-
 		var found = false;
 
 		if (section != null)
@@ -1296,7 +1301,7 @@ class ChartingState extends MusicBeatState
 				{
 					section.sectionNotes.remove(i);
 					found = true;
-					Debug.logTrace("Notes In Section " + section.sectionNotes.length + " Note Data " + i[1]);
+					Debug.logTrace("Notes In Section " + section.sectionNotes.length);
 					curRenderedNotes.remove(note);
 				}
 			}
@@ -1439,8 +1444,10 @@ class ChartingState extends MusicBeatState
 					note.rawNoteData = originalNote.rawNoteData;
 					note.sustainLength = originalNote.sustainLength;
 					note.noteType = originalNote.noteType;
-					note.setGraphicSize(Math.floor(gridSize), Math.floor(gridSize));
+					note.setGraphicSize(gridSize, gridSize);
 					note.updateHitbox();
+					note.width += 5;
+					note.height += 5;
 					note.x = editorArea.x + Math.floor(note.rawNoteData * gridSize) + separatorWidth;
 					if (note.rawNoteData < 4)
 						note.x -= separatorWidth;
@@ -1525,8 +1532,10 @@ class ChartingState extends MusicBeatState
 						note.rawNoteData = i[1];
 						note.sustainLength = i[2];
 						note.noteType = i[3];
-						note.setGraphicSize(Math.floor(gridSize), Math.floor(gridSize));
+						note.setGraphicSize(gridSize, gridSize);
 						note.updateHitbox();
+						note.width += 5;
+						note.height += 5;
 						note.x = editorArea.x + Math.floor(note.rawNoteData * gridSize) + separatorWidth;
 						if (note.rawNoteData < 4)
 							note.x -= separatorWidth;
@@ -3009,50 +3018,11 @@ class ChartingState extends MusicBeatState
 			});
 		}
 
-		var create = new MenuItem();
-		create.text = "Create Blank Chart";
-		create.onClick = function(e)
-		{
-			var cleaned = {
-				songId: 'test',
-				songName: 'Test',
-				audioFile: 'test',
-				chartVersion: "KEC1",
-				splitVoiceTracks: true,
-				notes: [],
-				eventObjects: [new Event("Init BPM", 0, SONG.bpm, "1", "BPM Change")],
-				bpm: 150,
-				needsVoices: true,
-				player1: 'bf',
-				player2: 'dad',
-				gfVersion: 'gf',
-				style: 'Default',
-				stage: 'stage',
-				speed: 1,
-				validScore: true
-			};
-
-			var cleanedData = Json.parse(haxe.Json.stringify({
-				"song": cleaned
-			}));
-
-			var data:SongData = cast cleanedData;
-			var meta:SongMeta = {};
-			if (cleanedData.song != null)
-			{
-				meta = cleanedData.songMeta != null ? cast cleanedData.songMeta : {};
-			}
-			PlayState.SONG = Song.parseJSONshit(data.songId, data, meta);
-			clean = true;
-			MusicBeatState.switchState(new ChartingState());
-		}
-
 		file.addComponent(saveSong);
 		file.addComponent(reloadChart);
 		file.addComponent(reload);
 		file.addComponent(loadAuto);
 		file.addComponent(cleanSong);
-		file.addComponent(create);
 
 		var dragTabs = new MenuCheckBox();
 		dragTabs.text = "Drag Tablist";
