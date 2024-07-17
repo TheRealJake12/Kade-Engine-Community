@@ -1,8 +1,6 @@
 package kec.states;
 
 import lime.app.Application;
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.addons.transition.TransitionData;
 #if FEATURE_DISCORD
 import kec.backend.Discord;
 #end
@@ -57,9 +55,6 @@ class TitleState extends MusicBeatState
 			Debug.logInfo('Hello.');
 
 		super.create();
-
-		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, 0.5, FlxPoint.weak(0, -1), NEW);
-		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, 0.4, FlxPoint.weak(0, 1), NEW);
 
 		#if !cpp
 		new FlxTimer().start(1, function(tmr:FlxTimer)
@@ -212,12 +207,12 @@ class TitleState extends MusicBeatState
 						returnedData[0] = data.substring(0, data.indexOf(';'));
 						Debug.logTrace('Github Version : ' + returnedData[0]);
 						returnedData[1] = data.substring(data.indexOf('-'), data.length);
-						if (!MainMenuState.kecVer.contains(returnedData[0].trim()) && !OutdatedSubState.leftState)
+						if (!Constants.kecVer.contains(returnedData[0].trim()) && !OutdatedSubState.leftState)
 						{
-							if (!MainMenuState.kecVer.contains("PRE-RELEASE"))
-								Debug.logTrace('The Latest Github Version Is ' + returnedData[0] + ' While Your Version Is ' + MainMenuState.kecVer);
+							if (!Constants.kecVer.contains("PRE-RELEASE"))
+								Debug.logTrace('The Latest Github Version Is ' + returnedData[0] + ' While Your Version Is ' + Constants.kecVer);
 							else
-								Debug.logTrace('You Are On A Pre-Release Build. Report Any Bugs You Encounter. Version : ${MainMenuState.kecVer}');
+								Debug.logTrace('You Are On A Pre-Release Build. Report Any Bugs You Encounter. Version : ${Constants.kecVer}');
 							OutdatedSubState.needVer = returnedData[0];
 							OutdatedSubState.currChanges = returnedData[1];
 							MusicBeatState.switchState(new OutdatedSubState());

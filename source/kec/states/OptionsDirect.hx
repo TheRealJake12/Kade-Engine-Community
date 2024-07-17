@@ -13,10 +13,10 @@ class OptionsDirect extends MusicBeatState
 
 		FlxG.camera.fade(FlxColor.BLACK, 0.6, true);
 
-		if (MainMenuState.freakyPlaying)
+		if (Constants.freakyPlaying)
 		{
 			FlxG.sound.playMusic(Paths.music('options'));
-			MainMenuState.freakyPlaying = false;
+			Constants.freakyPlaying = false;
 		}
 
 		persistentUpdate = false;

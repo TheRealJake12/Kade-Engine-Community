@@ -5,6 +5,8 @@ import kec.backend.cpp.CPPInterface;
 #end
 import openfl.Lib;
 import flixel.graphics.FlxGraphic;
+import flixel.addons.transition.FlxTransitionableState;
+import flixel.addons.transition.TransitionData;
 
 class Init extends MusicBeatState
 {
@@ -49,6 +51,9 @@ class Init extends MusicBeatState
 
 		FlxG.autoPause = FlxG.save.data.autoPause;
 		FlxG.mouse.visible = true;
+
+		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, 0.4, FlxPoint.weak(0, -1), NEW);
+		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, 0.4, FlxPoint.weak(0, 1), NEW);
 
 		switch (FlxG.save.data.resolution)
 		{

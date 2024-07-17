@@ -57,7 +57,7 @@ class Discord
 			discordPresence.state = state;
 
 		discordPresence.largeImageKey = "icon";
-		discordPresence.largeImageText = '${MainMenuState.kecVer}';
+		discordPresence.largeImageText = '${Constants.kecVer}';
 		discordPresence.smallImageKey = smallImageKey;
 		// Obtained times are in milliseconds so they are divided so Discord can use it
 		discordPresence.startTimestamp = Std.int(startTimestamp / 1000);

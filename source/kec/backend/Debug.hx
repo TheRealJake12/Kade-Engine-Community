@@ -220,10 +220,10 @@ class Debug
 		logInfo('Operating System : ${Sys.systemName()}');
 		#end
 		logInfo('Haxe Version: ' + haxe.macro.Compiler.getDefine("haxe"));
-		// I've wanted the haxe version since like 1.2 released. 1.10 isn't too late, is it?
+		// I've wanted the haxe version since like 1.2 released. 1.9.4 isn't too late, is it?
 		logInfo('HaxeFlixel version: ${Std.string(FlxG.VERSION)}');
-		logInfo('Kade Engine version: ${MainMenuState.keVer}');
-		logInfo('KEC version: ${MainMenuState.kecVer}');
+		logInfo('Kade Engine version: ${Constants.keVer}');
+		logInfo('KEC version: ${Constants.kecVer}');
 	}
 
 	/**

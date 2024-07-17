@@ -44,11 +44,11 @@ class SelectEditorsState extends MusicBeatState
 
 		FlxG.mouse.visible = true;
 
-		if (MainMenuState.freakyPlaying)
+		if (Constants.freakyPlaying)
 		{
 			if (!FlxG.sound.music.playing)
 				FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
-			MainMenuState.freakyPlaying = true;
+			Constants.freakyPlaying = true;
 			Conductor.changeBPM(102);
 		}
 

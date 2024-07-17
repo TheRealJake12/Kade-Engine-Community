@@ -1,5 +1,6 @@
 package kec.backend.script;
 
+import flixel.util.FlxAxes;
 import StringTools;
 import flixel.graphics.FlxGraphic;
 import flixel.system.FlxAssets.FlxShader;
@@ -147,6 +148,6 @@ class ScriptUtil
 
 	public static inline function hasPause(arr:Array<Dynamic>):Bool
 	{
-		return arr.contains(ScriptReturn.PUASE);
+		return arr.contains(ScriptReturn.PAUSE);
 	}
 }

@@ -110,7 +110,7 @@ class FreeplayState extends MusicBeatState
 		doUpdateText = true;
 
 		#if desktop
-		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
+		Application.current.window.title = '${Constants.kecVer} : In the Menus';
 		#end
 
 		Paths.clearStoredMemory();
@@ -256,15 +256,15 @@ class FreeplayState extends MusicBeatState
 		PlayStateChangeables.practiceMode = FlxG.save.data.practice;
 		PlayStateChangeables.skillIssue = FlxG.save.data.noMisses;
 
-		if (MainMenuState.freakyPlaying)
+		if (Constants.freakyPlaying)
 		{
 			if (!FlxG.sound.music.playing)
 				FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
-			MainMenuState.freakyPlaying = true;
+			Constants.freakyPlaying = true;
 			Conductor.changeBPM(102);
 		}
 
-		if (!FlxG.sound.music.playing && !MainMenuState.freakyPlaying)
+		if (!FlxG.sound.music.playing && !Constants.freakyPlaying)
 		{
 			dotheMusicThing();
 		}
@@ -705,7 +705,7 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 
-		if (FlxG.sound.music != null && !MainMenuState.freakyPlaying)
+		if (FlxG.sound.music != null && !Constants.freakyPlaying)
 		{
 			if (FlxG.sound.music.playing)
 			{
@@ -722,7 +722,7 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 
-		if (FlxG.sound.music.playing && !MainMenuState.freakyPlaying)
+		if (FlxG.sound.music.playing && !Constants.freakyPlaying)
 		{
 			FlxG.sound.music.pitch = rate;
 		}
@@ -819,7 +819,7 @@ class FreeplayState extends MusicBeatState
 				songPath = null;
 			}
 
-			MainMenuState.freakyPlaying = false;
+			Constants.freakyPlaying = false;
 
 			TimingStruct.clearTimings();
 

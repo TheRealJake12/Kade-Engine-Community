@@ -199,13 +199,6 @@ class PlayState extends MusicBeatState
 	// MS Timing For Notes?
 	var notesHitArray:Array<Float> = [];
 
-	// Noteskin And Notesplash Related Stuff.
-	public static var noteskinSprite:String;
-	public static var cpuNoteskinSprite:String;
-	public static var notesplashSprite:String;
-	public static var noteskinPixelSprite:FlxGraphic;
-	public static var noteskinPixelSpriteEnds:FlxGraphic;
-
 	// If The Arrows Are Generated / Shown.
 	public var arrowsGenerated:Bool = false;
 
@@ -433,7 +426,7 @@ class PlayState extends MusicBeatState
 		PlayerSettings.player1.controls.loadKeyBinds();
 
 		// Change The Application Title To The Engine Version, Song Name, And Difficulty.
-		Application.current.window.title = '${MainMenuState.kecVer}: ${SONG.songName} - [${CoolUtil.difficultyArray[storyDifficulty]}]';
+		Application.current.window.title = '${Constants.kecVer}: ${SONG.songName} - [${CoolUtil.difficultyArray[storyDifficulty]}]';
 
 		initStyle();
 
@@ -884,14 +877,14 @@ class PlayState extends MusicBeatState
 		switch (STYLE.style.toLowerCase())
 		{
 			case 'pixel':
-				noteskinPixelSprite = NoteStyleHelper.generatePixelSprite(FlxG.save.data.noteskin);
-				noteskinPixelSpriteEnds = NoteStyleHelper.generatePixelSprite(FlxG.save.data.noteskin, true);
+				Constants.noteskinPixelSprite = NoteStyleHelper.generatePixelSprite(FlxG.save.data.noteskin);
+				Constants.noteskinPixelSpriteEnds = NoteStyleHelper.generatePixelSprite(FlxG.save.data.noteskin, true);
 			case 'default':
-				noteskinSprite = NoteStyleHelper.generateNoteskinSprite(FlxG.save.data.noteskin);
-				cpuNoteskinSprite = NoteStyleHelper.generateNoteskinSprite(FlxG.save.data.cpuNoteskin);
+				Constants.noteskinSprite = NoteStyleHelper.generateNoteskinSprite(FlxG.save.data.noteskin);
+				Constants.cpuNoteskinSprite = NoteStyleHelper.generateNoteskinSprite(FlxG.save.data.cpuNoteskin);
 		}
 
-		notesplashSprite = NoteStyleHelper.generateNotesplashSprite(FlxG.save.data.notesplash, '');
+		Constants.notesplashSprite = NoteStyleHelper.generateNotesplashSprite(FlxG.save.data.notesplash, '');
 
 		tweenBoolshit = SONG.songId != 'tutorial' && SONG.songId != 'roses';
 
@@ -1023,6 +1016,7 @@ class PlayState extends MusicBeatState
 			scoreTxt.y = healthBarBG.y;
 
 		uiGroup.add(scoreTxt);
+		updateScoreText();
 
 		if (iconP2.animOffsets.exists('Idle'))
 		{
@@ -2372,14 +2366,8 @@ class PlayState extends MusicBeatState
 
 	var startedCountdown:Bool = false;
 	var canPause:Bool = true;
-	var nps:Int = 0;
-	var maxNPS:Int = 0;
-
-	public var stopUpdate = false;
-
-	public var currentBPM = 0;
-
-	public var updateFrame = 0;
+	public var nps:Int = 0;
+	public var maxNPS:Int = 0;
 
 	public var pastScrollChanges:Array<Event> = [];
 	public var pastAnimationPlays:Array<Event> = [];
@@ -2439,9 +2427,6 @@ class PlayState extends MusicBeatState
 				resyncVocals();
 			}
 		}
-
-		if (nps >= 0)
-			updateScoreText();
 
 		if (inst.playing)
 		{
@@ -2623,6 +2608,7 @@ class PlayState extends MusicBeatState
 			nps = notesHitArray.length;
 			if (nps > maxNPS)
 				maxNPS = nps;
+			updateScoreText();
 		}
 
 		if (FlxG.keys.justPressed.NINE)
@@ -3528,7 +3514,7 @@ class PlayState extends MusicBeatState
 					GameplayCustomizeState.freeplayNoteStyle = 'default';
 					GameplayCustomizeState.freeplayWeek = 1;
 					FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
-					MainMenuState.freakyPlaying = true;
+					Constants.freakyPlaying = true;
 					Conductor.changeBPM(102);
 					MusicBeatState.switchState(new StoryMenuState());
 				}
@@ -3833,27 +3819,6 @@ class PlayState extends MusicBeatState
 				daHitSound.play();
 			}
 		}
-
-		playerStrums.forEach(function(spr:StaticArrow)
-		{
-			if (!PlayStateChangeables.botPlay)
-			{
-				if (keys[spr.ID]
-					&& spr.animation.curAnim.name != 'confirm'
-					&& spr.animation.curAnim.name != 'pressed'
-					&& !spr.animation.curAnim.name.startsWith('dirCon'))
-				{
-					spr.playAnim('pressed', false);
-					if (spr.animation.curAnim.name == 'pressed' && spr.animation.curAnim.finished)
-						spr.animation.curAnim.pause();
-				}
-				if (!keys[spr.ID])
-				{
-					spr.playAnim('static', false);
-					spr.localAngle = 0;
-				}
-			}
-		});
 	}
 
 	public function changeScrollSpeed(mult:Float, time:Float, ease):Void
@@ -3942,12 +3907,13 @@ class PlayState extends MusicBeatState
 
 	function updateAccuracy()
 	{
-		accuracy = Math.max(0, totalNotesHit / totalPlayed * 100);
-		accuracyDefault = Math.max(0, totalNotesHitDefault / totalPlayed * 100);
 		#if FEATURE_HSCRIPT
 		if (ScriptUtil.hasPause(scripts.executeAllFunc("updateAccuracy")))
 			return;
 		#end
+
+		accuracy = Math.max(0, totalNotesHit / totalPlayed * 100);
+		accuracyDefault = Math.max(0, totalNotesHitDefault / totalPlayed * 100);
 
 		#if FEATURE_DISCORD
 		// Updating Discord Rich Presence (with Time Left)
@@ -4556,8 +4522,8 @@ class PlayState extends MusicBeatState
 			luaModchart = null;
 		}
 
-		noteskinSprite = null;
-		cpuNoteskinSprite = null;
+		Constants.noteskinSprite = null;
+		Constants.cpuNoteskinSprite = null;
 
 		LuaStorage.ListOfCameras.resize(0);
 
@@ -4674,7 +4640,7 @@ class PlayState extends MusicBeatState
 					files.push(_);
 		}
 
-		if (FlxG.save.data.gen)
+		if (FlxG.save.data.gen && files.length > 0)
 			Debug.logTrace(files);
 
 		for (file in files)
@@ -4777,12 +4743,13 @@ class PlayState extends MusicBeatState
 		script.set("playerTwoTurn", function(?note:Note)
 		{
 		});
-
+		
 		script.set("createTween", function(Object:Dynamic, Values:Dynamic, Duration:Float, ?Options:TweenOptions)
 		{
-		});
-		script.set("createTweenNum", function(FromValue:Float, ToValue:Float, Duration:Float, ?Options:TweenOptions)
-		{
+			var tween:FlxTween = tweenManager.tween(Object, Values, Duration, Options);
+			tween.manager = tweenManager;
+			return tween;
+			// actually bullshit. WHY CAN'T YOU DO CREATETWEEN NORMALLY???? (crashes doing it normally)
 		});
 		// sex
 		script.set("notesUpdate", function()
@@ -4792,11 +4759,6 @@ class PlayState extends MusicBeatState
 		script.set("ghostTap", function(?direction:Int)
 		{
 		});
-
-		//  EVENT FUNCTIONS
-		script.set("event", function(?event:String, ?val1:Dynamic, ?val2:Dynamic)
-		{
-		}); // ! HAS PAUSE
 
 		//  PAUSING / RESUMING
 		script.set("pause", function()
@@ -4894,10 +4856,6 @@ class PlayState extends MusicBeatState
 		var tween:FlxTween = tweenManager.tween(Object, Values, Duration, Options);
 		tween.manager = tweenManager;
 		return tween;
-
-		#if FEATURE_HSCRIPT
-		scripts.executeAllFunc("createTween", [Object, Values, Duration, Options]);
-		#end
 	}
 
 	public function createTweenNum(FromValue:Float, ToValue:Float, Duration:Float = 1, ?Options:TweenOptions, ?TweenFunction:Float->Void):FlxTween
@@ -4905,10 +4863,6 @@ class PlayState extends MusicBeatState
 		var tween:FlxTween = tweenManager.num(FromValue, ToValue, Duration, Options, TweenFunction);
 		tween.manager = tweenManager;
 		return tween;
-
-		#if FEATURE_HSCRIPT
-		scripts.executeAllFunc("createTweenNum", [FromValue, ToValue, Duration, Options, TweenFunction]);
-		#end
 	}
 
 	public function createTimer(Time:Float = 1, ?OnComplete:FlxTimer->Void, Loops:Int = 1):FlxTimer

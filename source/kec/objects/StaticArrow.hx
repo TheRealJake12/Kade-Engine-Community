@@ -56,9 +56,9 @@ class StaticArrow extends FlxSprite
 		if (texture.length < 1)
 		{
 			if (player == 0)
-				skin = PlayState.cpuNoteskinSprite;
+				skin = Constants.cpuNoteskinSprite;
 			else
-				skin = PlayState.noteskinSprite;
+				skin = Constants.noteskinSprite;
 			if (skin == null || skin.length < 1)
 				skin = player == 0 ? defaultPlayerSkin : defaultCpuSkin;
 		}
@@ -87,7 +87,7 @@ class StaticArrow extends FlxSprite
 		switch (noteTypeCheck)
 		{
 			case 'pixel':
-				loadGraphic(PlayState.noteskinPixelSprite, true, 17, 17);
+				loadGraphic(Constants.noteskinPixelSprite, true, 17, 17);
 				animation.add('green', [6]);
 				animation.add('red', [7]);
 				animation.add('blue', [5]);

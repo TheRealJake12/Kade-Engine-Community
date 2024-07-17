@@ -16,11 +16,7 @@ import kec.backend.chart.Song;
 
 class MainMenuState extends MusicBeatState
 {
-	public static final nightly:String = "";
-	public static final kecVer:String = 'Kade Engine Community 1.9.4 PRE-RELEASE 3';
-	public static final keVer:String = "Kade Engine 1.8.1";
 	public static var curSelected:Int = 0;
-	public static var freakyPlaying:Bool = true;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	final colorArray:Array<FlxColor> = [
@@ -33,34 +29,7 @@ class MainMenuState extends MusicBeatState
 		FlxColor.fromRGB(160, 0, 0)
 	];
 
-	public static final textArray:Array<String> = [
-		// thanks bolo, I find these ones really funny (I am sorry for stealing code)
-		"Yeah I use Kade Engine *insert gay fat guy dancing* (-Bolo)",
-		"Kade engine *insert burning PC gif* (-Bolo)",
-		"This is my kingdom cum (-Bolo)",
-		"God i love futabu!! so fucking much (-McChomk)", // God died in vain 💀
-		"Are you really reading this thing? (-Bolo)",
-		"I'm not gay, I'm default :trollface: (-Bolo)",
-		"I love men (-HomoKori)",
-		"Why do I have a pic of Mario with massive tits on my phone? (-Rudy)",
-		"Boner (-Red Radiant)",
-		"My Balls Itch (-TheRealJake_12)",
-		"Sus Sus Amogus (-Mryoyo123YT)",
-		"Man I'm Dead (-TheRealJake_12)",
-		"Jesse! We Need To Cook Crystal Meth! (-TheRealJake_12)",
-		"Also Try BoloVEVO Kade Engine!",
-		"The Basement (-TheRealJake_12)",
-		#if windows
-		'${Sys.environment()["USERNAME"]}! Get down from the tree and put your clothes on, dammit. (-Antonella)',
-		#elseif web
-		"You're On Web. Why The FUCK Are You On Web. You Can't Get Good Easter Eggs. Mother Fucker.",
-		#else
-		'${Sys.environment()["USER"]}! Get down from the tree and put your clothes on, dammit. (-Antonella)',
-		#end
-	];
-
 	public var logo:FlxSprite;
-
 	public static var myBalls:FlxText;
 
 	private var camGame:FlxCamera;
@@ -92,13 +61,13 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.mouse.visible = true;
 		#if desktop
-		Application.current.window.title = '${MainMenuState.kecVer} : In the Menus';
+		Application.current.window.title = '${Constants.kecVer} : In the Menus';
 		#end
 
-		if (!freakyPlaying)
+		if (!Constants.freakyPlaying)
 		{
 			FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
-			freakyPlaying = true;
+			Constants.freakyPlaying = true;
 			Conductor.changeBPM(102);
 		}
 
@@ -187,12 +156,12 @@ class MainMenuState extends MusicBeatState
 		logo.antialiasing = FlxG.save.data.antialiasing;
 		logo.updateHitbox();
 
-		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, keVer + (Main.watermarks ? " / " + kecVer + "" : ""), 12);
+		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, Constants.keVer + (Main.watermarks ? " / " + Constants.kecVer + "" : ""), 12);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 		add(versionShit);
 
-		myBalls = new FlxText(3, FlxG.height - 35, 0, textArray[FlxG.random.int(0, textArray.length - 1)], 12);
+		myBalls = new FlxText(3, FlxG.height - 35, 0, Constants.textArray[FlxG.random.int(0, Constants.textArray.length - 1)], 12);
 		myBalls.scrollFactor.set();
 		myBalls.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 		add(myBalls);

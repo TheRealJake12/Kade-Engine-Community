@@ -24,7 +24,7 @@ class OutdatedSubState extends MusicBeatState
 
 		var txt:FlxText = new FlxText(0, 0, FlxG.width,
 			"Your KEC is outdated!\nYou are on "
-			+ MainMenuState.kecVer
+			+ Constants.kecVer
 			+ "\nwhile the most recent version is "
 			+ needVer
 			+ "."
@@ -33,9 +33,9 @@ class OutdatedSubState extends MusicBeatState
 			+ "\n\nPress Space to view the full changelog and update\nor ENTER to ignore this",
 			32);
 
-		if (MainMenuState.kecVer.contains("PRE-RELEASE"))
+		if (Constants.kecVer.contains("PRE-RELEASE"))
 			txt.text = "You are on\n"
-				+ MainMenuState.kecVer
+				+ Constants.kecVer
 				+ "\nWhich is a PRE-RELEASE BUILD!"
 				+ "\n\nReport all bugs to the author of the pre-release.\nSpace/Escape ignores this.";
 
@@ -47,12 +47,12 @@ class OutdatedSubState extends MusicBeatState
 		add(txt);
 
 		// 6% chance of MOM appearing instead of KEC
-		if (FlxG.random.bool(6) && !MainMenuState.kecVer.contains("PRE-RELEASE"))
+		if (FlxG.random.bool(6) && !Constants.kecVer.contains("PRE-RELEASE"))
 			// YOU KNOW WHO ELSE IS OUTDATED? MY MOM!
 		{
 			var mom:FlxText = new FlxText(0, 0, FlxG.width,
 				"Your MOM is outdated!\nYou are on "
-				+ MainMenuState.kecVer
+				+ Constants.kecVer
 				+ "\nwhile the most recent version is "
 				+ needVer
 				+ "."
@@ -87,16 +87,11 @@ class OutdatedSubState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		if (FlxG.keys.justPressed.SPACE && !MainMenuState.kecVer.contains("PRE-RELEASE"))
+		if (FlxG.keys.justPressed.SPACE && !Constants.kecVer.contains("PRE-RELEASE"))
 		{
 			fancyOpenURL("https://therealjake12.github.io/Kade-Engine-Community/changelogs/changelog-" + needVer);
 		}
-		else if (controls.ACCEPT)
-		{
-			leftState = true;
-			MusicBeatState.switchState(new MainMenuState());
-		}
-		if (controls.BACK)
+		else if (controls.ACCEPT || controls.BACK)
 		{
 			leftState = true;
 			MusicBeatState.switchState(new MainMenuState());

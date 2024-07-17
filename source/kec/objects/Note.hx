@@ -313,9 +313,9 @@ class Note extends FlxSprite
 		if (texture.length < 1)
 		{
 			if (!PlayStateChangeables.opponentMode)
-				skin = isPlayer ? PlayState.noteskinSprite : PlayState.cpuNoteskinSprite;
+				skin = isPlayer ? Constants.noteskinSprite : Constants.cpuNoteskinSprite;
 			else
-				skin = isPlayer ? PlayState.cpuNoteskinSprite : PlayState.noteskinSprite;
+				skin = isPlayer ? Constants.cpuNoteskinSprite : Constants.noteskinSprite;
 
 			if (skin == null || skin.length < 1)
 				skin = isPlayer ? defaultPlayerSkin : defaultCpuSkin;
@@ -348,9 +348,9 @@ class Note extends FlxSprite
 		switch (noteTypeCheck)
 		{
 			case 'pixel':
-				loadGraphic(PlayState.noteskinPixelSprite, true, 17, 17);
+				loadGraphic(Constants.noteskinPixelSprite, true, 17, 17);
 				if (isSustainNote)
-					loadGraphic(PlayState.noteskinPixelSpriteEnds, true, 7, 6);
+					loadGraphic(Constants.noteskinPixelSpriteEnds, true, 7, 6);
 
 				loadPixelAnims();
 				antialiasing = false;

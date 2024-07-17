@@ -21,7 +21,7 @@ import kec.backend.cpp.CPPInterface;
 
 enum ScriptReturn
 {
-	PUASE;
+	PAUSE;
 	CONTINUE;
 }
 
@@ -73,18 +73,18 @@ class Script extends FlxBasic
 				lineNumber: _interp.posInfos() != null ? _interp.posInfos().lineNumber : -1,
 				className: name,
 				fileName: name,
-				methodName: null,
+				methodName: "scriptedFunction",
 				customParams: _.length > 0 ? _ : null
 			});
 		}));
 
-		set("addScript", function(scriptName:String):Dynamic
+		set("addScript", function(scriptPath:String, scriptName:String):Dynamic
 		{
 			var hx:Null<String> = null;
 
 			for (extn in ScriptUtil.extns)
 			{
-				var path:String = 'assets/shared/data/scripts/$scriptName.$extn';
+				var path:String = 'assets/shared/data/$scriptPath.$extn';
 
 				if (OpenFlAssets.exists(path))
 				{
