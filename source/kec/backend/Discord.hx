@@ -19,7 +19,7 @@ class Discord
 		handlers.ready = cpp.Function.fromStaticFunction(onReady);
 		handlers.disconnected = cpp.Function.fromStaticFunction(onDisconnected);
 		handlers.errored = cpp.Function.fromStaticFunction(onError);
-		RichPresence.Initialize("898970552600002561", cpp.RawPointer.addressOf(handlers), 1, null);
+		RichPresence.Initialize(Constants.discordRpc, cpp.RawPointer.addressOf(handlers), 1, null);
 
 		// Daemon Thread
 		Thread.create(function()
@@ -31,8 +31,8 @@ class Discord
 				#end
 				RichPresence.RunCallbacks();
 
-				// Wait 0.5 seconds until the next loop...
-				Sys.sleep(0.5);
+				// Wait 1 second until the next loop...
+				Sys.sleep(1);
 			}
 		});
 

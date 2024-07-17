@@ -11,6 +11,7 @@ import haxe.ui.components.OptionBox;
 import haxe.ui.components.Spacer;
 import haxe.ui.components.TextField;
 import haxe.ui.components.Toggle;
+import haxe.ui.core.Component;
 import haxe.ui.containers.ContinuousHBox;
 import haxe.ui.containers.Grid;
 import haxe.ui.containers.HBox;
@@ -45,6 +46,7 @@ import kec.objects.Note;
 import kec.objects.ui.HealthIcon;
 import kec.states.editors.ChartingBox;
 import kec.states.editors.SectionRender;
+import kec.backend.util.Sort;
 import openfl.Lib;
 import openfl.events.Event as OpenFlEvent;
 import openfl.events.IOErrorEvent;
@@ -142,8 +144,7 @@ class ChartingState extends MusicBeatState
 	var noteStyles:Array<String>; // noteStyles basically
 	var noteTypes:Array<String>; // noteTypes basically
 	var events:Array<String>; // even- you already know
-
-	// fard
+	
 	var noteType:String = "Normal"; // idfk
 
 	public var SONG:SongData;
@@ -570,13 +571,23 @@ class ChartingState extends MusicBeatState
 				playerSection.selected = weird.playerSec;
 			}
 		}
+		
+		if (FlxG.keys.justPressed.T)
+		{
+			if (FocusManager.instance.focus != null)
+			{
+				trace("FOCUS", cast(FocusManager.instance.focus, Component).className, cast(FocusManager.instance.focus, Component).id);
+			}
+			else
+			{
+				Debug.logTrace("NO FOCUS");
+			}
+		}
 
 		var doInput = true;
 
 		if (FocusManager.instance.focus != null)
-		{
 			doInput = false;
-		}
 
 		for (note in curRenderedNotes)
 		{
@@ -684,6 +695,7 @@ class ChartingState extends MusicBeatState
 
 		if (doInput)
 		{
+			// fard
 			if (FlxG.keys.justPressed.F1)
 			{
 				FlxG.save.data.showHelp = !FlxG.save.data.showHelp;
@@ -1370,7 +1382,6 @@ class ChartingState extends MusicBeatState
 		noteStyles = null;
 		noteTypes = null;
 
-		// fard
 		destroyBoxes();
 		FlxG.save.flush();
 		super.destroy();
@@ -2606,6 +2617,7 @@ class ChartingState extends MusicBeatState
 
 			Debug.logTrace(currentSelectedEventName);
 			eventDrop.selectItemBy(item -> item == currentSelectedEventName, true);
+			eventTypes.selectItemBy(item -> item == savedType, true);
 
 			TimingStruct.clearTimings();
 
@@ -2932,15 +2944,15 @@ class ChartingState extends MusicBeatState
 
 		var saveSong = new MenuItem();
 		saveSong.text = "Save Chart";
-		saveSong.shortcutText = "Ctrl+S";
 		saveSong.onClick = function(e)
 		{
 			saveLevel();
 		}
 
+		// fard
+
 		var loadAuto = new MenuItem();
 		loadAuto.text = "Load Autosave";
-		loadAuto.shortcutText = "Ctrl+A+S";
 		loadAuto.onClick = function(e)
 		{
 			loadAutosave();
@@ -3206,7 +3218,7 @@ class ChartingState extends MusicBeatState
 
 			eventObjects.push(new Event(name, pos, value, value2, type));
 		}
-
+		eventObjects.sort(Sort.sortEvents);
 		SONG.eventObjects = eventObjects;
 	}
 

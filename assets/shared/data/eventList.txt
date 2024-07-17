@@ -2,3 +2,4 @@ BPM Change
 Scroll Speed Change
 Play Animation
 Change Camera Zoom
+Change Character

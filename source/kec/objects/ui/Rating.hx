@@ -8,9 +8,9 @@ class Rating extends UIComponent
 		{
 			if (Paths.fileExists('hud/${style.style.toLowerCase()}/' + ratingName, IMAGE))
 				loadGraphic(Paths.image('hud/${style.style.toLowerCase()}/' + ratingName));
-			else	
-				loadGraphic(Paths.image('hud/default/' + ratingName));	
-			
+			else
+				loadGraphic(Paths.image('hud/default/' + ratingName));
+
 			setGraphicSize(Std.int(width * style.scale * 0.7));
 			updateHitbox();
 		}

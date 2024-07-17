@@ -30,6 +30,7 @@ class MainMenuState extends MusicBeatState
 	];
 
 	public var logo:FlxSprite;
+
 	public static var myBalls:FlxText;
 
 	private var camGame:FlxCamera;

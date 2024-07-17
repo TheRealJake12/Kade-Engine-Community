@@ -1,6 +1,7 @@
 package kec.backend;
 
 import flixel.graphics.FlxGraphic;
+
 /**
  * Constant Variables.
  */
@@ -41,4 +42,6 @@ class Constants
 	public static var notesplashSprite:String;
 	public static var noteskinPixelSprite:FlxGraphic;
 	public static var noteskinPixelSpriteEnds:FlxGraphic;
+
+	public static final discordRpc:String = "898970552600002561";
 }

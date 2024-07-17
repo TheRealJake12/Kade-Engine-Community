@@ -900,7 +900,7 @@ class FreeplayState extends MusicBeatState
 
 		PlayState.songMultiplier = rate;
 		lastRate = rate;
-		
+
 		instance.updateTexts();
 		openMod = false;
 

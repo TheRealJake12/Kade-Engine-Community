@@ -8,6 +8,7 @@ import kec.stages.TankmenBG;
 import kec.backend.chart.Song;
 import kec.backend.chart.TimingStruct;
 import kec.backend.PlayStateChangeables;
+import kec.backend.chart.NoteData;
 
 class Character extends FlxSprite
 {
@@ -34,6 +35,7 @@ class Character extends FlxSprite
 	public var rgbColorArray:Array<Int> = [255, 0, 0];
 	public var iconAnimated:Bool = false;
 	public var isAlt:Bool = false; // re-add alt idle support, but in a new way
+	public var isGF:Bool = false;
 
 	public var specialAnim = false;
 	public var skipDance = false;
@@ -43,7 +45,7 @@ class Character extends FlxSprite
 
 	public var animationNotes:Array<Dynamic> = [];
 
-	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
+	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false, ?isGF:Bool = false)
 	{
 		super(x, y);
 
@@ -55,6 +57,7 @@ class Character extends FlxSprite
 		animDanced = new Map<String, Bool>();
 		curCharacter = character;
 		this.isPlayer = isPlayer;
+		this.isGF = isGF;
 		healthIcon = curCharacter;
 
 		switch (curCharacter)
@@ -62,14 +65,14 @@ class Character extends FlxSprite
 			case 'pico-speaker':
 				parseDataFile();
 				skipDance = true;
-				loadMappedAnims();
+				if (FlxG.save.data.quality)
+					loadMappedAnims();
 				playAnim("shoot1");
 			default:
-				parseDataFile();	
+				parseDataFile();
 		}
 
 		// hardcode your character above
-		
 	}
 
 	function hardCodeCharacter()
@@ -91,19 +94,18 @@ class Character extends FlxSprite
 		var jsonData = Paths.loadJSON('characters/${curCharacter}');
 		if (jsonData == null)
 		{
-			if (FlxG.fullscreen)
-				FlxG.fullscreen = !FlxG.fullscreen;
 			if (isPlayer)
 			{
 				Debug.logError('Failed to parse JSON data for character  ${curCharacter}. Loading default boyfriend...');
 				jsonData = Paths.loadJSON('characters/bf');
 			}
-			else if (replacesGF)
+			if (isGF)
 			{
 				Debug.logError('Failed to parse JSON data for character  ${curCharacter}. Loading default gf...');
 				jsonData = Paths.loadJSON('characters/gf');
 			}
-			else
+
+			if (!isPlayer && !isGF)
 			{
 				Debug.logError('Failed to parse JSON data for character  ${curCharacter}. Loading default opponent...');
 				jsonData = Paths.loadJSON('characters/dad');
@@ -380,33 +382,44 @@ class Character extends FlxSprite
 		if (!FlxG.save.data.background)
 			return;
 		var noteData:Array<SwagSection> = Song.loadFromJson(PlayState.SONG.songId, 'picospeaker').notes;
+		var notes:Array<NoteData> = [];
+		var noteCounter:Int = 0;
 		for (section in noteData)
 		{
 			for (songNotes in section.sectionNotes)
 			{
+				var gottaHitNote:Bool = false;
 				var daStrumTime:Float = (songNotes[0] - FlxG.save.data.offset - PlayState.SONG.offset) / PlayState.songMultiplier;
 				if (daStrumTime < 0)
 					daStrumTime = 0;
 				var daBeat = TimingStruct.getBeatFromTime(daStrumTime);
 
 				var daNoteData:Int = Std.int(songNotes[1] % 4);
+				if (songNotes[1] > 3)
+					gottaHitNote = true;
+				else if (songNotes[1] <= 3)
+					gottaHitNote = false;
 
-				var oldNote:Note;
+				notes.push({
+					strumTime: daStrumTime,
+					noteData: daNoteData,
+					sustainLength: songNotes[2] / PlayState.songMultiplier,
+					noteType: songNotes[3],
+					isPlayer: gottaHitNote,
+					beat: daBeat
+				});
 
-				if (PlayState.instance.unspawnNotes.length > 0)
-					oldNote = PlayState.instance.unspawnNotes[Std.int(PlayState.instance.unspawnNotes.length - 1)];
-				else
-					oldNote = null;
-				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, false, false, daBeat);
+				var note = notes[noteCounter];
 
-				animationNotes.push(swagNote);
+				animationNotes.push(note);
+				noteCounter++;
 			}
 		}
 		TankmenBG.animationNotes = animationNotes;
 		animationNotes.sort(sortAnims);
 	}
 
-	function sortAnims(Obj1:Note, Obj2:Note):Int
+	function sortAnims(Obj1:NoteData, Obj2:NoteData):Int
 	{
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
 	}
