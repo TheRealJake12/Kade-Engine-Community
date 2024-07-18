@@ -19,6 +19,7 @@ Welcome To Kade Engine Community.
 
 ### Core Features
 <details>
+  
 ![Main Menu](art/readme/mainmenu.png)
 
 Stylized Main Menu.
