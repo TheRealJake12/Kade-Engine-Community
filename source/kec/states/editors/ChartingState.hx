@@ -174,7 +174,6 @@ class ChartingState extends MusicBeatState
 	public var lastAction:String = "";
 
 	var curSelectedNote:Array<Dynamic>;
-	private var lastNote:Note;
 	var texts:FlxTypedGroup<FlxText>;
 	var lines:FlxTypedGroup<FlxSprite>;
 
@@ -1115,8 +1114,6 @@ class ChartingState extends MusicBeatState
 
 					note.setGraphicSize(gridSize, gridSize);
 					note.updateHitbox();
-					note.width += 5;
-					note.height += 5;
 					note.x = editorArea.x + Math.floor(note.rawNoteData * gridSize) + separatorWidth;
 					if (note.rawNoteData < 4)
 						note.x -= separatorWidth;
@@ -1244,8 +1241,6 @@ class ChartingState extends MusicBeatState
 		note.noteType = noteType;
 		note.setGraphicSize(gridSize, gridSize);
 		note.updateHitbox();
-		note.width += 5;
-		note.height += 5;
 		note.x = editorArea.x + Math.floor(note.rawNoteData * gridSize) + separatorWidth;
 		if (note.rawNoteData < 4)
 			note.x -= separatorWidth;
@@ -1299,8 +1294,6 @@ class ChartingState extends MusicBeatState
 	function deleteNote(note:Note):Void
 	{
 		destroyBoxes();
-
-		lastNote = note;
 
 		var section = getSectionByTime(note.strumTime);
 		var found = false;
@@ -1457,8 +1450,6 @@ class ChartingState extends MusicBeatState
 					note.noteType = originalNote.noteType;
 					note.setGraphicSize(gridSize, gridSize);
 					note.updateHitbox();
-					note.width += 5;
-					note.height += 5;
 					note.x = editorArea.x + Math.floor(note.rawNoteData * gridSize) + separatorWidth;
 					if (note.rawNoteData < 4)
 						note.x -= separatorWidth;
@@ -1545,8 +1536,6 @@ class ChartingState extends MusicBeatState
 						note.noteType = i[3];
 						note.setGraphicSize(gridSize, gridSize);
 						note.updateHitbox();
-						note.width += 5;
-						note.height += 5;
 						note.x = editorArea.x + Math.floor(note.rawNoteData * gridSize) + separatorWidth;
 						if (note.rawNoteData < 4)
 							note.x -= separatorWidth;
@@ -3261,7 +3250,23 @@ class ChartingState extends MusicBeatState
 			addNote();
 		}
 		else
-			deleteNote(existingNote);
+		{
+			destroyBoxes();
+			for (i in section.sectionNotes)
+			{
+				if (i[0] == existingNote.strumTime && i[1] == existingNote.rawNoteData)
+				{
+					section.sectionNotes.remove(i);
+				}
+			}	
+			curRenderedNotes.remove(existingNote);
+			if (existingNote.sustainLength > 0)
+				curRenderedSustains.remove(existingNote.noteCharterObject, true);
+
+			curSelectedNote = null;
+			Debug.logTrace("tryna delete note");
+		}
+			// deleteNote(existingNote);
 	}
 
 	private inline function createGrid()

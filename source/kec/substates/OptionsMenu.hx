@@ -228,7 +228,7 @@ class OptionsMenu extends MusicBeatSubstate
 				new GPURendering("Makes All Sprites Load Into VRAM, Reducing Normal RAM Usage. (Not Recommended For ~3GB VRAM)"), // Ill come back to this. I'm tired asf
 				new BackgroundsOption("Toggles Backrounds From Being Visible. (Good Performance Booster.)"),
 				new QualityOption("Toggle If Extra Stage Background Assets Get Loaded (And Other Distractions)"),
-				new MaxRatingAmountOption("How Many Ratings / Combo Numbers Can Be Visible At A Time? (Combo Numbers * 3)"),
+				// not working rn new MaxRatingAmountOption("How Many Ratings / Combo Numbers Can Be Visible At A Time? (Combo Numbers * 3)"),
 				new Shaders("Should Shaders Be Enabled? (High GPU and CPU Usage.)"),
 				#if desktop
 				new UnloadSongs("Toggle If Assets Get Unloaded. Off Will Have Higher Memory Usage But With Better Reload Times."),
@@ -436,7 +436,6 @@ class OptionsMenu extends MusicBeatSubstate
 
 	var exiting:Bool = false;
 	var holdTime:Float = 0;
-
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -506,9 +505,6 @@ class OptionsMenu extends MusicBeatSubstate
 				{
 					FlxG.sound.play(Paths.sound('scrollMenu'));
 					selectedCatIndex++;
-
-					FlxG.save.flush();
-
 					if (selectedCatIndex > options.length - 3)
 						selectedCatIndex = 0;
 					if (selectedCatIndex < 0)
@@ -520,8 +516,6 @@ class OptionsMenu extends MusicBeatSubstate
 				{
 					FlxG.sound.play(Paths.sound('scrollMenu'));
 					selectedCatIndex--;
-
-					FlxG.save.flush();
 
 					if (selectedCatIndex > options.length - 3)
 						selectedCatIndex = 0;
@@ -562,7 +556,6 @@ class OptionsMenu extends MusicBeatSubstate
 						onComplete: function(twn:FlxTween)
 						{
 							close();
-
 							MusicBeatState.switchState(new MainMenuState());
 						}
 					});
@@ -799,11 +792,11 @@ class OptionsMenu extends MusicBeatSubstate
 	override function destroy():Void
 	{
 		instance = null;
+		FlxG.save.flush();
 		for (cata in options)
 			if (cata != null)
 				cata.destroy();
 		options.resize(0);
-
 		super.destroy();
 	}
 
