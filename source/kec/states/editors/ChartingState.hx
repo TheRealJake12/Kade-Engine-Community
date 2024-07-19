@@ -144,7 +144,7 @@ class ChartingState extends MusicBeatState
 	var noteStyles:Array<String>; // noteStyles basically
 	var noteTypes:Array<String>; // noteTypes basically
 	var events:Array<String>; // even- you already know
-	
+
 	var noteType:String = "Normal"; // idfk
 
 	public var SONG:SongData;
@@ -570,7 +570,7 @@ class ChartingState extends MusicBeatState
 				playerSection.selected = weird.playerSec;
 			}
 		}
-		
+
 		if (FlxG.keys.justPressed.T)
 		{
 			if (FocusManager.instance.focus != null)
@@ -3258,7 +3258,7 @@ class ChartingState extends MusicBeatState
 				{
 					section.sectionNotes.remove(i);
 				}
-			}	
+			}
 			curRenderedNotes.remove(existingNote);
 			if (existingNote.sustainLength > 0)
 				curRenderedSustains.remove(existingNote.noteCharterObject, true);
@@ -3266,7 +3266,7 @@ class ChartingState extends MusicBeatState
 			curSelectedNote = null;
 			Debug.logTrace("tryna delete note");
 		}
-			// deleteNote(existingNote);
+		// deleteNote(existingNote);
 	}
 
 	private inline function createGrid()

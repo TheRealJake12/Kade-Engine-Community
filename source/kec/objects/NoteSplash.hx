@@ -8,54 +8,45 @@ typedef SplashData =
 	/**
 	 * The name of this animation.
 	 */
+	var ?name:String;
+	var animations:Array<SplashAnims>;
+	var ?antialiasing:Bool;
+	var ?scale:Float;
+
+	var ?minFps:Int;
+	var ?maxFps:Int;
+}
+
+typedef SplashAnims = 
+{
 	var name:String;
-
-	/**
-	 * The frame rate of this animation.
-	 		* @default 24
-	 */
-	var fps:Int;
-
-	/**
-	 * The X Offset so it can be centered better.
-	 		* @default 90
-	 */
-	var xOffset:Int;
-
-	/**
-	 * The Y Offset so it can be centered better.
-	 		* @default 80
-	 */
-	var yOffset:Int;
-
-	var minFps:Int;
-	var maxFps:Int;
-	// theres gonna be more but the fps fucks me so much rn
+	var prefix:String;
+	var ?offsets:Array<Int>;
+	var ?frameRate:Int;
+	var ?frameIndices:Array<Int>;
 }
 
 class NoteSplash extends FlxSprite
 {
 	public var noteType:String = '';
-
-	var name:String;
-
-	public static var anims:Array<String> = ['purple', 'blue', 'green', 'red'];
-
-	var rawJson = null;
+	private var animOffsets:Map<String, Array<Dynamic>>;
+	static var _lastCheckedType:String = '';
+	
+	public static var colors:Array<String> = ['purple', 'blue', 'green', 'red'];
+	private static var configs:Map<String, SplashData> = new Map<String, SplashData>();
+	static var rawJson = null;
+	var minFps = 24;
+	var maxFps = 26;
 
 	public function new(x:Float = 0, y:Float = 0, noteType:String, noteData:Int)
 	{
 		super(x, y);
-
-		rawJson = Paths.loadData('images/splashes/' + NoteStyleHelper.notesplashArray[FlxG.save.data.notesplash], 'shared');
-
+		animOffsets = new Map<String, Array<Dynamic>>();
 		this.noteType = noteType;
-
 		// because it doesn't know what to do if it ACTUALLY has notetype data.
 
-		loadAnims();
-
-		antialiasing = FlxG.save.data.antialiasing;
+		loadFrames();
+		loadSplashData(Constants.notesplashSprite);
 	}
 
 	public function setupNoteSplash(x:Float, y:Float, note:Note)
@@ -65,60 +56,94 @@ class NoteSplash extends FlxSprite
 		setPosition(x - Note.swagWidth * 0.95, y - Note.swagWidth);
 		alpha = FlxG.save.data.alphaSplash;
 
-		loadAnims(noteType);
+		loadFrames(noteType);
+		offset.set(0,0);
 
-		var animNum:Int = FlxG.random.int(0, 1);
+		var animNum:Int = FlxG.random.int(1, 2);
+
+		var animToPlay:String;	
 
 		if (!FlxG.save.data.stepMania)
-			animation.play('splash ' + animNum + " " + note.noteData);
+			animToPlay = 'splash ${animNum} ${colors[note.noteData]}';
 		else
-			animation.play('splash ' + animNum + " " + note.originColor);
-		var data:SplashData = cast rawJson;
-		var minFps = 24;
-		var maxFps = 26;
-		switch (PlayState.STYLE.style)
-		{
-			case 'pixel':
-				minFps = 22;
-				maxFps = 26;
-			default:
-				minFps = data.minFps;
-				maxFps = data.maxFps;
-		}
+			animToPlay = 'splash ${animNum} ${colors[note.originColor]}';
 
-		animation.curAnim.frameRate = FlxG.random.int(minFps, maxFps);
-
-		animation.finishCallback = function(name:String)
-		{
-			visible = false;
-			kill();
-		}
+		playAnim(animToPlay);
 	}
 
-	function loadAnims(?noteType:String = '')
+	function loadFrames(?noteType:String = '')
 	{
-		var data:SplashData = cast rawJson;
+		var texture:String = Constants.notesplashSprite;
 		switch (PlayState.STYLE.style.toLowerCase())
 		{
 			case 'pixel':
 				frames = Paths.getSparrowAtlas('hud/pixel/noteSplashes-pixels');
-				for (i in 0...4)
-				{
-					animation.addByPrefix('splash 0 ' + i, 'note splash 1 ' + anims[i], 24, false);
-					animation.addByPrefix('splash 1 ' + i, 'note splash 2 ' + anims[i], 24, false);
-				}
 			default:
-				frames = Paths.getSparrowAtlas(NoteStyleHelper.generateNotesplashSprite(FlxG.save.data.notesplash, noteType.toLowerCase()), 'shared');
+				frames = Paths.getSparrowAtlas(NoteStyleHelper.generateNotesplashSprite(texture, noteType.toLowerCase()), 'shared');
 				if (frames == null)
-					frames = Paths.getSparrowAtlas(NoteStyleHelper.generateNotesplashSprite(0, ''), 'shared');
-				for (i in 0...4)
-				{
-					animation.addByPrefix('splash 0 ' + i, 'note splash 1 ' + anims[i], data.fps, false);
-					animation.addByPrefix('splash 1 ' + i, 'note splash 2 ' + anims[i], data.fps, false);
-				}
+					frames = Paths.getSparrowAtlas(NoteStyleHelper.generateNotesplashSprite(texture, ''), 'shared');
 		}
+		
+		loadAnimations(loadSplashData(texture));
+	}
 
-		offset.set(data.xOffset, data.yOffset);
+	private function loadAnimations(config:SplashData)
+	{
+		if (frames != null)
+		{
+			for (anim in config.animations)
+			{
+				var frameRate = anim.frameRate == null ? 24 : anim.frameRate;
+				if (anim.frameIndices != null)
+					animation.addByIndices(anim.name, anim.prefix, anim.frameIndices, "", Std.int(frameRate), false);
+				else
+					animation.addByPrefix(anim.name, anim.prefix, Std.int(frameRate), false);
+				animOffsets[anim.name] = anim.offsets == null ? [0, 0] : anim.offsets;
+			}
+
+			if (config.scale != null)
+			{
+				setGraphicSize(Std.int(width * config.scale));
+				updateHitbox();
+			}
+
+			minFps = config.minFps == null ? 22 : config.minFps;
+			maxFps = config.maxFps == null ? 26 : config.maxFps;
+
+			antialiasing = config.antialiasing == null ? FlxG.save.data.antialiasing : config.antialiasing;
+		}
+	}
+
+	private function loadSplashData(tex:String)
+	{
+		if (configs.exists(tex))
+			return configs.get(tex);
+		rawJson = Paths.loadData('images/splashes/' + Constants.notesplashSprite, 'shared');	
+		var data:SplashData = cast rawJson;
+		_lastCheckedType = tex;
+		configs.set(tex, data);
+		return data;
+	}
+
+	public function playAnim(name:String)
+	{
+		var daOffset = animOffsets.get(name);
+		if (animOffsets.exists(name))
+			offset.set(daOffset[0], daOffset[1]);
+		else
+			offset.set(0, 0);
+		animation.play(name, true);
+
+		animation.curAnim.frameRate = FlxG.random.int(minFps, maxFps);
+	}
+
+	override function destroy()
+	{
+		configs.clear();
+		rawJson = null;
+		_lastCheckedType = '';
+		animOffsets.clear();
+		super.destroy();
 	}
 
 	override function update(elapsed:Float)

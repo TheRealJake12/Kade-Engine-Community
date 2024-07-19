@@ -4,7 +4,7 @@ class ComboNumber extends UIComponent
 {
 	public function loadNum(num:Int)
 	{
-		if (!Paths.fileExists('hud/${style.style.toLowerCase()}/num$num', IMAGE))
+		if (Paths.fileExists('hud/${style.style.toLowerCase()}/num$num', IMAGE, 'shared'))
 			loadGraphic(Paths.image('hud/${style.style.toLowerCase()}/num$num'));
 		else
 			loadGraphic(Paths.image('hud/default/num$num'));

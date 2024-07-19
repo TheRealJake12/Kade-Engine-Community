@@ -36,6 +36,8 @@
 	<define name="FEATURE_HSCRIPT" />
 	<!-- Defines whether modcore can be used. -->
 	<define name="FEATURE_MODCORE" />
+	<!-- Defines if we can log traces and other stuff to files -->
+	<define name="FEATURE_LOGGING" if="FEATURE_FILESYSTEM"/>
 
 	<define name="CUSTOM_CLASSES" if="FEATURE_HSCRIPT"/>
 	<define name="COMPILE_ALL_CLASSES" if="FEATURE_HSCRIPT"/>

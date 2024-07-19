@@ -461,7 +461,7 @@ class DebugLogWriter
 		var ts = FlxStringUtil.formatTime(getTime(), true);
 		var msg = '$ts [${logLevel.rpad(' ', 5)}] ${input.join('')}';
 
-		#if FEATURE_FILESYSTEM
+		#if (FEATURE_FILESYSTEM && FEATURE_LOGGING)
 		if (active && file != null)
 		{
 			if (shouldLog(logLevel))

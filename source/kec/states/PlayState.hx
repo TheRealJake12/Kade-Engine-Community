@@ -416,7 +416,7 @@ class PlayState extends MusicBeatState
 		#end
 
 		FlxG.mouse.visible = FlxG.mouse.enabled = false;
-		
+
 		instance = this;
 
 		// Setup The Tween / Timer Manager.
@@ -833,7 +833,7 @@ class PlayState extends MusicBeatState
 				Constants.cpuNoteskinSprite = NoteStyleHelper.generateNoteskinSprite(FlxG.save.data.cpuNoteskin);
 		}
 
-		Constants.notesplashSprite = NoteStyleHelper.generateNotesplashSprite(FlxG.save.data.notesplash, '');
+		Constants.notesplashSprite = NoteStyleHelper.notesplashArray[FlxG.save.data.notesplash];
 
 		tweenBoolshit = SONG.songId != 'tutorial' && SONG.songId != 'roses';
 
@@ -1420,16 +1420,28 @@ class PlayState extends MusicBeatState
 			switch (t.loopsLeft)
 			{
 				case 3:
-					FlxG.sound.play(Paths.sound('styles/$styleName/intro3'), 0.6);
+					if (Paths.fileExists('styles/$styleName/intro3', SOUND, 'shared'))
+						FlxG.sound.play(Paths.sound('styles/$styleName/intro3'), 0.6);
+					else
+						FlxG.sound.play(Paths.sound('styles/default/intro3'), 0.6);
 				case 2:
+					if (Paths.fileExists('styles/$styleName/intro2', SOUND, 'shared'))
+						FlxG.sound.play(Paths.sound('styles/$styleName/intro2'), 0.6);
+					else
+						FlxG.sound.play(Paths.sound('styles/default/intro2'), 0.6);
 					introGroup.members[0].appear();
-					FlxG.sound.play(Paths.sound('styles/$styleName/intro2'), 0.6);
 				case 1:
+					if (Paths.fileExists('styles/$styleName/intro1', SOUND, 'shared'))
+						FlxG.sound.play(Paths.sound('styles/$styleName/intro1'), 0.6);
+					else
+						FlxG.sound.play(Paths.sound('styles/default/intro1'), 0.6);
 					introGroup.members[1].appear();
-					FlxG.sound.play(Paths.sound('styles/$styleName/intro1'), 0.6);
 				case 0:
+					if (Paths.fileExists('styles/$styleName/introGo', SOUND, 'shared'))
+						FlxG.sound.play(Paths.sound('styles/$styleName/introGo'), 0.6);
+					else
+						FlxG.sound.play(Paths.sound('styles/default/introGo'), 0.6);
 					introGroup.members[2].appear();
-					FlxG.sound.play(Paths.sound('styles/$styleName/introGo'), 0.6);
 			}
 			#if FEATURE_HSCRIPT
 			scripts.executeAllFunc("countTick", [-t.loopsLeft]);
@@ -1706,6 +1718,13 @@ class PlayState extends MusicBeatState
 		}
 		totalNotesHit -= 1;
 		totalPlayed += 1;
+
+		var char:Character = boyfriend;
+		if (PlayStateChangeables.opponentMode)
+			char = dad;
+
+		if (char.animOffsets.exists('sing' + dataSuffix[direction] + 'miss'))
+			char.playAnim('sing' + dataSuffix[direction] + 'miss', true);
 
 		if (FlxG.save.data.missSounds)
 			FlxG.sound.play(Paths.soundRandom('styles/$styleName/missnote', 1, 3), FlxG.random.float(0.1, 0.2));
@@ -2055,7 +2074,7 @@ class PlayState extends MusicBeatState
 						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 						var sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true, false,
 							gottaHitNote, 0);
-						sustainNote.rawNoteData = Std.int(songNotes[1]);	
+						sustainNote.rawNoteData = Std.int(songNotes[1]);
 
 						sustainNote.noteType = daNoteType;
 
@@ -2206,7 +2225,12 @@ class PlayState extends MusicBeatState
 
 	function tweenCamIn():Void
 	{
-		createTween(camGame, {zoom: 1.3}, (Conductor.stepCrochet * 4 * 0.001), {ease: FlxEase.elasticInOut});
+		// createTween(camGame, {zoom: 1.3}, (Conductor.stepCrochet * 4 * 0.001), {ease: FlxEase.elasticInOut});
+		createTweenNum(zoomForTweens, 1.3, (Conductor.stepCrochet * 4 * 0.001), {ease: FlxEase.elasticInOut}, function(num)
+		{
+			zoomForTweens = num;
+			// Debug.logTrace(zoomForTweens);
+		});
 	}
 
 	override function openSubState(SubState:FlxSubState)
@@ -2293,7 +2317,8 @@ class PlayState extends MusicBeatState
 				+ songScore
 				+ " | Misses: "
 				+ misses, iconRPC, true,
-				songLengthRPC - Conductor.songPosition);
+				songLengthRPC
+				- Conductor.songPosition);
 			#end
 		}
 
@@ -3333,7 +3358,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 	}
-	
+
 	public var endingSong:Bool = false;
 
 	public function getRatesScore(rate:Float, score:Float):Float
@@ -3639,7 +3664,7 @@ class PlayState extends MusicBeatState
 			var char:Character = boyfriend;
 			if (PlayStateChangeables.opponentMode)
 				char = dad;
-			
+
 			if (char.animOffsets.exists('sing' + dataSuffix[direction] + 'miss'))
 				char.playAnim('sing' + dataSuffix[direction] + 'miss', true);
 
@@ -3673,7 +3698,7 @@ class PlayState extends MusicBeatState
 
 		accuracy = Math.max(0, totalNotesHit / totalPlayed * 100);
 		accuracyDefault = Math.max(0, totalNotesHitDefault / totalPlayed * 100);
-		
+
 		#if FEATURE_DISCORD
 		// Updating Discord Rich Presence (with Time Left)
 		Discord.changePresence(detailsText
@@ -3894,8 +3919,8 @@ class PlayState extends MusicBeatState
 					{
 						spawnNoteSplashOnNote(note);
 					}
-					if (FlxG.save.data.accuracyMod == 0)
-						totalNotesHit -= 1;
+					totalPlayed += 1;
+					totalNotesHit -= 1;
 					note.rating = Ratings.timingWindows[0];
 					health -= 0.8;
 					char.playAnim('hurt');
@@ -4746,59 +4771,47 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	function changeNoteSkins(isStrum:Bool, isPlayer:Bool, texture:String)
+	function changeNoteSkins(isPlayer:Bool, texture:String)
 	{
-		switch (isStrum)
+		switch (isPlayer)
 		{
 			case true:
-				switch (isPlayer)
+				for (i in 0...playerStrums.length)
 				{
-					case true:
-						for (i in 0...playerStrums.length)
-						{
-							playerStrums.members[i].texture = 'noteskins/' + texture;
-						}
-					case false:
-						for (i in 0...cpuStrums.length)
-						{
-							cpuStrums.members[i].texture = 'noteskins/' + texture;
-						}
+					playerStrums.members[i].texture = 'noteskins/' + texture;
+				}
+				for (note in unspawnNotes)
+				{
+					if (note.mustPress && (note.noteType == null || note.noteType.toLowerCase() == 'normal'))
+					{
+						note.texture = 'noteskins/' + texture;
+					}
+				}
+				for (note in notes)
+				{
+					if (note.mustPress && (note.noteType == null || note.noteType.toLowerCase() == 'normal'))
+					{
+						note.texture = 'noteskins/' + texture;
+					}
 				}
 			case false:
-				switch (isPlayer)
+				for (i in 0...cpuStrums.length)
 				{
-					case true:
-						for (note in unspawnNotes)
-						{
-							if (note.mustPress && (note.noteType == null || note.noteType.toLowerCase() == 'normal'))
-							{
-								note.texture = 'noteskins/' + texture;
-							}
-						}
-
-						for (note in notes)
-						{
-							if (note.mustPress && (note.noteType == null || note.noteType.toLowerCase() == 'normal'))
-							{
-								note.texture = 'noteskins/' + texture;
-							}
-						}
-					case false:
-						for (note in unspawnNotes)
-						{
-							if (!note.mustPress && (note.noteType == null || note.noteType.toLowerCase() == 'normal'))
-							{
-								note.texture = 'noteskins/' + texture;
-							}
-						}
-
-						for (note in notes)
-						{
-							if (!note.mustPress && (note.noteType == null || note.noteType.toLowerCase() == 'normal'))
-							{
-								note.texture = 'noteskins/' + texture;
-							}
-						}
+					cpuStrums.members[i].texture = 'noteskins/' + texture;
+				}
+				for (note in unspawnNotes)
+				{
+					if (!note.mustPress && (note.noteType == null || note.noteType.toLowerCase() == 'normal'))
+					{
+						note.texture = 'noteskins/' + texture;
+					}
+				}
+				for (note in notes)
+				{
+					if (!note.mustPress && (note.noteType == null || note.noteType.toLowerCase() == 'normal'))
+					{
+						note.texture = 'noteskins/' + texture;
+					}
 				}
 		}
 	}
@@ -5093,6 +5106,7 @@ class PlayState extends MusicBeatState
 
 		SONG.eventObjects = eventObjects;
 	}
+
 	private function initGameplaySettings()
 	{
 		// Initialize PlayStateChangeables Options For Later.
@@ -5289,12 +5303,12 @@ class PlayState extends MusicBeatState
 				{
 					case 0:
 						changeChar(char, type, dad.x, dad.y);
-						// dad
+					// dad
 					case 1:
 						changeChar(char, type, boyfriend.x, boyfriend.y);
-						// bf
+					// bf
 					case 2:
-						changeChar(char, type, gf.x, gf.y);		
+						changeChar(char, type, gf.x, gf.y);
 				}
 		}
 	}

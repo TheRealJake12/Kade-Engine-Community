@@ -1,8 +1,80 @@
 {
     "name": "Psych",
-    "fps": 24,
     "minFps": 22,
     "maxFps": 26,
-    "xOffset": 0,
-    "yOffset": 0
+    "scale": 0.9,
+    "animations": [
+        {
+            "name": "splash 1 purple",
+            "prefix": "note splash 1 purple",
+            "frameRate": 24,
+            "offsets": [
+                -14,
+                0
+            ]
+        },
+        {
+            "name": "splash 2 purple",
+            "prefix": "note splash 2 purple",
+            "frameRate": 24,
+            "offsets": [
+                5,
+                -2
+            ]
+        },
+        {
+            "name": "splash 1 red",
+            "prefix": "note splash 1 red",
+            "frameRate": 24,
+            "offsets": [
+                -14,
+                0
+            ]
+        },
+        {
+            "name": "splash 2 red",
+            "prefix": "note splash 2 red",
+            "frameRate": 24,
+            "offsets": [
+                5,
+                -2
+            ]
+        },
+        {
+            "name": "splash 1 green",
+            "prefix": "note splash 1 green",
+            "frameRate": 24,
+            "offsets": [
+                -14,
+                0
+            ]
+        },
+        {
+            "name": "splash 2 green",
+            "prefix": "note splash 2 green",
+            "frameRate": 24,
+            "offsets": [
+                5,
+                -2
+            ]
+        },
+        {
+            "name": "splash 1 blue",
+            "prefix": "note splash 1 blue",
+            "frameRate": 24,
+            "offsets": [
+                -14,
+                0
+            ]
+        },
+        {
+            "name": "splash 2 blue",
+            "prefix": "note splash 2 blue",
+            "frameRate": 24,
+            "offsets": [
+                5,
+                -2
+            ]
+        }
+    ]
 }

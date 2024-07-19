@@ -436,6 +436,7 @@ class OptionsMenu extends MusicBeatSubstate
 
 	var exiting:Bool = false;
 	var holdTime:Float = 0;
+
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);

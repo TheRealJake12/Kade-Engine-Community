@@ -121,6 +121,7 @@ class StaticArrow extends FlxSprite
 
 				antialiasing = FlxG.save.data.antialiasing;
 				setGraphicSize(Std.int(width * 0.7));
+				updateHitbox();
 		}
 
 		if (lastAnim != null)

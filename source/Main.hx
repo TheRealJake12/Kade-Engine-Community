@@ -201,11 +201,13 @@ class Main extends Sprite
 			+ e.error
 			+
 			"\nWoops! We fucked up somewhere! Report this window here : https://github.com/TheRealJake12/Kade-Engine-Community.git\n\n Why dont you join the discord while you're at it? : https://discord.gg/TKCzG5rVGf \n\n> Crash Handler written by: sqirra-rng";
+		Sys.println(errMsg);	
+		#if FEATURE_LOGGING	
 		if (!FileSystem.exists("./logs/"))
 			FileSystem.createDirectory("./logs/");
 		File.saveContent(path, errMsg + "\n");
-		Sys.println(errMsg);
 		Sys.println("Crash dump saved in " + Path.normalize(path));
+		#end
 		Application.current.window.alert(errMsg, "Error!");
 		Sys.exit(1);
 	}
