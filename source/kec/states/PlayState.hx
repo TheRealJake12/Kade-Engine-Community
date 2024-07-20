@@ -928,20 +928,18 @@ class PlayState extends MusicBeatState
 		#end
 
 		var index = 0;
-		
-			var toBeRemoved = [];
-			for (i in 0...spawnNotes.length)
-			{
-				var dunceNote:NoteData = spawnNotes[i];
 
-				if (dunceNote.strumTime < startTime)
-					toBeRemoved.push(dunceNote);
-			}
+		var toBeRemoved = [];
+		for (i in 0...spawnNotes.length)
+		{
+			var dunceNote:NoteData = spawnNotes[i];
 
-			for (i in toBeRemoved)
-				spawnNotes.remove(i);
-			if (FlxG.save.data.gen)
-				Debug.logTrace("Removed " + toBeRemoved.length + " cuz of start time");
+			if (dunceNote.strumTime < startTime)
+				toBeRemoved.push(dunceNote);
+		}
+
+		for (i in toBeRemoved)
+			spawnNotes.remove(i);
 
 		createBar();
 
@@ -1746,6 +1744,7 @@ class PlayState extends MusicBeatState
 
 		addSongTiming();
 
+		#if FEATURE_DISCORD
 		Discord.changePresence(detailsText
 			+ " "
 			+ SONG.songName
@@ -1759,6 +1758,7 @@ class PlayState extends MusicBeatState
 			+ songScore
 			+ " | Misses: "
 			+ misses, iconRPC, true, songLengthRPC);
+		#end
 
 		#if FEATURE_HSCRIPT
 		if (ScriptUtil.hasPause(scripts.executeAllFunc("startSong")))
@@ -2025,7 +2025,7 @@ class PlayState extends MusicBeatState
 
 				var anotherCrochet:Float = Conductor.crochet;
 				var anotherStepCrochet:Float = anotherCrochet * 0.25;
-				
+
 				spawnNotes.push({
 					strumTime: daStrumTime,
 					noteData: daNoteData,
@@ -2335,6 +2335,7 @@ class PlayState extends MusicBeatState
 						sustain.spotInLine = spotInLine;
 						sustain.mustPress = data.isPlayer;
 						sustain.parent = note;
+							
 						sustain.noteType = sustain.parent.noteType;
 						note.children.push(sustain);
 						spotInLine++;
@@ -4063,11 +4064,6 @@ class PlayState extends MusicBeatState
 	{
 		super.beatHit();
 
-		if (generatedMusic)
-		{
-			notes.sort(FlxSort.byY, (PlayStateChangeables.useDownscroll ? FlxSort.ASCENDING : FlxSort.DESCENDING));
-		}
-
 		#if FEATURE_LUAMODCHART
 		if (executeModchart && luaModchart != null)
 		{
@@ -4801,15 +4797,7 @@ class PlayState extends MusicBeatState
 
 	private function destroyNote(daNote:Note)
 	{
-		if (daNote == null)
-			return;
-
-		daNote.active = false;
-		daNote.visible = false;
 		daNote.kill();
-		notes.remove(daNote, true);
-		daNote.destroy();
-		daNote = null;
 	}
 
 	private function cleanPlayObjects()

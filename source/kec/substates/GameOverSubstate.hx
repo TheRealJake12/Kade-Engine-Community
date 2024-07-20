@@ -6,8 +6,10 @@ import kec.backend.PlayStateChangeables;
 class GameOverSubstate extends MusicBeatSubstate
 {
 	public var bf:Character;
+
 	var camFollow:FlxObject;
 	var stageSuffix:String = "";
+
 	public static var instance:GameOverSubstate = null;
 
 	public function new()
