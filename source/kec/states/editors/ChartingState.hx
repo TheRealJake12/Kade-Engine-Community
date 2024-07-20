@@ -1106,7 +1106,9 @@ class ChartingState extends MusicBeatState
 					if (PlayStateChangeables.opponentMode)
 						gottaHitNote = !gottaHitNote;
 
-					var note:Note = new Note(daStrumTime, daNoteInfo % 4, null, false, true, gottaHitNote, daBeat);
+					var note:Note = new Note();
+					note.setup(daStrumTime, daNoteInfo % 4, null, false, gottaHitNote, daBeat);
+					note.insideCharter = true;
 					note.rawNoteData = daNoteInfo;
 					note.noteType = daType;
 					note.sustainLength = daSus;
@@ -1235,7 +1237,9 @@ class ChartingState extends MusicBeatState
 		if (PlayStateChangeables.opponentMode)
 			gottaHitNote = !gottaHitNote;
 
-		var note:Note = new Note(noteStrum, noteData % 4, null, false, true, gottaHitNote, TimingStruct.getBeatFromTime(noteStrum));
+		var note:Note = new Note();
+		note.setup(noteStrum, noteData % 4, null, false, gottaHitNote, TimingStruct.getBeatFromTime(noteStrum));
+		note.insideCharter = true;
 		note.rawNoteData = noteData;
 		note.sustainLength = noteSus;
 		note.noteType = noteType;
@@ -1444,7 +1448,9 @@ class ChartingState extends MusicBeatState
 					if (PlayStateChangeables.opponentMode)
 						gottaHitNote = !gottaHitNote;
 
-					var note:Note = new Note(strum, originalNote.noteData, originalNote.prevNote, false, true, gottaHitNote, originalNote.beat);
+					var note:Note = new Note();
+					note.setup(strum, originalNote.noteData, null, false, gottaHitNote, originalNote.beat);
+					note.insideCharter = true;
 					note.rawNoteData = originalNote.rawNoteData;
 					note.sustainLength = originalNote.sustainLength;
 					note.noteType = originalNote.noteType;
@@ -1530,7 +1536,9 @@ class ChartingState extends MusicBeatState
 						if (PlayStateChangeables.opponentMode)
 							gottaHitNote = !gottaHitNote;
 
-						var note:Note = new Note(strum, Math.floor(i[1] % 4), null, false, true, gottaHitNote, i[3]);
+						var note:Note = new Note();
+						note.setup(strum, Math.floor(i[1] % 4), null, false, gottaHitNote, i[3]);
+						note.insideCharter = true;
 						note.rawNoteData = i[1];
 						note.sustainLength = i[2];
 						note.noteType = i[3];

@@ -9,6 +9,7 @@ import kec.backend.chart.Song;
 import kec.backend.chart.TimingStruct;
 import kec.backend.PlayStateChangeables;
 import kec.backend.chart.NoteData;
+import kec.backend.util.Sort;
 
 class Character extends FlxSprite
 {
@@ -415,13 +416,8 @@ class Character extends FlxSprite
 				noteCounter++;
 			}
 		}
+		animationNotes.sort(Sort.sortNoteData);
 		TankmenBG.animationNotes = animationNotes;
-		animationNotes.sort(sortAnims);
-	}
-
-	function sortAnims(Obj1:NoteData, Obj2:NoteData):Int
-	{
-		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
 	}
 
 	public function addOffset(name:String, x:Float = 0, y:Float = 0)

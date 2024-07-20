@@ -98,6 +98,146 @@ class Note extends FlxSprite
 	public var LuaNote:LuaNote;
 	#end
 
+	public function setup(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?isPlayer:Bool = true, ?beat:Float = 0)
+	{
+		if (strumTime < 0)
+			strumTime = 0;
+		this.strumTime = strumTime;
+		this.noteData = noteData;
+		this.isPlayer = isPlayer;
+		this.beat = beat;
+		isSustainNote = sustainNote;
+		this.prevNote = prevNote;
+		moves = false;
+		lateHitMult = isSustainNote ? 0.5 : 1;
+		reloadNote(null);
+		isSustainEnd = false;
+
+		// MAKE SURE ITS DEFINITELY OFF SCREEN?
+		y -= 2000;
+
+		if (PlayStateChangeables.mirrorMode)
+		{
+			this.noteData = Std.int(Math.abs(3 - noteData));
+			noteData = Std.int(Math.abs(3 - noteData));
+		}
+
+		var animToPlay:String = '';
+		animToPlay = dataColor[Std.int(noteData % 4)] + 'Scroll';
+		x += swagWidth * noteData;
+
+		originColor = noteData; // The note's origin color will be checked by its sustain notes
+
+		if (FlxG.save.data.stepMania && !isSustainNote && !(PlayState.instance != null ? PlayState.instance.executeModchart : false))
+		{
+			var col:Int = 0;
+
+			var beatRow = Math.round(beat * 48);
+			// STOLEN ETTERNA CODE (IN 2002)
+
+			if (beatRow % (192 / 4) == 0)
+				col = quantityColor[0];
+			else if (beatRow % (192 / 8) == 0)
+				col = quantityColor[2];
+			else if (beatRow % (192 / 12) == 0)
+				col = quantityColor[4];
+			else if (beatRow % (192 / 16) == 0)
+				col = quantityColor[6];
+			else if (beatRow % (192 / 24) == 0)
+				col = quantityColor[4];
+			else if (beatRow % (192 / 32) == 0)
+				col = quantityColor[4];
+
+			originColor = col;
+
+			localAngle -= arrowAngles[col];
+			localAngle += arrowAngles[Std.int(noteData % 4)];
+			originAngle = localAngle;
+			animToPlay = dataColor[Std.int(col % 4)] + 'Scroll';
+		}
+
+		animation.play(animToPlay);
+
+		if (isSustainNote && prevNote != null)
+		{
+			stepHeight = (((0.45 * PlayState.instance.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayState.instance.scrollSpeed == 1 ? PlayState.SONG.speed : PlayState.instance.scrollSpeed,
+				2) * speedMultiplier);
+			noteYOff = -stepHeight + swagWidth * 0.5;
+
+			noteScore * 0.2;
+
+			if (PlayStateChangeables.useDownscroll)
+				flipY = true;
+
+			originColor = prevNote.originColor;
+			originAngle = prevNote.originAngle;
+
+			animation.play(dataColor[Std.int(originColor % 4)] + 'holdend'); // This works both for normal colors and quantization colors
+			updateHitbox();
+			isSustainEnd = true;
+
+			if (prevNote.isSustainNote)
+			{
+				prevNote.isSustainEnd = false;
+				prevNote.animation.play(dataColor[prevNote.originColor] + 'hold');
+				prevNote.updateHitbox();
+				prevNote.scale.y *= (stepHeight / prevNote.height);
+
+				if (noteTypeCheck != 'pixel')
+					prevNote.scale.y *= 1.0 + (1.0 / prevNote.frameHeight) * 1.05;
+
+				prevNote.updateHitbox();
+			}
+		}
+
+		clipRect = null;
+		updateHitbox();
+	}
+
+	public function resetNote()
+	{
+		noteData = 0;
+		rawNoteData = 0;
+		strumTime = 0;
+		scale.y = 0.7;
+		mustPress = false;
+		noteType = null;
+		sustainLength = 0;
+		distance = 2000;
+		spotInLine = 0;
+		isParent = false;
+		parent = null;
+		children.resize(0);
+		stepHeight = 0;
+		noteYOff = 0;
+		beat = 0;
+		wasGoodHit = false;
+		canBeHit = false;
+		tooLate = false;
+		originColor = 0;
+		rating = null;
+		modAngle = localAngle = originAngle = 0;
+		alpha = 1;
+		modAlpha = 1;
+		isSustainNote = false;
+		isSustainEnd = false;
+		sustainActive = false;
+		insideCharter = false;
+		charterSelected = false;
+		earlyHitMult = 1;
+		modifiedByLua = false;
+		lateHitMult = 1;
+		causesMisses = true;
+		canPlayAnims = true;
+		canNoteSplash = true;
+		botplayHit = true;
+		canRate = true;
+		missHealth = 0.08;
+		hitsoundsEditor = true;
+		LuaNote = null;
+		updateHitbox();
+	}
+
 	private function set_texture(value:String):String
 	{
 		if (texture != value)
@@ -176,129 +316,11 @@ class Note extends FlxSprite
 		return value;
 	}
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inCharter:Bool = false, ?isPlayer:Bool = false,
+	public function new(?strumTime:Float, ?noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inCharter:Bool = false, ?isPlayer:Bool = false,
 			?bet:Float = 0)
 	{
 		super();
-		this.noteType = noteType; // FFFFFFFFFFFFFFFFFFFFFFUUUUUUUUUUUUUUUUUUUUUUUUUUUU
-		insideCharter = inCharter;
-		this.isPlayer = isPlayer;
-		if (prevNote == null)
-			prevNote = this;
-
-		beat = bet;
-
-		this.prevNote = prevNote;
-		isSustainNote = sustainNote;
-		moves = false;
-		lateHitMult = isSustainNote ? 0.5 : 1;
-
-		x += 50;
-		// MAKE SURE ITS DEFINITELY OFF SCREEN?
-		y -= 2000;
-
-		if (inCharter)
-		{
-			this.strumTime = strumTime;
-			rStrumTime = strumTime;
-		}
-		else
-		{
-			this.strumTime = strumTime;
-			rStrumTime = strumTime;
-		}
-
-		if (this.strumTime < 0)
-			this.strumTime = 0;
-
-		this.noteData = noteData;
-
-		if (PlayStateChangeables.mirrorMode)
-		{
-			this.noteData = Std.int(Math.abs(3 - noteData));
-			noteData = Std.int(Math.abs(3 - noteData));
-		}
-
 		texture = '';
-
-		// x += swagWidth * (noteData);
-		var animToPlay:String = '';
-		animToPlay = dataColor[Std.int(noteData % 4)] + 'Scroll';
-		x += swagWidth * noteData;
-
-		originColor = noteData; // The note's origin color will be checked by its sustain notes
-
-		if (FlxG.save.data.stepMania && !isSustainNote && !(PlayState.instance != null ? PlayState.instance.executeModchart : false))
-		{
-			var col:Int = 0;
-
-			var beatRow = Math.round(beat * 48);
-			// STOLEN ETTERNA CODE (IN 2002)
-
-			if (beatRow % (192 / 4) == 0)
-				col = quantityColor[0];
-			else if (beatRow % (192 / 8) == 0)
-				col = quantityColor[2];
-			else if (beatRow % (192 / 12) == 0)
-				col = quantityColor[4];
-			else if (beatRow % (192 / 16) == 0)
-				col = quantityColor[6];
-			else if (beatRow % (192 / 24) == 0)
-				col = quantityColor[4];
-			else if (beatRow % (192 / 32) == 0)
-				col = quantityColor[4];
-
-			originColor = col;
-
-			localAngle -= arrowAngles[col];
-			localAngle += arrowAngles[Std.int(noteData % 4)];
-			originAngle = localAngle;
-			animToPlay = dataColor[Std.int(col % 4)] + 'Scroll';
-		}
-
-		animation.play(animToPlay);
-
-		if (isSustainNote && prevNote != null)
-		{
-			stepHeight = (((0.45 * PlayState.instance.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayState.instance.scrollSpeed == 1 ? PlayState.SONG.speed : PlayState.instance.scrollSpeed,
-				2) * speedMultiplier);
-			noteYOff = -stepHeight + swagWidth * 0.5;
-
-			noteScore * 0.2;
-
-			if (PlayStateChangeables.useDownscroll)
-				flipY = true;
-
-			x += width * 0.5;
-
-			originColor = prevNote.originColor;
-			originAngle = prevNote.originAngle;
-
-			animation.play(dataColor[Std.int(originColor % 4)] + 'holdend'); // This works both for normal colors and quantization colors
-			updateHitbox();
-
-			x -= width * 0.5;
-
-			if (inCharter)
-				x += 30;
-
-			if (prevNote.isSustainNote)
-			{
-				prevNote.animation.play(dataColor[prevNote.originColor] + 'hold');
-				prevNote.updateHitbox();
-				prevNote.scale.y *= (stepHeight / prevNote.height);
-
-				if (noteTypeCheck != 'pixel')
-					prevNote.scale.y *= 1.0 + (1.0 / prevNote.frameHeight) * 1.05;
-
-				prevNote.updateHitbox();
-			}
-		}
-		else if (!isSustainNote)
-		{
-			centerOffsets();
-			centerOrigin();
-		}
 	}
 
 	static var _lastValidChecked:String; // optimization
@@ -473,7 +495,6 @@ class Note extends FlxSprite
 
 			if (isSustainNote)
 			{
-				isSustainEnd = spotInLine == parent.children.length - 1;
 				alpha = !sustainActive
 					&& (parent.tooLate || parent.wasGoodHit) ? (modAlpha * FlxG.save.data.alpha) * 0.5 : modAlpha * FlxG.save.data.alpha; // This is the correct way
 			}

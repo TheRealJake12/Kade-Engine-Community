@@ -70,6 +70,7 @@ import kec.backend.PlayerSettings;
 import kec.objects.ui.ComboNumber;
 import kec.objects.ui.UIComponent;
 import kec.backend.util.Sort;
+import kec.backend.chart.NoteData;
 
 class PlayState extends MusicBeatState
 {
@@ -387,6 +388,9 @@ class PlayState extends MusicBeatState
 	private var numGroup:FlxTypedGroup<ComboNumber>;
 	private var ratingGroup:FlxTypedGroup<Rating>;
 	private var events:Array<Event> = null;
+
+	private var spawnNotes:Array<NoteData> = [];
+	private var prevNote:Note = null;
 
 	// Adding Objects Using Lua
 	public function addObject(object:FlxBasic)
@@ -924,27 +928,20 @@ class PlayState extends MusicBeatState
 		#end
 
 		var index = 0;
-
-		if (startTime != 0)
-		{
+		
 			var toBeRemoved = [];
-			for (i in 0...unspawnNotes.length)
+			for (i in 0...spawnNotes.length)
 			{
-				var dunceNote:Note = unspawnNotes[i];
+				var dunceNote:NoteData = spawnNotes[i];
 
-				if (dunceNote.strumTime <= startTime)
+				if (dunceNote.strumTime < startTime)
 					toBeRemoved.push(dunceNote);
 			}
 
 			for (i in toBeRemoved)
-				unspawnNotes.remove(i);
+				spawnNotes.remove(i);
 			if (FlxG.save.data.gen)
 				Debug.logTrace("Removed " + toBeRemoved.length + " cuz of start time");
-		}
-
-		for (i in 0...unspawnNotes.length)
-			if (unspawnNotes[i].strumTime < startTime)
-				unspawnNotes.remove(unspawnNotes[i]);
 
 		createBar();
 
@@ -1339,15 +1336,6 @@ class PlayState extends MusicBeatState
 		{
 			var ratio:Float = value / scrollSpeed;
 			for (note in notes)
-			{
-				if (note.animation.curAnim != null)
-					if (note.isSustainNote && !note.animation.curAnim.name.endsWith('end'))
-					{
-						note.scale.y *= ratio;
-						note.updateHitbox();
-					}
-			}
-			for (note in unspawnNotes)
 			{
 				if (note.animation.curAnim != null)
 					if (note.isSustainNote && !note.animation.curAnim.name.endsWith('end'))
@@ -2035,79 +2023,29 @@ class PlayState extends MusicBeatState
 				if (PlayStateChangeables.opponentMode)
 					gottaHitNote = !gottaHitNote;
 
-				var oldNote:Note;
-				if (unspawnNotes.length > 0)
-					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
-				else
-					oldNote = null;
-
-				var swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, gottaHitNote, daBeat);
-				swagNote.rawNoteData = Std.int(songNotes[1]);
-				swagNote.noteType = daNoteType;
-
-				if (PlayStateChangeables.holds)
-				{
-					swagNote.sustainLength = songNotes[2] / songMultiplier;
-				}
-				else
-				{
-					swagNote.sustainLength = 0;
-				}
-
-				swagNote.scrollFactor.set(0, 0);
-
-				var susLength:Float = swagNote.sustainLength;
-
 				var anotherCrochet:Float = Conductor.crochet;
 				var anotherStepCrochet:Float = anotherCrochet * 0.25;
-				susLength = susLength / anotherStepCrochet;
+				
+				spawnNotes.push({
+					strumTime: daStrumTime,
+					noteData: daNoteData,
+					sustainLength: (PlayStateChangeables.holds) ? songNotes[2] / songMultiplier : 0,
+					noteType: songNotes[3],
+					isPlayer: gottaHitNote,
+					beat: daBeat
+				});
 
-				unspawnNotes.push(swagNote);
-
-				var type = 0;
-
-				if (susLength > 0)
-				{
-					swagNote.isParent = true;
-					for (susNote in 0...Std.int(Math.max(susLength, 2)))
-					{
-						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
-						var sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true, false,
-							gottaHitNote, 0);
-						sustainNote.rawNoteData = Std.int(songNotes[1]);
-
-						sustainNote.noteType = daNoteType;
-
-						sustainNote.scrollFactor.set();
-						unspawnNotes.push(sustainNote);
-
-						sustainNote.mustPress = gottaHitNote;
-
-						sustainNote.parent = swagNote;
-						swagNote.children.push(sustainNote);
-						sustainNote.spotInLine = type;
-						type++;
-					}
-				}
-
-				swagNote.mustPress = gottaHitNote;
-
-				if (swagNote.mustPress && !swagNote.isSustainNote)
+				if (gottaHitNote)
 					playerNotes++;
-				else if (!swagNote.mustPress)
+				else
 					opponentNotes++;
 
 				songNotesCount++;
-
-				if (swagNote.mustPress)
-				{
-					swagNote.x += FlxG.width * 0.5; // general offset
-				}
 			}
 			daBeats += 1;
 		}
 
-		unspawnNotes.sort(Sort.sortNotes);
+		spawnNotes.sort(Sort.sortNoteData);
 
 		generatedMusic = true;
 		if (FlxG.save.data.gen)
@@ -2365,29 +2303,55 @@ class PlayState extends MusicBeatState
 
 	override public function update(elapsed:Float)
 	{
-		if (unspawnNotes[0] != null)
+		if (spawnNotes[0] != null)
 		{
 			var shit:Float = 2000;
 			if (SONG.speed < 1 || scrollSpeed < 1)
 				shit /= scrollSpeed == 1 ? SONG.speed : scrollSpeed;
 			var time:Float = shit * songMultiplier;
 
-			while (unspawnNotes.length > 0 && unspawnNotes[0].strumTime - Conductor.songPosition < time)
+			while (spawnNotes.length > 0 && spawnNotes[0].strumTime - Conductor.songPosition < time)
 			{
-				var dunceNote:Note = unspawnNotes[0];
-
-				notes.insert(0, dunceNote);
-
+				var data:NoteData = spawnNotes[0];
+				var note:Note = notes.recycle(Note);
+				note.resetNote();
+				note.setup(data.strumTime, data.noteData, prevNote, false, data.isPlayer, data.beat);
+				note.sustainLength = data.sustainLength;
+				note.noteType = data.noteType;
+				note.parent = null;
+				note.mustPress = data.isPlayer;
+				var susLength = note.sustainLength;
+				susLength = susLength / fakeNoteStepCrochet;
+				prevNote = note;
+				if (susLength > 0)
+				{
+					var spotInLine = 0;
+					note.isParent = true;
+					for (susNote in 0...Std.int(Math.max(susLength, 2)))
+					{
+						var sustain:Note = notes.recycle(Note);
+						sustain.resetNote();
+						sustain.setup(data.strumTime + (fakeNoteStepCrochet * susNote) + fakeNoteStepCrochet, data.noteData, prevNote, true, data.isPlayer, 0);
+						sustain.spotInLine = spotInLine;
+						sustain.mustPress = data.isPlayer;
+						sustain.parent = note;
+						sustain.noteType = sustain.parent.noteType;
+						note.children.push(sustain);
+						spotInLine++;
+						prevNote = sustain;
+					}
+				}
 				#if FEATURE_LUAMODCHART
 				if (executeModchart)
 				{
-					new LuaNote(dunceNote, currentLuaIndex);
-					dunceNote.luaID = currentLuaIndex;
+					new LuaNote(note, currentLuaIndex);
+					note.luaID = currentLuaIndex;
 				}
 				#end
 
-				var index:Int = unspawnNotes.indexOf(dunceNote);
-				unspawnNotes.splice(index, 1);
+				notes.sort(FlxSort.byY, (PlayStateChangeables.useDownscroll ? FlxSort.ASCENDING : FlxSort.DESCENDING));
+
+				spawnNotes.shift();
 				currentLuaIndex++;
 			}
 		}
@@ -4630,7 +4594,7 @@ class PlayState extends MusicBeatState
 		script.set("playerStrums", playerStrums);
 		script.set("cpuStrums", cpuStrums);
 
-		script.set("unspawnNotes", unspawnNotes);
+		script.set("spawnNotes", spawnNotes);
 
 		// MISC
 		script.set("add", function(obj:FlxBasic, ?front:Bool = false)
@@ -4780,13 +4744,6 @@ class PlayState extends MusicBeatState
 				{
 					playerStrums.members[i].texture = 'noteskins/' + texture;
 				}
-				for (note in unspawnNotes)
-				{
-					if (note.mustPress && (note.noteType == null || note.noteType.toLowerCase() == 'normal'))
-					{
-						note.texture = 'noteskins/' + texture;
-					}
-				}
 				for (note in notes)
 				{
 					if (note.mustPress && (note.noteType == null || note.noteType.toLowerCase() == 'normal'))
@@ -4798,13 +4755,6 @@ class PlayState extends MusicBeatState
 				for (i in 0...cpuStrums.length)
 				{
 					cpuStrums.members[i].texture = 'noteskins/' + texture;
-				}
-				for (note in unspawnNotes)
-				{
-					if (!note.mustPress && (note.noteType == null || note.noteType.toLowerCase() == 'normal'))
-					{
-						note.texture = 'noteskins/' + texture;
-					}
 				}
 				for (note in notes)
 				{
@@ -4867,10 +4817,10 @@ class PlayState extends MusicBeatState
 		timerManager.clear();
 		tweenManager.clear();
 
-		while (unspawnNotes.length > 0)
+		while (notes.length > 0)
 		{
-			var note = unspawnNotes[0];
-			unspawnNotes.remove(note);
+			var note = notes.members[0];
+			notes.remove(note);
 
 			if (!note.isParent && !note.isSustainNote)
 			{
