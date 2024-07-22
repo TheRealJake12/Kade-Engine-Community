@@ -76,8 +76,6 @@ class NoteSplash extends FlxSprite
 		var texture:String = Constants.notesplashSprite;
 		switch (PlayState.STYLE.style.toLowerCase())
 		{
-			case 'pixel':
-				frames = Paths.getSparrowAtlas('hud/pixel/noteSplashes-pixels');
 			default:
 				frames = Paths.getSparrowAtlas(NoteStyleHelper.generateNotesplashSprite(texture, noteType.toLowerCase()), 'shared');
 				if (frames == null)

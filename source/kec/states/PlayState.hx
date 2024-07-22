@@ -823,17 +823,18 @@ class PlayState extends MusicBeatState
 		playerStrums = new FlxTypedGroup<StaticArrow>();
 		cpuStrums = new FlxTypedGroup<StaticArrow>();
 
+		Constants.notesplashSprite = NoteStyleHelper.notesplashArray[FlxG.save.data.notesplash];
+
 		switch (STYLE.style.toLowerCase())
 		{
 			case 'pixel':
 				Constants.noteskinPixelSprite = NoteStyleHelper.generatePixelSprite(FlxG.save.data.noteskin);
 				Constants.noteskinPixelSpriteEnds = NoteStyleHelper.generatePixelSprite(FlxG.save.data.noteskin, true);
+				Constants.notesplashSprite = "Pixel";
 			case 'default':
 				Constants.noteskinSprite = NoteStyleHelper.generateNoteskinSprite(FlxG.save.data.noteskin);
 				Constants.cpuNoteskinSprite = NoteStyleHelper.generateNoteskinSprite(FlxG.save.data.cpuNoteskin);
 		}
-
-		Constants.notesplashSprite = NoteStyleHelper.notesplashArray[FlxG.save.data.notesplash];
 
 		tweenBoolshit = SONG.songId != 'tutorial' && SONG.songId != 'roses';
 
@@ -1420,24 +1421,24 @@ class PlayState extends MusicBeatState
 			switch (t.loopsLeft)
 			{
 				case 3:
-					if (Paths.fileExists('styles/$styleName/intro3', SOUND, 'shared'))
+					if (Paths.fileExists('sounds/styles/$styleName/intro3' + Paths.SOUND_EXT, SOUND, 'shared'))
 						FlxG.sound.play(Paths.sound('styles/$styleName/intro3'), 0.6);
 					else
 						FlxG.sound.play(Paths.sound('styles/default/intro3'), 0.6);
 				case 2:
-					if (Paths.fileExists('styles/$styleName/intro2', SOUND, 'shared'))
+					if (Paths.fileExists('sounds/styles/$styleName/intro2' + Paths.SOUND_EXT, SOUND, 'shared'))
 						FlxG.sound.play(Paths.sound('styles/$styleName/intro2'), 0.6);
 					else
 						FlxG.sound.play(Paths.sound('styles/default/intro2'), 0.6);
 					introGroup.members[0].appear();
 				case 1:
-					if (Paths.fileExists('styles/$styleName/intro1', SOUND, 'shared'))
+					if (Paths.fileExists('sounds/styles/$styleName/intro1' + Paths.SOUND_EXT, SOUND, 'shared'))
 						FlxG.sound.play(Paths.sound('styles/$styleName/intro1'), 0.6);
 					else
 						FlxG.sound.play(Paths.sound('styles/default/intro1'), 0.6);
 					introGroup.members[1].appear();
 				case 0:
-					if (Paths.fileExists('styles/$styleName/introGo', SOUND, 'shared'))
+					if (Paths.fileExists('sounds/styles/$styleName/introGo' + Paths.SOUND_EXT, SOUND, 'shared'))
 						FlxG.sound.play(Paths.sound('styles/$styleName/introGo'), 0.6);
 					else
 						FlxG.sound.play(Paths.sound('styles/default/introGo'), 0.6);
@@ -3053,41 +3054,53 @@ class PlayState extends MusicBeatState
 			{
 				if (!PlayStateChangeables.opponentMode)
 				{
-					if (healthBar.percent < 20 && icon1AnimArray[1])
+					if (health < 0.20 && icon1AnimArray[1])
+					{
 						animName = 'Lose';
+					}
 					else
+					{
 						animName = 'Idle';
+					}
 
 					if (iconP1.animation.curAnim.finished || (animName != iconP1.animation.curAnim.name))
+					{
 						iconP1.playAnim(animName, true);
+					}
 				}
 				else
 				{
-					if (healthBar.percent > 80 && icon1AnimArray[0])
+					if (health > 1.80 && icon1AnimArray[0])
+					{
 						animName = 'Lose';
+					}
 					else
+					{
 						animName = 'Idle';
+					}
 
 					if (iconP1.animation.curAnim.finished || (animName != iconP1.animation.curAnim.name))
+					{
 						iconP1.playAnim(animName, true);
+					}
 				}
 			}
 			else
 			{
 				if (!PlayStateChangeables.opponentMode)
 				{
-					if (healthBar.percent < 20)
+					if (health < 0.20)
 						iconP1.animation.curAnim.curFrame = 1;
-					else if (healthBar.percent > 80 && iconP1.hasWinningIcon)
+					else if (health > 1.80 && iconP1.hasWinningIcon)
 						iconP1.animation.curAnim.curFrame = 2;
 					else
 						iconP1.animation.curAnim.curFrame = 0;
 				}
 				else
 				{
-					if (healthBar.percent > 80)
+					if (health > 1.80)
 						iconP1.animation.curAnim.curFrame = 1;
-					else if (healthBar.percent < 20 && iconP1.hasWinningIcon)
+					else if (health < 0.20 && iconP1.hasWinningIcon)
 						iconP1.animation.curAnim.curFrame = 2;
 					else
 						iconP1.animation.curAnim.curFrame = 0;
@@ -3098,10 +3111,14 @@ class PlayState extends MusicBeatState
 			{
 				if (!PlayStateChangeables.opponentMode)
 				{
-					if (healthBar.percent > 80 && icon2AnimArray[0])
+					if (health > 1.80 && icon2AnimArray[0])
+					{
 						animName = 'Lose';
+					}
 					else
+					{
 						animName = 'Idle';
+					}
 
 					if (iconP2.animation.curAnim.finished || (animName != iconP2.animation.curAnim.name))
 					{
@@ -3110,31 +3127,37 @@ class PlayState extends MusicBeatState
 				}
 				else
 				{
-					if (healthBar.percent < 20 && icon2AnimArray[0])
+					if (health < 0.20 && icon2AnimArray[0])
+					{
 						animName = 'Lose';
+					}
 					else
+					{
 						animName = 'Idle';
+					}
 
 					if (iconP2.animation.curAnim.finished || (animName != iconP2.animation.curAnim.name))
+					{
 						iconP2.playAnim(animName, true);
+					}
 				}
 			}
 			else
 			{
 				if (PlayStateChangeables.opponentMode)
 				{
-					if (healthBar.percent < 20)
+					if (health < 0.20)
 						iconP2.animation.curAnim.curFrame = 1;
-					else if (healthBar.percent > 80 && iconP2.hasWinningIcon)
+					else if (health > 1.80 && iconP2.hasWinningIcon)
 						iconP2.animation.curAnim.curFrame = 2;
 					else
 						iconP2.animation.curAnim.curFrame = 0;
 				}
 				else
 				{
-					if (healthBar.percent > 80)
+					if (health > 1.80)
 						iconP2.animation.curAnim.curFrame = 1;
-					else if (healthBar.percent < 20 && iconP2.hasWinningIcon)
+					else if (health < 0.20 && iconP2.hasWinningIcon)
 						iconP2.animation.curAnim.curFrame = 2;
 					else
 						iconP2.animation.curAnim.curFrame = 0;
@@ -3814,7 +3837,7 @@ class PlayState extends MusicBeatState
 
 				if (FlxG.save.data.cpuStrums)
 				{
-					pressArrow(cpuStrums.members[daNote.noteData], daNote, Conductor.stepCrochet * 1.25 * 0.001);
+					pressArrow(cpuStrums.members[daNote.noteData], daNote, fakeNoteStepCrochet * 1.25 * 0.001);
 				}
 
 				if (SONG.needsVoices)
@@ -3954,7 +3977,7 @@ class PlayState extends MusicBeatState
 			#end
 
 			if (PlayStateChangeables.botPlay && FlxG.save.data.cpuStrums)
-				pressArrow(playerStrums.members[note.noteData], note, Conductor.stepCrochet * 1.25 * 0.001);
+				pressArrow(playerStrums.members[note.noteData], note, fakeNoteStepCrochet * 1.25 * 0.001);
 			else
 			{
 				var spr = playerStrums.members[note.noteData];
