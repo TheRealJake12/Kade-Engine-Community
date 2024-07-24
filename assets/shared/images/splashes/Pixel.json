@@ -1,0 +1,79 @@
+{
+    "name": "Pixel",
+    "minFps": 22,
+    "maxFps": 28,
+    "animations": [
+        {
+            "name": "splash 1 purple",
+            "prefix": "note splash 1 purple",
+            "frameRate": 24,
+            "offsets": [
+                -30,
+                -15
+            ]
+        },
+        {
+            "name": "splash 2 purple",
+            "prefix": "note splash 2 purple",
+            "frameRate": 24,
+            "offsets": [
+                -30,
+                -15
+            ]
+        },
+        {
+            "name": "splash 1 red",
+            "prefix": "note splash 1 red",
+            "frameRate": 24,
+            "offsets": [
+                -30,
+                -15
+            ]
+        },
+        {
+            "name": "splash 2 red",
+            "prefix": "note splash 2 red",
+            "frameRate": 24,
+            "offsets": [
+                -30,
+                -15
+            ]
+        },
+        {
+            "name": "splash 1 green",
+            "prefix": "note splash 1 green",
+            "frameRate": 24,
+            "offsets": [
+                -30,
+                -15
+            ]
+        },
+        {
+            "name": "splash 2 green",
+            "prefix": "note splash 2 green",
+            "frameRate": 24,
+            "offsets": [
+                -30,
+                -15
+            ]
+        },
+        {
+            "name": "splash 1 blue",
+            "prefix": "note splash 1 blue",
+            "frameRate": 24,
+            "offsets": [
+                -30,
+                -15
+            ]
+        },
+        {
+            "name": "splash 2 blue",
+            "prefix": "note splash 2 blue",
+            "frameRate": 24,
+            "offsets": [
+                -30,
+                -15
+            ]
+        }
+    ]
+}

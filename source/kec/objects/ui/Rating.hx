@@ -6,7 +6,7 @@ class Rating extends UIComponent
 	{
 		if (lastName != ratingName)
 		{
-			if (Paths.fileExists('hud/${style.style.toLowerCase()}/' + ratingName, IMAGE, 'shared'))
+			if (Paths.fileExists('images/hud/${style.style.toLowerCase()}/' + ratingName + '.png', IMAGE, 'shared'))
 				loadGraphic(Paths.image('hud/${style.style.toLowerCase()}/' + ratingName));
 			else
 				loadGraphic(Paths.image('hud/default/' + ratingName));
