@@ -9,6 +9,7 @@ typedef SplashData =
 	 * The name of this animation.
 	 */
 	var ?name:String;
+
 	var animations:Array<SplashAnims>;
 	var ?antialiasing:Bool;
 	var ?scale:Float;
@@ -17,7 +18,7 @@ typedef SplashData =
 	var ?maxFps:Int;
 }
 
-typedef SplashAnims = 
+typedef SplashAnims =
 {
 	var name:String;
 	var prefix:String;
@@ -29,12 +30,15 @@ typedef SplashAnims =
 class NoteSplash extends FlxSprite
 {
 	public var noteType:String = '';
+
 	private var animOffsets:Map<String, Array<Dynamic>>;
+
 	static var _lastCheckedType:String = '';
-	
+
 	public static var colors:Array<String> = ['purple', 'blue', 'green', 'red'];
 	private static var configs:Map<String, SplashData> = new Map<String, SplashData>();
 	static var rawJson = null;
+
 	var minFps = 24;
 	var maxFps = 26;
 
@@ -57,11 +61,11 @@ class NoteSplash extends FlxSprite
 		alpha = FlxG.save.data.alphaSplash;
 
 		loadFrames(noteType);
-		offset.set(0,0);
+		offset.set(0, 0);
 
 		var animNum:Int = FlxG.random.int(1, 2);
 
-		var animToPlay:String;	
+		var animToPlay:String;
 
 		if (!FlxG.save.data.stepMania)
 			animToPlay = 'splash ${animNum} ${colors[note.noteData]}';
@@ -81,7 +85,7 @@ class NoteSplash extends FlxSprite
 				if (frames == null)
 					frames = Paths.getSparrowAtlas(NoteStyleHelper.generateNotesplashSprite(texture, ''), 'shared');
 		}
-		
+
 		loadAnimations(loadSplashData(texture));
 	}
 
@@ -116,7 +120,7 @@ class NoteSplash extends FlxSprite
 	{
 		if (configs.exists(tex))
 			return configs.get(tex);
-		rawJson = Paths.loadData('images/splashes/' + Constants.notesplashSprite, 'shared');	
+		rawJson = Paths.loadData('images/splashes/' + Constants.notesplashSprite, 'shared');
 		var data:SplashData = cast rawJson;
 		_lastCheckedType = tex;
 		configs.set(tex, data);

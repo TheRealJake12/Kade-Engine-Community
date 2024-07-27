@@ -198,14 +198,9 @@ class PauseSubState extends MusicBeatSubstate
 					#end
 
 					if (PlayState.isStoryMode)
-					{
-						GameplayCustomizeState.freeplayNoteStyle = 'normal';
 						MusicBeatState.switchState(new StoryMenuState());
-					}
 					else
-					{
 						MusicBeatState.switchState(new FreeplayState());
-					}
 			}
 		}
 	}

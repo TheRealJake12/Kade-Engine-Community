@@ -381,26 +381,23 @@ class GameplayCustomizeState extends MusicBeatState
 		super.update(elapsed);
 
 		Stage.update(elapsed);
-
-		if (FlxG.save.data.zoom < 0.8)
-			FlxG.save.data.zoom = 0.8;
-
-		if (FlxG.save.data.zoom > 1.2)
-			FlxG.save.data.zoom = 1.2;
-
-		FlxG.camera.zoom = FlxMath.lerp(Stage.camZoom, FlxG.camera.zoom, 0.95);
-		camHUD.zoom = FlxMath.lerp(FlxG.save.data.zoom, camHUD.zoom, 0.95);
+		
+		var lerpVal:Float = CoolUtil.boundTo(1 - (elapsed * 12), 0, 1);
+		FlxG.camera.zoom = FlxMath.lerp(Stage.camZoom, FlxG.camera.zoom, lerpVal);
+		camHUD.zoom = FlxMath.lerp(FlxG.save.data.zoom, camHUD.zoom, lerpVal);
 
 		if (FlxG.keys.justPressed.E)
 		{
 			FlxG.save.data.zoom += 0.02;
-			camHUD.zoom = FlxG.save.data.zoom;
+			if (FlxG.save.data.zoom > 1.2)
+				FlxG.save.data.zoom = 1.2;
 		}
 
 		if (FlxG.keys.justPressed.Q)
 		{
 			FlxG.save.data.zoom -= 0.02;
-			camHUD.zoom = FlxG.save.data.zoom;
+			if (FlxG.save.data.zoom < 0.8)
+				FlxG.save.data.zoom = 0.8;
 		}
 
 		if (sick.x != defaultX && sick.y != defaultY)
@@ -420,7 +417,6 @@ class GameplayCustomizeState extends MusicBeatState
 			currentTimingShown.x = sick.x + 100;
 			currentTimingShown.y = sick.y + 100;
 			FlxG.save.data.zoom = 1;
-			camHUD.zoom = FlxG.save.data.zoom;
 			FlxG.save.data.changedHitX = sick.x;
 			FlxG.save.data.changedHitY = sick.y;
 			FlxG.save.data.changedHit = false;

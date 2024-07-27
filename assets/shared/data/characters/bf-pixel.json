@@ -6,6 +6,7 @@
   "antialiasing": false,
   "camPos": [-300, -300],
   "healthicon" : "bf-pixel",
+  "deadChar" : "bf-pixel-dead",
   "startingAnim": "idle",
   "animations": [
     {

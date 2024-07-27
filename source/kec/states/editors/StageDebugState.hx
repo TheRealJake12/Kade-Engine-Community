@@ -596,7 +596,7 @@ class StageDebugState extends MusicBeatState
 
 		FlxG.watch.addQuick('Camera Zoom', FlxG.camera.zoom);
 
-		var lerpVal:Float = CoolUtil.boundTo(1 - (elapsed * 4), 0, 1);
+		var lerpVal:Float = CoolUtil.boundTo(1 - (elapsed * 10), 0, 1);
 		FlxG.camera.zoom = FlxMath.lerp(fakeZoom, FlxG.camera.zoom, lerpVal);
 
 		if (FlxG.keys.justPressed.SHIFT)
@@ -774,7 +774,7 @@ class StageDebugState extends MusicBeatState
 			staticCam: staticCam.selected,
 			camZoom: fakeZoom,
 			hasGF: hasGF.selected,
-			camPosition: [camFollow.x, camFollow.y],
+			camPosition: [Math.round(camFollow.x), Math.round(camFollow.y)],
 			positions: [b => [boyfriend.x, boyfriend.y], g => [gf.x, gf.y], d => [dad.x, dad.y]],
 			directory: stageDirectory.text
 		};

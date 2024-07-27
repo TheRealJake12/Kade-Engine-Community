@@ -6,8 +6,10 @@ import kec.backend.PlayStateChangeables;
 class GameOverSubstate extends MusicBeatSubstate
 {
 	public var bf:Character;
+
 	var camFollow:FlxObject;
 	var stageSuffix:String = "";
+
 	public static var instance:GameOverSubstate = null;
 
 	public function new()
@@ -33,6 +35,9 @@ class GameOverSubstate extends MusicBeatSubstate
 				daBf = char.deadChar;
 		}
 
+		if (styleShit != 'default')
+			stageSuffix = '-${styleShit}';
+
 		Conductor.songPosition = 0;
 
 		bf = new Character(char.getScreenPosition().x, char.getScreenPosition().y, daBf);
@@ -40,7 +45,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		add(bf);
 		add(camFollow);
 
-		if (Paths.fileExists('styles/$styleShit/fnf_loss_sfx', SOUND, 'shared'))
+		if (Paths.fileExists('sounds/styles/$styleShit/fnf_loss_sfx.' + Paths.SOUND_EXT, SOUND, 'shared'))
 			FlxG.sound.play(Paths.sound('styles/$styleShit/fnf_loss_sfx'));
 		else
 			FlxG.sound.play(Paths.sound('styles/default/fnf_loss_sfx'));
