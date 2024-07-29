@@ -11,7 +11,7 @@ class Ratings
 	{
 		var comboranking:String = "";
 
-		if (PlayState.misses == 0)
+		if (Stats.misses == 0)
 		{
 			var reverseWindows = timingWindows.copy();
 			reverseWindows.reverse();
@@ -23,7 +23,7 @@ class Ratings
 				}
 			}
 		}
-		else if (PlayState.misses < 10) // Single Digit Combo Breaks
+		else if (Stats.misses < 10) // Single Digit Combo Breaks
 			comboranking = "(SDCB)";
 		else
 			comboranking = "(Clear)";
@@ -125,7 +125,7 @@ class Ratings
 		return shitWindows[shitWindows.length - 1];
 	}
 
-	public static function CalculateRanking(score:Int, scoreDef:Int, nps:Int, maxNPS:Int, accuracy:Float):String
+	public static function CalculateRanking(score:Int, nps:Int, maxNPS:Int, accuracy:Float):String
 	{
 		return (FlxG.save.data.npsDisplay ? // NPS Toggle
 			"NPS: "
@@ -137,7 +137,7 @@ class Ratings
 			(!PlayStateChangeables.botPlay ? "Score:" + score + // Score
 				(FlxG.save.data.accuracyDisplay ? // Accuracy Toggle
 					" | Combo Breaks:"
-					+ PlayState.misses // 	Misses/Combo Breaks
+					+ Stats.misses // 	Misses/Combo Breaks
 					+ (!FlxG.save.data.healthBar ? " | Health:"
 						+ (!PlayStateChangeables.opponentMode ? Math.round(PlayState.instance.health * 50) : Math.round(100 - (PlayState.instance.health * 50)))
 						+ "%" : "")

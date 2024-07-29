@@ -17,8 +17,7 @@ import flixel.graphics.frames.FlxBitmapFont;
 import cpp.vm.Gc;
 #end
 
-using StringTools;
-
+@:access(openfl.display.BitmapData)
 class Paths
 {
 	public static final SOUND_EXT = #if web "mp3" #else "ogg" #end;
@@ -437,6 +436,7 @@ class Paths
 		'assets/shared/music/ke_freakyMenu.$SOUND_EXT'
 	];
 
+	@:access(flixel.system.frontEnds.BitmapFrontEnd._cache)
 	public static function clearStoredMemory(?cleanUnused:Bool = false)
 	{
 		if (FlxG.save.data.unload)
@@ -451,48 +451,19 @@ class Paths
 				}
 			}
 
-			@:privateAccess
+			// clear anything not in the tracked assets list
 			for (key in FlxG.bitmap._cache.keys())
 			{
-				var obj = cast(FlxG.bitmap._cache.get(key), FlxGraphic);
-				if (obj != null && !currentTrackedAssets.exists(key))
-				{
-					obj.persist = false;
-					obj.destroyOnNoUse = true;
-
-					OpenFlAssets.cache.removeBitmapData(key);
-
-					FlxG.bitmap._cache.remove(key);
-
-					FlxG.bitmap.removeByKey(key);
-
-					if (obj.bitmap.__texture != null)
-					{
-						obj.bitmap.__texture.dispose();
-						obj.bitmap.__texture = null;
-					}
-
-					FlxG.bitmap.remove(obj);
-
-					obj.dump();
-
-					obj.bitmap.disposeImage();
-					FlxDestroyUtil.dispose(obj.bitmap);
-					obj.bitmap = null;
-
-					obj.destroy();
-					obj = null;
-				}
+				if (!currentTrackedAssets.exists(key))
+					destroyGraphic(FlxG.bitmap.get(key));
 			}
 
 			// clear all sounds that are cached
-			for (key in currentTrackedSounds.keys())
+			for (key => asset in currentTrackedSounds)
 			{
-				if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && key != null)
+				if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && asset != null)
 				{
-					// trace('test: ' + dumpExclusions, key);
 					OpenFlAssets.cache.clear(key);
-					OpenFlAssets.cache.removeSound(key);
 					currentTrackedSounds.remove(key);
 				}
 			}
@@ -554,45 +525,22 @@ class Paths
 				// if it is not currently contained within the used local assets
 				if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key))
 				{
-					// get rid of it
-					var obj = cast(currentTrackedAssets.get(key), FlxGraphic);
-					@:privateAccess
-					if (obj != null)
-					{
-						obj.persist = false;
-						obj.destroyOnNoUse = true;
-						OpenFlAssets.cache.removeBitmapData(key);
-						OpenFlAssets.cache.clearBitmapData(key);
-						OpenFlAssets.cache.clear(key);
-
-						FlxG.bitmap._cache.remove(key);
-						FlxG.bitmap.removeByKey(key);
-
-						if (obj.bitmap.__texture != null)
-						{
-							obj.bitmap.__texture.dispose();
-							obj.bitmap.__texture = null;
-						}
-
-						FlxG.bitmap.remove(obj);
-
-						obj.dump();
-						obj.bitmap.disposeImage();
-						FlxDestroyUtil.dispose(obj.bitmap);
-
-						obj.bitmap = null;
-
-						obj.destroy();
-
-						obj = null;
-
-						currentTrackedAssets.remove(key);
-					}
+					destroyGraphic(currentTrackedAssets.get(key)); // get rid of the graphic
+					currentTrackedAssets.remove(key); // and remove the key from local cache map
 				}
 			}
 			runGC();
 			// to be safe that NO gc memory is left.
 		}
+	}
+
+	inline static function destroyGraphic(graphic:FlxGraphic)
+	{
+		// free some gpu memory
+		if (graphic != null && graphic.bitmap != null && graphic.bitmap.__texture != null)
+			graphic.bitmap.__texture.dispose();
+		FlxG.bitmap.remove(graphic);
+		graphic = null;
 	}
 
 	public static function runGC()

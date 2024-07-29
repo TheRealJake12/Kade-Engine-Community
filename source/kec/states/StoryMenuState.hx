@@ -14,6 +14,7 @@ import kec.objects.MenuCharacter;
 import kec.backend.chart.Song;
 import kec.backend.util.Highscore;
 import kec.backend.PlayStateChangeables;
+import kec.backend.Stats;
 
 class StoryMenuState extends MusicBeatState
 {
@@ -361,15 +362,9 @@ class StoryMenuState extends MusicBeatState
 
 			var diff:String = CoolUtil.getSuffixFromDiff(diffString);
 
-			PlayState.marvs = 0;
-			PlayState.sicks = 0;
-			PlayState.bads = 0;
-			PlayState.shits = 0;
-			PlayState.goods = 0;
-			PlayState.campaignMisses = 0;
+			Stats.resetStats();
 			PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0], diff);
 			PlayState.storyWeek = curWeek;
-			PlayState.campaignScore = 0;
 			new FlxTimer().start(1, function(tmr:FlxTimer)
 			{
 				LoadingState.loadAndSwitchState(new PlayState(), true);

@@ -19,6 +19,7 @@ import kec.stages.Stage;
 import kec.objects.Note;
 import kec.objects.StaticArrow;
 import kec.objects.Character;
+import kec.backend.Stats;
 
 // completely yoinked from andromeda (thats what you get for stealing my callback inputs you fuckers /j)
 
@@ -1930,10 +1931,10 @@ class LuaGame extends LuaClass
 			},
 
 			"accuracy" => {
-				defaultValue: PlayState.instance.accuracy,
+				defaultValue: Stats.accuracy,
 				getter: function(l:State, data:Any):Int
 				{
-					Lua.pushnumber(l, PlayState.instance.accuracy);
+					Lua.pushnumber(l, Stats.accuracy);
 					return 1;
 				},
 				setter: SetNumProperty
@@ -1965,11 +1966,60 @@ class LuaGame extends LuaClass
 			PlayState.instance.remove(i);
 		}
 
+		PlayState.instance.remove(PlayState.instance.boyfriendGroup);
+		PlayState.instance.remove(PlayState.instance.dadGroup);
+		PlayState.instance.remove(PlayState.instance.gfGroup);
+
 		PlayState.instance.Stage = new Stage(stageName);
+		var directory:String = 'shared';
+		var otherDir:String = PlayState.instance.Stage.stageDir;
+
+		if (otherDir != null)
+			directory = otherDir;
+
+		Paths.setCurrentLevel(directory);
+
+		PlayState.instance.Stage.initStageProperties();
+
+		PlayState.instance.Stage.loadStageData(stageName);
+
+		if (!PlayState.instance.Stage.doesExist)
+		{
+			Debug.logTrace('Stage Does Not Exist For ${PlayState.instance.Stage.curStage}. Loading Default Stage.');
+			PlayState.instance.Stage.loadStageData('stage');
+			PlayState.instance.Stage.initStageProperties();
+		}
+
+		PlayState.instance.Stage.inEditor = false;
+
+		PlayState.instance.Stage.initCamPos();
 
 		for (i in PlayState.instance.Stage.toAdd)
 		{
 			PlayState.instance.add(i);
+		}
+
+		for (index => array in PlayState.instance.Stage.layInFront)
+		{
+			switch (index)
+			{
+				case 0:
+					if (PlayState.instance.gf != null)
+					{
+						PlayState.instance.add(PlayState.instance.gfGroup);
+						PlayState.instance.gf.scrollFactor.set(0.95, 0.95);
+					}
+					for (bg in array)
+						PlayState.instance.add(bg);
+				case 1:
+					PlayState.instance.add(PlayState.instance.dadGroup);
+					for (bg in array)
+						PlayState.instance.add(bg);
+				case 2:
+					PlayState.instance.add(PlayState.instance.boyfriendGroup);
+					for (bg in array)
+						PlayState.instance.add(bg);
+			}
 		}
 
 		return 0;

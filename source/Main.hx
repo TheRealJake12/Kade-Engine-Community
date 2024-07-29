@@ -3,6 +3,7 @@ package;
 import flixel.graphics.FlxGraphic;
 import flixel.FlxGame;
 import openfl.Assets;
+import openfl.display.DisplayObject;
 import openfl.display.Bitmap;
 import haxe.ui.Toolkit;
 import kec.objects.KadeEngineFPS;
@@ -57,6 +58,8 @@ class Main extends Sprite
 	public static var watermarks = true; // Whether to put Kade Engine literally anywhere
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
+
+	private var curGame:FlxGame;
 
 	public static function main():Void
 	{
@@ -117,12 +120,11 @@ class Main extends Sprite
 		#end
 
 		game.framerate = 60;
-		var fard:FlxGame = new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate,
-			game.skipSplash, game.startFullscreen);
+		curGame = new Game(game.width, game.height, game.initialState, game.framerate, game.skipSplash, game.startFullscreen);
 
 		@:privateAccess
-		fard._customSoundTray = flixel.FunkinSoundTray;
-		addChild(fard);
+		curGame._customSoundTray = flixel.FunkinSoundTray;
+		addChild(curGame);
 
 		FlxG.fixedTimestep = false;
 
@@ -296,4 +298,16 @@ class Main extends Sprite
 		Toolkit.theme = 'dark'; // don't be cringe
 		Toolkit.autoScale = false;
 	}
+
+	// Get rid of hit test function because mouse memory ramp up during first move (-Bolo)
+	@:noCompletion private override function __hitTest(x:Float, y:Float, shapeFlag:Bool, stack:Array<DisplayObject>, interactiveOnly:Bool,
+			hitObject:DisplayObject):Bool
+		return true;
+
+	@:noCompletion override private function __hitTestHitArea(x:Float, y:Float, shapeFlag:Bool, stack:Array<DisplayObject>, interactiveOnly:Bool,
+			hitObject:DisplayObject):Bool
+		return true;
+
+	@:noCompletion private override function __hitTestMask(x:Float, y:Float):Bool
+		return true;
 }

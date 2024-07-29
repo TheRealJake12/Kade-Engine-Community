@@ -23,6 +23,7 @@ import kec.backend.chart.Section;
 import kec.backend.chart.Song;
 import kec.backend.util.CoolUtil;
 import kec.backend.util.Highscore;
+import kec.backend.Stats;
 
 class ScriptUtil
 {
@@ -144,6 +145,7 @@ class ScriptUtil
 		script.set("StaticArrow", StaticArrow);
 		script.set("NoteSplash", NoteSplash);
 		script.set("Character", Character);
+		script.set("Stats", Stats);
 	}
 
 	public static inline function hasPause(arr:Array<Dynamic>):Bool

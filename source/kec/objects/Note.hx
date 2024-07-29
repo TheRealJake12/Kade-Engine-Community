@@ -122,13 +122,11 @@ class Note extends FlxSprite
 					missHealth = 0;
 					sustainActive = true;
 					hitsoundsEditor = false;
-					switch (NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin])
-					{
-						default:
-							texture = "notetypes/hurt_Arrows";
-						case "Circles":
-							texture = "notetypes/hurt_Circles";
-					}
+					if (Paths.fileExists('images/notetypes/hurt_'
+						+ NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin] + '.png', IMAGE))
+						texture = 'notetypes/hurt_' + NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin];
+					else
+						texture = "notetypes/hurt_Arrows";
 				case 'mustpress':
 					set_noteType('Must Press'); // backwards compatabilty for charts before the KEC1 format.
 				case 'must press':
@@ -138,13 +136,10 @@ class Note extends FlxSprite
 					canRate = true;
 					missHealth = 0.8;
 					hitsoundsEditor = true;
-					switch (NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin])
-					{
-						default:
-							texture = "notetypes/mustpress_Arrows";
-						case "Circles":
-							texture = "notetypes/mustpress_Circles";
-					}
+					if (Paths.fileExists('images/notetypes/mustpress_' + NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin] + '.png',IMAGE))
+						texture = 'notetypes/mustpress_' + NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin];
+					else
+						texture = "notetypes/mustpress_Arrows";
 				case 'no animation':
 					canPlayAnims = false;
 					canNoteSplash = true;

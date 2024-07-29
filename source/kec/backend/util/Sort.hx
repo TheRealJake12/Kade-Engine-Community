@@ -3,6 +3,7 @@ package kec.backend.util;
 import flixel.util.FlxSort;
 import haxe.ds.ArraySort;
 import kec.objects.Note;
+import kec.backend.chart.NoteData;
 import kec.backend.chart.Song.Event;
 import kec.objects.ui.UIComponent;
 
@@ -12,6 +13,11 @@ import kec.objects.ui.UIComponent;
 class Sort
 {
 	public static inline function sortNotes(Obj1:Note, Obj2:Note):Int
+	{
+		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
+	}
+
+	public static inline function sortNoteData(Obj1:NoteData, Obj2:NoteData):Int
 	{
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
 	}
