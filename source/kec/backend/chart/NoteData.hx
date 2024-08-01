@@ -1,4 +1,5 @@
 package kec.backend.chart;
+
 @:structInit
 class NoteData
 {

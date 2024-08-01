@@ -818,17 +818,11 @@ class Stage extends MusicBeatState
 			{
 				case 'halloween':
 					if (FlxG.random.bool(Conductor.bpm > 320 ? 100 : 10) && curBeat > lightningStrikeBeat + lightningOffset && !inEditor)
-					{
 						if (FlxG.save.data.quality)
-						{
 							lightningStrikeShit();
-						}
-					}
 				case 'school':
 					if (FlxG.save.data.quality)
-					{
 						swagBacks['bgGirls'].dance();
-					}
 				case 'limo':
 					if (FlxG.save.data.quality)
 					{
@@ -872,6 +866,8 @@ class Stage extends MusicBeatState
 							curLight = FlxG.random.int(0, phillyLightsColors.length - 1, [curLight]);
 							phillyWindow.color = phillyLightsColors[curLight];
 							phillyWindow.alpha = 1;
+							PlayState.tweenManager.cancelTweensOf(phillyWindow);
+							PlayState.instance.createTween(phillyWindow, {alpha : 0}, 1);
 						}
 					}
 

@@ -381,7 +381,7 @@ class GameplayCustomizeState extends MusicBeatState
 		super.update(elapsed);
 
 		Stage.update(elapsed);
-		
+
 		var lerpVal:Float = CoolUtil.boundTo(1 - (elapsed * 12), 0, 1);
 		FlxG.camera.zoom = FlxMath.lerp(Stage.camZoom, FlxG.camera.zoom, lerpVal);
 		camHUD.zoom = FlxMath.lerp(FlxG.save.data.zoom, camHUD.zoom, lerpVal);

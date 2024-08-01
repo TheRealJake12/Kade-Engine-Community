@@ -434,7 +434,7 @@ class ChartingState extends MusicBeatState
 
 		add(ui);
 		add(menu);
-		selectBox = new FlxSprite(0,0).makeGraphic(1, 1, FlxColor.fromRGB(173, 216, 230));
+		selectBox = new FlxSprite(0, 0).makeGraphic(1, 1, FlxColor.fromRGB(173, 216, 230));
 		selectBox.visible = false;
 		selectBox.alpha = 0.4;
 		add(selectBox);
@@ -657,7 +657,7 @@ class ChartingState extends MusicBeatState
 
 				waitingForRelease = true;
 				selectBox.setPosition(FlxG.mouse.x, FlxG.mouse.y);
-				selectBox.setGraphicSize(1,1);
+				selectBox.setGraphicSize(1, 1);
 				selectBox.updateHitbox();
 				selectInitialX = selectBox.x;
 				selectInitialY = selectBox.y;
@@ -699,7 +699,7 @@ class ChartingState extends MusicBeatState
 
 			if (FlxG.keys.justPressed.SHIFT)
 				doSnapShit = !doSnapShit;
-			
+
 			if (FlxG.keys.justPressed.E)
 			{
 				changeNoteSustain(Conductor.stepCrochet * sustainQuant);
@@ -796,14 +796,16 @@ class ChartingState extends MusicBeatState
 
 				selectedBoxes.forEachAlive(function(i:ChartingBox)
 				{
-					deletedNotes.push([{
-						strumTime : i.connectedNote.strumTime,
-						noteData : i.connectedNote.rawNoteData,
-						sustainLength : i.connectedNote.sustainLength,
-						noteType : i.connectedNote.noteType,
-						beat : TimingStruct.getBeatFromTime(i.connectedNote.strumTime),
-						isPlayer : i.connectedNote.mustPress
-					}]);
+					deletedNotes.push([
+						{
+							strumTime: i.connectedNote.strumTime,
+							noteData: i.connectedNote.rawNoteData,
+							sustainLength: i.connectedNote.sustainLength,
+							noteType: i.connectedNote.noteType,
+							beat: TimingStruct.getBeatFromTime(i.connectedNote.strumTime),
+							isPlayer: i.connectedNote.mustPress
+						}
+					]);
 					notesToBeDeleted.push(i.connectedNote);
 				});
 
@@ -1092,8 +1094,8 @@ class ChartingState extends MusicBeatState
 					strumTime: i[0],
 					noteData: i[1],
 					sustainLength: i[2],
-					noteType : i[3],
-					isPlayer : gottaHitNote,
+					noteType: i[3],
+					isPlayer: gottaHitNote,
 					beat: TimingStruct.getBeatFromTime(i[0]),
 				});
 			}
@@ -1217,10 +1219,10 @@ class ChartingState extends MusicBeatState
 		if (PlayStateChangeables.opponentMode)
 			gottaHitNote = !gottaHitNote;
 		spawnNotes.push({
-			strumTime : noteStrum, 
-			noteData : noteData, 
-			sustainLength : noteSus, 
-			noteType : noteType,
+			strumTime: noteStrum,
+			noteData: noteData,
+			sustainLength: noteSus,
+			noteType: noteType,
 			isPlayer: gottaHitNote,
 			beat: TimingStruct.getBeatFromTime(noteStrum)
 		});
@@ -1395,7 +1397,6 @@ class ChartingState extends MusicBeatState
 			});
 
 			sec.sectionNotes.push([note.strumTime, note.rawNoteData, note.sustainLength, note.noteType]);
-
 
 			if (note.sustainLength > 0)
 			{
@@ -1958,7 +1959,7 @@ class ChartingState extends MusicBeatState
 			FlxG.save.data.stepMania = !FlxG.save.data.stepMania;
 			updateNotes();
 		}
-	
+
 		box2.addComponent(noteShitDrop);
 		box2.addComponent(typeLabel);
 		box2.addComponent(quantiNotes);
@@ -3170,7 +3171,7 @@ class ChartingState extends MusicBeatState
 						sec.sectionNotes.remove(i);
 				}
 			}
-			
+
 			curRenderedNotes.remove(existingNote);
 			if (existingNote.sustainLength > 0)
 				curRenderedSustains.remove(existingNote.noteCharterObject, true);

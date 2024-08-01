@@ -137,12 +137,12 @@ class ResultsScreen extends MusicBeatSubstate
 		if (!PlayState.isStoryMode)
 			add(songText);
 
-		var score = Stats.songScore;
-		var acc = Stats.accuracy;
+		var score:Int = Stats.songScore;
+		var acc:Float = Stats.accuracy;
 
 		if (PlayState.isStoryMode)
 		{
-			acc = Stats.campaignAccuracy;
+			acc = Stats.campaignAccuracy / PlayState.songsPlayed;
 			score = Stats.campaignScore;
 		}
 
@@ -205,12 +205,9 @@ class ResultsScreen extends MusicBeatSubstate
 		if (PlayState.SONG.validScore && superMegaConditionShit)
 		{
 			Highscore.saveScore(PlayState.SONG.songId, Math.round(Stats.songScore), PlayState.storyDifficulty, PlayState.songMultiplier);
-			Highscore.saveCombo(PlayState.SONG.songId, Ratings.GenerateLetterRank(Stats.accuracy), PlayState.storyDifficulty,
-				PlayState.songMultiplier);
-			Highscore.saveAcc(PlayState.SONG.songId, HelperFunctions.truncateFloat(Stats.accuracy, 2), PlayState.storyDifficulty,
-				PlayState.songMultiplier);
-			Highscore.saveLetter(PlayState.SONG.songId, Ratings.GenerateLetterRank(Stats.accuracy), PlayState.storyDifficulty,
-				PlayState.songMultiplier);
+			Highscore.saveCombo(PlayState.SONG.songId, Ratings.GenerateLetterRank(Stats.accuracy), PlayState.storyDifficulty, PlayState.songMultiplier);
+			Highscore.saveAcc(PlayState.SONG.songId, HelperFunctions.truncateFloat(Stats.accuracy, 2), PlayState.storyDifficulty, PlayState.songMultiplier);
+			Highscore.saveLetter(PlayState.SONG.songId, Ratings.GenerateLetterRank(Stats.accuracy), PlayState.storyDifficulty, PlayState.songMultiplier);
 		}
 
 		// Debug.logTrace('$legitTimings ${!PlayState.usedBot} ${!FlxG.save.data.practice} ${PlayStateChangeables.holds} ${!PlayState.wentToChartEditor} ${HelperFunctions.truncateFloat(PlayStateChangeables.healthGain, 2) <= 1} ${HelperFunctions.truncateFloat(PlayStateChangeables.healthLoss, 2) >= 1}');
@@ -305,6 +302,7 @@ class ResultsScreen extends MusicBeatSubstate
 				FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
 				Conductor.changeBPM(102);
 				MusicBeatState.switchState(new StoryMenuState());
+				Stats.resetCampaignStats();
 			}
 			else
 			{

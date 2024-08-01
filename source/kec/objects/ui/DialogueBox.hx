@@ -273,7 +273,7 @@ class DialogueBox extends FlxSpriteGroup
 			sound.fadeOut(2.2, 0);
 		if (objList.length > 0)
 			for (obj in objList)
-			{	
+			{
 				PlayState.tweenManager.completeTweensOf(obj);
 				PlayState.instance.createTween(obj, {alpha: 0}, 1);
 			}
@@ -288,17 +288,16 @@ class DialogueBox extends FlxSpriteGroup
 	{
 		curLine += line;
 		/*
-		if (dialogueList[curLine] != null)
-			switch (songId)
-			{
-				case 'senpai':
-					switch (curLine)
-					{
-						case 2:
-					}
-			}
-			*/
-			
+			if (dialogueList[curLine] != null)
+				switch (songId)
+				{
+					case 'senpai':
+						switch (curLine)
+						{
+							case 2:
+						}
+				}
+		 */
 	}
 
 	function cleanDialog():Void

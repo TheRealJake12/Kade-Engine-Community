@@ -120,6 +120,7 @@ class PlayState extends MusicBeatState
 
 	// The Actual MS Timing.
 	public var msTiming:Float;
+
 	// Text For Accuracy, Score, Misses, Etc.
 	var scoreTxt:FlxText;
 	// How Many Marvs, Sicks, Etc.
@@ -339,8 +340,6 @@ class PlayState extends MusicBeatState
 	public static var usedBot:Bool = false;
 	public static var wentToChartEditor:Bool = false;
 
-	public var initStoryLength:Int = 0;
-
 	var tweenBoolshit = true;
 
 	// Default Note X Positions (Non Middlescroll). Used For Modcharts If You Want.
@@ -353,6 +352,9 @@ class PlayState extends MusicBeatState
 	private var numGroup:FlxTypedGroup<ComboNumber>;
 	private var ratingGroup:FlxTypedGroup<Rating>;
 	private var events:Array<Event> = null;
+
+	// I'm tired of initStoryLength.
+	public static var songsPlayed:Int = 0;
 
 	// Adding Objects Using Lua
 	public function addObject(object:FlxBasic)
@@ -1140,9 +1142,6 @@ class PlayState extends MusicBeatState
 		if (FlxG.save.data.hitSound != 0)
 			precacheThing("hitsounds/" + HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase(), 'sound', 'shared');
 
-		if (isStoryMode)
-			initStoryLength = StoryMenuState.weekData()[storyWeek].songs.length;
-
 		if (FlxG.save.data.showMs)
 		{
 			insert(members.indexOf(notes), currentTimingShown);
@@ -1253,7 +1252,7 @@ class PlayState extends MusicBeatState
 									{
 										remove(senpaiEvil);
 										remove(red);
-										
+
 										camGame.fade(FlxColor.WHITE, 0.01, true, function()
 										{
 											add(dialogueBox);
@@ -1729,7 +1728,8 @@ class PlayState extends MusicBeatState
 			+ "% | Score: "
 			+ Stats.songScore
 			+ " | Misses: "
-			+ Stats.misses, iconRPC, true, songLengthRPC);
+			+ Stats.misses, iconRPC, true,
+			songLengthRPC);
 
 		#if FEATURE_HSCRIPT
 		if (ScriptUtil.hasPause(scripts.executeAllFunc("startSong")))
@@ -3208,9 +3208,97 @@ class PlayState extends MusicBeatState
 		if (ScriptUtil.hasPause(scripts.executeAllFunc("endSong")))
 			return;
 		#end
+		fadeOutHUD();
 
-		if (!isStoryMode || storyPlaylist.length <= 0)
+		FlxTimer.wait(1.2, function()
 		{
+			if (isStoryMode)
+			{
+				Stats.addCampaignStats();
+				#if FEATURE_LUAMODCHART
+				if (luaModchart != null)
+				{
+					luaModchart.die();
+					luaModchart = null;
+				}
+				#end
+
+				paused = true;
+				inst.stop();
+
+				if (!SONG.splitVoiceTracks)
+					vocals.stop();
+				else
+				{
+					vocalsPlayer.stop();
+					vocalsEnemy.stop();
+				}
+
+				if (storyPlaylist.length <= 0)
+				{
+					if (SONG.validScore)
+						Highscore.saveWeekScore(storyWeek, Stats.campaignScore, storyDifficulty, 1);
+
+					if (FlxG.save.data.scoreScreen)
+					{
+						persistentUpdate = false;
+						inResults = true;
+						openSubState(subStates[1]);
+					}
+					else
+					{
+						FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
+						Constants.freakyPlaying = true;
+						Conductor.changeBPM(102);
+						MusicBeatState.switchState(new StoryMenuState());
+						Stats.resetCampaignStats();
+					}
+				}
+				else
+				{
+					var diff:String = CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[storyDifficulty]);
+
+					FlxTransitionableState.skipNextTransIn = true;
+					FlxTransitionableState.skipNextTransOut = true;
+
+					if (FlxTransitionableState.skipNextTransIn)
+						CustomFadeTransition.nextCamera = null;
+
+					Debug.logInfo('Loading Next Story Song ${PlayState.storyPlaylist[0]}${diff}');
+
+					PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0], diff);
+					inst.stop();
+
+					LoadingState.loadAndSwitchState(new PlayState());
+				}
+			}
+			else
+			{
+				paused = true;
+				inst.stop();
+				if (!SONG.splitVoiceTracks)
+					vocals.stop();
+				else
+				{
+					vocalsPlayer.stop();
+					vocalsEnemy.stop();
+				}
+				if (FlxG.save.data.scoreScreen)
+				{
+					persistentUpdate = false;
+					inResults = true;
+					openSubState(subStates[1]);
+				}
+				else
+					LoadingState.loadAndSwitchState(new FreeplayState());
+			}
+		});
+	}
+
+	private function fadeOutHUD()
+	{
+		if (!isStoryMode || storyPlaylist.length <= 0)
+		{	
 			if (FlxG.save.data.songPosition)
 			{
 				createTween(songName, {alpha: 0}, 1, {ease: FlxEase.circIn});
@@ -3226,108 +3314,8 @@ class PlayState extends MusicBeatState
 			for (note in 0...strumLineNotes.length)
 				createTween(strumLineNotes.members[note], {y: strumLineNotes.members[note].y - 10, alpha: 0}, 0.4, {
 					ease: FlxEase.circOut,
-					startDelay: 0.2 + (0.2 * note),
-					onComplete: function(t)
-					{
-						if (note == 7)
-						{
-							Debug.logTrace("we're fuckin ending the song ");
-							songEnd();
-						}
-					}
+					startDelay: 0.2 + (0.1 * note),
 				});
-		}
-		else
-			songEnd();
-	}
-
-	private function songEnd()
-	{
-		if (isStoryMode)
-		{
-			Stats.addCampaignStats();
-
-			if (storyPlaylist.length <= 0)
-			{
-				paused = true;
-				inst.stop();
-
-				if (!SONG.splitVoiceTracks)
-					vocals.stop();
-				else
-				{
-					vocalsPlayer.stop();
-					vocalsEnemy.stop();
-				}
-
-				#if FEATURE_LUAMODCHART
-				if (luaModchart != null)
-				{
-					luaModchart.die();
-					luaModchart = null;
-				}
-				#end
-
-				if (SONG.validScore)
-				{
-					Highscore.saveWeekScore(storyWeek, Stats.campaignScore, storyDifficulty, 1);
-				}
-
-				if (FlxG.save.data.scoreScreen)
-				{
-					persistentUpdate = false;
-					inResults = true;
-					openSubState(subStates[1]);
-				}
-				else
-				{
-					FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
-					Constants.freakyPlaying = true;
-					Conductor.changeBPM(102);
-					MusicBeatState.switchState(new StoryMenuState());
-				}
-			}
-			else
-			{
-				var diff:String = CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[storyDifficulty]);
-
-				FlxTransitionableState.skipNextTransIn = true;
-				FlxTransitionableState.skipNextTransOut = true;
-
-				if (FlxTransitionableState.skipNextTransIn)
-				{
-					CustomFadeTransition.nextCamera = null;
-				}
-
-				Debug.logInfo('Loading Next Story Song ${PlayState.storyPlaylist[0]}${diff}');
-
-				PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0], diff);
-				inst.stop();
-
-				LoadingState.loadAndSwitchState(new PlayState());
-			}
-		}
-		else
-		{
-			paused = true;
-			inst.stop();
-			if (!SONG.splitVoiceTracks)
-				vocals.stop();
-			else
-			{
-				vocalsPlayer.stop();
-				vocalsEnemy.stop();
-			}
-			if (FlxG.save.data.scoreScreen)
-			{
-				persistentUpdate = false;
-				inResults = true;
-				openSubState(subStates[1]);
-			}
-			else
-			{
-				LoadingState.loadAndSwitchState(new FreeplayState());
-			}
 		}
 	}
 
@@ -3897,7 +3885,7 @@ class PlayState extends MusicBeatState
 				scripts.executeAllFunc("goodNoteHit", [note]);
 				#end
 
-				if (PlayStateChangeables.botPlay && FlxG.save.data.cpuStrums)
+				if (PlayStateChangeables.botPlay || FlxG.save.data.cpuStrums)
 					pressArrow(playerStrums.members[note.noteData], note, fakeNoteStepCrochet * 1.25 * 0.001);
 				else
 				{

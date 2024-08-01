@@ -58,7 +58,6 @@ class Main extends Sprite
 	public static var watermarks = true; // Whether to put Kade Engine literally anywhere
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
-
 	private var curGame:FlxGame;
 
 	public static function main():Void

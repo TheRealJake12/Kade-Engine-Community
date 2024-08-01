@@ -123,7 +123,9 @@ class Note extends FlxSprite
 					sustainActive = true;
 					hitsoundsEditor = false;
 					if (Paths.fileExists('images/notetypes/hurt_'
-						+ NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin] + '.png', IMAGE))
+						+ NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin]
+						+ '.png',
+						IMAGE))
 						texture = 'notetypes/hurt_' + NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin];
 					else
 						texture = "notetypes/hurt_Arrows";
@@ -136,7 +138,10 @@ class Note extends FlxSprite
 					canRate = true;
 					missHealth = 0.8;
 					hitsoundsEditor = true;
-					if (Paths.fileExists('images/notetypes/mustpress_' + NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin] + '.png',IMAGE))
+					if (Paths.fileExists('images/notetypes/mustpress_'
+						+ NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin]
+						+ '.png',
+						IMAGE))
 						texture = 'notetypes/mustpress_' + NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin];
 					else
 						texture = "notetypes/mustpress_Arrows";
