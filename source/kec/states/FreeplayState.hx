@@ -6,6 +6,7 @@ import kec.backend.util.DiffCalc;
 import kec.backend.PlayStateChangeables;
 import kec.backend.chart.TimingStruct;
 import openfl.media.Sound;
+import kec.states.MusicBeatState.subStates;
 import flixel.effects.FlxFlicker;
 #if FEATURE_STEPMANIA
 import kec.backend.util.smTools.SMFile;
@@ -108,6 +109,7 @@ class FreeplayState extends MusicBeatState
 		FlxG.mouse.visible = true;
 		alreadyPressed = false;
 		doUpdateText = true;
+		openMod = false;
 
 		#if desktop
 		Application.current.window.title = '${Constants.kecVer} : In the Menus';
@@ -256,6 +258,12 @@ class FreeplayState extends MusicBeatState
 		PlayStateChangeables.practiceMode = FlxG.save.data.practice;
 		PlayStateChangeables.skillIssue = FlxG.save.data.noMisses;
 
+		if (!openMod)
+		{
+			changeSelection();
+			changeDiff();
+		}
+
 		if (Constants.freakyPlaying)
 		{
 			if (!FlxG.sound.music.playing)
@@ -271,13 +279,9 @@ class FreeplayState extends MusicBeatState
 
 		updateTexts();
 
-		if (!openMod)
-		{
-			changeSelection();
-			changeDiff();
-		}
-
 		super.create();
+
+		subStates.push(new kec.substates.FreeplaySubState.ModMenu());
 		Paths.clearUnusedMemory();
 		Debug.logTrace("Took " + Std.string(FlxMath.roundDecimal(haxe.Timer.stamp() - stamp, 3)) + " Seconds To Load Freeplay.");
 	}
@@ -639,7 +643,7 @@ class FreeplayState extends MusicBeatState
 		{
 			openMod = true;
 			FlxG.sound.play(Paths.sound('scrollMenu'));
-			openSubState(new kec.substates.FreeplaySubState.ModMenu());
+			openSubState(subStates[0]);
 		}
 
 		if (!openMod && !MusicBeatState.switchingState && doUpdateText)

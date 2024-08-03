@@ -45,7 +45,7 @@ class MusicBeatSubstate extends FlxSubState
 
 	override function update(elapsed:Float)
 	{
-		curDecimalBeat = (((Conductor.songPosition * 0.001))) * (Conductor.bpm / 60);
+		curDecimalBeat = (((Conductor.songPosition / 1000))) * (Conductor.bpm / 60);
 		curBeat = Math.floor(curDecimalBeat);
 		curStep = Math.floor(curDecimalBeat * 4);
 

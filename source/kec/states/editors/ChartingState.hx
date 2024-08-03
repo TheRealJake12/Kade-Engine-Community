@@ -1,8 +1,8 @@
 package kec.states.editors;
 
 import flixel.addons.display.FlxBackdrop;
-import haxe.ui.components.Button;
 import flixel.util.FlxSort;
+import haxe.ui.components.Button;
 import haxe.ui.components.CheckBox;
 import haxe.ui.components.DropDown;
 import haxe.ui.components.HorizontalSlider;
@@ -167,8 +167,6 @@ class ChartingState extends MusicBeatState
 	var curRenderedNotes:FlxTypedGroup<Note>;
 	var curRenderedSustains:FlxTypedGroup<FlxSprite>;
 
-	var spawnNotes:Array<NoteData> = [];
-
 	public var selectedBoxes:FlxTypedGroup<ChartingBox>;
 	public var curSelectedNoteObject:Note = null;
 
@@ -177,7 +175,7 @@ class ChartingState extends MusicBeatState
 	public var deletedNotes:Array<Array<Dynamic>> = [];
 	public var lastAction:String = "";
 
-	var curSelectedNote:NoteData;
+	var curSelectedNote:Array<Dynamic>;
 	var texts:FlxTypedGroup<FlxText>;
 	var lines:FlxTypedGroup<FlxSprite>;
 
@@ -400,7 +398,6 @@ class ChartingState extends MusicBeatState
 		createGrid();
 
 		regenerateLines();
-		initNotes(); // get the note data
 		updateNotes();
 
 		add(lines);
@@ -699,15 +696,11 @@ class ChartingState extends MusicBeatState
 
 			if (FlxG.keys.justPressed.SHIFT)
 				doSnapShit = !doSnapShit;
-
+			
 			if (FlxG.keys.justPressed.E)
-			{
 				changeNoteSustain(Conductor.stepCrochet * sustainQuant);
-			}
 			if (FlxG.keys.justPressed.Q)
-			{
 				changeNoteSustain(-Conductor.stepCrochet * sustainQuant);
-			}
 
 			if ((FlxG.keys.justPressed.A || FlxG.keys.justPressed.LEFT) && !FlxG.keys.pressed.CONTROL && !FlxG.keys.pressed.ALT)
 			{
@@ -1076,33 +1069,6 @@ class ChartingState extends MusicBeatState
 		super.update(elapsed);
 	}
 
-	function initNotes()
-	{
-		// adds notes to the spawnNotes array.
-		// fard
-		for (section in SONG.notes)
-		{
-			for (i in section.sectionNotes)
-			{
-				var gottaHitNote:Bool = false;
-				if (i[1] > 3)
-					gottaHitNote = true;
-				else if (i[1] <= 3)
-					gottaHitNote = false;
-
-				spawnNotes.push({
-					strumTime: i[0],
-					noteData: i[1],
-					sustainLength: i[2],
-					noteType: i[3],
-					isPlayer: gottaHitNote,
-					beat: TimingStruct.getBeatFromTime(i[0]),
-				});
-			}
-		}
-		spawnNotes.sort(Sort.sortNoteData);
-	}
-
 	function updateNotes()
 	{
 		curRenderedNotes.forEachAlive(function(spr:Note) spr.destroy());
@@ -1111,32 +1077,45 @@ class ChartingState extends MusicBeatState
 		curRenderedSustains.clear();
 		var noteCounter = 0;
 
-		while (spawnNotes[noteCounter] != null)
+		for (section in SONG.notes)
 		{
-			var dataNote:NoteData = spawnNotes[noteCounter];
-			var note:Note = new Note(dataNote.strumTime, dataNote.noteData % 4, null, false, true, dataNote.isPlayer, dataNote.beat);
-			note.rawNoteData = dataNote.noteData;
-			note.noteType = dataNote.noteType;
-			note.sustainLength = dataNote.sustainLength;
+			if (section != null)
+				for (i in 0...section.sectionNotes.length)
+				{
+					final songNotes:Array<Dynamic> = section.sectionNotes[i];
+					var noteData = songNotes[1];
+					var spawnTime = songNotes[0];
+					var holdLength = songNotes[2];
+					var noteType = songNotes[3];
+					var beat = TimingStruct.getBeatFromTime(spawnTime);
+					var playerNote:Bool = (songNotes[1] > 3);
 
-			note.setGraphicSize(gridSize, gridSize);
-			note.updateHitbox();
-			note.x = editorArea.x + Math.floor(note.rawNoteData * gridSize) + separatorWidth;
-			if (note.rawNoteData < 4)
-				note.x -= separatorWidth;
-			note.y = Math.floor(getYfromStrum(note.strumTime));
-			curRenderedNotes.add(note);
+					if (PlayStateChangeables.opponentMode)
+						playerNote = !playerNote;
 
-			if (note.sustainLength > 0)
-			{
-				var sustainVis:FlxSprite = new FlxSprite(note.x + 20, note.y + gridSize).makeGraphic(1, 1);
-				sustainVis.setGraphicSize(8, Math.floor((getYfromStrum(note.strumTime + note.sustainLength)) - note.y));
-				note.noteCharterObject = sustainVis;
-				sustainVis.updateHitbox();
+					var note:Note = new Note(spawnTime, noteData % 4, null, false, true, playerNote, beat);
+					note.rawNoteData = noteData;
+					note.noteType = noteType;
+					note.sustainLength = holdLength;
 
-				curRenderedSustains.add(sustainVis);
-			}
-			noteCounter++;
+					note.setGraphicSize(gridSize, gridSize);
+					note.updateHitbox();
+					note.x = editorArea.x + Math.floor(noteData * gridSize) + separatorWidth;
+					if (noteData < 4)
+						note.x -= separatorWidth;
+					note.y = Math.floor(getYfromStrum(spawnTime));
+					curRenderedNotes.add(note);
+
+					if (holdLength > 0)
+					{
+						var sustainVis:FlxSprite = new FlxSprite(note.x + 20, note.y + gridSize).makeGraphic(1, 1);
+						sustainVis.setGraphicSize(8, Math.floor((getYfromStrum(note.strumTime + note.sustainLength)) - note.y));
+						note.noteCharterObject = sustainVis;
+						sustainVis.updateHitbox();
+
+						curRenderedSustains.add(sustainVis);
+					}
+				}
 		}
 		curRenderedNotes.sort(FlxSort.byY, FlxSort.ASCENDING);
 	}
@@ -1206,87 +1185,89 @@ class ChartingState extends MusicBeatState
 
 		var strum = getStrumTime(mouseCursor.y);
 		var sec = getSectionByTime(strum);
-		var noteStrum = strum;
+		var spawnTime = strum;
 		var noteData:Int = Math.floor((mouseCursor.x - editorArea.x) / gridSize);
-		var noteSus = 0;
+		var holdLength = 0;
 		var noteType = noteTypes[noteShitDrop.selectedIndex];
-		var gottaHitNote:Bool = false;
-		if (noteData > 3)
-			gottaHitNote = true;
-		else if (noteData <= 3)
-			gottaHitNote = false;
+		var playerNote:Bool = (noteData > 3);
 
 		if (PlayStateChangeables.opponentMode)
-			gottaHitNote = !gottaHitNote;
-		spawnNotes.push({
-			strumTime: noteStrum,
-			noteData: noteData,
-			sustainLength: noteSus,
-			noteType: noteType,
-			isPlayer: gottaHitNote,
-			beat: TimingStruct.getBeatFromTime(noteStrum)
-		});
+			playerNote = !playerNote;
 
-		sec.sectionNotes.push([noteStrum, noteData, noteSus, noteType]); // retarded ass note saving
+		sec.sectionNotes.push([spawnTime, noteData, holdLength, noteType]); // retarded ass note saving
 
-		Debug.logTrace("Note Data : " + noteData + " StrumTime : " + noteStrum + " SpawnNotes Length : " + spawnNotes.length);
+		Debug.logTrace("Note Data : " + noteData + " StrumTime : " + spawnTime + " Section Length : " + sec.sectionNotes.length);
 
-		var note:Note = new Note(noteStrum, noteData % 4, null, false, true, gottaHitNote, TimingStruct.getBeatFromTime(noteStrum));
+		var note:Note = new Note(spawnTime, noteData % 4, null, false, true, playerNote, TimingStruct.getBeatFromTime(spawnTime));
 		note.rawNoteData = noteData;
-		note.sustainLength = noteSus;
+		note.sustainLength = holdLength;
 		note.noteType = noteType;
 		note.setGraphicSize(gridSize, gridSize);
 		note.updateHitbox();
-		note.x = editorArea.x + Math.floor(note.rawNoteData * gridSize) + separatorWidth;
-		if (note.rawNoteData < 4)
+		note.x = editorArea.x + Math.floor(noteData * gridSize) + separatorWidth;
+		if (noteData < 4)
 			note.x -= separatorWidth;
-		note.charterSelected = false;
-		curSelectedNoteObject = note;
-		note.y = Math.floor(getYfromStrum(noteStrum));
+		note.y = Math.floor(getYfromStrum(spawnTime));
 		curRenderedNotes.add(note);
-		selectNote(note);
+
+		curSelectedNote = sec.sectionNotes[sec.sectionNotes.length - 1];
+		curSelectedNoteObject = note;
+		createBox(note.x, note.y, note);
+		note.charterSelected = true;
+		curSelectedNoteObject.charterSelected = true;
 
 		autosaveSong();
 	}
 
 	function selectNote(note:Note):Void
 	{
-		for (i in 0...spawnNotes.length)
+		for (sec in SONG.notes)
 		{
-			if (spawnNotes[i].strumTime == note.strumTime && spawnNotes[i].noteData == note.rawNoteData)
-			{
-				curSelectedNote = spawnNotes[i];
-				curSelectedNoteObject = note;
-				if (!note.charterSelected)
+			if (sec != null)
+				for (i in 0...sec.sectionNotes.length)
 				{
-					createBox(note.x, note.y, note);
-					note.charterSelected = true;
-					curSelectedNoteObject.charterSelected = true;
+					final check:Array<Dynamic> = sec.sectionNotes[i];
+					final time = check[0];
+					final data = check[1];
+					final type = check[3];
+					if (time == note.strumTime && data == note.rawNoteData && type == note.noteType)
+					{
+						curSelectedNote = sec.sectionNotes[i];
+						curSelectedNoteObject = note;
+						if (!note.charterSelected)
+						{
+							createBox(note.x, note.y, note);
+							note.charterSelected = true;
+							curSelectedNoteObject.charterSelected = true;
+						}
+					}
 				}
-			}
 		}
 	}
 
 	function deleteNote(existingNote:Note):Void
 	{
 		destroyBoxes();
-		var i:Int = spawnNotes.length;
+		var sec = getSectionByTime(existingNote.strumTime);
+		var i:Int = sec.sectionNotes.length;
 		while (--i > -1)
 		{
-			if (spawnNotes[i].strumTime == existingNote.strumTime && spawnNotes[i].noteData == existingNote.rawNoteData)
+			if (sec.sectionNotes[i][0] == existingNote.strumTime && sec.sectionNotes[i][1] == existingNote.rawNoteData)
 			{
-				spawnNotes.splice(i, 1);
+				sec.sectionNotes.splice(i, 1);
 			}
 		}
-		var sec = getSectionByTime(existingNote.strumTime);
-		if (sec != null)
-		{
-			for (i in sec.sectionNotes)
+		/*
+			var sec = getSectionByTime(existingNote.strumTime);
+			if (sec != null)
 			{
-				if (i[0] == existingNote.strumTime && i[1] == existingNote.rawNoteData)
-					sec.sectionNotes.remove(i);
+				for (i in sec.sectionNotes)
+				{
+					if (i[0] == existingNote.strumTime && i[1] == existingNote.rawNoteData)
+						sec.sectionNotes.remove(i);
+				}
 			}
-		}
+		 */
 		// thanks Chris(Dimensionscape) from the FNF thread
 		curRenderedNotes.remove(existingNote);
 		if (existingNote.sustainLength > 0)
@@ -1329,7 +1310,6 @@ class ChartingState extends MusicBeatState
 		gfs = null;
 		noteStyles = null;
 		noteTypes = null;
-		spawnNotes.resize(0);
 
 		destroyBoxes();
 		FlxG.save.flush();
@@ -1338,27 +1318,25 @@ class ChartingState extends MusicBeatState
 
 	function changeNoteSustain(value:Float):Void
 	{
-		// I'm tired of typing "curSelectedNote.sustainLength"
-		if (value < 0)
+		Debug.logTrace(curSelectedNote == null);
+		if (curSelectedNote == null)
 			return;
 
-		if (curSelectedNote != null && value > 0)
+		curSelectedNote[2] += Math.ceil(value);
+		curSelectedNote[2] = Math.max(curSelectedNote[2], 0);
+
+		if (curSelectedNoteObject.noteCharterObject != null)
+			curRenderedSustains.remove(curSelectedNoteObject.noteCharterObject, true);
+
+		if (curSelectedNote[2] > 0)
 		{
-			curSelectedNote.sustainLength = Math.max(Math.ceil(value), 0);
-			if (curSelectedNoteObject.noteCharterObject != null)
-				curRenderedSustains.remove(curSelectedNoteObject.noteCharterObject, true);
+			var sustainVis:FlxSprite = new FlxSprite(curSelectedNoteObject.x + 20, curSelectedNoteObject.y + gridSize).makeGraphic(1, 1);
+			sustainVis.setGraphicSize(8, Math.floor((getYfromStrum(curSelectedNoteObject.strumTime + curSelectedNote[2])) - curSelectedNoteObject.y));
+			sustainVis.updateHitbox();
+			curSelectedNoteObject.sustainLength = curSelectedNote[2];
+			curSelectedNoteObject.noteCharterObject = sustainVis;
 
-			if (curSelectedNote.sustainLength > 0)
-			{
-				var sustainVis:FlxSprite = new FlxSprite(curSelectedNoteObject.x + 20, curSelectedNoteObject.y + gridSize).makeGraphic(1, 1);
-				sustainVis.setGraphicSize(8,
-					Math.floor((getYfromStrum(curSelectedNoteObject.strumTime + curSelectedNote.sustainLength)) - curSelectedNoteObject.y));
-				sustainVis.updateHitbox();
-				curSelectedNoteObject.sustainLength = value;
-				curSelectedNoteObject.noteCharterObject = sustainVis;
-
-				curRenderedSustains.add(sustainVis);
-			}
+			curRenderedSustains.add(sustainVis);
 		}
 	}
 
@@ -1372,6 +1350,8 @@ class ChartingState extends MusicBeatState
 			var originalNote = b.connectedNote;
 			toDelete.push(originalNote);
 			var strum = originalNote.strumTime + offset;
+			if (strum < 0)
+				return;
 			var sec = getSectionByTime(strum);
 
 			var note:Note = new Note(strum, originalNote.noteData, originalNote.prevNote, false, true, originalNote.mustPress, originalNote.beat);
@@ -1387,14 +1367,6 @@ class ChartingState extends MusicBeatState
 			pastedNotes.push(note);
 			toBeAdded.push(note);
 			curRenderedNotes.add(note);
-			spawnNotes.push({
-				strumTime: note.strumTime,
-				noteData: note.rawNoteData,
-				sustainLength: note.sustainLength,
-				noteType: note.noteType,
-				isPlayer: note.mustPress,
-				beat: TimingStruct.getBeatFromTime(note.strumTime)
-			});
 
 			sec.sectionNotes.push([note.strumTime, note.rawNoteData, note.sustainLength, note.noteType]);
 
@@ -2901,8 +2873,6 @@ class ChartingState extends MusicBeatState
 						text: "Clear",
 						callback: (data) ->
 						{
-							spawnNotes.resize(0);
-
 							updateNotes();
 							NotificationManager.instance.addNotification({
 								title: "Chart Cleared.",
@@ -3153,24 +3123,16 @@ class ChartingState extends MusicBeatState
 		else
 		{
 			destroyBoxes();
-			var i:Int = spawnNotes.length;
+			var sec = getSectionByTime(existingNote.strumTime);
+			var i:Int = sec.sectionNotes.length;
 			while (--i > -1)
 			{
-				if (spawnNotes[i].strumTime == existingNote.strumTime && spawnNotes[i].noteData == existingNote.rawNoteData)
+				if (sec.sectionNotes[i][0] == existingNote.strumTime && sec.sectionNotes[i][1] == existingNote.rawNoteData)
 				{
-					spawnNotes.splice(i, 1);
+					sec.sectionNotes.splice(i, 1);
 				}
 			}
 			// thanks Chris(Dimensionscape) from the FNF thread
-			var sec = getSectionByTime(strumTime);
-			if (sec != null)
-			{
-				for (i in sec.sectionNotes)
-				{
-					if (i[0] == existingNote.strumTime && i[1] == existingNote.rawNoteData)
-						sec.sectionNotes.remove(i);
-				}
-			}
 
 			curRenderedNotes.remove(existingNote);
 			if (existingNote.sustainLength > 0)

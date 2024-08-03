@@ -867,7 +867,7 @@ class Stage extends MusicBeatState
 							phillyWindow.color = phillyLightsColors[curLight];
 							phillyWindow.alpha = 1;
 							PlayState.tweenManager.cancelTweensOf(phillyWindow);
-							PlayState.instance.createTween(phillyWindow, {alpha : 0}, 1);
+							PlayState.instance.createTween(phillyWindow, {alpha: 0}, 1);
 						}
 					}
 

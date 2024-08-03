@@ -38,6 +38,8 @@ class MusicBeatState extends FlxTransitionableState
 	private var controls(get, never):Controls;
 	var fullscreenBind:FlxKey;
 
+	public static var transSubstate:CustomFadeTransition;
+
 	public static var subStates:Array<MusicBeatSubstate> = [];
 
 	inline function get_controls():Controls
@@ -45,21 +47,24 @@ class MusicBeatState extends FlxTransitionableState
 
 	override function create()
 	{
+		transSubstate = new CustomFadeTransition(0.4);
 		destroySubStates = false;
 		fullscreenBind = FlxKey.fromString(Std.string(FlxG.save.data.fullscreenBind));
 
 		super.create();
-		TimingStruct.clearTimings();
-
+		var skip:Bool = FlxTransitionableState.skipNextTransOut;
+		if (!skip)
+		{
+			transSubstate.isTransIn = true;
+			openSubState(transSubstate);
+		}
+		FlxTransitionableState.skipNextTransOut = false;
 		FlxG.stage.window.borderless = FlxG.save.data.borderless;
-
 		Main.gameContainer.setFPSCap(FlxG.save.data.fpsCap);
 	}
 
 	override function destroy()
 	{
-		super.destroy();
-
 		if (!PlayState.inDaPlay)
 		{
 			for (rateData in FreeplayState.songRating.keys())
@@ -92,6 +97,14 @@ class MusicBeatState extends FlxTransitionableState
 
 			subStates.resize(0);
 		}
+
+		if (transSubstate != null)
+		{
+			transSubstate.destroy();
+			transSubstate = null;
+		}
+
+		super.destroy();
 	}
 
 	public function fancyOpenURL(schmancy:String)
@@ -311,19 +324,27 @@ class MusicBeatState extends FlxTransitionableState
 	public static function switchState(nextState:FlxState)
 	{
 		MusicBeatState.switchingState = true;
-		Main.mainClassState = Type.getClass(nextState);
 		var curState:Dynamic = FlxG.state;
 		var leState:MusicBeatState = curState;
+		Main.mainClassState = Type.getClass(nextState);
 		if (!FlxTransitionableState.skipNextTransIn)
 		{
+			transSubstate.isTransIn = false;
+			leState.openSubState(transSubstate);
 			if (nextState == FlxG.state)
 			{
-				resetState();
+				transSubstate.finishCallback = function()
+				{
+					resetState();
+				};
 			}
 			else
 			{
-				MusicBeatState.switchingState = false;
-				FlxG.switchState(nextState);
+				transSubstate.finishCallback = function()
+				{
+					MusicBeatState.switchingState = false;
+					FlxG.switchState(nextState);
+				};
 			}
 			return;
 		}

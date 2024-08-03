@@ -1,11 +1,10 @@
 package kec.substates;
 
-import openfl.Lib;
-import kec.backend.Modifiers;
-import kec.backend.Controls.Control;
 import flash.text.TextField;
 import flixel.ui.FlxBar;
+import kec.backend.Modifiers;
 import kec.backend.PlayerSettings;
+import openfl.Lib;
 
 // Uuh... Direct copy of OptionsMenu.hx xD
 class ModMenu extends MusicBeatSubstate
@@ -41,6 +40,8 @@ class ModMenu extends MusicBeatSubstate
 	override function create()
 	{
 		modObjects = new FlxTypedGroup();
+
+		FreeplayState.openMod = true;
 
 		modifiers = [
 			new OpponentMode("Toggle to play as the opponent."),
@@ -160,6 +161,12 @@ class ModMenu extends MusicBeatSubstate
 		object.text = "> " + mod.getValue();
 
 		descText.text = mod.getDescription();
+	}
+
+	override function destroy()
+	{
+		instance = null;
+		super.destroy();
 	}
 
 	override function update(elapsed:Float)
@@ -308,8 +315,6 @@ class ModMenu extends MusicBeatSubstate
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 				var object = modObjects.members[selectedModifierIndex];
 				selectedModifier.right();
-
-				FlxG.save.flush();
 				changedMod = true;
 				object.text = "> " + selectedModifier.getValue();
 			}
@@ -319,8 +324,6 @@ class ModMenu extends MusicBeatSubstate
 				var object = modObjects.members[selectedModifierIndex];
 				selectedModifier.left();
 				changedMod = true;
-				FlxG.save.flush();
-
 				object.text = "> " + selectedModifier.getValue();
 			}
 			if (escape || controls.BACK)
@@ -328,10 +331,9 @@ class ModMenu extends MusicBeatSubstate
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 
 				PlayerSettings.player1.controls.loadKeyBinds();
-
-				FlxG.state.closeSubState();
-
 				FreeplayState.openMod = false;
+				FreeplayState.alreadyPressed = false;
+				FlxG.save.flush();
 
 				FreeplayState.instance.changeSelection();
 
@@ -356,11 +358,10 @@ class ModMenu extends MusicBeatSubstate
 							}
 						}
 					}
+				close();
+				if (changedMod)
+					FreeplayState.instance.updateDiffCalc();
 			}
-			#if !html5
-			if (changedMod)
-				FreeplayState.instance.updateDiffCalc();
-			#end
 		}
 	}
 }

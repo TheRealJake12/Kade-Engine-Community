@@ -65,6 +65,5 @@ class Stats
 		campaignGoods += goods;
 		campaignBads += bads;
 		campaignShits += shits;
-
 	}
 }

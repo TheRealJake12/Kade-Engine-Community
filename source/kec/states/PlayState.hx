@@ -1,29 +1,63 @@
 package kec.states;
 
+import flixel.addons.effects.FlxTrail;
+import flixel.addons.transition.FlxTransitionableState;
+import flixel.graphics.FlxGraphic;
+import flixel.math.FlxRect;
+import flixel.ui.FlxBar;
+import flixel.util.FlxSort;
+import kec.backend.HitSounds;
+import kec.backend.PlayStateChangeables;
+import kec.backend.PlayerSettings;
+import kec.backend.Ratings.RatingWindow;
+import kec.backend.Ratings;
+import kec.backend.Stats;
+import kec.backend.chart.Section.SwagSection;
+import kec.backend.chart.Song.Event;
+import kec.backend.chart.Song.SongData;
+import kec.backend.chart.Song.StyleData;
+import kec.backend.chart.Song;
+import kec.backend.chart.TimingStruct;
+import kec.backend.util.HelperFunctions;
+import kec.backend.util.Highscore;
+import kec.backend.util.NoteStyleHelper;
+import kec.backend.util.Sort;
+import kec.objects.Alphabet;
+import kec.objects.Character;
+import kec.objects.Note;
+import kec.objects.NoteSplash;
+import kec.objects.StaticArrow;
+import kec.objects.ui.ComboNumber;
+import kec.objects.ui.DialogueBox;
+import kec.objects.ui.HealthIcon;
+import kec.objects.ui.IntroSprite;
+import kec.objects.ui.Rating;
+import kec.objects.ui.UIComponent;
+import kec.stages.Stage;
+import kec.stages.TankmenBG;
+import kec.states.MusicBeatState.subStates;
+import kec.states.MusicBeatState.transSubstate;
+import kec.states.editors.ChartingState;
+import kec.states.editors.StageDebugState;
+import kec.substates.*;
+import lime.app.Application;
 import lime.utils.Assets as LimeAssets;
+import openfl.Lib;
+import openfl.events.KeyboardEvent;
+import openfl.media.Sound;
 import openfl.utils.Assets as OpenFlAssets;
 #if FEATURE_LUAMODCHART
 import kec.backend.lua.LuaClass;
 import kec.backend.lua.ModchartState;
 #end
-import openfl.media.Sound;
 #if FEATURE_STEPMANIA
 import kec.backend.util.smTools.SMFile;
 #end
 #if FEATURE_FILESYSTEM
-import sys.io.File;
 import Sys;
 import sys.FileSystem;
+import sys.io.File;
 #end
-import openfl.events.KeyboardEvent;
-import flixel.graphics.FlxGraphic;
-import lime.app.Application;
-import openfl.Lib;
-import flixel.addons.effects.FlxTrail;
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.math.FlxRect;
-import flixel.ui.FlxBar;
-import flixel.util.FlxSort;
 #if FEATURE_DISCORD
 import kec.backend.Discord;
 #end
@@ -33,44 +67,11 @@ import kec.backend.script.ScriptGroup;
 import kec.backend.script.ScriptUtil;
 #end
 // Orginization Imports
-import kec.states.editors.StageDebugState;
-import kec.states.editors.ChartingState;
 #if VIDEOS
 import hxvlc.flixel.FlxVideo as VideoHandler;
 import hxvlc.flixel.FlxVideoSprite as VideoSprite;
 import hxvlc.util.Handle;
 #end
-import kec.stages.Stage;
-import kec.stages.TankmenBG;
-import kec.backend.Ratings.RatingWindow;
-import kec.states.MusicBeatState.subStates;
-import kec.objects.ui.Rating;
-import kec.objects.ui.IntroSprite;
-import kec.backend.chart.Song.SongData;
-import kec.backend.chart.Song.StyleData;
-import kec.backend.chart.Song.Event;
-import kec.backend.chart.Song;
-import kec.backend.chart.TimingStruct;
-import kec.backend.chart.Section.SwagSection;
-import kec.backend.util.NoteStyleHelper;
-import kec.backend.Ratings;
-import kec.objects.Note;
-import kec.objects.NoteSplash;
-import kec.objects.StaticArrow;
-import kec.objects.ui.HealthIcon;
-import kec.backend.PlayStateChangeables;
-import kec.backend.util.Highscore;
-import kec.objects.Character;
-import kec.objects.Alphabet;
-import kec.backend.HitSounds;
-import kec.objects.ui.DialogueBox;
-import kec.backend.util.HelperFunctions;
-import kec.substates.*;
-import kec.backend.PlayerSettings;
-import kec.objects.ui.ComboNumber;
-import kec.objects.ui.UIComponent;
-import kec.backend.util.Sort;
-import kec.backend.Stats;
 
 class PlayState extends MusicBeatState
 {
@@ -1163,6 +1164,8 @@ class PlayState extends MusicBeatState
 		subStates.push(new GameOverSubstate());
 		subStates.push(new OptionsMenu(true));
 
+		transSubstate.nextCamera = overlayCam;
+
 		#if FEATURE_LUAMODCHART
 		if (executeModchart)
 		{
@@ -1973,74 +1976,77 @@ class PlayState extends MusicBeatState
 		var playerCounter:Int = 0;
 
 		var daBeats:Int = 0;
+		var ghostNotesCaught:Int = 0;
 
 		for (section in noteData)
 		{
-			for (songNotes in section.sectionNotes)
+			for (i in 0...section.sectionNotes.length)
 			{
-				var daStrumTime:Float = (songNotes[0] - FlxG.save.data.offset - SONG.offset) / songMultiplier;
-				if (daStrumTime < 0)
-					daStrumTime = 0;
-				var daNoteData:Int = Std.int(songNotes[1] % 4);
-				var daNoteType:String = songNotes[3];
-				var daBeat = TimingStruct.getBeatFromTime(daStrumTime);
-				var gottaHitNote:Bool = false;
+				final songNotes:Array<Dynamic> = section.sectionNotes[i];
+				var spawnTime:Float = (songNotes[0] - FlxG.save.data.offset - SONG.offset) / songMultiplier;
+				if (spawnTime < 0)
+					spawnTime = 0;
+				var noteData:Int = Std.int(songNotes[1]);
+				var noteType:String = songNotes[3];
+				var beat = TimingStruct.getBeatFromTime(spawnTime);
+				var holdLength:Float = songNotes[2];
+				var playerNote:Bool = (noteData > 3);
 
-				if (songNotes[1] > 3)
-					gottaHitNote = true;
-				else if (songNotes[1] <= 3)
-					gottaHitNote = false;
+				if (i != 0)
+				{
+					// CLEAR ANY POSSIBLE GHOST NOTES
+					for (evilNote in unspawnNotes)
+					{
+						var matches:Bool = noteData == evilNote.noteData && playerNote == evilNote.mustPress;
+						if (matches && Math.abs(spawnTime - evilNote.strumTime) == 0.0)
+						{
+							evilNote.destroy();
+							unspawnNotes.remove(evilNote);
+							ghostNotesCaught++;
+							// continue;
+						}
+					}
+				}
+
+				if (Math.isNaN(holdLength))
+					holdLength = 0.0;
 
 				if (PlayStateChangeables.opponentMode)
-					gottaHitNote = !gottaHitNote;
+					playerNote = !playerNote;
 
 				var oldNote:Note;
 				if (unspawnNotes.length > 0)
-					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
+					oldNote = unspawnNotes[unspawnNotes.length - 1];
 				else
 					oldNote = null;
 
-				var swagNote = new Note(daStrumTime, daNoteData, oldNote, false, false, gottaHitNote, daBeat);
-				swagNote.rawNoteData = Std.int(songNotes[1]);
-				swagNote.noteType = daNoteType;
-
-				if (PlayStateChangeables.holds)
-				{
-					swagNote.sustainLength = songNotes[2] / songMultiplier;
-				}
-				else
-				{
-					swagNote.sustainLength = 0;
-				}
+				var swagNote = new Note(spawnTime, noteData % 4, oldNote, false, false, playerNote, beat);
+				swagNote.rawNoteData = noteData;
+				swagNote.noteType = noteType;
+				swagNote.sustainLength = (PlayStateChangeables.holds ? holdLength / songMultiplier : 0);
 
 				swagNote.scrollFactor.set(0, 0);
-
-				var susLength:Float = swagNote.sustainLength;
-
 				var anotherCrochet:Float = Conductor.crochet;
 				var anotherStepCrochet:Float = anotherCrochet * 0.25;
-				susLength = susLength / anotherStepCrochet;
-
 				unspawnNotes.push(swagNote);
 
 				var type = 0;
+				final roundSus:Int = Std.int(Math.max((holdLength / anotherStepCrochet), 2));
 
-				if (susLength > 0)
+				if (holdLength > 0)
 				{
 					swagNote.isParent = true;
-					for (susNote in 0...Std.int(Math.max(susLength, 2)))
+					for (susNote in 0...roundSus)
 					{
 						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
-						var sustainNote = new Note(daStrumTime + (anotherStepCrochet * susNote) + anotherStepCrochet, daNoteData, oldNote, true, false,
-							gottaHitNote, 0);
-						sustainNote.rawNoteData = Std.int(songNotes[1]);
-
-						sustainNote.noteType = daNoteType;
-
+						var sustainNote = new Note(spawnTime + (anotherStepCrochet * susNote) + anotherStepCrochet, noteData % 4, oldNote, true, false,
+							playerNote, 0);
+						sustainNote.rawNoteData = noteData;
+						sustainNote.noteType = noteType;
 						sustainNote.scrollFactor.set();
 						unspawnNotes.push(sustainNote);
 
-						sustainNote.mustPress = gottaHitNote;
+						sustainNote.mustPress = playerNote;
 
 						sustainNote.parent = swagNote;
 						swagNote.children.push(sustainNote);
@@ -2049,7 +2055,7 @@ class PlayState extends MusicBeatState
 					}
 				}
 
-				swagNote.mustPress = gottaHitNote;
+				swagNote.mustPress = playerNote;
 
 				if (swagNote.mustPress && !swagNote.isSustainNote)
 					playerNotes++;
@@ -2065,6 +2071,8 @@ class PlayState extends MusicBeatState
 			}
 			daBeats += 1;
 		}
+
+		Debug.logTrace("Ghost Notes Removed : " + ghostNotesCaught);
 
 		unspawnNotes.sort(Sort.sortNotes);
 
@@ -2672,13 +2680,9 @@ class PlayState extends MusicBeatState
 				}
 				inst.stop();
 				if (FlxG.save.data.InstantRespawn || (PlayStateChangeables.opponentMode && !dad.animOffsets.exists('firstDeath')))
-				{
 					LoadingState.loadAndSwitchState(new PlayState());
-				}
 				else
-				{
 					openSubState(subStates[2]);
-				}
 
 				isDead = true;
 
@@ -2719,14 +2723,9 @@ class PlayState extends MusicBeatState
 				}
 				inst.stop();
 				if (FlxG.save.data.InstantRespawn || (PlayStateChangeables.opponentMode && !dad.animOffsets.exists('firstDeath')))
-				{
 					LoadingState.loadAndSwitchState(new PlayState());
-				}
 				else
-				{
 					openSubState(subStates[2]);
-				}
-
 				isDead = true;
 
 				#if FEATURE_DISCORD
@@ -3261,9 +3260,6 @@ class PlayState extends MusicBeatState
 					FlxTransitionableState.skipNextTransIn = true;
 					FlxTransitionableState.skipNextTransOut = true;
 
-					if (FlxTransitionableState.skipNextTransIn)
-						CustomFadeTransition.nextCamera = null;
-
 					Debug.logInfo('Loading Next Story Song ${PlayState.storyPlaylist[0]}${diff}');
 
 					PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0], diff);
@@ -3298,7 +3294,7 @@ class PlayState extends MusicBeatState
 	private function fadeOutHUD()
 	{
 		if (!isStoryMode || storyPlaylist.length <= 0)
-		{	
+		{
 			if (FlxG.save.data.songPosition)
 			{
 				createTween(songName, {alpha: 0}, 1, {ease: FlxEase.circIn});
@@ -3885,9 +3881,9 @@ class PlayState extends MusicBeatState
 				scripts.executeAllFunc("goodNoteHit", [note]);
 				#end
 
-				if (PlayStateChangeables.botPlay || FlxG.save.data.cpuStrums)
+				if (PlayStateChangeables.botPlay && FlxG.save.data.cpuStrums)
 					pressArrow(playerStrums.members[note.noteData], note, fakeNoteStepCrochet * 1.25 * 0.001);
-				else
+				else if (!PlayStateChangeables.botPlay)
 				{
 					var spr = playerStrums.members[note.noteData];
 					if (spr != null)
@@ -4242,6 +4238,7 @@ class PlayState extends MusicBeatState
 
 	override function destroy()
 	{
+		transSubstate.nextCamera = overlayCam;
 		#if FEATURE_HSCRIPT
 		if (scripts != null)
 		{

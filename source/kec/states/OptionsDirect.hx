@@ -1,16 +1,19 @@
 package kec.states;
 
-import flixel.addons.transition.FlxTransitionableState;
 import kec.backend.util.NoteStyleHelper;
+import kec.states.MusicBeatState.subStates;
 
 class OptionsDirect extends MusicBeatState
 {
+	var menuBG:FlxSprite;
+
+	public static var instance:OptionsDirect = null;
+
 	override function create()
 	{
-		var menuBG:FlxSprite;
-		transIn = FlxTransitionableState.defaultTransIn;
-		transOut = FlxTransitionableState.defaultTransOut;
-
+		instance = this;
+		Paths.clearStoredMemory();
+		Paths.clearUnusedMemory();
 		FlxG.camera.fade(FlxColor.BLACK, 0.6, true);
 
 		if (Constants.freakyPlaying)
@@ -21,6 +24,7 @@ class OptionsDirect extends MusicBeatState
 
 		persistentUpdate = false;
 
+		subStates.push(new kec.substates.OptionsMenu());
 		menuBG = new FlxSprite().loadGraphic(Paths.image("menuDesat"));
 		menuBG.color = 0xFF2F2F2F;
 		menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));
@@ -32,6 +36,8 @@ class OptionsDirect extends MusicBeatState
 		NoteStyleHelper.updateNoteskins();
 		NoteStyleHelper.updateNotesplashes();
 
-		openSubState(new kec.substates.OptionsMenu());
+		super.create();
+
+		openSubState(subStates[0]);
 	}
 }
