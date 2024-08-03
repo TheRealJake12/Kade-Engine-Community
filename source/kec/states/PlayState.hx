@@ -1407,20 +1407,6 @@ class PlayState extends MusicBeatState
 		}, 4);
 	}
 
-	var previousFrameTime:Int = 0;
-	var lastReportedPlayheadPosition:Int = 0;
-	var songTime:Float = 0;
-
-	private function getKey(charCode:Int):String
-	{
-		for (key => value in FlxKey.fromStringMap)
-		{
-			if (charCode == value)
-				return key;
-		}
-		return null;
-	}
-
 	var keys = [false, false, false, false];
 	var binds:Array<String> = [
 		FlxG.save.data.leftBind,
@@ -1435,7 +1421,7 @@ class PlayState extends MusicBeatState
 			return;
 
 		@:privateAccess
-		var key = FlxKey.toStringMap.get(evt.keyCode);
+		final key = FlxKey.toStringMap.get(evt.keyCode);
 
 		var data = -1;
 
@@ -1468,7 +1454,7 @@ class PlayState extends MusicBeatState
 		if (PlayStateChangeables.botPlay || !startedCountdown || paused || key < 0 || key >= playerStrums.length)
 			return;
 
-		var spr:StaticArrow = playerStrums.members[key];
+		final spr:StaticArrow = playerStrums.members[key];
 		if (spr != null)
 		{
 			spr.localAngle = 0;
@@ -1483,8 +1469,6 @@ class PlayState extends MusicBeatState
 		};
 		#end
 	}
-
-	public var closestNotes:Array<Note> = [];
 
 	private function getKeyFromKeyCode(key:FlxKey):Int
 	{
@@ -1511,8 +1495,8 @@ class PlayState extends MusicBeatState
 		// then use FlxKey to get the key's name based off of the FlxKey dictionary
 		// this makes it work for special characters
 
-		var eventKey = evt.keyCode;
-		var keyName = FlxKey.toStringMap.get(eventKey);
+		final eventKey = evt.keyCode;
+		final keyName = FlxKey.toStringMap.get(eventKey);
 		var key:Int = getKeyFromKeyCode(eventKey);
 
 		switch (eventKey) // arrow keys
@@ -1538,16 +1522,16 @@ class PlayState extends MusicBeatState
 
 	private function handleHits(key:Int)
 	{
-		var lastConductorTime:Float = Conductor.songPosition;
+		final lastConductorTime:Float = Conductor.songPosition;
 		keys[key] = true;
 
-		var closestNotes:Array<Note> = notes.members.filter(function(aliveNote:Note)
+		final closestNotes:Array<Note> = notes.members.filter(function(aliveNote:Note)
 		{
 			return aliveNote != null && aliveNote.alive && aliveNote.canBeHit && aliveNote.mustPress && !aliveNote.wasGoodHit && !aliveNote.isSustainNote
 				&& aliveNote.noteData == key;
 		});
 
-		var defNotes:Array<Note> = [for (v in closestNotes) v];
+		final defNotes:Array<Note> = [for (v in closestNotes) v];
 
 		haxe.ds.ArraySort.sort(defNotes, Sort.sortNotes);
 
@@ -1566,24 +1550,19 @@ class PlayState extends MusicBeatState
 					var note = defNotes[i];
 
 					if (!note.isSustainNote && ((note.strumTime - coolNote.strumTime) < 2) && note.noteData == key)
-					{
-						// just fuckin remove it since it's a stacked note and shouldn't be there
 						destroyNote(note);
-					}
 				}
 			}
 
 			goodNoteHit(coolNote);
 		}
 		else if (!FlxG.save.data.ghost && songStarted)
-		{
 			noteMissPress(key);
-		}
 
 		if (songStarted && !inCutscene && !paused)
 			keyShit();
 
-		var spr:StaticArrow = playerStrums.members[key];
+		final spr:StaticArrow = playerStrums.members[key];
 		if (spr != null
 			&& spr.animation.curAnim.name != 'confirm'
 			&& spr.animation.curAnim.name != 'pressed'
@@ -1714,8 +1693,6 @@ class PlayState extends MusicBeatState
 	{
 		startingSong = false;
 		songStarted = true;
-		previousFrameTime = FlxG.game.ticks;
-		lastReportedPlayheadPosition = 0;
 
 		addSongTiming();
 
