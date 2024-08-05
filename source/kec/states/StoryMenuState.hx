@@ -105,7 +105,7 @@ class StoryMenuState extends MusicBeatState
 			{
 				FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
 				Constants.freakyPlaying = true;
-				Conductor.changeBPM(102);
+				Conductor.bpm = 102;
 			}
 		}
 
@@ -356,7 +356,7 @@ class StoryMenuState extends MusicBeatState
 				var diff:String = CoolUtil.getSuffixFromDiff(diffString);
 				PlayState.storyPlaylist = weeksLoaded[curWeek].songs;
 				PlayState.isStoryMode = true;
-				PlayState.songMultiplier = 1;
+				Conductor.multiplier = 1;
 				PlayState.isSM = false;
 				PlayState.storyWeek = curWeek;
 				PlayState.storyDifficulty = CoolUtil.difficultyArray.indexOf(diffString);

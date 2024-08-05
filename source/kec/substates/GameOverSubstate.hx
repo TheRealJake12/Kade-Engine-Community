@@ -49,7 +49,7 @@ class GameOverSubstate extends MusicBeatSubstate
 			FlxG.sound.play(Paths.sound('styles/$styleShit/fnf_loss_sfx'));
 		else
 			FlxG.sound.play(Paths.sound('styles/default/fnf_loss_sfx'));
-		Conductor.changeBPM(100);
+		Conductor.bpm = 100;
 
 		// FlxG.camera.followLerp = 1;
 		// FlxG.camera.focusOn(FlxPoint.get(FlxG.width / 2, FlxG.height / 2));

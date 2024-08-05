@@ -35,6 +35,9 @@ class ModCore
 	];
 
 	public static var modsToLoad:Array<String> = [];
+	public static var enabledMods = []; // enabled mods
+	public static var modTitles = [];
+	public static var modDescriptions = []; // descriptions
 	#end
 
 	public static function initialize():Void
@@ -42,7 +45,8 @@ class ModCore
 		#if FEATURE_MODCORE
 		Debug.logInfo("Initializing ModCore...");
 		initPolymod();
-		Polymod.loadOnlyMods(getAllMods());
+		Debug.logTrace(enabledMods);
+		Polymod.loadOnlyMods(enabledMods);
 		#else
 		Debug.logInfo("ModCore not initialized; not supported on this platform.");
 		#end
@@ -80,6 +84,8 @@ class ModCore
 			customFilesystem: polymod.fs.MemoryFileSystem
 			#end
 		});
+		ModCore.modsToLoad = getAllMods();
+		enabledMods = FlxG.save.data.enabledMods;
 	}
 
 	public static function getAllMods():Array<String>
@@ -99,9 +105,10 @@ class ModCore
 			if (i != null)
 			{
 				daList.push(i.id);
+				modTitles.push(i.title);
+				modDescriptions.push(i.description);
 			}
 		}
-		modsToLoad = daList;
 		return daList != null && daList.length > 0 ? daList : [];
 	}
 
@@ -132,6 +139,7 @@ class ModCore
 		// Perform an action based on the error code.
 		switch (error.code)
 		{
+			case MISSING_ICON:
 			default:
 				// Log the message based on its severity.
 				switch (error.severity)

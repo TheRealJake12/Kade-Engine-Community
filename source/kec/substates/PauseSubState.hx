@@ -196,6 +196,7 @@ class PauseSubState extends MusicBeatSubstate
 						PlayState.luaModchart = null;
 					}
 					#end
+					Constants.freakyPlaying = false;
 
 					if (PlayState.isStoryMode)
 						MusicBeatState.switchState(new StoryMenuState());

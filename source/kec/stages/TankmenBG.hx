@@ -21,8 +21,8 @@ class TankmenBG extends FlxSprite
 		super(x, y);
 
 		frames = Paths.getSparrowAtlas('tankmanKilled1');
-		animation.addByPrefix('run', 'tankman running', Std.int(24 * PlayState.songMultiplier), true);
-		animation.addByPrefix('shot', 'John Shot ' + FlxG.random.int(1, 2), Std.int(24 * PlayState.songMultiplier), false);
+		animation.addByPrefix('run', 'tankman running', Std.int(24 * Conductor.multiplier), true);
+		animation.addByPrefix('shot', 'John Shot ' + FlxG.random.int(1, 2), Std.int(24 * Conductor.multiplier), false);
 		animation.play('run');
 		animation.curAnim.curFrame = FlxG.random.int(0, animation.curAnim.frames.length - 1);
 		antialiasing = FlxG.save.data.antialiasing;
@@ -50,7 +50,7 @@ class TankmenBG extends FlxSprite
 
 		if (animation.curAnim.name == "run")
 		{
-			var speed:Float = (Conductor.songPosition - strumTime) * tankSpeed * PlayState.songMultiplier;
+			var speed:Float = (Conductor.songPosition - strumTime) * tankSpeed * Conductor.multiplier;
 			if (goingRight)
 				x = (0.02 * FlxG.width - endingOffset) + speed;
 			else

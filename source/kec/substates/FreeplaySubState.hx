@@ -39,7 +39,11 @@ class ModMenu extends MusicBeatSubstate
 
 	override function create()
 	{
+		super.create();
+		
 		modObjects = new FlxTypedGroup();
+
+		openCallback = refresh;
 
 		FreeplayState.openMod = true;
 
@@ -108,10 +112,13 @@ class ModMenu extends MusicBeatSubstate
 		add(titleObject);
 
 		selectedModifier = modifiers[0];
+		selectModifier(modifiers[0]);
+	}
 
-		selectModifier(selectedModifier);
-
-		super.create();
+	private function refresh()
+	{
+		selectedModifier = modifiers[0];
+		selectModifier(modifiers[0]);
 	}
 
 	public function selectModifier(mod:Modifier)
@@ -183,14 +190,14 @@ class ModMenu extends MusicBeatSubstate
 
 		changedMod = false;
 
-		accept = FlxG.keys.justPressed.ENTER;
-		right = FlxG.keys.justPressed.RIGHT;
-		left = FlxG.keys.justPressed.LEFT;
-		up = FlxG.keys.justPressed.UP;
-		down = FlxG.keys.justPressed.DOWN;
+		accept = FlxG.keys.justPressed.ENTER || controls.ACCEPT;
+		right = FlxG.keys.justPressed.RIGHT || controls.RIGHT_P;
+		left = FlxG.keys.justPressed.LEFT || controls.LEFT_P;
+		up = FlxG.keys.justPressed.UP || controls.UP_P;
+		down = FlxG.keys.justPressed.DOWN || controls.DOWN_P;
 
 		any = FlxG.keys.justPressed.ANY;
-		escape = FlxG.keys.justPressed.ESCAPE;
+		escape = FlxG.keys.justPressed.ESCAPE || controls.BACK;
 
 		#if !mobile
 		if (FlxG.mouse.wheel != 0)
@@ -213,7 +220,8 @@ class ModMenu extends MusicBeatSubstate
 					object.text = "> " + selectedModifier.getValue();
 					return;
 				}
-				else if (any)
+
+				if (any)
 				{
 					var object = modObjects.members[selectedModifierIndex];
 					selectedModifier.onType(FlxG.keys.getIsDown()[0].ID.toString());
@@ -237,7 +245,7 @@ class ModMenu extends MusicBeatSubstate
 				}
 			}
 
-			if (down || controls.DOWN_P)
+			if (down)
 			{
 				if (selectedModifier.acceptType)
 					selectedModifier.waitingType = false;
@@ -268,7 +276,8 @@ class ModMenu extends MusicBeatSubstate
 
 				selectModifier(modifiers[selectedModifierIndex]);
 			}
-			else if (up || controls.UP_P)
+
+			if (up)
 			{
 				if (selectedModifier.acceptType)
 					selectedModifier.waitingType = false;
@@ -310,21 +319,24 @@ class ModMenu extends MusicBeatSubstate
 				selectModifier(modifiers[selectedModifierIndex]);
 			}
 
-			if (right || controls.RIGHT_P)
+			if (right)
 			{
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 				var object = modObjects.members[selectedModifierIndex];
 				selectedModifier.right();
 				changedMod = true;
 				object.text = "> " + selectedModifier.getValue();
+				FreeplayState.instance.updateDiffCalc();
 			}
-			else if (left || controls.LEFT_P)
+
+			if (left)
 			{
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 				var object = modObjects.members[selectedModifierIndex];
 				selectedModifier.left();
 				changedMod = true;
 				object.text = "> " + selectedModifier.getValue();
+				FreeplayState.instance.updateDiffCalc();
 			}
 			if (escape || controls.BACK)
 			{
@@ -359,8 +371,6 @@ class ModMenu extends MusicBeatSubstate
 						}
 					}
 				close();
-				if (changedMod)
-					FreeplayState.instance.updateDiffCalc();
 			}
 		}
 	}

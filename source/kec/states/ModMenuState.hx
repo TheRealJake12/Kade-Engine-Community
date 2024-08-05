@@ -1,11 +1,13 @@
 package kec.states;
 
+import kec.objects.mod.ModCard;
 #if FEATURE_MODCORE
 import haxe.ui.components.Button;
 import kec.backend.modding.ModCore;
 import flixel.group.FlxSpriteGroup;
 import polymod.Polymod.ModMetadata;
 import polymod.Polymod;
+import kec.objects.CoolText;
 #if FEATURE_FILESYSTEM
 import sys.FileSystem;
 import sys.io.File;
@@ -20,114 +22,105 @@ import sys.io.File;
  */
 class ModMenuState extends MusicBeatState
 {
-	public static var eList = []; // enabled mods
-	public static var existMods:Array<String> = []; // mods polymod detected in the folder
-
-	private var button:Button; // remove 1 mod
-	private var saveMods:Button; // save to file
 	private var bg:FlxSprite;
-	private var icons:FlxSpriteGroup; // modmenuicons
+	private var modGroup:FlxTypedSpriteGroup<ModCard>;
+	private var curSelected:Int = 0;
 
 	override function create()
 	{
 		super.create();
-		#if FEATURE_MODCORE
-		existMods = ModCore.getAllMods();
-		Polymod.loadOnlyMods(existMods);
-		#end
-		eList = parseList();
+		ModCore.enabledMods = FlxG.save.data.enabledMods;
+
 		createMUI();
-		createHUI();
-		Debug.logTrace('Mods In List ' + eList);
-		Debug.logTrace('Avaliable Mods ' + existMods);
+		Debug.logTrace('Avaliable Mods ' + ModCore.modsToLoad);
 	}
 
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
 
-		if (FlxG.keys.justPressed.M)
+		if (controls.UP_P)
+			scroll(-1);
+
+		if (controls.DOWN_P)
+			scroll(1);	
+
+		if (FlxG.mouse.wheel != 0)
+		{
+			#if desktop
+			scroll(-FlxG.mouse.wheel);
+			#else
+			if (FlxG.mouse.wheel < 0) // HTML5 BRAIN'T
+				scroll(1);
+			else if (FlxG.mouse.wheel > 0)
+				scroll(-1);
+			#end
+		}	
+
+		if (controls.ACCEPT)
+			checkMod();	
+
+		if (controls.BACK)
 			MusicBeatState.switchState(new MainMenuState());
+
 	}
 
-	function createHUI()
+	private function scroll(fard:Int = 0)
 	{
-		button = new Button();
-		button.x += 400;
-		button.text = "Mods";
-		button.onClick = function(e)
-		{
-			eList.pop();
-			Debug.logTrace(eList.length);
-		}
-		saveMods = new Button();
-		saveMods.x += 500;
-		saveMods.text = "Save Mods";
-		saveMods.onClick = function(e)
-		{
-			var fileStr = '';
-			for (mod in eList)
-			{
-				mod.trim();
-				if (fileStr.length > 0)
-					fileStr += '\n';
+		curSelected += fard;
+		if (curSelected < 0)
+			curSelected = modGroup.length - 1;
+		if (curSelected >= modGroup.length)
+			curSelected = 0;
+		var bullShit:Int = 0;
 
-				fileStr += mod;
-
-				Debug.logTrace(fileStr);
-			}
-			#if FEATURE_FILESYSTEM
-			File.saveContent('assets/shared/data/modList.txt', fileStr);
-			#end
-			Debug.logTrace(eList.length);
+		for (item in modGroup.members)
+		{
+			item.targY = bullShit - curSelected;
+			bullShit++;
 		}
-		add(button);
-		add(saveMods);
+	}
+
+	private function checkMod()
+	{	
+		if (ModCore.enabledMods.contains(ModCore.modsToLoad[curSelected]))
+		{
+			ModCore.enabledMods.remove(ModCore.modsToLoad[curSelected]);
+			modGroup.members[curSelected].alpha = 0.5;
+			Debug.logTrace('Disabled Mod : ' + ModCore.modsToLoad[curSelected]);
+		}
+		else
+		{
+			ModCore.enabledMods.push(ModCore.modsToLoad[curSelected]);
+			modGroup.members[curSelected].alpha = 1;
+			Debug.logTrace('Enabled Mod : ' + ModCore.modsToLoad[curSelected]);
+		}
 	}
 
 	function createMUI()
 	{
-		icons = new FlxSpriteGroup();
+		modGroup = new FlxTypedSpriteGroup<ModCard>();
+		for (i in 0...ModCore.modsToLoad.length)
+		{
+			modGroup.add(new ModCard(150, 0, i, ModCore.modTitles[i], ModCore.modDescriptions[i]));
+
+			if (!ModCore.enabledMods.contains(ModCore.modsToLoad[i]))
+				modGroup.members[i].alpha = 0.5;
+		}
+
 		bg = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
 		bg.updateHitbox();
 		bg.screenCenter();
 		add(bg);
-
-		for (i in 0...existMods.length)
-		{
-			var modIcon:FlxSprite = new FlxSprite().loadGraphic(Paths.image('missingMod'));
-			modIcon.setGraphicSize(Std.int(modIcon.width * 0.25));
-			modIcon.updateHitbox();
-			modIcon.setPosition(50, 25);
-			modIcon.y += 200 * i;
-			icons.add(modIcon);
-		}
-		add(icons);
+		add(modGroup);
 	}
 
-	public static function parseList()
+	override function destroy()
 	{
-		var list:Array<String> = [];
-		#if FEATURE_MODCORE
-		try
-		{
-			for (mod in existMods)
-			{
-				// trace('Mod: $mod');
-				if (mod.trim().length < 1)
-					continue;
-				list.push(mod);
-
-				Debug.logTrace(mod);
-			}
-		}
-		catch (e)
-		{
-			Debug.logTrace(e);
-		}
-		#end
-		return list;
+		super.destroy();
+		FlxG.save.data.enabledMods = ModCore.enabledMods;
+		Debug.logTrace(ModCore.enabledMods);
 	}
 }
 #end

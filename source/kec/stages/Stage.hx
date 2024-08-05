@@ -98,7 +98,7 @@ class Stage extends MusicBeatState
 							var halloweenBG = new FlxSprite(-200, -80);
 							halloweenBG.frames = hallowTex;
 							halloweenBG.animation.addByPrefix('idle', 'halloweem bg0');
-							halloweenBG.animation.addByPrefix('lightning', 'halloweem bg lightning strike', Std.int(24 * PlayState.songMultiplier), false);
+							halloweenBG.animation.addByPrefix('lightning', 'halloweem bg lightning strike', Std.int(24 * Conductor.multiplier), false);
 							halloweenBG.animation.play('idle');
 							halloweenBG.antialiasing = FlxG.save.data.antialiasing;
 							swagBacks['halloweenBG'] = halloweenBG;
@@ -175,7 +175,7 @@ class Stage extends MusicBeatState
 
 						var bgLimo:FlxSprite = new FlxSprite(-200, 480);
 						bgLimo.frames = Paths.getSparrowAtlas('limo/bgLimo');
-						bgLimo.animation.addByPrefix('drive', "background limo pink", Std.int(24 * PlayState.songMultiplier));
+						bgLimo.animation.addByPrefix('drive', "background limo pink", Std.int(24 * Conductor.multiplier));
 						bgLimo.animation.play('drive');
 						bgLimo.scrollFactor.set(0.4, 0.4);
 						bgLimo.antialiasing = FlxG.save.data.antialiasing;
@@ -238,7 +238,7 @@ class Stage extends MusicBeatState
 
 						var upperBoppers = new FlxSprite(-240, -90);
 						upperBoppers.frames = Paths.getSparrowAtlas('christmas/upperBop');
-						upperBoppers.animation.addByPrefix('idle', "Upper Crowd Bob", Std.int(24 * PlayState.songMultiplier), false);
+						upperBoppers.animation.addByPrefix('idle', "Upper Crowd Bob", Std.int(24 * Conductor.multiplier), false);
 						upperBoppers.antialiasing = FlxG.save.data.antialiasing;
 						upperBoppers.scrollFactor.set(0.33, 0.33);
 						upperBoppers.setGraphicSize(Std.int(upperBoppers.width * 0.85));
@@ -267,8 +267,8 @@ class Stage extends MusicBeatState
 
 						var bottomBoppers = new FlxSprite(-300, 140);
 						bottomBoppers.frames = Paths.getSparrowAtlas('christmas/bottomBop');
-						bottomBoppers.animation.addByPrefix('idle', 'Bottom Level Boppers Idle', Std.int(24 * PlayState.songMultiplier), false);
-						bottomBoppers.animation.addByPrefix('hey', 'Bottom Level Boppers HEY', Std.int(24 * PlayState.songMultiplier), false);
+						bottomBoppers.animation.addByPrefix('idle', 'Bottom Level Boppers Idle', Std.int(24 * Conductor.multiplier), false);
+						bottomBoppers.animation.addByPrefix('hey', 'Bottom Level Boppers HEY', Std.int(24 * Conductor.multiplier), false);
 						bottomBoppers.antialiasing = FlxG.save.data.antialiasing;
 						bottomBoppers.scrollFactor.set(0.9, 0.9);
 						bottomBoppers.setGraphicSize(Std.int(bottomBoppers.width * 1));
@@ -288,7 +288,7 @@ class Stage extends MusicBeatState
 
 						var santa = new FlxSprite(-840, 150);
 						santa.frames = Paths.getSparrowAtlas('christmas/santa');
-						santa.animation.addByPrefix('idle', 'santa idle in fear', Std.int(24 * PlayState.songMultiplier), false);
+						santa.animation.addByPrefix('idle', 'santa idle in fear', Std.int(24 * Conductor.multiplier), false);
 						santa.antialiasing = FlxG.save.data.antialiasing;
 						if (FlxG.save.data.quality)
 						{
@@ -358,7 +358,7 @@ class Stage extends MusicBeatState
 						var treetex = Paths.getPackerAtlas('weeb/weebTrees');
 						bgTrees.frames = treetex;
 						bgTrees.animation.add('treeLoop', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
-							Std.int(12 * PlayState.songMultiplier));
+							Std.int(12 * Conductor.multiplier));
 						bgTrees.animation.play('treeLoop');
 						bgTrees.antialiasing = false;
 						bgTrees.scrollFactor.set(0.85, 0.85);
@@ -367,7 +367,7 @@ class Stage extends MusicBeatState
 
 						var treeLeaves:FlxSprite = new FlxSprite(repositionShit, -40);
 						treeLeaves.frames = Paths.getSparrowAtlas('weeb/petals');
-						treeLeaves.animation.addByPrefix('leaves', 'PETALS ALL', Std.int(24 * PlayState.songMultiplier), true);
+						treeLeaves.animation.addByPrefix('leaves', 'PETALS ALL', Std.int(24 * Conductor.multiplier), true);
 						treeLeaves.animation.play('leaves');
 						treeLeaves.antialiasing = false;
 						treeLeaves.scrollFactor.set(0.85, 0.85);
@@ -413,7 +413,7 @@ class Stage extends MusicBeatState
 
 						var bg:FlxSprite = new FlxSprite(posX, posY);
 						bg.frames = Paths.getSparrowAtlas('weeb/animatedEvilSchool');
-						bg.animation.addByPrefix('idle', 'background 2', Std.int(PlayState.songMultiplier * 24));
+						bg.animation.addByPrefix('idle', 'background 2', Std.int(Conductor.multiplier * 24));
 						bg.animation.play('idle');
 						bg.scrollFactor.set(0.8, 0.9);
 						bg.scale.set(6, 6);
@@ -469,7 +469,7 @@ class Stage extends MusicBeatState
 						smokeLeft.antialiasing = FlxG.save.data.antialiasing;
 						smokeLeft.scrollFactor.set(0.4, 0.4);
 						smokeLeft.frames = Paths.getSparrowAtlas('smokeLeft');
-						smokeLeft.animation.addByPrefix('idle', 'SmokeBlurLeft', Std.int(24 * PlayState.songMultiplier), true);
+						smokeLeft.animation.addByPrefix('idle', 'SmokeBlurLeft', Std.int(24 * Conductor.multiplier), true);
 						smokeLeft.animation.play('idle');
 						swagBacks['smokeLeft'] = smokeLeft;
 						toAdd.push(smokeLeft);
@@ -478,7 +478,7 @@ class Stage extends MusicBeatState
 						smokeRight.antialiasing = FlxG.save.data.antialiasing;
 						smokeRight.scrollFactor.set(0.4, 0.4);
 						smokeRight.frames = Paths.getSparrowAtlas('smokeRight');
-						smokeRight.animation.addByPrefix('idle', 'SmokeRight', Std.int(24 * PlayState.songMultiplier), true);
+						smokeRight.animation.addByPrefix('idle', 'SmokeRight', Std.int(24 * Conductor.multiplier), true);
 						smokeRight.animation.play('idle');
 						swagBacks['smokeRight'] = smokeRight;
 						toAdd.push(smokeRight);
@@ -486,7 +486,7 @@ class Stage extends MusicBeatState
 						var tankWatchTower:FlxSprite = new FlxSprite(100, 50);
 						tankWatchTower.antialiasing = FlxG.save.data.antialiasing;
 						tankWatchTower.frames = Paths.getSparrowAtlas('tankWatchtower');
-						tankWatchTower.animation.addByPrefix('idle', 'watchtower gradient color', Std.int(24 * PlayState.songMultiplier));
+						tankWatchTower.animation.addByPrefix('idle', 'watchtower gradient color', Std.int(24 * Conductor.multiplier));
 						tankWatchTower.animation.play('idle');
 						tankWatchTower.scrollFactor.set(0.5, 0.5);
 						tankWatchTower.active = true;
@@ -497,7 +497,7 @@ class Stage extends MusicBeatState
 					tankGround.scrollFactor.set(0.5, 0.5);
 					tankGround.antialiasing = FlxG.save.data.antialiasing;
 					tankGround.frames = Paths.getSparrowAtlas('tankRolling');
-					tankGround.animation.addByPrefix('idle', 'BG tank w lighting', Std.int(24 * PlayState.songMultiplier), true);
+					tankGround.animation.addByPrefix('idle', 'BG tank w lighting', Std.int(24 * Conductor.multiplier), true);
 					tankGround.animation.play('idle');
 					swagBacks['tankGround'] = tankGround;
 					toAdd.push(tankGround);
@@ -517,7 +517,7 @@ class Stage extends MusicBeatState
 					foreGround0.scrollFactor.set(1.7, 1.5);
 					foreGround0.antialiasing = FlxG.save.data.antialiasing;
 					foreGround0.frames = Paths.getSparrowAtlas('tank0');
-					foreGround0.animation.addByPrefix('idle', 'fg tankhead far right', Std.int(24 * PlayState.songMultiplier));
+					foreGround0.animation.addByPrefix('idle', 'fg tankhead far right', Std.int(24 * Conductor.multiplier));
 					foreGround0.animation.play('idle');
 					swagBacks['foreGround0'] = foreGround0;
 					layInFront[2].push(foreGround0);
@@ -528,7 +528,7 @@ class Stage extends MusicBeatState
 						foreGround1.scrollFactor.set(2, 0.2);
 						foreGround1.antialiasing = FlxG.save.data.antialiasing;
 						foreGround1.frames = Paths.getSparrowAtlas('tank1');
-						foreGround1.animation.addByPrefix('idle', 'fg tankhead', Std.int(24 * PlayState.songMultiplier));
+						foreGround1.animation.addByPrefix('idle', 'fg tankhead', Std.int(24 * Conductor.multiplier));
 						foreGround1.animation.play('idle');
 						swagBacks['foreGround1'] = foreGround1;
 						layInFront[2].push(foreGround1);
@@ -538,7 +538,7 @@ class Stage extends MusicBeatState
 					foreGround2.scrollFactor.set(1.5, 1.5);
 					foreGround2.antialiasing = FlxG.save.data.antialiasing;
 					foreGround2.frames = Paths.getSparrowAtlas('tank2');
-					foreGround2.animation.addByPrefix('idle', 'foreground man', Std.int(24 * PlayState.songMultiplier));
+					foreGround2.animation.addByPrefix('idle', 'foreground man', Std.int(24 * Conductor.multiplier));
 					foreGround2.animation.play('idle');
 					swagBacks['foreGround2'] = foreGround2;
 					layInFront[2].push(foreGround2);
@@ -549,7 +549,7 @@ class Stage extends MusicBeatState
 						foreGround3.scrollFactor.set(1.5, 1.5);
 						foreGround3.antialiasing = FlxG.save.data.antialiasing;
 						foreGround3.frames = Paths.getSparrowAtlas('tank4');
-						foreGround3.animation.addByPrefix('idle', 'fg tankman', Std.int(24 * PlayState.songMultiplier));
+						foreGround3.animation.addByPrefix('idle', 'fg tankman', Std.int(24 * Conductor.multiplier));
 						foreGround3.animation.play('idle');
 						swagBacks['foreGround3'] = foreGround3;
 						layInFront[2].push(foreGround3);
@@ -559,7 +559,7 @@ class Stage extends MusicBeatState
 					foreGround4.scrollFactor.set(1.5, 1.5);
 					foreGround4.antialiasing = FlxG.save.data.antialiasing;
 					foreGround4.frames = Paths.getSparrowAtlas('tank5');
-					foreGround4.animation.addByPrefix('idle', 'fg tankhead far right', Std.int(24 * PlayState.songMultiplier));
+					foreGround4.animation.addByPrefix('idle', 'fg tankhead far right', Std.int(24 * Conductor.multiplier));
 					foreGround4.animation.play('idle');
 					swagBacks['foreGround4'] = foreGround4;
 					layInFront[2].push(foreGround4);
@@ -570,7 +570,7 @@ class Stage extends MusicBeatState
 						foreGround5.scrollFactor.set(1.5, 1.5);
 						foreGround5.antialiasing = FlxG.save.data.antialiasing;
 						foreGround5.frames = Paths.getSparrowAtlas('tank3');
-						foreGround5.animation.addByPrefix('idle', 'fg tankhead', Std.int(24 * PlayState.songMultiplier));
+						foreGround5.animation.addByPrefix('idle', 'fg tankhead', Std.int(24 * Conductor.multiplier));
 						foreGround5.animation.play('idle');
 						swagBacks['foreGround5'] = foreGround5;
 						layInFront[2].push(foreGround5);
@@ -1155,7 +1155,7 @@ class Stage extends MusicBeatState
 
 	function moveTank():Void
 	{
-		tankAngle += FlxG.elapsed * tankSpeed * PlayState.songMultiplier;
+		tankAngle += FlxG.elapsed * tankSpeed * Conductor.multiplier;
 		// Worst fix I've ever done in my life. I hope this doesn't make lag stutters.
 		if (PlayState.instance != null && !PlayState.instance.endingSong)
 			PlayState.instance.createTween(swagBacks['tankGround'], {angle: tankAngle - 90 + 15}, 0.01, {type: FlxTweenType.ONESHOT});

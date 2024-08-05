@@ -246,11 +246,11 @@ class Song
 		{
 			if (i.type == "BPM Change")
 			{
-				var beat:Float = i.position * PlayState.songMultiplier;
+				var beat:Float = i.position * Conductor.multiplier;
 
 				var endBeat:Float = Math.POSITIVE_INFINITY;
 
-				TimingStruct.addTiming(beat, i.value * PlayState.songMultiplier, endBeat, 0); // offset in this case = start time since we don't have a offset
+				TimingStruct.addTiming(beat, i.value * Conductor.multiplier, endBeat, 0); // offset in this case = start time since we don't have a offset
 
 				if (currentIndex != 0)
 				{
@@ -390,8 +390,8 @@ class Song
 		{
 			for (sortedNote in newNotes)
 			{
-				if (sortedNote[0] / PlayState.songMultiplier >= section.startTime
-					&& sortedNote[0] / PlayState.songMultiplier < section.endTime)
+				if (sortedNote[0] / Conductor.multiplier >= section.startTime
+					&& sortedNote[0] / Conductor.multiplier < section.endTime)
 					section.sectionNotes.push(sortedNote);
 			}
 		}

@@ -437,7 +437,7 @@ class Paths
 	];
 
 	@:access(flixel.system.frontEnds.BitmapFrontEnd._cache)
-	public static function clearStoredMemory(?cleanUnused:Bool = false)
+	public static function clearStoredMemory()
 	{
 		if (FlxG.save.data.unload)
 		{

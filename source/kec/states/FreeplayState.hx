@@ -264,17 +264,11 @@ class FreeplayState extends MusicBeatState
 			changeDiff();
 		}
 
-		if (Constants.freakyPlaying)
+		if (!Constants.freakyPlaying)
 		{
-			if (!FlxG.sound.music.playing)
-				FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
+			FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
 			Constants.freakyPlaying = true;
-			Conductor.changeBPM(102);
-		}
-
-		if (!FlxG.sound.music.playing && !Constants.freakyPlaying)
-		{
-			dotheMusicThing();
+			Conductor.bpm = 102;
 		}
 
 		updateTexts();
@@ -709,23 +703,6 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 
-		if (FlxG.sound.music != null && !Constants.freakyPlaying)
-		{
-			if (FlxG.sound.music.playing)
-			{
-				if (curTiming != null)
-				{
-					var curBPM = curTiming.bpm;
-
-					if (curBPM != Conductor.bpm)
-					{
-						Debug.logInfo("BPM CHANGE to " + curBPM);
-						Conductor.changeBPM(curBPM);
-					}
-				}
-			}
-		}
-
 		if (FlxG.sound.music.playing && !Constants.freakyPlaying)
 		{
 			FlxG.sound.music.pitch = rate;
@@ -902,7 +879,7 @@ class FreeplayState extends MusicBeatState
 		PlayState.isSM = false;
 		#end
 
-		PlayState.songMultiplier = rate;
+		Conductor.multiplier = rate;
 		lastRate = rate;
 
 		instance.updateTexts();
@@ -1001,7 +978,6 @@ class FreeplayState extends MusicBeatState
 			hmm = songData.get(songs[curSelected].songName)[curDifficulty];
 			if (hmm != null)
 			{
-				Conductor.changeBPM(hmm.bpm);
 				GameplayCustomizeState.freeplayBf = hmm.player1;
 				GameplayCustomizeState.freeplayDad = hmm.player2;
 				GameplayCustomizeState.freeplayGf = hmm.gfVersion;

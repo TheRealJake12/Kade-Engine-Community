@@ -280,7 +280,7 @@ class ChartingState extends MusicBeatState
 
 		curDiff = CoolUtil.difficultyArray[PlayState.storyDifficulty];
 
-		Conductor.changeBPM(SONG.bpm);
+		Conductor.bpm = SONG.bpm;
 
 		currentBPM = SONG.bpm;
 
@@ -622,12 +622,12 @@ class ChartingState extends MusicBeatState
 			}
 		}
 
-		var mult:Float = FlxMath.lerp(0.75, iconP1.scale.x, FlxMath.bound(1 - (elapsed * 9 * PlayState.songMultiplier), 0, 1));
+		var mult:Float = FlxMath.lerp(0.75, iconP1.scale.x, FlxMath.bound(1 - (elapsed * 9 * pitch), 0, 1));
 		if (!FlxG.save.data.motion)
 			iconP1.scale.set(mult, mult);
 		iconP1.updateHitbox();
 
-		var mult:Float = FlxMath.lerp(0.75, iconP2.scale.x, FlxMath.bound(1 - (elapsed * 9 * PlayState.songMultiplier), 0, 1));
+		var mult:Float = FlxMath.lerp(0.75, iconP2.scale.x, FlxMath.bound(1 - (elapsed * 9 * Conductor.multiplier), 0, 1));
 		if (!FlxG.save.data.motion)
 			iconP2.scale.set(mult, mult);
 		iconP2.updateHitbox();
@@ -1019,14 +1019,10 @@ class ChartingState extends MusicBeatState
 						if ((FlxG.save.data.playHitsounds && playerNote) || (FlxG.save.data.playHitsoundsE && !playerNote))
 						{
 							if (FlxG.save.data.hitSound == 0)
-							{
 								daHitSound = new FlxSound().loadEmbedded(Paths.sound('hitsounds/snap', 'shared'));
-							}
 							else
-							{
 								daHitSound = new FlxSound()
 									.loadEmbedded(Paths.sound('hitsounds/${HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase()}', 'shared'));
-							}
 							daHitSound.volume = hitsoundsVol.pos;
 							daHitSound.play().pan = noteDataToCheck < 4 ? -0.3 : 0.3;
 							playedSound[data] = true;
@@ -1253,21 +1249,8 @@ class ChartingState extends MusicBeatState
 		while (--i > -1)
 		{
 			if (sec.sectionNotes[i][0] == existingNote.strumTime && sec.sectionNotes[i][1] == existingNote.rawNoteData)
-			{
-				sec.sectionNotes.splice(i, 1);
-			}
+				sec.sectionNotes.remove(sec.sectionNotes[i]);
 		}
-		/*
-			var sec = getSectionByTime(existingNote.strumTime);
-			if (sec != null)
-			{
-				for (i in sec.sectionNotes)
-				{
-					if (i[0] == existingNote.strumTime && i[1] == existingNote.rawNoteData)
-						sec.sectionNotes.remove(i);
-				}
-			}
-		 */
 		// thanks Chris(Dimensionscape) from the FNF thread
 		curRenderedNotes.remove(existingNote);
 		if (existingNote.sustainLength > 0)
@@ -1351,7 +1334,10 @@ class ChartingState extends MusicBeatState
 			toDelete.push(originalNote);
 			var strum = originalNote.strumTime + offset;
 			if (strum < 0)
+			{
+				Debug.logTrace("New Time Is 0 Or Less, Deleting Note.");
 				return;
+			}
 			var sec = getSectionByTime(strum);
 
 			var note:Note = new Note(strum, originalNote.noteData, originalNote.prevNote, false, true, originalNote.mustPress, originalNote.beat);
@@ -1401,7 +1387,6 @@ class ChartingState extends MusicBeatState
 		// ok so basically theres a bug with color quant that it doesn't update the color until the grid updates.
 		// when the grid updates, it causes a massive performance drop everytime we offset the notes. :/
 		// actually its broken either way because theres a ghost note after offsetting sometimes. updateGrid anyway.
-		// now sustains don't get shifted. I don't know.
 	}
 
 	function pasteNotesFromArray(array:Array<Array<Dynamic>>, fromStrum:Bool = true)
@@ -3117,30 +3102,9 @@ class ChartingState extends MusicBeatState
 		var noteData:Int = Math.floor((mouseCursor.x - editorArea.x) / gridSize);
 		var existingNote:Note = curRenderedNotes.getFirst((n) -> n.alive && n.rawNoteData == noteData && FlxG.mouse.overlaps(n));
 		if (existingNote == null)
-		{
 			addNote();
-		}
 		else
-		{
-			destroyBoxes();
-			var sec = getSectionByTime(existingNote.strumTime);
-			var i:Int = sec.sectionNotes.length;
-			while (--i > -1)
-			{
-				if (sec.sectionNotes[i][0] == existingNote.strumTime && sec.sectionNotes[i][1] == existingNote.rawNoteData)
-				{
-					sec.sectionNotes.splice(i, 1);
-				}
-			}
-			// thanks Chris(Dimensionscape) from the FNF thread
-
-			curRenderedNotes.remove(existingNote);
-			if (existingNote.sustainLength > 0)
-				curRenderedSustains.remove(existingNote.noteCharterObject, true);
-
-			curSelectedNote = null;
-			Debug.logTrace("tryna delete note");
-		}
+			deleteNote(existingNote);
 	}
 
 	private inline function createGrid()

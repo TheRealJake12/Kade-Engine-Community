@@ -44,12 +44,11 @@ class SelectEditorsState extends MusicBeatState
 
 		FlxG.mouse.visible = true;
 
-		if (Constants.freakyPlaying)
+		if (!Constants.freakyPlaying)
 		{
-			if (!FlxG.sound.music.playing)
-				FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
+			FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
 			Constants.freakyPlaying = true;
-			Conductor.changeBPM(102);
+			Conductor.bpm = 102;
 		}
 
 		bgSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('menuDesat'));
@@ -150,7 +149,7 @@ class SelectEditorsState extends MusicBeatState
 				PlayState.storyWeek = 0;
 				PlayState.isStoryMode = false;
 				PlayState.isSM = false;
-				PlayState.songMultiplier = 1;
+				Conductor.multiplier = 1;
 				LoadingState.loadAndSwitchState(new kec.states.editors.ChartingState(), true);
 		}
 		FlxG.sound.music.stop();

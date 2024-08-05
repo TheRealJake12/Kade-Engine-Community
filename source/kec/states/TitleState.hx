@@ -143,7 +143,7 @@ class TitleState extends MusicBeatState
 			FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
 
 			FlxG.sound.music.fadeIn(4, 0, 0.7);
-			Conductor.changeBPM(102);
+			Conductor.bpm = 102;
 			initialized = true;
 		}
 	}

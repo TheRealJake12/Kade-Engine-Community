@@ -57,7 +57,7 @@ class MainMenuState extends MusicBeatState
 
 		#if FEATURE_MODCORE
 		if (FlxG.save.data.loadMods)
-			Polymod.loadOnlyMods(kec.backend.modding.ModCore.getAllMods());
+			Polymod.loadOnlyMods(FlxG.save.data.enabledMods);
 		#end
 
 		FlxG.mouse.visible = true;
@@ -69,8 +69,8 @@ class MainMenuState extends MusicBeatState
 		{
 			FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
 			Constants.freakyPlaying = true;
-			Conductor.changeBPM(102);
 		}
+		Conductor.bpm = 102;
 
 		if (!FlxG.save.data.watermark)
 			optionShit.remove('discord');

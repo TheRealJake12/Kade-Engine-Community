@@ -18,14 +18,14 @@ class Init extends MusicBeatState
 
 		FlxG.save.bind('kec' #if (flixel < "5.0.0"), 'therealjake12' #end);
 
-		// Gotta run this before any assets get loaded.
-		kec.backend.modding.ModCore.initialize();
-
 		kec.backend.PlayerSettings.init();
 
 		kec.backend.KadeEngineData.initSave();
 
 		kec.backend.KeyBinds.keyCheck();
+		
+		// Gotta run this before any assets get loaded.
+		kec.backend.modding.ModCore.initialize();
 
 		kec.backend.util.NoteStyleHelper.updateNoteskins();
 		kec.backend.util.NoteStyleHelper.updateNotesplashes();
