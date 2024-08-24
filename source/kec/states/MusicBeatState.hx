@@ -128,6 +128,10 @@ class MusicBeatState extends FlxTransitionableState
 
 	override function update(elapsed:Float)
 	{
+		super.update(elapsed);
+		if (FlxG.keys.anyJustPressed([fullscreenBind]))
+			FlxG.fullscreen = !FlxG.fullscreen;
+
 		if (curDecimalBeat < 0)
 			curDecimalBeat = 0;
 
@@ -136,9 +140,7 @@ class MusicBeatState extends FlxTransitionableState
 		else
 		{
 			if (curTiming == null)
-			{
 				setFirstTiming();
-			}
 			if (curTiming != null)
 			{
 				/* Not necessary to get a timing every frame if it's the same one. Instead if the current timing endBeat is equal or greater
@@ -149,8 +151,7 @@ class MusicBeatState extends FlxTransitionableState
 				{
 					Debug.logTrace('Current Timing ended, checking for next Timing...');
 					curTiming = TimingStruct.getTimingAtTimestamp(Conductor.songPosition);
-					step = ((60 / curTiming.bpm) * 1000) / 4;
-					startInMS = (curTiming.startTime * 1000);
+					Conductor.bpm = curTiming.bpm * Conductor.rate;
 				}
 
 				#if debug
@@ -242,15 +243,6 @@ class MusicBeatState extends FlxTransitionableState
 				}
 			}
 		}
-
-		if (FlxG.keys.anyJustPressed([fullscreenBind]))
-		{
-			FlxG.fullscreen = !FlxG.fullscreen;
-		}
-
-		// Main.gameContainer.setFPSCap(FlxG.save.data.fpsCap);
-
-		super.update(elapsed);
 	}
 
 	public function stepHit():Void
@@ -309,12 +301,7 @@ class MusicBeatState extends FlxTransitionableState
 
 	private function setFirstTiming()
 	{
-		curTiming = TimingStruct.getTimingAtTimestamp(Conductor.songPosition);
-		if (curTiming != null)
-		{
-			step = ((60 / curTiming.bpm) * 1000) / 4;
-			startInMS = (curTiming.startTime * 1000);
-		}
+		curTiming = TimingStruct.getTimingAtTimestamp(0);
 	}
 
 	public function sectionHit():Void

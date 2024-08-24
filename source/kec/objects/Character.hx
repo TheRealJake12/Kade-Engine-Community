@@ -158,11 +158,11 @@ class Character extends FlxSprite
 
 				if (anim.frameIndices != null)
 				{
-					animation.addByIndices(anim.name, anim.prefix, anim.frameIndices, "", Std.int(frameRate * Conductor.multiplier), looped, flipX, flipY);
+					animation.addByIndices(anim.name, anim.prefix, anim.frameIndices, "", Std.int(frameRate * Conductor.rate), looped, flipX, flipY);
 				}
 				else
 				{
-					animation.addByPrefix(anim.name, anim.prefix, Std.int(frameRate * Conductor.multiplier), looped, flipX, flipY);
+					animation.addByPrefix(anim.name, anim.prefix, Std.int(frameRate * Conductor.rate), looped, flipX, flipY);
 				}
 
 				animOffsets[anim.name] = anim.offsets == null ? [0, 0] : anim.offsets;
@@ -262,7 +262,7 @@ class Character extends FlxSprite
 					holdTimer += elapsed;
 				}
 
-				if (holdTimer >= Conductor.stepCrochet * 0.0011 * holdLength * Conductor.multiplier)
+				if (holdTimer >= Conductor.stepCrochet * 0.0011 * holdLength * Conductor.rate)
 				{
 					dance();
 
@@ -389,7 +389,7 @@ class Character extends FlxSprite
 			for (songNotes in section.sectionNotes)
 			{
 				var gottaHitNote:Bool = false;
-				var daStrumTime:Float = (songNotes[0] - FlxG.save.data.offset - PlayState.SONG.offset) / Conductor.multiplier;
+				var daStrumTime:Float = (songNotes[0] - FlxG.save.data.offset - PlayState.SONG.offset) / Conductor.rate;
 				if (daStrumTime < 0)
 					daStrumTime = 0;
 				var daBeat = TimingStruct.getBeatFromTime(daStrumTime);
@@ -403,7 +403,7 @@ class Character extends FlxSprite
 				notes.push({
 					strumTime: daStrumTime,
 					noteData: daNoteData,
-					sustainLength: songNotes[2] / Conductor.multiplier,
+					sustainLength: songNotes[2] / Conductor.rate,
 					noteType: songNotes[3],
 					isPlayer: gottaHitNote,
 					beat: daBeat

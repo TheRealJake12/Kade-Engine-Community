@@ -64,7 +64,7 @@ class EtternaFunctions
 
 	public static function wife3(maxms:Float)
 	{
-		var ts = Conductor.multiplier;
+		var ts = Conductor.rate;
 		var max_points = 1.0;
 		var miss_weight = -5.5;
 		var ridic = 5 * ts;

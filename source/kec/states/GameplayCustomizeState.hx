@@ -9,13 +9,13 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import openfl.ui.Keyboard;
 import kec.stages.Stage;
 import kec.backend.chart.Song.Style;
-import kec.objects.StaticArrow;
+import kec.objects.note.StaticArrow;
 import kec.objects.Character;
 #if FEATURE_DISCORD
 import kec.backend.Discord;
 #end
 import kec.backend.PlayStateChangeables;
-import kec.objects.Note;
+import kec.objects.note.Note;
 import kec.backend.util.NoteStyleHelper;
 import kec.backend.PlayerSettings;
 

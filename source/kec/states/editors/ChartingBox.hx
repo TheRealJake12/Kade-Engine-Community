@@ -1,6 +1,6 @@
 package kec.states.editors;
 
-import kec.objects.Note;
+import kec.objects.note.Note;
 import kec.backend.chart.NoteData;
 
 class ChartingBox extends FlxSprite

@@ -9,7 +9,7 @@ import sys.FileSystem;
 #end
 import kec.objects.HitGraph;
 import kec.objects.OFLSprite;
-import kec.objects.Note;
+import kec.objects.note.Note;
 import kec.backend.PlayStateChangeables;
 import kec.backend.Ratings;
 import kec.backend.util.HelperFunctions;
@@ -152,7 +152,7 @@ class ResultsScreen extends MusicBeatSubstate
 		var bads = PlayState.isStoryMode ? Stats.campaignBads : Stats.bads;
 		var shits = PlayState.isStoryMode ? Stats.campaignShits : Stats.shits;
 
-		comboText.text = 'Judgements:\nMarvs - ${marvs}\nSicks - ${sicks}\nGoods - ${goods}\nBads - ${bads}\n\nCombo Breaks: ${(PlayState.isStoryMode ? Stats.campaignMisses : Stats.misses)}\nHighest Combo: ${PlayState.highestCombo + 1}\nScore: $score\n${(PlayState.isStoryMode ? 'Average Accuracy' : 'Accuracy')}: ${HelperFunctions.truncateFloat(acc, 2)}% ( ${(FlxG.save.data.accuracyMod == 0 ? 'Accurate' : 'Complex')} )\n\n${Ratings.GenerateComboRank(Stats.accuracy)} ${Ratings.GenerateLetterRank(Stats.accuracy)}\nRate: ${HelperFunctions.truncateFloat(Conductor.multiplier, 2)}x\n\n\nF1 - Replay song';
+		comboText.text = 'Judgements:\nMarvs - ${marvs}\nSicks - ${sicks}\nGoods - ${goods}\nBads - ${bads}\n\nCombo Breaks: ${(PlayState.isStoryMode ? Stats.campaignMisses : Stats.misses)}\nHighest Combo: ${PlayState.highestCombo + 1}\nScore: $score\n${(PlayState.isStoryMode ? 'Average Accuracy' : 'Accuracy')}: ${HelperFunctions.truncateFloat(acc, 2)}% ( ${(FlxG.save.data.accuracyMod == 0 ? 'Accurate' : 'Complex')} )\n\n${Ratings.GenerateComboRank(Stats.accuracy)} ${Ratings.GenerateLetterRank(Stats.accuracy)}\nRate: ${HelperFunctions.truncateFloat(Conductor.rate, 2)}x\n\n\nF1 - Replay song';
 
 		add(comboText);
 
@@ -204,10 +204,10 @@ class ResultsScreen extends MusicBeatSubstate
 
 		if (PlayState.SONG.validScore && superMegaConditionShit)
 		{
-			Highscore.saveScore(PlayState.SONG.songId, Math.round(Stats.songScore), PlayState.storyDifficulty, Conductor.multiplier);
-			Highscore.saveCombo(PlayState.SONG.songId, Ratings.GenerateLetterRank(Stats.accuracy), PlayState.storyDifficulty, Conductor.multiplier);
-			Highscore.saveAcc(PlayState.SONG.songId, HelperFunctions.truncateFloat(Stats.accuracy, 2), PlayState.storyDifficulty, Conductor.multiplier);
-			Highscore.saveLetter(PlayState.SONG.songId, Ratings.GenerateLetterRank(Stats.accuracy), PlayState.storyDifficulty, Conductor.multiplier);
+			Highscore.saveScore(PlayState.SONG.songId, Math.round(Stats.songScore), PlayState.storyDifficulty, Conductor.rate);
+			Highscore.saveCombo(PlayState.SONG.songId, Ratings.GenerateLetterRank(Stats.accuracy), PlayState.storyDifficulty, Conductor.rate);
+			Highscore.saveAcc(PlayState.SONG.songId, HelperFunctions.truncateFloat(Stats.accuracy, 2), PlayState.storyDifficulty, Conductor.rate);
+			Highscore.saveLetter(PlayState.SONG.songId, Ratings.GenerateLetterRank(Stats.accuracy), PlayState.storyDifficulty, Conductor.rate);
 		}
 
 		// Debug.logTrace('$legitTimings ${!PlayState.usedBot} ${!FlxG.save.data.practice} ${PlayStateChangeables.holds} ${!PlayState.wentToChartEditor} ${HelperFunctions.truncateFloat(PlayStateChangeables.healthGain, 2) <= 1} ${HelperFunctions.truncateFloat(PlayStateChangeables.healthLoss, 2) >= 1}');

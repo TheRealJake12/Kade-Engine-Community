@@ -2,7 +2,7 @@
 package kec.backend.util.smTools;
 
 import kec.backend.chart.Song;
-import kec.backend.chart.Song.Event;
+import kec.backend.chart.Event;
 import kec.backend.chart.TimingStruct;
 
 class SMHeader
@@ -79,7 +79,12 @@ class SMHeader
 					TimingStruct.AllTimings[currentIndex].startTime = data.startTime + data.length;
 				}
 
-				changeEvents.push(new Event(HelperFunctions.truncateFloat(beat, 0) + "SM", beat, bpm, null, "BPM Change"));
+				changeEvents.push({
+					name: HelperFunctions.truncateFloat(beat, 0) + "SM",
+					beat: beat,
+					args: [bpm, 1],
+					type: "BPM Change"
+				});
 
 				if (bpmSplit.length == 1)
 					break;

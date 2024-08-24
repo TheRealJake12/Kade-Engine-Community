@@ -1,4 +1,4 @@
-package kec.objects;
+package kec.objects.note;
 
 import kec.backend.lua.LuaClass;
 import kec.backend.util.NoteStyleHelper;
@@ -9,13 +9,9 @@ class StaticArrow extends FlxSprite
 	public var luaObject:LuaReceptor;
 	#end
 	public var modifiedByLua:Bool = false;
-	public var modAngle:Float = 0; // The angle set by modcharts
-	public var localAngle:Float = 0; // The angle to be edited inside here
 
 	public var laneFollowsReceptor:Bool = true;
 	public var bgLane:FlxSprite;
-
-	public var direction:Float = 90;
 
 	public var downScroll:Bool = false;
 
@@ -34,6 +30,15 @@ class StaticArrow extends FlxSprite
 
 	public var noteTypeCheck:String = 'normal';
 
+	public var modAngle(default, set):Float = 0; // The angle set by modcharts
+	public var localAngle(default, set):Float = 0;
+	public var modAlpha(default, set):Float = 1.0;
+	public var localAlpha(default, set):Float = 1.0;
+
+	public var direction(default, set):Float;
+	public var _cos:Float = 0;
+	public var _sin:Float = 1;
+
 	private function set_texture(value:String):String
 	{
 		if (texture != value)
@@ -51,6 +56,7 @@ class StaticArrow extends FlxSprite
 		this.player = player;
 		noteData = data;
 		super(x, y);
+		direction = 90;
 
 		var skin:String = null;
 		if (texture.length < 1)
@@ -144,10 +150,6 @@ class StaticArrow extends FlxSprite
 
 	override function update(elapsed:Float)
 	{
-		if (!modifiedByLua)
-			angle = localAngle + modAngle;
-		else
-			angle = modAngle;
 		if (resetAnim > 0)
 		{
 			resetAnim -= elapsed;
@@ -159,12 +161,6 @@ class StaticArrow extends FlxSprite
 			}
 		}
 		super.update(elapsed);
-		bgLane.angle = direction - 90;
-		if (laneFollowsReceptor)
-			bgLane.x = (x - 2) - (bgLane.angle * 0.5);
-
-		bgLane.alpha = FlxG.save.data.laneTransparency * alpha;
-		bgLane.visible = visible;
 	}
 
 	public function playAnim(AnimName:String, ?force:Bool = false):Void
@@ -177,5 +173,78 @@ class StaticArrow extends FlxSprite
 		}
 
 		angle = localAngle + modAngle;
+	}
+
+	function set_localAngle(value:Float)
+	{
+		localAngle = value;
+		angle = localAngle + modAngle;
+		return value;
+	}
+
+	function set_modAngle(value:Float)
+	{
+		modAngle = value;
+		angle = localAngle + modAngle;
+		return value;
+	}
+
+	function set_localAlpha(value:Float)
+	{
+		localAlpha = value;
+		alpha = localAlpha + modAlpha;
+		return value;
+	}
+
+	function set_modAlpha(value:Float)
+	{
+		modAlpha = value;
+		alpha = localAlpha + modAlpha;
+		return value;
+	}
+
+	override function set_x(value:Float)
+	{
+		if (bgLane != null)
+			if (laneFollowsReceptor)
+				bgLane.x = value - 2;
+
+		return super.set_x(value);
+	}
+
+	override function set_alpha(value:Float):Float
+	{
+		if (bgLane != null)
+			bgLane.alpha = FlxG.save.data.laneTransparency * alpha;
+
+		return super.set_alpha(value);
+	}
+
+	override function set_visible(value:Bool):Bool
+	{
+		if (bgLane != null)
+			bgLane.visible = value;
+		return super.set_visible(value);
+	}
+
+	override function destroy()
+	{
+		FlxDestroyUtil.destroy(bgLane);
+		super.destroy();
+	}
+
+	function set_direction(value:Float)
+	{
+		if (value != direction)
+		{
+			direction = value;
+			var d = value * Math.PI / 180;
+			_cos = Math.cos(d);
+			_sin = Math.sin(d);
+
+			if (bgLane != null)
+				bgLane.angle = value - 90;
+		}
+		return value;
 	}
 }

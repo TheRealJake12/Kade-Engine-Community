@@ -149,7 +149,7 @@ class SelectEditorsState extends MusicBeatState
 				PlayState.storyWeek = 0;
 				PlayState.isStoryMode = false;
 				PlayState.isSM = false;
-				Conductor.multiplier = 1;
+				Conductor.rate = 1;
 				LoadingState.loadAndSwitchState(new kec.states.editors.ChartingState(), true);
 		}
 		FlxG.sound.music.stop();

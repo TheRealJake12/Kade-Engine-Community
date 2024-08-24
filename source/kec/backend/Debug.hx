@@ -10,7 +10,7 @@ import kec.backend.chart.Song.SongData;
 import kec.backend.chart.Song;
 import kec.objects.Character;
 import kec.objects.ui.HealthIcon;
-import kec.objects.Note;
+import kec.objects.note.Note;
 
 /**
  * Hey you, developer!

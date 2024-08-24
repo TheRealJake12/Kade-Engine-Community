@@ -36,7 +36,7 @@ import kec.backend.PlayStateChangeables;
 import kec.backend.chart.NoteData;
 import kec.backend.chart.Section.SwagSection;
 import kec.backend.chart.Section;
-import kec.backend.chart.Song.Event;
+import kec.backend.chart.Event;
 import kec.backend.chart.Song.SongData;
 import kec.backend.chart.Song;
 import kec.backend.chart.TimingStruct;
@@ -46,7 +46,7 @@ import kec.backend.util.Sort;
 import kec.backend.util.Sort;
 import kec.objects.Character;
 import kec.objects.CoolText;
-import kec.objects.Note;
+import kec.objects.note.Note;
 import kec.objects.ui.HealthIcon;
 import kec.states.editors.ChartingBox;
 import kec.states.editors.SectionRender;
@@ -354,19 +354,13 @@ class ChartingState extends MusicBeatState
 
 		for (i in SONG.eventObjects)
 		{
-			var name = Reflect.field(i, "name");
-			var type = Reflect.field(i, "type");
-			var pos = Reflect.field(i, "position");
-			var value = Reflect.field(i, "value");
-			var value2 = Reflect.field(i, "value2");
-
-			if (type == "BPM Change")
+			if (i.type == "BPM Change")
 			{
-				var beat:Float = pos;
+				final beat:Float = i.beat;
+				final bpm:Float = i.args[0];
+				final endBeat:Float = Math.POSITIVE_INFINITY;
 
-				var endBeat:Float = Math.POSITIVE_INFINITY;
-
-				TimingStruct.addTiming(beat, value, endBeat, 0); // offset in this case = start time since we don't have a offset
+				TimingStruct.addTiming(beat, bpm, endBeat, 0); // offset in this case = start time since we don't have a offset
 
 				if (currentIndex != 0)
 				{
@@ -380,15 +374,6 @@ class ChartingState extends MusicBeatState
 
 				currentIndex++;
 			}
-		}
-
-		var lastSeg = TimingStruct.AllTimings[TimingStruct.AllTimings.length - 1];
-
-		for (i in 0...TimingStruct.AllTimings.length)
-		{
-			var seg = TimingStruct.AllTimings[i];
-			if (i == TimingStruct.AllTimings.length - 1)
-				lastSeg = seg;
 		}
 		recalculateAllSectionTimes();
 		lengthInBeats = Math.round(TimingStruct.getBeatFromTime(inst.length));
@@ -515,11 +500,11 @@ class ChartingState extends MusicBeatState
 			{
 				if (i.type == "BPM Change")
 				{
-					var beat:Float = i.position;
+					final beat:Float = i.beat;
+					final bpm:Float = i.args[0];
+					final endBeat:Float = Math.POSITIVE_INFINITY;
 
-					var endBeat:Float = Math.POSITIVE_INFINITY;
-
-					TimingStruct.addTiming(beat, i.value, endBeat, 0); // offset in this case = start time since we don't have a offset
+					TimingStruct.addTiming(beat, bpm, endBeat, 0); // offset in this case = start time since we don't have a offset
 
 					if (currentIndex != 0)
 					{
@@ -545,20 +530,21 @@ class ChartingState extends MusicBeatState
 
 		if (curDecimalBeat < 0)
 			curDecimalBeat = 0;
-
-		var currentSeg = TimingStruct.getTimingAtBeat(curDecimalBeat);
-		if (currentSeg != null)
-		{
-			var timingSegBpm = currentSeg.bpm;
-
-			if (timingSegBpm != Conductor.bpm)
+		/*
+			var currentSeg = TimingStruct.getTimingAtBeat(curDecimalBeat);
+			if (currentSeg != null)
 			{
-				Debug.logInfo("BPM CHANGE to " + timingSegBpm);
-				Conductor.bpm = timingSegBpm;
-				recalculateAllSectionTimes();
-				currentBPM = timingSegBpm;
+				var timingSegBpm = currentSeg.bpm;
+
+				if (timingSegBpm != Conductor.bpm)
+				{
+					Debug.logInfo("BPM CHANGE to " + timingSegBpm);
+					Conductor.bpm = timingSegBpm;
+					recalculateAllSectionTimes();
+					currentBPM = timingSegBpm;
+				}
 			}
-		}
+		 */
 
 		var lerpVal:Float = CoolUtil.boundTo(1 - (elapsed * 12), 0, 1);
 		strumLine.y = FlxMath.lerp(getYfromStrum(inst.time), strumLine.y, lerpVal);
@@ -572,18 +558,6 @@ class ChartingState extends MusicBeatState
 			{
 				lastUpdatedSection = weird;
 				playerSection.selected = weird.playerSec;
-			}
-		}
-
-		if (FlxG.keys.justPressed.T)
-		{
-			if (FocusManager.instance.focus != null)
-			{
-				trace("FOCUS", cast(FocusManager.instance.focus, Component).className, cast(FocusManager.instance.focus, Component).id);
-			}
-			else
-			{
-				Debug.logTrace("NO FOCUS");
 			}
 		}
 
@@ -627,7 +601,7 @@ class ChartingState extends MusicBeatState
 			iconP1.scale.set(mult, mult);
 		iconP1.updateHitbox();
 
-		var mult:Float = FlxMath.lerp(0.75, iconP2.scale.x, FlxMath.bound(1 - (elapsed * 9 * Conductor.multiplier), 0, 1));
+		var mult:Float = FlxMath.lerp(0.75, iconP2.scale.x, FlxMath.bound(1 - (elapsed * 9 * pitch), 0, 1));
 		if (!FlxG.save.data.motion)
 			iconP2.scale.set(mult, mult);
 		iconP2.updateHitbox();
@@ -1145,13 +1119,13 @@ class ChartingState extends MusicBeatState
 
 			for (i in SONG.eventObjects)
 			{
-				var seg = TimingStruct.getTimingAtBeat(i.position);
+				var seg = TimingStruct.getTimingAtBeat(i.beat);
 
 				var posi:Float = 0;
 
 				if (seg != null)
 				{
-					var start:Float = (i.position - seg.startBeat) / (seg.bpm / 60);
+					var start:Float = (i.beat - seg.startBeat) / (seg.bpm / 60);
 
 					posi = seg.startTime + start;
 				}
@@ -1163,7 +1137,7 @@ class ChartingState extends MusicBeatState
 
 				var type = i.type;
 
-				var text = new FlxText(editorArea.x + (gridSize * 8) + separatorWidth, pos, 0, i.name + "\n" + type + "\n" + i.value + "\n" + i.value2, 16);
+				var text = new FlxText(editorArea.x + (gridSize * 8) + separatorWidth, pos, 0, i.name + "\n" + type + "\n" + i.args[0] + "\n" + i.args[1], 16);
 				text.borderStyle = OUTLINE_FAST;
 				text.borderColor = FlxColor.BLACK;
 				text.font = Paths.font("vcr.ttf");
@@ -1301,7 +1275,6 @@ class ChartingState extends MusicBeatState
 
 	function changeNoteSustain(value:Float):Void
 	{
-		Debug.logTrace(curSelectedNote == null);
 		if (curSelectedNote == null)
 			return;
 
@@ -1462,9 +1435,7 @@ class ChartingState extends MusicBeatState
 	{
 		for (i in events)
 		{
-			var thisName = Reflect.field(i, "name");
-
-			if (thisName == name)
+			if (i.name == name)
 				return i;
 		}
 		return null;
@@ -1537,19 +1508,6 @@ class ChartingState extends MusicBeatState
 				vocalsE.time = inst.time;
 			}
 		}
-	}
-
-	function getSectionStart(add:Int = 0)
-	{
-		var daBPM:Float = Conductor.bpm;
-		Debug.logTrace(Conductor.bpm);
-		var daPos:Float = 0;
-		for (i in 0...curSection + add)
-		{
-			daPos += 4 * (1000 * 60 / daBPM);
-			Debug.logTrace(daPos);
-		}
-		return daPos;
 	}
 
 	function updateNotetypeText()
@@ -2157,35 +2115,25 @@ class ChartingState extends MusicBeatState
 		{
 			SONG.bpm = bpm.pos;
 			for (section in SONG.notes)
-			{
 				section.bpm = bpm.pos;
-			}
 
 			if (SONG.eventObjects[0].type != "BPM Change")
 				lime.app.Application.current.window.alert("i'm crying, first event isn't a bpm change. fuck you");
 			else
-			{
-				SONG.eventObjects[0].value = bpm.pos;
-			}
+				SONG.eventObjects[0].args[0] = bpm.pos;
 
 			TimingStruct.clearTimings();
 
 			var currentIndex = 0;
 			for (i in SONG.eventObjects)
 			{
-				var name = Reflect.field(i, "name");
-				var type = Reflect.field(i, "type");
-				var pos = Reflect.field(i, "position");
-				var value = Reflect.field(i, "value");
-				var value2 = Reflect.field(i, "value2");
-
-				if (type == "BPM Change")
+				if (i.type == "BPM Change")
 				{
-					var beat:Float = pos;
+					final beat:Float = i.beat;
+					final bpm:Float = i.args[0];
+					final endBeat:Float = Math.POSITIVE_INFINITY;
 
-					var endBeat:Float = Math.POSITIVE_INFINITY;
-
-					TimingStruct.addTiming(beat, value, endBeat, 0); // offset in this case = start time since we don't have a offset
+					TimingStruct.addTiming(beat, bpm, endBeat, 0); // offset in this case = start time since we don't have a offset
 
 					if (currentIndex != 0)
 					{
@@ -2413,16 +2361,16 @@ class ChartingState extends MusicBeatState
 			if (event == null)
 				return;
 
-			savedValue = event.value;
-			savedValue2 = event.value2;
+			savedValue = event.args[0];
+			savedValue2 = event.args[1];
 			savedType = event.type;
 			currentSelectedEventName = event.name;
 			eventName.text = currentSelectedEventName;
-			eventVal1.text = event.value + "";
-			eventVal2.text = event.value2 + "";
-			currentEventPosition = event.position;
+			eventVal1.text = event.args[0] + "";
+			eventVal2.text = event.args[1] + "";
+			currentEventPosition = event.beat;
 			eventPosition.text = Std.string(currentEventPosition);
-			eventVal2.text = event.value2 + "";
+			eventVal2.text = event.args[1] + "";
 			Debug.logTrace('$currentSelectedEventName $savedType $savedValue $savedValue2 $currentEventPosition');
 			eventTypes.selectItemBy(item -> item == savedType, true);
 		});
@@ -2441,8 +2389,12 @@ class ChartingState extends MusicBeatState
 		eventAdd.text = "Add Event";
 		eventAdd.onClick = function(e)
 		{
-			var pog:Event = new Event("New Event " + HelperFunctions.truncateFloat(curDecimalBeat, 2), HelperFunctions.truncateFloat(curDecimalBeat, 3),
-				'${SONG.bpm}', "1", "BPM Change");
+			var pog:Event = {
+				name: "New Event " + HelperFunctions.truncateFloat(curDecimalBeat, 2),
+				beat: HelperFunctions.truncateFloat(curDecimalBeat, 3),
+				args: [SONG.bpm, 1],
+				type: "BPM Change"
+			};
 
 			var obj = containsName(pog.name, SONG.eventObjects);
 
@@ -2459,18 +2411,16 @@ class ChartingState extends MusicBeatState
 			}
 
 			eventName.text = pog.name;
-			eventVal1.text = pog.value + "";
-			eventVal2.text = pog.value2 + "";
-			eventPosition.text = pog.position + "";
+			eventVal1.text = pog.args[0] + "";
+			eventVal2.text = pog.args[1] + "";
+			eventPosition.text = pog.beat + "";
 			currentSelectedEventName = pog.name;
-			currentEventPosition = pog.position;
-			savedValue = pog.value;
-			savedValue2 = pog.value2;
+			currentEventPosition = pog.beat;
+			savedValue = pog.args[0];
+			savedValue2 = pog.args[1];
 			savedType = pog.type;
 
 			eventDrop.dataSource = existingEvents;
-
-			Debug.logTrace(currentSelectedEventName);
 			eventDrop.selectItemBy(item -> item == currentSelectedEventName, true);
 			eventTypes.selectItemBy(item -> item == savedType, true);
 
@@ -2479,18 +2429,13 @@ class ChartingState extends MusicBeatState
 			var currentIndex = 0;
 			for (i in SONG.eventObjects)
 			{
-				var name = Reflect.field(i, "name");
-				var type = Reflect.field(i, "type");
-				var pos = Reflect.field(i, "position");
-				var value = Reflect.field(i, "value");
-				var value2 = Reflect.field(i, "value2");
-				if (type == "BPM Change")
+				if (i.type == "BPM Change")
 				{
-					var beat:Float = pos;
+					final beat:Float = i.beat;
+					final bpm:Float = i.args[0];
+					final endBeat:Float = Math.POSITIVE_INFINITY;
 
-					var endBeat:Float = Math.POSITIVE_INFINITY;
-
-					TimingStruct.addTiming(beat, value, endBeat, 0); // offset in this case = start time since we don't have a offset
+					TimingStruct.addTiming(beat, bpm, endBeat, 0); // offset in this case = start time since we don't have a offset
 
 					if (currentIndex != 0)
 					{
@@ -2533,7 +2478,12 @@ class ChartingState extends MusicBeatState
 		eventSave.text = "Save Event";
 		eventSave.onClick = function(e)
 		{
-			var pog:Event = new Event(currentSelectedEventName, currentEventPosition, savedValue, savedValue2, savedType);
+			var pog:Event = {
+				name: currentSelectedEventName,
+				beat: currentEventPosition,
+				args: [savedValue, savedValue2],
+				type: savedType
+			};
 
 			var obj = containsName(pog.name, SONG.eventObjects);
 
@@ -2541,10 +2491,7 @@ class ChartingState extends MusicBeatState
 				return;
 
 			if (obj != null)
-			{
 				SONG.eventObjects.remove(obj);
-				Debug.logTrace("isn't null, removing");
-			}
 
 			SONG.eventObjects.push(pog);
 
@@ -2553,19 +2500,13 @@ class ChartingState extends MusicBeatState
 			var currentIndex = 0;
 			for (i in SONG.eventObjects)
 			{
-				var name = Reflect.field(i, "name");
-				var type = Reflect.field(i, "type");
-				var pos = Reflect.field(i, "position");
-				var value = Reflect.field(i, "value");
-				var value2 = Reflect.field(i, "value2");
-
-				if (type == "BPM Change")
+				if (i.type == "BPM Change")
 				{
-					var beat:Float = pos;
+					final beat:Float = i.beat;
+					final bpm:Float = i.args[0];
+					final endBeat:Float = Math.POSITIVE_INFINITY;
 
-					var endBeat:Float = Math.POSITIVE_INFINITY;
-
-					TimingStruct.addTiming(beat, value, endBeat, 0); // offset in this case = start time since we don't have a offset
+					TimingStruct.addTiming(beat, bpm, endBeat, 0); // offset in this case = start time since we don't have a offset
 
 					if (currentIndex != 0)
 					{
@@ -2622,7 +2563,12 @@ class ChartingState extends MusicBeatState
 
 			if (firstEvent == null)
 			{
-				SONG.eventObjects.push(new Event("Init BPM", 0, '${SONG.bpm}', "1", "BPM Change"));
+				SONG.eventObjects.push({
+					name: "Init BPM",
+					beat: 0,
+					args: [SONG.bpm, 1],
+					type: "BPM Change"
+				});
 				firstEvent = SONG.eventObjects[0];
 			}
 
@@ -2638,11 +2584,11 @@ class ChartingState extends MusicBeatState
 			eventDrop.dataSource = existingEvents;
 
 			eventName.text = firstEvent.name;
-			eventVal1.text = firstEvent.value + "";
-			eventVal2.text = firstEvent.value2 + "";
-			eventPosition.text = firstEvent.position + "";
+			eventVal1.text = firstEvent.args[0] + "";
+			eventVal2.text = firstEvent.args[1] + "";
+			eventPosition.text = firstEvent.beat + "";
 			currentSelectedEventName = firstEvent.name;
-			currentEventPosition = firstEvent.position;
+			currentEventPosition = firstEvent.beat;
 			eventDrop.selectItemBy(item -> item == firstEvent.name, true);
 
 			TimingStruct.clearTimings();
@@ -2650,19 +2596,13 @@ class ChartingState extends MusicBeatState
 			var currentIndex = 0;
 			for (i in SONG.eventObjects)
 			{
-				var name = Reflect.field(i, "name");
-				var type = Reflect.field(i, "type");
-				var pos = Reflect.field(i, "position");
-				var value = Reflect.field(i, "value");
-				var value2 = Reflect.field(i, "value2");
-
-				if (type == "BPM Change")
+				if (i.type == "BPM Change")
 				{
-					var beat:Float = pos;
+					final beat:Float = i.beat;
+					final bpm:Float = i.args[0];
+					final endBeat:Float = Math.POSITIVE_INFINITY;
 
-					var endBeat:Float = Math.POSITIVE_INFINITY;
-
-					TimingStruct.addTiming(beat, value, endBeat, 0); // offset in this case = start time since we don't have a offset
+					TimingStruct.addTiming(beat, bpm, endBeat, 0); // offset in this case = start time since we don't have a offset
 
 					if (currentIndex != 0)
 					{
@@ -2695,30 +2635,30 @@ class ChartingState extends MusicBeatState
 			if (obj == null)
 				return;
 			currentEventPosition = HelperFunctions.truncateFloat(curDecimalBeat, 3);
-			obj.position = currentEventPosition;
+			obj.beat = currentEventPosition;
 			eventPosition.text = currentEventPosition + "";
 		}
 
 		eventPosition = new TextField();
-		eventPosition.text = Std.string(SONG.eventObjects[0].position);
+		eventPosition.text = Std.string(SONG.eventObjects[0].beat);
 		eventPosition.onChange = function(e)
 		{
 			var obj = containsName(currentSelectedEventName, SONG.eventObjects);
 			if (obj == null)
 				return;
 			currentEventPosition = Std.parseFloat(eventPosition.text);
-			obj.position = currentEventPosition;
+			obj.beat = currentEventPosition;
 		}
 
 		eventVal1 = new TextField();
-		eventVal1.text = SONG.eventObjects[0].value;
+		eventVal1.text = SONG.eventObjects[0].args[0];
 		eventVal1.onChange = function(e)
 		{
 			savedValue = eventVal1.text;
 		}
 
 		eventVal2 = new TextField();
-		eventVal2.text = SONG.eventObjects[0].value2;
+		eventVal2.text = SONG.eventObjects[0].args[1];
 		eventVal2.onChange = function(e)
 		{
 			savedValue2 = eventVal2.text;
@@ -2831,9 +2771,7 @@ class ChartingState extends MusicBeatState
 				loadSong(SONG.audioFile.toLowerCase(), false);
 			}
 			catch (e)
-			{
 				Debug.logTrace(e);
-			}
 			// goofy song overlapping and raping your ears
 		}
 
@@ -3051,21 +2989,23 @@ class ChartingState extends MusicBeatState
 		var eventObjects:Array<Event> = [];
 
 		if (SONG.eventObjects == null || SONG.eventObjects.length == 0)
-			SONG.eventObjects = [new Event("Init BPM", 0, SONG.bpm, "1", "BPM Change")];
+			SONG.eventObjects = [
+				{
+					name: "Init BPM",
+					beat: 0,
+					args: [SONG.bpm, 1],
+					type: "BPM Change"
+				}
+			];
 
 		for (i in SONG.eventObjects)
-		{
-			var name = Reflect.field(i, "name");
-			var type = Reflect.field(i, "type");
-			var pos = Reflect.field(i, "position");
-			var value = Reflect.field(i, "value");
-			var value2 = Reflect.field(i, "value2");
+			eventObjects.push({
+				name: i.name,
+				beat: i.beat,
+				args: i.args,
+				type: i.type
+			});
 
-			if (value2 == null)
-				value2 = "1";
-
-			eventObjects.push(new Event(name, pos, value, value2, type));
-		}
 		eventObjects.sort(Sort.sortEvents);
 		SONG.eventObjects = eventObjects;
 	}

@@ -2,9 +2,9 @@ package kec.backend.util;
 
 import flixel.util.FlxSort;
 import haxe.ds.ArraySort;
-import kec.objects.Note;
+import kec.objects.note.Note;
 import kec.backend.chart.NoteData;
-import kec.backend.chart.Song.Event;
+import kec.backend.chart.Event;
 import kec.objects.ui.UIComponent;
 
 /**
@@ -24,7 +24,7 @@ class Sort
 
 	public static inline function sortEvents(e1:Event, e2:Event)
 	{
-		return FlxSort.byValues(FlxSort.ASCENDING, e1.position, e2.position);
+		return FlxSort.byValues(FlxSort.ASCENDING, e1.beat, e2.beat);
 	}
 
 	public static inline function sortUI(order:Int, a:UIComponent, b:UIComponent):Int

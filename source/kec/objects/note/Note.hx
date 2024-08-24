@@ -1,4 +1,4 @@
-package kec.objects;
+package kec.objects.note;
 
 import kec.backend.lua.LuaClass;
 import flixel.math.FlxRect;
@@ -42,6 +42,7 @@ class Note extends FlxSprite
 	public var missHealth:Float = 0.08; // default health you miss.
 	public var hitsoundsEditor:Bool = true; // if a note plays a hitsound in the chart editor.
 	public var gfNote:Bool = false; // if GF plays the note instead of the player / opponent.
+	public var quantNote:Bool = true; // rotate
 
 	public var luaID:Int = 0;
 
@@ -129,6 +130,7 @@ class Note extends FlxSprite
 						texture = 'notetypes/hurt_' + NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin];
 					else
 						texture = "notetypes/hurt_Arrows";
+					quantNote = true;
 				case 'mustpress':
 					set_noteType('Must Press'); // backwards compatabilty for charts before the KEC1 format.
 				case 'must press':
@@ -145,6 +147,7 @@ class Note extends FlxSprite
 						texture = 'notetypes/mustpress_' + NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin];
 					else
 						texture = "notetypes/mustpress_Arrows";
+					quantNote = true;
 				case 'no animation':
 					canPlayAnims = false;
 					canNoteSplash = true;
@@ -153,6 +156,7 @@ class Note extends FlxSprite
 					botplayHit = true;
 					canRate = true;
 					hitsoundsEditor = true;
+					quantNote = true;
 				case 'gf':
 					gfNote = true;
 					canPlayAnims = true;
@@ -162,6 +166,7 @@ class Note extends FlxSprite
 					botplayHit = true;
 					canRate = true;
 					hitsoundsEditor = true;
+					quantNote = true;
 				default:
 					canPlayAnims = true;
 					canNoteSplash = true;
@@ -170,6 +175,7 @@ class Note extends FlxSprite
 					botplayHit = true;
 					canRate = true;
 					hitsoundsEditor = true;
+					quantNote = true;
 			}
 			noteType = value;
 		}
@@ -228,7 +234,10 @@ class Note extends FlxSprite
 
 		originColor = noteData; // The note's origin color will be checked by its sustain notes
 
-		if (FlxG.save.data.stepMania && !isSustainNote && !(PlayState.instance != null ? PlayState.instance.executeModchart : false))
+		if (FlxG.save.data.stepMania
+			&& !quantNote
+			&& !isSustainNote
+			&& !(PlayState.instance != null ? PlayState.instance.executeModchart : false))
 		{
 			var col:Int = 0;
 

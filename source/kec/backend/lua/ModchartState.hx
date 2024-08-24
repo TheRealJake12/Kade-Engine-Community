@@ -454,7 +454,7 @@ class ModchartState
 		setVar("colour", FlxG.save.data.colour);
 		setVar("downscroll", FlxG.save.data.downscroll);
 		setVar("middlescroll", FlxG.save.data.middleScroll);
-		setVar("rate", Conductor.multiplier); // Kinda XD since you can modify this through Lua and break the game.
+		setVar("rate", Conductor.rate); // Kinda XD since you can modify this through Lua and break the game.
 
 		setVar("curStep", 0);
 		setVar("curBeat", 0);

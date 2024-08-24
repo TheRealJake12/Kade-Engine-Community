@@ -16,8 +16,8 @@ import flash.display.BitmapData;
 import flixel.graphics.frames.FlxAtlasFrames;
 import haxe.DynamicAccess;
 import kec.stages.Stage;
-import kec.objects.Note;
-import kec.objects.StaticArrow;
+import kec.objects.note.Note;
+import kec.objects.note.StaticArrow;
 import kec.objects.Character;
 import kec.backend.Stats;
 

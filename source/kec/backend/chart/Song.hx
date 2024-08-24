@@ -2,24 +2,6 @@ package kec.backend.chart;
 
 import kec.backend.chart.Section.SwagSection;
 
-class Event
-{
-	public var name:String;
-	public var position:Float;
-	public var value:Dynamic;
-	public var value2:Dynamic;
-	public var type:String;
-
-	public function new(name:String, pos:Float, value:Dynamic, value2:Dynamic, type:String)
-	{
-		this.name = name;
-		this.position = pos;
-		this.value = value;
-		this.value2 = value2;
-		this.type = type;
-	}
-}
-
 typedef StyleData =
 {
 	var style:String;
@@ -184,30 +166,32 @@ class Song
 
 	public static function conversionChecks(song:SongData):SongData
 	{
+		song.eventObjects = convertEvents(song.eventObjects);
 		if (song.chartVersion == latestChart)
-		{
 			return song;
-		}
 
 		var ba = song.bpm;
 
-		var eventObjects:Array<Song.Event> = [];
+		var eventObjects:Array<Event> = [];
 
 		if (song.eventObjects == null)
-			song.eventObjects = [new Song.Event("Init BPM", 0, ba, "1", "BPM Change")];
+			song.eventObjects = [
+				{
+					name: "Init BPM",
+					beat: 0,
+					args: [ba, "1"],
+					type: "BPM Change"
+				}
+			];
 
 		for (i in song.eventObjects)
 		{
-			var name = Reflect.field(i, "name");
-			var type = Reflect.field(i, "type");
-			var pos = Reflect.field(i, "position");
-			var value = Reflect.field(i, "value");
-			var value2 = Reflect.field(i, "value2");
-
-			if (value2 == null)
-				value2 = "1";
-
-			eventObjects.push(new Song.Event(name, pos, value, value2, type));
+			eventObjects.push({
+				name: i.name,
+				beat: i.beat,
+				args: i.args,
+				type: i.type
+			});
 		}
 
 		song.eventObjects = eventObjects;
@@ -223,9 +207,7 @@ class Song
 		}
 
 		if (song.noteStyle == 'pixel')
-		{
 			song.style = "Pixel";
-		}
 
 		if (song.style == null)
 			song.style = "Default";
@@ -236,8 +218,6 @@ class Song
 		if (song.stage == null)
 			song.stage = "stage";
 
-		TimingStruct.clearTimings();
-
 		if (song.splitVoiceTracks == null)
 			song.splitVoiceTracks = false;
 
@@ -246,11 +226,11 @@ class Song
 		{
 			if (i.type == "BPM Change")
 			{
-				var beat:Float = i.position * Conductor.multiplier;
+				var beat:Float = i.beat * Conductor.rate;
 
 				var endBeat:Float = Math.POSITIVE_INFINITY;
 
-				TimingStruct.addTiming(beat, i.value * Conductor.multiplier, endBeat, 0); // offset in this case = start time since we don't have a offset
+				TimingStruct.addTiming(beat, i.args[0] * Conductor.rate, endBeat, 0); // offset in this case = start time since we don't have a offset
 
 				if (currentIndex != 0)
 				{
@@ -283,7 +263,12 @@ class Song
 			if (i.changeBPM && i.bpm != ba)
 			{
 				ba = i.bpm;
-				song.eventObjects.push(new Song.Event("FNF BPM Change " + index, beat, '${i.bpm}', "1", "BPM Change"));
+				song.eventObjects.push({
+					name: "FNF BPM Change " + index,
+					beat: beat,
+					args: [i.bpm, 1],
+					type: "BPM Change"
+				});
 			}
 
 			for (ii in i.sectionNotes)
@@ -357,6 +342,21 @@ class Song
 		return Song.conversionChecks(songData);
 	}
 
+	private static function convertEvents(events:Array<Event>)
+	{
+		var newEvents:Array<Event> = [];
+		for (i in events)
+			newEvents.push({
+				name: i.name,
+				beat: i.position,
+				args: [i.value, i.value2],
+				type: i.type
+			});
+		events.resize(0);
+		newEvents.sort(Sort.sortEvents);
+		return newEvents;
+	}
+
 	private static function newSection(song:SongData, playerSec:Bool = true):SwagSection
 	{
 		var sec:SwagSection = {
@@ -368,31 +368,5 @@ class Song
 		};
 
 		return sec;
-	}
-
-	public static function sortSectionNotes(song:SongData)
-	{
-		var newNotes:Array<Array<Dynamic>> = [];
-
-		for (section in song.notes)
-		{
-			if (section.sectionNotes != null)
-			{
-				for (songNotes in section.sectionNotes)
-				{
-					newNotes.push(songNotes);
-				}
-			}
-			section.sectionNotes.resize(0);
-		}
-
-		for (section in song.notes)
-		{
-			for (sortedNote in newNotes)
-			{
-				if (sortedNote[0] / Conductor.multiplier >= section.startTime && sortedNote[0] / Conductor.multiplier < section.endTime)
-					section.sectionNotes.push(sortedNote);
-			}
-		}
 	}
 }

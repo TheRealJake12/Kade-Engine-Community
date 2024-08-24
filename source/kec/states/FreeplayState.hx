@@ -879,7 +879,7 @@ class FreeplayState extends MusicBeatState
 		PlayState.isSM = false;
 		#end
 
-		Conductor.multiplier = rate;
+		Conductor.rate = rate;
 		lastRate = rate;
 
 		instance.updateTexts();
