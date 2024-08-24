@@ -696,7 +696,7 @@ class ChartingState extends MusicBeatState
 
 			if (FlxG.keys.justPressed.SHIFT)
 				doSnapShit = !doSnapShit;
-			
+
 			if (FlxG.keys.justPressed.E)
 				changeNoteSustain(Conductor.stepCrochet * sustainQuant);
 			if (FlxG.keys.justPressed.Q)

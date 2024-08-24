@@ -2356,7 +2356,8 @@ class PlayState extends MusicBeatState
 
 		if (generatedMusic && !paused && songStarted && Conductor.multiplier < 1)
 		{
-			if (Conductor.songPosition * Conductor.multiplier >= inst.time + 25 || Conductor.songPosition * Conductor.multiplier <= inst.time - 25)
+			if (Conductor.songPosition * Conductor.multiplier >= inst.time + 25
+				|| Conductor.songPosition * Conductor.multiplier <= inst.time - 25)
 			{
 				resyncVocals();
 			}
@@ -3274,7 +3275,7 @@ class PlayState extends MusicBeatState
 					openSubState(subStates[1]);
 				}
 				else
-					LoadingState.loadAndSwitchState(new FreeplayState());	
+					LoadingState.loadAndSwitchState(new FreeplayState());
 			}
 		});
 	}
@@ -4833,7 +4834,7 @@ class PlayState extends MusicBeatState
 
 		hitSound.autoDestroy = true;
 		hitSound.stop();
-		
+
 		introGroup.clear();
 		numGroup.clear();
 		ratingGroup.clear();

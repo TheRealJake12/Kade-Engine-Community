@@ -43,7 +43,7 @@ class ModMenuState extends MusicBeatState
 			scroll(-1);
 
 		if (controls.DOWN_P)
-			scroll(1);	
+			scroll(1);
 
 		if (FlxG.mouse.wheel != 0)
 		{
@@ -55,14 +55,13 @@ class ModMenuState extends MusicBeatState
 			else if (FlxG.mouse.wheel > 0)
 				scroll(-1);
 			#end
-		}	
+		}
 
 		if (controls.ACCEPT)
-			checkMod();	
+			checkMod();
 
 		if (controls.BACK)
 			MusicBeatState.switchState(new MainMenuState());
-
 	}
 
 	private function scroll(fard:Int = 0)
@@ -82,7 +81,7 @@ class ModMenuState extends MusicBeatState
 	}
 
 	private function checkMod()
-	{	
+	{
 		if (ModCore.enabledMods.contains(ModCore.modsToLoad[curSelected]))
 		{
 			ModCore.enabledMods.remove(ModCore.modsToLoad[curSelected]);

@@ -300,7 +300,7 @@ class KadeEngineData
 			FlxG.save.data.maxRatings = 4;
 
 		if (FlxG.save.data.enabledMods == null)
-			FlxG.save.data.enabledMods = [];	
+			FlxG.save.data.enabledMods = [];
 
 		FlxSprite.defaultAntialiasing = FlxG.save.data.antialiasing;
 		FlxObject.defaultMoves = false;

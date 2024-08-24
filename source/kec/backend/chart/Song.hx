@@ -390,8 +390,7 @@ class Song
 		{
 			for (sortedNote in newNotes)
 			{
-				if (sortedNote[0] / Conductor.multiplier >= section.startTime
-					&& sortedNote[0] / Conductor.multiplier < section.endTime)
+				if (sortedNote[0] / Conductor.multiplier >= section.startTime && sortedNote[0] / Conductor.multiplier < section.endTime)
 					section.sectionNotes.push(sortedNote);
 			}
 		}

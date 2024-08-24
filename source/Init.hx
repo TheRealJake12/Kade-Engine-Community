@@ -23,7 +23,7 @@ class Init extends MusicBeatState
 		kec.backend.KadeEngineData.initSave();
 
 		kec.backend.KeyBinds.keyCheck();
-		
+
 		// Gotta run this before any assets get loaded.
 		kec.backend.modding.ModCore.initialize();
 

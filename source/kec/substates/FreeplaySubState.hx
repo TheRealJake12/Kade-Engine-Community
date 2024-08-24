@@ -40,7 +40,7 @@ class ModMenu extends MusicBeatSubstate
 	override function create()
 	{
 		super.create();
-		
+
 		modObjects = new FlxTypedGroup();
 
 		openCallback = refresh;

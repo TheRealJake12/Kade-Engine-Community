@@ -38,8 +38,8 @@ class ModCore
 	public static var enabledMods = []; // enabled mods
 	public static var modTitles = [];
 	public static var modDescriptions = []; // descriptions
-	#end
 
+	#end
 	public static function initialize():Void
 	{
 		#if FEATURE_MODCORE
