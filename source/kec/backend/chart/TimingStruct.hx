@@ -1,5 +1,9 @@
 package kec.backend.chart;
+import kec.backend.chart.Song.SongData;
 
+/**
+ * Handy class that helps with beat and step measurements in song with variable bpm! 
+ */
 class TimingStruct
 {
 	public static var AllTimings:Array<TimingStruct> = [];
@@ -14,15 +18,43 @@ class TimingStruct
 
 	public var length:Float = Math.POSITIVE_INFINITY; // in beats
 
-	public static function clearTimings()
+	public static var lastTiming:TimingStruct;
+	public static var nextTiming:TimingStruct;
+
+	public function new(startBeat:Float, bpm:Float, endBeat:Float, offset:Float)
 	{
-		AllTimings = [];
+		this.bpm = bpm;
+		this.startBeat = startBeat;
+		if (endBeat != -1)
+			this.endBeat = endBeat;
+		startTime = offset;
 	}
 
-	public static function addTiming(startBeat, bpm, endBeat:Float, offset:Float)
+	public static function clearTimings()
+	{
+		AllTimings.splice(0, AllTimings.length);
+	}
+
+	public static function addTiming(startBeat:Float, bpm, endBeat:Float, offset:Float):TimingStruct
 	{
 		var pog = new TimingStruct(startBeat, bpm, endBeat, offset);
+
+		lastTiming = AllTimings[AllTimings.length - 1];
+		if (lastTiming == null)
+		{
+			AllTimings.push(pog);
+			return pog;
+		}
+
+		lastTiming.endBeat = startBeat;
+		lastTiming.length = ((lastTiming.endBeat - lastTiming.startBeat) / (lastTiming.bpm / 60));
+		var step = ((60 / lastTiming.bpm) * 1000) / 4;
+		pog.startStep = Math.floor((((lastTiming.endBeat / (lastTiming.bpm / 60)) * 1000) / step));
+		pog.startTime = lastTiming.startTime + lastTiming.length;
+
 		AllTimings.push(pog);
+
+		return pog;
 	}
 
 	public static function getBeatFromTime(time:Float)
@@ -58,15 +90,6 @@ class TimingStruct
 		return time * 1000;
 	}
 
-	public function new(startBeat:Float, bpm:Float, endBeat:Float, offset:Float)
-	{
-		this.bpm = bpm;
-		this.startBeat = startBeat;
-		if (endBeat != -1)
-			this.endBeat = endBeat;
-		startTime = offset;
-	}
-
 	public static function getTimingAtTimestamp(msTime:Float):TimingStruct
 	{
 		for (i in AllTimings)
@@ -85,5 +108,86 @@ class TimingStruct
 				return i;
 		}
 		return null;
+	}
+
+	public static function getBeatFromTimingTime(curTiming:TimingStruct, time:Float):Float
+	{
+		var beat = -1.0;
+		var seg = curTiming;
+
+		if (seg != null)
+			beat = seg.startBeat + (((time / 1000) - seg.startTime) * (seg.bpm / 60));
+
+		return beat;
+	}
+
+	public static function getTimeFromTimingBeat(curTiming:TimingStruct, beat:Float)
+	{
+		var time = -1.0;
+		var seg = curTiming;
+
+		if (seg != null)
+			time = seg.startTime + ((beat - seg.startBeat) / (seg.bpm / 60));
+
+		return time * 1000;
+	}
+
+	public static function setSongTimings(song:SongData)
+	{
+		TimingStruct.clearTimings();
+
+		TimingStruct.addTiming(0, song.bpm, Math.POSITIVE_INFINITY, 0);
+
+		for (i => section in song.notes)
+		{
+			var startBeat:Float = (section.lengthInSteps / 4) * (i);
+
+			for (k in 0...i)
+				startBeat -= ((section.lengthInSteps / 4) - (song.notes[k].lengthInSteps / 4));
+
+			var currentSeg = TimingStruct.getTimingAtBeat(startBeat);
+
+			if (currentSeg == null)
+				continue;
+
+			var beat:Float = currentSeg.startBeat + (startBeat - currentSeg.startBeat);
+
+			if (section.changeBPM && section.bpm != song.bpm)
+			{
+				Debug.logInfo("converting changebpm for section " + i);
+
+				var bpmChangeEvent:Event = {
+					name: 'FNF BPM Change $beat',
+					type: 'BPM Change',
+					beat: beat,
+					args: [section.bpm]
+				};
+				song.eventObjects.push(bpmChangeEvent);
+				var timing = TimingStruct.addTiming(bpmChangeEvent.beat, bpmChangeEvent.args[0], Math.POSITIVE_INFINITY, 0);
+				Debug.logInfo(timing.bpm);
+			}
+		}
+		song.eventObjects.sort(Sort.sortEvents);
+
+		var bpmIndex:Int = 0;
+		for (event in song.eventObjects)
+		{
+			if (event.type == "BPM Change")
+			{
+				if (TimingStruct.AllTimings[bpmIndex] != null)
+				{
+					bpmIndex++;
+					continue;
+				}
+
+				var beat:Float = event.beat / Conductor.rate;
+				var endBeat:Float = Math.POSITIVE_INFINITY;
+				var bpm = event.args[0];
+
+				TimingStruct.addTiming(beat, bpm, endBeat, 0);
+
+				bpmIndex++;
+			}
+		}
 	}
 }

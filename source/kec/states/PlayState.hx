@@ -1896,9 +1896,10 @@ class PlayState extends MusicBeatState
 		activeSong = SONG;
 		curSong = songData.songId;
 
-		addSongTiming();
+		TimingStruct.setSongTimings(SONG);
+		recalculateAllSectionTimes();
 
-		Conductor.bpm = SONG.bpm;
+		Conductor.bpm = SONG.bpm * Conductor.rate;
 		var anotherCrochet:Float = Conductor.crochet;
 		var anotherStepCrochet:Float = anotherCrochet * 0.25;
 
@@ -1937,7 +1938,7 @@ class PlayState extends MusicBeatState
 				var noteData:Int = Std.int(songNotes[1]);
 				var noteType:String = songNotes[3];
 				var beat = TimingStruct.getBeatFromTime(spawnTime);
-				var holdLength:Float = songNotes[2];
+				var holdLength:Float = songNotes[2] / Conductor.rate;
 				var playerNote:Bool = (noteData > 3);
 
 				if (Math.isNaN(holdLength))
@@ -1955,7 +1956,7 @@ class PlayState extends MusicBeatState
 				var swagNote = new Note(spawnTime, noteData % 4, oldNote, false, false, playerNote, beat);
 				swagNote.rawNoteData = noteData;
 				swagNote.noteType = noteType;
-				swagNote.sustainLength = (PlayStateChangeables.holds ? holdLength / Conductor.rate : 0);
+				swagNote.sustainLength = (PlayStateChangeables.holds ? holdLength : 0);
 
 				swagNote.scrollFactor.set(0, 0);
 				unspawnNotes.push(swagNote);
@@ -4640,39 +4641,6 @@ class PlayState extends MusicBeatState
 		notes.remove(daNote, true);
 		daNote.destroy();
 		daNote = null;
-	}
-
-	private function addSongTiming()
-	{
-		TimingStruct.clearTimings();
-
-		var currentIndex = 0;
-		for (i in SONG.eventObjects)
-		{
-			if (i.type == "BPM Change")
-			{
-				var beat:Float = i.beat;
-
-				var endBeat:Float = Math.POSITIVE_INFINITY;
-
-				var bpm = i.args[0] * Conductor.rate;
-
-				TimingStruct.addTiming(beat, bpm, endBeat, 0); // offset in this case = start time since we don't have a offset
-
-				if (currentIndex != 0)
-				{
-					var data = TimingStruct.AllTimings[currentIndex - 1];
-					data.endBeat = beat;
-					data.length = ((data.endBeat - (data.startBeat)) / (data.bpm / 60));
-					var step = ((60 / (data.bpm)) * 1000) * 0.25;
-					TimingStruct.AllTimings[currentIndex].startStep = Math.floor((((data.endBeat / (data.bpm / 60)) * 1000) / step));
-					TimingStruct.AllTimings[currentIndex].startTime = data.startTime + data.length;
-				}
-
-				currentIndex++;
-			}
-		}
-		recalculateAllSectionTimes();
 	}
 
 	private function cleanPlayObjects()

@@ -34,7 +34,7 @@ class UIComponent extends FlxSprite
 	public function fadeOut()
 	{
 		PlayState.instance.createTween(this, {alpha: 0}, 0.2, {
-			startDelay: (Conductor.crochet * Math.pow(Conductor.rate, 2)) * 0.001,
+			startDelay: Conductor.crochet * 0.001,
 			onComplete: function(t:FlxTween)
 			{
 				kill();

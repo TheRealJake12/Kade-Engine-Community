@@ -191,6 +191,9 @@
 		<haxeflag name="--macro" value="ClassMacro.addAdditionalClasses()" />
 		<!--I'm Crying So Hard Right Now.-->
 	</section>
+	<section if="hxvlc">
+		<haxedef name="HXVLC_NO_SHARE_DIRECTORY" />
+	</section>
 
 	<!--Basically Allows Videos To Render In Higher Quality On Higher Resoluttions-->
 	<haxedef name="openfl_dpi_aware" unless="web" />

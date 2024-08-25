@@ -353,7 +353,7 @@ class Song
 				type: i.type
 			});
 		events.resize(0);
-		newEvents.sort(Sort.sortEvents);
+		// newEvents.sort(Sort.sortEvents);
 		return newEvents;
 	}
 

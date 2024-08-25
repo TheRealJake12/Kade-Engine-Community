@@ -352,29 +352,7 @@ class ChartingState extends MusicBeatState
 
 		var currentIndex = 0;
 
-		for (i in SONG.eventObjects)
-		{
-			if (i.type == "BPM Change")
-			{
-				final beat:Float = i.beat;
-				final bpm:Float = i.args[0];
-				final endBeat:Float = Math.POSITIVE_INFINITY;
-
-				TimingStruct.addTiming(beat, bpm, endBeat, 0); // offset in this case = start time since we don't have a offset
-
-				if (currentIndex != 0)
-				{
-					var data = TimingStruct.AllTimings[currentIndex - 1];
-					data.endBeat = beat;
-					data.length = (data.endBeat - data.startBeat) / (data.bpm / 60);
-					var step = ((60 / data.bpm) * 1000) * 0.25;
-					TimingStruct.AllTimings[currentIndex].startStep = Math.floor(((data.endBeat / (data.bpm / 60)) * 1000) / step);
-					TimingStruct.AllTimings[currentIndex].startTime = data.startTime + data.length;
-				}
-
-				currentIndex++;
-			}
-		}
+		setSongTimings();
 		recalculateAllSectionTimes();
 		lengthInBeats = Math.round(TimingStruct.getBeatFromTime(inst.length));
 		lengthInSteps = lengthInBeats * 4;
@@ -491,60 +469,20 @@ class ChartingState extends MusicBeatState
 			Conductor.songPosition = inst.time;
 		}
 
-		if (updateFrame == 4)
-		{
-			TimingStruct.clearTimings();
-
-			var currentIndex = 0;
-			for (i in SONG.eventObjects)
-			{
-				if (i.type == "BPM Change")
-				{
-					final beat:Float = i.beat;
-					final bpm:Float = i.args[0];
-					final endBeat:Float = Math.POSITIVE_INFINITY;
-
-					TimingStruct.addTiming(beat, bpm, endBeat, 0); // offset in this case = start time since we don't have a offset
-
-					if (currentIndex != 0)
-					{
-						var data = TimingStruct.AllTimings[currentIndex - 1];
-						data.endBeat = beat;
-						data.length = (data.endBeat - data.startBeat) / (data.bpm / 60);
-						var step = ((60 / data.bpm) * 1000) * 0.25;
-						TimingStruct.AllTimings[currentIndex].startStep = Math.floor(((data.endBeat / (data.bpm / 60)) * 1000) / step);
-						TimingStruct.AllTimings[currentIndex].startTime = data.startTime + data.length;
-					}
-
-					currentIndex++;
-				}
-			}
-
-			recalculateAllSectionTimes();
-
-			regenerateLines();
-			updateFrame++;
-		}
-		else if (updateFrame != 5)
-			updateFrame++;
-
 		if (curDecimalBeat < 0)
 			curDecimalBeat = 0;
-		/*
-			var currentSeg = TimingStruct.getTimingAtBeat(curDecimalBeat);
-			if (currentSeg != null)
-			{
-				var timingSegBpm = currentSeg.bpm;
+		var currentSeg = TimingStruct.getTimingAtBeat(curDecimalBeat);
+		if (currentSeg != null)
+		{
+			var timingSegBpm = currentSeg.bpm;
 
-				if (timingSegBpm != Conductor.bpm)
-				{
-					Debug.logInfo("BPM CHANGE to " + timingSegBpm);
-					Conductor.bpm = timingSegBpm;
-					recalculateAllSectionTimes();
-					currentBPM = timingSegBpm;
-				}
+			if (timingSegBpm != Conductor.bpm)
+			{
+				Debug.logInfo("BPM CHANGE to " + timingSegBpm);
+				Conductor.bpm = timingSegBpm;
+				recalculateAllSectionTimes();
 			}
-		 */
+		}
 
 		var lerpVal:Float = CoolUtil.boundTo(1 - (elapsed * 12), 0, 1);
 		strumLine.y = FlxMath.lerp(getYfromStrum(inst.time), strumLine.y, lerpVal);
@@ -938,35 +876,45 @@ class ChartingState extends MusicBeatState
 				}
 
 				var amount = FlxG.mouse.wheel;
-
-				if (amount > 0 && strumLine.y < -100)
-					amount = 0;
-
-				var increase:Float = 0;
-				var beats:Float = 0;
-				var snap = quantization * 0.25;
-
+				var beat:Float = TimingStruct.getBeatFromTime(Conductor.songPosition);
+				var snap:Float = quantization * 0.25;
+				var increase:Float = 0.0;
 				if (amount < 0)
-				{
 					increase = 1 / snap;
-					beats = (Math.floor((curDecimalBeat * snap) + 0.001) / snap) + increase;
+				else
+					increase = -1 / snap;
+
+				var fuck:Float = (Math.fround(beat * snap) / snap) + increase;
+				if (fuck < 0)
+					fuck = 0;
+
+
+				var data = TimingStruct.getTimingAtBeat(fuck);
+				var lastDataIndex = TimingStruct.AllTimings.indexOf(data) - 1;
+				if (lastDataIndex < 0)
+					lastDataIndex = 0;
+
+				var lastData = TimingStruct.AllTimings[lastDataIndex];
+
+				var pog = 0.0;
+				var shitPosition = 0.0;
+				if (beat < data.startBeat)
+				{
+					pog = (fuck - lastData.startBeat) / (lastData.bpm / 60);
+					shitPosition = (lastData.startTime + pog) * 1000;
+				}
+				else if (beat > data.startBeat)
+				{
+					pog = (fuck - data.startBeat) / (data.bpm / 60);
+					shitPosition = (data.startTime + pog) * 1000;
 				}
 				else
 				{
-					increase = -1 / snap;
-					beats = ((Math.ceil(curDecimalBeat * snap) - 0.001) / snap) + increase;
+					pog = fuck / (Conductor.bpm / 60);
+					shitPosition = pog * 1000;
 				}
 
-				var data = TimingStruct.getTimingAtBeat(beats);
-				if (beats <= 0)
-					inst.time = 0;
-
-				var bpm = data != null ? data.bpm : SONG.bpm;
-
-				if (data != null)
-				{
-					inst.time = (data.startTime + ((beats - data.startBeat) / (bpm / 60))) * 1000;
-				}
+				inst.time = shitPosition;
 
 				if (!SONG.splitVoiceTracks)
 					vocals.time = inst.time;
@@ -2402,6 +2350,7 @@ class ChartingState extends MusicBeatState
 				return;
 
 			SONG.eventObjects.push(pog);
+			
 			existingEvents.clear();
 			eventList = [];
 			for (event in 0...SONG.eventObjects.length)
@@ -2424,34 +2373,13 @@ class ChartingState extends MusicBeatState
 			eventDrop.selectItemBy(item -> item == currentSelectedEventName, true);
 			eventTypes.selectItemBy(item -> item == savedType, true);
 
-			TimingStruct.clearTimings();
-
-			var currentIndex = 0;
-			for (i in SONG.eventObjects)
+			if (pog.type == 'BPM Change')
 			{
-				if (i.type == "BPM Change")
-				{
-					final beat:Float = i.beat;
-					final bpm:Float = i.args[0];
-					final endBeat:Float = Math.POSITIVE_INFINITY;
-
-					TimingStruct.addTiming(beat, bpm, endBeat, 0); // offset in this case = start time since we don't have a offset
-
-					if (currentIndex != 0)
-					{
-						var data = TimingStruct.AllTimings[currentIndex - 1];
-						data.endBeat = beat;
-						data.length = (data.endBeat - data.startBeat) / (data.bpm / 60);
-						var step = ((60 / data.bpm) * 1000) / 4;
-						TimingStruct.AllTimings[currentIndex].startStep = Math.floor(((data.endBeat / (data.bpm / 60)) * 1000) / step);
-						TimingStruct.AllTimings[currentIndex].startTime = data.startTime + data.length;
-					}
-
-					currentIndex++;
-				}
+				setSongTimings();
+				recalculateAllSectionTimes();
+				updateNotes();
+				destroyBoxes();
 			}
-
-			recalculateAllSectionTimes();
 			regenerateLines();
 		}
 
@@ -2494,56 +2422,37 @@ class ChartingState extends MusicBeatState
 				SONG.eventObjects.remove(obj);
 
 			SONG.eventObjects.push(pog);
-
-			TimingStruct.clearTimings();
-
-			var currentIndex = 0;
-			for (i in SONG.eventObjects)
+			SONG.eventObjects.sort(function(a, b)
 			{
-				if (i.type == "BPM Change")
-				{
-					final beat:Float = i.beat;
-					final bpm:Float = i.args[0];
-					final endBeat:Float = Math.POSITIVE_INFINITY;
-
-					TimingStruct.addTiming(beat, bpm, endBeat, 0); // offset in this case = start time since we don't have a offset
-
-					if (currentIndex != 0)
-					{
-						var data = TimingStruct.AllTimings[currentIndex - 1];
-						data.endBeat = beat;
-						data.length = (data.endBeat - data.startBeat) / (data.bpm / 60);
-						var step = ((60 / data.bpm) * 1000) / 4;
-						TimingStruct.AllTimings[currentIndex].startStep = Math.floor(((data.endBeat / (data.bpm / 60)) * 1000) / step);
-						TimingStruct.AllTimings[currentIndex].startTime = data.startTime + data.length;
-					}
-
-					currentIndex++;
-				}
-			}
-
-			if (pog.type == "BPM Change")
-			{
-				recalculateAllSectionTimes();
-				updateNotes();
-
-				// may break things, but will improve performance when it isn't a bpm change
-			}
-
-			regenerateLines();
+				if (a.beat < b.beat)
+					return -1
+				else if (a.beat > b.beat)
+					return 1;
+				else
+					return 0;
+			});
 
 			existingEvents.clear();
-			eventList = [];
+			eventList.resize(0);
 			for (event in 0...SONG.eventObjects.length)
 			{
 				existingEvents.add(SONG.eventObjects[event].name);
 				eventList.push(SONG.eventObjects[event]);
 			}
-
 			eventDrop.dataSource = existingEvents;
 			eventIndex = eventList.length - 1;
 			eventDrop.selectItemBy(item -> item == pog.name, true);
 			autosaveSong();
+
+			if (pog.type == "BPM Change")
+			{
+				setSongTimings();
+				recalculateAllSectionTimes();
+				updateNotes();
+				destroyBoxes();
+				// may break things, but will improve performance when it isn't a bpm change
+			}
+			regenerateLines();
 
 			Debug.logTrace('$currentSelectedEventName $currentEventPosition $savedType');
 		}
@@ -2590,38 +2499,13 @@ class ChartingState extends MusicBeatState
 			currentSelectedEventName = firstEvent.name;
 			currentEventPosition = firstEvent.beat;
 			eventDrop.selectItemBy(item -> item == firstEvent.name, true);
-
-			TimingStruct.clearTimings();
-
-			var currentIndex = 0;
-			for (i in SONG.eventObjects)
+			
+			if (firstEvent.type == "BPM Change")
 			{
-				if (i.type == "BPM Change")
-				{
-					final beat:Float = i.beat;
-					final bpm:Float = i.args[0];
-					final endBeat:Float = Math.POSITIVE_INFINITY;
-
-					TimingStruct.addTiming(beat, bpm, endBeat, 0); // offset in this case = start time since we don't have a offset
-
-					if (currentIndex != 0)
-					{
-						var data = TimingStruct.AllTimings[currentIndex - 1];
-						data.endBeat = beat;
-						data.length = (data.endBeat - data.startBeat) / (data.bpm / 60);
-						var step = ((60 / data.bpm) * 1000) / 4;
-						TimingStruct.AllTimings[currentIndex].startStep = Math.floor(((data.endBeat / (data.bpm / 60)) * 1000) / step);
-						TimingStruct.AllTimings[currentIndex].startTime = data.startTime + data.length;
-					}
-
-					currentIndex++;
-				}
-			}
-
-			if (obj.type == "BPM Change")
-			{
+				setSongTimings();
 				recalculateAllSectionTimes();
 				updateNotes();
+				destroyBoxes();
 			}
 
 			regenerateLines();
@@ -3070,5 +2954,52 @@ class ChartingState extends MusicBeatState
 		FlxG.camera.targetOffset.y = 100;
 		add(mouseCursor);
 		add(strumLine);
+	}
+
+	private function setSongTimings()
+	{
+		TimingStruct.clearTimings();
+
+		var currentIndex = 0;
+		for (event in SONG.eventObjects)
+		{
+			switch (event.type)
+			{
+				case 'BPM Change':
+					{
+						final beat:Float = event.beat;
+						final endBeat:Float = Math.POSITIVE_INFINITY;
+						final bpm = event.args[0];
+						TimingStruct.addTiming(beat, bpm, endBeat, 0); // offset in this case = start time since we don't have a offset
+
+						if (currentIndex != 0)
+						{
+							var data = TimingStruct.AllTimings[currentIndex - 1];
+							data.endBeat = beat;
+							data.length = ((data.endBeat - (data.startBeat)) / (data.bpm / 60));
+							var step = ((60 / (data.bpm)) * 1000) / 4;
+							TimingStruct.AllTimings[currentIndex].startStep = Math.floor((((data.endBeat / (data.bpm / 60)) * 1000) / step));
+							TimingStruct.AllTimings[currentIndex].startTime = data.startTime + data.length;
+						}
+
+						currentIndex++;
+						recalculateAllSectionTimes();
+					}
+			}
+		}
+
+		// sort events by beat
+		if (SONG.eventObjects != null)
+		{
+			SONG.eventObjects.sort(function(a, b)
+			{
+				if (a.beat < b.beat)
+					return -1
+				else if (a.beat > b.beat)
+					return 1;
+				else
+					return 0;
+			});
+		}
 	}
 }
