@@ -197,6 +197,7 @@ class PauseSubState extends MusicBeatSubstate
 					}
 					#end
 					Constants.freakyPlaying = false;
+					Conductor.bpm = 102;
 
 					if (PlayState.isStoryMode)
 						MusicBeatState.switchState(new StoryMenuState());

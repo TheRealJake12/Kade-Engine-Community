@@ -779,8 +779,6 @@ class FreeplayState extends MusicBeatState
 		{
 			FlxG.sound.music.stop();
 
-			activeSong = playinSong;
-
 			if (currentSongPlaying != songs[curSelected].songName)
 			{
 				var songPath:String = null;
@@ -801,14 +799,6 @@ class FreeplayState extends MusicBeatState
 			}
 
 			Constants.freakyPlaying = false;
-
-			TimingStruct.clearTimings();
-
-			curTiming = null;
-
-			var currentIndex = 0;
-			rate = lastRate;
-
 			currentSongPlaying = songs[curSelected].songName;
 		}
 		#end

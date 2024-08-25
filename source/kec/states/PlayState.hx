@@ -2714,6 +2714,9 @@ class PlayState extends MusicBeatState
 				else
 					daNote.x = strumX + (strum.members[daNote.noteData]._cos * daNote.distance);
 
+				if (styleName == 'pixel' && daNote.isSustainNote)
+					daNote.x -= 5;	
+
 				if (!daNote.overrideDistance)
 				{
 					if (PlayStateChangeables.useDownscroll)
@@ -2724,35 +2727,28 @@ class PlayState extends MusicBeatState
 				daNote.y = strumY + (strum.members[daNote.noteData]._sin * daNote.distance);
 				if (daNote.isSustainNote)
 				{
-					if (strumScrollType)
+					if (daNote.sustainActive && daNote.causesMisses)
 					{
-						if (daNote.sustainActive)
+						if (strumScrollType)
 						{
-							if ((daNote.causesMisses) && daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= origin)
+							if (daNote.y - daNote.offset.y * daNote.scale.y + daNote.height >= strumY + Note.swagWidth / 2)
 							{
-								final swagRect:FlxRect = FlxRect.get(0, 0, daNote.width / daNote.scale.x, daNote.width / daNote.scale.x);
 								// Clip to strumline
-								swagRect.width = daNote.frameWidth;
-								swagRect.height = (origin - daNote.y) / daNote.scale.y;
+								final swagRect:FlxRect = FlxRect.get(0, 0, daNote.width / daNote.scale.x, daNote.height / daNote.scale.y);
+
+								swagRect.height = ((strumY + Note.swagWidth / 2) - daNote.y) / daNote.scale.y;
 								swagRect.y = daNote.frameHeight - swagRect.height;
 								daNote.clipRect = swagRect;
-								swagRect.put();
 							}
 						}
-					}
-					else
-					{
-						if (daNote.sustainActive)
+						else
 						{
-							// Clip to strumline
-							if ((daNote.causesMisses) && daNote.y + daNote.offset.y * daNote.scale.y <= origin)
+							if (daNote.y + daNote.offset.y * daNote.scale.y <= strumY + Note.swagWidth / 2)
 							{
 								final swagRect:FlxRect = FlxRect.get(0, 0, daNote.width / daNote.scale.x, daNote.height / daNote.scale.y);
-								swagRect.y = (origin - daNote.y) / daNote.scale.y;
-								swagRect.width = daNote.width / daNote.scale.x;
-								swagRect.height = (daNote.height / daNote.scale.y) - swagRect.y;
+								swagRect.y = ((strumY + Note.swagWidth / 2) - daNote.y) / daNote.scale.y;
+								swagRect.height -= swagRect.y;
 								daNote.clipRect = swagRect;
-								swagRect.put();
 							}
 						}
 					}
@@ -2795,52 +2791,41 @@ class PlayState extends MusicBeatState
 				{
 					if (Conductor.songPosition > Ratings.timingWindows[0].timingWindow + daNote.strumTime)
 					{
-						if (daNote.isSustainNote && daNote.wasGoodHit && Conductor.songPosition >= daNote.strumTime)
-						{
-							destroyNote(daNote);
-						}
 						if (daNote != null)
 						{
-							if (daNote.mustPress && daNote.tooLate && !daNote.canBeHit && daNote.mustPress)
+							if (daNote.isSustainNote)
 							{
-								if (daNote.isSustainNote && daNote.wasGoodHit && daNote.causesMisses)
+								destroyNote(daNote);
+								return;
+							}
+
+							if (daNote.mustPress && daNote.tooLate && !daNote.canBeHit)
+							{
+								switch (daNote.noteType.toLowerCase())
 								{
-									destroyNote(daNote);
-								}
-								else
-								{
-									switch (daNote.noteType.toLowerCase())
-									{
-										case 'hurt':
-										default:
-											if (daNote.isSustainNote)
+									case 'hurt':
+									default:
+										if (daNote.isParent && daNote.visible)
+										{
+											Debug.logTrace("User failed Sustain note at the start of sustain.");
+											for (i in daNote.children)
 											{
+												i.sustainActive = false;
 											}
-											else
+											health -= (daNote.missHealth * PlayStateChangeables.healthLoss);
+											noteMiss(daNote.noteData, daNote);
+										}
+										else
+										{
+											if (!daNote.wasGoodHit && daNote.causesMisses)
 											{
-												if (daNote.isParent && daNote.visible)
-												{
-													Debug.logTrace("User failed Sustain note at the start of sustain.");
-													for (i in daNote.children)
-													{
-														i.sustainActive = false;
-													}
-													health -= (daNote.missHealth * PlayStateChangeables.healthLoss);
-													noteMiss(daNote.noteData, daNote);
-												}
-												else
-												{
-													if (!daNote.wasGoodHit && !daNote.isSustainNote && daNote.causesMisses)
-													{
-														health -= (daNote.missHealth * PlayStateChangeables.healthLoss);
-														Debug.logTrace("User failed note.");
-														noteMiss(daNote.noteData, daNote);
-													}
-												}
+												health -= (daNote.missHealth * PlayStateChangeables.healthLoss);
+												Debug.logTrace("User failed note.");
+												noteMiss(daNote.noteData, daNote);
 											}
-									}
-									destroyNote(daNote);
+										}
 								}
+								destroyNote(daNote);
 							}
 						}
 					}
@@ -3141,9 +3126,7 @@ class PlayState extends MusicBeatState
 					}
 					else
 					{
-						FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
-						Constants.freakyPlaying = true;
-						Conductor.bpm = 102;
+						Constants.freakyPlaying = false;
 						MusicBeatState.switchState(new StoryMenuState());
 						Stats.resetCampaignStats();
 					}
@@ -3181,7 +3164,10 @@ class PlayState extends MusicBeatState
 					openSubState(subStates[1]);
 				}
 				else
+				{
+					Constants.freakyPlaying = false;
 					LoadingState.loadAndSwitchState(new FreeplayState());
+				}
 			}
 		});
 	}
@@ -4632,11 +4618,9 @@ class PlayState extends MusicBeatState
 
 	private function destroyNote(daNote:Note)
 	{
-		if (daNote == null)
-			return;
-
 		daNote.active = false;
 		daNote.visible = false;
+		FlxDestroyUtil.put(daNote.clipRect);
 		daNote.kill();
 		notes.remove(daNote, true);
 		daNote.destroy();

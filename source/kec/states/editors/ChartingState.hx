@@ -824,6 +824,7 @@ class ChartingState extends MusicBeatState
 						vocalsE.stop();
 					}
 				}
+				Constants.freakyPlaying = false;
 				MusicBeatState.switchState(new FreeplayState());
 				Lib.clearInterval(id);
 			}
@@ -887,7 +888,6 @@ class ChartingState extends MusicBeatState
 				var fuck:Float = (Math.fround(beat * snap) / snap) + increase;
 				if (fuck < 0)
 					fuck = 0;
-
 
 				var data = TimingStruct.getTimingAtBeat(fuck);
 				var lastDataIndex = TimingStruct.AllTimings.indexOf(data) - 1;
@@ -2350,7 +2350,7 @@ class ChartingState extends MusicBeatState
 				return;
 
 			SONG.eventObjects.push(pog);
-			
+
 			existingEvents.clear();
 			eventList = [];
 			for (event in 0...SONG.eventObjects.length)
@@ -2499,7 +2499,7 @@ class ChartingState extends MusicBeatState
 			currentSelectedEventName = firstEvent.name;
 			currentEventPosition = firstEvent.beat;
 			eventDrop.selectItemBy(item -> item == firstEvent.name, true);
-			
+
 			if (firstEvent.type == "BPM Change")
 			{
 				setSongTimings();

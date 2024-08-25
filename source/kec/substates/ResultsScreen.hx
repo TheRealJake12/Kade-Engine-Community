@@ -297,10 +297,10 @@ class ResultsScreen extends MusicBeatSubstate
 			if (music != null)
 				music.fadeOut(0.3);
 
+			Constants.freakyPlaying = false;	
+
 			if (PlayState.isStoryMode)
 			{
-				FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
-				Conductor.bpm = 102;
 				MusicBeatState.switchState(new StoryMenuState());
 				Stats.resetCampaignStats();
 			}

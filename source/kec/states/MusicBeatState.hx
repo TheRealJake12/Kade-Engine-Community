@@ -13,24 +13,18 @@ import kec.backend.util.NoteStyleHelper;
 
 class MusicBeatState extends FlxTransitionableState
 {
-	private var curStep:Int = 0;
-	private var curBeat:Int = 0;
+	private var curStep(default, set):Int = 0;
+	private var curBeat(default, set):Int = 0;
+	private var curSection(default, set):Int = 0;
 	var step = 0.0;
 	var startInMS = 0.0;
 	var activeSong:SongData = null;
 
-	var oldStep:Int = -1;
-
-	private var curSection:Int = 0;
-
 	private var currentSection:SwagSection = null;
 
 	private var curDecimalBeat:Float = 0;
-
-	private var oldSection:Int = -1;
+	
 	private var curTiming:TimingStruct = null;
-
-	public static var currentColor = 0;
 	public static var switchingState:Bool = false;
 
 	public static var initSave:Bool = false;
@@ -187,18 +181,6 @@ class MusicBeatState extends FlxTransitionableState
 				{
 					// Debug.logError('Section is null you fucking dumbass uninstall Flixel and kys');
 				}
-
-				if (oldSection != curSection)
-				{
-					sectionHit();
-					oldSection = curSection;
-				}
-
-				if (oldStep != curStep)
-				{
-					stepHit();
-					oldStep = curStep;
-				}
 			}
 			else
 			{
@@ -229,31 +211,50 @@ class MusicBeatState extends FlxTransitionableState
 				{
 					// Debug.logError('Section is null you fucking dumbass uninstall Flixel and kys');
 				}
-
-				if (oldSection != curSection)
-				{
-					sectionHit();
-					oldSection = curSection;
-				}
-
-				if (oldStep != curStep)
-				{
-					stepHit();
-					oldStep = curStep;
-				}
 			}
 		}
 	}
 
+	private function set_curStep(v:Int)
+	{
+		if (curStep != v)
+		{
+			curStep = v;
+			stepHit();	
+		}
+		return v;	
+	}
+
+	private function set_curBeat(v:Int)
+	{
+		if (curBeat != v)
+		{
+			curBeat = v;
+			beatHit();
+		}
+		return v;
+	}
+
+	private function set_curSection(v:Int)
+	{
+		if (curSection != v)
+		{
+			curSection = v;
+			sectionHit();
+		}
+		return v;
+	}
+
 	public function stepHit():Void
 	{
-		if (curStep % 4 == 0)
-			beatHit();
 	}
 
 	public function beatHit():Void
 	{
-		// do literally nothing dumbass
+	}
+
+	public function sectionHit():Void
+	{
 	}
 
 	function getSectionByTime(ms:Float):SwagSection
@@ -302,10 +303,6 @@ class MusicBeatState extends FlxTransitionableState
 	private function setFirstTiming()
 	{
 		curTiming = TimingStruct.getTimingAtTimestamp(0);
-	}
-
-	public function sectionHit():Void
-	{
 	}
 
 	public static function switchState(nextState:FlxState)

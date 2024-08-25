@@ -235,7 +235,7 @@ class Note extends FlxSprite
 		originColor = noteData; // The note's origin color will be checked by its sustain notes
 
 		if (FlxG.save.data.stepMania
-			&& !quantNote
+			&& quantNote
 			&& !isSustainNote
 			&& !(PlayState.instance != null ? PlayState.instance.executeModchart : false))
 		{
