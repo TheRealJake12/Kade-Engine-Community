@@ -2762,14 +2762,17 @@ class PlayState extends MusicBeatState
 			Debug.logTrace(Conductor.songPosition);
 			resyncInstToPosition();
 		}
-		switch (SONG.splitVoiceTracks)
+		if (SONG.needsVoices)
 		{
-			case true:
-				if (Math.abs(inst.time - vocalsPlayer.time) > 25)
-					resyncVocalsToInst();
-			case false:
-				if (Math.abs(inst.time - vocalsPlayer.time) > 25)
-					resyncVocalsToInst();
+			switch (SONG.splitVoiceTracks)
+			{
+				case true:
+					if (Math.abs(inst.time - vocalsPlayer.time) > 25)
+						resyncVocalsToInst();
+				case false:
+					if (Math.abs(inst.time - vocals.time) > 25)
+						resyncVocalsToInst();
+			}
 		}
 	}
 
@@ -4618,7 +4621,6 @@ class PlayState extends MusicBeatState
 			}
 		}
 		// Debug.logTrace(events);
-		SONG.eventObjects = events;
 	}
 
 	private function initGameplaySettings()
