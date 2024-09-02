@@ -75,8 +75,6 @@ typedef SongMeta =
 
 class Song
 {
-	public static var latestChart:String = "KEC1";
-
 	public static function loadFromJsonRAW(rawJson:String)
 	{
 		while (!rawJson.endsWith("}"))
@@ -98,48 +96,6 @@ class Song
 		var metaData:SongMeta = loadMetadata(songId);
 
 		return parseJSONshit(songId, rawJson, metaData);
-	}
-
-	public static function parseJSONData(songId:String, jsonData:Dynamic, jsonMetaData:Dynamic):SongData
-	{
-		if (jsonData == null)
-			return null;
-		var songData:SongData = cast jsonData;
-
-		songData.songId = songId;
-
-		var songMetaData:SongMeta = cast jsonMetaData;
-
-		/**
-		 * Default values.
-		 */
-		if (songData.noteStyle == null)
-			songData.noteStyle = "normal";
-
-		if (songData.audioFile == null)
-		{
-			songData.audioFile = songId;
-		}
-
-		if (songData.validScore == null)
-			songData.validScore = true;
-
-		// Inject info from _meta.json.
-		if (songMetaData != null)
-		{
-			if (songMetaData.name != null)
-			{
-				songData.songName = songMetaData.name;
-			}
-			else
-			{
-				songData.songName = songId.split('-').join(' ');
-			}
-
-			songData.offset = songMetaData.offset != null ? songMetaData.offset : 0;
-		}
-
-		return Song.conversionChecks(songData);
 	}
 
 	public static function loadMetadata(songId:String):SongMeta
@@ -166,154 +122,18 @@ class Song
 
 	public static function conversionChecks(song:SongData):SongData
 	{
-		song.eventObjects = convertEvents(song.eventObjects);
-		if (song.chartVersion == latestChart)
+		if (song.chartVersion == Constants.chartVer)
 			return song;
 
-		var ba = song.bpm;
-
-		var eventObjects:Array<Event> = [];
-
-		if (song.eventObjects == null)
-			song.eventObjects = [
-				{
-					name: "Init BPM",
-					beat: 0,
-					args: [ba, "1"],
-					type: "BPM Change"
-				}
-			];
-
-		for (i in song.eventObjects)
+		switch (song.chartVersion)
 		{
-			eventObjects.push({
-				name: i.name,
-				beat: i.beat,
-				args: i.args,
-				type: i.type
-			});
+			case "KEC1":
+				return ChartConverter.convertKEC2(song);
+			default:
+				return ChartConverter.convertEtc(song);
 		}
 
-		song.eventObjects = eventObjects;
-
-		var index = 0;
-
-		if (song.songName == null)
-		{
-			if (song.song != null)
-				song.songName = song.song;
-			else
-				song.songName = song.songId;
-		}
-
-		if (song.noteStyle == 'pixel')
-			song.style = "Pixel";
-
-		if (song.style == null)
-			song.style = "Default";
-
-		if (song.gfVersion == null)
-			song.gfVersion = "gf";
-
-		if (song.stage == null)
-			song.stage = "stage";
-
-		if (song.splitVoiceTracks == null)
-			song.splitVoiceTracks = false;
-
-		var currentIndex = 0;
-		for (i in song.eventObjects)
-		{
-			if (i.type == "BPM Change")
-			{
-				var beat:Float = i.beat * Conductor.rate;
-
-				var endBeat:Float = Math.POSITIVE_INFINITY;
-
-				TimingStruct.addTiming(beat, i.args[0] * Conductor.rate, endBeat, 0); // offset in this case = start time since we don't have a offset
-
-				if (currentIndex != 0)
-				{
-					var data = TimingStruct.AllTimings[currentIndex - 1];
-					data.endBeat = beat;
-					data.length = (data.endBeat - data.startBeat) / (data.bpm / 60);
-					var step = ((60 / data.bpm) * 1000) / 4;
-					TimingStruct.AllTimings[currentIndex].startStep = Math.floor(((data.endBeat / (data.bpm / 60)) * 1000) / step);
-					TimingStruct.AllTimings[currentIndex].startTime = data.startTime + data.length;
-				}
-
-				currentIndex++;
-			}
-		}
-
-		for (i in song.notes)
-		{
-			var currentBeat = 4 * index;
-
-			var currentSeg = TimingStruct.getTimingAtBeat(currentBeat);
-
-			if (i.lengthInSteps == null)
-				i.lengthInSteps = 16;
-
-			if (currentSeg == null)
-				continue;
-
-			var beat:Float = currentSeg.startBeat + (currentBeat - currentSeg.startBeat);
-
-			if (i.changeBPM && i.bpm != ba)
-			{
-				ba = i.bpm;
-				song.eventObjects.push({
-					name: "FNF BPM Change " + index,
-					beat: beat,
-					args: [i.bpm, 1],
-					type: "BPM Change"
-				});
-			}
-
-			for (ii in i.sectionNotes)
-			{
-				// try not to brick the game challenge (impossible (thanks bolo))
-				if (i.mustHitSection)
-				{
-					var bool = false;
-					if (ii[1] <= 3)
-					{
-						ii[1] += 4;
-						bool = true;
-					}
-					if (ii[1] > 3)
-						if (!bool)
-							ii[1] -= 4;
-				}
-
-				i.playerSec = i.mustHitSection;
-
-				var strumTime = ii[0];
-				var noteData = ii[1];
-				var length = ii[2];
-
-				if (ii[3] == null || !Std.isOfType(ii[3], String))
-					ii[3] = 'Normal';
-				var type = ii[3];
-
-				ii.resize(0);
-
-				ii.push(strumTime);
-				ii.push(noteData);
-				ii.push(length);
-				ii.push(type);
-				// simple conversion
-				// nvm, retarded conversion
-
-				if (ii[4] != null && Std.isOfType(ii[4], String))
-					ii[3] = ii[4];
-			}
-
-			index++;
-		}
-
-		song.chartVersion = latestChart;
+		song.chartVersion = Constants.chartVer;
 
 		return song;
 	}
@@ -335,36 +155,96 @@ class Song
 		// Inject info from _meta.json.
 		var songMetaData:SongMeta = cast jsonMetaData;
 		if (songMetaData != null)
-		{
 			songData.offset = songMetaData.offset != null ? songMetaData.offset : 0;
-		}
 
 		return Song.conversionChecks(songData);
 	}
 
-	private static function convertEvents(events:Array<Event>)
+	public static function recalculateAllSectionTimes(activeSong:SongData, startIndex:Int = 0)
 	{
-		var newEvents:Array<Event> = [];
-		for (i in events)
-			newEvents.push({
-				name: i.name,
-				beat: i.position,
-				args: [i.value, i.value2],
-				type: i.type
-			});
-		events.resize(0);
-		// newEvents.sort(Sort.sortEvents);
-		return newEvents;
+		trace("RECALCULATING SECTION TIMES");
+
+		if (activeSong == null)
+			return;
+
+		for (i in startIndex...activeSong.notes.length) // loops through sections
+		{
+			var section:SwagSection = activeSong.notes[i];
+
+			var endBeat:Float = 0.0;
+
+			endBeat = (section.lengthInSteps / 4) * (i + 1);
+
+			for (k in 0...i)
+				endBeat -= ((section.lengthInSteps / 4) - (activeSong.notes[k].lengthInSteps / 4));
+
+			section.endTime = TimingStruct.getTimeFromBeat(endBeat);
+
+			if (i != 0)
+				section.startTime = activeSong.notes[i - 1].endTime;
+			else
+				section.startTime = 0;
+
+			// Debug.logTrace('Section #$i | startTime: ${section.startTime} | endtime: ${section.endTime}');
+		}
 	}
 
-	private static function newSection(song:SongData, playerSec:Bool = true):SwagSection
+	public static function sortSectionNotes(song:SongData)
+	{
+		var newNotes:List<Array<Dynamic>> = new List();
+
+		for (section in song.notes)
+		{
+			if (section.sectionNotes != null)
+			{
+				for (songNotes in section.sectionNotes)
+				{
+					newNotes.add(songNotes);
+				}
+			}
+
+			section.sectionNotes.splice(0, section.sectionNotes.length);
+		}
+
+		for (section in song.notes)
+		{
+			for (sortedNote in newNotes)
+			{
+				if (sortedNote[0] >= section.startTime && sortedNote[0] < section.endTime)
+				{
+					section.sectionNotes.push(sortedNote);
+				}
+			}
+		}
+
+		newNotes.clear();
+	}
+
+	public static function checkforSections(SONG:SongData, songLength:Float)
+	{
+		var totalBeats = TimingStruct.getBeatFromTime(songLength);
+
+		var lastSecBeat = TimingStruct.getBeatFromTime(SONG.notes[SONG.notes.length - 1].endTime);
+
+		while (lastSecBeat < totalBeats)
+		{
+			SONG.notes.push(Song.newSection(SONG, SONG.notes[SONG.notes.length - 1].lengthInSteps, SONG.notes.length, true, false, false));
+
+			recalculateAllSectionTimes(SONG, SONG.notes.length - 1);
+			lastSecBeat = TimingStruct.getBeatFromTime(SONG.notes[SONG.notes.length - 1].endTime);
+		}
+	}
+
+	public static function newSection(song:SongData, lengthInSteps:Int = 16, index:Int = -1, mustHitSection:Bool = false, CPUAltAnim:Bool = true,
+			playerAltAnim:Bool = true):SwagSection
 	{
 		var sec:SwagSection = {
+			lengthInSteps: lengthInSteps,
 			bpm: song.bpm,
 			changeBPM: false,
-			playerSec: playerSec,
-			lengthInSteps: 16,
+			playerSec: mustHitSection,
 			sectionNotes: [],
+			index: index
 		};
 
 		return sec;

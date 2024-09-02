@@ -1531,7 +1531,9 @@ class BotPlay extends Option
 	}
 
 	private override function updateDisplay():String
+	{
 		return "BotPlay: < " + (FlxG.save.data.botplay ? "Enabled" : "Disabled") + " >";
+	}
 }
 
 class CamZoomOption extends Option
@@ -1936,41 +1938,6 @@ class ResetScoreOption extends Option
 	}
 }
 
-class Optimization extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		if (OptionsMenu.isInPause)
-		{
-			blocked = true;
-			description = pauseDesc;
-		}
-		else
-			description = desc;
-	}
-
-	public override function left():Bool
-	{
-		if (OptionsMenu.isInPause)
-			return false;
-		FlxG.save.data.optimize = !FlxG.save.data.optimize;
-		display = updateDisplay();
-		return true;
-	}
-
-	public override function right():Bool
-	{
-		left();
-		return true;
-	}
-
-	private override function updateDisplay():String
-	{
-		return "Optimization < " + (FlxG.save.data.optimize ? "Enabled" : "Disabled") + " >";
-	}
-}
-
 class NotesplashesOption extends Option
 {
 	public function new(desc:String)
@@ -2075,7 +2042,7 @@ class LowMotion extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Icon Bumping: < " + (!FlxG.save.data.motion ? "Enabled" : "Disabled") + " >";
+		return "Icon Bumping: < " + (FlxG.save.data.motion ? "Enabled" : "Disabled") + " >";
 	}
 }
 
@@ -2176,41 +2143,6 @@ class SplashAlpha extends Option
 			FlxG.save.data.alphaSplash = 1;
 
 		return true;
-	}
-}
-
-class FXAAOption extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		if (OptionsMenu.isInPause)
-		{
-			blocked = true;
-			description = pauseDesc;
-		}
-		else
-			description = desc;
-	}
-
-	public override function left():Bool
-	{
-		if (OptionsMenu.isInPause)
-			return false;
-		FlxG.save.data.fxaa = !FlxG.save.data.fxaa;
-		display = updateDisplay();
-		return true;
-	}
-
-	public override function right():Bool
-	{
-		left();
-		return true;
-	}
-
-	private override function updateDisplay():String
-	{
-		return "FXAA Antialiasing: < " + (!FlxG.save.data.fxaa ? "Disabled" : "Enabled") + " >";
 	}
 }
 
@@ -2934,51 +2866,6 @@ class DeveloperMode extends Option
 	}
 }
 
-class MaxRatingAmountOption extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		if (OptionsMenu.isInPause)
-		{
-			blocked = true;
-			description = pauseDesc;
-		}
-		else
-			description = desc;
-	}
-
-	public override function right():Bool
-	{
-		if (OptionsMenu.isInPause)
-			return false;
-		if (FlxG.save.data.maxRatings >= 30)
-			FlxG.save.data.maxRatings = 30;
-		else
-			FlxG.save.data.maxRatings++;
-		display = updateDisplay();
-		return true;
-	}
-
-	public override function left():Bool
-	{
-		if (OptionsMenu.isInPause)
-			return false;
-		if (FlxG.save.data.maxRatings > 30)
-			FlxG.save.data.maxRatings = 30;
-		else if (FlxG.save.data.maxRatings < 2)
-			FlxG.save.data.maxRatings = 1;
-		else
-			FlxG.save.data.maxRatings--;
-		return true;
-	}
-
-	private override function updateDisplay():String
-	{
-		return "Rating Cap: < " + FlxG.save.data.maxRatings + " >";
-	}
-}
-
 class ResetSettings extends Option
 {
 	var confirm:Bool = false;
@@ -3067,7 +2954,6 @@ class ResetSettings extends Option
 		FlxG.save.data.playHitsounds = null;
 		FlxG.save.data.playHitsoundsE = null;
 		FlxG.save.data.developer = null;
-		FlxG.save.data.maxRatings = null;
 
 		KadeEngineData.initSave();
 		confirm = false;

@@ -1,7 +1,6 @@
 package kec.states;
 
 import kec.backend.util.NoteStyleHelper;
-import kec.states.MusicBeatState.subStates;
 
 class OptionsDirect extends MusicBeatState
 {
@@ -24,7 +23,7 @@ class OptionsDirect extends MusicBeatState
 
 		persistentUpdate = false;
 
-		subStates.push(new kec.substates.OptionsMenu());
+		pushSub(new kec.substates.OptionsMenu());
 		menuBG = new FlxSprite().loadGraphic(Paths.image("menuDesat"));
 		menuBG.color = 0xFF2F2F2F;
 		menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));

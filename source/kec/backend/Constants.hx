@@ -3,12 +3,13 @@ package kec.backend;
 import flixel.graphics.FlxGraphic;
 
 /**
- * Constant Variables.
+ * Constant / Globally Used Variables.
  */
 class Constants
 {
 	public static final kecVer:String = 'Kade Engine Community 1.9.4 PRE-RELEASE 3';
 	public static final keVer:String = "Kade Engine 1.8.1";
+	public static final chartVer:String = "KEC2";
 	public static var freakyPlaying:Bool = true;
 	public static final textArray:Array<String> = [
 		// thanks bolo, I find these ones really funny (I am sorry for stealing code)
@@ -34,6 +35,8 @@ class Constants
 		#else
 		'${Sys.environment()["USER"]}! Get down from the tree and put your clothes on, dammit. (-Antonella)',
 		#end
+		'"not working" (-TechDev)',
+		"yesd (-TechDev)"
 	];
 
 	// Noteskin And Notesplash Related Stuff.

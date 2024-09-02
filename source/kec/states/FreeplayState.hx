@@ -6,7 +6,6 @@ import kec.backend.util.DiffCalc;
 import kec.backend.PlayStateChangeables;
 import kec.backend.chart.TimingStruct;
 import openfl.media.Sound;
-import kec.states.MusicBeatState.subStates;
 import flixel.effects.FlxFlicker;
 #if FEATURE_STEPMANIA
 import kec.backend.util.smTools.SMFile;
@@ -258,12 +257,6 @@ class FreeplayState extends MusicBeatState
 		PlayStateChangeables.practiceMode = FlxG.save.data.practice;
 		PlayStateChangeables.skillIssue = FlxG.save.data.noMisses;
 
-		if (!openMod)
-		{
-			changeSelection();
-			changeDiff();
-		}
-
 		if (!Constants.freakyPlaying)
 		{
 			FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
@@ -275,7 +268,12 @@ class FreeplayState extends MusicBeatState
 
 		super.create();
 
-		subStates.push(new kec.substates.FreeplaySubState.ModMenu());
+		pushSub(new kec.substates.FreeplaySubState.ModMenu());
+		if (!openMod)
+		{
+			changeSelection();
+			changeDiff();
+		}
 		Paths.clearUnusedMemory();
 		Debug.logTrace("Took " + Std.string(FlxMath.roundDecimal(haxe.Timer.stamp() - stamp, 3)) + " Seconds To Load Freeplay.");
 	}
@@ -886,6 +884,7 @@ class FreeplayState extends MusicBeatState
 
 	override function destroy()
 	{
+		clearSubs();
 		super.destroy();
 	}
 
@@ -961,25 +960,6 @@ class FreeplayState extends MusicBeatState
 		}
 
 		updateScoreText();
-
-		var hmm;
-		try
-		{
-			hmm = songData.get(songs[curSelected].songName)[curDifficulty];
-			if (hmm != null)
-			{
-				GameplayCustomizeState.freeplayBf = hmm.player1;
-				GameplayCustomizeState.freeplayDad = hmm.player2;
-				GameplayCustomizeState.freeplayGf = hmm.gfVersion;
-				GameplayCustomizeState.freeplayNoteStyle = hmm.noteStyle;
-				GameplayCustomizeState.freeplayStage = hmm.stage;
-				GameplayCustomizeState.freeplaySong = hmm.songId;
-				GameplayCustomizeState.freeplayWeek = songs[curSelected].week;
-			}
-		}
-		catch (ex)
-		{
-		}
 
 		var bullShit:Int = 0;
 

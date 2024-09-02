@@ -289,15 +289,15 @@ class ResultsScreen extends MusicBeatSubstate
 		#if !cpp
 		if (music != null)
 			if (music.volume < 0.5)
-				music.volume += 0.01 * elapsed;
+				Math.min(music.volume + 0.5 * elapsed, 0.5);
 		#end
 
-		if ((PlayerSettings.player1.controls.ACCEPT && !FlxG.keys.pressed.ALT) || FlxG.mouse.pressed)
+		if ((controls.ACCEPT && !FlxG.keys.pressed.ALT) || FlxG.mouse.pressed)
 		{
 			if (music != null)
 				music.fadeOut(0.3);
 
-			Constants.freakyPlaying = false;	
+			Constants.freakyPlaying = false;
 
 			if (PlayState.isStoryMode)
 			{
@@ -326,7 +326,7 @@ class ResultsScreen extends MusicBeatSubstate
 
 	override function destroy()
 	{
-		if (FlxG.save.data.inputShow)
+		if (graph != null && graphSprite != null)
 		{
 			graph.destroy();
 			graph = null;

@@ -42,13 +42,10 @@ class CoolUtil
 
 		var fileSuffix:String = difficulties[num];
 		if (fileSuffix != defaultDifficulty)
-		{
 			fileSuffix = '-' + fileSuffix;
-		}
 		else
-		{
 			fileSuffix = '';
-		}
+
 		return Paths.formatToSongPath(fileSuffix);
 	}
 
@@ -74,16 +71,6 @@ class CoolUtil
 	inline public static function boundTo(value:Float, min:Float, max:Float):Float
 	{
 		return Math.max(min, Math.min(max, value));
-	}
-
-	public static function fpsLerp(v1:Float, v2:Float, ratio:Float):Float
-	{
-		return FlxMath.lerp(v1, v2, getFPSRatio(ratio));
-	}
-
-	public static function getFPSRatio(ratio:Float):Float
-	{
-		return FlxMath.bound(ratio * 60 * FlxG.elapsed, 0, 1);
 	}
 
 	/**
@@ -135,9 +122,7 @@ class CoolUtil
 		daList = string.trim().split('\n');
 
 		for (i in 0...daList.length)
-		{
 			daList[i] = daList[i].trim();
-		}
 
 		return daList;
 	}
@@ -166,6 +151,16 @@ class CoolUtil
 		return FlxMath.lerp(a, b, camLerpShit(ratio));
 	}
 
+	// taken from heaps
+
+	/**
+		Same as lerp but is scaled based on current FPS, using current elapsed time in seconds.
+	**/
+	public inline static function fpsLerp(a:Float, b:Float, k:Float, dt:Float)
+	{
+		return lerp(a, b, 1 - Math.pow(1 - k, dt * FlxG.elapsed));
+	}
+
 	public static function coolTextFile(path:String):Array<String>
 	{
 		var daList:Array<String>;
@@ -181,9 +176,7 @@ class CoolUtil
 
 		if (daList != null)
 			for (i in 0...daList.length)
-			{
 				daList[i] = daList[i].trim();
-			}
 
 		return daList;
 	}
@@ -193,9 +186,7 @@ class CoolUtil
 		var daList:Array<String> = path.trim().split('\n');
 
 		for (i in 0...daList.length)
-		{
 			daList[i] = daList[i].trim();
-		}
 
 		return daList;
 	}
@@ -204,9 +195,7 @@ class CoolUtil
 	{
 		var dumbArray:Array<Int> = [];
 		for (i in min...max)
-		{
 			dumbArray.push(i);
-		}
 		return dumbArray;
 	}
 
@@ -271,14 +260,10 @@ class CoolUtil
 				FlxG.log.add('Video file has been cached: ' + name);
 			}
 			else
-			{
 				FlxG.log.add('Video file has already been cached: ' + name);
-			}
 		}
 		else
-		{
 			FlxG.log.warn('Couldnt find video file: ' + name);
-		}
 		#else
 		FlxG.log.warn('Platform not supported!');
 		#end

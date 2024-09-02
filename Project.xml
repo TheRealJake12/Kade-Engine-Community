@@ -45,7 +45,6 @@
 	<define name="haxeui_allow_drag_any_component" value="true"/>
 	<define name="haxeui_flixel_no_custom_cursors" value="true"/>
 	<!-- Clicking outside a dialog should deselect the current focused component. -->
-	<haxedef name="haxeui_focus_out_on_click" />
 	
 
 	<!-- Discord Thingy -->
@@ -132,7 +131,6 @@
 
 	<!-- Utilities -->
 	
-	<haxelib name="tjson"/>
 	<haxelib name="hxcpp-debug-server" if="desktop"/>
 	<section if="cpp">
 		<haxelib name="hxvlc" if="VIDEOS" />
@@ -193,10 +191,20 @@
 	</section>
 	<section if="hxvlc">
 		<haxedef name="HXVLC_NO_SHARE_DIRECTORY" />
+		<haxedef name="HXVLC_OPENAL" />
 	</section>
 
 	<!--Basically Allows Videos To Render In Higher Quality On Higher Resoluttions-->
 	<haxedef name="openfl_dpi_aware" unless="web" />
+	<haxedef name="haxeui_focus_out_on_click" />
+	<!--Tired Of HaxeUI Breaking Things-->
+	<haxeflag name="--macro" value="include('haxe.ui.backend.flixel.components')" />
+	<haxeflag name="--macro" value="include('haxe.ui.containers.dialogs')" />
+	<haxeflag name="--macro" value="include('haxe.ui.containers.menus')" />
+	<haxeflag name="--macro" value="include('haxe.ui.containers.properties')" />
+	<haxeflag name="--macro" value="include('haxe.ui.core')" />
+	<haxeflag name="--macro" value="include('haxe.ui.components')" />
+	<haxeflag name="--macro" value="include('haxe.ui.containers')" />
 
 	<!-- _________________________________ Custom _______________________________ -->
 

@@ -143,7 +143,7 @@ class SMFile
 			stage: 'stage',
 			speed: 2.8,
 			validScore: false,
-			chartVersion: Song.latestChart,
+			chartVersion: Constants.chartVer,
 		};
 
 		// lets check if the sm loading was valid
@@ -332,7 +332,7 @@ class SMFile
 
 		// save da song
 
-		song.chartVersion = Song.latestChart;
+		song.chartVersion = Constants.chartVer;
 
 		var json = {
 			"song": song

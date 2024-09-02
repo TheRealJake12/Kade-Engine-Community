@@ -61,7 +61,7 @@ class TimingStruct
 	public static function getBeatFromTime(time:Float)
 	{
 		var beat = -1.0;
-		var seg = TimingStruct.getTimingAtTimestamp(time);
+		final seg = TimingStruct.getTimingAtTimestamp(time);
 
 		if (seg != null)
 			beat = seg.startBeat + (((time / 1000) - seg.startTime) * (seg.bpm / 60));
@@ -73,7 +73,7 @@ class TimingStruct
 	{
 		var time = -1.0;
 
-		var seg = TimingStruct.getTimingAtBeat(lastBeat);
+		final seg = TimingStruct.getTimingAtBeat(lastBeat);
 		if (seg != null)
 			time = seg.startTime + ((curBeat - seg.startBeat) / (seg.bpm / 60));
 
@@ -83,7 +83,7 @@ class TimingStruct
 	public static function getTimeFromBeat(beat:Float)
 	{
 		var time = -1.0;
-		var seg = TimingStruct.getTimingAtBeat(beat);
+		final seg = TimingStruct.getTimingAtBeat(beat);
 
 		if (seg != null)
 			time = seg.startTime + ((beat - seg.startBeat) / (seg.bpm / 60));
@@ -114,7 +114,7 @@ class TimingStruct
 	public static function getBeatFromTimingTime(curTiming:TimingStruct, time:Float):Float
 	{
 		var beat = -1.0;
-		var seg = curTiming;
+		final seg = curTiming;
 
 		if (seg != null)
 			beat = seg.startBeat + (((time / 1000) - seg.startTime) * (seg.bpm / 60));
@@ -125,7 +125,7 @@ class TimingStruct
 	public static function getTimeFromTimingBeat(curTiming:TimingStruct, beat:Float)
 	{
 		var time = -1.0;
-		var seg = curTiming;
+		final seg = curTiming;
 
 		if (seg != null)
 			time = seg.startTime + ((beat - seg.startBeat) / (seg.bpm / 60));
@@ -146,7 +146,7 @@ class TimingStruct
 			for (k in 0...i)
 				startBeat -= ((section.lengthInSteps / 4) - (song.notes[k].lengthInSteps / 4));
 
-			var currentSeg = TimingStruct.getTimingAtBeat(startBeat);
+			final currentSeg = TimingStruct.getTimingAtBeat(startBeat);
 
 			if (currentSeg == null)
 				continue;
@@ -157,18 +157,18 @@ class TimingStruct
 			{
 				Debug.logInfo("converting changebpm for section " + i);
 
-				var bpmChangeEvent:Event = {
-					name: 'FNF BPM Change $beat',
-					type: 'BPM Change',
+				final bpmChangeEvent:Event = {
+					type: "BPM Change",
+					name: 'BPM Change $beat',
 					beat: beat,
 					args: [section.bpm]
 				};
 				song.eventObjects.push(bpmChangeEvent);
-				var timing = TimingStruct.addTiming(bpmChangeEvent.beat, bpmChangeEvent.args[0], Math.POSITIVE_INFINITY, 0);
+				ChartConverter.sortEvents(song);
+				final timing = TimingStruct.addTiming(bpmChangeEvent.beat, bpmChangeEvent.args[0], Math.POSITIVE_INFINITY, 0);
 				Debug.logInfo(timing.bpm);
 			}
 		}
-		song.eventObjects.sort(Sort.sortEvents);
 
 		var bpmIndex:Int = 0;
 		for (event in song.eventObjects)
@@ -181,9 +181,9 @@ class TimingStruct
 					continue;
 				}
 
-				var beat:Float = event.beat / Conductor.rate;
-				var endBeat:Float = Math.POSITIVE_INFINITY;
-				var bpm = event.args[0];
+				final beat:Float = event.beat;
+				final endBeat:Float = Math.POSITIVE_INFINITY;
+				final bpm = event.args[0];
 
 				TimingStruct.addTiming(beat, bpm, endBeat, 0);
 

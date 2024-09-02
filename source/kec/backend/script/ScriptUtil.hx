@@ -19,7 +19,7 @@ import kec.objects.note.Note;
 import kec.objects.note.NoteSplash;
 import kec.objects.note.StaticArrow;
 import kec.backend.chart.Conductor;
-import kec.backend.chart.Section;
+import kec.backend.chart.Section.SwagSection;
 import kec.backend.chart.Song;
 import kec.backend.util.CoolUtil;
 import kec.backend.util.Highscore;
@@ -137,7 +137,6 @@ class ScriptUtil
 
 		// Song
 		script.set("Song", Song);
-		script.set("Section", Section);
 		script.set("Conductor", Conductor);
 
 		// Objects

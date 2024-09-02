@@ -12,7 +12,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
-import tjson.TJSON as Json;
+import haxe.Json;
 import flixel.input.keyboard.FlxKey;
 import flixel.FlxSprite;
 import flixel.FlxG;

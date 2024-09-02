@@ -3,12 +3,12 @@ package kec.objects;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.util.FlxSort;
-import kec.backend.chart.Section.SwagSection;
-import kec.stages.TankmenBG;
-import kec.backend.chart.Song;
-import kec.backend.chart.TimingStruct;
 import kec.backend.PlayStateChangeables;
 import kec.backend.chart.NoteData;
+import kec.backend.chart.Section.SwagSection;
+import kec.backend.chart.Song;
+import kec.backend.chart.TimingStruct;
+import kec.stages.TankmenBG;
 
 class Character extends FlxSprite
 {
@@ -157,13 +157,9 @@ class Character extends FlxSprite
 				var flipY = anim.flipY == null ? false : anim.flipY;
 
 				if (anim.frameIndices != null)
-				{
 					animation.addByIndices(anim.name, anim.prefix, anim.frameIndices, "", Std.int(frameRate * Conductor.rate), looped, flipX, flipY);
-				}
 				else
-				{
 					animation.addByPrefix(anim.name, anim.prefix, Std.int(frameRate * Conductor.rate), looped, flipX, flipY);
-				}
 
 				animOffsets[anim.name] = anim.offsets == null ? [0, 0] : anim.offsets;
 				animInterrupt[anim.name] = anim.interrupt == null ? true : anim.interrupt;
@@ -258,9 +254,7 @@ class Character extends FlxSprite
 			else
 			{
 				if (animation.curAnim.name.startsWith('sing'))
-				{
 					holdTimer += elapsed;
-				}
 
 				if (holdTimer >= Conductor.stepCrochet * 0.0011 * holdLength * Conductor.rate)
 				{
@@ -353,33 +347,25 @@ class Character extends FlxSprite
 
 		var daOffset = animOffsets.get(AnimName);
 		if (animOffsets.exists(AnimName))
-		{
 			offset.set(daOffset[0], daOffset[1]);
-		}
 		else
 			offset.set(0, 0);
 
 		if (curCharacter == 'gf')
 		{
 			if (AnimName == 'singLEFT')
-			{
 				danced = true;
-			}
 			else if (AnimName == 'singRIGHT')
-			{
 				danced = false;
-			}
 
 			if (AnimName == 'singUP' || AnimName == 'singDOWN')
-			{
 				danced = !danced;
-			}
 		}
 	}
 
 	public function loadMappedAnims():Void
 	{
-		if (!FlxG.save.data.background)
+		if (!FlxG.save.data.background && !debugMode)
 			return;
 		var noteData:Array<SwagSection> = Song.loadFromJson(PlayState.SONG.songId, 'picospeaker').notes;
 		var notes:Array<NoteData> = [];
@@ -392,9 +378,9 @@ class Character extends FlxSprite
 				var daStrumTime:Float = (songNotes[0] - FlxG.save.data.offset - PlayState.SONG.offset) / Conductor.rate;
 				if (daStrumTime < 0)
 					daStrumTime = 0;
-				var daBeat = TimingStruct.getBeatFromTime(daStrumTime);
+				final daBeat = TimingStruct.getBeatFromTime(daStrumTime);
 
-				var daNoteData:Int = Std.int(songNotes[1] % 4);
+				final daNoteData:Int = Std.int(songNotes[1] % 4);
 				if (songNotes[1] > 3)
 					gottaHitNote = true;
 				else if (songNotes[1] <= 3)

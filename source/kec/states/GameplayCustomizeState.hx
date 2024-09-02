@@ -62,13 +62,6 @@ class GameplayCustomizeState extends MusicBeatState
 	public var boyfriend:Character;
 
 	public static var Stage:Stage;
-	public static var freeplayBf:String = 'bf';
-	public static var freeplayDad:String = 'dad';
-	public static var freeplayGf:String = 'gf';
-	public static var freeplayNoteStyle:String = 'default';
-	public static var freeplayStage:String = 'stage';
-	public static var freeplaySong:String = 'bopeebo';
-	public static var freeplayWeek:Int = 1;
 
 	var ui:Panel;
 	var box:VBox;
@@ -91,11 +84,6 @@ class GameplayCustomizeState extends MusicBeatState
 		if (PlayState.STYLE == null)
 			PlayState.STYLE = Style.loadJSONFile('default');
 
-		var styleShit:String = (PlayState.STYLE.style == null ? 'default' : PlayState.STYLE.style).toLowerCase();
-
-		if (styleShit == null)
-			styleShit = 'default';
-
 		// Conductor.changeBPM(102);
 		persistentUpdate = true;
 
@@ -103,19 +91,9 @@ class GameplayCustomizeState extends MusicBeatState
 
 		super.create();
 
-		switch (styleShit)
-		{
-			case 'pixel':
-				Constants.noteskinPixelSprite = NoteStyleHelper.generatePixelSprite(FlxG.save.data.noteskin);
-				Constants.noteskinPixelSpriteEnds = NoteStyleHelper.generatePixelSprite(FlxG.save.data.noteskin, true);
-			case 'default':
-				Constants.noteskinSprite = NoteStyleHelper.generateNoteskinSprite(FlxG.save.data.noteskin);
-				Constants.cpuNoteskinSprite = NoteStyleHelper.generateNoteskinSprite(FlxG.save.data.cpuNoteskin);
-		}
-
-		Stage = new Stage(freeplayStage);
+		Stage = new Stage('stage');
 		Stage.inEditor = true;
-		Stage.loadStageData(freeplayStage);
+		Stage.loadStageData('stage');
 		Stage.initStageProperties();
 
 		var directory:String = 'shared';
@@ -123,14 +101,6 @@ class GameplayCustomizeState extends MusicBeatState
 
 		if (otherDir != null)
 			directory = otherDir;
-
-		if (!Stage.doesExist)
-		{
-			Debug.logTrace('Stage Does Not Exist For ${Stage.curStage}. Loading Default Stage.');
-			Stage.loadStageData('stage');
-			Stage.initStageProperties();
-		}
-
 		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
 
@@ -167,55 +137,9 @@ class GameplayCustomizeState extends MusicBeatState
 		ui.draggable = true;
 		ui.camera = camOverlay;
 
-		dad = new Character(100, 100, freeplayDad);
-
-		if (dad.frames == null)
-		{
-			#if debug
-			FlxG.log.warn(["Couldn't load opponent: " + freeplayDad + ". Loading default opponent"]);
-			#end
-			dad = new Character(100, 100, 'dad');
-		}
-
-		boyfriend = new Character(770, 450, freeplayBf);
-
-		if (boyfriend.frames == null)
-		{
-			#if debug
-			FlxG.log.warn(["Couldn't load boyfriend: " + freeplayBf + ". Loading default boyfriend"]);
-			#end
-			boyfriend = new Character(770, 450, 'bf');
-		}
-
-		// defaults if no gf was found in chart
-		var gfCheck:String = 'gf';
-
-		if (freeplayGf == null)
-		{
-			switch (freeplayWeek)
-			{
-				case 4:
-					gfCheck = 'gf-car';
-				case 5:
-					gfCheck = 'gf-christmas';
-				case 6:
-					gfCheck = 'gf-pixel';
-				case 7:
-					gfCheck = 'gfTank';
-			}
-		}
-		else
-			gfCheck = freeplayGf;
-
-		gf = new Character(400, 130, freeplayGf);
-
-		if (gf.frames == null)
-		{
-			#if debug
-			FlxG.log.warn(["Couldn't load gf: " + freeplayGf + ". Loading default gf"]);
-			#end
-			gf = new Character(400, 130, 'gf');
-		}
+		dad = new Character(100, 100, 'dad');
+		boyfriend = new Character(770, 450, 'bf');
+		gf = new Character(400, 130, 'gf');
 
 		var positions = Stage.positions[Stage.curStage];
 		if (positions != null)
@@ -235,8 +159,7 @@ class GameplayCustomizeState extends MusicBeatState
 			switch (index)
 			{
 				case 0:
-					if (Stage.hasGF)
-						add(gf);
+					add(gf);
 					gf.scrollFactor.set(0.95, 0.95);
 					for (bg in array)
 						add(bg);
@@ -251,7 +174,7 @@ class GameplayCustomizeState extends MusicBeatState
 			}
 		}
 
-		sick = new FlxExtendedMouseSprite(0, 0, Paths.image('hud/$styleShit/sick'));
+		sick = new FlxExtendedMouseSprite(0, 0, Paths.image('hud/default/sick'));
 		sick.setGraphicSize(Std.int(sick.width * PlayState.STYLE.scale * 0.7));
 		sick.updateHitbox();
 		sick.scrollFactor.set();
@@ -455,7 +378,7 @@ class GameplayCustomizeState extends MusicBeatState
 			var babyArrow:StaticArrow = new StaticArrow(-10, strumLine.y, player, i);
 			babyArrow.downScroll = FlxG.save.data.downscroll;
 
-			babyArrow.noteTypeCheck = freeplayNoteStyle;
+			babyArrow.noteTypeCheck = 'normal';
 			babyArrow.reloadNote();
 
 			babyArrow.loadLane();

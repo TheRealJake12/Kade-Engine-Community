@@ -220,19 +220,13 @@ class Main extends Sprite
 		// Lower global volume when unfocused
 		oldVol = FlxG.sound.volume;
 		if (oldVol > 0.3)
-		{
 			newVol = 0.3;
-		}
 		else
 		{
 			if (oldVol > 0.1)
-			{
 				newVol = 0.1;
-			}
 			else
-			{
 				newVol = 0;
-			}
 		}
 
 		if (focusMusicTween != null)
@@ -245,7 +239,7 @@ class Main extends Sprite
 
 	function onWindowFocusIn()
 	{
-		new FlxTimer().start(0.2, function(tmr:FlxTimer)
+		FlxTimer.wait(0.2, function()
 		{
 			focused = true;
 		});

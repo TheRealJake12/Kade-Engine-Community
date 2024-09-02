@@ -1,5 +1,7 @@
 BPM Change
 Scroll Speed Change
+Camera Focus
 Play Animation
-Change Camera Zoom
+Change Zoom
+Zoom In
 Change Character

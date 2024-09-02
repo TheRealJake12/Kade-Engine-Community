@@ -37,6 +37,10 @@ class PauseSubState extends MusicBeatSubstate
 
 		openCallback = refresh;
 
+		pauseMusic = new FlxSound().loadEmbedded(Paths.music('breakfast'), true, true);
+		pauseMusic.volume = 0;
+		// pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
+
 		tweenManager = new FlxTweenManager();
 
 		if (CoolUtil.difficultyArray.length < 2)
@@ -75,10 +79,7 @@ class PauseSubState extends MusicBeatSubstate
 
 	override public function create()
 	{
-		pauseMusic = new FlxSound().loadEmbedded(Paths.music('breakfast'), true, true);
-		pauseMusic.volume = 0;
 		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
-
 		add(bg);
 
 		add(levelInfo);

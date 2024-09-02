@@ -132,7 +132,6 @@ class Paths
 	static public function loadJSON(key:String, ?library:String):Dynamic
 	{
 		var rawJson = '';
-
 		try
 		{
 			rawJson = OpenFlAssets.getText(Paths.json(key, library)).trim();

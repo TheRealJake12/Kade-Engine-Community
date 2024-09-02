@@ -254,13 +254,9 @@ class MainMenuState extends MusicBeatState
 			if (FlxG.mouse.overlaps(menuItems, FlxG.camera) && FlxG.mouse.justPressed || controls.ACCEPT)
 			{
 				if (optionShit[curSelected] == 'donate')
-				{
 					fancyOpenURL("https://ninja-muffin24.itch.io/funkin");
-				}
 				else if (optionShit[curSelected] == 'discord')
-				{
 					fancyOpenURL("https://discord.gg/TKCzG5rVGf");
-				}
 				else
 				{
 					selectedSomethin = true;
