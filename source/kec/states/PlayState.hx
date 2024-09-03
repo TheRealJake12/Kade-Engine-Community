@@ -1350,27 +1350,15 @@ class PlayState extends MusicBeatState
 			switch (t.loopsLeft)
 			{
 				case 3:
-					if (Paths.fileExists('sounds/styles/$styleName/intro3.' + Paths.SOUND_EXT, SOUND, 'shared'))
-						FlxG.sound.play(Paths.sound('styles/$styleName/intro3'), 0.6);
-					else
-						FlxG.sound.play(Paths.sound('styles/default/intro3'), 0.6);
+					FlxG.sound.play(Paths.sound('styles/$styleName/intro3'), 0.6);
 				case 2:
-					if (Paths.fileExists('sounds/styles/$styleName/intro2.' + Paths.SOUND_EXT, SOUND, 'shared'))
-						FlxG.sound.play(Paths.sound('styles/$styleName/intro2'), 0.6);
-					else
-						FlxG.sound.play(Paths.sound('styles/default/intro2'), 0.6);
+					FlxG.sound.play(Paths.sound('styles/$styleName/intro2'), 0.6);
 					introGroup.members[0].appear();
 				case 1:
-					if (Paths.fileExists('sounds/styles/$styleName/intro1.' + Paths.SOUND_EXT, SOUND, 'shared'))
-						FlxG.sound.play(Paths.sound('styles/$styleName/intro1'), 0.6);
-					else
-						FlxG.sound.play(Paths.sound('styles/default/intro1'), 0.6);
+					FlxG.sound.play(Paths.sound('styles/$styleName/intro1'), 0.6);
 					introGroup.members[1].appear();
 				case 0:
-					if (Paths.fileExists('sounds/styles/$styleName/introGo.' + Paths.SOUND_EXT, SOUND, 'shared'))
-						FlxG.sound.play(Paths.sound('styles/$styleName/introGo'), 0.6);
-					else
-						FlxG.sound.play(Paths.sound('styles/default/introGo'), 0.6);
+					FlxG.sound.play(Paths.sound('styles/$styleName/introGo'), 0.6);
 					introGroup.members[2].appear();
 			}
 			#if FEATURE_HSCRIPT
@@ -1905,7 +1893,7 @@ class PlayState extends MusicBeatState
 				var noteData:Int = Std.int(songNotes[1]);
 				var noteType:String = songNotes[3];
 				var beat = TimingStruct.getBeatFromTime(spawnTime) * Conductor.rate;
-				var holdLength:Float = songNotes[2] / Conductor.rate;
+				var holdLength:Float = (PlayStateChangeables.holds ? songNotes[2] / Conductor.rate: 0);
 				var playerNote:Bool = (noteData > 3);
 
 				if (Math.isNaN(holdLength))
