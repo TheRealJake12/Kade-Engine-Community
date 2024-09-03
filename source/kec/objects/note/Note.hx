@@ -458,8 +458,8 @@ class Note extends FlxSprite
 				switch (noteType.toLowerCase())
 				{
 					case 'hurt':
-						if (strumTime - Conductor.songPosition <= ((Ratings.timingWindows[0].timingWindow) * 0.2)
-							&& strumTime - Conductor.songPosition >= (-Ratings.timingWindows[0].timingWindow) * 0.4)
+						if (strumTime - Conductor.elapsedPosition <= ((Ratings.timingWindows[0].timingWindow) * 0.2)
+							&& strumTime - Conductor.elapsedPosition >= (-Ratings.timingWindows[0].timingWindow) * 0.4)
 						{
 							canBeHit = true;
 						}
@@ -467,15 +467,15 @@ class Note extends FlxSprite
 						{
 							canBeHit = false;
 						}
-						if (strumTime - Conductor.songPosition < -Ratings.timingWindows[0].timingWindow && !wasGoodHit)
+						if (strumTime - Conductor.elapsedPosition < -Ratings.timingWindows[0].timingWindow && !wasGoodHit)
 							tooLate = true;
 					default:
-						if (strumTime - Conductor.songPosition <= (((Ratings.timingWindows[0].timingWindow) * lateHitMult))
-							&& strumTime - Conductor.songPosition >= (((-Ratings.timingWindows[0].timingWindow) * earlyHitMult)))
+						if (strumTime - Conductor.elapsedPosition <= (((Ratings.timingWindows[0].timingWindow) * lateHitMult))
+							&& strumTime - Conductor.elapsedPosition >= (((-Ratings.timingWindows[0].timingWindow) * earlyHitMult)))
 							canBeHit = true;
 						else
 							canBeHit = false;
-						if (strumTime - Conductor.songPosition < (-Ratings.timingWindows[0].timingWindow) && !wasGoodHit)
+						if (strumTime - Conductor.elapsedPosition < (-Ratings.timingWindows[0].timingWindow) && !wasGoodHit)
 							tooLate = true;
 				}
 			}

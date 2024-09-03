@@ -1904,7 +1904,7 @@ class PlayState extends MusicBeatState
 					spawnTime = 0;
 				var noteData:Int = Std.int(songNotes[1]);
 				var noteType:String = songNotes[3];
-				var beat = TimingStruct.getBeatFromTime(spawnTime);
+				var beat = TimingStruct.getBeatFromTime(spawnTime) * Conductor.rate;
 				var holdLength:Float = songNotes[2] / Conductor.rate;
 				var playerNote:Bool = (noteData > 3);
 
@@ -2418,7 +2418,7 @@ class PlayState extends MusicBeatState
 		{
 			lastPos = Conductor.elapsedPosition;
 			Conductor.songPosition = lastPos * Conductor.rate;
-			songPositionBar = (Conductor.songPosition - songLength) * 0.001;
+			songPositionBar = ((Conductor.songPosition - songLength) * 0.001) / Conductor.rate;
 			var curTime:Float = Conductor.songPosition / Conductor.rate;
 			if (curTime < 0)
 				curTime = 0;
@@ -2793,7 +2793,7 @@ class PlayState extends MusicBeatState
 
 	function resyncInstToPosition():Void
 	{
-		inst.time = Conductor.songPosition;
+		inst.time = Conductor.songPosition * Conductor.rate;
 	}
 
 	function endSong():Void
@@ -3157,7 +3157,7 @@ class PlayState extends MusicBeatState
 			ratingGroup.sort(Sort.sortUI, -1);
 			rating.fadeOut();
 			createTween(currentTimingShown, {alpha: 0}, 0.1, {
-				startDelay: (Conductor.crochet * Math.pow(Conductor.rate, 2)) * 0.0005
+				startDelay: (Conductor.crochet * 0.0005)
 			});
 		}
 	}
@@ -3625,10 +3625,7 @@ class PlayState extends MusicBeatState
 		{
 			if (SONG.songId == 'eggnog' && curStep == 938 * Conductor.rate)
 			{
-				var blackShit:FlxSprite = new FlxSprite(-FlxG.width * camGame.zoom,
-					-FlxG.height * camGame.zoom).makeGraphic(FlxG.width * 3, FlxG.height * 3, FlxColor.BLACK);
-				blackShit.scrollFactor.set();
-				add(blackShit);
+				camGame.visible = false;
 				camHUD.visible = false;
 
 				FlxG.sound.play(Paths.sound('Lights_Shut_off'));
