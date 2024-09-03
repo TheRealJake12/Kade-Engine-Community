@@ -1,0 +1,82 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Mac Build
+
+# Controls when the workflow will run
+on: [workflow_dispatch]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: macos-latest
+    
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+     - name: Pulling the new commit
+        uses: actions/checkout@v4.1.6
+      - name: Setting up Haxe
+        uses: krdlab/setup-haxe@v1.5.1
+        with:
+          haxe-version: 4.3.6
+
+      - name: Get last Action build
+       uses: actions/cache@v4.0.2
+        with:
+          # not caching the bin folder to prevent asset duplication and stuff like that
+          key: cache-build-mac
+          path: |
+            .haxelib/
+            export/release/macos/haxe/
+            export/release/macos/obj/
+          restore-keys: |
+            cache-build-mac
+
+      # Runs a set of commands using the runners shell
+
+      - name: Installing Haxe libraries (script run line haha)
+        run: |
+          haxe -cp ./update -D analyzer-optimize -main Update --interp
+
+      - name: Compile
+        run: |
+          haxelib run lime build mac
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: MacOS Build
+          path: export/release/macos/bin
+
+      - name: Clear current Action Cache
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const caches = await github.rest.actions.getActionsCacheList({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+            for (const cache of caches.data.actions_caches) {
+              if (cache.key == "cache-build-mac") {
+                console.log('Clearing ' + cache.key + '...')
+                await github.rest.actions.deleteActionsCacheById({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  cache_id: cache.id,
+                })
+                console.log("Cache cleared.")
+              }
+            }
+            
+      - name: Caching new Action
+        uses: actions/cache@v3
+        with:
+          # caching again since for some reason it doesnt work with the first post cache shit
+          key: cache-build-mac
+          path: |
+            .haxelib/
+            export/release/macos/haxe/
+            export/release/macos/obj/
+          restore-keys: |
+            cache-build-mac

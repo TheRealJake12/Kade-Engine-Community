@@ -12,7 +12,7 @@ jobs:
       - name: Setting up Haxe
         uses: krdlab/setup-haxe@v1.5.1
         with:
-          haxe-version: 4.3.4
+          haxe-version: 4.3.6
       - name: Restore existing build cache for faster compilation
         uses: actions/cache@v4.0.2
         with:
