@@ -1,54 +1,43 @@
-# This is a basic workflow to help you get started with Actions
 
-name: MacOS Build
+name: Mac OS Build
 on:
   push:
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
-    runs-on: macos-latest
-    
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    name: Mac OS Build
+    runs-on: macos-13
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Pulling the new commit
         uses: actions/checkout@v4.1.6
-      
       - name: Setting up Haxe
-        uses: krdlab/setup-haxe@master
+        uses: krdlab/setup-haxe@v1.5.1
         with:
           haxe-version: 4.3.6
-
-      - name: Get last Action build
+      - name: Restore existing build cache for faster compilation
         uses: actions/cache@v4.0.2
         with:
           # not caching the bin folder to prevent asset duplication and stuff like that
-          key: cache-build-mac
+          key: cache-build-macos
           path: |
             .haxelib/
             export/release/macos/haxe/
             export/release/macos/obj/
           restore-keys: |
-            cache-build-mac
-
-      # Runs a set of commands using the runners shell
-
-      - name: Installing Haxe libraries (script run line haha)
+            cache-build-macos
+      - name: Installing/Updating libraries
         run: |
           haxe -cp ./update -D analyzer-optimize -main Update --interp
-
-      - name: Compile
+        shell: cmd        
+      - name: Building the game
         run: |
           haxelib run lime build mac
 
-      - uses: actions/upload-artifact@v4.3.3
+      - name: Uploading artifact (entire build)
+        uses: actions/upload-artifact@v4.3.3
         with:
-          name: MacOS Build
+          name: Kade Engine Community
           path: export/release/macos/bin
-
-      - name: Clear current Action Cache
+      - name: Clearing already existing cache
         uses: actions/github-script@v7.0.1
         with:
           script: |
@@ -57,7 +46,7 @@ jobs:
               repo: context.repo.repo,
             })
             for (const cache of caches.data.actions_caches) {
-              if (cache.key == "cache-build-mac") {
+              if (cache.key == "cache-build-macos") {
                 console.log('Clearing ' + cache.key + '...')
                 await github.rest.actions.deleteActionsCacheById({
                   owner: context.repo.owner,
@@ -67,15 +56,14 @@ jobs:
                 console.log("Cache cleared.")
               }
             }
-            
-      - name: Caching new Action
+      - name: Uploading new cache
         uses: actions/cache@v4.0.2
         with:
           # caching again since for some reason it doesnt work with the first post cache shit
-          key: cache-build-mac
+          key: cache-build-macos
           path: |
             .haxelib/
             export/release/macos/haxe/
             export/release/macos/obj/
           restore-keys: |
-            cache-build-mac
+            cache-build-macos
