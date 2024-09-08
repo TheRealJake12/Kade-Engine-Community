@@ -230,7 +230,7 @@ class SMFile
 					switch (numba)
 					{
 						case 1: // normal
-							sectionNotes.push({time : rowTime, data : lane, length: 0, type : nType});
+							section.sectionNotes.push({time : rowTime, data : lane, length: 0, type : nType});
 						case 2: // held head
 							heldNotes[lane] = [rowTime, lane, 0, rowTime];
 						case 3: // held tail
