@@ -723,9 +723,11 @@ class PlayState extends MusicBeatState
 		add(uiGroup = new FlxSpriteGroup());
 
 		Conductor.elapsedPosition = -5000;
-
+		
 		if (PlayStateChangeables.useDownscroll)
 			correctY = 135;
+		else
+			correctY = Std.int(FlxG.height * 0.9);
 
 		strumLine = new FlxSprite(0, 50).makeGraphic(FlxG.width + 50, 10, FlxColor.WHITE);
 		strumLine.scrollFactor.set();
@@ -881,7 +883,7 @@ class PlayState extends MusicBeatState
 			uiGroup.add(judgementCounter);
 		}
 
-		botPlayState = new FlxText(565, 648 + (PlayStateChangeables.useDownscroll ? 100 : -100), 0, "BOTPLAY", 20);
+		botPlayState = new FlxText(565, correctY + (PlayStateChangeables.useDownscroll ? 25 : -125), 0, "BOTPLAY", 20);
 		botPlayState.setFormat(Paths.font("vcr.ttf"), 42, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		botPlayState.scrollFactor.set();
 		botPlayState.borderSize = 2;
@@ -1709,7 +1711,7 @@ class PlayState extends MusicBeatState
 		if (FlxG.save.data.songPosition)
 		{
 			createTween(songName, {alpha: 1}, 0.5, {ease: FlxEase.circOut});
-			createTween(songPosBar, {alpha: 0.85}, 0.5, {ease: FlxEase.circOut});
+			createTween(songPosBar, {alpha: 1}, 0.5, {ease: FlxEase.circOut});
 		}
 
 		if (needSkip)
@@ -3843,9 +3845,10 @@ class PlayState extends MusicBeatState
 			uiGroup.add(iconP2);
 		}
 
-		correctY = 698;
 		if (PlayStateChangeables.useDownscroll)
 			correctY = 135;
+		else
+			correctY = Std.int(FlxG.height * 0.9);
 
 		scoreTxt.revive();
 		uiGroup.add(scoreTxt);

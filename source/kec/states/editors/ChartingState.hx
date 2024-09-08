@@ -197,10 +197,6 @@ class ChartingState extends MusicBeatState
 	public static var lengthInSections:Int = 0;
 
 	public var pitch:Float = 1.0;
-
-	var sectionY = 0;
-
-	var currentBPM:Float = 0;
 	var doSnapShit:Bool = true;
 	var defaultSnap:Bool = true;
 
@@ -272,15 +268,13 @@ class ChartingState extends MusicBeatState
 
 		PlayState.inDaPlay = false;
 		SONG = PlayState.SONG;
-		activeSong = SONG;
-
 		loadSong(SONG.audioFile, false);
+		activeSong = SONG;
+		setInitVars();
 
 		curDiff = CoolUtil.difficultyArray[PlayState.storyDifficulty];
 
 		Conductor.bpm = SONG.bpm;
-
-		currentBPM = SONG.bpm;
 
 		Constants.noteskinSprite = NoteStyleHelper.generateNoteskinSprite(FlxG.save.data.noteskin);
 		Constants.cpuNoteskinSprite = NoteStyleHelper.generateNoteskinSprite(FlxG.save.data.cpuNoteskin);
@@ -351,7 +345,6 @@ class ChartingState extends MusicBeatState
 		var currentIndex = 0;
 
 		inst.time = 0;
-
 		setSongTimings();
 		currentSection = getSectionByTime(0);
 		Song.checkforSections(SONG, inst.length);
@@ -416,7 +409,6 @@ class ChartingState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		super.update(elapsed);
 		if (inst != null)
 		{
 			if (inst.time >= inst.length - 85)
@@ -450,21 +442,15 @@ class ChartingState extends MusicBeatState
 					if (!SONG.splitVoiceTracks)
 					{
 						if (vocals != null && vocals.length > 0)
-						{
 							vocals.pitch = pitch;
-						}
 					}
 					else
 					{
 						if (vocalsP != null && vocalsP.length > 0)
-						{
 							vocalsP.pitch = pitch;
-						}
 
 						if (vocalsE != null && vocalsE.length > 0)
-						{
 							vocalsE.pitch = pitch;
-						}
 					}
 				}
 				catch (e)
@@ -1016,6 +1002,7 @@ class ChartingState extends MusicBeatState
 
 		// I hate having things run in update all the time but fuck it
 		songShit();
+		super.update(elapsed);
 	}
 
 	function updateNotes()
@@ -1472,8 +1459,9 @@ class ChartingState extends MusicBeatState
 			return;
 
 		inst.time = (data.startTime + ((beat - data.startBeat) / (data.bpm / 60))) * 1000;
+		var sec = getSectionByTime(inst.time);
 		curSection = section;
-		Debug.logTrace("Going too " + inst.time + " | " + section + " | Which is at " + beat);
+		Debug.logTrace("Going too " + inst.time + " | " + section + " | Which is at " + beat + " | Section Index " + sec.index);
 
 		if (inst.time < 0)
 			inst.time = 0;

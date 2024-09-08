@@ -80,15 +80,28 @@ class Song
 	{
 		if (song?.chartVersion == Constants.chartVer)
 			return song;
-
+		
 		final oldFormat:Legacy = cast song.song;
 
-		switch (oldFormat.chartVersion)
+		if (oldFormat.chartVersion != null)
 		{
-			case "KEC1":
-				return ChartConverter.convertKEC2(song);
-			default:
-				return ChartConverter.convertEtc(song);
+			switch (oldFormat.chartVersion)
+			{
+				case "KEC1":
+					return ChartConverter.convertKEC2(song);
+				default:
+					return ChartConverter.convertKade(song);
+			}
+		}
+		if (song.format == 'psych_v1_convert')
+		{
+			Debug.logTrace('${song.song} was a PSYCHKIGD chart');
+			return ChartConverter.convertPsychV1(song);
+		}
+		else
+		{
+			Debug.logWarn("Your Chart Format Is Fucked.");
+			return ChartConverter.convertEtc(song);
 		}
 		return song;
 	}

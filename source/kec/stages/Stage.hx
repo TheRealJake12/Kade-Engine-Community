@@ -1,19 +1,19 @@
 package kec.stages;
 
-import flixel.group.FlxGroup;
 import flixel.addons.effects.chainable.FlxWaveEffect;
-import openfl.filters.ShaderFilter;
-import openfl.display.BlendMode;
+import flixel.group.FlxGroup;
 import flixel.math.FlxAngle;
-import openfl.Assets as OpenFlAssets;
-import kec.stages.StageData;
 import haxe.DynamicAccess;
+import kec.backend.PlayStateChangeables;
+import kec.stages.StageData;
+import openfl.Assets as OpenFlAssets;
+import openfl.display.BlendMode;
+import openfl.filters.ShaderFilter;
 #if FEATURE_HSCRIPT
 import kec.backend.script.Script;
 import kec.backend.script.ScriptGroup;
 import kec.backend.script.ScriptUtil;
 #end
-import kec.backend.PlayStateChangeables;
 
 class Stage extends MusicBeatState
 {
@@ -903,43 +903,25 @@ class Stage extends MusicBeatState
 
 		var scriptData:Map<String, String> = [];
 
-		var files:Array<String> = [];
-		var extensions = ["hx", "hscript", "hsc", "hxs"];
-		var rawFiles:Array<String> = CoolUtil.readAssetsDirectoryFromLibrary('assets/shared/data/stages/$curStage', 'TEXT', 'default');
-
-		for (sub in rawFiles)
-		{
-			for (ext in extensions)
-			{
-				if (sub.contains(ext))
-				{
-					files.push(sub);
-					break; // only one
-				}
-			}
-		}
+		var file:String = 'assets/shared/data/stages/$curStage.hx';
+		if (!OpenFlAssets.exists(file))
+			return;
 
 		// I'll come back and optimize this later.
 
 		if (FlxG.save.data.gen)
-			Debug.logTrace(files);
+			Debug.logTrace(file);
 
-		for (file in files)
+		var hx:String = OpenFlAssets.getText(file);
+
+		if (hx != null)
 		{
-			var hx:Null<String> = null;
+			var scriptName:String = CoolUtil.getFileStringFromPath(file);
 
-			if (OpenFlAssets.exists(file))
-				hx = OpenFlAssets.getText(file);
-
-			if (hx != null)
+			if (!scriptData.exists(scriptName))
 			{
-				var scriptName:String = CoolUtil.getFileStringFromPath(file);
-
-				if (!scriptData.exists(scriptName))
-				{
-					scriptData.set(scriptName, hx);
-					doesExist = true;
-				}
+				scriptData.set(scriptName, hx);
+				doesExist = true;
 			}
 		}
 

@@ -157,7 +157,7 @@ class MusicBeatState extends FlxTransitionableState
 
 			if (currentSection != null)
 			{
-				if (Conductor.songPosition >= currentSection.endTime)
+				if (Conductor.songPosition >= currentSection.endTime || Conductor.songPosition < currentSection.startTime)
 				{
 					currentSection = getSectionByIndex(curSection +
 						1); // Searching by index is very slow if we have too many sections, instead we assign a index to every section.
@@ -182,7 +182,7 @@ class MusicBeatState extends FlxTransitionableState
 
 			if (currentSection != null)
 			{
-				if (Conductor.songPosition >= currentSection.endTime)
+				if (Conductor.songPosition >= currentSection.endTime || Conductor.songPosition < currentSection.startTime)
 				{
 					currentSection = getSectionByIndex(curSection + 1);
 

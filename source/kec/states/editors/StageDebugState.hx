@@ -197,6 +197,7 @@ class StageDebugState extends MusicBeatState
 		addHelpText();
 
 		Conductor.bpm = PlayState.SONG.bpm;
+		super.create();
 	}
 
 	inline function addTabs()
@@ -464,9 +465,6 @@ class StageDebugState extends MusicBeatState
 						add(bg);
 			}
 		}
-
-		Paths.clearUnusedMemory();
-		Paths.runGC();
 
 		Debug.logTrace('Stage Loaded.');
 

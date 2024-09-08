@@ -174,12 +174,13 @@ class GameplayCustomizeState extends MusicBeatState
 			}
 		}
 
-		sick = new FlxExtendedMouseSprite(0, 0, Paths.image('hud/default/sick'));
-		sick.setGraphicSize(Std.int(sick.width * PlayState.STYLE.scale * 0.7));
-		sick.updateHitbox();
+		sick = new FlxExtendedMouseSprite(0, 0);
+		sick.frames = Paths.getSparrowAtlas('hud/default/default');
+		sick.animation.addByPrefix('marv', 'marv', 1);
+		sick.animation.play('marv');
 		sick.scrollFactor.set();
-		if (PlayState.STYLE.antialiasing == false)
-			sick.antialiasing = false;
+		sick.setGraphicSize(Std.int(sick.frameWidth * 0.7));
+		sick.updateHitbox();
 		sick.visible = FlxG.save.data.showRating;
 		sick.enableMouseDrag();
 		add(sick);

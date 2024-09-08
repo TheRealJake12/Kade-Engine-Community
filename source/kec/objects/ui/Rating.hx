@@ -9,6 +9,7 @@ class Rating extends UIComponent
 		super();
 		frames = Paths.getSparrowAtlas('hud/${UIComponent.style.style.toLowerCase()}/${UIComponent.style.style.toLowerCase()}', 'shared');
 		addAnims();
+		alpha = 0;
 		if (UIComponent.style.antialiasing == false)
 			antialiasing = false;
 	}
