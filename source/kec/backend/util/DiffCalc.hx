@@ -2,7 +2,7 @@ package kec.backend.util;
 
 import openfl.system.System;
 import flixel.math.FlxMath;
-import kec.backend.chart.Song.SongData;
+import kec.backend.chart.format.Modern;
 
 class SmallNote // basically Note.hx but small as fuck
 {
@@ -23,7 +23,7 @@ class DiffCalc
 	public static var lastDiffHandOne:Array<Float> = [];
 	public static var lastDiffHandTwo:Array<Float> = [];
 
-	public static function CalculateDiff(song:SongData, opponentMode:Bool = false, ?accuracy:Float = .93)
+	public static function CalculateDiff(song:Modern, opponentMode:Bool = false, ?accuracy:Float = .93)
 	{
 		// cleaned notes
 		var cleanedNotes:Array<SmallNote> = [];
@@ -37,21 +37,18 @@ class DiffCalc
 		// find all of the notes
 		for (i in song.notes) // sections
 		{
-			for (ii in i.sectionNotes) // notes
+			for (ii in 0...i.sectionNotes.length)
 			{
+				final note = i.sectionNotes[ii];
 				var gottaHitNote:Bool = false;
-				gottaHitNote = ii[1] > 3;
+				gottaHitNote = note.data > 3;
 
-				var data = ii[1] % 4;
+				var data = note.data % 4;
 
 				if (gottaHitNote && !opponentMode)
-				{
-					cleanedNotes.push(new SmallNote(ii[0], Math.floor(Math.abs(data))));
-				}
+					cleanedNotes.push(new SmallNote(note.time, Math.floor(Math.abs(data))));
 				else if (!gottaHitNote && opponentMode)
-				{
-					cleanedNotes.push(new SmallNote(ii[0], Math.floor(Math.abs(data))));
-				}
+					cleanedNotes.push(new SmallNote(note.time, Math.floor(Math.abs(data))));
 			}
 		}
 

@@ -1,15 +1,15 @@
 package kec.states;
 
+import kec.backend.chart.format.Section;
 import flixel.addons.transition.FlxTransitionableState;
-import kec.backend.chart.Section.SwagSection;
-import kec.backend.chart.Song.SongData;
-import kec.backend.chart.TimingStruct;
 import kec.backend.Controls;
-import kec.substates.MusicBeatSubstate;
-import kec.substates.CustomFadeTransition;
-import kec.states.FreeplayState;
 import kec.backend.PlayerSettings;
+import kec.backend.chart.TimingStruct;
+import kec.backend.chart.format.Modern;
 import kec.backend.util.NoteStyleHelper;
+import kec.states.FreeplayState;
+import kec.substates.CustomFadeTransition;
+import kec.substates.MusicBeatSubstate;
 
 class MusicBeatState extends FlxTransitionableState
 {
@@ -18,9 +18,9 @@ class MusicBeatState extends FlxTransitionableState
 	private var curSection(default, set):Int = 0;
 	var step = 0.0;
 	var startInMS = 0.0;
-	var activeSong:SongData = null;
+	var activeSong:Modern = null;
 
-	private var currentSection:SwagSection = null;
+	private var currentSection:Section = null;
 
 	private var curDecimalBeat:Float = 0;
 
@@ -146,10 +146,9 @@ class MusicBeatState extends FlxTransitionableState
 
 			curStep = Math.floor(curDecimalBeat * 4);
 			curBeat = Math.floor(curDecimalBeat);
-
 			if (currentSection == null)
 			{
-				Debug.logTrace('trying to find section in ${Conductor.songPosition}');
+				Debug.logTrace('trying to find section at pos ${Conductor.songPosition}');
 				currentSection = getSectionByTime(Conductor.songPosition);
 
 				if (currentSection != null)
@@ -281,14 +280,10 @@ class MusicBeatState extends FlxTransitionableState
 	public function changeTime(time:Float)
 	{
 		Conductor.songPosition = time;
-		currentSection = getSectionByTime(Conductor.songPosition);
-
-		curSection = currentSection.index;
-
 		curTiming = TimingStruct.getTimingAtTimestamp(Conductor.songPosition);
 	}
 
-	function getSectionByTime(ms:Float):SwagSection
+	function getSectionByTime(ms:Float):Section
 	{
 		if (activeSong == null)
 			return null;
@@ -307,7 +302,7 @@ class MusicBeatState extends FlxTransitionableState
 		return null;
 	}
 
-	function getSectionByIndex(index:Int):SwagSection
+	function getSectionByIndex(index:Int):Section
 	{
 		if (activeSong == null)
 			return null;
@@ -325,7 +320,7 @@ class MusicBeatState extends FlxTransitionableState
 
 		for (i in startIndex...activeSong.notes.length) // loops through sections
 		{
-			var section:SwagSection = activeSong.notes[i];
+			var section:Section = activeSong.notes[i];
 
 			var currentBeat:Float = 0.0;
 

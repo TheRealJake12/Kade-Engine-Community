@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="intro.png">
+	<!-- Created with Adobe Animate version 22.0.2.168 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="go" x="1" y="1" width="92" height="37"/>
+	<SubTexture name="ready" x="1" y="41" width="87" height="41"/>
+	<SubTexture name="set" x="1" y="85" width="80" height="37"/>
+</TextureAtlas>

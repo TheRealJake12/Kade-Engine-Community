@@ -4,11 +4,11 @@ package kec.backend.util.smTools;
 import sys.io.File;
 import haxe.Exception;
 import lime.app.Application;
-import kec.backend.chart.Section.SwagSection;
 import haxe.Json;
 import openfl.Lib;
 import kec.backend.chart.Song;
 import kec.backend.chart.TimingStruct;
+import kec.backend.chart.format.*;
 
 class SMFile
 {
@@ -45,7 +45,6 @@ class SMFile
 			{
 				headerData += data[inc];
 				inc++;
-				// trace(data[inc]);
 			}
 
 			header = new SMHeader(headerData.split(';'));
@@ -80,16 +79,11 @@ class SMFile
 			}
 			if (StringTools.contains(data[inc], "dance-double:"))
 				isDouble = true;
-			if (isDouble)
-				trace('this is dance double');
-
 			inc += 5; // skip 5 down to where da notes @
 
 			measures = [];
 
 			var measure = "";
-
-			trace(data[inc - 1]);
 
 			for (ii in inc...data.length)
 			{
@@ -97,13 +91,11 @@ class SMFile
 				if (StringTools.contains(i, ",") || StringTools.contains(i, ";"))
 				{
 					measures.push(new SMMeasure(measure.split('\n')));
-					// trace(measures.length);
 					measure = "";
 					continue;
 				}
 				measure += i + "\n";
 			}
-			trace(measures.length + " Measures");
 		}
 		catch (e:Exception)
 		{
@@ -129,9 +121,10 @@ class SMFile
 
 		// init a fnf song
 
-		var song = {
+		var song:Modern = {
 			songId: header.TITLE,
 			songName: header.TITLE,
+			audioFile: header.MUSIC,
 			notes: [],
 			eventObjects: [],
 			bpm: header.getBPM(0),
@@ -139,10 +132,11 @@ class SMFile
 			player1: 'bf',
 			player2: 'gf',
 			gfVersion: 'gf',
-			noteStyle: 'normal',
+			style: 'Default',
 			stage: 'stage',
 			speed: 2.8,
 			validScore: false,
+			splitVoiceTracks:false,
 			chartVersion: Constants.chartVer,
 		};
 
@@ -150,18 +144,12 @@ class SMFile
 
 		if (!isValid)
 		{
-			var json = {
-				"song": song
-			};
-
-			var data:String = Json.stringify(json, null, " ");
+			final data:String = Json.stringify(song);
 			File.saveContent(saveTo, data);
 			return data;
 		}
 
 		// aight time to convert da measures
-
-		trace("Converting measures");
 
 		for (measure in measures)
 		{
@@ -173,16 +161,14 @@ class SMFile
 
 			// section declaration
 
-			var section = {
+			var section:Section = {
 				sectionNotes: [],
 				lengthInSteps: 16,
-				typeOfSection: 0,
 				startTime: 0.0,
 				endTime: 0.0,
 				mustHitSection: false,
 				bpm: header.getBPM(0),
-				changeBPM: false,
-				playerSec: true
+				index: 0,
 			};
 
 			// if it's not a double always set this to true
@@ -194,7 +180,6 @@ class SMFile
 			for (i in 0...measure._measure.length - 1)
 			{
 				var noteRow = (measureIndex * 192) + (lengthInRows * rowIndex);
-
 				var notes:Array<String> = [];
 
 				for (note in measure._measure[i].split(''))
@@ -209,27 +194,22 @@ class SMFile
 				{
 					// ok new section time
 					song.notes.push(section);
-					section = {
+					var section:Section = {
 						sectionNotes: [],
 						lengthInSteps: 16,
-						typeOfSection: 0,
 						startTime: 0.0,
 						endTime: 0.0,
 						mustHitSection: false,
 						bpm: header.getBPM(0),
-						changeBPM: false,
-						playerSec: true
+						index: rowIndex,
 					};
 					if (!isDouble)
-						section.playerSec = true;
+						section.mustHitSection = true;
 				}
 
 				var seg = TimingStruct.getTimingAtBeat(currentBeat);
-
 				var timeInSec:Float = (seg.startTime + ((currentBeat - seg.startBeat) / (seg.bpm / 60)));
-
 				var rowTime = timeInSec * 1000;
-
 				// output += " - Row " + noteRow + " - Time: " + rowTime + " (" + timeInSec + ") - Beat: " + currentBeat + " - Current BPM: " + header.getBPM(currentBeat) + "\n";
 
 				var index = 0;
@@ -237,11 +217,9 @@ class SMFile
 				for (i in notes)
 				{
 					// if its a mine lets skip (maybe add mines in the future??)
+					var nType:String = "Normal";
 					if (i == "M")
-					{
-						index++;
-						continue;
-					}
+						nType = "Hurt";
 
 					// get the lane and note type
 					var lane = index + 4; // shitty fix
@@ -252,13 +230,18 @@ class SMFile
 					switch (numba)
 					{
 						case 1: // normal
-							section.sectionNotes.push([rowTime, lane, 0, rowTime]);
+							sectionNotes.push({time : rowTime, data : lane, length: 0, type : nType});
 						case 2: // held head
 							heldNotes[lane] = [rowTime, lane, 0, rowTime];
 						case 3: // held tail
 							var data = heldNotes[lane];
 							var timeDiff = rowTime - data[0];
-							section.sectionNotes.push([data[0], lane, timeDiff, data[4]]);
+							section.sectionNotes.push({
+								time: data[0],
+								data: lane,
+								length: timeDiff,
+								type: nType
+							});
 							heldNotes[index] = [];
 						case 4: // roll head
 							heldNotes[lane] = [rowTime, lane, 0, rowTime];
@@ -269,25 +252,16 @@ class SMFile
 				rowIndex++;
 			}
 
-			// push the section
-
 			song.notes.push(section);
-
-			// output += ",\n";
-
 			measureIndex++;
 		}
 
 		for (i in 0...song.notes.length) // loops through sections
 		{
 			var section = song.notes[i];
-
 			var currentBeat = 4 * i;
-
 			var currentSeg = TimingStruct.getTimingAtBeat(currentBeat);
-
 			var start:Float = (currentBeat - currentSeg.startBeat) / (currentSeg.bpm / 60);
-
 			section.startTime = (currentSeg.startTime + start) * 1000;
 
 			if (i != 0)
@@ -298,47 +272,10 @@ class SMFile
 		// File.saveContent("fuac" + header.TITLE,output);
 
 		if (header.changeEvents.length != 0)
-		{
 			song.eventObjects = header.changeEvents;
-		}
-		/*var newSections = [];
-
-			for(s in 0...song.notes.length) // lets go ahead and make sure each note is actually in their own section haha
-			{
-				var sec:SwagSection = {
-					startTime: song.notes[s].startTime,
-					endTime: song.notes[s].endTime,
-					lengthInSteps: 16,
-					bpm: song.bpm,
-					changeBPM: false,
-					mustHitSection: song.notes[s].mustHitSection,
-					sectionNotes: [],
-					typeOfSection: 0,
-				};
-				for(i in song.notes)
-				{
-					for(ii in i.sectionNotes)
-					{
-						if (ii[0] >= sec.startTime && ii[0] < sec.endTime)
-							sec.sectionNotes.push(ii);
-					}
-				}
-				newSections.push(sec);
-		}*/
-
-		// WE ALREADY DO THIS
-
-		// song.notes = newSections;
-
-		// save da song
 
 		song.chartVersion = Constants.chartVer;
-
-		var json = {
-			"song": song
-		};
-
-		var data:String = Json.stringify(json, null, " ");
+		final data:String = Json.stringify(song);
 		File.saveContent(saveTo, data);
 		return data;
 	}

@@ -1,7 +1,5 @@
 package kec.substates;
 
-import kec.backend.chart.Section.SwagSection;
-import kec.backend.chart.Song.SongData;
 import kec.backend.chart.TimingStruct;
 import kec.backend.Controls;
 import kec.backend.PlayerSettings;

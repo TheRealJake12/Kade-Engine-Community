@@ -5,10 +5,11 @@ import flixel.graphics.frames.FlxFramesCollection;
 import flixel.util.FlxSort;
 import kec.backend.PlayStateChangeables;
 import kec.backend.chart.NoteData;
-import kec.backend.chart.Section.SwagSection;
 import kec.backend.chart.Song;
 import kec.backend.chart.TimingStruct;
 import kec.stages.TankmenBG;
+import kec.backend.chart.ChartNote;
+import kec.backend.chart.format.Section;
 
 class Character extends FlxSprite
 {
@@ -367,42 +368,15 @@ class Character extends FlxSprite
 	{
 		if (!FlxG.save.data.background && !debugMode)
 			return;
-		var noteData:Array<SwagSection> = Song.loadFromJson(PlayState.SONG.songId, 'picospeaker').notes;
-		var notes:Array<NoteData> = [];
-		var noteCounter:Int = 0;
+		var noteData:Array<Section> = Song.loadFromJson(PlayState.SONG.songId, 'picospeaker').notes;
 		for (section in noteData)
 		{
-			for (songNotes in section.sectionNotes)
-			{
-				var gottaHitNote:Bool = false;
-				var daStrumTime:Float = (songNotes[0] - FlxG.save.data.offset - PlayState.SONG.offset) / Conductor.rate;
-				if (daStrumTime < 0)
-					daStrumTime = 0;
-				final daBeat = TimingStruct.getBeatFromTime(daStrumTime);
-
-				final daNoteData:Int = Std.int(songNotes[1] % 4);
-				if (songNotes[1] > 3)
-					gottaHitNote = true;
-				else if (songNotes[1] <= 3)
-					gottaHitNote = false;
-
-				notes.push({
-					strumTime: daStrumTime,
-					noteData: daNoteData,
-					sustainLength: songNotes[2] / Conductor.rate,
-					noteType: songNotes[3],
-					isPlayer: gottaHitNote,
-					beat: daBeat
-				});
-
-				var note = notes[noteCounter];
-
-				animationNotes.push(note);
-				noteCounter++;
-			}
+			for (i in 0...section.sectionNotes.length)
+				animationNotes.push(section.sectionNotes[i]);
 		}
+
 		TankmenBG.animationNotes = animationNotes;
-		animationNotes.sort(sortAnims);
+		TankmenBG.animationNotes.sort(sortAnims);
 	}
 
 	function sortAnims(Obj1:NoteData, Obj2:NoteData):Int

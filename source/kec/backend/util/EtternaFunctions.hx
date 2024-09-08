@@ -28,12 +28,12 @@ class EtternaFunctions
 	public static function getNotes():Int
 	{
 		var notes:Int = 0;
-		for (i in 0...PlayState.SONG.notes.length)
+		for (sec in PlayState.SONG.notes)
 		{
-			for (ii in 0...PlayState.SONG.notes[i].sectionNotes.length)
+			for (i in 0...sec.sectionNotes.length)
 			{
-				var n = PlayState.SONG.notes[i].sectionNotes[ii];
-				if (n[1] <= 0)
+				var n = sec.sectionNotes[i];
+				if (n.time <= 0)
 					notes++;
 			}
 		}
@@ -43,14 +43,12 @@ class EtternaFunctions
 	public static function getHolds():Int
 	{
 		var notes:Int = 0;
-		for (i in 0...PlayState.SONG.notes.length)
+		for (sec in PlayState.SONG.notes)
 		{
-			trace(PlayState.SONG.notes[i]);
-			for (ii in 0...PlayState.SONG.notes[i].sectionNotes.length)
+			for (i in 0...sec.sectionNotes.length)
 			{
-				var n = PlayState.SONG.notes[i].sectionNotes[ii];
-				trace(n);
-				if (n[1] > 0)
+				var n = sec.sectionNotes[i];
+				if (n.length > 0)
 					notes++;
 			}
 		}

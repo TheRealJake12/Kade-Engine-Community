@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="default.png">
+	<!-- Created with Adobe Animate version 22.0.2.168 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="bad" x="1" y="1" width="261" height="131"/>
+	<SubTexture name="good" x="265" y="1" width="317" height="126"/>
+	<SubTexture name="marv" x="585" y="1" width="403" height="152"/>
+	<SubTexture name="num0" x="1" y="156" width="56" height="68"/>
+	<SubTexture name="num1" x="60" y="156" width="56" height="68"/>
+	<SubTexture name="num2" x="119" y="156" width="56" height="68"/>
+	<SubTexture name="num3" x="178" y="156" width="56" height="68"/>
+	<SubTexture name="num4" x="237" y="156" width="56" height="68"/>
+	<SubTexture name="num5" x="296" y="156" width="56" height="68"/>
+	<SubTexture name="num6" x="355" y="156" width="56" height="68"/>
+	<SubTexture name="num7" x="414" y="156" width="56" height="68"/>
+	<SubTexture name="num8" x="473" y="156" width="56" height="68"/>
+	<SubTexture name="num9" x="532" y="156" width="56" height="68"/>
+	<SubTexture name="shit" x="591" y="156" width="285" height="163"/>
+	<SubTexture name="sick" x="1" y="322" width="403" height="152"/>
+</TextureAtlas>

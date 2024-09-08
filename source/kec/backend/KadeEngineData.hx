@@ -83,7 +83,7 @@ class KadeEngineData
 			FlxG.save.data.botplay = false;
 
 		if (FlxG.save.data.cpuStrums == null)
-			FlxG.save.data.cpuStrums = false;
+			FlxG.save.data.cpuStrums = true;
 
 		if (FlxG.save.data.smoothHealthbar == null)
 			FlxG.save.data.smoothHealthbar = true;
@@ -169,7 +169,7 @@ class KadeEngineData
 			FlxG.save.data.oldcharter = false;
 
 		if (FlxG.save.data.motion == null)
-			FlxG.save.data.motion = false;
+			FlxG.save.data.motion = true;
 
 		if (FlxG.save.data.gpuRender == null)
 			FlxG.save.data.gpuRender = false;

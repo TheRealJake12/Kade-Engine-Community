@@ -1,6 +1,6 @@
 package kec.backend.chart;
 
-import kec.backend.chart.Song.SongData;
+import kec.backend.chart.format.Modern;
 
 /**
  * Handy class that helps with beat and step measurements in song with variable bpm! 
@@ -33,7 +33,7 @@ class TimingStruct
 
 	public static function clearTimings()
 	{
-		AllTimings.splice(0, AllTimings.length);
+		AllTimings.resize(0);
 	}
 
 	public static function addTiming(startBeat:Float, bpm, endBeat:Float, offset:Float):TimingStruct
@@ -133,43 +133,11 @@ class TimingStruct
 		return time * 1000;
 	}
 
-	public static function setSongTimings(song:SongData)
+	public static function setSongTimings(song:Modern)
 	{
 		TimingStruct.clearTimings();
 
 		TimingStruct.addTiming(0, song.bpm, Math.POSITIVE_INFINITY, 0);
-
-		for (i => section in song.notes)
-		{
-			var startBeat:Float = (section.lengthInSteps / 4) * (i);
-
-			for (k in 0...i)
-				startBeat -= ((section.lengthInSteps / 4) - (song.notes[k].lengthInSteps / 4));
-
-			final currentSeg = TimingStruct.getTimingAtBeat(startBeat);
-
-			if (currentSeg == null)
-				continue;
-
-			var beat:Float = currentSeg.startBeat + (startBeat - currentSeg.startBeat);
-
-			if (section.changeBPM && section.bpm != song.bpm)
-			{
-				Debug.logInfo("converting changebpm for section " + i);
-
-				final bpmChangeEvent:Event = {
-					type: "BPM Change",
-					name: 'BPM Change $beat',
-					beat: beat,
-					args: [section.bpm]
-				};
-				song.eventObjects.push(bpmChangeEvent);
-				ChartConverter.sortEvents(song);
-				final timing = TimingStruct.addTiming(bpmChangeEvent.beat, bpmChangeEvent.args[0], Math.POSITIVE_INFINITY, 0);
-				Debug.logInfo(timing.bpm);
-			}
-		}
-
 		var bpmIndex:Int = 0;
 		for (event in song.eventObjects)
 		{

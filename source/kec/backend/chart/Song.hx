@@ -1,6 +1,6 @@
 package kec.backend.chart;
 
-import kec.backend.chart.Section.SwagSection;
+import kec.backend.chart.format.*;
 
 typedef StyleData =
 {
@@ -29,44 +29,6 @@ class Style
 	}
 }
 
-typedef SongData =
-{
-	/**
-		* The readable name of the song, as displayed to the user.
-				* Can be any string. 
-				Actually Used Now Instead Of Song.	
-	 */
-	var songName:String;
-
-	/**
-	 * The internal name of the song, as used in the file system.
-	 */
-	var songId:String;
-
-	/**
-	 * Old Display Name. Only Used For Formatting Now.
-	 */
-	var ?song:String;
-
-	var ?songFile:String;
-	var chartVersion:String;
-	var notes:Array<SwagSection>;
-	var eventObjects:Array<Event>;
-	var bpm:Float;
-	var needsVoices:Bool;
-	var speed:Float;
-	var player1:String;
-	var player2:String;
-	var gfVersion:String;
-	var ?noteStyle:String;
-	var style:String;
-	var stage:String;
-	var ?validScore:Bool;
-	var ?offset:Int;
-	var ?splitVoiceTracks:Bool;
-	var ?audioFile:String;
-}
-
 typedef SongMeta =
 {
 	var ?offset:Int;
@@ -88,7 +50,7 @@ class Song
 		return parseJSONshit('rawsong', jsonData, 'rawname');
 	}
 
-	public static function loadFromJson(songId:String, difficulty:String):SongData
+	public static function loadFromJson(songId:String, difficulty:String):Modern
 	{
 		var songFile = '$songId/$songId$difficulty';
 
@@ -102,65 +64,57 @@ class Song
 	{
 		var rawMetaJson = null;
 		if (Paths.doesTextAssetExist(Paths.songMeta(songId)))
-		{
 			rawMetaJson = Paths.loadJSON('songs/$songId/_meta');
-		}
 		else
 		{
 			if (FlxG.save.data.gen)
 				Debug.logInfo('Hey, you didn\'t include a _meta.json with your song files (id ${songId}).Won\'t break anything but you should probably add one anyway.');
 		}
 		if (rawMetaJson == null)
-		{
 			return null;
-		}
 		else
-		{
 			return cast rawMetaJson;
-		}
 	}
 
-	public static function conversionChecks(song:SongData):SongData
+	public static function conversionChecks(song:Dynamic):Modern
 	{
-		if (song.chartVersion == Constants.chartVer)
+		if (song?.chartVersion == Constants.chartVer)
 			return song;
 
-		switch (song.chartVersion)
+		final oldFormat:Legacy = cast song.song;
+
+		switch (oldFormat.chartVersion)
 		{
 			case "KEC1":
 				return ChartConverter.convertKEC2(song);
 			default:
 				return ChartConverter.convertEtc(song);
 		}
-
-		song.chartVersion = Constants.chartVer;
-
 		return song;
 	}
 
-	public static function parseJSONshit(songId:String, jsonData:Dynamic, jsonMetaData:Dynamic):SongData
+	public static function parseJSONshit(songId:String, jsonData:Dynamic, jsonMetaData:Dynamic):Modern
 	{
-		var songData:SongData = cast jsonData.song;
-
-		if (songData.songId == null)
-			songData.songId = songId;
-
-		if (songData.audioFile == null)
-			songData.audioFile = songId;
-
-		// Enforce default values for optional fields.
-		if (songData.validScore == null)
-			songData.validScore = true;
-
-		// Inject info from _meta.json.
-		var songMetaData:SongMeta = cast jsonMetaData;
-		if (songMetaData != null)
-			songData.offset = songMetaData.offset != null ? songMetaData.offset : 0;
-
+		final songData = cast jsonData;
 		return Song.conversionChecks(songData);
 	}
 
-	public static function recalculateAllSectionTimes(activeSong:SongData, startIndex:Int = 0)
+	public static function checkforSections(SONG:Modern, songLength:Float)
+	{
+		var totalBeats = TimingStruct.getBeatFromTime(songLength);
+
+		var lastSecBeat = TimingStruct.getBeatFromTime(SONG.notes[SONG.notes.length - 1].endTime);
+
+		while (lastSecBeat < totalBeats)
+		{
+			SONG.notes.push(Song.newSection(SONG, SONG.notes[SONG.notes.length - 1].lengthInSteps, SONG.notes.length, true));
+
+			recalculateAllSectionTimes(SONG, SONG.notes.length - 1);
+			lastSecBeat = TimingStruct.getBeatFromTime(SONG.notes[SONG.notes.length - 1].endTime);
+		}
+	}
+
+	public static function recalculateAllSectionTimes(activeSong:Modern, startIndex:Int = 0)
 	{
 		trace("RECALCULATING SECTION TIMES");
 
@@ -169,7 +123,7 @@ class Song
 
 		for (i in startIndex...activeSong.notes.length) // loops through sections
 		{
-			var section:SwagSection = activeSong.notes[i];
+			var section:Section = activeSong.notes[i];
 
 			var endBeat:Float = 0.0;
 
@@ -189,60 +143,26 @@ class Song
 		}
 	}
 
-	public static function sortSectionNotes(song:SongData)
+	public static function newSection(song:Modern, lengthInSteps:Int = 16, index:Int = -1, mustHitSection:Bool = false):Section
 	{
-		var newNotes:List<Array<Dynamic>> = new List();
+		var sec:Section = {
+			lengthInSteps: lengthInSteps,
+			bpm: song.bpm,
+			mustHitSection: mustHitSection,
+			sectionNotes: [],
+			index: index
+		};
 
-		for (section in song.notes)
-		{
-			if (section.sectionNotes != null)
-			{
-				for (songNotes in section.sectionNotes)
-				{
-					newNotes.add(songNotes);
-				}
-			}
-
-			section.sectionNotes.splice(0, section.sectionNotes.length);
-		}
-
-		for (section in song.notes)
-		{
-			for (sortedNote in newNotes)
-			{
-				if (sortedNote[0] >= section.startTime && sortedNote[0] < section.endTime)
-				{
-					section.sectionNotes.push(sortedNote);
-				}
-			}
-		}
-
-		newNotes.clear();
+		return sec;
 	}
 
-	public static function checkforSections(SONG:SongData, songLength:Float)
+	public static function oldSection(song:Legacy, lengthInSteps:Int = 16, index:Int = -1, mustHitSection:Bool = false):LegacySection
 	{
-		var totalBeats = TimingStruct.getBeatFromTime(songLength);
-
-		var lastSecBeat = TimingStruct.getBeatFromTime(SONG.notes[SONG.notes.length - 1].endTime);
-
-		while (lastSecBeat < totalBeats)
-		{
-			SONG.notes.push(Song.newSection(SONG, SONG.notes[SONG.notes.length - 1].lengthInSteps, SONG.notes.length, true, false, false));
-
-			recalculateAllSectionTimes(SONG, SONG.notes.length - 1);
-			lastSecBeat = TimingStruct.getBeatFromTime(SONG.notes[SONG.notes.length - 1].endTime);
-		}
-	}
-
-	public static function newSection(song:SongData, lengthInSteps:Int = 16, index:Int = -1, mustHitSection:Bool = false, CPUAltAnim:Bool = true,
-			playerAltAnim:Bool = true):SwagSection
-	{
-		var sec:SwagSection = {
+		var sec:LegacySection = {
 			lengthInSteps: lengthInSteps,
 			bpm: song.bpm,
 			changeBPM: false,
-			playerSec: mustHitSection,
+			mustHitSection: mustHitSection,
 			sectionNotes: [],
 			index: index
 		};

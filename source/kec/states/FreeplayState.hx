@@ -7,14 +7,14 @@ import kec.backend.PlayStateChangeables;
 import kec.backend.chart.TimingStruct;
 import openfl.media.Sound;
 import flixel.effects.FlxFlicker;
-#if FEATURE_STEPMANIA
-import kec.backend.util.smTools.SMFile;
-#end
 #if FEATURE_FILESYSTEM
 import sys.FileSystem;
 import sys.io.File;
 #end
-import kec.backend.chart.Song.SongData;
+#if FEATURE_STEPMANIA
+import kec.backend.util.smTools.SMFile;
+#end
+import kec.backend.chart.format.Modern;
 import lime.app.Application;
 import flash.text.TextField;
 import openfl.utils.Assets as OpenFlAssets;
@@ -84,7 +84,7 @@ class FreeplayState extends MusicBeatState
 
 	public static var icon:HealthIcon;
 
-	public var songData:Map<String, Array<SongData>> = [];
+	public var songData:Map<String, Array<Modern>> = [];
 
 	public static var instance:FreeplayState = null;
 
@@ -96,7 +96,7 @@ class FreeplayState extends MusicBeatState
 	public static var doUpdateText:Bool = true;
 	public static var alreadyPressed:Bool = false;
 
-	function loadDiff(diff:Int, songId:String, array:Array<SongData>)
+	function loadDiff(diff:Int, songId:String, array:Array<Modern>)
 		array.push(Song.loadFromJson(songId, CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[diff])));
 
 	public static var list:Array<String> = [];
@@ -373,7 +373,6 @@ class FreeplayState extends MusicBeatState
 			meta.diffs = diffsThatExist;
 			songs.push(meta);
 		}
-
 		#if FEATURE_STEPMANIA
 		for (i in FileSystem.readDirectory("assets/sm/"))
 		{
@@ -768,7 +767,7 @@ class FreeplayState extends MusicBeatState
 		super.stepHit();
 	}
 
-	var playinSong:SongData;
+	var playinSong:Modern;
 
 	private function dotheMusicThing():Void
 	{
@@ -783,10 +782,6 @@ class FreeplayState extends MusicBeatState
 
 				switch (songs[curSelected].songCharacter)
 				{
-					case "sm":
-						#if (FEATURE_FILESYSTEM && FEATURE_STEPMANIA)
-						songPath = FileSystem.absolutePath(songs[curSelected].path + "/" + songs[curSelected].sm.header.MUSIC);
-						#end
 					default:
 						songPath = Paths.inst(songs[curSelected].songName, true);
 				}
@@ -827,7 +822,7 @@ class FreeplayState extends MusicBeatState
 	public static function loadSongInFreePlay(songName:String, difficulty:Int, isCharting:Bool, reloadSong:Bool = false)
 	{
 		// Make sure song data is initialized first.
-		var currentSongData:SongData = null;
+		var currentSongData:Modern = null;
 		try
 		{
 			switch (instance.songs[curSelected].songCharacter)
@@ -1050,7 +1045,6 @@ class FreeplaySongMetadata
 	public var songCharacter:String = "";
 	public var color:Int = -7179779;
 	public var diffs = [];
-
 	#if FEATURE_STEPMANIA
 	public function new(song:String, week:Int, songCharacter:String, ?color:FlxColor, ?sm:SMFile = null, ?path:String = "")
 	{

@@ -1,51 +1,54 @@
 package kec.backend.chart;
 
-import kec.backend.chart.Song.SongData;
+import kec.backend.chart.format.*;
 
 class ChartConverter
 {
-	public static function convertEtc(song:SongData):SongData
+	public static function convertEtc(song:Dynamic):Modern
 	{
-		song.eventObjects = checkEvents(song);
-		song.eventObjects = convertEvents(song);
+		final data:Legacy = cast song.song;
+		data.eventObjects = checkEvents(data);
+		data.eventObjects = convertEvents(data);
 		var currentIndex = 0;
 		var index = 0;
 		var ba = song.bpm;
-		if (song.songName == null)
+		if (data.songName == null)
 		{
-			if (song.song != null)
-				song.songName = song.song;
+			if (data.song != null)
+				data.songName = data.song;
 			else
-				song.songName = song.songId;
+				data.songName = data.songId;
 		}
 
-		if (song.noteStyle == 'pixel')
-			song.style = "Pixel";
+		if (data.noteStyle == 'pixel')
+			data.style = "Pixel";
 
-		if (song.style == null)
-			song.style = "Default";
+		if (data.style == null)
+			data.style = "Default";
 
-		if (song.gfVersion == null)
-			song.gfVersion = "gf";
+		if (data.gfVersion == null)
+			data.gfVersion = "gf";
 
-		if (song.stage == null)
-			song.stage = "stage";
+		if (data.stage == null)
+			data.stage = "stage";
 
-		if (song.splitVoiceTracks == null)
-			song.splitVoiceTracks = false;
+		if (data.splitVoiceTracks == null)
+			data.splitVoiceTracks = false;
 
-		if (song.notes == null)
+		// If the song has null sections.
+		if (data.notes == null)
 		{
-			song.notes = [];
-
-			song.notes.push(Song.newSection(song));
+			data.notes = [];
+			data.notes.push(Song.oldSection(data));
 		}
 
 		// If the section array exists but there's nothing we push at least 1 section to play.
-		if (song.notes.length == 0)
-			song.notes.push(Song.newSection(song));
+		if (data.notes.length == 0)
+			data.notes.push(Song.oldSection(song));
+		var newNotes:Array<Section> = [];
+		TimingStruct.clearTimings();
 
-		for (i in song.eventObjects)
+		for (i in data.eventObjects)
 		{
 			if (i.type == "BPM Change")
 			{
@@ -68,12 +71,20 @@ class ChartConverter
 				currentIndex++;
 			}
 		}
-		for (i => section in song.notes)
+		for (i => section in data.notes)
 		{
 			section.index = i;
 			final currentBeat = 4 * index;
-
 			final currentSeg = TimingStruct.getTimingAtBeat(currentBeat);
+			newNotes.push({
+				index: i,
+				sectionNotes: [],
+				bpm: section.bpm,
+				mustHitSection: section.mustHitSection,
+				lengthInSteps : 16,
+				startTime: currentSeg.startTime,
+			}); // create a blank for now
+			
 
 			if (section.lengthInSteps == null)
 				section.lengthInSteps = 16;
@@ -86,14 +97,17 @@ class ChartConverter
 			if (section.changeBPM && section.bpm != ba)
 			{
 				ba = section.bpm;
-				song.eventObjects.push({
+				data.eventObjects.push({
 					name: "FNF BPM Change " + section.index,
 					beat: beat,
 					args: [section.bpm],
 					type: "BPM Change"
 				});
 			}
-			section.playerSec = section.mustHitSection;
+			section.mustHitSection = section.playerSec;
+			if (Reflect.hasField(section, 'playerSec'))
+				Reflect.deleteField(section, 'playerSec');
+			var fard:Int = 0;
 
 			for (ii in section.sectionNotes)
 			{
@@ -113,47 +127,152 @@ class ChartConverter
 
 				final strumTime = ii[0];
 				final noteData = ii[1];
-				final length = ii[2];
+				final holdLength = ii[2];
 
 				if (ii[3] == null || !Std.isOfType(ii[3], String))
 					ii[3] = 'Normal';
-				var type = ii[3];
+				var nType = ii[3];
 
 				ii.resize(0);
+				// simple conversion
+				// nvm, retarded conversion
+				newNotes[i].sectionNotes.push({
+					time: strumTime,
+					data: noteData,
+					length: holdLength,
+					type: nType
+				});
+			}
+			index++;
+		}
+		final events:Array<Event> = sortEvents(data.eventObjects);
+		final newSong:Modern = {
+			songName: data.songName,
+			songId: data.songId,
+			audioFile: data.audioFile,
+			notes: newNotes,
+			player1: data.player1,
+			player2: data.player2,
+			gfVersion: data.gfVersion,
+			stage: data.stage,
+			bpm: data.bpm,
+			speed: data.speed,
+			needsVoices: data.needsVoices,
+			style: data.style,
+			eventObjects: events,
+			splitVoiceTracks: data.splitVoiceTracks,
+			chartVersion: Constants.chartVer
+		};
+		Song.recalculateAllSectionTimes(newSong);
+		newNotes = null;
+		return newSong;
+	}
 
-				ii.push(strumTime);
-				ii.push(noteData);
-				ii.push(length);
-				ii.push(type);
+	public static function convertKEC2(song:Dynamic):Modern
+	{
+		final data:Legacy = cast song.song;
+		data.eventObjects = convertEvents(data);
+		var newNotes:Array<Section> = [];
+		var index = 0;
+		var currentIndex = 0;
+		// If the song has null sections.
+		if (data.notes == null)
+		{
+			data.notes = [];
+			data.notes.push(Song.oldSection(data));
+		}
+
+		// If the section array exists but there's nothing we push at least 1 section to play.
+		if (data.notes.length == 0)
+			data.notes.push(Song.oldSection(song));
+		TimingStruct.clearTimings();
+		for (i in data.eventObjects)
+		{
+			if (i.type == "BPM Change")
+			{
+				var beat:Float = i.beat * Conductor.rate;
+
+				var endBeat:Float = Math.POSITIVE_INFINITY;
+
+				TimingStruct.addTiming(beat, i.args[0] * Conductor.rate, endBeat, 0); // offset in this case = start time since we don't have a offset
+
+				if (currentIndex != 0)
+				{
+					var data = TimingStruct.AllTimings[currentIndex - 1];
+					data.endBeat = beat;
+					data.length = (data.endBeat - data.startBeat) / (data.bpm / 60);
+					var step = ((60 / data.bpm) * 1000) / 4;
+					TimingStruct.AllTimings[currentIndex].startStep = Math.floor(((data.endBeat / (data.bpm / 60)) * 1000) / step);
+					TimingStruct.AllTimings[currentIndex].startTime = data.startTime + data.length;
+				}
+
+				currentIndex++;
+			}
+		}
+		for (i => section in data.notes)
+		{
+			section.index = i;
+			final currentBeat = 4 * index;
+			final currentSeg = TimingStruct.getTimingAtBeat(currentBeat);
+			newNotes.push({
+				index: i,
+				sectionNotes: [],
+				bpm: section.bpm,
+				mustHitSection: section.mustHitSection,
+				lengthInSteps: 16,
+				startTime: currentSeg.startTime
+			}); // create a blank for now
+			final beat:Float = currentSeg.startBeat + (currentBeat - currentSeg.startBeat);
+			section.mustHitSection = section.playerSec;
+			if (Reflect.hasField(section, 'playerSec'))
+				Reflect.deleteField(section, 'playerSec');
+			newNotes[i].index = i;
+			for (ii in section.sectionNotes)
+			{
+				final strumTime = ii[0];
+				final noteData = ii[1];
+				final holdLength = ii[2];
+				final nType = ii[3];
+
+				ii.resize(0);
 				// simple conversion
 				// nvm, retarded conversion
 
-				if (ii[4] != null && Std.isOfType(ii[4], String))
-					ii[3] = ii[4];
+				newNotes[i].sectionNotes.push({
+					time: strumTime,
+					data: noteData,
+					length: holdLength,
+					type: nType
+				});
 			}
+			index++;
 		}
-		sortEvents(song);
-		song.chartVersion = Constants.chartVer;
-		return song;
+		final newSong:Modern = {
+			songName: data.songName,
+			songId: data.songId,
+			audioFile: data.audioFile,
+			notes: newNotes,
+			player1: data.player1,
+			player2: data.player2,
+			gfVersion: data.gfVersion,
+			stage: data.stage,
+			bpm: data.bpm,
+			speed: data.speed,
+			needsVoices: data.needsVoices,
+			style: data.style,
+			eventObjects: data.eventObjects,
+			splitVoiceTracks: data.splitVoiceTracks,
+			chartVersion: Constants.chartVer
+		};
+		Song.recalculateAllSectionTimes(newSong);
+		newNotes = null;
+		return newSong;
 	}
 
-	public static function convertKEC2(song:SongData):SongData
-	{
-		song.eventObjects = convertEvents(song);
-		sortEvents(song);
-		for (i => section in song.notes)
-		{
-			section.index = i;
-		}
-		if (song.style == null)
-			song.style = "Default";
-		song.chartVersion = Constants.chartVer;
-		return song;
-	}
-
-	private static function checkEvents(song:SongData):Array<Event>
+	private static function checkEvents(song:Legacy):Array<Event>
 	{
 		if (song.eventObjects == null)
+		{
 			song.eventObjects = [
 				{
 					name: "Init BPM",
@@ -162,10 +281,12 @@ class ChartConverter
 					type: "BPM Change"
 				}
 			];
+			Debug.logTrace(song.eventObjects);
+		}
 		return song.eventObjects;
 	}
 
-	private static function convertEvents(song:SongData):Array<Event>
+	private static function convertEvents(song:Legacy):Array<Event>
 	{
 		var newEvents:Array<Event> = [];
 		for (i in song.eventObjects)
@@ -201,11 +322,11 @@ class ChartConverter
 		return newEvents;
 	}
 
-	public static function sortEvents(song:SongData)
+	public static function sortEvents(arr:Array<Event>):Array<Event>
 	{
-		if (song.eventObjects != null)
+		if (arr != null)
 		{
-			song.eventObjects.sort(function(a, b)
+			arr.sort(function(a, b)
 			{
 				if (a.beat < b.beat)
 					return -1
@@ -215,5 +336,6 @@ class ChartConverter
 					return 0;
 			});
 		}
+		return arr;
 	}
 }
