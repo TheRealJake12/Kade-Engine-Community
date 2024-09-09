@@ -44,7 +44,7 @@ class Character extends FlxSprite
 	public var deadChar:String = 'bf-dead';
 	public var flipAnimations:Bool = false;
 
-	public var animationNotes:Array<Dynamic> = [];
+	public var animationNotes:Array<ChartNote> = [];
 
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false, ?isGF:Bool = false)
 	{
@@ -274,10 +274,10 @@ class Character extends FlxSprite
 			switch (curCharacter)
 			{
 				case 'pico-speaker':
-					if (animationNotes.length > 0 && Conductor.songPosition >= animationNotes[0].strumTime)
+					while(animationNotes.length > 0 && Conductor.songPosition >= animationNotes[0].time)
 					{
 						var noteData:Int = 1;
-						if (2 <= animationNotes[0].noteData)
+						if (2 <= animationNotes[0].data)
 							noteData = 3;
 
 						noteData += FlxG.random.int(0, 1);
@@ -368,20 +368,21 @@ class Character extends FlxSprite
 	{
 		if (!FlxG.save.data.background && !debugMode)
 			return;
-		var noteData:Array<Section> = Song.loadFromJson(PlayState.SONG.songId, 'picospeaker').notes;
+		final noteData:Array<Section> = Song.loadFromJson(PlayState.SONG.songId, 'picospeaker').notes;
 		for (section in noteData)
 		{
 			for (i in 0...section.sectionNotes.length)
+			{
 				animationNotes.push(section.sectionNotes[i]);
+			}
 		}
-
+		animationNotes.sort(sortAnims);
 		TankmenBG.animationNotes = animationNotes;
-		TankmenBG.animationNotes.sort(sortAnims);
 	}
 
-	function sortAnims(Obj1:NoteData, Obj2:NoteData):Int
+	function sortAnims(Obj1:ChartNote, Obj2:ChartNote):Int
 	{
-		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
+		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.time, Obj2.time);
 	}
 
 	public function addOffset(name:String, x:Float = 0, y:Float = 0)

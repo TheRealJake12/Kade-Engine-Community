@@ -273,9 +273,8 @@ class ChartingState extends MusicBeatState
 		setInitVars();
 
 		curDiff = CoolUtil.difficultyArray[PlayState.storyDifficulty];
-
+		Conductor.rate = 1;
 		Conductor.bpm = SONG.bpm;
-
 		Constants.noteskinSprite = NoteStyleHelper.generateNoteskinSprite(FlxG.save.data.noteskin);
 		Constants.cpuNoteskinSprite = NoteStyleHelper.generateNoteskinSprite(FlxG.save.data.cpuNoteskin);
 		Constants.noteskinPixelSprite = NoteStyleHelper.generatePixelSprite(FlxG.save.data.noteskin);

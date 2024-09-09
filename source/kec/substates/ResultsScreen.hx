@@ -264,7 +264,7 @@ class ResultsScreen extends MusicBeatSubstate
 		{
 			var noteRating = note.rating;
 
-			var noteDiff = note.strumTime - Conductor.songPosition;
+			var noteDiff = note.strumTime - (Conductor.songPosition / Conductor.rate);
 
 			if (isMiss)
 				noteDiff = Ratings.timingWindows[0].timingWindow;

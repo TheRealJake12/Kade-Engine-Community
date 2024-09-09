@@ -1036,8 +1036,8 @@ class PlayState extends MusicBeatState
 							if (FlxG.random.bool(16))
 							{
 								var tankBih = Stage.swagBacks['tankmanRun'].recycle(TankmenBG);
-								tankBih.strumTime = TankmenBG.animationNotes[i].strumTime;
-								tankBih.resetShit(500, 200 + FlxG.random.int(50, 100), TankmenBG.animationNotes[i].noteData < 2);
+								tankBih.strumTime = TankmenBG.animationNotes[i].time;
+								tankBih.resetShit(500, 200 + FlxG.random.int(50, 100), TankmenBG.animationNotes[i].data < 2);
 								Stage.swagBacks['tankmanRun'].add(tankBih);
 							}
 						}
@@ -1742,8 +1742,8 @@ class PlayState extends MusicBeatState
 
 	public function generateSong(dataPath:String):Void
 	{
-		var chartStamp = haxe.Timer.stamp();
-		var songData = SONG;
+		final chartStamp = haxe.Timer.stamp();
+		final songData = SONG;
 		try
 		{
 			if (!SONG.splitVoiceTracks)
@@ -1827,7 +1827,7 @@ class PlayState extends MusicBeatState
 		notes = new FlxTypedGroup<Note>();
 		add(notes);
 
-		var chartNotes:Array<Section> = songData.notes;
+		final chartNotes:Array<Section> = songData.notes;
 
 		var playerCounter:Int = 0;
 
@@ -1930,8 +1930,8 @@ class PlayState extends MusicBeatState
 
 	private function generateStaticArrows(player:Int, ?tween:Bool = true):Void
 	{
-		var seX:Float = !PlayStateChangeables.opponentMode ? (PlayStateChangeables.middleScroll ? -278 : 42) : (PlayStateChangeables.middleScroll ? 366 : 42);
-		var seY:Float = strumLine.y;
+		final seX:Float = !PlayStateChangeables.opponentMode ? (PlayStateChangeables.middleScroll ? -278 : 42) : (PlayStateChangeables.middleScroll ? 366 : 42);
+		final seY:Float = strumLine.y;
 		for (i in 0...4)
 		{
 			var babyArrow:StaticArrow = new StaticArrow(seX, seY, player, i);
@@ -1948,16 +1948,12 @@ class PlayState extends MusicBeatState
 				if (PlayStateChangeables.opponentMode)
 				{
 					if (player == 1)
-					{
 						targAlpha = 0;
-					}
 				}
 				else
 				{
 					if (player == 0)
-					{
 						targAlpha = 0;
-					}
 				}
 			}
 
@@ -1979,22 +1975,14 @@ class PlayState extends MusicBeatState
 			{
 				case 0:
 					if (!PlayStateChangeables.opponentMode)
-					{
 						cpuStrums.add(babyArrow);
-					}
 					else
-					{
 						playerStrums.add(babyArrow);
-					}
 				case 1:
 					if (!PlayStateChangeables.opponentMode)
-					{
 						playerStrums.add(babyArrow);
-					}
 					else
-					{
 						cpuStrums.add(babyArrow);
-					}
 			}
 			// babyArrow.x += 98.5; // Tryna make it not offset because it was pissing me off + Psych Engine has it somewhat like this.
 			babyArrow.x += 50;
@@ -2356,7 +2344,7 @@ class PlayState extends MusicBeatState
 		{
 			lastPos = Conductor.elapsedPosition;
 			Conductor.songPosition = lastPos * Conductor.rate;
-			var curTime:Float = Math.max(0, Conductor.songPosition);
+			var curTime:Float = Math.max(0, Conductor.songPosition) / Conductor.rate;
 			songPositionBar = (curTime / songLength);
 			var songCalc:Float = (songLength - curTime);
 			var secondsTotal:Int = Math.floor(songCalc * 0.001);

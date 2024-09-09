@@ -1,10 +1,11 @@
 package kec.stages;
 
+import kec.backend.chart.ChartNote;
 import flixel.graphics.frames.FlxAtlasFrames;
 
 class TankmenBG extends FlxSprite
 {
-	public static var animationNotes:Array<Dynamic> = [];
+	public static var animationNotes:Array<ChartNote> = [];
 
 	private var tankSpeed:Float;
 	private var endingOffset:Float;
