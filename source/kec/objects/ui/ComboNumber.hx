@@ -25,7 +25,7 @@ class ComboNumber extends UIComponent
 
 	public function addAnims()
 	{
-		for (i in 0...9)
+		for (i in 0...10)
 		{
 			animation.addByPrefix('num$i', 'num$i', 1, false);
 		}

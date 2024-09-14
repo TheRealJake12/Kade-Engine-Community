@@ -727,7 +727,7 @@ class PlayState extends MusicBeatState
 		if (PlayStateChangeables.useDownscroll)
 			correctY = 135;
 		else
-			correctY = Std.int(FlxG.height * 0.9);
+			correctY = 698;
 
 		strumLine = new FlxSprite(0, 50).makeGraphic(FlxG.width + 50, 10, FlxColor.WHITE);
 		strumLine.scrollFactor.set();
@@ -883,7 +883,7 @@ class PlayState extends MusicBeatState
 			uiGroup.add(judgementCounter);
 		}
 
-		botPlayState = new FlxText(565, correctY + (PlayStateChangeables.useDownscroll ? 25 : -125), 0, "BOTPLAY", 20);
+		botPlayState = new FlxText(565, correctY + (PlayStateChangeables.useDownscroll ? 25 : -175), 0, "BOTPLAY", 20);
 		botPlayState.setFormat(Paths.font("vcr.ttf"), 42, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		botPlayState.scrollFactor.set();
 		botPlayState.borderSize = 2;
@@ -1064,17 +1064,6 @@ class PlayState extends MusicBeatState
 		FlxG.sound.list.add(hitSound);
 		createSongPosBar();
 
-		songName = new FlxText(0, songPosBar.y, 0, SONG.songName, 16);
-		songName.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		songName.scrollFactor.set();
-		songName.text = SONG.songName + ' (' + FlxStringUtil.formatTime(songLength, false) + ')';
-		songName.alpha = 0;
-		uiGroup.add(songName);
-		songName.screenCenter(X);
-
-		songName.visible = FlxG.save.data.songPosition;
-		songPosBar.visible = FlxG.save.data.songPosition;
-
 		if (FlxG.save.data.showMs)
 		{
 			insert(members.indexOf(notes), currentTimingShown);
@@ -1082,14 +1071,10 @@ class PlayState extends MusicBeatState
 		}
 
 		if (FlxG.save.data.showRating)
-		{
 			insert(members.indexOf(notes), ratingGroup);
-		}
 
 		if (FlxG.save.data.showNum)
-		{
 			insert(members.indexOf(notes), numGroup);
-		}
 
 		pushSub(new PauseSubState());
 		pushSub(new ResultsScreen());
@@ -1148,6 +1133,17 @@ class PlayState extends MusicBeatState
 		songPosBar.scrollFactor.set();
 		songPosBar.setColors(dad.barColor, FlxColor.BLACK);
 		songPosBar.alpha = 0;
+
+		songName = new FlxText(0, songPosBar.y, 0, SONG.songName, 16);
+		songName.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		songName.scrollFactor.set();
+		songName.text = SONG.songName + ' (' + FlxStringUtil.formatTime(songLength, false) + ')';
+		songName.alpha = 0;
+		uiGroup.add(songName);
+		songName.screenCenter(X);
+
+		songName.visible = FlxG.save.data.songPosition;
+		songPosBar.visible = FlxG.save.data.songPosition;
 		// fard
 	}
 
@@ -2344,9 +2340,9 @@ class PlayState extends MusicBeatState
 		{
 			lastPos = Conductor.elapsedPosition;
 			Conductor.songPosition = lastPos * Conductor.rate;
-			var curTime:Float = Math.max(0, Conductor.songPosition) / Conductor.rate;
-			songPositionBar = (curTime / songLength);
-			var songCalc:Float = (songLength - curTime);
+			final curTime:Float = Math.max(0, Conductor.songPosition) / Conductor.rate;
+			songPositionBar = CoolUtil.fpsLerp(songPositionBar, (curTime / songLength), 0.15, 60 * Conductor.rate);
+			final songCalc:Float = (songLength - curTime);
 			var secondsTotal:Int = Math.floor(songCalc * 0.001);
 			if (secondsTotal < 0)
 				secondsTotal = 0;
@@ -2536,7 +2532,6 @@ class PlayState extends MusicBeatState
 							{
 								// Clip to strumline
 								final swagRect:FlxRect = FlxRect.get(0, 0, daNote.width / daNote.scale.x, daNote.height / daNote.scale.y);
-
 								swagRect.height = ((strumY + Note.swagWidth / 2) - daNote.y) / daNote.scale.y;
 								swagRect.y = daNote.frameHeight - swagRect.height;
 								daNote.clipRect = swagRect;
@@ -3836,7 +3831,7 @@ class PlayState extends MusicBeatState
 		if (PlayStateChangeables.useDownscroll)
 			correctY = 135;
 		else
-			correctY = Std.int(FlxG.height * 0.9);
+			correctY = 698;
 
 		scoreTxt.revive();
 		uiGroup.add(scoreTxt);
