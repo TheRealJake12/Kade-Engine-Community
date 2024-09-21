@@ -1,17 +1,17 @@
 package kec.states.editors;
 
-import kec.objects.note.Note;
+import kec.objects.note.EditorNote;
 
 class ChartingBox extends FlxSprite
 {
-	public var connectedNote:Note;
+	public var connectedNote:EditorNote;
 
 	public function new(x, y)
 	{
 		super(x, y);
 	}
 
-	public function setupBox(x, y, cn:Note)
+	public function setupBox(x, y, cn:EditorNote)
 	{
 		connectedNote = cn;
 		this.x = x;

@@ -148,7 +148,6 @@ class PlayState extends MusicBeatState
 
 	// Note Animation Suffixes.
 	private var dataSuffix:Array<String> = ['LEFT', 'DOWN', 'UP', 'RIGHT'];
-	private var dataColor:Array<String> = ['purple', 'blue', 'green', 'red'];
 
 	// Tracks The Last Score (I Don't Know What It Does.)
 	public static var lastScore:Array<FlxSprite> = [];
@@ -3834,6 +3833,8 @@ class PlayState extends MusicBeatState
 		scoreTxt.revive();
 		uiGroup.add(scoreTxt);
 		updateScoreText();
+		for (note in strumLineNotes)
+			note.bgLane.alpha = FlxG.save.data.laneTransparency * note.alpha;
 	}
 
 	#if FEATURE_HSCRIPT

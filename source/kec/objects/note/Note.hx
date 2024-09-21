@@ -66,7 +66,6 @@ class Note extends FlxSprite
 	public var localAngle:Float = 0; // The angle to be edited inside Note.hx
 	public var originAngle:Float = 0; // The angle the OG note of the sus note had (?)
 
-	public static final dataColor:Array<String> = ['purple', 'blue', 'green', 'red'];
 	public static final quantityColor:Array<Int> = [RED_NOTE, 2, BLUE_NOTE, 2, PURP_NOTE, 2, GREEN_NOTE, 2];
 	public static final arrowAngles:Array<Int> = [180, 90, 270, 0];
 
@@ -229,7 +228,7 @@ class Note extends FlxSprite
 
 		// x += swagWidth * (noteData);
 		var animToPlay:String = '';
-		animToPlay = dataColor[Std.int(noteData % 4)] + 'Scroll';
+		animToPlay = Constants.noteColors[Std.int(noteData % 4)] + 'Scroll';
 		x += swagWidth * noteData;
 
 		originColor = noteData; // The note's origin color will be checked by its sustain notes
@@ -262,7 +261,7 @@ class Note extends FlxSprite
 			localAngle -= arrowAngles[col];
 			localAngle += arrowAngles[Std.int(noteData % 4)];
 			originAngle = localAngle;
-			animToPlay = dataColor[Std.int(col % 4)] + 'Scroll';
+			animToPlay = Constants.noteColors[Std.int(col % 4)] + 'Scroll';
 		}
 
 		animation.play(animToPlay);
@@ -283,7 +282,7 @@ class Note extends FlxSprite
 			originColor = prevNote.originColor;
 			originAngle = prevNote.originAngle;
 
-			animation.play(dataColor[Std.int(originColor % 4)] + 'holdend'); // This works both for normal colors and quantization colors
+			animation.play(Constants.noteColors[Std.int(originColor % 4)] + 'holdend'); // This works both for normal colors and quantization colors
 			updateHitbox();
 
 			x -= width * 0.5;
@@ -293,7 +292,7 @@ class Note extends FlxSprite
 
 			if (prevNote.isSustainNote)
 			{
-				prevNote.animation.play(dataColor[prevNote.originColor] + 'hold');
+				prevNote.animation.play(Constants.noteColors[prevNote.originColor] + 'hold');
 				prevNote.updateHitbox();
 				prevNote.scale.y *= (stepHeight / prevNote.height);
 
@@ -394,11 +393,11 @@ class Note extends FlxSprite
 		{
 			if (isSustainNote)
 			{
-				animation.addByPrefix(dataColor[i] + 'hold', dataColor[i] + ' hold'); // Hold
-				animation.addByPrefix(dataColor[i] + 'holdend', dataColor[i] + ' tail'); // Tails
+				animation.addByPrefix(Constants.noteColors[i] + 'hold', Constants.noteColors[i] + ' hold'); // Hold
+				animation.addByPrefix(Constants.noteColors[i] + 'holdend', Constants.noteColors[i] + ' tail'); // Tails
 			}
 			else
-				animation.addByPrefix(dataColor[i] + 'Scroll', dataColor[i] + ' alone'); // Normal notes
+				animation.addByPrefix(Constants.noteColors[i] + 'Scroll', Constants.noteColors[i] + ' alone'); // Normal notes
 		}
 		setGraphicSize(Std.int(width * 0.7));
 		updateHitbox();
@@ -410,11 +409,11 @@ class Note extends FlxSprite
 		{
 			if (isSustainNote)
 			{
-				animation.add(dataColor[i] + 'hold', [i]); // Holds
-				animation.add(dataColor[i] + 'holdend', [i + 4]); // Tails
+				animation.add(Constants.noteColors[i] + 'hold', [i]); // Holds
+				animation.add(Constants.noteColors[i] + 'holdend', [i + 4]); // Tails
 			}
 			else
-				animation.add(dataColor[i] + 'Scroll', [i + 4]); // Normal notes
+				animation.add(Constants.noteColors[i] + 'Scroll', [i + 4]); // Normal notes
 		}
 
 		setGraphicSize(Std.int(width * CoolUtil.daPixelZoom));

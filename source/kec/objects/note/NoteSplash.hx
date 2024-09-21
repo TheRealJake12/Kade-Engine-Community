@@ -34,8 +34,6 @@ class NoteSplash extends FlxSprite
 	private var animOffsets:Map<String, Array<Dynamic>>;
 
 	static var _lastCheckedType:String = '';
-
-	public static var colors:Array<String> = ['purple', 'blue', 'green', 'red'];
 	private static var configs:Map<String, SplashData> = new Map<String, SplashData>();
 	static var rawJson = null;
 
@@ -68,9 +66,9 @@ class NoteSplash extends FlxSprite
 		var animToPlay:String;
 
 		if (!FlxG.save.data.stepMania)
-			animToPlay = 'splash ${animNum} ${colors[note.noteData]}';
+			animToPlay = 'splash ${animNum} ${Constants.noteColors[note.noteData]}';
 		else
-			animToPlay = 'splash ${animNum} ${colors[note.originColor]}';
+			animToPlay = 'splash ${animNum} ${Constants.noteColors[note.originColor]}';
 
 		playAnim(animToPlay);
 	}
