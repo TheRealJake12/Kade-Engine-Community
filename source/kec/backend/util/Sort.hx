@@ -3,7 +3,7 @@ package kec.backend.util;
 import flixel.util.FlxSort;
 import haxe.ds.ArraySort;
 import kec.objects.note.Note;
-import kec.backend.chart.NoteData;
+import kec.backend.chart.ChartNote;
 import kec.backend.chart.Event;
 import kec.objects.ui.UIComponent;
 
@@ -17,9 +17,9 @@ class Sort
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
 	}
 
-	public static inline function sortNoteData(Obj1:NoteData, Obj2:NoteData):Int
+	public static inline function sortChartNotes(Obj1:ChartNote, Obj2:ChartNote):Int
 	{
-		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
+		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.time, Obj2.time);
 	}
 
 	public static inline function sortEvents(e1:Event, e2:Event)

@@ -313,8 +313,7 @@ class MainMenuState extends MusicBeatState
 				case 'freeplay':
 					MusicBeatState.switchState(new FreeplayState());
 				case 'options':
-					// transIn = FlxTransitionableState.defaultTransIn;
-					// transOut = FlxTransitionableState.defaultTransOut;
+					FlxTransitionableState.skipNextTransOut = true;
 					MusicBeatState.switchState(new OptionsDirect());
 			}
 		}

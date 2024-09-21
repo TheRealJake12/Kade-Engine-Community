@@ -501,8 +501,6 @@ class Note extends FlxSprite
 
 		super.destroy();
 
-		frames = null;
-
 		_lastValidChecked = '';
 	}
 

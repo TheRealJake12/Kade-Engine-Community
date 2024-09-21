@@ -667,8 +667,8 @@ class Stage extends MusicBeatState
 			if (PlayState.instance.gf != null)
 			{
 				camPosition = [
-					PlayState.instance.gf.getGraphicMidpoint().x + PlayState.instance.gf.camPos[0],
-					PlayState.instance.gf.getGraphicMidpoint().y + PlayState.instance.gf.camPos[1]
+					PlayState.instance.gf.getGraphicMidpoint().x + PlayState.instance.gf.data.camPos[0],
+					PlayState.instance.gf.getGraphicMidpoint().y + PlayState.instance.gf.data.camPos[1]
 				];
 			}
 			else
@@ -898,7 +898,7 @@ class Stage extends MusicBeatState
 	#if FEATURE_HSCRIPT
 	function initScripts()
 	{
-		if (scripts == null)
+		if (scripts == null || !FlxG.save.data.background)
 			return;
 
 		var scriptData:Map<String, String> = [];
@@ -1022,8 +1022,8 @@ class Stage extends MusicBeatState
 
 		if (PlayState.instance.boyfriend != null
 			&& PlayState.instance.gf != null
-			&& PlayState.instance.boyfriend.curCharacter == 'bf'
-			&& PlayState.instance.gf.curCharacter == 'gf')
+			&& PlayState.instance.boyfriend.data.char == 'bf'
+			&& PlayState.instance.gf.data.char == 'gf')
 		{
 			PlayState.instance.boyfriend.playAnim('scared', true);
 			PlayState.instance.gf.playAnim('scared', true);
@@ -1057,7 +1057,7 @@ class Stage extends MusicBeatState
 			{
 				startedMoving = true;
 
-				if (PlayState.instance.gf != null && PlayState.instance.gf.curCharacter == 'gftrain')
+				if (PlayState.instance.gf != null && PlayState.instance.gf.data.char == 'gftrain')
 					PlayState.instance.gf.playAnim('hairBlow');
 			}
 
@@ -1085,7 +1085,7 @@ class Stage extends MusicBeatState
 	{
 		if (FlxG.save.data.quality && curStage == 'philly')
 		{
-			if (PlayState.instance.gf != null && PlayState.instance.gf.curCharacter == 'gftrain')
+			if (PlayState.instance.gf != null && PlayState.instance.gf.data.char == 'gftrain')
 				PlayState.instance.gf.playAnim('hairFall');
 
 			swagBacks['phillyTrain'].x = FlxG.width + 200;

@@ -5,15 +5,19 @@ import flixel.addons.transition.TransitionData;
 import flixel.util.FlxGradient;
 import kec.substates.MusicBeatSubstate;
 
-class CustomFadeTransition extends MusicBeatSubstate
+/**
+ *
+ * Transition overrides
+ * @author Shadow_Mario_
+ *
+**/
+class CustomFadeTransition extends FlxSpriteGroup
 {
 	public var finishCallback:Void->Void;
 
 	private var leTween:FlxTween;
 
 	private var inTween:FlxTween;
-
-	public var nextCamera:FlxCamera;
 
 	public var isTransIn:Bool = false;
 
@@ -25,6 +29,9 @@ class CustomFadeTransition extends MusicBeatSubstate
 	public function new(duration:Float)
 	{
 		super();
+		visible = false;
+		active = false;
+		scrollFactor.set(0, 0);
 
 		this.duration = duration;
 		var width:Int = Std.int(FlxG.width);
@@ -38,27 +45,27 @@ class CustomFadeTransition extends MusicBeatSubstate
 		transGradient.x -= (width - FlxG.width) / 2;
 		transBlack.x = transGradient.x;
 
-		openCallback = refresh;
-	}
-
-	override function create()
-	{
 		transBlack.setPosition(0, 0);
 		transGradient.setPosition(0, 0);
 
 		add(transGradient);
 		add(transBlack);
-		transBlack.alpha = 0;
-		transGradient.alpha = 0;
-		super.create();
+
+		camera = FlxG.cameras.list[FlxG.cameras.list.length - 1];
 	}
 
-	private function refresh()
+	private function resetTrans() // prepare to change your pronouns
 	{
+		visible = false;
+		active = false;
+
+		transGradient.scale.x = 1 / camera.zoom;
+		transGradient.scale.y = 1 / camera.zoom;
+		transGradient.updateHitbox();
+
 		transBlack.setPosition(0, 0);
-		transGradient.setPosition(0, 0);
-		transBlack.alpha = 0;
-		transGradient.alpha = 0;
+		transGradient.setPosition(0, 0); // Send them to brazil, before tweening they get their correct position
+
 		if (leTween != null)
 		{
 			leTween.cancel();
@@ -69,59 +76,47 @@ class CustomFadeTransition extends MusicBeatSubstate
 			inTween.cancel();
 			inTween.destroy();
 		}
-		transition();
 	}
 
-	private function transition()
+	public function executeTransition() // suicide
 	{
-		transBlack.alpha = 1;
-		transGradient.alpha = 1;
+		resetTrans();
+
 		if (isTransIn)
 		{
-			transGradient.flipY = false;
 			transGradient.y = transBlack.y - transBlack.height;
+			transGradient.flipY = false;
+
 			inTween = FlxTween.tween(transGradient, {y: transGradient.height + 50}, duration, {
 				onComplete: function(twn:FlxTween)
 				{
 					if (finishCallback != null)
 						finishCallback();
-					close();
 				},
 				ease: FlxEase.linear
 			});
 		}
 		else
 		{
-			transGradient.flipY = true;
 			transGradient.y = -transGradient.height;
-			transBlack.y = transGradient.y - transBlack.height + 50;
+			transGradient.flipY = true;
+
 			leTween = FlxTween.tween(transGradient, {y: transGradient.height + 50}, duration, {
 				onComplete: function(twn:FlxTween)
 				{
 					if (finishCallback != null)
-					{
 						finishCallback();
-					}
 				},
 				ease: FlxEase.linear
 			});
 		}
-	}
 
-	var camStarted:Bool = false;
+		active = true;
+		visible = true;
+	}
 
 	override function update(elapsed:Float)
 	{
-		if (isTransIn)
-			transBlack.y = transGradient.y + transGradient.height;
-		else
-			transBlack.y = transGradient.y - transBlack.height;
-
-		var camList = FlxG.cameras.list;
-		camera = camList[camList.length - 1];
-		transBlack.cameras = [camera];
-		transGradient.cameras = [camera];
-
 		super.update(elapsed);
 
 		if (isTransIn)
@@ -146,6 +141,8 @@ class CustomFadeTransition extends MusicBeatSubstate
 			inTween.cancel();
 			inTween.destroy();
 		}
-		super.close();
+		if (finishCallback != null)
+			finishCallback = null;
+		super.destroy();
 	}
 }

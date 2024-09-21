@@ -80,7 +80,7 @@ class Song
 	{
 		if (song?.chartVersion == Constants.chartVer)
 			return song;
-		
+
 		final oldFormat:Legacy = cast song.song;
 
 		if (oldFormat.chartVersion != null)

@@ -107,6 +107,10 @@ class StageDebugState extends MusicBeatState
 
 		FlxG.sound.music.stop();
 
+		super.create();
+
+		activeSong = null;
+
 		FlxG.sound.playMusic(Paths.inst(PlayState.SONG.audioFile));
 		FlxG.sound.music.fadeIn(3, 0, 0.5);
 		FlxG.mouse.visible = true;
@@ -140,18 +144,9 @@ class StageDebugState extends MusicBeatState
 		{
 			for (char => pos in positions)
 				for (person in [boyfriend, gf, dad])
-					if (person.curCharacter == char)
+					if (person.data.char == char)
 						person.setPosition(pos[0], pos[1]);
 		}
-
-		/*
-			dad.moves = true;
-			dad.active = true;
-			boyfriend.active = true;
-			boyfriend.moves = true;
-			gf.active = true;
-			gf.moves = true;
-		 */
 
 		PlayState.inDaPlay = false;
 
@@ -197,7 +192,6 @@ class StageDebugState extends MusicBeatState
 		addHelpText();
 
 		Conductor.bpm = PlayState.SONG.bpm;
-		super.create();
 	}
 
 	inline function addTabs()
@@ -387,9 +381,6 @@ class StageDebugState extends MusicBeatState
 		remove(boyfriend);
 		remove(gf);
 
-		Paths.clearUnusedMemory();
-		Paths.runGC();
-
 		if (FlxG.save.data.gen)
 			Debug.logTrace('Removing Characters...');
 
@@ -410,7 +401,7 @@ class StageDebugState extends MusicBeatState
 		Stage.initCamPos();
 
 		curChars = [dad, boyfriend, gf];
-		if (dad.replacesGF)
+		if (dad.data.replacesGF)
 		{
 			gf.visible = false;
 			dad.setPosition(gf.x, gf.y);
@@ -425,13 +416,9 @@ class StageDebugState extends MusicBeatState
 		camFollow.setPosition(Stage.camPosition[0], Stage.camPosition[1]);
 
 		if (charMode)
-		{
 			getNextChar();
-		}
 		else
-		{
 			getNextObject();
-		}
 
 		fakeZoom = Stage.camZoom;
 
@@ -439,9 +426,7 @@ class StageDebugState extends MusicBeatState
 			Debug.logTrace('Initalize New Stage Data...');
 
 		for (i in Stage.toAdd)
-		{
 			add(i);
-		}
 
 		if (FlxG.save.data.gen)
 			Debug.logTrace('Add Characters And Stage Sprites...');
@@ -486,7 +471,7 @@ class StageDebugState extends MusicBeatState
 		newStage = leStage;
 
 		curChars = [dad, boyfriend, gf];
-		if (dad.replacesGF)
+		if (dad.data.replacesGF)
 		{
 			gf.visible = false;
 			dad.setPosition(gf.x, gf.y);
@@ -543,7 +528,7 @@ class StageDebugState extends MusicBeatState
 			for (char => pos in positions)
 				for (person in [boyfriend, gf, dad])
 					if (person != null)
-						if (person.curCharacter == char)
+						if (person.data.char == char)
 							person.setPosition(pos[0], pos[1]);
 		}
 
@@ -591,8 +576,6 @@ class StageDebugState extends MusicBeatState
 			if (fakeZoom > 0.15) // me when floating point error
 				fakeZoom -= 0.05;
 		}
-
-		FlxG.watch.addQuick('Camera Zoom', FlxG.camera.zoom);
 
 		var lerpVal:Float = CoolUtil.boundTo(1 - (elapsed * 10), 0, 1);
 		FlxG.camera.zoom = FlxMath.lerp(fakeZoom, FlxG.camera.zoom, lerpVal);
@@ -765,9 +748,9 @@ class StageDebugState extends MusicBeatState
 
 	function saveProperties()
 	{
-		var b = boyfriend.curCharacter;
-		var g = gf.curCharacter;
-		var d = dad.curCharacter;
+		var b = boyfriend.data.char;
+		var g = gf.data.char;
+		var d = dad.data.char;
 		var json:kec.stages.StageData = {
 			staticCam: staticCam.selected,
 			camZoom: fakeZoom,
@@ -847,11 +830,11 @@ class StageDebugState extends MusicBeatState
 		}
 		else if (curBeat % idleBeat != 0)
 		{
-			if (boyfriend.isDancing)
+			if (boyfriend.data.dances)
 				boyfriend.dance(forcedToIdle);
-			if (dad.isDancing)
+			if (dad.data.dances)
 				dad.dance(forcedToIdle);
-			if (gf != null && gf.isDancing)
+			if (gf != null && gf.data.dances)
 				gf.dance(forcedToIdle);
 		}
 	}

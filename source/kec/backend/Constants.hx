@@ -45,6 +45,9 @@ class Constants
 	public static var notesplashSprite:String;
 	public static var noteskinPixelSprite:FlxGraphic;
 	public static var noteskinPixelSpriteEnds:FlxGraphic;
+	public static final defaultBF:String = 'bf';
+	public static final defaultOP:String = 'dad';
+	public static final defaultGF:String = 'gf';
 
 	public static final discordRpc:String = "898970552600002561";
 }

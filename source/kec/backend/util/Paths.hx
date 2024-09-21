@@ -163,7 +163,7 @@ class Paths
 		}
 		catch (e)
 		{
-			Debug.logError("AN ERROR OCCURRED parsing a JSON file.");
+			Debug.logError("AN ERROR OCCURRED parsing a JSON file. " + key);
 			Debug.logError(e.message);
 
 			// Return null.

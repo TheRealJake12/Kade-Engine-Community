@@ -34,7 +34,6 @@ import haxe.ui.util.Color;
 import kec.backend.HitSounds;
 import kec.backend.PlayStateChangeables;
 import kec.backend.chart.Event;
-import kec.backend.chart.NoteData;
 import kec.backend.chart.format.Modern;
 import kec.backend.chart.Song;
 import kec.backend.chart.TimingStruct;
@@ -42,7 +41,7 @@ import kec.backend.util.HelperFunctions;
 import kec.backend.util.NoteStyleHelper;
 import kec.backend.util.Sort;
 import kec.backend.util.Sort;
-import kec.objects.Character;
+import kec.backend.character.CharacterData;
 import kec.objects.CoolText;
 import kec.objects.note.Note;
 import kec.objects.ui.HealthIcon;
@@ -186,8 +185,8 @@ class ChartingState extends MusicBeatState
 	var iconP1:HealthIcon;
 	var iconP2:HealthIcon;
 
-	var player:Character;
-	var opponent:Character;
+	var player:CharacterData;
+	var opponent:CharacterData;
 
 	var lastConductorPos:Float;
 	var strumLine:FlxSprite;
@@ -197,6 +196,7 @@ class ChartingState extends MusicBeatState
 	public static var lengthInSections:Int = 0;
 
 	public var pitch:Float = 1.0;
+
 	var doSnapShit:Bool = true;
 	var defaultSnap:Bool = true;
 
@@ -269,8 +269,8 @@ class ChartingState extends MusicBeatState
 		PlayState.inDaPlay = false;
 		SONG = PlayState.SONG;
 		loadSong(SONG.audioFile, false);
-		activeSong = SONG;
 		setInitVars();
+		activeSong = SONG;
 
 		curDiff = CoolUtil.difficultyArray[PlayState.storyDifficulty];
 		Conductor.rate = 1;
@@ -297,11 +297,11 @@ class ChartingState extends MusicBeatState
 		noteStyles = CoolUtil.coolTextFile(Paths.txt('data/songStyleList'));
 		events = CoolUtil.coolTextFile(Paths.txt('data/eventList'));
 
-		player = new Character(0, 0, SONG.player1, true);
-		opponent = new Character(0, 0, SONG.player2, false);
+		player = new CharacterData(SONG.player1, true);
+		opponent = new CharacterData(SONG.player2, false);
 
-		iconP2 = new HealthIcon(opponent.healthIcon, opponent.iconAnimated, false);
-		iconP1 = new HealthIcon(player.healthIcon, player.iconAnimated, true);
+		iconP2 = new HealthIcon(opponent.icon, opponent.iconAnimated, false);
+		iconP1 = new HealthIcon(player.icon, player.iconAnimated, true);
 
 		iconP1.size.set(0.75, 0.75);
 		iconP2.size.set(0.75, 0.75);
@@ -344,13 +344,13 @@ class ChartingState extends MusicBeatState
 		var currentIndex = 0;
 
 		inst.time = 0;
-		setSongTimings();
-		currentSection = getSectionByTime(0);
 		Song.checkforSections(SONG, inst.length);
 		lengthInBeats = Math.round(TimingStruct.getBeatFromTime(inst.length));
 		lengthInSteps = lengthInBeats * 4;
 		lengthInSections = Std.int(lengthInBeats / 4);
 		Debug.logTrace('Total Beats ${lengthInBeats}. Total Steps ${lengthInSteps} Probable Length In Sections ${lengthInSections}');
+		setSongTimings();
+		currentSection = getSectionByTime(0);
 		createGrid();
 
 		regenerateLines();
@@ -469,15 +469,14 @@ class ChartingState extends MusicBeatState
 			{
 				Debug.logInfo("BPM CHANGE to " + timingSegBpm);
 				Conductor.bpm = timingSegBpm;
-				setSongTimings();
-				updateNotes();
+				updateNotePos();
 				regenerateLines();
 				Debug.logTrace(currentSeg.endBeat);
 				strumLine.y = getYfromStrum(inst.time); // make it snap
 			}
 		}
 
-		var lerpVal:Float = CoolUtil.boundTo(1 - (elapsed * 12), 0, 1);
+		final lerpVal:Float = CoolUtil.boundTo(1 - (elapsed * 12), 0, 1);
 		strumLine.y = FlxMath.lerp(getYfromStrum(inst.time), strumLine.y, lerpVal);
 		// strumLine.y = getYfromStrum(inst.time);
 
@@ -839,109 +838,109 @@ class ChartingState extends MusicBeatState
 					inst.play();
 				}
 			}
-			
-				if (FlxG.mouse.wheel != 0)
+
+			if (FlxG.mouse.wheel != 0)
+			{
+				inst.pause();
+				if (!SONG.splitVoiceTracks)
+					vocals.pause();
+				else
 				{
-					inst.pause();
-					if (!SONG.splitVoiceTracks)
-						vocals.pause();
-					else
+					vocalsP.pause();
+					vocalsE.pause();
+				}
+				if (!doSnapShit)
+				{
+					var leWheel = FlxG.mouse.wheel;
+
+					inst.time -= Std.int(leWheel * 25);
+
+					if (inst.time < 0)
+						inst.time = 0;
+				}
+
+				if (doSnapShit)
+				{
+					final beat:Float = TimingStruct.getBeatFromTime(Conductor.songPosition);
+					final snap:Float = quantization * 0.25;
+					final increase:Float = 1 / snap;
+					final wheelShit = FlxG.mouse.wheel > 0;
+
+					if (wheelShit)
 					{
-						vocalsP.pause();
-						vocalsE.pause();
-					}
-					if (!doSnapShit)
-					{
-						var leWheel = FlxG.mouse.wheel;
+						var fuck:Float = (Math.fround(beat * snap) / snap) - increase;
+						if (fuck < 0)
+							fuck = 0;
+						final data = TimingStruct.getTimingAtBeat(fuck);
+						var lastDataIndex = TimingStruct.AllTimings.indexOf(data) - 1;
+						if (lastDataIndex < 0)
+							lastDataIndex = 0;
 
-						inst.time -= Std.int(leWheel * 25);
+						final lastData = TimingStruct.AllTimings[lastDataIndex];
 
-						if (inst.time < 0)
-							inst.time = 0;
-					}
+						var pog = 0.0;
+						var shitPosition = 0.0;
 
-					if (doSnapShit)
-					{
-						final beat:Float = TimingStruct.getBeatFromTime(Conductor.songPosition);
-						final snap:Float = quantization * 0.25;
-						final increase:Float = 1 / snap;
-						final wheelShit = FlxG.mouse.wheel > 0;
-
-						if (wheelShit)
+						if (beat < data.startBeat)
 						{
-							var fuck:Float = (Math.fround(beat * snap) / snap) - increase;
-							if (fuck < 0)
-								fuck = 0;
-							final data = TimingStruct.getTimingAtBeat(fuck);
-							var lastDataIndex = TimingStruct.AllTimings.indexOf(data) - 1;
-							if (lastDataIndex < 0)
-								lastDataIndex = 0;
-
-							final lastData = TimingStruct.AllTimings[lastDataIndex];
-
-							var pog = 0.0;
-							var shitPosition = 0.0;
-
-							if (beat < data.startBeat)
-							{
-								pog = (fuck - lastData.startBeat) / (lastData.bpm / 60);
-								shitPosition = (lastData.startTime + pog) * 1000;
-							}
-							else if (beat > data.startBeat)
-							{
-								pog = (fuck - data.startBeat) / (data.bpm / 60);
-								shitPosition = (data.startTime + pog) * 1000;
-							}
-							else
-							{
-								pog = fuck / (Conductor.bpm / 60);
-								shitPosition = pog * 1000;
-							}
-
-							inst.time = shitPosition;
+							pog = (fuck - lastData.startBeat) / (lastData.bpm / 60);
+							shitPosition = (lastData.startTime + pog) * 1000;
+						}
+						else if (beat > data.startBeat)
+						{
+							pog = (fuck - data.startBeat) / (data.bpm / 60);
+							shitPosition = (data.startTime + pog) * 1000;
 						}
 						else
 						{
-							var fuck:Float = (Math.fround(beat * snap) / snap) + increase;
-							if (fuck < 0)
-								fuck = 0;
-							final data = TimingStruct.getTimingAtBeat(fuck);
-							var lastDataIndex = TimingStruct.AllTimings.indexOf(data) - 1;
-							if (lastDataIndex < 0)
-								lastDataIndex = 0;
-
-							final lastData = TimingStruct.AllTimings[lastDataIndex];
-
-							var pog = 0.0;
-							var shitPosition = 0.0;
-							if (beat < data.startBeat)
-							{
-								pog = (fuck - lastData.startBeat) / (lastData.bpm / 60);
-								shitPosition = (lastData.startTime + pog) * 1000;
-							}
-							else if (beat > data.startBeat)
-							{
-								pog = (fuck - data.startBeat) / (data.bpm / 60);
-								shitPosition = (data.startTime + pog) * 1000;
-							}
-							else
-							{
-								pog = fuck / (Conductor.bpm / 60);
-								shitPosition = pog * 1000;
-							}
-
-							inst.time = shitPosition;
+							pog = fuck / (Conductor.bpm / 60);
+							shitPosition = pog * 1000;
 						}
-					}
 
-					if (!SONG.splitVoiceTracks)
-						vocals.time = inst.time;
+						inst.time = shitPosition;
+					}
 					else
 					{
-						vocalsP.time = inst.time;
-						vocalsE.time = inst.time;
+						var fuck:Float = (Math.fround(beat * snap) / snap) + increase;
+						if (fuck < 0)
+							fuck = 0;
+						final data = TimingStruct.getTimingAtBeat(fuck);
+						var lastDataIndex = TimingStruct.AllTimings.indexOf(data) - 1;
+						if (lastDataIndex < 0)
+							lastDataIndex = 0;
+
+						final lastData = TimingStruct.AllTimings[lastDataIndex];
+
+						var pog = 0.0;
+						var shitPosition = 0.0;
+						if (beat < data.startBeat)
+						{
+							pog = (fuck - lastData.startBeat) / (lastData.bpm / 60);
+							shitPosition = (lastData.startTime + pog) * 1000;
+						}
+						else if (beat > data.startBeat)
+						{
+							pog = (fuck - data.startBeat) / (data.bpm / 60);
+							shitPosition = (data.startTime + pog) * 1000;
+						}
+						else
+						{
+							pog = fuck / (Conductor.bpm / 60);
+							shitPosition = pog * 1000;
+						}
+
+						inst.time = shitPosition;
 					}
 				}
+
+				if (!SONG.splitVoiceTracks)
+					vocals.time = inst.time;
+				else
+				{
+					vocalsP.time = inst.time;
+					vocalsE.time = inst.time;
+				}
+			}
 		}
 
 		var playedSound:Array<Bool> = [false, false, false, false, false, false, false, false];

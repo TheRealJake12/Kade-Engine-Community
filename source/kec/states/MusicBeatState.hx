@@ -52,16 +52,23 @@ class MusicBeatState extends FlxTransitionableState
 		destroySubStates = false;
 		fullscreenBind = FlxKey.fromString(Std.string(FlxG.save.data.fullscreenBind));
 
-		super.create();
+		
 		var skip:Bool = FlxTransitionableState.skipNextTransOut;
 		if (!skip)
 		{
-			transSubstate.isTransIn = true;
-			openSubState(transSubstate);
+			if (transSubstate != null)
+			{
+				transSubstate.isTransIn = true;
+				transSubstate.executeTransition();
+			}
 		}
 		FlxTransitionableState.skipNextTransOut = false;
 		FlxG.stage.window.borderless = FlxG.save.data.borderless;
 		Main.gameContainer.setFPSCap(FlxG.save.data.fpsCap);
+
+		super.create();
+
+		transSubstate.camera = FlxG.cameras.list[FlxG.cameras.list.length - 1];
 	}
 
 	override function destroy()
@@ -117,6 +124,10 @@ class MusicBeatState extends FlxTransitionableState
 		if (FlxG.keys.anyJustPressed([fullscreenBind]))
 			FlxG.fullscreen = !FlxG.fullscreen;
 
+		if (transSubstate != null)
+			if (transSubstate.active)
+				transSubstate.update(elapsed);	
+
 		if (curDecimalBeat < 0)
 			curDecimalBeat = 0;
 
@@ -157,10 +168,17 @@ class MusicBeatState extends FlxTransitionableState
 
 			if (currentSection != null)
 			{
-				if (Conductor.songPosition >= currentSection.endTime || Conductor.songPosition < currentSection.startTime)
+				if (Conductor.songPosition >= currentSection.endTime)
 				{
 					currentSection = getSectionByIndex(curSection +
 						1); // Searching by index is very slow if we have too many sections, instead we assign a index to every section.
+
+					if (currentSection != null)
+						curSection = currentSection.index;
+				}
+				else if (Conductor.songPosition < currentSection.startTime)
+				{
+					currentSection = getSectionByIndex(curSection - 1); // Searching by index is very slow if we have too many sections, instead we assign a index to every section.
 
 					if (currentSection != null)
 						curSection = currentSection.index;
@@ -241,22 +259,23 @@ class MusicBeatState extends FlxTransitionableState
 		Main.mainClassState = Type.getClass(nextState);
 		if (!FlxTransitionableState.skipNextTransIn)
 		{
-			transSubstate.isTransIn = false;
-			FlxG.state.openSubState(transSubstate);
-			if (nextState == FlxG.state)
+			if (transSubstate != null)
 			{
-				transSubstate.finishCallback = function()
-				{
-					resetState();
-				};
-			}
-			else
-			{
+				transSubstate.isTransIn = false;
+
 				transSubstate.finishCallback = function()
 				{
 					MusicBeatState.switchingState = false;
-					FlxG.switchState(nextState);
+
+					return FlxG.switchState(nextState);
 				};
+				transSubstate.executeTransition();
+			}
+			else
+			{
+				MusicBeatState.switchingState = false;
+
+				return FlxG.switchState(nextState);
 			}
 			return;
 		}
@@ -348,5 +367,13 @@ class MusicBeatState extends FlxTransitionableState
 		curBeat = -1;
 		curStep = -1;
 		setFirstTiming();
+	}
+
+	override function draw()
+	{
+		super.draw();
+
+		if (transSubstate != null && transSubstate.visible)
+			transSubstate.draw();
 	}
 }

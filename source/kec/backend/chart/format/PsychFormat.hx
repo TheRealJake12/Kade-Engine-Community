@@ -1,6 +1,6 @@
 package kec.backend.chart.format;
 
-typedef PsychFormat = 
+typedef PsychFormat =
 {
 	var song:String;
 	var notes:Array<PsychSection>;

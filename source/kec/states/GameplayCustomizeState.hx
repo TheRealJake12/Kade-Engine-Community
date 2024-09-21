@@ -146,7 +146,7 @@ class GameplayCustomizeState extends MusicBeatState
 		{
 			for (char => pos in positions)
 				for (person in [boyfriend, gf, dad])
-					if (person.curCharacter == char)
+					if (person.data.char == char)
 						person.setPosition(pos[0], pos[1]);
 		}
 		for (i in Stage.toAdd)
@@ -362,12 +362,7 @@ class GameplayCustomizeState extends MusicBeatState
 			boyfriend.dance();
 			dad.dance();
 		}
-		else if (dad.curCharacter == 'spooky' || dad.curCharacter == 'gf')
-			dad.dance();
-
 		gf.dance();
-
-		trace('beat');
 	}
 
 	// ripped from play state cuz im lazy

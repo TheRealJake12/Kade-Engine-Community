@@ -1149,7 +1149,7 @@ class LuaCharacter extends LuaClass
 
 		char = connectedCharacter;
 
-		isPlayer = char.isPlayer;
+		isPlayer = char.data.isPlayer;
 
 		properties = [
 			"alpha" => {
@@ -1433,7 +1433,7 @@ class LuaCharacter extends LuaClass
 
 		PlayState.instance.remove(char);
 
-		PlayState.instance.dad = new Character(x, y, newName, char.isPlayer);
+		PlayState.instance.dad = new Character(x, y, newName, char.data.isPlayer);
 
 		property.char = PlayState.instance.dad;
 

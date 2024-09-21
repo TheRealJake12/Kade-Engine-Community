@@ -576,22 +576,22 @@ class PlayState extends MusicBeatState
 
 		for (g in gfGroup.members)
 		{
-			g.x += g.charPos[0];
-			g.y += g.charPos[1];
+			g.x += g.data.charPos[0];
+			g.y += g.data.charPos[1];
 			charGroup.add(g);
 		}
 
 		for (d in dadGroup.members)
 		{
-			d.x += d.charPos[0];
-			d.y += d.charPos[1];
+			d.x += d.data.charPos[0];
+			d.y += d.data.charPos[1];
 			charGroup.add(d);
 		}
 
 		for (b in boyfriendGroup.members)
 		{
-			b.x += b.charPos[0];
-			b.y += b.charPos[1];
+			b.x += b.data.charPos[0];
+			b.y += b.data.charPos[1];
 			charGroup.add(b);
 		}
 
@@ -599,7 +599,7 @@ class PlayState extends MusicBeatState
 		{
 			for (char => pos in positions)
 				for (person in charGroup.members)
-					if (person.curCharacter == char)
+					if (person.data.char == char)
 						person.setPosition(pos[0], pos[1]);
 		}
 
@@ -645,7 +645,7 @@ class PlayState extends MusicBeatState
 			add(boyfriendGroup);
 		}
 
-		if (dad.hasTrail)
+		if (dad.data.trail)
 		{
 			if (FlxG.save.data.quality)
 			{
@@ -660,7 +660,7 @@ class PlayState extends MusicBeatState
 		camPos.x = Stage.camPosition[0];
 		camPos.y = Stage.camPosition[1];
 
-		if (dad.replacesGF && gf != null)
+		if (dad.data.replacesGF && gf != null)
 		{
 			if (!stageTesting)
 				dad.setPosition(gf.x, gf.y);
@@ -723,7 +723,7 @@ class PlayState extends MusicBeatState
 		add(uiGroup = new FlxSpriteGroup());
 
 		Conductor.elapsedPosition = -5000;
-		
+
 		if (PlayStateChangeables.useDownscroll)
 			correctY = 135;
 		else
@@ -897,10 +897,10 @@ class PlayState extends MusicBeatState
 		addedBotplay = PlayStateChangeables.botPlay;
 		reloadHealthBarColors();
 
-		iconP1 = new HealthIcon(boyfriend.healthIcon, boyfriend.iconAnimated, true);
+		iconP1 = new HealthIcon(boyfriend.data.icon, boyfriend.data.iconAnimated, true);
 		iconP1.y = healthBar.y - (iconP1.height * 0.5);
 
-		iconP2 = new HealthIcon(dad.healthIcon, dad.iconAnimated, false);
+		iconP2 = new HealthIcon(dad.data.icon, dad.data.iconAnimated, false);
 		iconP2.y = healthBar.y - (iconP2.height * 0.5);
 
 		if (FlxG.save.data.healthBar)
@@ -1020,7 +1020,7 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.save.data.quality && FlxG.save.data.background)
 		{
-			if (Stage.curStage == 'tank' && gf != null && gf.curCharacter == 'pico-speaker')
+			if (Stage.curStage == 'tank' && gf != null && gf.data.char == 'pico-speaker')
 			{
 				if (FlxG.save.data.quality)
 				{
@@ -1080,9 +1080,7 @@ class PlayState extends MusicBeatState
 		pushSub(new ResultsScreen());
 		pushSub(new GameOverSubstate());
 		pushSub(new OptionsMenu(true));
-
-		transSubstate.nextCamera = overlayCam;
-
+	
 		#if FEATURE_LUAMODCHART
 		if (executeModchart)
 		{
@@ -1131,7 +1129,7 @@ class PlayState extends MusicBeatState
 			songPosBar.y = FlxG.height - 37;
 		uiGroup.add(songPosBar);
 		songPosBar.scrollFactor.set();
-		songPosBar.setColors(dad.barColor, FlxColor.BLACK);
+		songPosBar.setColors(dad.data.barColor, FlxColor.BLACK);
 		songPosBar.alpha = 0;
 
 		songName = new FlxText(0, songPosBar.y, 0, SONG.songName, 16);
@@ -1551,7 +1549,7 @@ class PlayState extends MusicBeatState
 		{
 			for (d in dadGroup.members)
 			{
-				if (d.holdTimer > Conductor.stepCrochet * 4 * 0.001 * d.holdLength * 0.5)
+				if (d.holdTimer > Conductor.stepCrochet * 4 * 0.001 * d.data.holdLength * 0.5)
 				{
 					if (d.animation.curAnim.name.startsWith('sing')
 
@@ -2277,8 +2275,7 @@ class PlayState extends MusicBeatState
 			paused = true;
 			StageDebugState.Stage = Stage;
 			StageDebugState.fromEditor = false;
-			LoadingState.loadAndSwitchState(new StageDebugState(Stage.curStage, if (gf != null) gf.curCharacter else "gf", boyfriend.curCharacter,
-				dad.curCharacter));
+			LoadingState.loadAndSwitchState(new StageDebugState(Stage.curStage, if (gf != null) gf.data.char else "gf", boyfriend.data.char, dad.data.char));
 			#if FEATURE_LUAMODCHART
 			if (luaModchart != null)
 			{
@@ -2535,6 +2532,7 @@ class PlayState extends MusicBeatState
 								swagRect.height = ((strumY + Note.swagWidth / 2) - daNote.y) / daNote.scale.y;
 								swagRect.y = daNote.frameHeight - swagRect.height;
 								daNote.clipRect = swagRect;
+								swagRect.put();
 							}
 						}
 						else
@@ -2545,6 +2543,7 @@ class PlayState extends MusicBeatState
 								swagRect.y = ((strumY + Note.swagWidth / 2) - daNote.y) / daNote.scale.y;
 								swagRect.height -= swagRect.y;
 								daNote.clipRect = swagRect;
+								swagRect.put();
 							}
 						}
 					}
@@ -3599,12 +3598,12 @@ class PlayState extends MusicBeatState
 		{
 			for (boey in dadGroup.members)
 			{
-				if (boey.isDancing && !boey.animation.curAnim.name.startsWith('sing'))
+				if (boey.data.dances && !boey.animation.curAnim.name.startsWith('sing'))
 					boey.dance(forcedToIdle);
 			}
 			for (boi in boyfriendGroup.members)
 			{
-				if (boi.isDancing && !boi.animation.curAnim.name.startsWith('sing'))
+				if (boi.data.dances && !boi.animation.curAnim.name.startsWith('sing'))
 					boi.dance(forcedToIdle);
 			}
 		}
@@ -3662,7 +3661,7 @@ class PlayState extends MusicBeatState
 			return;
 
 		var point = char.getMidpoint();
-		camFollow.set(point.x + char.camPos[0] / char.scrollFactor.x, point.y + char.camPos[1] / char.scrollFactor.y);
+		camFollow.set(point.x + char.data.camPos[0] / char.scrollFactor.x, point.y + char.data.camPos[1] / char.scrollFactor.y);
 		point.put();
 
 		camFollow.x += camNoteX;
@@ -3707,27 +3706,27 @@ class PlayState extends MusicBeatState
 		switch (type)
 		{
 			case 0:
-				if (dad.curCharacter != value)
+				if (dad.data.char != value)
 				{
 					var lastAlpha:Float = dad.alpha;
 					dad.alpha = 0.00001;
 					dad = dadMap.get(value);
 					dad.setPosition(x, y);
 					dad.alpha = lastAlpha;
-					iconP2.changeIcon(dad.healthIcon, dad.iconAnimated);
+					iconP2.changeIcon(dad.data.icon, dad.data.iconAnimated);
 				}
 			case 1:
-				if (boyfriend.curCharacter != value)
+				if (boyfriend.data.char != value)
 				{
 					var lastAlpha:Float = boyfriend.alpha;
 					boyfriend.alpha = 0.00001;
 					boyfriend = boyfriendMap.get(value);
 					boyfriend.setPosition(x, y);
 					boyfriend.alpha = lastAlpha;
-					iconP1.changeIcon(boyfriend.healthIcon, boyfriend.iconAnimated);
+					iconP1.changeIcon(boyfriend.data.icon, boyfriend.data.iconAnimated);
 				}
 			case 2:
-				if (gf.curCharacter != value)
+				if (gf.data.char != value)
 				{
 					var lastAlpha = gf.alpha;
 					gf.alpha = 0.00001;
@@ -3741,7 +3740,6 @@ class PlayState extends MusicBeatState
 
 	override function destroy()
 	{
-		transSubstate.nextCamera = overlayCam;
 		#if FEATURE_HSCRIPT
 		if (scripts != null)
 		{
@@ -3974,6 +3972,14 @@ class PlayState extends MusicBeatState
 			tween.manager = tweenManager;
 			return tween;
 			// actually bullshit. WHY CAN'T YOU DO CREATETWEEN NORMALLY???? (crashes doing it normally)
+		});
+
+		script.set("createTimer", function(Time:Float = 1, ?OnComplete:FlxTimer->Void, Loops:Int = 1)
+		{
+			var timer:FlxTimer = new FlxTimer();
+			timer.manager = timerManager;
+			return timer.start(Time, OnComplete, Loops);
+			// actually bullshit. WHY CAN'T YOU DO CREATETIMER NORMALLY???? (crashes doing it normally)
 		});
 		// sex
 		script.set("notesUpdate", function()
@@ -4212,7 +4218,6 @@ class PlayState extends MusicBeatState
 	{
 		daNote.active = false;
 		daNote.visible = false;
-		FlxDestroyUtil.put(daNote.clipRect);
 		daNote.kill();
 		notes.remove(daNote, true);
 		daNote.destroy();
@@ -4585,10 +4590,10 @@ class PlayState extends MusicBeatState
 			#end
 			dad = new Character(100, 100, 'dad', false, false);
 		}
-		dadMap.set(dad.curCharacter, dad);
-		boyfriendMap.set(boyfriend.curCharacter, boyfriend);
+		dadMap.set(dad.data.char, dad);
+		boyfriendMap.set(boyfriend.data.char, boyfriend);
 		if (Stage.hasGF)
-			gfMap.set(gf.curCharacter, gf);
+			gfMap.set(gf.data.char, gf);
 	}
 
 	private function executeEventCheck()
@@ -4725,7 +4730,7 @@ class PlayState extends MusicBeatState
 	public function reloadHealthBarColors()
 	{
 		if (FlxG.save.data.colour)
-			healthBar.setColors(dad.barColor, boyfriend.barColor);
+			healthBar.setColors(dad.data.barColor, boyfriend.data.barColor);
 		else
 			healthBar.setColors(0xFFFF0000, 0xFF66FF33);
 	}

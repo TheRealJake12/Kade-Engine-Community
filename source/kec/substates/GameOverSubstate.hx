@@ -29,10 +29,10 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		var styleShit:String = (PlayState.STYLE.style == null ? 'default' : PlayState.STYLE.style).toLowerCase();
 		var daBf:String = '';
-		switch (char.curCharacter)
+		switch (char.data.char)
 		{
 			default:
-				daBf = char.deadChar;
+				daBf = char.data.deadChar;
 		}
 
 		if (styleShit != 'default')
@@ -41,7 +41,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		Conductor.songPosition = 0;
 
 		bf = new Character(char.getScreenPosition().x, char.getScreenPosition().y, daBf);
-		camFollow = new FlxObject(bf.getMidpoint().x + bf.camPos[0], bf.getMidpoint().y + bf.camPos[1], 1, 1);
+		camFollow = new FlxObject(bf.getMidpoint().x + bf.data.camPos[0], bf.getMidpoint().y + bf.data.camPos[1], 1, 1);
 		add(bf);
 		add(camFollow);
 
