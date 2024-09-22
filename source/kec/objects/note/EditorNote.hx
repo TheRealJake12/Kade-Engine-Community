@@ -187,6 +187,5 @@ class EditorNote extends FlxSprite
     override function kill()
     {
         super.kill();
-        visible = false;
     }
 }

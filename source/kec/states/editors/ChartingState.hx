@@ -272,6 +272,7 @@ class ChartingState extends MusicBeatState
 		loadSong(SONG.audioFile, false);
 		setInitVars();
 		activeSong = SONG;
+		curSection = 0;
 
 		curDiff = CoolUtil.difficultyArray[PlayState.storyDifficulty];
 		Conductor.rate = 1;
@@ -2075,10 +2076,9 @@ class ChartingState extends MusicBeatState
 		scrollSpeed.max = 10;
 		scrollSpeed.min = 0.1;
 		scrollSpeed.precision = 3;
-		scrollSpeed.step = 0.1;
+		scrollSpeed.step = 0.05;
 		scrollSpeed.pos = SONG.speed;
 		scrollSpeed.decimalSeparator = ".";
-		scrollSpeed.autoCorrect = true;
 		scrollSpeed.onChange = function(e)
 		{
 			SONG.speed = scrollSpeed.pos;
