@@ -79,7 +79,7 @@ class CharacterData
 		icon = data.healthicon == null ? char : data.healthicon;
 		iconAnimated = data.iconAnimated == null ? false : data.iconAnimated;
 		rgb = data.rgbArray == null ? [255, 0, 0] : data.rgbArray;
-		deadChar = data.deadChar == null ? deadChar : data.deadChar;
+		deadChar = data.deadChar == null ? 'bf-dead' : data.deadChar;
 		flipAnims = data.flipAnimations == null ? false : data.flipAnimations;
 		flipX = data.flipX == null ? false : data.flipX;
 		antialiasing = data.antialiasing == null ? FlxSprite.defaultAntialiasing : data.antialiasing;

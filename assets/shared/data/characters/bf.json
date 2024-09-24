@@ -9,6 +9,7 @@
     -100,
     -100
   ],
+  "deadChar":"bf-dead",
   "healthicon": "bf",
   "animations": [
     {

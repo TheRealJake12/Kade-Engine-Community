@@ -2358,6 +2358,7 @@ class PlayState extends MusicBeatState
 				persistentUpdate = false;
 				persistentDraw = false;
 				paused = true;
+				cannotDie = true;
 				if (!SONG.splitVoiceTracks)
 					vocals.stop();
 				else
@@ -2366,8 +2367,9 @@ class PlayState extends MusicBeatState
 					vocalsEnemy.stop();
 				}
 				inst.stop();
-				if (FlxG.save.data.InstantRespawn || (PlayStateChangeables.opponentMode && !dad.animOffsets.exists('firstDeath')))
-					LoadingState.loadAndSwitchState(new PlayState());
+
+				if (FlxG.save.data.InstantRespawn)
+					MusicBeatState.resetState();
 				else
 					openSubState(subStates[2]);
 
@@ -2409,8 +2411,8 @@ class PlayState extends MusicBeatState
 					vocalsEnemy.stop();
 				}
 				inst.stop();
-				if (FlxG.save.data.InstantRespawn || (PlayStateChangeables.opponentMode && !dad.animOffsets.exists('firstDeath')))
-					LoadingState.loadAndSwitchState(new PlayState());
+				if (FlxG.save.data.InstantRespawn)
+					MusicBeatState.resetState();
 				else
 					openSubState(subStates[2]);
 				isDead = true;
@@ -4073,13 +4075,9 @@ class PlayState extends MusicBeatState
 				{
 					var position:Int = PlayState.instance.members.indexOf(PlayState.instance.gfGroup);
 					if (PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup) < position)
-					{
 						position = PlayState.instance.members.indexOf(PlayState.instance.boyfriendGroup);
-					}
 					else if (PlayState.instance.members.indexOf(PlayState.instance.dadGroup) < position)
-					{
 						position = PlayState.instance.members.indexOf(PlayState.instance.dadGroup);
-					}
 					PlayState.instance.insert(position, obj);
 				}
 			}

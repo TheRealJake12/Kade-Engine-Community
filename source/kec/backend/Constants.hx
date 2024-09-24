@@ -36,7 +36,8 @@ class Constants
 		'${Sys.environment()["USER"]}! Get down from the tree and put your clothes on, dammit. (-Antonella)',
 		#end
 		'"not working" (-TechDev)',
-		"yesd (-TechDev)"
+		"yesd (-TechDev)",
+		"JAKEEEEEE (-TechDev)"
 	];
 
 	// Noteskin And Notesplash Related Stuff.
