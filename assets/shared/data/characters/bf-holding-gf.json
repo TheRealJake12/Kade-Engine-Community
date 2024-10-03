@@ -1,82 +1,137 @@
 {
-	"name": "Boyfriend holding GF",
-	"asset": ["characters/bfAndGF"],
-	"barColor": "#31B0D1",
-	"camPos": [-100, -100],
-	"healthicon" : "bf",
-	"startingAnim": "idle",
-	"deadChar": "bf-holding-gf-dead",
-	"animations": [
-		{
-			"offsets": [-5,0],
-			"loop": false,
-			"frameRate": 24,
-			"name": "idle",
-			"prefix": "BF idle dance"
-		},
-		{
-			"offsets": [12,7],
-			"loop": false,
-			"frameRate": 24,
-			"name": "singLEFT",
-			"prefix": "BF NOTE LEFT0"
-		},
-		{
-			"offsets": [-10,-10],
-			"looped": false,
-			"frameRate": 24,
-			"name": "singDOWN",
-			"prefix": "BF NOTE DOWN0"
-		},
-		{
-			"offsets": [-29,10],
-			"looped": false,
-			"frameRate": 24,
-			"name": "singUP",
-			"prefix": "BF NOTE UP0"
-		},
-		{
-			"offsets": [-41,23],
-			"looped": false,
-			"frameRate": 24,
-			"name": "singRIGHT",
-			"prefix": "BF NOTE RIGHT0"
-		},
-		{
-			"offsets": [12,7],
-			"looped": false,
-			"frameRate": 24,
-			"name": "singLEFTmiss",
-			"prefix": "BF NOTE LEFT MISS"
-		},
-		{
-			"offsets": [-10,-10],
-			"looped": false,
-			"frameRate": 24,
-			"name": "singDOWNmiss",
-			"prefix": "BF NOTE DOWN MISS"
-		},
-		{
-			"offsets": [-29,10],
-			"looped": false,
-			"frameRate": 24,
-			"name": "singUPmiss",
-			"prefix": "BF NOTE UP MISS"
-		},
-		{
-			"offsets": [-41,33],
-			"looped": false,
-			"frameRate": 24,
-			"name": "singRIGHTmiss",
-			"prefix": "BF NOTE RIGHT MISS"
-		},
-		{
-			"looped": false,
-			"offsets": [0,90],
-			"name": "bfCatch",
-			"frameRate": 24,
-			"prefix": "BF catches GF"
-		}
-	]
-
+ "animations": [
+  {
+   "loop": false,
+   "offsets": [
+    -5,
+    0
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF idle dance",
+   "looped": false,
+   "name": "idle"
+  },
+  {
+   "loop": false,
+   "offsets": [
+    12,
+    7
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF NOTE LEFT0",
+   "looped": false,
+   "name": "singLEFT"
+  },
+  {
+   "offsets": [
+    -10,
+    -10
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF NOTE DOWN0",
+   "looped": false,
+   "name": "singDOWN"
+  },
+  {
+   "offsets": [
+    -29,
+    10
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF NOTE UP0",
+   "looped": false,
+   "name": "singUP"
+  },
+  {
+   "offsets": [
+    -41,
+    23
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF NOTE RIGHT0",
+   "looped": false,
+   "name": "singRIGHT"
+  },
+  {
+   "offsets": [
+    12,
+    7
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF NOTE LEFT MISS",
+   "looped": false,
+   "name": "singLEFTmiss"
+  },
+  {
+   "offsets": [
+    -10,
+    -10
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF NOTE DOWN MISS",
+   "looped": false,
+   "name": "singDOWNmiss"
+  },
+  {
+   "offsets": [
+    -29,
+    10
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF NOTE UP MISS",
+   "looped": false,
+   "name": "singUPmiss"
+  },
+  {
+   "offsets": [
+    -41,
+    33
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF NOTE RIGHT MISS",
+   "looped": false,
+   "name": "singRIGHTmiss"
+  },
+  {
+   "offsets": [
+    0,
+    90
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF catches GF",
+   "looped": false,
+   "name": "bfCatch"
+  }
+ ],
+ "barType": "rgb",
+ "camPos": [
+  -100,
+  -100
+ ],
+ "flipAnimations": false,
+ "flipX": false,
+ "healthicon": "bf",
+ "rgbArray": [
+  49,
+  176,
+  209
+ ],
+ "asset": [
+  "characters/bfAndGF"
+ ],
+ "startingAnim": "idle",
+ "iconAnimated": false,
+ "deadChar": "bf-holding-gf-dead",
+ "name": "bf-holding-gf",
+ "scale": 1
 }

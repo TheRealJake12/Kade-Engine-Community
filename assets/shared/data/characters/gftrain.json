@@ -1,40 +1,127 @@
 {
-  "name": "Girlfriend Train",
-  "asset": ["characters/GF_assets_train"],
-  "barColor": "#A5004D",
-  "startingAnim": "danceRight",
-  "isDancing": true,
-  "holdLength": 4.1,
-  "replacesGF": true,
-  "animations": [
-    {
-      "name": "danceLeft",
-      "prefix": "GF Dancing Beat",
-      "offsets": [0, -9],
-      "frameIndices": [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
-    },
-    {
-      "name": "danceRight",
-      "prefix": "GF Dancing Beat",
-      "offsets": [0, -9],
-      "frameIndices": [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
-    },
-    {
-      "name": "hairBlow",
-      "prefix": "GF Dancing Beat Hair blowing",
-      "interrupt": false,
-      "offsets": [45, -8],
-      "frameIndices": [0, 1, 2, 3],
-      "looped": true
-    },
-    {
-      "name": "hairFall",
-      "prefix": "GF Dancing Beat Hair Landing",
-      "nextAnim": "danceRight",
-      "interrupt": false,
-      "isDanced": true,
-      "offsets": [0, -9],
-      "frameIndices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-    }
-  ]
+ "animations": [
+  {
+   "offsets": [
+    0,
+    -9
+   ],
+   "frameRate": 24,
+   "prefix": "GF Dancing Beat0",
+   "frameIndices": [
+    30,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+   ],
+   "looped": false,
+   "name": "danceLeft"
+  },
+  {
+   "offsets": [
+    0,
+    -9
+   ],
+   "frameRate": 24,
+   "prefix": "GF Dancing Beat0",
+   "frameIndices": [
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+   ],
+   "looped": false,
+   "name": "danceRight"
+  },
+  {
+   "offsets": [
+    45,
+    -8
+   ],
+   "frameRate": 24,
+   "frameIndices": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "prefix": "GF Dancing Beat Hair blowing",
+   "looped": true,
+   "name": "hairBlow",
+   "interrupt": false
+  },
+  {
+   "offsets": [
+    0,
+    -9
+   ],
+   "frameIndices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+   ],
+   "prefix": "GF Dancing Beat Hair Landing",
+   "looped": false,
+   "isDanced": true,
+   "name": "hairFall",
+   "interrupt": false,
+   "nextAnim": "danceRight",
+   "frameRate": 24
+  }
+ ],
+ "barType": "rgb",
+ "isDancing": true,
+ "camPos": [
+  0,
+  0
+ ],
+ "flipAnimations": false,
+ "flipX": false,
+ "healthicon": "gf",
+ "rgbArray": [
+  165,
+  0,
+  77
+ ],
+ "asset": [
+  "characters/GF_assets_train"
+ ],
+ "startingAnim": "idle",
+ "iconAnimated": false,
+ "antialiasing": true,
+ "deadChar": "",
+ "name": "gftrain",
+ "replacesGF": true,
+ "scale": 1
 }

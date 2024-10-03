@@ -35,6 +35,9 @@ class GameOverSubstate extends MusicBeatSubstate
 				daBf = char.data.deadChar;
 		}
 
+		if (daBf == null || daBf.length == 0)
+			daBf = 'bf-dead';
+
 		if (styleShit != 'default')
 			stageSuffix = '-${styleShit}';
 

@@ -16,7 +16,7 @@
 								<label text="Character ID" verticalAlign="center" />
 								<textfield id="charToLoad" placeholder="" />
 								<label text="Asset Path" verticalAlign="center" />
-								<textfield id="charAssets" placeholder="" />
+								<textfield id="charAssets" restrictChars="[]"/>
 								<label text="Icon Path" verticalAlign="center" />
 								<textfield id="charIcon" placeholder="" />
 								<label text="Dead Character" verticalAlign="center" />
@@ -33,11 +33,16 @@
 								</hbox>
 								<hbox>
 									<label text="Scale:" verticalAlign="center" />
-									<number-stepper id="charScale" step="0.1" verticalAlign="center" />
+									<number-stepper id="charScale" step="0.01" verticalAlign="center" />
 									<spacer/>
 									<label text="Camera Pos X" verticalAlign="center" />
 									<spacer/>
 									<label text="Camera Pos Y" verticalAlign="center" />
+								</hbox>
+								<hbox>
+									<checkbox id="charAntiAlias" text="Antialiasing" verticalAlign="center"/>
+									<checkbox id="charDances" text="Dances" verticalAlign="center"/>
+									<checkbox id="charGF" text="Is GF" verticalAlign="center"/>
 								</hbox>
 							</vbox>
 							<menu-separator />
@@ -90,6 +95,11 @@
 								<label text="Ignore Idle" verticalAlign="center" />
 								<checkbox id="animIgnoreIdle" verticalAlign="center" />
 							</grid>
+							<menu-separator />
+							<hbox>
+								<label text="Hold Length" verticalAlign="center"/>
+								<number-stepper id="animLength" step="0.1" verticalAlign="center"/>
+							</hbox>
 						</vbox>
 					</frame>
 				</vbox>

@@ -1,63 +1,141 @@
 {
-  "name": "Boyfriend (Car)",
-  "asset": ["characters/bfCar"],
-  "barColor": "#31B0D1",
-  "startingAnim": "idle",
-  "camPos": [-100, -100],
-  "healthicon" : "bf",
-  "animations": [
-    {
-      "name": "idle",
-      "prefix": "BF idle dance",
-      "nextAnim": "idleLoop",
-      "offsets": [-5, 0]
-    },
-    {
-      "name": "idleLoop",
-      "prefix": "BF idle dance",
-      "offsets": [-5, 0],
-      "frameIndices": [10, 11, 12, 13],
-      "looped": true
-    },
-    {
-      "name": "singUP",
-      "prefix": "BF NOTE UP0",
-      "offsets": [-29, 27]
-    },
-    {
-      "name": "singLEFT",
-      "prefix": "BF NOTE LEFT0",
-      "offsets": [12, -6]
-    },
-    {
-      "name": "singRIGHT",
-      "prefix": "BF NOTE RIGHT0",
-      "offsets": [-38, -7]
-    },
-    {
-      "name": "singDOWN",
-      "prefix": "BF NOTE DOWN0",
-      "offsets": [-10, -50]
-    },
-    {
-      "name": "singUPmiss",
-      "prefix": "BF NOTE UP MISS",
-      "offsets": [-29, 27]
-    },
-    {
-      "name": "singLEFTmiss",
-      "prefix": "BF NOTE LEFT MISS",
-      "offsets": [12, 24]
-    },
-    {
-      "name": "singRIGHTmiss",
-      "prefix": "BF NOTE RIGHT MISS",
-      "offsets": [-30, 21]
-    },
-    {
-      "name": "singDOWNmiss",
-      "prefix": "BF NOTE DOWN MISS",
-      "offsets": [-11, -19]
-    }
-  ]
+ "animations": [
+  {
+   "offsets": [
+    -5,
+    0
+   ],
+   "nextAnim": "idleLoop",
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF idle dance",
+   "looped": false,
+   "name": "idle"
+  },
+  {
+   "offsets": [
+    -5,
+    0
+   ],
+   "frameRate": 24,
+   "prefix": "BF idle dance",
+   "frameIndices": [
+    10,
+    11,
+    12,
+    13
+   ],
+   "looped": true,
+   "name": "idleLoop"
+  },
+  {
+   "offsets": [
+    -29,
+    27
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF NOTE UP0",
+   "looped": false,
+   "name": "singUP"
+  },
+  {
+   "offsets": [
+    12,
+    -6
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF NOTE LEFT0",
+   "looped": false,
+   "name": "singLEFT"
+  },
+  {
+   "offsets": [
+    -38,
+    -7
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF NOTE RIGHT0",
+   "looped": false,
+   "name": "singRIGHT"
+  },
+  {
+   "offsets": [
+    -10,
+    -50
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF NOTE DOWN0",
+   "looped": false,
+   "name": "singDOWN"
+  },
+  {
+   "offsets": [
+    -29,
+    27
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF NOTE UP MISS",
+   "looped": false,
+   "name": "singUPmiss"
+  },
+  {
+   "offsets": [
+    12,
+    24
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF NOTE LEFT MISS",
+   "looped": false,
+   "name": "singLEFTmiss"
+  },
+  {
+   "offsets": [
+    -30,
+    21
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF NOTE RIGHT MISS",
+   "looped": false,
+   "name": "singRIGHTmiss"
+  },
+  {
+   "offsets": [
+    -11,
+    -19
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF NOTE DOWN MISS",
+   "looped": false,
+   "name": "singDOWNmiss"
+  }
+ ],
+ "barType": "rgb",
+ "camPos": [
+  -100,
+  -100
+ ],
+ "flipAnimations": false,
+ "flipX": false,
+ "healthicon": "bf",
+ "rgbArray": [
+  49,
+  176,
+  209
+ ],
+ "asset": [
+  "characters/bfCar"
+ ],
+ "startingAnim": "idle",
+ "iconAnimated": false,
+ "deadChar": "",
+ "name": "bf-car",
+ "scale": 1
 }

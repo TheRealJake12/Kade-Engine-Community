@@ -1,35 +1,83 @@
 {
-  "name": "Monster (Christmas)",
-  "asset": ["characters/monsterChristmas"],
-  "barColor": "#F3FF6E",
-  "startingAnim": "idle",
-  "healthicon" : "monster",
-  "camPos": [300, -100],
-  "animations": [
-    {
-      "name": "idle",
-      "prefix": "monster idle",
-      "offsets": [0, 0]
-    },
-    {
-      "name": "singUP",
-      "prefix": "monster up note",
-      "offsets": [-20, 50]
-    },
-    {
-      "name": "singLEFT",
-      "prefix": "Monster left note",
-      "offsets": [-30, 0]
-    },
-    {
-      "name": "singRIGHT",
-      "prefix": "Monster Right note",
-      "offsets": [-51, 0]
-    },
-    {
-      "name": "singDOWN",
-      "prefix": "monster down",
-      "offsets": [-40, -94]
-    }
-  ]
+ "animations": [
+  {
+   "offsets": [
+    0,
+    0
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "monster idle",
+   "looped": false,
+   "name": "idle"
+  },
+  {
+   "offsets": [
+    -20,
+    50
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "monster up note",
+   "looped": false,
+   "name": "singUP"
+  },
+  {
+   "offsets": [
+    -30,
+    0
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "Monster left note",
+   "looped": false,
+   "name": "singLEFT"
+  },
+  {
+   "offsets": [
+    -51,
+    0
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "Monster Right note",
+   "looped": false,
+   "name": "singRIGHT"
+  },
+  {
+   "offsets": [
+    -40,
+    -94
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "monster down",
+   "looped": false,
+   "name": "singDOWN"
+  }
+ ],
+ "barType": "rgb",
+ "isDancing": false,
+ "camPos": [
+  300,
+  -100
+ ],
+ "flipAnimations": false,
+ "flipX": false,
+ "healthicon": "monster",
+ "rgbArray": [
+  243,
+  255,
+  110
+ ],
+ "asset": [
+  "characters/monsterChristmas"
+ ],
+ "startingAnim": "idle",
+ "iconAnimated": false,
+ "antialiasing": true,
+ "deadChar": "",
+ "name": "monster-christmas",
+ "replacesGF": false,
+ "scale": 1
 }

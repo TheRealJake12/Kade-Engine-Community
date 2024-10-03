@@ -1,31 +1,103 @@
 {
-  "name": "Girlfriend (Car)",
-  "asset": ["characters/gfCar"],
-  "barColor": "#A5004D",
-  "startingAnim": "danceRight",
-  "isDancing": true,
-  "replacesGF": true,
-  "animations": [
-    {
-      "name": "danceLeft",
-      "prefix": "GF Dancing Beat Hair blowing CAR",
-      "nextAnim": "idleLoop",
-      "offsets": [0, 0],
-      "frameIndices": [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
-    },
-    {
-      "name": "danceRight",
-      "prefix": "GF Dancing Beat Hair blowing CAR",
-      "nextAnim": "idleLoop",
-      "offsets": [0, 0],
-      "frameIndices": [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
-    },
-    {
-      "name": "idleLoop",
-      "prefix": "GF Dancing Beat Hair blowing CAR",
-      "offsets": [0, 0],
-      "frameIndices": [10, 11, 12, 25, 26, 27],
-      "looped": true
-    }
-  ]
+ "animations": [
+  {
+   "offsets": [
+    0,
+    0
+   ],
+   "nextAnim": "idleLoop",
+   "frameRate": 24,
+   "frameIndices": [
+    30,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+   ],
+   "prefix": "GF Dancing Beat Hair blowing CAR",
+   "looped": false,
+   "name": "danceLeft"
+  },
+  {
+   "offsets": [
+    0,
+    0
+   ],
+   "nextAnim": "idleLoop",
+   "frameRate": 24,
+   "frameIndices": [
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+   ],
+   "prefix": "GF Dancing Beat Hair blowing CAR",
+   "looped": false,
+   "name": "danceRight"
+  },
+  {
+   "offsets": [
+    0,
+    0
+   ],
+   "frameRate": 24,
+   "prefix": "GF Dancing Beat Hair blowing CAR",
+   "frameIndices": [
+    10,
+    11,
+    12,
+    25,
+    26,
+    27
+   ],
+   "looped": true,
+   "name": "idleLoop"
+  }
+ ],
+ "barType": "rgb",
+ "isDancing": true,
+ "camPos": [
+  0,
+  0
+ ],
+ "flipAnimations": false,
+ "flipX": false,
+ "healthicon": "gf",
+ "rgbArray": [
+  165,
+  0,
+  77
+ ],
+ "asset": [
+  "characters/gfCar"
+ ],
+ "startingAnim": "idle",
+ "iconAnimated": false,
+ "antialiasing": true,
+ "deadChar": "",
+ "name": "gf-car",
+ "replacesGF": true,
+ "scale": 1
 }

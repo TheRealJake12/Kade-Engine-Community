@@ -1,58 +1,124 @@
 {
-  "name": "Boyfriend (Pixel Day)",
-  "asset": ["characters/bfPixel"],
-  "barColor": "#31B0D1",
-  "scale": 6,
-  "antialiasing": false,
-  "camPos": [-300, -300],
-  "healthicon" : "bf-pixel",
-  "deadChar" : "bf-pixel-dead",
-  "startingAnim": "idle",
-  "animations": [
-    {
-      "name": "idle",
-      "prefix": "BF IDLE",
-      "offsets": [0, 0]
-    },
-    {
-      "name": "singUP",
-      "prefix": "BF UP NOTE",
-      "offsets": [0, 0]
-    },
-    {
-      "name": "singLEFT",
-      "prefix": "BF LEFT NOTE",
-      "offsets": [0, 0]
-    },
-    {
-      "name": "singRIGHT",
-      "prefix": "BF RIGHT NOTE",
-      "offsets": [0, 0]
-    },
-    {
-      "name": "singDOWN",
-      "prefix": "BF DOWN NOTE",
-      "offsets": [0, 0]
-    },
-    {
-      "name": "singUPmiss",
-      "prefix": "BF UP MISS",
-      "offsets": [0, 0]
-    },
-    {
-      "name": "singLEFTmiss",
-      "prefix": "BF LEFT MISS",
-      "offsets": [0, 0]
-    },
-    {
-      "name": "singRIGHTmiss",
-      "prefix": "BF RIGHT MISS",
-      "offsets": [0, 0]
-    },
-    {
-      "name": "singDOWNmiss",
-      "prefix": "BF DOWN MISS",
-      "offsets": [0, 0]
-    }
-  ]
+ "animations": [
+  {
+   "offsets": [
+    0,
+    0
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF IDLE",
+   "looped": false,
+   "name": "idle"
+  },
+  {
+   "offsets": [
+    0,
+    0
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF UP NOTE",
+   "looped": false,
+   "name": "singUP"
+  },
+  {
+   "offsets": [
+    0,
+    0
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF LEFT NOTE",
+   "looped": false,
+   "name": "singLEFT"
+  },
+  {
+   "offsets": [
+    0,
+    0
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF RIGHT NOTE",
+   "looped": false,
+   "name": "singRIGHT"
+  },
+  {
+   "offsets": [
+    0,
+    0
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF DOWN NOTE",
+   "looped": false,
+   "name": "singDOWN"
+  },
+  {
+   "offsets": [
+    0,
+    0
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF UP MISS",
+   "looped": false,
+   "name": "singUPmiss"
+  },
+  {
+   "offsets": [
+    0,
+    0
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF LEFT MISS",
+   "looped": false,
+   "name": "singLEFTmiss"
+  },
+  {
+   "offsets": [
+    0,
+    0
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF RIGHT MISS",
+   "looped": false,
+   "name": "singRIGHTmiss"
+  },
+  {
+   "offsets": [
+    0,
+    0
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF DOWN MISS",
+   "looped": false,
+   "name": "singDOWNmiss"
+  }
+ ],
+ "barType": "rgb",
+ "camPos": [
+  -300,
+  -300
+ ],
+ "flipAnimations": false,
+ "flipX": false,
+ "healthicon": "bf-pixel",
+ "rgbArray": [
+  123,
+  214,
+  246
+ ],
+ "asset": [
+  "characters/bfPixel"
+ ],
+ "startingAnim": "idle",
+ "iconAnimated": false,
+ "deadChar": "bf-pixel-dead",
+ "name": "bf-pixel",
+ "scale": 6
 }

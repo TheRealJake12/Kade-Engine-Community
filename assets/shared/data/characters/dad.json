@@ -1,45 +1,99 @@
 {
-  "name": "Daddy Dearest",
-  "asset": ["characters/DADDY_DEAREST"],
-  "barColor": "#AF66CE",
-  "startingAnim": "idle",
-  "holdLength": 6.1,
-  "camPos": [150, -100],
-  "healthicon" : "dad",
-  "animations": [
-    {
-      "name": "idle",
-      "prefix": "Dad idle dance",
-      "nextAnim": "idleLoop",
-      "offsets": [0, 0]
-    },
-    {
-      "name": "idleLoop",
-      "prefix": "Dad idle dance",
-      "offsets": [0, 0],
-      "frameIndices": [11, 12],
-      "frameRate": 12,
-      "looped": true
-    },
-    {
-      "name": "singUP",
-      "prefix": "Dad Sing Note UP",
-      "offsets": [-6, 50]
-    },
-    {
-      "name": "singLEFT",
-      "prefix": "Dad Sing Note LEFT",
-      "offsets": [-10, 10]
-    },
-    {
-      "name": "singRIGHT",
-      "prefix": "Dad Sing Note RIGHT",
-      "offsets": [0, 27]
-    },
-    {
-      "name": "singDOWN",
-      "prefix": "Dad Sing Note DOWN",
-      "offsets": [0, -30]
-    }
-  ]
+ "animations": [
+  {
+   "offsets": [
+    0,
+    0
+   ],
+   "nextAnim": "idleLoop",
+   "frameRate": 24,
+   "prefix": "Dad idle dance",
+   "frameIndices": [],
+   "name": "idle",
+   "looped": false
+  },
+  {
+   "offsets": [
+    0,
+    0
+   ],
+   "frameRate": 12,
+   "prefix": "Dad idle dance",
+   "frameIndices": [
+    11,
+    12
+   ],
+   "looped": true,
+   "name": "idleLoop"
+  },
+  {
+   "offsets": [
+    -6,
+    50
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "Dad Sing Note UP",
+   "name": "singUP",
+   "looped": false
+  },
+  {
+   "offsets": [
+    -10,
+    10
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "Dad Sing Note LEFT",
+   "name": "singLEFT",
+   "looped": false
+  },
+  {
+   "offsets": [
+    0,
+    27
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "Dad Sing Note RIGHT",
+   "name": "singRIGHT",
+   "looped": false
+  },
+  {
+   "offsets": [
+    0,
+    -30
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "Dad Sing Note DOWN",
+   "name": "singDOWN",
+   "looped": false
+  }
+ ],
+ "barType": "rgb",
+ "isDancing": false,
+ "camPos": [
+  -150,
+  -100
+ ],
+ "holdLength": 6.1,
+ "flipAnimations": false,
+ "flipX": false,
+ "healthicon": "dad",
+ "rgbArray": [
+  175,
+  102,
+  206
+ ],
+ "asset": [
+  "characters/DADDY_DEAREST"
+ ],
+ "startingAnim": "idle",
+ "iconAnimated": false,
+ "antialiasing": true,
+ "deadChar": "",
+ "name": "dad",
+ "replacesGF": false,
+ "scale": 1
 }

@@ -1,59 +1,85 @@
 {
-  "name": "Spirit",
-  "asset": [
-    "characters/spirit"
-  ],
-  "barColor": "#FF3C6E",
-  "scale": 6,
-  "antialiasing": false,
-  "AtlasType": "PackerAtlas",
-  "startingAnim": "idle",
-  "camPos": [
-    0,
-    0
-  ],
-  "hasTrail": true,
-  "healthicon": "spirit",
-  "animations": [
-    {
-      "name": "idle",
-      "prefix": "idle spirit_",
-      "offsets": [
-        -220,
-        -280
-      ]
-    },
-    {
-      "name": "singUP",
-      "prefix": "up_",
-      "offsets": [
-        -220,
-        -240
-      ]
-    },
-    {
-      "name": "singLEFT",
-      "prefix": "left_",
-      "offsets": [
-        -200,
-        -280
-      ]
-    },
-    {
-      "name": "singRIGHT",
-      "prefix": "right_",
-      "offsets": [
-        -220,
-        -280
-      ]
-    },
-    {
-      "name": "singDOWN",
-      "prefix": "spirit down_",
-      "offsets": [
-        170,
-        110
-      ]
-    }
-  ]
+ "animations": [
+  {
+   "offsets": [
+    -220,
+    -280
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "idle spirit_",
+   "looped": false,
+   "name": "idle"
+  },
+  {
+   "offsets": [
+    -220,
+    -240
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "up_",
+   "looped": false,
+   "name": "singUP"
+  },
+  {
+   "offsets": [
+    -200,
+    -280
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "left_",
+   "looped": false,
+   "name": "singLEFT"
+  },
+  {
+   "offsets": [
+    -220,
+    -280
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "right_",
+   "looped": false,
+   "name": "singRIGHT"
+  },
+  {
+   "offsets": [
+    170,
+    110
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "spirit down_",
+   "looped": false,
+   "name": "singDOWN"
+  }
+ ],
+ "barType": "rgb",
+ "isDancing": false,
+ "camPos": [
+  0,
+  0
+ ],
+ "holdLength": 4,
+ "flipAnimations": false,
+ "flipX": false,
+ "healthicon": "spirit",
+ "rgbArray": [
+  255,
+  60,
+  110
+ ],
+ "asset": [
+  "characters/spirit"
+ ],
+ "startingAnim": "idle",
+ "iconAnimated": false,
+ "antialiasing": false,
+ "deadChar": "",
+ "name": "spirit",
+ "replacesGF": false,
+ "hasTrail": true,
+ "scale": 6
 }

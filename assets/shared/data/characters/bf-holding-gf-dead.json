@@ -1,32 +1,58 @@
 {
-	"asset": ["characters/bfHoldingGF-DEAD"],
-	"barColor": "#31B0D1",
-	"camPos": [0,0],
-	"holdLength": 4,
-	"scale": 1.05,
-	
-	"startingAnim": "firstDeath",
-	"animations": [
-		{
-			"offsets": [37,-3],
-			"frameRate": 24,
-			"name": "deathLoop",
-			"looped": true,
-			"prefix": "BF Dead with GF Loop"
-		},
-		{
-			"offsets": [37,14],
-			"frameRate": 24,
-			"name": "firstDeath",
-			"looped": false,
-			"prefix": "BF Dies with GF"
-		},
-		{
-			"offsets": [37,28],
-			"frameRate": 24,
-			"name": "deathConfirm",
-			"looped": false,
-			"prefix": "RETRY confirm holding gf"
-		}
-	]
+ "animations": [
+  {
+   "offsets": [
+    37,
+    -3
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF Dead with GF Loop",
+   "name": "deathLoop",
+   "looped": true
+  },
+  {
+   "offsets": [
+    37,
+    14
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "BF Dies with GF",
+   "name": "firstDeath",
+   "looped": false
+  },
+  {
+   "offsets": [
+    37,
+    28
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "RETRY confirm holding gf",
+   "name": "deathConfirm",
+   "looped": false
+  }
+ ],
+ "barType": "rgb",
+ "camPos": [
+  0,
+  0
+ ],
+ "flipAnimations": false,
+ "flipX": false,
+ "healthicon": "bf-holding-gf-dead",
+ "rgbArray": [
+  255,
+  0,
+  0
+ ],
+ "asset": [
+  "characters/bfHoldingGF-DEAD"
+ ],
+ "startingAnim": "idle",
+ "iconAnimated": false,
+ "deadChar": "bf-holding-gf-dead",
+ "name": "bf-holding-gf-dead",
+ "scale": 1
 }

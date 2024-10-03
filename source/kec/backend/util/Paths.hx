@@ -550,17 +550,20 @@ class Paths
 		#end
 	}
 
-	static public function getAtlas(key:String, ?parentFolder:String = null, ?allowGPU:Bool = true):FlxAtlasFrames
+	static public function getAtlas(key:String, ?parentFolder:String = null, ?allowGPU:Bool):FlxAtlasFrames
 	{
 		final imageLoaded:FlxGraphic = image(key, parentFolder, allowGPU);
 		final myXml:Dynamic = getPath('images/$key.xml', TEXT, parentFolder);
+		final myTxt:Dynamic = getPath('images/$key.txt', TEXT, parentFolder);
 		if (OpenFlAssets.exists(myXml))
 			return FlxAtlasFrames.fromSparrow(imageLoaded, myXml);
+		else if (OpenFlAssets.exists(myTxt))
+			return FlxAtlasFrames.fromSpriteSheetPacker(imageLoaded, myTxt);
 
 		return null;
 	}
 
-	static public function getMultiAtlas(keys:Array<String>, ?parentFolder:String = null, ?allowGPU:Bool = true):FlxAtlasFrames
+	static public function getMultiAtlas(keys:Array<String>, ?parentFolder:String = null, ?allowGPU:Bool):FlxAtlasFrames
 	{
 		var parentFrames:FlxAtlasFrames = Paths.getAtlas(keys[0].trim());
 		if (keys.length > 1)
@@ -578,35 +581,24 @@ class Paths
 		return parentFrames;
 	}
 
-	static public function getSparrowAtlas(key:String, ?library:String, ?isCharacter:Bool = false, ?gpuRender:Bool)
+	static public function getSparrowAtlas(key:String, ?library:String, ?gpuRender:Bool)
 	{
 		gpuRender = gpuRender != null ? gpuRender : FlxG.save.data.gpuRender;
-		if (isCharacter)
-		{
-			return FlxAtlasFrames.fromSparrow(image('characters/$key', library, gpuRender), file('images/characters/$key.xml', library));
-		}
 		return FlxAtlasFrames.fromSparrow(image(key, library, gpuRender), file('images/$key.xml', library));
 	}
 
 	/**
 	 * Senpai in Thorns uses this instead of Sparrow and IDK why.
 	 */
-	static public function getPackerAtlas(key:String, ?library:String, ?isCharacter:Bool = false, ?gpuRender:Bool)
+	static public function getPackerAtlas(key:String, ?library:String, ?gpuRender:Bool)
 	{
 		gpuRender = gpuRender != null ? gpuRender : FlxG.save.data.gpuRender;
-		if (isCharacter)
-		{
-			return FlxAtlasFrames.fromSpriteSheetPacker(loadImage('characters/$key', library, gpuRender), file('images/characters/$key.txt', library));
-		}
 		return FlxAtlasFrames.fromSpriteSheetPacker(loadImage(key, library, gpuRender), file('images/$key.txt', library));
 	}
 
-	static public function getJSONAtlas(key:String, ?library:String, ?isCharacter:Bool = false, ?gpuRender:Bool)
+	static public function getJSONAtlas(key:String, ?library:String, ?gpuRender:Bool)
 	{
 		gpuRender = gpuRender != null ? gpuRender : FlxG.save.data.gpuRender;
-		if (isCharacter)
-			return FlxAtlasFrames.fromTexturePackerJson(image('characters/$key', library, gpuRender), file('images/characters/$key.json', library));
-
 		return FlxAtlasFrames.fromTexturePackerJson(image(key, library), file('images/$key.json', library));
 	}
 }

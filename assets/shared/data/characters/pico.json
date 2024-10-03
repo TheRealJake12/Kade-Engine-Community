@@ -1,56 +1,127 @@
 {
-  "name": "Pico",
-  "asset": ["characters/Pico_FNF_assetss"],
-  "barColor": "#B7D855",
-  "startingAnim": "idle",
-  "flipX":true,
-  "camPos": [150, -100],
-  "healthicon" : "pico",
-  "animations": [
-    {
-      "name": "idle",
-      "prefix": "Pico Idle Dance",
-      "offsets": [0, 0]
-    },
-    {
-      "name": "singUP",
-      "prefix": "pico Up note0",
-      "offsets": [-29, 27]
-    },
-    {
-      "name": "singLEFT",
-      "prefix": "Pico Note Right0",
-      "offsets": [65, 9]
-    },
-    {
-      "name": "singRIGHT",
-      "prefix": "Pico NOTE LEFT0",
-      "offsets": [-68, -7]
-    },
-    {
-      "name": "singDOWN",
-      "prefix": "Pico Down Note0",
-      "offsets": [200, -70]
-    },
-    {
-      "name": "singUPmiss",
-      "prefix": "pico Up note miss",
-      "offsets": [-19, 67]
-    },
-    {
-      "name": "singLEFTmiss",
-      "prefix": "Pico Note Right Miss",
-      "offsets": [62, 64]
-    },
-    {
-      "name": "singRIGHTmiss",
-      "prefix": "Pico NOTE LEFT miss",
-      "offsets": [-60, 41]
-    },
-    {
-      "name": "singDOWNmiss",
-      "prefix": "Pico Down Note MISS",
-      "offsets": [210, -28]
-    }
-  ]
+ "animations": [
+  {
+   "offsets": [
+    0,
+    0
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "Pico Idle Dance",
+   "looped": false,
+   "name": "idle"
+  },
+  {
+   "offsets": [
+    -29,
+    27
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "pico Up note0",
+   "looped": false,
+   "name": "singUP"
+  },
+  {
+   "offsets": [
+    65,
+    9
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "Pico Note Right0",
+   "looped": false,
+   "name": "singLEFT"
+  },
+  {
+   "offsets": [
+    -68,
+    -7
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "Pico NOTE LEFT0",
+   "looped": false,
+   "name": "singRIGHT"
+  },
+  {
+   "offsets": [
+    200,
+    -70
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "Pico Down Note0",
+   "looped": false,
+   "name": "singDOWN"
+  },
+  {
+   "offsets": [
+    -19,
+    67
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "pico Up note miss",
+   "looped": false,
+   "name": "singUPmiss"
+  },
+  {
+   "offsets": [
+    62,
+    64
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "Pico Note Right Miss",
+   "looped": false,
+   "name": "singLEFTmiss"
+  },
+  {
+   "offsets": [
+    -60,
+    41
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "Pico NOTE LEFT miss",
+   "looped": false,
+   "name": "singRIGHTmiss"
+  },
+  {
+   "offsets": [
+    210,
+    -28
+   ],
+   "frameRate": 24,
+   "frameIndices": [],
+   "prefix": "Pico Down Note MISS",
+   "looped": false,
+   "name": "singDOWNmiss"
+  }
+ ],
+ "barType": "rgb",
+ "isDancing": false,
+ "camPos": [
+  150,
+  -100
+ ],
+ "flipAnimations": false,
+ "flipX": true,
+ "healthicon": "pico",
+ "rgbArray": [
+  183,
+  216,
+  85
+ ],
+ "asset": [
+  "characters/Pico_FNF_assetss"
+ ],
+ "startingAnim": "idle",
+ "iconAnimated": false,
+ "antialiasing": true,
+ "deadChar": "",
+ "name": "pico",
+ "replacesGF": false,
+ "scale": 1
 }

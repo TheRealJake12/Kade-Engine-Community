@@ -71,6 +71,9 @@ class CharacterEditorState extends UIState
 	private var charIconAnimName:TextField;
 	private var camPosX:NumberStepper;
 	private var camPosY:NumberStepper;
+	private var charAntialias:CheckBox;
+	private var charGF:CheckBox;
+	private var charDances:CheckBox;
 	// ANIMATIONS
 	private var animName:TextField;
 	private var animFPS:NumberStepper;
@@ -309,11 +312,16 @@ class CharacterEditorState extends UIState
 		charIconAnimated.selected = char.data.iconAnimated;
 		camPosX.pos = char.data.camPos[0];
 		camPosY.pos = char.data.camPos[1];
+		charAntiAlias.selected = char.data.antialiasing;
+		charDances.selected = char.data.dances;
+		charGF.selected = char.data.replacesGF;
+		animLength.pos = char.data.holdLength;
 	}
 
 	private function setIcon(newIcon:String, animated:Bool)
 	{
 		icon.changeIcon(newIcon, animated);
+		char.data.icon = newIcon;
 	}
 
 	private function setBar()
@@ -346,12 +354,16 @@ class CharacterEditorState extends UIState
 
 	private function setGhost()
 	{
-		if (ghost.graphic == char.graphic)
-			return;
 		ghost.loadGraphic(char.graphic);
 		ghost.frames.frames = char.frames.frames;
 		ghost.animation.copyFrom(char.animation);
 		setGhostFrame();
+	}
+
+	private function setAntiAliasing()
+	{
+		char.data.antialiasing = charAntiAlias.selected;
+		char.antialiasing = char.data.antialiasing;
 	}
 
 	// seperated because we don't need to load the graphic EVERY time.
@@ -472,6 +484,7 @@ class CharacterEditorState extends UIState
 	{
 		charToDrag.setPosition(Math.floor(FlxG.mouse.screenX + charToDrag.scrollFactor.x * (FlxG.mouse.x - FlxG.mouse.screenX)) - _dragOffsetX,
 			Math.floor(FlxG.mouse.screenY + charToDrag.scrollFactor.y * (FlxG.mouse.y - FlxG.mouse.screenY)) - _dragOffsetY);
+		camPos.setPosition(char.getMidpoint().x + char.data.camPos[0], char.getMidpoint().y + char.data.camPos[1]);	
 	}
 
 	// HAXEUI
@@ -504,6 +517,9 @@ class CharacterEditorState extends UIState
 		editorGhostUpdate.onClick = _ -> this.setGhostFrame();
 		editorGhostSetPos.onClick = _ -> ghost.setPosition(char.x, char.y);
 		charIconAnimated.onChange = _ -> this.setIcon(charIcon.text, charIconAnimated.selected);
+		charAntiAlias.onClick = _ -> this.setAntiAliasing();
+		charDances.onClick = _ -> char.data.dances = charDances.selected;
+		charGF.onClick = _ -> char.data.replacesGF = charGF.selected;
 		charIconAnimName.onChange = _ ->
 		{
 			try
@@ -581,7 +597,7 @@ class CharacterEditorState extends UIState
 			final animIndices:Array<Int> = anim.frameIndices;
 			addAnimation(animName, animPrefix, animFps, animLoop, animIndices);
 		}
-		char.playAnim(lastAnim);
+		char.playAnim(lastAnim, true);
 	}
 
 	function addAnimation(anim:String, name:String, fps:Float, loop:Bool, indices:Array<Int>)
@@ -592,7 +608,10 @@ class CharacterEditorState extends UIState
 			char.animation.addByPrefix(anim, name, fps, loop);
 
 		if (!char.animation.exists(anim))
+		{
+			Debug.logTrace('$anim DOES NOT EXIST');
 			char.animOffsets[anim] = [0, 0];
+		}
 	}
 
 	function addAnim()
@@ -606,7 +625,6 @@ class CharacterEditorState extends UIState
 			for (i in indices)
 				newIndices.push(Std.parseInt(i));
 		}
-		Debug.logTrace(newIndices);
 		final newAnim:AnimationData = {
 			name: animName.text,
 			prefix: animPrefix.text,
@@ -640,11 +658,9 @@ class CharacterEditorState extends UIState
 		curAnim = char.data.animations[curAnimSelected];
 		curAnim.name = animName.text;
 		curAnim.frameRate = animFPS.pos == 0 ? 24 : Std.int(animFPS.pos);
-		char.animation.getByName(curAnim.name).frameRate = curAnim.frameRate;
 		curAnim.prefix = animPrefix.text;
 		curAnim.frameIndices = newIndices;
 		curAnim.looped = animLooped.selected;
-		Debug.logTrace('${curAnim.name} ${curAnim.prefix} ${curAnim.frameRate} ${curAnim.frameIndices} ${curAnim.looped}');
 		char.animation.remove(animName.text);
 		addAnimation(curAnim.name, curAnim.prefix, curAnim.frameRate, curAnim.looped, newIndices);
 		reloadTexts();
@@ -653,8 +669,9 @@ class CharacterEditorState extends UIState
 
 	function removeAnim()
 	{
-		if (!char.animation.exists(animName.text))
+		if (!animList.toString().contains(animName.text))
 			return;
+		// wack bullshit	
 		final name = animList[curAnimSelected].name;
 		animList.remove(curAnim);
 		char.data.animations = animList;
@@ -679,6 +696,10 @@ class CharacterEditorState extends UIState
 			flipX: charFlipX.selected,
 			flipAnimations: charFlipAnims.selected,
 			deadChar: charDead.text,
+			antialiasing: char.antialiasing,
+			replacesGF: charGF.selected,
+			isDancing: charDances.selected,
+			holdLength: animLength.pos,
 			camPos: [Std.int(camPosX.pos), Std.int(camPosY.pos)]
 		};
 
@@ -691,7 +712,6 @@ class CharacterEditorState extends UIState
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 			_file.save(json.trim(), charToLoad.text + ".json");
 		}
-		Debug.logTrace("Saved?");
 	}
 
 	/**

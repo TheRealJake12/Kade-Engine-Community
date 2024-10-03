@@ -1,125 +1,172 @@
 {
-  "name": "Boyfriend",
-  "asset": [
-    "characters/BOYFRIEND"
-  ],
-  "barColor": "#31B0D1",
-  "startingAnim": "idle",
-  "camPos": [
-    -100,
-    -100
-  ],
-  "deadChar":"bf-dead",
-  "healthicon": "bf",
-  "animations": [
-    {
-      "name": "idle",
-      "prefix": "BF idle dance0",
-      "offsets": [
-        -5,
-        0
-      ]
-    },
-    {
-      "name": "singUP",
-      "prefix": "BF NOTE UP0",
-      "offsets": [
-        -29,
-        27
-      ]
-    },
-    {
-      "name": "singLEFT",
-      "prefix": "BF NOTE LEFT0",
-      "offsets": [
-        12,
-        -6
-      ]
-    },
-    {
-      "name": "singRIGHT",
-      "prefix": "BF NOTE RIGHT0",
-      "offsets": [
-        -38,
-        -7
-      ]
-    },
-    {
-      "name": "singDOWN",
-      "prefix": "BF NOTE DOWN0",
-      "offsets": [
-        -10,
-        -50
-      ]
-    },
-    {
-      "name": "singUPmiss",
-      "prefix": "BF NOTE UP MISS",
-      "offsets": [
-        -29,
-        27
-      ]
-    },
-    {
-      "name": "singLEFTmiss",
-      "prefix": "BF NOTE LEFT MISS",
-      "offsets": [
-        12,
-        24
-      ]
-    },
-    {
-      "name": "singRIGHTmiss",
-      "prefix": "BF NOTE RIGHT MISS",
-      "offsets": [
-        -30,
-        21
-      ]
-    },
-    {
-      "name": "singDOWNmiss",
-      "prefix": "BF NOTE DOWN MISS",
-      "offsets": [
-        -11,
-        -19
-      ]
-    },
-    {
-      "name": "hey",
-      "prefix": "BF HEY",
-      "offsets": [
-        7,
-        4
-      ]
-    },
-    {
-      "name": "scared",
-      "prefix": "BF idle shaking",
-      "offsets": [
-        -4,
-        0
-      ],
-      "looped": true
-    },
-    {
-      "name": "hurt",
-      "prefix": "BF hit",
-      "nextAnim": "idle",
-      "offsets": [
-        14,
-        18
-      ],
-      "interrupt": false
-    },
-    {
-      "name": "dodge",
-      "prefix": "boyfriend dodge",
-      "offsets": [
-        -10,
-        -16
-      ],
-      "nextAnim": "idle",
-      "interrupt": false
-    }
-  ]
+    "animations": [
+        {
+            "offsets": [
+                -5,
+                0
+            ],
+            "frameRate": 24,
+            "frameIndices": [],
+            "prefix": "BF idle dance0",
+            "looped": false,
+            "name": "idle"
+        },
+        {
+            "offsets": [
+                -29,
+                27
+            ],
+            "frameRate": 24,
+            "frameIndices": [],
+            "prefix": "BF NOTE UP0",
+            "looped": false,
+            "name": "singUP"
+        },
+        {
+            "offsets": [
+                12,
+                -6
+            ],
+            "frameRate": 24,
+            "frameIndices": [],
+            "prefix": "BF NOTE LEFT0",
+            "looped": false,
+            "name": "singLEFT"
+        },
+        {
+            "offsets": [
+                -38,
+                -7
+            ],
+            "frameRate": 24,
+            "frameIndices": [],
+            "prefix": "BF NOTE RIGHT0",
+            "looped": false,
+            "name": "singRIGHT"
+        },
+        {
+            "offsets": [
+                -10,
+                -50
+            ],
+            "frameRate": 24,
+            "frameIndices": [],
+            "prefix": "BF NOTE DOWN0",
+            "looped": false,
+            "name": "singDOWN"
+        },
+        {
+            "offsets": [
+                -29,
+                27
+            ],
+            "frameRate": 24,
+            "frameIndices": [],
+            "prefix": "BF NOTE UP MISS",
+            "looped": false,
+            "name": "singUPmiss"
+        },
+        {
+            "offsets": [
+                12,
+                24
+            ],
+            "frameRate": 24,
+            "frameIndices": [],
+            "prefix": "BF NOTE LEFT MISS",
+            "looped": false,
+            "name": "singLEFTmiss"
+        },
+        {
+            "offsets": [
+                -30,
+                21
+            ],
+            "frameRate": 24,
+            "frameIndices": [],
+            "prefix": "BF NOTE RIGHT MISS",
+            "looped": false,
+            "name": "singRIGHTmiss"
+        },
+        {
+            "offsets": [
+                -11,
+                -19
+            ],
+            "frameRate": 24,
+            "frameIndices": [],
+            "prefix": "BF NOTE DOWN MISS",
+            "looped": false,
+            "name": "singDOWNmiss"
+        },
+        {
+            "offsets": [
+                7,
+                4
+            ],
+            "frameRate": 24,
+            "frameIndices": [],
+            "prefix": "BF HEY",
+            "looped": false,
+            "name": "hey"
+        },
+        {
+            "offsets": [
+                -4,
+                0
+            ],
+            "frameRate": 24,
+            "frameIndices": [],
+            "prefix": "BF idle shaking",
+            "name": "scared",
+            "looped": true
+        },
+        {
+            "offsets": [
+                14,
+                18
+            ],
+            "nextAnim": "idle",
+            "frameRate": 24,
+            "frameIndices": [],
+            "prefix": "BF hit",
+            "looped": false,
+            "interrupt": false,
+            "name": "hurt"
+        },
+        {
+            "nextAnim": "idle",
+            "offsets": [
+                -10,
+                -16
+            ],
+            "frameRate": 24,
+            "frameIndices": [],
+            "prefix": "boyfriend dodge",
+            "looped": false,
+            "interrupt": false,
+            "name": "dodge"
+        }
+    ],
+    "barType": "rgb",
+    "camPos": [
+        -100,
+        -100
+    ],
+    "flipAnimations": false,
+    "flipX": false,
+    "healthicon": "bf",
+    "rgbArray": [
+        49,
+        176,
+        209
+    ],
+    "asset": [
+        "characters/BOYFRIEND"
+    ],
+    "startingAnim": "idle",
+    "iconAnimated": false,
+    "deadChar": "bf-dead",
+    "name": "bf",
+    "scale": 1
 }
