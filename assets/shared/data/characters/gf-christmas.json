@@ -25,8 +25,8 @@
     13,
     14
    ],
-   "looped": false,
-   "name": "danceLeft"
+   "name": "danceLeft",
+   "looped": false
   },
   {
    "offsets": [
@@ -52,8 +52,8 @@
     28,
     29
    ],
-   "looped": false,
-   "name": "danceRight"
+   "name": "danceRight",
+   "looped": false
   },
   {
    "offsets": [
@@ -63,8 +63,8 @@
    "frameRate": 24,
    "frameIndices": [],
    "prefix": "GF Cheer",
-   "looped": false,
-   "name": "cheer"
+   "name": "cheer",
+   "looped": false
   },
   {
    "offsets": [
@@ -88,16 +88,18 @@
     11,
     12
    ],
-   "looped": false,
-   "name": "sad"
+   "name": "sad",
+   "looped": false
   }
  ],
  "barType": "rgb",
+ "hasTrail": false,
  "isDancing": true,
  "camPos": [
   0,
   0
  ],
+ "holdLength": 4,
  "flipAnimations": false,
  "flipX": false,
  "healthicon": "gf",
@@ -109,7 +111,7 @@
  "asset": [
   "characters/gfChristmas"
  ],
- "startingAnim": "idle",
+ "startingAnim": "danceLeft",
  "iconAnimated": false,
  "antialiasing": true,
  "deadChar": "",

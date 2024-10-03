@@ -8,8 +8,8 @@
    "frameRate": 24,
    "frameIndices": [],
    "prefix": "BF IDLE",
-   "looped": false,
-   "name": "idle"
+   "name": "idle",
+   "looped": false
   },
   {
    "offsets": [
@@ -19,8 +19,8 @@
    "frameRate": 24,
    "frameIndices": [],
    "prefix": "BF UP NOTE",
-   "looped": false,
-   "name": "singUP"
+   "name": "singUP",
+   "looped": false
   },
   {
    "offsets": [
@@ -30,8 +30,8 @@
    "frameRate": 24,
    "frameIndices": [],
    "prefix": "BF LEFT NOTE",
-   "looped": false,
-   "name": "singLEFT"
+   "name": "singLEFT",
+   "looped": false
   },
   {
    "offsets": [
@@ -41,8 +41,8 @@
    "frameRate": 24,
    "frameIndices": [],
    "prefix": "BF RIGHT NOTE",
-   "looped": false,
-   "name": "singRIGHT"
+   "name": "singRIGHT",
+   "looped": false
   },
   {
    "offsets": [
@@ -52,8 +52,8 @@
    "frameRate": 24,
    "frameIndices": [],
    "prefix": "BF DOWN NOTE",
-   "looped": false,
-   "name": "singDOWN"
+   "name": "singDOWN",
+   "looped": false
   },
   {
    "offsets": [
@@ -63,8 +63,8 @@
    "frameRate": 24,
    "frameIndices": [],
    "prefix": "BF UP MISS",
-   "looped": false,
-   "name": "singUPmiss"
+   "name": "singUPmiss",
+   "looped": false
   },
   {
    "offsets": [
@@ -74,8 +74,8 @@
    "frameRate": 24,
    "frameIndices": [],
    "prefix": "BF LEFT MISS",
-   "looped": false,
-   "name": "singLEFTmiss"
+   "name": "singLEFTmiss",
+   "looped": false
   },
   {
    "offsets": [
@@ -85,8 +85,8 @@
    "frameRate": 24,
    "frameIndices": [],
    "prefix": "BF RIGHT MISS",
-   "looped": false,
-   "name": "singRIGHTmiss"
+   "name": "singRIGHTmiss",
+   "looped": false
   },
   {
    "offsets": [
@@ -96,15 +96,17 @@
    "frameRate": 24,
    "frameIndices": [],
    "prefix": "BF DOWN MISS",
-   "looped": false,
-   "name": "singDOWNmiss"
+   "name": "singDOWNmiss",
+   "looped": false
   }
  ],
  "barType": "rgb",
+ "isDancing": false,
  "camPos": [
   -300,
   -300
  ],
+ "holdLength": 4,
  "flipAnimations": false,
  "flipX": false,
  "healthicon": "bf-pixel",
@@ -118,7 +120,9 @@
  ],
  "startingAnim": "idle",
  "iconAnimated": false,
- "deadChar": "bf-pixel-dead",
+ "antialiasing": false,
+ "deadChar": "",
  "name": "bf-pixel",
+ "replacesGF": false,
  "scale": 6
 }

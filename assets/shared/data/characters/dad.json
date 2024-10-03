@@ -1,16 +1,16 @@
 {
  "animations": [
   {
+   "nextAnim": "idleLoop",
    "offsets": [
     0,
     0
    ],
-   "nextAnim": "idleLoop",
    "frameRate": 24,
-   "prefix": "Dad idle dance",
    "frameIndices": [],
-   "name": "idle",
-   "looped": false
+   "prefix": "Dad idle dance",
+   "looped": false,
+   "name": "idle"
   },
   {
    "offsets": [
@@ -23,8 +23,8 @@
     11,
     12
    ],
-   "looped": true,
-   "name": "idleLoop"
+   "name": "idleLoop",
+   "looped": true
   },
   {
    "offsets": [
@@ -34,8 +34,8 @@
    "frameRate": 24,
    "frameIndices": [],
    "prefix": "Dad Sing Note UP",
-   "name": "singUP",
-   "looped": false
+   "looped": false,
+   "name": "singUP"
   },
   {
    "offsets": [
@@ -45,8 +45,8 @@
    "frameRate": 24,
    "frameIndices": [],
    "prefix": "Dad Sing Note LEFT",
-   "name": "singLEFT",
-   "looped": false
+   "looped": false,
+   "name": "singLEFT"
   },
   {
    "offsets": [
@@ -56,8 +56,8 @@
    "frameRate": 24,
    "frameIndices": [],
    "prefix": "Dad Sing Note RIGHT",
-   "name": "singRIGHT",
-   "looped": false
+   "looped": false,
+   "name": "singRIGHT"
   },
   {
    "offsets": [
@@ -67,14 +67,14 @@
    "frameRate": 24,
    "frameIndices": [],
    "prefix": "Dad Sing Note DOWN",
-   "name": "singDOWN",
-   "looped": false
+   "looped": false,
+   "name": "singDOWN"
   }
  ],
  "barType": "rgb",
  "isDancing": false,
  "camPos": [
-  -150,
+  150,
   -100
  ],
  "holdLength": 6.1,

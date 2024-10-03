@@ -1,12 +1,13 @@
 {
  "animations": [
   {
+   "nextAnim": "idleLoop",
    "offsets": [
     0,
     0
    ],
-   "nextAnim": "idleLoop",
    "frameRate": 24,
+   "prefix": "GF Dancing Beat Hair blowing CAR",
    "frameIndices": [
     30,
     0,
@@ -25,17 +26,17 @@
     13,
     14
    ],
-   "prefix": "GF Dancing Beat Hair blowing CAR",
-   "looped": false,
-   "name": "danceLeft"
+   "name": "danceLeft",
+   "looped": false
   },
   {
+   "nextAnim": "idleLoop",
    "offsets": [
     0,
     0
    ],
-   "nextAnim": "idleLoop",
    "frameRate": 24,
+   "prefix": "GF Dancing Beat Hair blowing CAR",
    "frameIndices": [
     15,
     16,
@@ -53,9 +54,8 @@
     28,
     29
    ],
-   "prefix": "GF Dancing Beat Hair blowing CAR",
-   "looped": false,
-   "name": "danceRight"
+   "name": "danceRight",
+   "looped": false
   },
   {
    "offsets": [
@@ -72,16 +72,18 @@
     26,
     27
    ],
-   "looped": true,
-   "name": "idleLoop"
+   "name": "idleLoop",
+   "looped": true
   }
  ],
  "barType": "rgb",
+ "hasTrail": false,
  "isDancing": true,
  "camPos": [
   0,
   0
  ],
+ "holdLength": 4,
  "flipAnimations": false,
  "flipX": false,
  "healthicon": "gf",
@@ -93,7 +95,7 @@
  "asset": [
   "characters/gfCar"
  ],
- "startingAnim": "idle",
+ "startingAnim": "danceLeft",
  "iconAnimated": false,
  "antialiasing": true,
  "deadChar": "",

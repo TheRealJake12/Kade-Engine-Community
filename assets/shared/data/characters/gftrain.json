@@ -25,8 +25,8 @@
     13,
     14
    ],
-   "looped": false,
-   "name": "danceLeft"
+   "name": "danceLeft",
+   "looped": false
   },
   {
    "offsets": [
@@ -52,8 +52,8 @@
     28,
     29
    ],
-   "looped": false,
-   "name": "danceRight"
+   "name": "danceRight",
+   "looped": false
   },
   {
    "offsets": [
@@ -68,9 +68,9 @@
     3
    ],
    "prefix": "GF Dancing Beat Hair blowing",
-   "looped": true,
+   "interrupt": false,
    "name": "hairBlow",
-   "interrupt": false
+   "looped": true
   },
   {
    "offsets": [
@@ -92,20 +92,22 @@
     11
    ],
    "prefix": "GF Dancing Beat Hair Landing",
-   "looped": false,
-   "isDanced": true,
-   "name": "hairFall",
    "interrupt": false,
+   "name": "hairFall",
+   "isDanced": true,
+   "looped": false,
    "nextAnim": "danceRight",
    "frameRate": 24
   }
  ],
  "barType": "rgb",
+ "hasTrail": false,
  "isDancing": true,
  "camPos": [
   0,
   0
  ],
+ "holdLength": 4,
  "flipAnimations": false,
  "flipX": false,
  "healthicon": "gf",
@@ -117,7 +119,7 @@
  "asset": [
   "characters/GF_assets_train"
  ],
- "startingAnim": "idle",
+ "startingAnim": "danceLeft",
  "iconAnimated": false,
  "antialiasing": true,
  "deadChar": "",

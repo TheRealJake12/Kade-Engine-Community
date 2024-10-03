@@ -55,42 +55,7 @@ class CharacterEditorState extends UIState
 
 	// HAXEUI
 	private var editorUI:VBox;
-	private var charToLoad:TextField;
-	private var charAssets:TextField;
-	private var charIcon:TextField;
-	private var charFrames:Button;
-	private var charDead:TextField;
-	private var charFlipX:CheckBox;
-	private var saveChar:Button;
-	private var charReload:Button;
-	private var charRed:NumberStepper;
-	private var charGreen:NumberStepper;
-	private var charBlue:NumberStepper;
-	private var charGetColor:Button;
-	private var charIconAnimated:CheckBox;
-	private var charIconAnimName:TextField;
-	private var camPosX:NumberStepper;
-	private var camPosY:NumberStepper;
-	private var charAntialias:CheckBox;
-	private var charGF:CheckBox;
-	private var charDances:CheckBox;
-	// ANIMATIONS
-	private var animName:TextField;
-	private var animFPS:NumberStepper;
-	private var animPrefix:TextField;
-	private var animIndices:TextField;
-	private var animNextAnim:TextField;
-	private var animIgnoreIdle:CheckBox;
-	private var animLooped:CheckBox;
-	private var animUpdate:Button;
-	private var animAdd:Button;
-	private var animDelete:Button;
-	// EDITOR !!
-	private var editorDrag:CheckBox;
-	private var editorGhost:Button;
-	private var editorAlpha:Slider;
-	private var editorGhostUpdate:Button;
-	private var editorGhostSetPos:Button;
+	
 
 	public function new(char:String = 'bf')
 	{
@@ -294,6 +259,7 @@ class CharacterEditorState extends UIState
 		reloadTexts();
 		switchAnim(0);
 		setIcon(char.data.icon, char.data.iconAnimated);
+		camPos.setPosition(char.getMidpoint().x + char.data.camPos[0], char.getMidpoint().y + char.data.camPos[1]);
 	}
 
 	private function setProperties()
@@ -316,6 +282,15 @@ class CharacterEditorState extends UIState
 		charDances.selected = char.data.dances;
 		charGF.selected = char.data.replacesGF;
 		animLength.pos = char.data.holdLength;
+		charToLoad.text = char.data.char;
+		charAssets.text = char.data.assets[0];
+		charScale.pos = char.data.scale;
+		charIcon.text = char.data.icon;
+		charFlipX.selected = char.data.flipX;
+		charFlipAnims.selected = char.data.flipAnims;
+		charIconAnimated.selected = char.data.iconAnimated;
+		charStartAnim.text = char.data.startingAnim;
+		charTrail.selected = char.data.trail;
 	}
 
 	private function setIcon(newIcon:String, animated:Bool)
@@ -491,13 +466,6 @@ class CharacterEditorState extends UIState
 
 	function setupHUI()
 	{
-		charToLoad.text = char.data.char;
-		charAssets.text = char.data.assets[0];
-		charScale.pos = char.data.scale;
-		charIcon.text = char.data.icon;
-		charFlipX.selected = char.data.flipX;
-		charFlipAnims.selected = char.data.flipAnims;
-		charIconAnimated.selected = char.data.iconAnimated;
 		charReload.onClick = _ -> this.setCharacter(charToLoad.text);
 		charFrames.onClick = _ -> this.updateCharFrames();
 		charScale.onChange = _ -> this.updateScale();
@@ -520,6 +488,8 @@ class CharacterEditorState extends UIState
 		charAntiAlias.onClick = _ -> this.setAntiAliasing();
 		charDances.onClick = _ -> char.data.dances = charDances.selected;
 		charGF.onClick = _ -> char.data.replacesGF = charGF.selected;
+		charTrail.onClick = _ -> char.data.trail = charTrail.selected;
+		charStartAnim.onChange = _ -> char.data.startingAnim = charStartAnim.text;
 		charIconAnimName.onChange = _ ->
 		{
 			try
@@ -688,7 +658,7 @@ class CharacterEditorState extends UIState
 			asset: charAssets.text.split(', '),
 			healthicon: charIcon.text,
 			iconAnimated: charIconAnimated.selected,
-			startingAnim: 'idle',
+			startingAnim: charStartAnim.text,
 			rgbArray: char.data.rgb,
 			barType: "rgb",
 			animations: char.data.animations,
@@ -696,10 +666,11 @@ class CharacterEditorState extends UIState
 			flipX: charFlipX.selected,
 			flipAnimations: charFlipAnims.selected,
 			deadChar: charDead.text,
-			antialiasing: char.antialiasing,
+			antialiasing: char.data.antialiasing,
 			replacesGF: charGF.selected,
 			isDancing: charDances.selected,
 			holdLength: animLength.pos,
+			hasTrail: charTrail.selected,
 			camPos: [Std.int(camPosX.pos), Std.int(camPosY.pos)]
 		};
 

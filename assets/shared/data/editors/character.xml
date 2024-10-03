@@ -16,7 +16,7 @@
 								<label text="Character ID" verticalAlign="center" />
 								<textfield id="charToLoad" placeholder="" />
 								<label text="Asset Path" verticalAlign="center" />
-								<textfield id="charAssets" restrictChars="[]"/>
+								<textfield id="charAssets" restrictChars="[]" />
 								<label text="Icon Path" verticalAlign="center" />
 								<textfield id="charIcon" placeholder="" />
 								<label text="Dead Character" verticalAlign="center" />
@@ -34,15 +34,15 @@
 								<hbox>
 									<label text="Scale:" verticalAlign="center" />
 									<number-stepper id="charScale" step="0.01" verticalAlign="center" />
-									<spacer/>
+									<spacer />
 									<label text="Camera Pos X" verticalAlign="center" />
-									<spacer/>
+									<spacer />
 									<label text="Camera Pos Y" verticalAlign="center" />
 								</hbox>
 								<hbox>
-									<checkbox id="charAntiAlias" text="Antialiasing" verticalAlign="center"/>
-									<checkbox id="charDances" text="Dances" verticalAlign="center"/>
-									<checkbox id="charGF" text="Is GF" verticalAlign="center"/>
+									<checkbox id="charAntiAlias" text="Antialiasing" verticalAlign="center" />
+									<checkbox id="charDances" text="Dances" verticalAlign="center" />
+									<checkbox id="charGF" text="Is GF" verticalAlign="center" />
 								</hbox>
 							</vbox>
 							<menu-separator />
@@ -97,8 +97,8 @@
 							</grid>
 							<menu-separator />
 							<hbox>
-								<label text="Hold Length" verticalAlign="center"/>
-								<number-stepper id="animLength" step="0.1" verticalAlign="center"/>
+								<label text="Hold Length" verticalAlign="center" />
+								<number-stepper id="animLength" step="0.1" verticalAlign="center" />
 							</hbox>
 						</vbox>
 					</frame>
@@ -126,6 +126,14 @@
 							<label text="Drag Editor" verticalAlign="center" />
 							<checkbox id="editorDrag" verticalAlign="center" />
 						</hbox>
+					</frame>
+					<frame text="Extra Data">
+						<grid>
+							<label text="Character Starting Animation" verticalAlign="center" />
+							<textfield id="charStartAnim" verticalAlign="center" />
+							<label text="Character Trail" verticalAlign="center" />
+							<checkbox id="charTrail" verticalAlign="center" />
+						</grid>
 					</frame>
 				</vbox>
 			</box>

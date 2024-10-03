@@ -25,8 +25,8 @@
     13,
     14
    ],
-   "looped": false,
-   "name": "danceLeft"
+   "name": "danceLeft",
+   "looped": false
   },
   {
    "offsets": [
@@ -52,16 +52,18 @@
     28,
     29
    ],
-   "looped": false,
-   "name": "danceRight"
+   "name": "danceRight",
+   "looped": false
   }
  ],
  "barType": "rgb",
+ "hasTrail": false,
  "isDancing": true,
  "camPos": [
   0,
   0
  ],
+ "holdLength": 4,
  "flipAnimations": false,
  "flipX": false,
  "healthicon": "gf",
@@ -73,7 +75,7 @@
  "asset": [
   "characters/gfPixel"
  ],
- "startingAnim": "idle",
+ "startingAnim": "danceLeft",
  "iconAnimated": false,
  "antialiasing": false,
  "deadChar": "",
