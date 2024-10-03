@@ -1992,33 +1992,6 @@ class CPUSplash extends Option
 	}
 }
 
-class General extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		description = desc;
-	}
-
-	public override function left():Bool
-	{
-		FlxG.save.data.gen = !FlxG.save.data.gen;
-		display = updateDisplay();
-		return true;
-	}
-
-	public override function right():Bool
-	{
-		left();
-		return true;
-	}
-
-	private override function updateDisplay():String
-	{
-		return "General Tracing < " + (FlxG.save.data.gen ? "Enabled" : "Disabled") + " >";
-	}
-}
-
 class LowMotion extends Option
 {
 	public function new(desc:String)

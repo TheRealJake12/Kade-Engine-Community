@@ -80,9 +80,7 @@ class ModCore
 
 			// Parsing rules for various data formats.
 			parseRules: getParseRules(),
-			#if html5
-			customFilesystem: polymod.fs.MemoryFileSystem
-			#end
+			customFilesystem: polymod.fs.ZipFileSystem
 		});
 		ModCore.modsToLoad = getAllMods();
 		enabledMods = FlxG.save.data.enabledMods;

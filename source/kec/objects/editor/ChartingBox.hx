@@ -1,6 +1,7 @@
-package kec.states.editors;
+package kec.objects.editor;
 
-import kec.objects.note.EditorNote;
+import kec.objects.editor.EditorNote;
+import kec.states.editors.ChartingState;
 
 class ChartingBox extends FlxSprite
 {

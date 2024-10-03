@@ -65,7 +65,7 @@ class HealthIcon extends FlxSprite
 			{
 				offset.set(0, 0);
 
-				frames = Paths.getSparrowAtlas('icons/animated/${newChar}');
+				frames = Paths.getSparrowAtlas('icons/animated/${newChar}', null);
 				animation.addByPrefix('Idle', 'Idle', 24, false, isPlayer);
 				animation.addByPrefix('Lose', 'Lose', 24, false, isPlayer);
 
@@ -76,8 +76,13 @@ class HealthIcon extends FlxSprite
 			{
 				if (animation.getByName(newChar) == null)
 				{
-					var name:String = 'icons/icon-' + newChar;
-					var file:Dynamic = Paths.image(name);
+					final name:String = 'icons/icon-' + newChar;
+					var file:Dynamic = null;
+					if (Paths.fileExists('images/$name.png', IMAGE, 'shared'))
+						file = Paths.image(name, null);
+					else
+						file = Paths.image('icons/icon-face', null);
+
 					loadGraphic(file); // Load stupidly first for getting the file size
 					if (width == 450)
 						hasWinningIcon = true;
@@ -214,7 +219,7 @@ class HealthIcon extends FlxSprite
 			return false;
 	}
 
-	function playAnimation(newAnim:String)
+	public function playAnimation(newAnim:String)
 	{
 		if (hasAnimation(newAnim) && finishedAnim())
 		{

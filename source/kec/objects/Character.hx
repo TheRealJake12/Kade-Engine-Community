@@ -14,7 +14,7 @@ import kec.backend.character.AnimationData;
 
 class Character extends FlxSprite
 {
-	public var animOffsets:Map<String, Array<Dynamic>>;
+	public var animOffsets:Map<String, Array<Int>>;
 	public var animInterrupt:Map<String, Bool>;
 	public var animForces:Map<String, Bool>; // primarily for dead characters if you don't want it to be beat based.
 	public var animNext:Map<String, String>;
@@ -29,15 +29,16 @@ class Character extends FlxSprite
 	public var animationNotes:Array<ChartNote> = [];
 	public var data:CharacterData = null;
 
-	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false, ?isGF:Bool = false)
+	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false, ?isGF:Bool = false, ?debug:Bool = false)
 	{
 		super(x, y);
 
-		animOffsets = new Map<String, Array<Dynamic>>();
+		animOffsets = new Map<String, Array<Int>>();
 		animInterrupt = new Map<String, Bool>();
 		animForces = new Map<String, Bool>();
 		animNext = new Map<String, String>();
 		animDanced = new Map<String, Bool>();
+		this.debugMode = debug;
 
 		switch (character)
 		{
@@ -60,36 +61,9 @@ class Character extends FlxSprite
 		var tex:FlxFramesCollection;
 		var thingy:FlxAtlasFrames;
 
-		switch (data.atlasType)
-		{
-			case 'PackerAtlas':
-				thingy = Paths.getPackerAtlas(data.assets[0], 'shared');
-			case 'JsonAtlas':
-				thingy = Paths.getJSONAtlas(data.assets[0], 'shared');
-			case 'SparrowAtlas':
-				thingy = Paths.getSparrowAtlas(data.assets[0], 'shared');
-			default:
-				thingy = Paths.getSparrowAtlas(data.assets[0], 'shared');
-		}
-
-		for (i in 1...data.assets.length)
-		{
-			switch (data.atlasType)
-			{
-				case 'PackerAtlas':
-					thingy.addAtlas(Paths.getPackerAtlas(data.assets[i], 'shared'));
-				case 'JsonAtlas':
-					thingy.addAtlas(Paths.getJSONAtlas(data.assets[i], 'shared'));
-				case 'SparrowAtlas':
-					thingy.addAtlas(Paths.getSparrowAtlas(data.assets[i], 'shared'));
-				default:
-					thingy.addAtlas(Paths.getSparrowAtlas(data.assets[i], 'shared'));
-			}
-		}
+		frames = Paths.getMultiAtlas(data.assets);
 
 		// Multi-atlas support which breaks everything
-
-		frames = thingy;
 
 		if (frames != null)
 			for (anim in data.animations)
@@ -99,7 +73,7 @@ class Character extends FlxSprite
 				final flipX = anim.flipX == null ? false : anim.flipX;
 				final flipY = anim.flipY == null ? false : anim.flipY;
 
-				if (anim.frameIndices != null)
+				if (anim.frameIndices != null && anim.frameIndices.length > 0)
 					animation.addByIndices(anim.name, anim.prefix, anim.frameIndices, "", Std.int(frameRate * Conductor.rate), looped, flipX, flipY);
 				else
 					animation.addByPrefix(anim.name, anim.prefix, Std.int(frameRate * Conductor.rate), looped, flipX, flipY);
@@ -297,7 +271,7 @@ class Character extends FlxSprite
 		TankmenBG.animationNotes = animationNotes;
 	}
 
-	public function addOffset(name:String, x:Float = 0, y:Float = 0)
+	public function addOffset(name:String, x:Int = 0, y:Int = 0)
 	{
 		animOffsets[name] = [x, y];
 	}

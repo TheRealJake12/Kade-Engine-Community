@@ -139,6 +139,7 @@ class TimingStruct
 
 		TimingStruct.addTiming(0, song.bpm, Math.POSITIVE_INFINITY, 0);
 		var bpmIndex:Int = 0;
+		song.eventObjects.sort(Sort.sortEvents);
 		for (event in song.eventObjects)
 		{
 			if (event.type == "BPM Change")
@@ -152,7 +153,7 @@ class TimingStruct
 				final beat:Float = event.beat;
 				final endBeat:Float = Math.POSITIVE_INFINITY;
 				final bpm = event.args[0];
-
+				TimingStruct.AllTimings[bpmIndex - 1].endBeat = beat;
 				TimingStruct.addTiming(beat, bpm, endBeat, 0);
 
 				bpmIndex++;

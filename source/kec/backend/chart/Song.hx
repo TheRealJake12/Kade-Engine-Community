@@ -129,8 +129,6 @@ class Song
 
 	public static function recalculateAllSectionTimes(activeSong:Modern, startIndex:Int = 0)
 	{
-		trace("RECALCULATING SECTION TIMES");
-
 		if (activeSong == null)
 			return;
 

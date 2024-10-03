@@ -1,10 +1,9 @@
-package kec.states.editors;
+package kec.objects.editor;
 
 import flixel.addons.display.FlxBackdrop;
 import openfl.display.BitmapData;
 import flixel.addons.display.FlxGridOverlay;
-
-using kec.states.editors.MakeRect;
+import kec.states.editors.ChartingState;
 
 /**
  * Heavily Insprired By sword_352's chart editor.
@@ -33,8 +32,9 @@ class EditorArea extends FlxSpriteGroup
 		// editorWalls walls
 		for (i in 0...3)
 		{
-			var separator:FlxSprite = new FlxSprite(x + ChartingState.gridSize * 4 * i);
-			separator.makeRect(ChartingState.separatorWidth, FlxG.height, FlxColor.BLACK, false, "fard");
+			var separator:FlxSprite = new FlxSprite(x + ChartingState.gridSize * 4 * i).makeGraphic(1, 1, FlxColor.BLACK);
+			separator.scale.set(ChartingState.separatorWidth, FlxG.height);
+			separator.updateHitbox();
 			separator.x += separator.width * (i - 2);
 			separator.x = Math.floor(separator.x); // avoids weird width
 			separator.scrollFactor.set();

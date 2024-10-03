@@ -1,15 +1,17 @@
 package kec.backend.util;
+
 // stolen from funkin
+
 /**
  * A static extension which provides utility functions for Strings.
  */
 class StringTools
 {
 	/**
-	    * Converts a string to title case. For example, "hello world" becomes "Hello World".
-	 *
-	    * @param value The string to convert.
-	    * @return The converted string.
+	 * Converts a string to title case. For example, "hello world" becomes "Hello World".
+	 	 *
+	 * @param value The string to convert.
+	 * @return The converted string.
 	 */
 	public static function toTitleCase(value:String):String
 	{

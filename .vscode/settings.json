@@ -1,14 +1,4 @@
 {
-  "search.exclude": {
-    "export/**/*.hx": true
-  },
-  "[haxe]": {
-    "editor.formatOnSave": true,
-    "editor.formatOnPaste": true,
-    "editor.codeActionsOnSave": {
-      "source.sortImports": "explicit"
-    }
-  },
   "lime.targetConfigurations": [
     {
       "label": "Build Windows (Debug)",

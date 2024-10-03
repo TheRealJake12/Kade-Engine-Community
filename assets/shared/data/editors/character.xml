@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vbox width="100%" height="100%">
+	<vbox id="editorUI" width="100%" style="padding: 20px;">
+		<tabview id="tabs" width="375" height="400">
+			<box text="Character" style="padding: 5px;">
+				<vbox>
+					<frame text="Character Data">
+						<vbox>
+							<hbox>
+								<button id="saveChar" text="Save" verticalAlign="center" />
+								<button id="charReload" text="Reload" verticalAlign="center" />
+								<button id="charFrames" text="Load Frames" verticalAlign="center" />
+							</hbox>
+							<menu-separator />
+							<grid>
+								<label text="Character ID" verticalAlign="center" />
+								<textfield id="charToLoad" placeholder="" />
+								<label text="Asset Path" verticalAlign="center" />
+								<textfield id="charAssets" placeholder="" />
+								<label text="Icon Path" verticalAlign="center" />
+								<textfield id="charIcon" placeholder="" />
+								<label text="Dead Character" verticalAlign="center" />
+								<textfield id="charDead" />
+							</grid>
+							<menu-separator />
+							<vbox>
+								<hbox>
+									<checkbox id="charFlipX" text="Flip X" verticalAlign="center" />
+									<checkbox id="charFlipAnims" text="Flip L/R" verticalAlign="center" />
+									<rule direction="vertical" verticalAlign="center" height="75%" />
+									<number-stepper id="camPosX" verticalAlign="center" />
+									<number-stepper id="camPosY" min="-9000" max="9000" verticalAlign="center" />
+								</hbox>
+								<hbox>
+									<label text="Scale:" verticalAlign="center" />
+									<number-stepper id="charScale" step="0.1" verticalAlign="center" />
+									<spacer/>
+									<label text="Camera Pos X" verticalAlign="center" />
+									<spacer/>
+									<label text="Camera Pos Y" verticalAlign="center" />
+								</hbox>
+							</vbox>
+							<menu-separator />
+							<hbox>
+								<checkbox id="charIconAnimated" text="Animated Icon?" verticalAlign="center" />
+								<label text="Animation Name" verticalAlign="center" />
+								<textfield id="charIconAnimName" text="" verticalAlign="center" />
+							</hbox>
+						</vbox>
+					</frame>
+					<frame text="Healthbar Colors (RGB)">
+						<vbox>
+							<hbox>
+								<number-stepper id="charRed" step="1" min="0" max="255" verticalAlign="center" />
+								<number-stepper id="charGreen" step="1" min="0" max="255" verticalAlign="center" />
+								<number-stepper id="charBlue" step="1" min="0" max="255" verticalAlign="center" />
+							</hbox>
+							<hbox>
+								<button id="charGetColor" text="Get Color" verticalAlign="center" />
+							</hbox>
+						</vbox>
+					</frame>
+				</vbox>
+			</box>
+			<box text="Animations" style="padding: 5px; spacing : 5px;">
+				<vbox>
+					<frame text="Animation Data">
+						<vbox>
+							<hbox>
+								<button id="animAdd" text="Add" verticalAlign="center" />
+								<spacer />
+								<button id="animUpdate" text="Update" verticalAlign="center" />
+								<spacer />
+								<button id="animDelete" text="Delete" verticalAlign="center" />
+							</hbox>
+							<menu-separator />
+							<grid>
+								<label text="Animation Name:" verticalAlign="center" />
+								<textfield id="animName" placeholder="" verticalAlign="center" />
+								<label text="Animation Framerate:" verticalAlign="center" />
+								<number-stepper id="animFPS" pos="24" verticalAlign="center" />
+								<label text="Animation Prefix:" verticalAlign="center" />
+								<textfield id="animPrefix" placeholder="" verticalAlign="center" />
+								<label text="Frame Order:" verticalAlign="center" />
+								<textfield id="animIndices" placeholder="" restrictChars="0-9," verticalAlign="center" />
+								<label text="Next Animation:" verticalAlign="center" />
+								<textfield id="animNextAnim" placeholder="" verticalAlign="center" />
+								<label text="Loop Animation" verticalAlign="center" />
+								<checkbox id="animLooped" verticalAlign="center" />
+								<label text="Ignore Idle" verticalAlign="center" />
+								<checkbox id="animIgnoreIdle" verticalAlign="center" />
+							</grid>
+						</vbox>
+					</frame>
+				</vbox>
+			</box>
+			<box text="Misc" style="padding: 5px; spacing : 5px;">
+				<vbox>
+					<frame text="Ghost">
+						<vbox>
+							<hbox style="spacing : 20px;">
+								<button id="editorGhost" text="Create" verticalAlign="center" />
+								<button id="editorGhostUpdate" text="Update" verticalAlign="center" />
+								<button id="editorGhostSetPos" text="Update Position" verticalAlign="center" />
+							</hbox>
+							<menu-separator />
+							<hbox>
+								<label text="Transparency" verticalAlign="center" />
+								<slider id="editorAlpha" pos="50" step="10" minorTicks="5" majorTicks="10" verticalAlign="center" />
+							</hbox>
+						</vbox>
+					</frame>
+					<menu-separator />
+					<frame text="Editor">
+						<hbox>
+							<label text="Drag Editor" verticalAlign="center" />
+							<checkbox id="editorDrag" verticalAlign="center" />
+						</hbox>
+					</frame>
+				</vbox>
+			</box>
+		</tabview>
+	</vbox>
+</vbox>

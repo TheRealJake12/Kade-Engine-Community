@@ -89,8 +89,6 @@ class GameplayCustomizeState extends MusicBeatState
 
 		var stageCheck:String = 'stage';
 
-		super.create();
-
 		Stage = new Stage('stage');
 		Stage.inEditor = true;
 		Stage.loadStageData('stage');
@@ -258,6 +256,7 @@ class GameplayCustomizeState extends MusicBeatState
 		add(ui);
 
 		FlxG.mouse.visible = true;
+		super.create();
 		Paths.clearUnusedMemory();
 	}
 
@@ -349,6 +348,7 @@ class GameplayCustomizeState extends MusicBeatState
 		if (controls.BACK)
 		{
 			FlxG.sound.play(Paths.sound('cancelMenu'));
+			flixel.addons.transition.FlxTransitionableState.skipNextTransOut = true;
 			MusicBeatState.switchState(new OptionsDirect());
 		}
 	}

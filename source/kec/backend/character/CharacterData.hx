@@ -131,7 +131,7 @@ typedef Data =
 	 * Pixel characters typically use 6.
 	 * @default 1
 	 */
-	var ?scale:Int;
+	var ?scale:Float;
 
 	/**
 	 * Whether this character has antialiasing.

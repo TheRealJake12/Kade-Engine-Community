@@ -1,25 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
-
 	<app title="Kade Engine Community" file="Kade Engine Community" packageName="com.therealjake12.kec" package="com.therealjake12.kec" main="Main" version="1.9.4" company="TheRealJake12" />
-
-	<!--Switch Export with Unique ApplicationID and Icon-->
+	<!-- Switch Export with Unique ApplicationID and Icon -->
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
-
-	<haxedef name="LINC_LUA_RELATIVE_DYNAMIC_LIB"/>
-
-	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
-		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
+	<haxedef name="LINC_LUA_RELATIVE_DYNAMIC_LIB" />
+	<!--
+	The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
+	or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"
+	-->
 	<!-- <app preloader="Preloader" resizable="true" /> -->
 	<app preloader="flixel.system.FlxPreloader" />
-
-	<!--Minimum without FLX_NO_GAMEPAD: 11.8, without FLX_NO_NATIVE_CURSOR: 11.2-->
+	<!-- Minimum without FLX_NO_GAMEPAD: 11.8, without FLX_NO_NATIVE_CURSOR: 11.2 -->
 	<set name="SWF_VERSION" value="11.8" />
-
 	<!-- Use defines to ensure compile-time definitions have readable context. -->
 	<!-- Allowed inputs are mobile,desktop,web,ios,android,windows,mac,linux,switch,html5,cpp,neko,flash,js -->
-
 	<!-- Defines whether the Discord client should be enabled. Only works on desktop. -->
 	<define name="FEATURE_DISCORD" if="cpp" />
 	<!-- Defines whether the file system can be read/written directly. Does not work in browser. -->
@@ -31,144 +26,111 @@
 	<!-- Defines whether the Thread class can be used. -->
 	<define name="FEATURE_MULTITHREADING" if="cpp" />
 	<!-- Videos -->
-	<define name="VIDEOS" if="desktop || mobile"/>
+	<define name="VIDEOS" if="desktop || mobile" />
 	<!-- Defines if hscript are enabled. Might Work In Browser. -->
 	<define name="FEATURE_HSCRIPT" />
 	<!-- Defines whether modcore can be used. -->
 	<define name="FEATURE_MODCORE" />
 	<!-- Defines if we can log traces and other stuff to files -->
-	<define name="FEATURE_LOGGING" if="FEATURE_FILESYSTEM"/>
-
-	<define name="CUSTOM_CLASSES" if="FEATURE_HSCRIPT"/>
-	<define name="COMPILE_ALL_CLASSES" if="FEATURE_HSCRIPT"/>
-
-	<define name="haxeui_allow_drag_any_component" value="true"/>
-	<define name="haxeui_flixel_no_custom_cursors" value="true"/>
+	<define name="FEATURE_LOGGING" if="FEATURE_FILESYSTEM" />
+	<define name="CUSTOM_CLASSES" if="FEATURE_HSCRIPT" />
+	<define name="COMPILE_ALL_CLASSES" if="FEATURE_HSCRIPT" />
 	<!-- Clicking outside a dialog should deselect the current focused component. -->
-
 	<!-- Discord Thingy -->
 	<haxedef name="DISCORD_DISABLE_IO_THREAD" />
-
-	<!--Disables the use of precompiled headers but can cause issues with build times and memory usage-->
-    <haxedef name="NO_PRECOMPILED_HEADERS" if="linux" />
-
+	<!-- Disables the use of precompiled headers but can cause issues with build times and memory usage -->
+	<haxedef name="NO_PRECOMPILED_HEADERS" if="linux" />
 	<!-- ____________________________ Window Settings ___________________________ -->
-
-	<!--These window settings apply to all targets-->
+	<!-- These window settings apply to all targets -->
 	<window width="1280" height="720" fps="60" background="#000000" hardware="true" vsync="false" />
-
-	<!--HTML5-specific-->
+	<window antialiasing="0" allow-high-dpi="true"/>
+	<!-- HTML5-specific -->
 	<window if="html5" resizable="true" />
-
-	<!--Desktop-specific-->
-	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" vsync="false"/>
-
-	<!--Mobile-specific-->
-	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" resizable="false"/>
-
-	<!--Switch-specific-->
+	<!-- Desktop-specific -->
+	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" vsync="false" />
+	<!-- Mobile-specific -->
+	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" resizable="false" />
+	<!-- Switch-specific -->
 	<window if="switch" orientation="landscape" fullscreen="true" width="0" height="0" resizable="true" />
-
 	<!-- _____________________________ Path Settings ____________________________ -->
-
 	<set name="BUILD_DIR" value="export/debug" if="debug" />
 	<set name="BUILD_DIR" value="export/release" unless="debug" />
 	<set name="BUILD_DIR" value="export/32bit" if="32bits" />
-
 	<classpath name="source" />
-
 	<!-- <define name="PRELOAD_ALL" /> -->
 	<define name="PRELOAD_ALL" unless="web" />
-	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL"/>
-	
-	<assets path="assets/songs"    library="songs"    exclude="*.ogg" if="web"/>
-	<assets path="assets/songs"    library="songs"    exclude="*.mp3" unless="web"/>
-	<assets path="assets/videos" embed='false' if="VIDEOS" />
-	<assets path="assets/shared"        exclude="*.ogg" if="web"/>
-	<assets path="assets/shared"        exclude="*.mp3" unless="web"/>
-	<assets path="assets/weeks"   library="weeks"   rename="assets" exclude="*.ogg" if="web"/>
-	<assets path="assets/weeks"   library="weeks"   rename="assets" exclude="*.mp3" unless="web"/>
-	<assets path="assets/sm"   library="sm"  if="FEATURE_STEPMANIA"/>
-	
-	<assets path='mods' embed='false' if="FEATURE_MODCORE"/>
-	
-	<assets path='art/readme.txt' rename='do NOT readme.txt' />
-	<assets path='LICENSE' rename='LICENSE.txt' />
-
-	<library name="videos"        preload="true" if="VIDEOS"/>
-	<library name="songs"         preload="true" />
-	<library name="weeks"   preload="true" />
-
-	<assets path="assets/fonts"/>
-	<assets path='alsoft.ini'/>
+	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL" />
+	<assets path="assets/songs" library="songs" exclude="*.ogg" if="web" />
+	<assets path="assets/songs" library="songs" exclude="*.mp3" unless="web" />
+	<assets path="assets/videos" embed="false" if="VIDEOS" />
+	<assets path="assets/shared" exclude="*.ogg" if="web" />
+	<assets path="assets/shared" exclude="*.mp3" unless="web" />
+	<assets path="assets/weeks" library="weeks" rename="assets" exclude="*.ogg" if="web" />
+	<assets path="assets/weeks" library="weeks" rename="assets" exclude="*.mp3" unless="web" />
+	<assets path="assets/sm" library="sm" if="FEATURE_STEPMANIA" />
+	<assets path="mods" embed="false" if="FEATURE_MODCORE" />
+	<assets path="art/readme.txt" rename="do NOT readme.txt" />
+	<assets path="LICENSE" rename="LICENSE.txt" />
+	<library name="videos" preload="true" if="VIDEOS" />
+	<library name="songs" preload="true" />
+	<library name="weeks" preload="true" />
+	<assets path="assets/fonts" />
+	<assets path="alsoft.ini" />
 	<!-- _______________________________ Libraries ______________________________ -->
-
-	<haxedev set='webgl' />
-
+	<haxedev set="webgl" />
 	<!-- Flixel -->
-
 	<haxelib name="flixel" />
 	<haxelib name="flixel-addons" />
 	<haxelib name="haxeui-flixel" />
 	<haxelib name="haxeui-core" />
-	<haxelib name="flixel-text-input" /> <!--Stupid Ass Text Layering In The Editors-->
+	<haxelib name="flixel-text-input" />
+	<!-- Stupid Ass Text Layering In The Editors -->
 	<!-- APIs -->
-
-	<haxelib name="hxdiscord_rpc" if="FEATURE_DISCORD"/>
-	<haxelib name="polymod" if="FEATURE_MODCORE"/>
-	<haxelib name="linc_luajit" if="FEATURE_LUAMODCHART"/>
-	<haxelib name="hscript-improved" if="FEATURE_HSCRIPT"/>
-	<haxedef name="hscriptPos" if="FEATURE_HSCRIPT"/>
-
+	<haxelib name="hxdiscord_rpc" if="FEATURE_DISCORD" />
+	<haxelib name="polymod" if="FEATURE_MODCORE" />
+	<haxelib name="linc_luajit" if="FEATURE_LUAMODCHART" />
+	<haxelib name="hscript-improved" if="FEATURE_HSCRIPT" />
+	<haxedef name="hscriptPos" if="FEATURE_HSCRIPT" />
 	<!-- Utilities -->
-	
-	<haxelib name="hxcpp-debug-server" if="desktop"/>
+	<haxelib name="hxcpp-debug-server" if="desktop" />
 	<section if="cpp">
 		<haxelib name="hxvlc" if="VIDEOS" />
 	</section>
-
 	<section if="debug">
-		<!--These defines are mostly for testing (aren't required to be used)-->
+		<!-- These defines are mostly for testing (aren't required to be used) -->
 		<haxedef name="HXVLC_VERBOSE" value="2" />
 		<haxedef name="HXVLC_LOGGING" />
 	</section>
-
 	<!-- ______________________________ Haxedefines _____________________________ -->
-
 	<haxedef name="FLX_NO_TOUCH" if="desktop" />
-	
-	<!--Disable the Flixel core focus lost screen-->
+	<!-- Disable the Flixel core focus lost screen -->
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
-
-	<!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
+	<!-- Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode! -->
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />
-
-	<!--Enable this for Nape release builds for a serious peformance improvement-->
+	<!-- Enable this for Nape release builds for a serious peformance improvement -->
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
-	
-	<!--Where credit is due, Thanks sqirra-rng.-->	
+	<!-- Where credit is due, Thanks sqirra-rng. -->
 	<haxedef name="HXCPP_CHECK_POINTER" if="desktop" />
 	<haxedef name="HXCPP_STACK_LINE" if="desktop" />
-	
 	<haxedef name="no_deprecation_warnings" />
-
 	<haxeflag name="-D no-traces" unless="debug" />
-	<haxedef name="queue_experimental_optimization"/>
-
+	<haxedef name="queue_experimental_optimization" />
+	<haxedef name="haxeui_allow_drag_any_component" value="true" />
+	<haxedef name="haxeui_flixel_no_custom_cursors" value="true" />
+	<haxedef name="haxeui_dont_impose_base_class" value="true" />
 	<section if="COMPILE_ALL_CLASSES">
 		<haxeflag name="-dce" value="no" />
 		<haxeflag name="--macro" value="ClassMacro.addAdditionalClasses()" />
-		<!--I'm Crying So Hard Right Now.-->
+		<!-- I'm Crying So Hard Right Now. -->
 	</section>
 	<section if="hxvlc">
 		<haxedef name="HXVLC_NO_SHARE_DIRECTORY" />
 		<haxedef name="HXVLC_OPENAL" />
 	</section>
-
-	<!--Basically Allows Videos To Render In Higher Quality On Higher Resoluttions-->
+	<!-- Basically Allows Videos To Render In Higher Quality On Higher Resoluttions -->
 	<haxedef name="openfl_dpi_aware" unless="web" />
 	<haxedef name="haxeui_focus_out_on_click" />
-	<!--Tired Of HaxeUI Breaking Things-->
+	<!-- Tired Of HaxeUI Breaking Things -->
 	<haxeflag name="--macro" value="include('haxe.ui.backend.flixel.components')" />
 	<haxeflag name="--macro" value="include('haxe.ui.containers.dialogs')" />
 	<haxeflag name="--macro" value="include('haxe.ui.containers.menus')" />
@@ -176,22 +138,16 @@
 	<haxeflag name="--macro" value="include('haxe.ui.core')" />
 	<haxeflag name="--macro" value="include('haxe.ui.components')" />
 	<haxeflag name="--macro" value="include('haxe.ui.containers')" />
-
 	<!-- _________________________________ Custom _______________________________ -->
-
-	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
-	
-	<assets path='art/iconOG.png' rename='icon.png' if="linux" />
-
-	<icon path="art/icon8.png" size='8'/>
-	<icon path="art/icon16.png" size='16'/>
-	<icon path="art/icon32.png" size='32'/>
-	<icon path="art/icon64.png" size='64'/>
-	<icon path="art/icon128.png" size='128'/>
-	<icon path="art/icon256.png" size='256'/>
-	<icon path="art/icon512.png" size='512'/>
+	<!-- Place custom nodes like icons here (higher priority to override the HaxeFlixel icon) -->
+	<assets path="art/iconOG.png" rename="icon.png" if="linux" />
+	<icon path="art/icon8.png" size="8" />
+	<icon path="art/icon16.png" size="16" />
+	<icon path="art/icon32.png" size="32" />
+	<icon path="art/icon64.png" size="64" />
+	<icon path="art/icon128.png" size="128" />
+	<icon path="art/icon256.png" size="256" />
+	<icon path="art/icon512.png" size="512" />
 	<icon path="art/iconOG.png" />
-
-   <haxedef name="gl_stats" if="desktop" />
-
+	<haxedef name="gl_stats" if="desktop" />
 </project>

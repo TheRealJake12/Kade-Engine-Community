@@ -7,8 +7,8 @@ import kec.backend.chart.Song;
 
 class SelectEditorsState extends MusicBeatState
 {
-	var editors:Array<String> = ['Stage Editor', 'Chart Editor'];
-	var icons = ['tankman', 'sm'];
+	var editors:Array<String> = ['Character Editor', 'Stage Editor', 'Chart Editor'];
+	var icons = ['face', 'tankman', 'sm'];
 
 	private var grpTexts:FlxTypedGroup<Alphabet>;
 
@@ -139,6 +139,8 @@ class SelectEditorsState extends MusicBeatState
 	{
 		switch (editors[curSelected])
 		{
+			case 'Character Editor':
+				MusicBeatState.switchState(new kec.states.editors.CharacterEditorState('bf'));
 			case 'Stage Editor':
 				PlayState.SONG = Song.loadFromJson('test', '');
 				kec.states.editors.StageDebugState.fromEditor = true;
@@ -152,6 +154,7 @@ class SelectEditorsState extends MusicBeatState
 				Conductor.rate = 1;
 				LoadingState.loadAndSwitchState(new kec.states.editors.ChartingState(), true);
 		}
+		Constants.freakyPlaying = false;
 		FlxG.sound.music.stop();
 	}
 
@@ -171,8 +174,10 @@ class SelectEditorsState extends MusicBeatState
 		switch (curSelected)
 		{
 			case 0:
-				info.text = "Stage Editor, Move The Positions Of Stage Assets.";
+				info.text = "Character Editor, Change Offsets And Properties.";
 			case 1:
+				info.text = "Stage Editor, Move The Positions Of Stage Assets.";
+			case 2:
 				info.text = "Chart Editor, Place Notes And Create Charts.";
 		}
 		info.updateHitbox();

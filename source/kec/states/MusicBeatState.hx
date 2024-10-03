@@ -52,7 +52,6 @@ class MusicBeatState extends FlxTransitionableState
 		destroySubStates = false;
 		fullscreenBind = FlxKey.fromString(Std.string(FlxG.save.data.fullscreenBind));
 
-		
 		var skip:Bool = FlxTransitionableState.skipNextTransOut;
 		if (!skip)
 		{
@@ -126,7 +125,7 @@ class MusicBeatState extends FlxTransitionableState
 
 		if (transSubstate != null)
 			if (transSubstate.active)
-				transSubstate.update(elapsed);	
+				transSubstate.update(elapsed);
 
 		if (curDecimalBeat < 0)
 			curDecimalBeat = 0;
@@ -140,7 +139,7 @@ class MusicBeatState extends FlxTransitionableState
 				than the current Beat meaning that the timing ended the game will check for a new timing (for bpm change events basically), 
 				and also to get a lil more of performance */
 
-			if (curDecimalBeat > curTiming.endBeat)
+			if (curDecimalBeat >= curTiming.endBeat)
 			{
 				Debug.logTrace('Current Timing ended, checking for next Timing...');
 				curTiming = TimingStruct.getTimingAtTimestamp(Conductor.songPosition);
@@ -172,14 +171,6 @@ class MusicBeatState extends FlxTransitionableState
 				{
 					currentSection = getSectionByIndex(curSection +
 						1); // Searching by index is very slow if we have too many sections, instead we assign a index to every section.
-
-					if (currentSection != null)
-						curSection = currentSection.index;
-				}
-				else if (Conductor.songPosition < currentSection.startTime)
-				{
-					currentSection = getSectionByIndex(curSection - 1); // Searching by index is very slow if we have too many sections, instead we assign a index to every section.
-
 					if (currentSection != null)
 						curSection = currentSection.index;
 				}
@@ -200,11 +191,12 @@ class MusicBeatState extends FlxTransitionableState
 
 			if (currentSection != null)
 			{
-				if (Conductor.songPosition >= currentSection.endTime || Conductor.songPosition < currentSection.startTime)
+				if (Conductor.songPosition >= currentSection.endTime)
 				{
-					currentSection = getSectionByIndex(curSection + 1);
-
-					curSection = currentSection.index;
+					currentSection = getSectionByIndex(curSection +
+						1); // Searching by index is very slow if we have too many sections, instead we assign a index to every section.
+					if (currentSection != null)
+						curSection = currentSection.index;
 				}
 			}
 		}

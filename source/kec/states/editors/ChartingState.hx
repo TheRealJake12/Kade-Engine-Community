@@ -45,14 +45,15 @@ import kec.backend.character.CharacterData;
 import kec.objects.CoolText;
 import kec.objects.note.Note;
 import kec.objects.ui.HealthIcon;
-import kec.states.editors.ChartingBox;
+import kec.objects.editor.ChartingBox;
 import openfl.Lib;
 import openfl.events.Event as OpenFlEvent;
 import openfl.events.IOErrorEvent;
 import openfl.net.FileReference;
 import kec.backend.chart.ChartNote;
 import kec.backend.chart.format.Section;
-import kec.objects.note.EditorNote;
+import kec.objects.editor.EditorNote;
+import kec.objects.editor.EditorArea;
 #if FEATURE_FILESYSTEM
 import sys.FileSystem;
 import sys.io.File;

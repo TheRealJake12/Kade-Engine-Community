@@ -1079,7 +1079,7 @@ class PlayState extends MusicBeatState
 		pushSub(new ResultsScreen());
 		pushSub(new GameOverSubstate());
 		pushSub(new OptionsMenu(true));
-	
+
 		#if FEATURE_LUAMODCHART
 		if (executeModchart)
 		{

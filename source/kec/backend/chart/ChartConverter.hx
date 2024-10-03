@@ -79,7 +79,7 @@ class ChartConverter
 			newNotes.push({
 				index: i,
 				sectionNotes: [],
-				bpm: section.bpm,
+				bpm: currentSeg.bpm,
 				mustHitSection: section.mustHitSection,
 				lengthInSteps: 16,
 				startTime: currentSeg.startTime,
@@ -238,7 +238,7 @@ class ChartConverter
 			newNotes.push({
 				index: i,
 				sectionNotes: [],
-				bpm: section.bpm,
+				bpm: currentSeg.bpm,
 				mustHitSection: section.mustHitSection,
 				lengthInSteps: 16,
 				startTime: currentSeg.startTime,
@@ -368,7 +368,7 @@ class ChartConverter
 			newNotes.push({
 				index: i,
 				sectionNotes: [],
-				bpm: section.bpm,
+				bpm: currentSeg.bpm,
 				mustHitSection: section.mustHitSection,
 				lengthInSteps: Std.int(section.sectionBeats * 4),
 				startTime: 0
@@ -482,11 +482,11 @@ class ChartConverter
 		{
 			if (i.type == "BPM Change")
 			{
-				var beat:Float = i.beat * Conductor.rate;
+				var beat:Float = i.beat;
 
 				var endBeat:Float = Math.POSITIVE_INFINITY;
 
-				TimingStruct.addTiming(beat, i.args[0] * Conductor.rate, endBeat, 0); // offset in this case = start time since we don't have a offset
+				TimingStruct.addTiming(beat, Std.parseFloat(i.args[0]), endBeat, 0); // offset in this case = start time since we don't have a offset
 
 				if (currentIndex != 0)
 				{
@@ -496,6 +496,7 @@ class ChartConverter
 					var step = ((60 / data.bpm) * 1000) / 4;
 					TimingStruct.AllTimings[currentIndex].startStep = Math.floor(((data.endBeat / (data.bpm / 60)) * 1000) / step);
 					TimingStruct.AllTimings[currentIndex].startTime = data.startTime + data.length;
+					Debug.logTrace(TimingStruct.AllTimings[currentIndex].startStep);
 				}
 
 				currentIndex++;

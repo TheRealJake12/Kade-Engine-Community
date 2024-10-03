@@ -147,9 +147,6 @@ class KadeEngineData
 		if (FlxG.save.data.mem == null)
 			FlxG.save.data.mem = false;
 
-		if (FlxG.save.data.gen == null)
-			FlxG.save.data.gen = true;
-
 		if (FlxG.save.data.notesplashes == null)
 			FlxG.save.data.notesplashes = true;
 

@@ -109,9 +109,6 @@ class Paths
 						}
 						bitmap.getSurface();
 						bitmap.disposeImage();
-						bitmap.image.data = null;
-						bitmap.image = null;
-						bitmap.readable = true;
 					}
 				}
 
@@ -551,6 +548,34 @@ class Paths
 		#if sys
 		openfl.system.System.gc();
 		#end
+	}
+
+	static public function getAtlas(key:String, ?parentFolder:String = null, ?allowGPU:Bool = true):FlxAtlasFrames
+	{
+		final imageLoaded:FlxGraphic = image(key, parentFolder, allowGPU);
+		final myXml:Dynamic = getPath('images/$key.xml', TEXT, parentFolder);
+		if (OpenFlAssets.exists(myXml))
+			return FlxAtlasFrames.fromSparrow(imageLoaded, myXml);
+
+		return null;
+	}
+
+	static public function getMultiAtlas(keys:Array<String>, ?parentFolder:String = null, ?allowGPU:Bool = true):FlxAtlasFrames
+	{
+		var parentFrames:FlxAtlasFrames = Paths.getAtlas(keys[0].trim());
+		if (keys.length > 1)
+		{
+			var original:FlxAtlasFrames = parentFrames;
+			parentFrames = new FlxAtlasFrames(parentFrames.parent);
+			parentFrames.addAtlas(original, true);
+			for (i in 1...keys.length)
+			{
+				var extraFrames:FlxAtlasFrames = Paths.getAtlas(keys[i].trim(), parentFolder, allowGPU);
+				if (extraFrames != null)
+					parentFrames.addAtlas(extraFrames, true);
+			}
+		}
+		return parentFrames;
 	}
 
 	static public function getSparrowAtlas(key:String, ?library:String, ?isCharacter:Bool = false, ?gpuRender:Bool)

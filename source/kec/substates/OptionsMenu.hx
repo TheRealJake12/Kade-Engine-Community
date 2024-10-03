@@ -208,7 +208,6 @@ class OptionsMenu extends MusicBeatSubstate
 				#end
 			]),
 			new OptionCata(935, 40, "Saves", [
-				new General("Traces things in the debug console or logs."),
 				new ResetScoreOption("Reset your score on all songs and weeks. This is irreversible!"),
 				new LockWeeksOption("Reset your story mode progress. This is irreversible!"),
 				new ResetSettings("Reset ALL your settings. This is irreversible!")
@@ -225,7 +224,7 @@ class OptionsMenu extends MusicBeatSubstate
 				new Resolution("Change The Resolution The Game Plays In. (Press Enter To Apply.)"),
 				#end
 				new AntialiasingOption("Toggle antialiasing, improving graphics quality at a slight performance penalty."),
-				new GPURendering("Makes All Sprites Load Into VRAM, Reducing Normal RAM Usage. (Not Recommended For ~3GB VRAM)"), // Ill come back to this. I'm tired asf
+				new GPURendering("Makes All Sprites Load Into VRAM, Reducing Normal RAM Usage. (Not Recommended For ~3GB VRAM) (Will Break Get Color)"), // Ill come back to this. I'm tired asf
 				new BackgroundsOption("Toggles Backrounds From Being Visible. (Good Performance Booster.)"),
 				new QualityOption("Toggle If Extra Stage Background Assets Get Loaded (And Other Distractions)"),
 				// not working rn new MaxRatingAmountOption("How Many Ratings / Combo Numbers Can Be Visible At A Time? (Combo Numbers * 3)"),
