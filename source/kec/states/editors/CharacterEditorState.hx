@@ -333,6 +333,7 @@ class CharacterEditorState extends UIState
 		ghost.frames.frames = char.frames.frames;
 		ghost.animation.copyFrom(char.animation);
 		setGhostFrame();
+		ghost.setPosition(char.x, char.y);
 	}
 
 	private function setAntiAliasing()
@@ -530,12 +531,14 @@ class CharacterEditorState extends UIState
 
 	function updateAnimText()
 	{
+		/*
 		charToLoad.text = char.data.char;
 		charAssets.text = char.data.assets[0];
 		charIcon.text = char.data.icon;
 		charRed.pos = char.data.rgb[0];
 		charGreen.pos = char.data.rgb[1];
 		charBlue.pos = char.data.rgb[2];
+		*/
 		animName.text = curAnim.name;
 		animFPS.pos = curAnim.frameRate == null ? 24 : curAnim.frameRate;
 		animPrefix.text = curAnim.prefix;
@@ -623,30 +626,38 @@ class CharacterEditorState extends UIState
 
 	function updateAnim()
 	{
-		if (!char.animation.exists(animName.text))
+		if (!animList.toString().contains(animName.text))
 			return;
-		final indices:Array<String> = animIndices.text.split(',');
-		var newIndices:Array<Int> = [];
-		if (indices.length > 1)
+		try
 		{
-			for (i in indices)
-				newIndices.push(Std.parseInt(i));
+			final indices:Array<String> = animIndices.text.split(',');
+			var newIndices:Array<Int> = [];
+			if (indices.length > 1)
+			{
+				for (i in indices)
+					newIndices.push(Std.parseInt(i));
+			}
+			curAnim = char.data.animations[curAnimSelected];
+			curAnim.name = animName.text;
+			curAnim.frameRate = animFPS.pos == 0 ? 24 : Std.int(animFPS.pos);
+			curAnim.prefix = animPrefix.text;
+			curAnim.frameIndices = newIndices;
+			curAnim.looped = animLooped.selected;
+			char.playAnim(char.data.animations[0].name, true);
+			char.animation.remove(curAnim.name);
+			addAnimation(curAnim.name, curAnim.prefix, curAnim.frameRate, curAnim.looped, newIndices);
+			reloadTexts();
+			switchAnim();
 		}
-		curAnim = char.data.animations[curAnimSelected];
-		curAnim.name = animName.text;
-		curAnim.frameRate = animFPS.pos == 0 ? 24 : Std.int(animFPS.pos);
-		curAnim.prefix = animPrefix.text;
-		curAnim.frameIndices = newIndices;
-		curAnim.looped = animLooped.selected;
-		char.animation.remove(animName.text);
-		addAnimation(curAnim.name, curAnim.prefix, curAnim.frameRate, curAnim.looped, newIndices);
-		reloadTexts();
-		switchAnim();
+		catch(e)
+		{
+			Debug.logError(e);
+		}
 	}
 
 	function removeAnim()
 	{
-		if ((!animList.toString().contains(animName.text) || !char.animation.exists(animName.text)) || animList.length - 1  < 1)
+		if (!animList.toString().contains(animName.text) || animList.length - 1  < 1)
 			return;
 		// wack bullshit
 		final name = animList[curAnimSelected].name;
