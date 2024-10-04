@@ -128,7 +128,7 @@ class CharacterEditorState extends UIState
 			FlxG.keys.justPressed.UP,
 			FlxG.keys.justPressed.RIGHT,
 		];
-		var txt = 'fard';
+		var txt = 'Error Finding Animation';
 		if (FocusManager.instance.focus == null)
 		{
 			if (camKeys.contains(true))
@@ -186,13 +186,13 @@ class CharacterEditorState extends UIState
 			if (FlxG.keys.justPressed.F1)
 				openSubState(subStates[0]);
 		}
-		if (char.animation != null)
+		if (char.animation != null && char.animation.exists(curAnim.name))
 		{
 			if (FlxG.keys.justPressed.SPACE && FocusManager.instance.focus == null)
 				char.playAnim(curAnim.name, true);
 			var frames = -1;
 			var length = -1;
-			if (char.animation.curAnim != null)
+			if (char.animation.curAnim != null )
 			{
 				frames = char.animation.curAnim.curFrame;
 				length = char.animation.curAnim.numFrames - 1;
@@ -572,21 +572,28 @@ class CharacterEditorState extends UIState
 
 	function addAnimation(anim:String, name:String, fps:Float, loop:Bool, indices:Array<Int>)
 	{
-		if (indices != null && indices.length > 0)
-			char.animation.addByIndices(anim, name, indices, "", fps, loop);
-		else
-			char.animation.addByPrefix(anim, name, fps, loop);
-
-		if (!char.animation.exists(anim))
+		try
 		{
-			Debug.logTrace('$anim DOES NOT EXIST');
-			char.animOffsets[anim] = [0, 0];
+			if (indices != null && indices.length > 0)
+				char.animation.addByIndices(anim, name, indices, "", fps, loop);
+			else
+				char.animation.addByPrefix(anim, name, fps, loop);
+
+			if (!char.animation.exists(anim))
+			{
+				Debug.logTrace('$anim DOES NOT EXIST');
+				char.animOffsets[anim] = [0, 0];
+			}
+		}
+		catch(e)
+		{
+			Debug.logTrace(e);
 		}
 	}
 
 	function addAnim()
 	{
-		if (char.animation.exists(animName.text))
+		if (char.animation.exists(animName.text) && animList.toString().contains(animName.text))
 			return;
 		final indices:Array<String> = animIndices.text.split(',');
 		var newIndices:Array<Int> = [];
@@ -639,11 +646,12 @@ class CharacterEditorState extends UIState
 
 	function removeAnim()
 	{
-		if (!animList.toString().contains(animName.text))
+		if ((!animList.toString().contains(animName.text) || !char.animation.exists(animName.text)) || animList.length - 1  < 1)
 			return;
-		// wack bullshit	
+		// wack bullshit
 		final name = animList[curAnimSelected].name;
 		animList.remove(curAnim);
+		Debug.logTrace(animList.length);
 		char.data.animations = animList;
 		curAnimSelected = 0;
 		reloadTexts();
