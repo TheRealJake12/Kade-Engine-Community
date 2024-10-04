@@ -94,7 +94,7 @@
  "asset": [
   "characters/spooky_kids_assets"
  ],
- "startingAnim": "idle",
+ "startingAnim": "danceLeft",
  "iconAnimated": false,
  "antialiasing": true,
  "deadChar": "",
