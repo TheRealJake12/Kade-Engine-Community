@@ -1123,6 +1123,7 @@ class PlayState extends MusicBeatState
 		songPosBar.goesToRight = true;
 		if (PlayStateChangeables.useDownscroll)
 			songPosBar.y = FlxG.height - 37;
+			
 		uiGroup.add(songPosBar);
 		songPosBar.scrollFactor.set();
 		songPosBar.setColors(dad.data.barColor, FlxColor.BLACK);
@@ -3408,7 +3409,6 @@ class PlayState extends MusicBeatState
 							spawnNoteSplashOnNote(note);
 						}
 						Stats.totalPlayed += 1;
-						Stats.totalNotesHit -= 1;
 						note.rating = Ratings.timingWindows[0];
 						health -= 0.8;
 						char.playAnim('hurt');
@@ -3797,16 +3797,17 @@ class PlayState extends MusicBeatState
 			uiGroup.remove(i);
 		}
 
+		songName.revive();
+		songPosBar.revive();
+		uiGroup.add(songPosBar);
+		uiGroup.add(songName);
+		songName.visible = FlxG.save.data.songPosition;
+		songPosBar.visible = FlxG.save.data.songPosition;
+
 		if (songStarted)
 		{
-			songName.visible = FlxG.save.data.songPosition;
-			songPosBar.visible = FlxG.save.data.songPosition;
 			if (FlxG.save.data.songPosition)
 			{
-				songName.revive();
-				songPosBar.revive();
-				uiGroup.add(songPosBar);
-				uiGroup.add(songName);
 				songName.alpha = 1;
 				songPosBar.alpha = 1;
 			}
