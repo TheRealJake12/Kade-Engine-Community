@@ -122,7 +122,7 @@ class TitleState extends MusicBeatState
 
 		credTextShit.visible = false;
 
-		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('credshit/meredo'));
+		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('credshit/jake'));
 		add(ngSpr);
 		ngSpr.alpha = 0;
 		ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));

@@ -49,7 +49,10 @@ class Constants
 	public static final defaultBF:String = 'bf';
 	public static final defaultOP:String = 'dad';
 	public static final defaultGF:String = 'gf';
+	// Note Animation Names
 	public static final noteColors:Array<String> = ['purple', 'blue', 'green', 'red'];
+	// Animation Names
+	public static final singAnimations:Array<String> = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
 
 	public static final discordRpc:String = "898970552600002561";
 }

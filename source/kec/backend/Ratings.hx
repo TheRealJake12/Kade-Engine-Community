@@ -206,7 +206,7 @@ class RatingWindow
 				var missArray:Array<Bool> = [false, false, false, false, false];
 				var splashArray:Array<Bool> = [false, false, false, true, true];
 				var suffixes:Array<String> = ['s', 's', 's', 's', 's'];
-				var combos:Array<String> = ['', 'FC', 'GFC', 'PFC', 'MFC'];
+				var combos:Array<String> = ['FC', 'FC', 'GFC', 'PFC', 'MFC'];
 				for (i in 0...ratings.length)
 				{
 					var rClass = new RatingWindow(ratings[i], timings[i], combos[i], colors[i], healthBonuses[i], scoreBonuses[i], acc[i], missArray[i],
