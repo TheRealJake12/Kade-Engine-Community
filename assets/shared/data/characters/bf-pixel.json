@@ -121,7 +121,7 @@
  "startingAnim": "idle",
  "iconAnimated": false,
  "antialiasing": false,
- "deadChar": "",
+ "deadChar": "bf-pixel-dead",
  "name": "bf-pixel",
  "replacesGF": false,
  "scale": 6

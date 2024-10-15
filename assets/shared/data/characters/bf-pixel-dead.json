@@ -8,8 +8,8 @@
    "frameRate": 24,
    "frameIndices": [],
    "prefix": "BF Dies pixel",
-   "looped": false,
-   "name": "firstDeath"
+   "name": "firstDeath",
+   "looped": false
   },
   {
    "offsets": [
@@ -19,8 +19,8 @@
    "frameRate": 24,
    "frameIndices": [],
    "prefix": "Retry Loop",
-   "looped": false,
-   "name": "deathLoop"
+   "name": "deathLoop",
+   "looped": false
   },
   {
    "offsets": [
@@ -30,15 +30,18 @@
    "frameRate": 24,
    "frameIndices": [],
    "prefix": "RETRY CONFIRM",
-   "looped": false,
-   "name": "deathConfirm"
+   "name": "deathConfirm",
+   "looped": false
   }
  ],
  "barType": "rgb",
+ "hasTrail": false,
+ "isDancing": false,
  "camPos": [
   -225,
   -175
  ],
+ "holdLength": 4,
  "flipAnimations": false,
  "flipX": false,
  "healthicon": "bf-pixel",
@@ -52,7 +55,9 @@
  ],
  "startingAnim": "idle",
  "iconAnimated": false,
- "deadChar": "bf-pixel-dead",
+ "antialiasing": false,
+ "deadChar": "",
  "name": "bf-pixel-dead",
+ "replacesGF": false,
  "scale": 6
 }
