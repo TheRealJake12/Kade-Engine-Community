@@ -79,9 +79,9 @@ class NoteSplash extends FlxSprite
 		switch (PlayState.STYLE.style.toLowerCase())
 		{
 			default:
-				frames = Paths.getSparrowAtlas(NoteStyleHelper.generateNotesplashSprite(texture, noteType.toLowerCase()), 'shared');
+				frames = Paths.getSparrowAtlas(NoteStyleHelper.generateNotesplashSprite(texture, noteType.toLowerCase()));
 				if (frames == null)
-					frames = Paths.getSparrowAtlas(NoteStyleHelper.generateNotesplashSprite(texture, ''), 'shared');
+					frames = Paths.getSparrowAtlas(NoteStyleHelper.generateNotesplashSprite(texture, ''));
 		}
 
 		loadAnimations(loadSplashData(texture));
@@ -118,7 +118,7 @@ class NoteSplash extends FlxSprite
 	{
 		if (configs.exists(tex))
 			return configs.get(tex);
-		rawJson = Paths.loadData('images/splashes/' + Constants.notesplashSprite, 'shared');
+		rawJson = Paths.loadJSON('images/splashes/' + Constants.notesplashSprite);
 		var data:SplashData = cast rawJson;
 		_lastCheckedType = tex;
 		configs.set(tex, data);

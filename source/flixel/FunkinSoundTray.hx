@@ -30,7 +30,7 @@ class FunkinSoundTray extends FlxSoundTray
 		super();
 		removeChildren();
 
-		var bg:Bitmap = new Bitmap(Assets.getBitmapData(Paths.oldImage("soundtray/volumebox")));
+		var bg:Bitmap = new Bitmap(Assets.getBitmapData(Paths.file("images/soundtray/volumebox.png")));
 		bg.scaleX = graphicScale;
 		bg.scaleY = graphicScale;
 		addChild(bg);
@@ -39,7 +39,7 @@ class FunkinSoundTray extends FlxSoundTray
 		visible = false;
 
 		// makes an alpha'd version of all the bars (bar_10.png)
-		var backingBar:Bitmap = new Bitmap(Assets.getBitmapData(Paths.oldImage("soundtray/bars_10")));
+		var backingBar:Bitmap = new Bitmap(Assets.getBitmapData(Paths.file("images/soundtray/bars_10.png")));
 		backingBar.x = 9;
 		backingBar.y = 5;
 		backingBar.scaleX = graphicScale;
@@ -55,7 +55,7 @@ class FunkinSoundTray extends FlxSoundTray
 		// we are trying to get assets bars_1-10
 		for (i in 1...11)
 		{
-			var bar:Bitmap = new Bitmap(Assets.getBitmapData(Paths.oldImage("soundtray/bars_" + i)));
+			var bar:Bitmap = new Bitmap(Assets.getBitmapData(Paths.file("images/soundtray/bars_" + i + ".png")));
 			bar.x = 9;
 			bar.y = 5;
 			bar.scaleX = graphicScale;
@@ -67,9 +67,9 @@ class FunkinSoundTray extends FlxSoundTray
 		y = -height;
 		screenCenter();
 
-		volumeUpSound = Paths.soundOld("soundtray/Volup");
-		volumeDownSound = Paths.soundOld("soundtray/Voldown");
-		volumeMaxSound = Paths.soundOld("soundtray/VolMAX");
+		volumeUpSound = Paths.sound("soundtray/Volup", false, true);
+		volumeDownSound = Paths.sound("soundtray/Voldown", false, true);
+		volumeMaxSound = Paths.sound("soundtray/VolMAX", false, true);
 
 		trace("Custom tray added!");
 	}

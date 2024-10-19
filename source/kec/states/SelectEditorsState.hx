@@ -39,8 +39,7 @@ class SelectEditorsState extends MusicBeatState
 
 	override function create()
 	{
-		Paths.clearStoredMemory();
-		Paths.clearUnusedMemory();
+		Paths.clearCache();
 
 		FlxG.mouse.visible = true;
 
@@ -94,7 +93,6 @@ class SelectEditorsState extends MusicBeatState
 		tweenColorShit();
 
 		super.create();
-		Paths.clearUnusedMemory();
 	}
 
 	override function update(elapsed:Float)
@@ -144,7 +142,7 @@ class SelectEditorsState extends MusicBeatState
 			case 'Stage Editor':
 				PlayState.SONG = Song.loadFromJson('test', '');
 				kec.states.editors.StageDebugState.fromEditor = true;
-				LoadingState.loadAndSwitchState(new kec.states.editors.StageDebugState('stage'));
+				MusicBeatState.switchState(new kec.states.editors.StageDebugState('stage'));
 			case 'Chart Editor':
 				PlayState.SONG = Song.loadFromJson('test', '');
 				PlayState.storyDifficulty = 1;
@@ -152,7 +150,7 @@ class SelectEditorsState extends MusicBeatState
 				PlayState.isStoryMode = false;
 				PlayState.isSM = false;
 				Conductor.rate = 1;
-				LoadingState.loadAndSwitchState(new kec.states.editors.ChartingState(), true);
+				MusicBeatState.switchState(new kec.states.editors.ChartingState());
 		}
 		Constants.freakyPlaying = false;
 		FlxG.sound.music.stop();

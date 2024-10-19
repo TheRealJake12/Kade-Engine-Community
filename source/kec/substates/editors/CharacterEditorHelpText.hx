@@ -5,7 +5,6 @@ package kec.substates.editors;
  */
 class CharacterEditorHelpText extends MusicBeatSubstate
 {
-	var tweenManager:FlxTweenManager = null;
 	var text:FlxText = null;
 	var bg:FlxSprite = null;
 
@@ -13,7 +12,6 @@ class CharacterEditorHelpText extends MusicBeatSubstate
 	{
 		super();
 		openCallback = refresh;
-		tweenManager = new FlxTweenManager();
 		bg = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
 		bg.scale.set(FlxG.width, FlxG.height);
 		bg.updateHitbox();
@@ -49,13 +47,12 @@ class CharacterEditorHelpText extends MusicBeatSubstate
 
 	override function update(elapsed:Float)
 	{
-		tweenManager.update(elapsed);
 		super.update(elapsed);
 
 		if (FlxG.keys.justPressed.F1)
 		{
-			tweenManager.tween(bg, {alpha: 0}, 1, {ease: FlxEase.cubeIn});
-			tweenManager.tween(text, {alpha: 0}, 1, {
+			createTween(bg, {alpha: 0}, 1, {ease: FlxEase.cubeIn});
+			createTween(text, {alpha: 0}, 1, {
 				ease: FlxEase.cubeIn,
 				onComplete: function(t)
 				{
@@ -67,7 +64,7 @@ class CharacterEditorHelpText extends MusicBeatSubstate
 
 	private function refresh()
 	{
-		tweenManager.tween(bg, {alpha: 0.8}, 0.4, {ease: FlxEase.cubeOut});
-		tweenManager.tween(text, {alpha: 1}, 0.4, {ease: FlxEase.cubeOut});
+		createTween(bg, {alpha: 0.8}, 0.4, {ease: FlxEase.cubeOut});
+		createTween(text, {alpha: 1}, 0.4, {ease: FlxEase.cubeOut});
 	}
 }

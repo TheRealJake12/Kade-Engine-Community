@@ -55,7 +55,6 @@ class CharacterEditorState extends UIState
 
 	// HAXEUI
 	private var editorUI:VBox;
-	
 
 	public function new(char:String = 'bf')
 	{
@@ -65,8 +64,7 @@ class CharacterEditorState extends UIState
 
 	override function create()
 	{
-		Paths.clearStoredMemory();
-		Paths.clearUnusedMemory();
+		Paths.clearCache();
 		setStage('stage');
 		char = new Character(400, 450, charString, false, false, true);
 		setProperties();
@@ -192,7 +190,7 @@ class CharacterEditorState extends UIState
 				char.playAnim(curAnim.name, true);
 			var frames = -1;
 			var length = -1;
-			if (char.animation.curAnim != null )
+			if (char.animation.curAnim != null)
 			{
 				frames = char.animation.curAnim.curFrame;
 				length = char.animation.curAnim.numFrames - 1;
@@ -224,7 +222,6 @@ class CharacterEditorState extends UIState
 	private function setStage(newStage:String)
 	{
 		stage = new Stage(newStage);
-		Paths.setCurrentLevel(stage.stageDir);
 		stage.initStageProperties();
 		stage.loadStageData(newStage);
 		camZoom = stage.camZoom;
@@ -258,7 +255,7 @@ class CharacterEditorState extends UIState
 
 		reloadTexts();
 		switchAnim(0);
-		setIcon(char.data.icon, char.data.iconAnimated);
+		setIcon(char.data.icon);
 		camPos.setPosition(char.getMidpoint().x + char.data.camPos[0], char.getMidpoint().y + char.data.camPos[1]);
 	}
 
@@ -275,7 +272,6 @@ class CharacterEditorState extends UIState
 		charIcon.text = char.data.icon;
 		charFlipX.selected = char.data.flipX;
 		charFlipAnims.selected = char.data.flipAnims;
-		charIconAnimated.selected = char.data.iconAnimated;
 		camPosX.pos = char.data.camPos[0];
 		camPosY.pos = char.data.camPos[1];
 		charAntiAlias.selected = char.data.antialiasing;
@@ -288,25 +284,24 @@ class CharacterEditorState extends UIState
 		charIcon.text = char.data.icon;
 		charFlipX.selected = char.data.flipX;
 		charFlipAnims.selected = char.data.flipAnims;
-		charIconAnimated.selected = char.data.iconAnimated;
 		charStartAnim.text = char.data.startingAnim;
 		charTrail.selected = char.data.trail;
 	}
 
-	private function setIcon(newIcon:String, animated:Bool)
+	private function setIcon(newIcon:String)
 	{
-		icon.changeIcon(newIcon, animated);
+		icon.changeIcon(newIcon);
 		char.data.icon = newIcon;
 	}
 
 	private function setBar()
 	{
-		colorBar = new Bar(650, 625, 'healthBar', 'shared', null, 2, 2);
+		colorBar = new Bar(650, 625, 'healthBar', null, 2, 2);
 		colorBar.setColors(char.data.barColor, char.data.barColor);
 		colorBar.camera = cam;
 		add(colorBar);
 
-		icon = new HealthIcon(char.data.char, char.data.iconAnimated, false);
+		icon = new HealthIcon(char.data.char, false);
 		icon.setPosition(625, colorBar.y - 75);
 		icon.camera = cam;
 		add(icon);
@@ -460,7 +455,7 @@ class CharacterEditorState extends UIState
 	{
 		charToDrag.setPosition(Math.floor(FlxG.mouse.screenX + charToDrag.scrollFactor.x * (FlxG.mouse.x - FlxG.mouse.screenX)) - _dragOffsetX,
 			Math.floor(FlxG.mouse.screenY + charToDrag.scrollFactor.y * (FlxG.mouse.y - FlxG.mouse.screenY)) - _dragOffsetY);
-		camPos.setPosition(char.getMidpoint().x + char.data.camPos[0], char.getMidpoint().y + char.data.camPos[1]);	
+		camPos.setPosition(char.getMidpoint().x + char.data.camPos[0], char.getMidpoint().y + char.data.camPos[1]);
 	}
 
 	// HAXEUI
@@ -479,13 +474,12 @@ class CharacterEditorState extends UIState
 		charRed.onChange = _ -> this.setColors();
 		charGreen.onChange = _ -> this.setColors();
 		charBlue.onChange = _ -> this.setColors();
-		charIcon.onChange = _ -> this.setIcon(charIcon.text, charIconAnimated.selected);
+		charIcon.onChange = _ -> this.setIcon(charIcon.text);
 		charFlipX.onClick = _ -> this.setFlipX();
 		charFlipAnims.onClick = _ -> this.setFlipAnims();
 		editorGhost.onClick = _ -> this.setGhost();
 		editorGhostUpdate.onClick = _ -> this.setGhostFrame();
 		editorGhostSetPos.onClick = _ -> ghost.setPosition(char.x, char.y);
-		charIconAnimated.onChange = _ -> this.setIcon(charIcon.text, charIconAnimated.selected);
 		charAntiAlias.onClick = _ -> this.setAntiAliasing();
 		charDances.onClick = _ -> char.data.dances = charDances.selected;
 		charGF.onClick = _ -> char.data.replacesGF = charGF.selected;
@@ -532,13 +526,13 @@ class CharacterEditorState extends UIState
 	function updateAnimText()
 	{
 		/*
-		charToLoad.text = char.data.char;
-		charAssets.text = char.data.assets[0];
-		charIcon.text = char.data.icon;
-		charRed.pos = char.data.rgb[0];
-		charGreen.pos = char.data.rgb[1];
-		charBlue.pos = char.data.rgb[2];
-		*/
+			charToLoad.text = char.data.char;
+			charAssets.text = char.data.assets[0];
+			charIcon.text = char.data.icon;
+			charRed.pos = char.data.rgb[0];
+			charGreen.pos = char.data.rgb[1];
+			charBlue.pos = char.data.rgb[2];
+		 */
 		animName.text = curAnim.name;
 		animFPS.pos = curAnim.frameRate == null ? 24 : curAnim.frameRate;
 		animPrefix.text = curAnim.prefix;
@@ -588,7 +582,7 @@ class CharacterEditorState extends UIState
 				char.animOffsets[anim] = [0, 0];
 			}
 		}
-		catch(e)
+		catch (e)
 		{
 			Debug.logTrace(e);
 		}
@@ -649,7 +643,7 @@ class CharacterEditorState extends UIState
 			reloadTexts();
 			switchAnim();
 		}
-		catch(e)
+		catch (e)
 		{
 			Debug.logError(e);
 		}
@@ -657,7 +651,7 @@ class CharacterEditorState extends UIState
 
 	function removeAnim()
 	{
-		if (!animList.toString().contains(animName.text) || animList.length - 1  < 1)
+		if (!animList.toString().contains(animName.text) || animList.length - 1 < 1)
 			return;
 		// wack bullshit
 		final name = animList[curAnimSelected].name;
@@ -676,7 +670,6 @@ class CharacterEditorState extends UIState
 			name: charToLoad.text,
 			asset: charAssets.text.split(', '),
 			healthicon: charIcon.text,
-			iconAnimated: charIconAnimated.selected,
 			startingAnim: charStartAnim.text,
 			rgbArray: char.data.rgb,
 			barType: "rgb",

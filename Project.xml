@@ -60,13 +60,9 @@
 	<!-- <define name="PRELOAD_ALL" /> -->
 	<define name="PRELOAD_ALL" unless="web" />
 	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL" />
-	<assets path="assets/songs" library="songs" exclude="*.ogg" if="web" />
-	<assets path="assets/songs" library="songs" exclude="*.mp3" unless="web" />
 	<assets path="assets/videos" embed="false" if="VIDEOS" />
 	<assets path="assets/shared" exclude="*.ogg" if="web" />
 	<assets path="assets/shared" exclude="*.mp3" unless="web" />
-	<assets path="assets/weeks" library="weeks" rename="assets" exclude="*.ogg" if="web" />
-	<assets path="assets/weeks" library="weeks" rename="assets" exclude="*.mp3" unless="web" />
 	<assets path="assets/sm" library="sm" if="FEATURE_STEPMANIA" />
 	<assets path="mods" embed="false" if="FEATURE_MODCORE" />
 	<assets path="art/readme.txt" rename="do NOT readme.txt" />
@@ -129,6 +125,7 @@
 	</section>
 	<!-- Basically Allows Videos To Render In Higher Quality On Higher Resoluttions -->
 	<haxedef name="openfl_dpi_aware" unless="web" />
+	
 	<haxedef name="haxeui_focus_out_on_click" />
 	<!-- Tired Of HaxeUI Breaking Things -->
 	<haxeflag name="--macro" value="include('haxe.ui.backend.flixel.components')" />

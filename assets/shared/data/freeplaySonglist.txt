@@ -11,9 +11,9 @@ blammed:pico:3:#6F133C
 satin-panties:mom:4:#CB84BE
 high:mom:4:#CB84BE
 milf:mom:4:#CB84BE
-cocoa:parents-christmas:5:#8DA5CE
-eggnog:parents-christmas:5:#8DA5CE
-winter-horrorland:monster-christmas:5:#a10000
+cocoa:parents:5:#8DA5CE
+eggnog:parents:5:#8DA5CE
+winter-horrorland:monster:5:#a10000
 senpai:senpai:6:#B25C93
 roses:senpai:6:#B25C93
 thorns:spirit:6:#17005c

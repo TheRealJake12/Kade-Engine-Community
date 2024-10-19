@@ -425,13 +425,13 @@ class ModchartState
 				songLowercase = 'milf';
 		}
 
-		var path = Paths.lua('songs/${PlayState.SONG.songId}/modchart');
+		var path = Paths.file('data/songs/${PlayState.SONG.songId}/modchart.lua');
 		#if FEATURE_STEPMANIA
 		if (PlayState.isSM)
 			path = PlayState.pathToSm + "/modchart.lua";
 		#end
 
-		var result = LuaL.dofile(lua, path); // execute le file
+		var result = LuaL.dofile(lua, OpenFlAssets.getPath(path)); // execute le file
 
 		if (result != 0)
 		{
@@ -483,9 +483,9 @@ class ModchartState
 
 		setVar("strumLineY", PlayState.instance.strumLine.y);
 
-		Lua_helper.add_callback(lua, "precache", function(asset:String, type:String, ?library:String)
+		Lua_helper.add_callback(lua, "precache", function(asset:String, type:String)
 		{
-			PlayState.instance.precacheThing(asset, type, library);
+			PlayState.instance.precacheThing(asset, type);
 		});
 
 		// callbacks

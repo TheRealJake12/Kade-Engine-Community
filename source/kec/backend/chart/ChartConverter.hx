@@ -448,7 +448,7 @@ class ChartConverter
 			bpm: data.bpm,
 			speed: data.speed,
 			needsVoices: data.needsVoices,
-			style: 'default', // doesn't exist anymore :/
+			style: 'Default', // doesn't exist anymore :/
 			eventObjects: events,
 			splitVoiceTracks: false,
 			chartVersion: Constants.chartVer
@@ -473,6 +473,9 @@ class ChartConverter
 			data.notes = [];
 			data.notes.push(Song.oldSection(data));
 		}
+
+		if (data.style == null)
+			data.style = "Default";
 
 		// If the section array exists but there's nothing we push at least 1 section to play.
 		if (data.notes.length == 0)

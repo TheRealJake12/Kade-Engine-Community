@@ -124,8 +124,7 @@ class Note extends FlxSprite
 					hitsoundsEditor = false;
 					if (Paths.fileExists('images/notetypes/hurt_'
 						+ NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin]
-						+ '.png',
-						IMAGE))
+						+ '.png'))
 						texture = 'notetypes/hurt_' + NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin];
 					else
 						texture = "notetypes/hurt_Arrows";
@@ -141,8 +140,7 @@ class Note extends FlxSprite
 					hitsoundsEditor = true;
 					if (Paths.fileExists('images/notetypes/mustpress_'
 						+ NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin]
-						+ '.png',
-						IMAGE))
+						+ '.png'))
 						texture = 'notetypes/mustpress_' + NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin];
 					else
 						texture = "notetypes/mustpress_Arrows";
@@ -340,7 +338,7 @@ class Note extends FlxSprite
 		var customSkin:String = skin + skinPostfix;
 		var path:String = '';
 
-		if (customSkin == _lastValidChecked || Paths.fileExists('images/' + customSkin + '.png', IMAGE))
+		if (customSkin == _lastValidChecked || Paths.fileExists('images/' + customSkin + '.png'))
 		{
 			skin = customSkin;
 			_lastValidChecked = customSkin;

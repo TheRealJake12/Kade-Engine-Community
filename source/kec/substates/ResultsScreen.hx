@@ -240,18 +240,18 @@ class ResultsScreen extends MusicBeatSubstate
 
 		add(settingsText);
 
-		FlxTween.tween(background, {alpha: 0.5}, 0.5);
+		createTween(background, {alpha: 0.5}, 0.5);
 		if (!PlayState.isStoryMode)
 		{
-			FlxTween.tween(songText, {y: 65}, 0.5, {ease: FlxEase.expoInOut});
-			FlxTween.tween(activeMods, {y: FlxG.height - 400}, 0.5, {ease: FlxEase.expoInOut});
+			createTween(songText, {y: 65}, 0.5, {ease: FlxEase.expoInOut});
+			createTween(activeMods, {y: FlxG.height - 400}, 0.5, {ease: FlxEase.expoInOut});
 		}
-		FlxTween.tween(text, {y: 20}, 0.5, {ease: FlxEase.expoInOut});
-		FlxTween.tween(comboText, {y: 145}, 0.5, {ease: FlxEase.expoInOut});
-		FlxTween.tween(contText, {y: FlxG.height - 45}, 0.5, {ease: FlxEase.expoInOut});
-		FlxTween.tween(settingsText, {y: FlxG.height - 35}, 0.5, {ease: FlxEase.expoInOut});
+		createTween(text, {y: 20}, 0.5, {ease: FlxEase.expoInOut});
+		createTween(comboText, {y: 145}, 0.5, {ease: FlxEase.expoInOut});
+		createTween(contText, {y: FlxG.height - 45}, 0.5, {ease: FlxEase.expoInOut});
+		createTween(settingsText, {y: FlxG.height - 35}, 0.5, {ease: FlxEase.expoInOut});
 		if (FlxG.save.data.inputShow)
-			FlxTween.tween(graphSprite, {alpha: 1}, 1, {ease: FlxEase.expoInOut});
+			createTween(graphSprite, {alpha: 1}, 1, {ease: FlxEase.expoInOut});
 
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
@@ -318,7 +318,7 @@ class ResultsScreen extends MusicBeatSubstate
 
 			PlayState.isStoryMode = false;
 			PlayState.storyDifficulty = PlayState.storyDifficulty;
-			LoadingState.loadAndSwitchState(new PlayState());
+			MusicBeatState.switchState(new PlayState());
 		}
 
 		super.update(elapsed);

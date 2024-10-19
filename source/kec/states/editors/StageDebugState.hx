@@ -23,8 +23,9 @@ import haxe.ui.containers.HBox;
 import haxe.ui.containers.TabView;
 import haxe.ui.containers.VBox;
 import haxe.ui.data.ArrayDataSource;
+import haxe.ui.backend.flixel.UIState;
 
-class StageDebugState extends MusicBeatState
+class StageDebugState extends UIState
 {
 	public var daStage:String;
 	public var daBf:String;
@@ -102,8 +103,7 @@ class StageDebugState extends MusicBeatState
 
 	override function create()
 	{
-		Paths.clearStoredMemory();
-		Paths.clearUnusedMemory();
+		Paths.clearCache();
 
 		FlxG.sound.music.stop();
 
@@ -167,7 +167,7 @@ class StageDebugState extends MusicBeatState
 		ui.height = 200;
 		ui.x = 1030;
 		ui.y = 490;
-		ui.cameras = [camHUD];
+		root.camera = camHUD;
 
 		addTabs();
 		addAssetUI();

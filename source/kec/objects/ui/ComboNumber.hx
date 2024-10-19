@@ -5,7 +5,7 @@ class ComboNumber extends UIComponent
 	public function new()
 	{
 		super();
-		frames = Paths.getSparrowAtlas('hud/${UIComponent.style.style.toLowerCase()}/${UIComponent.style.style.toLowerCase()}', 'shared');
+		frames = Paths.getSparrowAtlas('hud/${UIComponent.style.style.toLowerCase()}/${UIComponent.style.style.toLowerCase()}');
 		if (UIComponent.style.antialiasing == false)
 			antialiasing = false;
 		addAnims();

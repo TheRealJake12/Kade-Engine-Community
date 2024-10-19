@@ -77,8 +77,7 @@ class StoryMenuState extends MusicBeatState
 
 	override function create()
 	{
-		Paths.clearStoredMemory();
-		Paths.clearUnusedMemory();
+		Paths.clearCache();
 
 		weeksID = CoolUtil.coolTextFile(Paths.txt('data/weekList'));
 		weeksLoaded = weekData();
@@ -356,14 +355,14 @@ class StoryMenuState extends MusicBeatState
 				Conductor.rate = 1;
 				PlayState.isSM = false;
 				PlayState.storyWeek = curWeek;
-				PlayState.storyDifficulty = CoolUtil.difficultyArray.indexOf(diffString);
+				PlayState.storyDifficulty = CoolUtil.difficulties.indexOf(diffString);
 
 				Stats.resetStats();
 				Stats.resetCampaignStats();
 				PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0], diff);
 				FlxTimer.wait(1, function()
 				{
-					LoadingState.loadAndSwitchState(new PlayState(), true);
+					MusicBeatState.switchState(new PlayState());
 				});
 			}
 			catch (e)
@@ -398,7 +397,7 @@ class StoryMenuState extends MusicBeatState
 
 			if (tweenDifficulty != null)
 				tweenDifficulty.cancel();
-			tweenDifficulty = FlxTween.tween(sprDifficulty, {y: leftArrow.y + 15, alpha: 1}, 0.07, {
+			tweenDifficulty = createTween(sprDifficulty, {y: leftArrow.y + 15, alpha: 1}, 0.07, {
 				onComplete: function(twn:FlxTween)
 				{
 					tweenDifficulty = null;
@@ -412,10 +411,10 @@ class StoryMenuState extends MusicBeatState
 
 		var diffString = weeksLoaded[curWeek].difficulties[curDifficulty];
 
-		var abDiff = CoolUtil.difficultyArray.indexOf(diffString); // USING THESE WEIRD VALUES SO THAT IT DOESNT FLOAT UP
+		var abDiff = CoolUtil.difficulties.indexOf(diffString); // USING THESE WEIRD VALUES SO THAT IT DOESNT FLOAT UP
 		sprDifficulty.y = leftArrow.y - 15;
 		intendedScore = Highscore.getWeekScore(curWeek, abDiff, 1);
-		FlxTween.tween(sprDifficulty, {y: leftArrow.y + 15, alpha: 1}, 0.07);
+		createTween(sprDifficulty, {y: leftArrow.y + 15, alpha: 1}, 0.07);
 	}
 
 	var lerpScore:Int = 0;

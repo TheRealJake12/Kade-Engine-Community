@@ -48,8 +48,7 @@ class MainMenuState extends MusicBeatState
 
 	override function create()
 	{
-		Paths.clearStoredMemory();
-		Paths.clearUnusedMemory();
+		Paths.clearCache();
 		#if FEATURE_DISCORD
 		// Updating Discord Rich Presence
 		Discord.changePresence("In the Menus", null);
@@ -143,23 +142,13 @@ class MainMenuState extends MusicBeatState
 		}
 
 		logo = new FlxSprite(900, 0);
-		if (Main.watermarks)
-		{
-			logo.frames = Paths.getSparrowAtlas("KECLogoOrange");
-			logo.scale.set(0.7, 0.7);
-		}
-		else
-		{
-			logo.frames = Paths.getSparrowAtlas("KadeEngineLogoBumpin");
-			logo.x = 800;
-			logo.y = -60;
-			logo.scale.set(0.55, 0.55);
-		}
+		logo.frames = Paths.getSparrowAtlas("KECLogoOrange");
+		logo.scale.set(0.7, 0.7);
 		logo.animation.addByPrefix("bump", "logo bumpin", 24);
 		logo.antialiasing = FlxG.save.data.antialiasing;
 		logo.updateHitbox();
 
-		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, Constants.keVer + (Main.watermarks ? " / " + Constants.kecVer + "" : ""), 12);
+		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, Constants.keVer + (FlxG.save.data.watermarks ? " / " + Constants.kecVer + "" : ""), 12);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 		add(versionShit);
@@ -177,7 +166,6 @@ class MainMenuState extends MusicBeatState
 		tweenColorShit();
 
 		super.create();
-		Paths.clearUnusedMemory();
 	}
 
 	var selectedSomethin:Bool = false;
@@ -215,7 +203,7 @@ class MainMenuState extends MusicBeatState
 				PlayState.SONG = Song.loadFromJson('salvation', '');
 				PlayState.isStoryMode = false;
 				PlayState.isSM = false;
-				LoadingState.loadAndSwitchState(new PlayState());
+				MusicBeatState.switchState(new PlayState());
 			}
 
 			#if FEATURE_MODCORE

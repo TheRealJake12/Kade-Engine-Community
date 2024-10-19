@@ -1969,18 +1969,8 @@ class LuaGame extends LuaClass
 		PlayState.instance.remove(PlayState.instance.boyfriendGroup);
 		PlayState.instance.remove(PlayState.instance.dadGroup);
 		PlayState.instance.remove(PlayState.instance.gfGroup);
-
 		PlayState.instance.Stage = new Stage(stageName);
-		var directory:String = 'shared';
-		var otherDir:String = PlayState.instance.Stage.stageDir;
-
-		if (otherDir != null)
-			directory = otherDir;
-
-		Paths.setCurrentLevel(directory);
-
 		PlayState.instance.Stage.initStageProperties();
-
 		PlayState.instance.Stage.loadStageData(stageName);
 
 		if (!PlayState.instance.Stage.doesExist)

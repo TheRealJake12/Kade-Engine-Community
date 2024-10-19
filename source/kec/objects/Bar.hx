@@ -21,15 +21,14 @@ class Bar extends FlxSpriteGroup
 	public var barHeight(default, set):Int = 1;
 	public var barOffset:FlxPoint = new FlxPoint(3, 3);
 
-	public function new(x:Float, y:Float, image:String = 'healthBar', library:String = 'shared', variableValue:Void->Float = null, boundingX:Float = 0,
-			boundingY:Float = 1)
+	public function new(x:Float, y:Float, image:String = 'healthBar', variableValue:Void->Float = null, boundingX:Float = 0, boundingY:Float = 1)
 	{
 		super(x, y);
 
 		this.variableValue = variableValue;
 		setLimits(boundingX, boundingY);
 
-		background = new FlxSprite().loadGraphic(Paths.image(image, library));
+		background = new FlxSprite().loadGraphic(Paths.image(image));
 		leftBar = new FlxSprite().makeGraphic(Std.int(background.width), Std.int(background.height), FlxColor.WHITE);
 		rightBar = new FlxSprite().makeGraphic(Std.int(background.width), Std.int(background.height), FlxColor.WHITE);
 

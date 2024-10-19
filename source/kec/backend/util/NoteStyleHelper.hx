@@ -54,10 +54,10 @@ class NoteStyleHelper
 
 	static public function generatePixelSprite(id:Int, ends:Bool = false)
 	{
-		if (Paths.fileExists('images/noteskins/${getNoteskinByID(id)}' + '-pixel' + (ends ? '-ends' : '') + ".png", IMAGE))
-			return Paths.image('noteskins/${getNoteskinByID(id)}' + "-pixel" + (ends ? "-ends" : ""), 'shared');
+		if (Paths.fileExists('images/noteskins/${getNoteskinByID(id)}' + '-pixel' + (ends ? '-ends' : '') + ".png"))
+			return Paths.image('noteskins/${getNoteskinByID(id)}' + "-pixel" + (ends ? "-ends" : ""));
 		else
-			return Paths.image("noteskins/Arrows-pixel" + (ends ? "-ends" : ""), 'shared');
+			return Paths.image("noteskins/Arrows-pixel" + (ends ? "-ends" : ""));
 	}
 
 	public static function updateNotesplashes()
@@ -91,7 +91,7 @@ class NoteStyleHelper
 
 	static public function generateNotesplashSprite(path:String, ?type:String = '')
 	{
-		if (type != '' && Paths.fileExists('images/notetypes/splashes/${path + type}.png', IMAGE))
+		if (type != '' && Paths.fileExists('images/notetypes/splashes/${path + type}.png'))
 			return 'notetypes/splashes/${path + type}';
 		else
 			return 'splashes/$path';

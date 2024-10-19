@@ -17,7 +17,7 @@ class Style
 {
 	public static function loadJSONFile(style:String):StyleData
 	{
-		var rawJson = Paths.loadJSON('styles/$style');
+		var rawJson = Paths.loadJSON('data/styles/$style');
 		return parseWeek(rawJson);
 	}
 
@@ -45,30 +45,29 @@ class Song
 			// LOL GOING THROUGH THE BULLSHIT TO CLEAN IDK WHATS STRANGE
 		}
 
-		var jsonData = Json.parse(rawJson);
+		final jsonData = Json.parse(rawJson);
 
 		return parseJSONshit('rawsong', jsonData, 'rawname');
 	}
 
 	public static function loadFromJson(songId:String, difficulty:String):Modern
 	{
-		var songFile = '$songId/$songId$difficulty';
+		final songFile = 'data/songs/$songId/$songId$difficulty';
 
-		var rawJson = Paths.loadJSON('songs/$songFile');
-		var metaData:SongMeta = loadMetadata(songId);
-
+		final rawJson = Paths.loadJSON(songFile);
+		final metaData:SongMeta = loadMetadata(songId);
 		return parseJSONshit(songId, rawJson, metaData);
 	}
 
 	public static function loadMetadata(songId:String):SongMeta
 	{
 		var rawMetaJson = null;
-		if (Paths.doesTextAssetExist(Paths.songMeta(songId)))
-			rawMetaJson = Paths.loadJSON('songs/$songId/_meta');
+		if (Paths.fileExists('data/songs/$songId/_meta.json'))
+			rawMetaJson = Paths.loadJSON('data/songs/$songId/_meta');
 		else
 		{
 			if (FlxG.save.data.gen)
-				Debug.logInfo('Hey, you didn\'t include a _meta.json with your song files (id ${songId}).Won\'t break anything but you should probably add one anyway.');
+				Debug.logInfo('$songId is missing a _meta.json.');
 		}
 		if (rawMetaJson == null)
 			return null;

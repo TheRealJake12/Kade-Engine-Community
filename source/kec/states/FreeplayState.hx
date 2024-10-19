@@ -97,12 +97,14 @@ class FreeplayState extends MusicBeatState
 	public static var alreadyPressed:Bool = false;
 
 	function loadDiff(diff:Int, songId:String, array:Array<Modern>)
-		array.push(Song.loadFromJson(songId, CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[diff])));
+		array.push(Song.loadFromJson(songId, CoolUtil.getSuffixFromDiff(CoolUtil.difficulties[diff])));
 
 	public static var list:Array<String> = [];
 
 	override function create()
-	{var stamp = haxe.Timer.stamp();
+	{
+		Paths.clearCache();
+		var stamp = haxe.Timer.stamp();
 		instance = this;
 		PlayState.SONG = null;
 		FlxG.mouse.visible = true;
@@ -110,12 +112,12 @@ class FreeplayState extends MusicBeatState
 		doUpdateText = true;
 		openMod = false;
 
+		inst = new FlxSound();
+		FlxG.sound.list.add(inst);
+
 		#if desktop
 		Application.current.window.title = '${Constants.kecVer} : In the Menus';
 		#end
-
-		Paths.clearStoredMemory();
-		Paths.clearUnusedMemory();
 		list = CoolUtil.coolTextFile(Paths.txt('data/freeplaySonglist'));
 		cached = false;
 
@@ -180,10 +182,7 @@ class FreeplayState extends MusicBeatState
 		var bottomText:String = #if !mobile #if PRELOAD_ALL "  Press SPACE to listen to the Song Instrumental / Click and scroll through the songs with your MOUSE /"
 			+ #else "  Click and scroll through the songs with your MOUSE /"
 			+ #end #end
-		" Your offset is "
-		+ FlxG.save.data.offset
-		+ "ms "
-		+ (FlxG.save.data.optimize ? "/ Optimized" : "");
+		" Your offset is " + FlxG.save.data.offset + "ms " + (FlxG.save.data.optimize ? "/ Optimized" : "");
 
 		var scoreBG:FlxSprite = new FlxSprite(scoreText.x - 6, 0).makeGraphic(Std.int(FlxG.width * 0.4), 337, 0xFF000000);
 		scoreBG.alpha = 0.6;
@@ -274,7 +273,6 @@ class FreeplayState extends MusicBeatState
 			changeSelection();
 			changeDiff();
 		}
-		Paths.clearUnusedMemory();
 		Debug.logTrace("Took " + Std.string(FlxMath.roundDecimal(haxe.Timer.stamp() - stamp, 3)) + " Seconds To Load Freeplay.");
 	}
 
@@ -304,11 +302,11 @@ class FreeplayState extends MusicBeatState
 			var diffs = [];
 			var diffsThatExist = [];
 
-			for (i in 0...CoolUtil.difficultyArray.length)
+			for (i in 0...CoolUtil.difficulties.length)
 			{
-				var leDiff = CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[i]);
-				if (Paths.doesTextAssetExist(Paths.json('songs/$songId/$songId$leDiff')))
-					diffsThatExist.push(CoolUtil.difficultyArray[i]);
+				var leDiff = CoolUtil.getSuffixFromDiff(CoolUtil.difficulties[i]);
+				if (Paths.fileExists('data/songs/$songId/$songId$leDiff.json'))
+					diffsThatExist.push(CoolUtil.difficulties[i]);
 			}
 
 			var customDiffs = CoolUtil.coolTextFile(Paths.txt('data/songs/$songId/customDiffs'));
@@ -318,15 +316,15 @@ class FreeplayState extends MusicBeatState
 				for (i in 0...customDiffs.length)
 				{
 					var cDiff = customDiffs[i];
-					if (Paths.doesTextAssetExist(Paths.json('songs/$songId/$songId-${cDiff.toLowerCase()}')))
+					if (Paths.fileExists('data/songs/$songId/$songId-${cDiff.toLowerCase()}.json'))
 					{
 						if (FlxG.save.data.gen)
 							Debug.logTrace('New Difficulties detected for $songId: $cDiff');
 						if (!diffsThatExist.contains(cDiff))
 							diffsThatExist.push(cDiff);
 
-						if (!CoolUtil.difficultyArray.contains(cDiff))
-							CoolUtil.difficultyArray.push(cDiff);
+						if (!CoolUtil.difficulties.contains(cDiff))
+							CoolUtil.difficulties.push(cDiff);
 					}
 				}
 			}
@@ -340,11 +338,11 @@ class FreeplayState extends MusicBeatState
 
 			if (!loadedSongData)
 			{
-				for (i in 0...CoolUtil.difficultyArray.length)
+				for (i in 0...CoolUtil.difficulties.length)
 				{
-					var leDiff = CoolUtil.difficultyArray[i];
+					var leDiff = CoolUtil.difficulties[i];
 					if (diffsThatExist.contains(leDiff))
-						loadDiff(CoolUtil.difficultyArray.indexOf(leDiff), songId, diffs);
+						loadDiff(CoolUtil.difficulties.indexOf(leDiff), songId, diffs);
 				}
 				if (customDiffs != null)
 				{
@@ -352,7 +350,7 @@ class FreeplayState extends MusicBeatState
 					{
 						var cDiff = customDiffs[i];
 						if (diffsThatExist.contains(cDiff))
-							loadDiff(CoolUtil.difficultyArray.indexOf(cDiff), songId, diffs);
+							loadDiff(CoolUtil.difficulties.indexOf(cDiff), songId, diffs);
 					}
 				}
 
@@ -454,11 +452,11 @@ class FreeplayState extends MusicBeatState
 		var diffs = [];
 		var diffsThatExist = [];
 
-		for (i in 0...CoolUtil.difficultyArray.length)
+		for (i in 0...CoolUtil.difficulties.length)
 		{
-			var leDiff = CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[i]);
-			if (Paths.doesTextAssetExist(Paths.json('songs/$songName/$songName$leDiff')))
-				diffsThatExist.push(CoolUtil.difficultyArray[i]);
+			final leDiff = CoolUtil.getSuffixFromDiff(CoolUtil.difficulties[i]);
+			if (Paths.fileExists('songs/$songName/$songName$leDiff.json'))
+				diffsThatExist.push(CoolUtil.difficulties[i]);
 		}
 
 		var customDiffs = CoolUtil.coolTextFile(Paths.txt('data/songs/$songName/customDiffs'));
@@ -468,14 +466,14 @@ class FreeplayState extends MusicBeatState
 			for (i in 0...customDiffs.length)
 			{
 				var cDiff = customDiffs[i];
-				if (Paths.doesTextAssetExist(Paths.json('songs/$songName/$songName-${cDiff.toLowerCase()}')))
+				if (Paths.fileExists('songs/$songName/$songName-${cDiff.toLowerCase()}.json'))
 				{
 					Debug.logTrace('New Difficulties detected for $songName: $cDiff');
 					if (!diffsThatExist.contains(cDiff))
 						diffsThatExist.push(cDiff);
 
-					if (!CoolUtil.difficultyArray.contains(cDiff))
-						CoolUtil.difficultyArray.push(cDiff);
+					if (!CoolUtil.difficulties.contains(cDiff))
+						CoolUtil.difficulties.push(cDiff);
 				}
 			}
 		}
@@ -489,11 +487,11 @@ class FreeplayState extends MusicBeatState
 
 		if (!loadedSongData)
 		{
-			for (i in 0...CoolUtil.difficultyArray.length)
+			for (i in 0...CoolUtil.difficulties.length)
 			{
-				var leDiff = CoolUtil.difficultyArray[i];
+				var leDiff = CoolUtil.difficulties[i];
 				if (diffsThatExist.contains(leDiff))
-					loadDiff(CoolUtil.difficultyArray.indexOf(leDiff), songName, diffs);
+					loadDiff(CoolUtil.difficulties.indexOf(leDiff), songName, diffs);
 			}
 			if (customDiffs != null)
 			{
@@ -501,7 +499,7 @@ class FreeplayState extends MusicBeatState
 				{
 					var cDiff = customDiffs[i];
 					if (diffsThatExist.contains(cDiff))
-						loadDiff(CoolUtil.difficultyArray.indexOf(cDiff), songName, diffs);
+						loadDiff(CoolUtil.difficulties.indexOf(cDiff), songName, diffs);
 				}
 			}
 
@@ -778,17 +776,10 @@ class FreeplayState extends MusicBeatState
 
 			if (currentSongPlaying != songs[curSelected].songName)
 			{
-				var songPath:String = null;
-
-				switch (songs[curSelected].songCharacter)
-				{
-					default:
-						songPath = Paths.inst(songs[curSelected].songName, true);
-				}
-
-				FlxG.sound.playMusic(songPath, 0.7, true);
-
-				songPath = null;
+				inst.stop();
+				inst.loadEmbedded(Paths.inst(songs[curSelected].songName));
+				inst.play();
+				inst.fadeIn(1, 0, 0.7);
 			}
 
 			Constants.freakyPlaying = false;
@@ -833,7 +824,7 @@ class FreeplayState extends MusicBeatState
 				#end
 				default:
 					currentSongData = Song.loadFromJson(instance.songs[curSelected].songName,
-						CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[CoolUtil.difficultyArray.indexOf(instance.songs[curSelected].diffs[difficulty])]));
+						CoolUtil.getSuffixFromDiff(CoolUtil.difficulties[CoolUtil.difficulties.indexOf(instance.songs[curSelected].diffs[difficulty])]));
 			}
 		}
 		catch (ex)
@@ -844,7 +835,7 @@ class FreeplayState extends MusicBeatState
 
 		PlayState.SONG = currentSongData;
 		PlayState.STYLE = Style.loadJSONFile(PlayState.SONG.style.toLowerCase());
-		PlayState.storyDifficulty = CoolUtil.difficultyArray.indexOf(instance.songs[curSelected].diffs[difficulty]);
+		PlayState.storyDifficulty = CoolUtil.difficulties.indexOf(instance.songs[curSelected].diffs[difficulty]);
 		PlayState.storyWeek = instance.songs[curSelected].week;
 		PlayState.isStoryMode = false;
 
@@ -867,19 +858,21 @@ class FreeplayState extends MusicBeatState
 
 		instance.updateTexts();
 		openMod = false;
+		FlxG.sound.music.stop();
 
 		if (isCharting)
 		{
 			ChartingState.clean = true;
-			LoadingState.loadAndSwitchState(new ChartingState(), true);
+			MusicBeatState.switchState(new ChartingState());
 		}
 		else
-			LoadingState.loadAndSwitchState(new PlayState(), true);
+			MusicBeatState.switchState(new PlayState());
 	}
 
 	override function destroy()
 	{
 		clearSubs();
+		inst.destroy();
 		super.destroy();
 	}
 
@@ -921,7 +914,7 @@ class FreeplayState extends MusicBeatState
 			case 'M.I.L.F':
 				songHighscore = 'Milf';
 		}
-		var abDiff = CoolUtil.difficultyArray.indexOf(songs[curSelected].diffs[curDifficulty]);
+		var abDiff = CoolUtil.difficulties.indexOf(songs[curSelected].diffs[curDifficulty]);
 		#if !switch
 		intendedScore = Highscore.getScore(songHighscore, abDiff, rate);
 		combo = Highscore.getCombo(songHighscore, abDiff, rate);

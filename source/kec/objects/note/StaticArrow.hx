@@ -70,7 +70,7 @@ class StaticArrow extends FlxSprite
 		}
 
 		var customSkin:String = skin;
-		if (Paths.fileExists('images/$customSkin.png', IMAGE))
+		if (Paths.fileExists('images/$customSkin.png'))
 			skin = customSkin;
 
 		texture = skin; // Load texture and anims

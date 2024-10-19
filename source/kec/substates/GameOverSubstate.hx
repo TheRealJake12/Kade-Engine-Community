@@ -19,7 +19,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	override function create()
 	{
-		Paths.clearUnusedMemory();
+		Paths.clearCache();
 		instance = this;
 
 		var daBf:String = '';
@@ -48,7 +48,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		add(bf);
 		add(camFollow);
 
-		if (Paths.fileExists('sounds/styles/$styleShit/fnf_loss_sfx.' + Paths.SOUND_EXT, SOUND, 'shared'))
+		if (Paths.fileExists('sounds/styles/$styleShit/fnf_loss_sfx.ogg'))
 			FlxG.sound.play(Paths.sound('styles/$styleShit/fnf_loss_sfx'));
 		else
 			FlxG.sound.play(Paths.sound('styles/default/fnf_loss_sfx'));
@@ -141,7 +141,7 @@ class GameOverSubstate extends MusicBeatSubstate
 			{
 				FlxG.camera.fade(FlxColor.BLACK, 2, false, function()
 				{
-					LoadingState.loadAndSwitchState(new PlayState());
+					MusicBeatState.switchState(new PlayState());
 				});
 			});
 		}

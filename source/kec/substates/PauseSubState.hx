@@ -13,8 +13,6 @@ class PauseSubState extends MusicBeatSubstate
 	public static var goToOptions:Bool = false;
 	public static var goBack:Bool = false;
 
-	var tweenManager:FlxTweenManager = null;
-
 	var pauseOG:Array<String> = ['Resume', 'Restart Song', 'Change Difficulty', 'Options', 'Exit to menu'];
 	var difficultyChoices = [];
 
@@ -32,7 +30,6 @@ class PauseSubState extends MusicBeatSubstate
 
 	public function new()
 	{
-		Paths.clearUnusedMemory();
 		super();
 
 		openCallback = refresh;
@@ -41,16 +38,14 @@ class PauseSubState extends MusicBeatSubstate
 		pauseMusic.volume = 0;
 		// pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
 
-		tweenManager = new FlxTweenManager();
-
-		if (CoolUtil.difficultyArray.length < 2)
+		if (CoolUtil.difficulties.length < 2)
 			pauseOG.remove('Change Difficulty'); // No need to change difficulty if there is only one!
 
 		menuItems = pauseOG;
 
-		for (i in 0...CoolUtil.difficultyArray.length)
+		for (i in 0...CoolUtil.difficulties.length)
 		{
-			var diff:String = '' + CoolUtil.difficultyArray[i];
+			var diff:String = '' + CoolUtil.difficulties[i];
 			difficultyChoices.push(diff);
 		}
 		difficultyChoices.push('BACK');
@@ -94,7 +89,7 @@ class PauseSubState extends MusicBeatSubstate
 		levelInfo.x = FlxG.width - (levelInfo.width + 20);
 		levelDifficulty.x = FlxG.width - (levelDifficulty.width + 20);
 
-		FlxTween.tween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
+		createTween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
 
 		add(grpMenuShit);
 
@@ -110,8 +105,6 @@ class PauseSubState extends MusicBeatSubstate
 
 	override function update(elapsed:Float)
 	{
-		tweenManager.update(elapsed);
-
 		super.update(elapsed);
 
 		if (pauseMusic.volume < 0.5)
@@ -153,7 +146,7 @@ class PauseSubState extends MusicBeatSubstate
 				{
 					PlayState.storyDifficulty = curSelected;
 					PlayState.SONG = Song.loadFromJson(PlayState.SONG.songId.toLowerCase(),
-						CoolUtil.getSuffixFromDiff(CoolUtil.difficultyArray[PlayState.storyDifficulty]));
+						CoolUtil.getSuffixFromDiff(CoolUtil.difficulties[PlayState.storyDifficulty]));
 					PlayState.startTime = 0;
 					MusicBeatState.resetState();
 					return;
@@ -210,18 +203,13 @@ class PauseSubState extends MusicBeatSubstate
 
 	override function destroy()
 	{
-		tweenManager.clear();
-		tweenManager.destroy();
 		pauseMusic.destroy();
-
 		super.destroy();
 	}
 
 	override function close()
 	{
-		tweenManager.clear();
 		pauseMusic.pause();
-
 		super.close();
 	}
 
@@ -286,9 +274,9 @@ class PauseSubState extends MusicBeatSubstate
 		levelDifficulty.alpha = 0;
 		levelInfo.alpha = 0;
 
-		tweenManager.tween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
-		tweenManager.tween(levelInfo, {alpha: 1, y: 20}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.3});
-		tweenManager.tween(levelDifficulty, {alpha: 1, y: levelDifficulty.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.5});
+		createTween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
+		createTween(levelInfo, {alpha: 1, y: 20}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.3});
+		createTween(levelDifficulty, {alpha: 1, y: levelDifficulty.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.5});
 
 		changeSelection();
 	}

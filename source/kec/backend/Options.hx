@@ -1131,7 +1131,7 @@ class FPSOption extends Option
 	public override function left():Bool
 	{
 		FlxG.save.data.fps = !FlxG.save.data.fps;
-		Main.gameContainer.toggleFPS(FlxG.save.data.fps);
+		Main.gameContainer.fpsVisible(FlxG.save.data.fps);
 		display = updateDisplay();
 		return true;
 	}
@@ -1293,7 +1293,7 @@ class RainbowFPSOption extends Option
 	public override function left():Bool
 	{
 		FlxG.save.data.fpsRain = !FlxG.save.data.fpsRain;
-		Main.gameContainer.changeFPSColor(FlxColor.WHITE);
+		// Main.gameContainer.changeFPSColor(FlxColor.WHITE);
 		display = updateDisplay();
 		return true;
 	}
@@ -1334,33 +1334,6 @@ class NPSDisplayOption extends Option
 	private override function updateDisplay():String
 	{
 		return "NPS Display: < " + (!FlxG.save.data.npsDisplay ? "Disabled" : "Enabled") + " >";
-	}
-}
-
-class CacheNow extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		if (OptionsMenu.isInPause)
-		{
-			blocked = true;
-			description = pauseDesc;
-		}
-		else
-			description = desc;
-		acceptType = true;
-	}
-
-	public override function press():Bool
-	{
-		MusicBeatState.switchState(new Caching());
-		return false;
-	}
-
-	private override function updateDisplay():String
-	{
-		return "Cache";
 	}
 }
 
@@ -1419,7 +1392,7 @@ class CustomizeGameplay extends Option
 		if (OptionsMenu.isInPause)
 			return false;
 		trace("switch");
-		LoadingState.loadAndSwitchState(new GameplayCustomizeState());
+		MusicBeatState.switchState(new GameplayCustomizeState());
 		return false;
 	}
 
@@ -1447,8 +1420,7 @@ class WatermarkOption extends Option
 	{
 		if (OptionsMenu.isInPause)
 			return false;
-		Main.watermarks = !Main.watermarks;
-		FlxG.save.data.watermark = Main.watermarks;
+		FlxG.save.data.watermark = !FlxG.save.data.watermark;
 		display = updateDisplay();
 		return true;
 	}
@@ -1461,7 +1433,7 @@ class WatermarkOption extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Watermarks: < " + (Main.watermarks ? "Enabled" : "Disabled") + " >";
+		return "Watermarks: < " + (FlxG.save.data.watermark ? "Enabled" : "Disabled") + " >";
 	}
 }
 
@@ -1992,7 +1964,7 @@ class CPUSplash extends Option
 	}
 }
 
-class LowMotion extends Option
+class IconBump extends Option
 {
 	public function new(desc:String)
 	{
@@ -2002,7 +1974,7 @@ class LowMotion extends Option
 
 	public override function left():Bool
 	{
-		FlxG.save.data.motion = !FlxG.save.data.motion;
+		FlxG.save.data.iconBop = !FlxG.save.data.iconBop;
 		display = updateDisplay();
 		return true;
 	}
@@ -2143,63 +2115,6 @@ class WaterMarkFPS extends Option
 	private override function updateDisplay():String
 	{
 		return "FPS Watermark: < " + (FlxG.save.data.fpsmark ? "Enabled" : "Disabled") + " >";
-	}
-}
-
-class UnloadSongs extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		description = desc;
-	}
-
-	public override function left():Bool
-	{
-		FlxG.save.data.unload = !FlxG.save.data.unload;
-		kec.backend.util.BaseCache.loadedBefore = false;
-		display = updateDisplay();
-		return true;
-	}
-
-	public override function right():Bool
-	{
-		left();
-		return true;
-	}
-
-	private override function updateDisplay():String
-	{
-		return "Persistant Memory: < " + (FlxG.save.data.unload ? "Disabled" : "Enabled") + " >";
-	}
-}
-
-class UnloadNow extends Option
-{
-	public function new(desc:String)
-	{
-		super();
-		if (OptionsMenu.isInPause)
-		{
-			blocked = true;
-			description = pauseDesc;
-		}
-		else
-			description = desc;
-	}
-
-	public override function press():Bool
-	{
-		if (OptionsMenu.isInPause)
-			return false;
-
-		Paths.clearUnusedMemory();
-		return false;
-	}
-
-	private override function updateDisplay():String
-	{
-		return ('Clears All Cache We Can Remove.');
 	}
 }
 
@@ -2448,7 +2363,7 @@ class HitSoundOption extends Option
 		display = updateDisplay();
 		if (FlxG.save.data.hitSound != 0)
 		{
-			daHitSound.loadEmbedded(Paths.sound('hitsounds/${HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase()}', 'shared'));
+			daHitSound.loadEmbedded(Paths.sound('hitsounds/${HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase()}', true));
 			daHitSound.volume = FlxG.save.data.hitVolume;
 			daHitSound.play();
 		}
@@ -2463,7 +2378,7 @@ class HitSoundOption extends Option
 		display = updateDisplay();
 		if (FlxG.save.data.hitSound != 0)
 		{
-			daHitSound.loadEmbedded(Paths.sound('hitsounds/${HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase()}', 'shared'));
+			daHitSound.loadEmbedded(Paths.sound('hitsounds/${HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase()}', true));
 			daHitSound.volume = FlxG.save.data.hitVolume;
 			daHitSound.play();
 		}
@@ -2510,7 +2425,7 @@ class HitSoundVolume extends Option
 
 		if (FlxG.save.data.hitSound != 0)
 		{
-			daHitSound.loadEmbedded(Paths.sound('hitsounds/${HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase()}', 'shared'));
+			daHitSound.loadEmbedded(Paths.sound('hitsounds/${HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase()}', true));
 			daHitSound.volume = FlxG.save.data.hitVolume;
 			daHitSound.play();
 		}
@@ -2534,7 +2449,7 @@ class HitSoundVolume extends Option
 
 		if (FlxG.save.data.hitSound != 0)
 		{
-			daHitSound.loadEmbedded(Paths.sound('hitsounds/${HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase()}', 'shared'));
+			daHitSound.loadEmbedded(Paths.sound('hitsounds/${HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase()}', true));
 			daHitSound.volume = FlxG.save.data.hitVolume;
 			daHitSound.play();
 		}

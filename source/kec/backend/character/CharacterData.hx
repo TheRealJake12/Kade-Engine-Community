@@ -10,7 +10,6 @@ class CharacterData
 	public var startingAnim:String;
 	public var animations:Array<AnimationData>;
 	public var icon:String;
-	public var iconAnimated:Bool;
 	public var charPos:Array<Float> = []; // offset the char position
 	public var camPos:Array<Float> = []; // camera position
 	public var holdLength:Float; // something something hold extender
@@ -42,23 +41,23 @@ class CharacterData
 
 	public function loadFromJson(char:String = 'bf', ?isPlayer:Bool = true, isGF:Bool = false)
 	{
-		var json = Paths.loadJSON('characters/$char');
+		var json = Paths.loadJSON('data/characters/$char');
 		if (json == null)
 		{
 			if (isPlayer)
 			{
 				Debug.logWarn("Couldn't Find JSON For " + char + ". Loading Default Boyfriend.");
-				json = Paths.loadJSON('characters/${Constants.defaultBF}');
+				json = Paths.loadJSON('data/characters/${Constants.defaultBF}');
 			}
 			else if (isGF)
 			{
 				Debug.logWarn("Couldn't Find JSON For " + char + ". Loading Default GF.");
-				json = Paths.loadJSON('characters/${Constants.defaultGF}');
+				json = Paths.loadJSON('data/characters/${Constants.defaultGF}');
 			}
 			else
 			{
 				Debug.logWarn("Couldn't Find JSON For " + char + ". Loading Default Opponent.");
-				json = Paths.loadJSON('characters/${Constants.defaultOP}');
+				json = Paths.loadJSON('data/characters/${Constants.defaultOP}');
 			}
 		}
 
@@ -77,7 +76,6 @@ class CharacterData
 		camPos = data.camPos == null ? [0, 0] : data.camPos;
 		holdLength = data.holdLength == null ? 4 : data.holdLength;
 		icon = data.healthicon == null ? char : data.healthicon;
-		iconAnimated = data.iconAnimated == null ? false : data.iconAnimated;
 		rgb = data.rgbArray == null ? [255, 0, 0] : data.rgbArray;
 		deadChar = data.deadChar == null ? 'bf-dead' : data.deadChar;
 		flipAnims = data.flipAnimations == null ? false : data.flipAnimations;
@@ -101,7 +99,6 @@ typedef Data =
 	var startingAnim:String;
 
 	var ?healthicon:String;
-	var ?iconAnimated:Bool;
 	var ?charPos:Array<Float>;
 	var ?camPos:Array<Float>;
 	var ?holdLength:Float;

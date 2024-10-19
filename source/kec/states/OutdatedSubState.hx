@@ -2,6 +2,7 @@ package kec.states;
 
 import lime.app.Application;
 
+// trolling
 class OutdatedSubState extends MusicBeatState
 {
 	public static var leftState:Bool = false;
@@ -14,10 +15,9 @@ class OutdatedSubState extends MusicBeatState
 
 	override function create()
 	{
-		Paths.clearStoredMemory();
-		Paths.clearUnusedMemory();
+		Paths.clearCache();
 		super.create();
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('stageback', 'shared'));
+		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('stageback'));
 		bg.screenCenter();
 		bg.antialiasing = FlxG.save.data.antialiasing;
 		add(bg);
@@ -81,16 +81,12 @@ class OutdatedSubState extends MusicBeatState
 			else
 				colorRotation = 0;
 		}, 0);
-
-		Paths.clearUnusedMemory();
 	}
 
 	override function update(elapsed:Float)
 	{
 		if (FlxG.keys.justPressed.SPACE && !Constants.kecVer.contains("PRE-RELEASE"))
-		{
 			fancyOpenURL("https://therealjake12.github.io/Kade-Engine-Community/changelogs/changelog-" + needVer);
-		}
 		else if (controls.ACCEPT || controls.BACK)
 		{
 			leftState = true;

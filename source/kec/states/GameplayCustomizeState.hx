@@ -1,10 +1,6 @@
 package kec.states;
 
-import haxe.ui.containers.VBox;
 import flixel.addons.display.FlxExtendedMouseSprite;
-import haxe.ui.components.CheckBox;
-import haxe.ui.containers.Panel;
-import haxe.ui.containers.Box;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import openfl.ui.Keyboard;
 import kec.stages.Stage;
@@ -18,8 +14,10 @@ import kec.backend.PlayStateChangeables;
 import kec.objects.note.Note;
 import kec.backend.util.NoteStyleHelper;
 import kec.backend.PlayerSettings;
+import haxe.ui.backend.flixel.UIState;
 
-class GameplayCustomizeState extends MusicBeatState
+@:build(haxe.ui.ComponentBuilder.build("assets/shared/data/editors/gameplay.xml"))
+class GameplayCustomizeState extends UIState
 {
 	var defaultX:Float = FlxG.width * 0.55 - 135;
 	var defaultY:Float = FlxG.height / 2 - 50;
@@ -34,8 +32,6 @@ class GameplayCustomizeState extends MusicBeatState
 
 	var strumLine:FlxSprite;
 	var strumLineNotes:FlxTypedGroup<FlxSprite>;
-	var playerStrums:FlxTypedGroup<StaticArrow>;
-	var cpuStrums:FlxTypedGroup<StaticArrow>;
 
 	var camPos:FlxPoint;
 
@@ -63,18 +59,11 @@ class GameplayCustomizeState extends MusicBeatState
 
 	public static var Stage:Stage;
 
-	var ui:Panel;
-	var box:VBox;
-	var daRating:CheckBox;
-	var daCombo:CheckBox;
-	var daTiming:CheckBox;
-
 	var currentTimingShown:FlxText = new FlxText(0, 0, 0, "0ms");
 
 	public override function create()
 	{
-		Paths.clearStoredMemory();
-		Paths.clearUnusedMemory();
+		Paths.clearCache();
 		#if FEATURE_DISCORD
 		// Updating Discord Rich Presence
 		Discord.changePresence("Customizing Gameplay Modules", null);
@@ -123,17 +112,8 @@ class GameplayCustomizeState extends MusicBeatState
 		add(camFollow);
 
 		FlxG.camera.follow(camFollow, LOCKON, 0.01);
-		// FlxG.camera.setScrollBounds(0, FlxG.width, 0, FlxG.height);
 		FlxG.camera.zoom = Stage.camZoom;
 		FlxG.camera.focusOn(camFollow.getPosition());
-
-		ui = new Panel();
-		ui.padding = 5;
-		ui.text = "Gameplay Modules";
-		ui.width = 200;
-		ui.height = 100;
-		ui.draggable = true;
-		ui.camera = camOverlay;
 
 		dad = new Character(100, 100, 'dad');
 		boyfriend = new Character(770, 450, 'bf');
@@ -204,9 +184,6 @@ class GameplayCustomizeState extends MusicBeatState
 		strumLineNotes = new FlxTypedGroup<FlxSprite>();
 		add(strumLineNotes);
 
-		playerStrums = new FlxTypedGroup<StaticArrow>();
-		cpuStrums = new FlxTypedGroup<StaticArrow>();
-
 		generateStaticArrows(0);
 		generateStaticArrows(1);
 
@@ -225,8 +202,6 @@ class GameplayCustomizeState extends MusicBeatState
 		sick.cameras = [camHUD];
 		currentTimingShown.cameras = [camHUD];
 		strumLine.cameras = [camHUD];
-		playerStrums.cameras = [camHUD];
-		cpuStrums.cameras = [camHUD];
 		strumLineNotes.cameras = [camHUD];
 
 		text.scrollFactor.set();
@@ -234,8 +209,8 @@ class GameplayCustomizeState extends MusicBeatState
 		add(blackBorder);
 		add(text);
 
-		FlxTween.tween(text, {y: FlxG.height - 18}, 2, {ease: FlxEase.elasticInOut});
-		FlxTween.tween(blackBorder, {y: FlxG.height - 18}, 2, {ease: FlxEase.elasticInOut});
+		createTween(text, {y: FlxG.height - 18}, 2, {ease: FlxEase.elasticInOut});
+		createTween(blackBorder, {y: FlxG.height - 18}, 2, {ease: FlxEase.elasticInOut});
 
 		if (!FlxG.save.data.changedHit)
 		{
@@ -249,51 +224,34 @@ class GameplayCustomizeState extends MusicBeatState
 		currentTimingShown.x = sick.x + 100;
 		currentTimingShown.y = sick.y + 100;
 
-		addMenuUI();
-		ui.x = 1080;
-		ui.y = 600;
-
-		add(ui);
-
 		FlxG.mouse.visible = true;
 		super.create();
-		Paths.clearUnusedMemory();
+		initHUI();
+
+		root.camera = camOverlay;
 	}
 
-	inline function addMenuUI():Void
+	inline function initHUI():Void
 	{
-		box = new VBox();
-		daRating = new CheckBox();
-		daRating.text = "Show Rating";
-		daRating.selected = FlxG.save.data.showRating;
-		daRating.onClick = function(e)
+		rating.selected = FlxG.save.data.showRating;
+		rating.onClick = function(e)
 		{
 			FlxG.save.data.showRating = !FlxG.save.data.showRating;
 			sick.visible = FlxG.save.data.showRating;
 		};
 
-		daCombo = new CheckBox();
-		daCombo.text = "Show Combo Number";
-		daCombo.selected = FlxG.save.data.showNum;
-		daCombo.onClick = function(e)
+		combo.selected = FlxG.save.data.showNum;
+		combo.onClick = function(e)
 		{
 			FlxG.save.data.showNum = !FlxG.save.data.showNum;
 		};
 
-		daTiming = new CheckBox();
-		daTiming.text = "Show MS Timing";
-		daTiming.selected = FlxG.save.data.showMs;
-		daTiming.onClick = function(e)
+		timing.selected = FlxG.save.data.showMs;
+		timing.onClick = function(e)
 		{
 			FlxG.save.data.showMs = !FlxG.save.data.showMs;
 			currentTimingShown.visible = FlxG.save.data.showMs;
 		};
-
-		box.addComponent(daRating);
-		box.addComponent(daCombo);
-		box.addComponent(daTiming);
-
-		ui.addComponent(box);
 	}
 
 	override function update(elapsed:Float)
@@ -305,7 +263,7 @@ class GameplayCustomizeState extends MusicBeatState
 
 		Stage.update(elapsed);
 
-		var lerpVal:Float = CoolUtil.boundTo(1 - (elapsed * 12), 0, 1);
+		final lerpVal:Float = CoolUtil.boundTo(1 - (elapsed * 12), 0, 1);
 		FlxG.camera.zoom = FlxMath.lerp(Stage.camZoom, FlxG.camera.zoom, lerpVal);
 		camHUD.zoom = FlxMath.lerp(FlxG.save.data.zoom, camHUD.zoom, lerpVal);
 
@@ -369,74 +327,45 @@ class GameplayCustomizeState extends MusicBeatState
 
 	private function generateStaticArrows(player:Int, ?tween:Bool = true):Void
 	{
+		final seX:Float = !PlayStateChangeables.opponentMode ? (PlayStateChangeables.middleScroll ? -278 : 42) : (PlayStateChangeables.middleScroll ? 366 : 42);
+		final seY:Float = strumLine.y;
 		for (i in 0...4)
 		{
-			var babyArrow:StaticArrow = new StaticArrow(-10, strumLine.y, player, i);
-			babyArrow.downScroll = FlxG.save.data.downscroll;
+			var babyArrow:StaticArrow = new StaticArrow(seX, seY, player, i);
 
-			babyArrow.noteTypeCheck = 'normal';
-			babyArrow.reloadNote();
-
-			babyArrow.loadLane();
+			var noteTypeCheck:String = 'normal';
+			babyArrow.downScroll = PlayStateChangeables.useDownscroll;
 
 			babyArrow.x += Note.swagWidth * i;
+
+			var targAlpha = 1;
+
+			if (PlayStateChangeables.middleScroll)
+			{
+				if (PlayStateChangeables.opponentMode)
+				{
+					if (player == 1)
+						targAlpha = 0;
+				}
+				else
+				{
+					if (player == 0)
+						targAlpha = 0;
+				}
+			}
 
 			if (tween)
 			{
 				babyArrow.y -= 10;
 				babyArrow.alpha = 0;
-				FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
+				createTween(babyArrow, {y: babyArrow.y + 10, alpha: targAlpha}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
 			}
 			else
-				babyArrow.alpha = 1;
+				babyArrow.alpha = targAlpha;
 
 			babyArrow.ID = i;
-
-			switch (player)
-			{
-				case 0:
-					if (!PlayStateChangeables.opponentMode)
-					{
-						babyArrow.x += 20;
-						cpuStrums.add(babyArrow);
-					}
-					else
-					{
-						babyArrow.x += 20;
-						playerStrums.add(babyArrow);
-					}
-				case 1:
-					if (!PlayStateChangeables.opponentMode)
-					{
-						playerStrums.add(babyArrow);
-						babyArrow.x -= 5;
-					}
-					else
-					{
-						babyArrow.x -= 20;
-						cpuStrums.add(babyArrow);
-					}
-			}
-
-			babyArrow.playAnim('static');
-			babyArrow.x += 98.5; // Tryna make it not offset because it was pissing me off + Psych Engine has it somewhat like this.
-			babyArrow.x += ((FlxG.width / 2) * player);
-
-			if (FlxG.save.data.middleScroll || FlxG.save.data.optimize)
-			{
-				if (!PlayStateChangeables.opponentMode)
-				{
-					babyArrow.x -= 303.5;
-					if (player == 0)
-						babyArrow.x -= 275 / Math.pow(PlayStateChangeables.zoom, 3);
-				}
-				else
-				{
-					babyArrow.x += 311.5;
-					if (player == 1)
-						babyArrow.x += 275 / Math.pow(PlayStateChangeables.zoom, 3);
-				}
-			}
+			babyArrow.x += 50;
+			babyArrow.x += ((FlxG.width * 0.5) * player);
 
 			strumLineNotes.add(babyArrow);
 		}

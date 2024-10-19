@@ -274,8 +274,8 @@ class DialogueBox extends FlxSpriteGroup
 		if (objList.length > 0)
 			for (obj in objList)
 			{
-				PlayState.tweenManager.completeTweensOf(obj);
-				PlayState.instance.createTween(obj, {alpha: 0}, 1);
+				FlxTween.globalManager.completeTweensOf(obj);
+				FlxTween.tween(obj, {alpha: 0}, 1);
 			}
 		FlxTimer.wait(1.25, function():Void
 		{

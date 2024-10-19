@@ -47,7 +47,6 @@
 							</vbox>
 							<menu-separator />
 							<hbox>
-								<checkbox id="charIconAnimated" text="Animated Icon?" verticalAlign="center" />
 								<label text="Animation Name" verticalAlign="center" />
 								<textfield id="charIconAnimName" text="" verticalAlign="center" />
 							</hbox>

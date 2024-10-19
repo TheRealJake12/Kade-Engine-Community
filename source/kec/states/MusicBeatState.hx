@@ -40,10 +40,17 @@ class MusicBeatState extends FlxTransitionableState
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;
 
+	// Tween And Timer Manager. Don't Mess With These.
+	public var tweenManager:FlxTweenManager;
+	public var timerManager:FlxTimerManager;
+
 	public function new()
 	{
 		super();
 		subStates = [];
+		// Setup The Tween / Timer Manager.
+		tweenManager = new FlxTweenManager();
+		timerManager = new FlxTimerManager();
 	}
 
 	override function create()
@@ -89,6 +96,9 @@ class MusicBeatState extends FlxTransitionableState
 			transSubstate = null;
 		}
 
+		timerManager.clear();
+		tweenManager.clear();
+
 		super.destroy();
 	}
 
@@ -120,6 +130,11 @@ class MusicBeatState extends FlxTransitionableState
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
+		// DO NOT COMMENT THIS OUT.
+		tweenManager.update(elapsed);
+		timerManager.update(elapsed);
+
 		if (FlxG.keys.anyJustPressed([fullscreenBind]))
 			FlxG.fullscreen = !FlxG.fullscreen;
 
@@ -141,7 +156,13 @@ class MusicBeatState extends FlxTransitionableState
 
 			if (curDecimalBeat >= curTiming.endBeat)
 			{
-				Debug.logTrace('Current Timing ended, checking for next Timing...');
+				Debug.logTrace("Looking For Next Timing Going Forwards");
+				curTiming = TimingStruct.getTimingAtTimestamp(Conductor.songPosition);
+				Conductor.bpm = curTiming.bpm * Conductor.rate;
+			}
+			else if (curDecimalBeat < curTiming.startBeat)
+			{
+				Debug.logTrace('Looking For Next Timing Going Backwards');
 				curTiming = TimingStruct.getTimingAtTimestamp(Conductor.songPosition);
 				Conductor.bpm = curTiming.bpm * Conductor.rate;
 			}
@@ -171,6 +192,12 @@ class MusicBeatState extends FlxTransitionableState
 				{
 					currentSection = getSectionByIndex(curSection +
 						1); // Searching by index is very slow if we have too many sections, instead we assign a index to every section.
+					if (currentSection != null)
+						curSection = currentSection.index;
+				}
+				else if (Conductor.songPosition < currentSection.startTime)
+				{
+					currentSection = getSectionByIndex(curSection - 1); // Searching by index is very slow if we have too many sections, instead we assign a index to every section.
 					if (currentSection != null)
 						curSection = currentSection.index;
 				}
@@ -367,5 +394,26 @@ class MusicBeatState extends FlxTransitionableState
 
 		if (transSubstate != null && transSubstate.visible)
 			transSubstate.draw();
+	}
+
+	public function createTween(Object:Dynamic, Values:Dynamic, Duration:Float, ?Options:TweenOptions):FlxTween
+	{
+		var tween:FlxTween = tweenManager.tween(Object, Values, Duration, Options);
+		tween.manager = tweenManager;
+		return tween;
+	}
+
+	public function createTweenNum(FromValue:Float, ToValue:Float, Duration:Float = 1, ?Options:TweenOptions, ?TweenFunction:Float->Void):FlxTween
+	{
+		var tween:FlxTween = tweenManager.num(FromValue, ToValue, Duration, Options, TweenFunction);
+		tween.manager = tweenManager;
+		return tween;
+	}
+
+	public function createTimer(Time:Float = 1, ?OnComplete:FlxTimer->Void, Loops:Int = 1):FlxTimer
+	{
+		var timer:FlxTimer = new FlxTimer();
+		timer.manager = timerManager;
+		return timer.start(Time, OnComplete, Loops);
 	}
 }

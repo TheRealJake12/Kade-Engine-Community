@@ -23,16 +23,19 @@ class CoolUtil
 	public static var suffixDiffsArray:Array<String> = ['-easy', "", "-hard"];
 
 	public static var customDifficulties:Array<String> = [];
-
-	public static var difficultyArray:Array<String> = getGlobalDiffs();
 	public static var defaultDifficulty:String = 'Normal'; // The chart that has no suffix and starting difficulty on Freeplay/Story Mode
 	public static var noteShitArray:Array<String> = ['Alt', 'Hurt', 'Must Press']; // Grabs the custom notetypes (not normal)
 
-	public static var difficulties:Array<String> = [];
+	public static var difficulties:Array<String> = getGlobalDiffs();
+
+	public static function formatToSongPath(path:String)
+	{
+		return path.toLowerCase().replace(' ', '-');
+	}
 
 	public static function difficultyFromInt(difficulty:Int):String
 	{
-		return difficultyArray[difficulty];
+		return difficulties[difficulty];
 	}
 
 	public static function getDifficultyFilePath(num:Null<Int> = null)
@@ -46,7 +49,7 @@ class CoolUtil
 		else
 			fileSuffix = '';
 
-		return Paths.formatToSongPath(fileSuffix);
+		return formatToSongPath(fileSuffix);
 	}
 
 	public static function difficultyString():String
@@ -130,7 +133,7 @@ class CoolUtil
 	public static function getSuffixFromDiff(diff:String):String
 	{
 		var suffix = '';
-		if (diff != 'Normal')
+		if (diff != defaultDifficulty)
 			suffix = '-${diff.toLowerCase()}';
 
 		return suffix;

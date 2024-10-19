@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<panel>
+	<box width="100%" style="padding: 20px;">
+        <frame>
+            <vbox>
+                <checkbox id="rating" text="Show Rating" verticalAlign="center"/>
+                <checkbox id="combo" text="Show Combo" verticalAlign="center"/>
+                <checkbox id="timing" text="Show MS Timing" verticalAlign="center"/>
+            </vbox>
+        </frame>
+	</box>
+</panel>

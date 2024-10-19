@@ -14,7 +14,7 @@ class StageJSON
 {
 	public static function loadJSONFile(stage:String):StageData
 	{
-		var rawJson = Paths.loadJSON('stages/$stage');
+		var rawJson = Paths.loadJSON('data/stages/$stage');
 		return parseStage(rawJson);
 	}
 
