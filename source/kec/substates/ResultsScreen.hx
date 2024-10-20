@@ -202,7 +202,7 @@ class ResultsScreen extends MusicBeatSubstate
 			&& HelperFunctions.truncateFloat(PlayStateChangeables.healthGain, 2) <= 1
 			&& HelperFunctions.truncateFloat(PlayStateChangeables.healthLoss, 2) >= 1;
 
-		if (PlayState.SONG.validScore && superMegaConditionShit)
+		if (superMegaConditionShit)
 		{
 			Highscore.saveScore(PlayState.SONG.songId, Math.round(Stats.songScore), PlayState.storyDifficulty, Conductor.rate);
 			Highscore.saveCombo(PlayState.SONG.songId, Ratings.GenerateLetterRank(Stats.accuracy), PlayState.storyDifficulty, Conductor.rate);

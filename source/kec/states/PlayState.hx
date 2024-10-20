@@ -2723,7 +2723,7 @@ class PlayState extends MusicBeatState
 			&& HelperFunctions.truncateFloat(PlayStateChangeables.healthGain, 2) <= 1
 			&& HelperFunctions.truncateFloat(PlayStateChangeables.healthLoss, 2) >= 1;
 
-		if (SONG.validScore && superMegaConditionShit)
+		if (superMegaConditionShit)
 		{
 			Highscore.saveScore(PlayState.SONG.songId, Math.round(Stats.songScore), storyDifficulty, Conductor.rate);
 			Highscore.saveCombo(PlayState.SONG.songId, Ratings.GenerateComboRank(Stats.accuracy), storyDifficulty, Conductor.rate);
