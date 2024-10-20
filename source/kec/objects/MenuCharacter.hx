@@ -45,7 +45,7 @@ class MenuCharacter extends FlxSprite
 				visible = false;
 				dontPlayAnim = true;
 			default:
-				var jsonPath:String = 'menuCharacters/' + character;
+				var jsonPath:String = 'data/menuCharacters/' + character;
 
 				var charJson:MenuCharData = cast Paths.loadJSON(jsonPath);
 				var frameRate = charJson.frameRate == null ? 24 : charJson.frameRate;

@@ -47,7 +47,7 @@
 							</vbox>
 							<menu-separator />
 							<hbox>
-								<label text="Animation Name" verticalAlign="center" />
+								<label text="Icon Animation Name" verticalAlign="center" />
 								<textfield id="charIconAnimName" text="" verticalAlign="center" />
 							</hbox>
 						</vbox>

@@ -45,7 +45,7 @@ class SelectEditorsState extends MusicBeatState
 
 		if (!Constants.freakyPlaying)
 		{
-			FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
+			FlxG.sound.playMusic(Paths.music("freakyMenu"));
 			Constants.freakyPlaying = true;
 			Conductor.bpm = 102;
 		}

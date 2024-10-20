@@ -7,6 +7,7 @@ import kec.objects.Alphabet;
 class TitleState extends MusicBeatState
 {
 	private static var seenBefore:Bool = false;
+
 	private var clickedBefore:Bool = false;
 
 	private var danceLeft:Bool = false;
@@ -63,7 +64,7 @@ class TitleState extends MusicBeatState
 	{
 		Paths.clearCache();
 
-		FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
+		FlxG.sound.playMusic(Paths.music("freakyMenu"));
 		FlxG.sound.music.fadeIn(10, 0, 0.7);
 		if (seenBefore)
 			show();
@@ -131,7 +132,7 @@ class TitleState extends MusicBeatState
 
 	private function show()
 	{
-		seenBefore = true;	
+		seenBefore = true;
 		deleteText();
 		remove(textGroup);
 		remove(jake);
@@ -159,7 +160,7 @@ class TitleState extends MusicBeatState
 
 	private function decide()
 	{
-		switch(seenBefore)
+		switch (seenBefore)
 		{
 			case false:
 				show();

@@ -67,6 +67,7 @@ class ChartingState extends MusicBeatState
 	public static var instance:ChartingState = null;
 
 	var ui:TabView;
+	var entireUI:VBox;
 	var menu:MenuBar;
 
 	var box:ContinuousHBox;
@@ -373,7 +374,14 @@ class ChartingState extends MusicBeatState
 
 		add(iconP1);
 		add(iconP2);
+
+		entireUI = new VBox();
 		menuBarShit();
+		entireUI.addComponent(menu);
+		var tempSpacer = new Spacer();
+		tempSpacer.height = 420;
+		entireUI.addComponent(tempSpacer);
+		entireUI.addComponent(ui);
 
 		addTabs();
 		addAssetUI();
@@ -392,17 +400,14 @@ class ChartingState extends MusicBeatState
 		add(notetypetext);
 		add(helpText);
 
-		add(ui);
-		add(menu);
+		add(entireUI);
+
 		selectBox = new FlxSprite(0, 0).makeGraphic(1, 1, FlxColor.fromRGB(173, 216, 230));
 		selectBox.visible = false;
 		selectBox.alpha = 0.4;
 		add(selectBox);
 
 		id = Lib.setInterval(backupChart, 5 * 60 * 1000);
-
-		ui.x = 0;
-		ui.y = 420;
 
 		#if FEATURE_DISCORD
 		kec.backend.Discord.changePresence("Chart Editor", "Charting : " + SONG.songName, null, true);
@@ -989,7 +994,7 @@ class ChartingState extends MusicBeatState
 		gfs = null;
 		noteStyles = null;
 		noteTypes = null;
-		
+
 		// I hate having things run in update all the time but fuck it
 		songShit();
 		backupChart();
@@ -2165,8 +2170,8 @@ class ChartingState extends MusicBeatState
 		vbox2.addComponent(eventSave);
 		vbox2.addComponent(eventRemove);
 		vbox2.addComponent(eventPos);
-		uiGrid.addComponent(vbox);
-		uiGrid.addComponent(vbox2);
+		grid.addComponent(vbox);
+		grid.addComponent(vbox2);
 		box5.addComponent(grid);
 
 		// dfjk

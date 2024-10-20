@@ -680,7 +680,7 @@ class StageDebugState extends UIState
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
 			FlxG.sound.music.stop();
-			FlxG.sound.playMusic(Paths.music(FlxG.save.data.watermark ? "freakyMenu" : "ke_freakyMenu"));
+			FlxG.sound.playMusic(Paths.music("freakyMenu"));
 			Constants.freakyPlaying = true;
 			Conductor.bpm = 102;
 			if (!fromEditor)

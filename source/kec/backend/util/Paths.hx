@@ -89,7 +89,7 @@ class Paths
 	// MISC
 
 	public static function video(file:String)
-		return getPath('videos/$file');
+		return 'assets/videos/$file';
 
 	// GRAPHICS
 
@@ -105,8 +105,7 @@ class Paths
 		if (!OpenFlAssets.exists(img, IMAGE))
 		{
 			Debug.logWarn("Couldn't Find Asset At " + img);
-			path = 'missingMod';
-			img = getPath('images/missingMod.png');
+			// shouldn't override it because flixel will handle it for you incase it's an atlas
 			return null;
 		}
 		if (graphics.exists(path))

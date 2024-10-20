@@ -13,7 +13,7 @@ class Week
 {
 	public static function loadJSONFile(week:String):WeekData
 	{
-		var rawJson = Paths.loadJSON('weeks/$week');
+		var rawJson = Paths.loadJSON('data/weeks/$week');
 		return parseWeek(rawJson);
 	}
 

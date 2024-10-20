@@ -10,6 +10,7 @@ import kec.backend.util.NoteStyleHelper;
 import kec.states.FreeplayState;
 import kec.substates.CustomFadeTransition;
 import kec.substates.MusicBeatSubstate;
+import flixel.util.typeLimit.NextState;
 
 class MusicBeatState extends FlxTransitionableState
 {
@@ -303,17 +304,13 @@ class MusicBeatState extends FlxTransitionableState
 	}
 
 	public static function resetState()
-	{
 		FlxG.resetState();
-	}
 
 	public inline static function getState():MusicBeatState
 		return cast(FlxG.state, MusicBeatState);
 
 	private function setFirstTiming()
-	{
 		curTiming = TimingStruct.getTimingAtTimestamp(0);
-	}
 
 	public function changeTime(time:Float)
 	{
