@@ -86,8 +86,7 @@ It will take a while to build for both versions.
 
 - [KadeDev](https://github.com/kade-github) - The Original Guy who created Kade Engine.
 
--
-[DetectiveBaldi](https://github.com/DetectiveBaldi)
+-[DetectiveBaldi](https://github.com/DetectiveBaldi)
 - Sound Streaming / Cache Cleanup
 
 - [PolybiusProxy](https://github.com/polybiusproxy) - The Video Support (Legacy).
