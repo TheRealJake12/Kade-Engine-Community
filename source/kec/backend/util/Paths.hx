@@ -1,5 +1,8 @@
 package kec.backend.util;
 
+#if cpp
+import cpp.vm.Gc;
+#end
 import openfl.media.Sound;
 import haxe.ui.ToolkitAssets;
 import flixel.graphics.FlxGraphic;
@@ -27,6 +30,9 @@ class Paths
 	{
 		graphics = new Map<String, FlxGraphic>();
 		sounds = new Map<String, Sound>();
+		#if cpp
+			Gc.enable(true);
+		#end
 	}
 
 	// FINDING FILES

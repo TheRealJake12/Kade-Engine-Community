@@ -76,8 +76,8 @@ class FrameCounter extends TextField
 
 	inline function get_memoryMegas():String
 	{
-		var memoryUsage = (FlxG.save.data.mem ? "Memory Usage: " : "");
-		var mem = Int64.make(0, System.totalMemory);
+		var memoryUsage:String = (FlxG.save.data.mem ? "Memory Usage: " : "");
+		var mem:Dynamic = Int64.make(0, System.totalMemory);
 
 		var taskMemoryMegas = Int64.make(0, kec.backend.util.MemoryUtil.getMemoryfromProcess());
 
