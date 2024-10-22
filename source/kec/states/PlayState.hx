@@ -4454,7 +4454,7 @@ class PlayState extends MusicBeatState
 	{
 		STYLE = Style.loadJSONFile(SONG.style.toLowerCase());
 
-		if (STYLE == null)
+		if (STYLE == null || SONG.style == "")
 		{
 			STYLE = Style.loadJSONFile('default');
 			Debug.logTrace("No Style Found. Loading Default.");

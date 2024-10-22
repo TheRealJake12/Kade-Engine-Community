@@ -114,6 +114,7 @@
 	<haxedef name="haxeui_allow_drag_any_component" value="true" />
 	<haxedef name="haxeui_flixel_no_custom_cursors" value="true" />
 	<haxedef name="haxeui_dont_impose_base_class" value="true" />
+	<haxedef name="openfl_enable_experimental_update_queue"/>
 	<section if="COMPILE_ALL_CLASSES">
 		<haxeflag name="-dce" value="no" />
 		<haxeflag name="--macro" value="ClassMacro.addAdditionalClasses()" />

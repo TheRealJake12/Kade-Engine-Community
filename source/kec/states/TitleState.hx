@@ -65,7 +65,7 @@ class TitleState extends MusicBeatState
 		Paths.clearCache();
 
 		FlxG.sound.playMusic(Paths.music("freakyMenu"));
-		FlxG.sound.music.fadeIn(10, 0, 0.7);
+		FlxG.sound.music.fadeIn(4, 0, 0.7);
 		if (seenBefore)
 			show();
 		super.create();

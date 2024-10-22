@@ -296,7 +296,7 @@ class Paths
 			}
 		}
 
-		// sound.close();
+		sound.close();
 
 		OpenFlAssets.cache.removeSound(path);
 

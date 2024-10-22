@@ -830,6 +830,7 @@ class ChartingState extends MusicBeatState
 			+ snap;
 		infoText.updateHitbox();
 		lastConductorPos = Conductor.songPosition;
+		songShit();
 		super.update(elapsed);
 	}
 
@@ -980,8 +981,10 @@ class ChartingState extends MusicBeatState
 	{
 		noteGroup.forEachAlive(function(spr:EditorNote) spr.destroy());
 		noteGroup.clear();
-		sustainGroup.forEachAlive(function(spr:FlxSprite) spr.destroy());
+		sustainGroup.forEachAlive(function(spr:EditorSustain) spr.destroy());
 		sustainGroup.clear();
+		// I hate having things run in update all the time but fuck it
+		backupChart();
 		copiedNotes = null;
 		pastedNotes = null;
 		deletedNotes = null;
@@ -994,10 +997,7 @@ class ChartingState extends MusicBeatState
 		gfs = null;
 		noteStyles = null;
 		noteTypes = null;
-
-		// I hate having things run in update all the time but fuck it
-		songShit();
-		backupChart();
+	
 		destroyBoxes();
 		super.destroy();
 	}
