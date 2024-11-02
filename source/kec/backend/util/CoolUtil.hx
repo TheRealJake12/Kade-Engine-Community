@@ -278,30 +278,9 @@ class CoolUtil
 		return maxKey;
 	}
 
-	public static var loadingVideos:Array<String> = [];
-	public static var loadedVideos:Array<String> = [];
-
-	public static function precacheVideo(name:String):Void
+	public static function expDecay(a:Float, b:Float, decay:Float)
 	{
-		#if VIDEOS
-		if (FileSystem.exists(Paths.video(name)))
-		{
-			if (!loadedVideos.contains(name))
-			{
-				var cache:VideoHandler = new VideoHandler();
-				cache.mute = true;
-				cache.load(Paths.video(name));
-				loadedVideos.push(name);
-				FlxG.log.add('Video file has been cached: ' + name);
-			}
-			else
-				FlxG.log.add('Video file has already been cached: ' + name);
-		}
-		else
-			FlxG.log.warn('Couldnt find video file: ' + name);
-		#else
-		FlxG.log.warn('Platform not supported!');
-		#end
+		return b + (a - b) * Math.exp(-decay * FlxG.elapsed);
 	}
 
 	public static inline function getFileStringFromPath(file:String):String

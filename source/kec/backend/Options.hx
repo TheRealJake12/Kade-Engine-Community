@@ -1219,7 +1219,7 @@ class FPSCapOption extends Option
 		#end
 		if (FlxG.save.data.fpsCap > 900)
 			FlxG.save.data.fpsCap = 900;
-		else if (FlxG.save.data.fpsCap < 60)
+		else if (FlxG.save.data.fpsCap <= 60)
 			FlxG.save.data.fpsCap = 60;
 		else
 			FlxG.save.data.fpsCap--;

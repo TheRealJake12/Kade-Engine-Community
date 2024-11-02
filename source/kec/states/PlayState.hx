@@ -333,6 +333,8 @@ class PlayState extends MusicBeatState
 	var lastPos:Float = -5000;
 
 	public var correctY = 698;
+	private var desyncs:Int = 0;
+	private var iDesyncs:Int = 0;
 
 	// Adding Objects Using Lua
 	public function addObject(object:FlxBasic)
@@ -1821,6 +1823,15 @@ class PlayState extends MusicBeatState
 			}
 		}
 
+		inst.pitch = Conductor.rate;
+		if (!SONG.splitVoiceTracks)
+			vocals.pitch = Conductor.rate;
+		else
+		{
+			vocalsPlayer.pitch = Conductor.rate;
+			vocalsEnemy.pitch = Conductor.rate;
+		}
+
 		unspawnNotes.sort(Sort.sortNotes);
 
 		generatedMusic = true;
@@ -2020,6 +2031,26 @@ class PlayState extends MusicBeatState
 
 	override public function update(elapsed:Float)
 	{
+		if (startedCountdown)
+		{
+			Conductor.elapsedPosition += FlxG.elapsed * 1000;
+
+			if (Conductor.elapsedPosition > 0 && startingSong)
+				startSong();
+
+			if (songStarted && !endingSong && (inst.length / Conductor.rate) - Conductor.elapsedPosition <= 0)
+				endSong();
+			Conductor.songPosition = Conductor.elapsedPosition * Conductor.rate;
+			final curTime:Float = Math.max(0, Conductor.songPosition) / Conductor.rate;
+			songPositionBar = CoolUtil.fpsLerp(songPositionBar, (curTime / songLength), 0.15, 60 * Conductor.rate);
+			final songCalc:Float = (songLength - curTime);
+			var secondsTotal:Int = Math.floor(songCalc * 0.001);
+			if (secondsTotal < 0)
+				secondsTotal = 0;
+			songName.text = SONG.songName + ' (' + FlxStringUtil.formatTime(secondsTotal, false) + ')';
+			checkMusicSync();
+		}
+
 		if (unspawnNotes[0] != null)
 		{
 			var shit:Float = 2000;
@@ -2061,39 +2092,8 @@ class PlayState extends MusicBeatState
 		if (FlxG.save.data.background)
 			Stage.update(elapsed);
 
-		if (generatedMusic)
-		{
-			if (songStarted && !endingSong)
-			{
-				if ((inst.length / Conductor.rate) - Conductor.elapsedPosition <= 0)
-				{
-					endingSong = true;
-					endSong();
-				}
-			}
-		}
-
 		if (inst.playing)
-		{
 			executeEventCheck();
-
-			// handles BPM Change events for you lol
-
-			inst.pitch = Conductor.rate;
-			if (!SONG.splitVoiceTracks)
-			{
-				if (vocals.playing)
-					vocals.pitch = Conductor.rate;
-			}
-			else
-			{
-				if (vocalsPlayer.playing && vocalsEnemy.playing)
-				{
-					vocalsPlayer.pitch = Conductor.rate;
-					vocalsEnemy.pitch = Conductor.rate;
-				}
-			}
-		}
 
 		if (PlayStateChangeables.botPlay && FlxG.keys.justPressed.F1)
 			camHUD.visible = !camHUD.visible;
@@ -2231,28 +2231,6 @@ class PlayState extends MusicBeatState
 			checkMusicSync();
 			createTween(skipText, {alpha: 0}, 0.2);
 			skipActive = false;
-		}
-
-		if (startedCountdown)
-		{
-			Conductor.elapsedPosition += FlxG.elapsed * 1000;
-
-			if (Conductor.elapsedPosition > 0 && startingSong)
-				startSong();
-		}
-
-		if (Conductor.elapsedPosition > lastPos)
-		{
-			lastPos = Conductor.elapsedPosition;
-			Conductor.songPosition = lastPos * Conductor.rate;
-			final curTime:Float = Math.max(0, Conductor.songPosition) / Conductor.rate;
-			songPositionBar = CoolUtil.fpsLerp(songPositionBar, (curTime / songLength), 0.15, 60 * Conductor.rate);
-			final songCalc:Float = (songLength - curTime);
-			var secondsTotal:Int = Math.floor(songCalc * 0.001);
-			if (secondsTotal < 0)
-				secondsTotal = 0;
-			songName.text = SONG.songName + ' (' + FlxStringUtil.formatTime(secondsTotal, false) + ')';
-			checkMusicSync();
 		}
 
 		FlxG.watch.addQuick("curBPM", Conductor.bpm);
@@ -2514,43 +2492,35 @@ class PlayState extends MusicBeatState
 	{
 		if (!generatedMusic || paused || !songStarted || endingSong)
 			return;
-
-		if (Math.abs(Conductor.songPosition - inst.time) > 100)
-		{
+		if (Math.abs(Conductor.songPosition - inst.time) > 75)
 			resyncInstToPosition();
-		}
 		if (SONG.needsVoices)
 		{
-			switch (SONG.splitVoiceTracks)
+			var checkVocals = [vocals];
+			if (SONG.splitVoiceTracks)
+				checkVocals = [vocalsPlayer, vocalsEnemy];
+			for (voc in checkVocals)
 			{
-				case true:
-					if (Math.abs(inst.time - vocalsPlayer.time) > 25)
-						resyncVocalsToInst();
-				case false:
-					if (Math.abs(inst.time - vocals.time) > 25)
-						resyncVocalsToInst();
+				if (voc.playing)
+					if (Math.abs(inst.time - voc.time) > 20)
+						if (Conductor.songPosition <= voc.length)
+						{
+							voc.time = inst.time;
+							voc.pitch = inst.pitch;
+							desyncs++;
+							Debug.logTrace('Vocal Desyncs $desyncs');
+						}
+							
 			}
 		}
 	}
 
-	function resyncVocalsToInst():Void
+	function resyncInstToPosition()
 	{
-		var checkVocals = [];
-		if (!SONG.splitVoiceTracks)
-			checkVocals = [vocals];
-		else
-			checkVocals = [vocalsPlayer, vocalsEnemy];
-		for (voc in checkVocals)
-		{
-			if (voc.playing)
-				if (Conductor.elapsedPosition <= voc.length)
-					voc.time = inst.time;
-		}
-	}
-
-	function resyncInstToPosition():Void
-	{
-		inst.time = Conductor.songPosition * Conductor.rate;
+		inst.time = Conductor.songPosition;
+		inst.pitch = Conductor.rate;
+		iDesyncs++;
+		Debug.logTrace('Inst Desyncs $iDesyncs');
 	}
 
 	function endSong():Void

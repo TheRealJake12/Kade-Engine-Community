@@ -67,9 +67,6 @@
 	<assets path="mods" embed="false" if="FEATURE_MODCORE" />
 	<assets path="art/readme.txt" rename="do NOT readme.txt" />
 	<assets path="LICENSE" rename="LICENSE.txt" />
-	<library name="videos" preload="true" if="VIDEOS" />
-	<library name="songs" preload="true" />
-	<library name="weeks" preload="true" />
 	<assets path="assets/fonts" />
 	<assets path="alsoft.ini" />
 	<!-- _______________________________ Libraries ______________________________ -->
