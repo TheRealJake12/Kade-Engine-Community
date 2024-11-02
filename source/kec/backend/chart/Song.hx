@@ -53,10 +53,16 @@ class Song
 	public static function loadFromJson(songId:String, difficulty:String):Modern
 	{
 		final songFile = 'data/songs/$songId/$songId$difficulty';
-
 		final rawJson = Paths.loadJSON(songFile);
 		final metaData:SongMeta = loadMetadata(songId);
+		doesChartExist(songId, difficulty);
 		return parseJSONshit(songId, rawJson, metaData);
+	}
+
+	public static function doesChartExist(songId:String, diff:String):Bool
+	{
+		final songFile = 'data/songs/$songId/$songId$diff.json';
+		return Paths.fileExists(songFile);
 	}
 
 	public static function loadMetadata(songId:String):SongMeta

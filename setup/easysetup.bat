@@ -24,7 +24,6 @@ echo Press any key to install the git libraries.
 pause >nul
 title KEC Setup - Installing libraries
 haxelib git polymod https://github.com/swordcube/scriptless-polymod.git
-haxelib git tjson https://github.com/EliteMasterEric/TJSON.git
 haxelib git hscript-improved https://github.com/FNF-CNE-Devs/hscript-improved.git
 haxelib git haxeui-core https://github.com/haxeui/haxeui-core.git --skip-dependencies
 haxelib git haxeui-flixel https://github.com/haxeui/haxeui-flixel.git --skip-dependencies

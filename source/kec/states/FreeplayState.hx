@@ -861,10 +861,7 @@ class FreeplayState extends MusicBeatState
 		FlxG.sound.music.stop();
 
 		if (isCharting)
-		{
-			ChartingState.clean = true;
 			MusicBeatState.switchState(new ChartingState());
-		}
 		else
 			MusicBeatState.switchState(new PlayState());
 	}

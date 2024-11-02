@@ -14,5 +14,12 @@ class EditorSustain extends FlxSprite
 		setGraphicSize(sizeX, sizeY);
 		updateHitbox();
 		setPosition(x, y);
+		visible = true;
+	}
+
+	override function kill()
+	{
+		visible = false;
+		super.kill();
 	}
 }

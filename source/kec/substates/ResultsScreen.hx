@@ -121,12 +121,9 @@ class ResultsScreen extends MusicBeatSubstate
 	override function create()
 	{
 		add(background);
-		if (!PlayState.inResults)
-		{
-			music.volume = 0;
-			music.play(false, FlxG.random.int(0, Std.int(music.length / 2)));
-			FlxG.sound.list.add(music);
-		}
+		music.volume = 0;
+		music.play(false, FlxG.random.int(0, Std.int(music.length / 2)));
+		FlxG.sound.list.add(music);
 
 		add(activeMods);
 

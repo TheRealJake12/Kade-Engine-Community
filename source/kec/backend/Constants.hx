@@ -53,6 +53,7 @@ class Constants
 	public static final noteColors:Array<String> = ['purple', 'blue', 'green', 'red'];
 	// Animation Names
 	public static final singAnimations:Array<String> = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
+	public static final colorFilters:Array<String> = ['None', 'Deuteranopia', 'Protanopia', 'Tritanopia'];
 
 	public static final discordRpc:String = "898970552600002561";
 }

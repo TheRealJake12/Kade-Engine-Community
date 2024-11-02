@@ -43,7 +43,7 @@
 	<!-- ____________________________ Window Settings ___________________________ -->
 	<!-- These window settings apply to all targets -->
 	<window width="1280" height="720" fps="60" background="#000000" hardware="true" vsync="false" />
-	<window antialiasing="0" allow-high-dpi="true"/>
+	<window antialiasing="0" allow-high-dpi="true" />
 	<!-- HTML5-specific -->
 	<window if="html5" resizable="true" />
 	<!-- Desktop-specific -->
@@ -114,7 +114,6 @@
 	<haxedef name="haxeui_allow_drag_any_component" value="true" />
 	<haxedef name="haxeui_flixel_no_custom_cursors" value="true" />
 	<haxedef name="haxeui_dont_impose_base_class" value="true" />
-	<haxedef name="openfl_enable_experimental_update_queue"/>
 	<section if="COMPILE_ALL_CLASSES">
 		<haxeflag name="-dce" value="no" />
 		<haxeflag name="--macro" value="ClassMacro.addAdditionalClasses()" />
@@ -126,7 +125,6 @@
 	</section>
 	<!-- Basically Allows Videos To Render In Higher Quality On Higher Resoluttions -->
 	<haxedef name="openfl_dpi_aware" unless="web" />
-	
 	<haxedef name="haxeui_focus_out_on_click" />
 	<!-- Tired Of HaxeUI Breaking Things -->
 	<haxeflag name="--macro" value="include('haxe.ui.backend.flixel.components')" />

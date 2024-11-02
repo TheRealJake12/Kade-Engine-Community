@@ -31,7 +31,7 @@ class Paths
 		graphics = new Map<String, FlxGraphic>();
 		sounds = new Map<String, Sound>();
 		#if cpp
-			Gc.enable(true);
+		Gc.enable(true);
 		#end
 	}
 
@@ -296,7 +296,7 @@ class Paths
 			}
 		}
 
-		sound.close();
+		// sound.close();
 
 		OpenFlAssets.cache.removeSound(path);
 

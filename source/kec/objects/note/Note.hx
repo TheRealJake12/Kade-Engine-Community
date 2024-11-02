@@ -54,7 +54,7 @@ class Note extends FlxSprite
 
 	public var beat:Float = 0;
 
-	public static var swagWidth:Float = 160 * 0.7;
+	public static final swagWidth:Float = 160 * 0.7;
 	public static final PURP_NOTE:Int = 0;
 	public static final GREEN_NOTE:Int = 2;
 	public static final BLUE_NOTE:Int = 1;
@@ -82,7 +82,15 @@ class Note extends FlxSprite
 	public var speedMultiplier:Float = 1.0;
 	public var overrideDistance:Bool = false; // Set this to true if you know what are you doing.
 
-	public var modAlpha:Float = 1;
+	/**
+	 * Alpha helper to modify note alpha in-game (modcharts), use this instead of note.alpha
+	 */
+	public var modAlpha(default, set):Float = 1.0;
+
+	/**
+	 * Alpha helper for master note alpha, use this instead of note.alpha
+	 */
+	public var localAlpha(default, set):Float = 1.0;
 
 	public static var defaultPlayerSkin(default, never):String = 'noteskins/Arrows';
 	public static var defaultCpuSkin(default, never):String = 'noteskins/Arrows';
@@ -288,6 +296,8 @@ class Note extends FlxSprite
 			if (inCharter)
 				x += 30;
 
+			isSustainEnd = true;
+
 			if (prevNote.isSustainNote)
 			{
 				prevNote.animation.play(Constants.noteColors[prevNote.originColor] + 'hold');
@@ -298,7 +308,10 @@ class Note extends FlxSprite
 					prevNote.scale.y *= 1.0 + (1.0 / prevNote.frameHeight) * 1.05;
 
 				prevNote.updateHitbox();
+				prevNote.isSustainEnd = false;
 			}
+
+			localAlpha = FlxG.save.data.alpha;
 		}
 		else if (!isSustainNote)
 		{
@@ -329,9 +342,7 @@ class Note extends FlxSprite
 
 		var animName:String = null;
 		if (animation.curAnim != null)
-		{
 			animName = animation.curAnim.name;
-		}
 
 		var lastScaleY:Float = scale.y;
 		var skinPostfix:String = '';
@@ -377,9 +388,7 @@ class Note extends FlxSprite
 		if (noteTypeCheck != 'pixel')
 		{
 			if (isSustainNote && (animation.curAnim != null && !animation.curAnim.name.endsWith('end')))
-			{
 				scale.y = lastScaleY;
-			}
 		}
 
 		updateHitbox();
@@ -435,16 +444,14 @@ class Note extends FlxSprite
 		{
 			if (isSustainNote)
 			{
-				var newStepHeight = (((0.45 * PlayState.instance.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayState.instance.scrollSpeed == 1 ? PlayState.SONG.speed : PlayState.instance.scrollSpeed,
+				final newStepHeight = (((0.45 * PlayState.instance.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayState.instance.scrollSpeed == 1 ? PlayState.SONG.speed : PlayState.instance.scrollSpeed,
 					2) * speedMultiplier);
 
 				if (stepHeight != newStepHeight)
 				{
 					stepHeight = newStepHeight;
 					if (isSustainNote)
-					{
 						noteYOff = -stepHeight + swagWidth * 0.5;
-					}
 				}
 
 				flipY = PlayStateChangeables.useDownscroll;
@@ -457,13 +464,9 @@ class Note extends FlxSprite
 					case 'hurt':
 						if (strumTime - Conductor.elapsedPosition <= ((Ratings.timingWindows[0].timingWindow) * 0.2)
 							&& strumTime - Conductor.elapsedPosition >= (-Ratings.timingWindows[0].timingWindow) * 0.4)
-						{
 							canBeHit = true;
-						}
 						else
-						{
 							canBeHit = false;
-						}
 						if (strumTime - Conductor.elapsedPosition < -Ratings.timingWindows[0].timingWindow && !wasGoodHit)
 							tooLate = true;
 					default:
@@ -477,13 +480,7 @@ class Note extends FlxSprite
 				}
 			}
 
-			if (isSustainNote)
-			{
-				isSustainEnd = spotInLine == parent.children.length - 1;
-				alpha = !sustainActive
-					&& (parent.tooLate || parent.wasGoodHit) ? (modAlpha * FlxG.save.data.alpha) * 0.5 : modAlpha * FlxG.save.data.alpha; // This is the correct way
-			}
-			else if (tooLate && !wasGoodHit)
+			if (tooLate && !wasGoodHit)
 			{
 				if (alpha > modAlpha * 0.3)
 					alpha = modAlpha * 0.3;
@@ -497,8 +494,6 @@ class Note extends FlxSprite
 			noteCharterObject.destroy();
 
 		super.destroy();
-
-		_lastValidChecked = '';
 	}
 
 	@:noCompletion
@@ -519,5 +514,78 @@ class Note extends FlxSprite
 			frame = frames.frames[animation.frameIndex];
 
 		return rect;
+	}
+
+	public function followStaticArrow(parent:StaticArrow)
+	{
+		final leSpeed:Float = PlayState.instance.scrollSpeed == 1 ? PlayState.SONG.speed : PlayState.instance.scrollSpeed;
+		if (isSustainNote)
+			x = (parent.x + (parent._cos * distance)) + (swagWidth / 3);
+		else
+			x = parent.x + (parent._cos * distance);
+
+		if (isSustainNote && noteTypeCheck == 'pixel')
+			x -= 5;
+
+		if (!overrideDistance)
+		{
+			if (parent.downScroll)
+				distance = (0.45 * (Conductor.elapsedPosition - strumTime)) * (FlxMath.roundDecimal(leSpeed, 2)) - noteYOff;
+			else
+				distance = (-0.45 * (Conductor.elapsedPosition - strumTime)) * (FlxMath.roundDecimal(leSpeed, 2)) + noteYOff;
+		}
+
+		y = parent.y + (parent._sin * distance);
+
+		// modchart shit
+
+		visible = parent.visible;
+		if (!isSustainNote)
+			modAngle = parent.modAngle;
+
+		modAlpha = parent.modAlpha;
+	}
+
+	public function clipToStaticArrow(parent:StaticArrow)
+	{
+		if (!isSustainNote || !sustainActive || !causesMisses)
+			return;
+
+		final center:Float = parent.y + swagWidth * 0.5;
+		final swagRect:FlxRect = FlxRect.get(0, 0, frameWidth, frameHeight);
+
+		switch (parent.downScroll)
+		{
+			case true:
+				if (y - offset.y * scale.y + height >= center)
+				{
+					swagRect.width = frameWidth;
+					swagRect.height = (center - y) / scale.y;
+					swagRect.y = frameHeight - swagRect.height;
+				}
+			case false:
+				if (y + offset.y * scale.y <= center)
+				{
+					swagRect.y = (center - y) / scale.y;
+					swagRect.width = width / scale.x;
+					swagRect.height = (height / scale.y) - swagRect.y;
+				}
+		}
+		clipRect = swagRect;
+		swagRect.put();
+	}
+
+	function set_localAlpha(a:Float)
+	{
+		localAlpha = a;
+		alpha = localAlpha * modAlpha;
+		return a;
+	}
+
+	function set_modAlpha(a:Float)
+	{
+		modAlpha = a;
+		alpha = localAlpha * modAlpha;
+		return a;
 	}
 }

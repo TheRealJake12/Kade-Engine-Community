@@ -38,6 +38,7 @@ class HealthIcon extends FlxSprite
 		animOffsets = new Map<String, Array<Dynamic>>();
 
 		changeIcon(char);
+		allowedToBop = FlxG.save.data.iconBop;
 		scrollFactor.set();
 	}
 
@@ -55,81 +56,81 @@ class HealthIcon extends FlxSprite
 
 	public function changeIcon(newChar:String):Void
 	{
-		if (newChar != char)
+		if (newChar == char)
+			return;
+
+		char = newChar;
+		var name:String = 'icon-' + newChar;
+		switch (Paths.fileExists('images/icons/animated/' + name + '.png'))
 		{
-			char = newChar;
-			var name:String = 'icon-' + newChar;
-			switch (Paths.fileExists('images/icons/animated/' + name + '.png'))
-			{
-				case true:
-					frames = Paths.getSparrowAtlas('icons/animated/$name');
-					for (i in 0...frames.frames.length)
-						animation.addByPrefix(animationNames[i], animationNames[i], 24, false, isPlayer);
+			case true:
+				frames = Paths.getSparrowAtlas('icons/animated/$name');
+				for (i in animationNames)
+					animation.addByPrefix(i, i, 24, false, isPlayer);
 
-				case false:
-					if (!Paths.fileExists('images/icons/$name.png'))
-						name = 'icon-face';
-					final graphic = Paths.image('icons/$name');
-					final iSize:Float = Math.round(graphic.width / graphic.height);
-					loadGraphic(graphic, true, Math.floor(graphic.width / iSize), Math.floor(graphic.height));
-					updateHitbox();
-					for (i in 0...frames.frames.length)
-						animation.add(animationNames[i], [i], 0, false, isPlayer);
-			}
-			animation.play('Idle');
-
-			if (char.endsWith('-pixel') || char.startsWith('senpai') || char.startsWith('spirit'))
-				antialiasing = false
-			else
-				antialiasing = FlxG.save.data.antialiasing;
-
-			scrollFactor.set();
+			case false:
+				if (!Paths.fileExists('images/icons/$name.png'))
+					name = 'icon-face';
+				final graphic = Paths.image('icons/$name');
+				final iSize:Float = Math.round(graphic.width / graphic.height);
+				loadGraphic(graphic, true, Math.floor(graphic.width / iSize), Math.floor(graphic.height));
+				updateHitbox();
+				for (i in 0...frames.frames.length)
+					animation.add(animationNames[i], [i], 0, false, isPlayer);
 		}
+		animation.play('Idle');
+
+		if (char.endsWith('-pixel') || char.startsWith('senpai') || char.startsWith('spirit'))
+			antialiasing = false
+		else
+			antialiasing = FlxG.save.data.antialiasing;
+
+		scrollFactor.set();
 		playAnimation('Idle');
 		initTargetSize();
 	}
 
 	public function onStepHit(step:Int)
 	{
-		if ((FlxG.save.data.iconBop && allowedToBop) && step % stepsBetween == 0)
-		{
-			// Make the icon increase in size (the update function causes them to lerp back down).
-			if (this.width > this.height)
-				setGraphicSize(Std.int(this.width + (defaultSize * this.size.x * sizeMult)), 0);
-			else
-				setGraphicSize(0, Std.int(this.height + (defaultSize * this.size.y * sizeMult)));
-			this.updateHitbox();
-		}
+		if (!allowedToBop)
+			return;
+
+		if (step % stepsBetween != 0)
+			return;
+		// Make the icon increase in size (the update function causes them to lerp back down).
+		if (this.width > this.height)
+			setGraphicSize(Std.int(this.width + (defaultSize * this.size.x * sizeMult)), 0);
+		else
+			setGraphicSize(0, Std.int(this.height + (defaultSize * this.size.y * sizeMult)));
+		this.updateHitbox();
 	}
 
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
 
-		if (FlxG.save.data.iconBop && allowedToBop)
-		{
-			if (this.width > this.height)
-			{
-				// Apply linear interpolation while accounting for frame rate.
-				var targetSize:Int = Std.int(CoolUtil.coolLerp(this.width, defaultSize * this.size.x, 0.15));
-				setGraphicSize(targetSize, 0);
-			}
-			else
-			{
-				var targetSize:Int = Std.int(CoolUtil.coolLerp(this.height, defaultSize * this.size.y, 0.15));
-				setGraphicSize(0, targetSize);
-			}
-			this.updateHitbox();
-		}
-
 		if (sprTracker != null)
 			setPosition(sprTracker.x + sprTracker.width + 10, sprTracker.y - 30);
+
+		if (!allowedToBop)
+			return;
+
+		if (this.width > this.height)
+		{
+			// Apply linear interpolation while accounting for frame rate.
+			var targetSize:Int = Std.int(CoolUtil.coolLerp(this.width, defaultSize * this.size.x, 0.15));
+			setGraphicSize(targetSize, 0);
+		}
+		else
+		{
+			var targetSize:Int = Std.int(CoolUtil.coolLerp(this.height, defaultSize * this.size.y, 0.15));
+			setGraphicSize(0, targetSize);
+		}
+		this.updateHitbox();
 	}
 
 	public function addOffset(name:String, x:Float = 0, y:Float = 0)
-	{
 		animOffsets[name] = [x, y];
-	}
 
 	inline function initTargetSize():Void
 	{
@@ -201,16 +202,15 @@ class HealthIcon extends FlxSprite
 
 	public function playAnimation(newAnim:String)
 	{
-		if (hasAnimation(newAnim) && finishedAnim())
-		{
-			this.animation.play(newAnim, true, false);
-			var daOffset = animOffsets.get(newAnim);
-
-			if (animOffsets.exists(newAnim))
-				offset.set(daOffset[0], daOffset[1]);
-			else
-				offset.set(0, 0);
+		if (!hasAnimation(newAnim) && !finishedAnim())
 			return;
-		}
+		this.animation.play(newAnim, false, false);
+		var daOffset = animOffsets.get(newAnim);
+
+		if (animOffsets.exists(newAnim))
+			offset.set(daOffset[0], daOffset[1]);
+		else
+			offset.set(0, 0);
+		return;
 	}
 }

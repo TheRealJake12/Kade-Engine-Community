@@ -1,5 +1,6 @@
 package;
 
+import kec.backend.util.FilterUtils;
 #if cpp
 import kec.backend.cpp.CPPInterface;
 #end
@@ -25,6 +26,9 @@ class Init extends MusicBeatState
 		kec.backend.KadeEngineData.initSave();
 
 		kec.backend.KeyBinds.keyCheck();
+		FilterUtils.initializeFilters();
+
+		FilterUtils.setColorBlindess(FlxG.save.data.colorblind);
 
 		// Gotta run this before any assets get loaded.
 		kec.backend.modding.ModCore.initialize();

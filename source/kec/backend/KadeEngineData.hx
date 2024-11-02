@@ -259,6 +259,9 @@ class KadeEngineData
 		if (FlxG.save.data.enabledMods == null)
 			FlxG.save.data.enabledMods = [];
 
+		if (FlxG.save.data.colorblind == null)
+			FlxG.save.data.colorblind = 0; // none	
+
 		FlxSprite.defaultAntialiasing = FlxG.save.data.antialiasing;
 		FlxObject.defaultMoves = false;
 		PlayerSettings.player1.controls.loadKeyBinds();

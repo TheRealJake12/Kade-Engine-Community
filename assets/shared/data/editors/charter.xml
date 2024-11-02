@@ -10,12 +10,13 @@
 		<menu text="Chart" style="padding: 5px;">
 			<menu-item id="chartSave" text="Save Chart" />
 			<menu-item id="chartReload" text="Reload Chart" />
+			<!--
 			<menu-item id="chartLoadAuto" text="Load Autosave" />
 			<menu-item id="chartClear" text="Clear Chart" />
+			-->
 		</menu>
 		<menu text="Preferences" style="padding: 5px;">
-			<menu-checkbox id="editorDrag" text="Drag Editor" />
-			<menu-item id="editorReset" text="Reset Editor Position" />
+			<menu-checkbox id="editorAutoSave" text="Autosave Chart" />
 			<menu-separator />
 			<vbox width="100%" style="padding: 5px;">
 				<label width="100%" styleName="menuHeader" text="Metronome Volume" verticalAlign="center" />
@@ -34,36 +35,30 @@
 		<vbox text="Assets">
 			<frame width="350" height="350">
 				<vbox>
-					<hbox>
+					<grid>
 						<label text="Player" horizontalAlign="center" />
-						<spacer width="75" />
-						<label text="GF" horizontalAlign="center" />
-						<spacer width="75" />
-						<label text="Opponent" verticalAlign="center" />
-					</hbox>
-					<hbox>
 						<dropdown id="playerSelect" width="75" horizontalAlign="center" />
-						<spacer />
+						<label text="GF" horizontalAlign="center" />
 						<dropdown id="gfSelect" width="75" horizontalAlign="center" />
-						<spacer />
+						<label text="Opponent" verticalAlign="center" />
 						<dropdown id="opponentSelect" width="75" horizontalAlign="center" />
-					</hbox>
+					</grid>
 					<menu-separator />
-					<hbox>
-						<label text="Stage" width="100" horizontalAlign="center" />
-						<label text="Style" width="100" horizontalAlign="center" />
-						<label text="Difficulty" width="100" horizontalAlign="center" />
-					</hbox>
-					<hbox>
+					<grid>
+						<label text="Stage" horizontalAlign="center" />
 						<dropdown id="stageSelect" width="90" horizontalAlign="center" />
+						<label text="Style" horizontalAlign="center" />
 						<dropdown id="styleSelect" width="90" horizontalAlign="center" />
-						<dropdown id="diffSelect" width="90" horizontalAlign="center" />
-					</hbox>
+					</grid>
 				</vbox>
 			</frame>
 		</vbox>
 		<vbox text="Section">
-
+			<frame width="350" height="350">
+				<vbox>
+					<checkbox id="sectionMustHit" text="Must Hit Section" horizontalAlign="center" />
+				</vbox>
+			</frame>
 		</vbox>
 		<vbox text="Song">
 			<frame>
@@ -78,6 +73,8 @@
 					<number-stepper id="dataBPM" pos="100" step="0.1" verticalAlign="center" />
 					<label text="Scroll Speed" verticalAlign="center" />
 					<number-stepper id="dataSpeed" pos="100" step="0.1" verticalAlign="center" />
+					<label text="Difficulty" horizontalAlign="center" />
+					<dropdown id="diffSelect" width="90" horizontalAlign="center" />
 				</grid>
 			</frame>
 		</vbox>

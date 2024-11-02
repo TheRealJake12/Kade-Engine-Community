@@ -52,13 +52,13 @@ class MusicBeatState extends FlxTransitionableState
 		// Setup The Tween / Timer Manager.
 		tweenManager = new FlxTweenManager();
 		timerManager = new FlxTimerManager();
+		fullscreenBind = FlxKey.fromString(Std.string(FlxG.save.data.fullscreenBind));
 	}
 
 	override function create()
 	{
 		transSubstate = new CustomFadeTransition(0.4);
 		destroySubStates = false;
-		fullscreenBind = FlxKey.fromString(Std.string(FlxG.save.data.fullscreenBind));
 
 		var skip:Bool = FlxTransitionableState.skipNextTransOut;
 		if (!skip)

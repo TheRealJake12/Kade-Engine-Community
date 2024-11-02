@@ -24,7 +24,7 @@ class StaticArrow extends FlxSprite
 	private var dataSuffix:Array<String> = ['LEFT', 'DOWN', 'UP', 'RIGHT'];
 	private var dataColor:Array<String> = ['purple', 'blue', 'green', 'red'];
 	private var player:Int;
-	private var noteData:Int = 0;
+	private var lane:Int = 0;
 
 	public var resetAnim:Float = 0;
 
@@ -54,7 +54,7 @@ class StaticArrow extends FlxSprite
 		x = xx;
 		y = yy;
 		this.player = player;
-		noteData = data;
+		lane = data;
 		super(x, y);
 		direction = 90;
 
@@ -103,14 +103,12 @@ class StaticArrow extends FlxSprite
 				updateHitbox();
 				antialiasing = false;
 
-				animation.add('static', [noteData]);
-				animation.add('pressed', [4 + noteData, 8 + noteData], 12, false);
-				animation.add('confirm', [12 + noteData, 16 + noteData], 12, false);
+				animation.add('static', [lane]);
+				animation.add('pressed', [4 + lane, 8 + lane], 12, false);
+				animation.add('confirm', [12 + lane, 16 + lane], 12, false);
 
 				for (j in 0...4)
-				{
 					animation.add('dirCon' + j, [12 + j, 16 + j], 12, false);
-				}
 			default:
 				frames = Paths.getSparrowAtlas(texture);
 				for (j in 0...4)
@@ -119,9 +117,9 @@ class StaticArrow extends FlxSprite
 					animation.addByPrefix('dirCon' + j, dataSuffix[j].toLowerCase() + ' confirm', 24, false);
 				}
 
-				var lowerDir:String = dataSuffix[noteData].toLowerCase();
+				var lowerDir:String = dataSuffix[lane].toLowerCase();
 
-				animation.addByPrefix('static', 'arrow' + dataSuffix[noteData]);
+				animation.addByPrefix('static', 'arrow' + dataSuffix[lane]);
 				animation.addByPrefix('pressed', lowerDir + ' press', 24, false);
 				animation.addByPrefix('confirm', lowerDir + ' confirm', 24, false);
 

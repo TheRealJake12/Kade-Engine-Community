@@ -1,5 +1,6 @@
 package kec.backend;
 
+import kec.backend.util.FilterUtils;
 import lime.app.Application;
 import lime.system.DisplayMode;
 import kec.backend.Controls.KeyboardScheme;
@@ -1987,7 +1988,7 @@ class IconBump extends Option
 
 	private override function updateDisplay():String
 	{
-		return "Icon Bumping: < " + (FlxG.save.data.motion ? "Enabled" : "Disabled") + " >";
+		return "Icon Bumping: < " + (FlxG.save.data.iconBop ? "Enabled" : "Disabled") + " >";
 	}
 }
 
@@ -2754,6 +2755,43 @@ class DeveloperMode extends Option
 	}
 }
 
+class ColorBlindOption extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function left():Bool
+	{
+		FlxG.save.data.colorblind--;
+		if (FlxG.save.data.colorblind < 0)
+			FlxG.save.data.colorblind = Constants.colorFilters.length - 1;
+
+		FilterUtils.setColorBlindess(FlxG.save.data.colorblind);
+
+		display = updateDisplay();
+		return true;
+	}
+
+	public override function right():Bool
+	{
+		FlxG.save.data.colorblind++;
+		if (FlxG.save.data.colorblind > Constants.colorFilters.length - 1)
+			FlxG.save.data.colorblind = 0;
+
+		FilterUtils.setColorBlindess(FlxG.save.data.colorblind);
+		display = updateDisplay();	
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return "Color Blindness: < " + (Constants.colorFilters[FlxG.save.data.colorblind]) + " >";
+	}
+}
+
 class ResetSettings extends Option
 {
 	var confirm:Bool = false;
@@ -2810,7 +2848,6 @@ class ResetSettings extends Option
 		FlxG.save.data.camzoom = null;
 		FlxG.save.data.scoreScreen = null;
 		FlxG.save.data.inputShow = null;
-		FlxG.save.data.optimize = null;
 		FlxG.save.data.laneTransparency = 0;
 		// custom shit
 		FlxG.save.data.hitsound = null;
@@ -2818,8 +2855,6 @@ class ResetSettings extends Option
 		FlxG.save.data.mem = null;
 		FlxG.save.data.unload = null;
 		FlxG.save.data.gen = null;
-		FlxG.save.data.oldcharter = null;
-		FlxG.save.data.motion = null;
 		FlxG.save.data.fpsMark = null;
 		FlxG.save.data.borderless = null;
 		FlxG.save.data.resolution = null;
@@ -2842,6 +2877,8 @@ class ResetSettings extends Option
 		FlxG.save.data.playHitsounds = null;
 		FlxG.save.data.playHitsoundsE = null;
 		FlxG.save.data.developer = null;
+		FlxG.save.data.iconBop = null;
+		FlxG.save.data.colorblind = null;
 
 		KadeEngineData.initSave();
 		confirm = false;
