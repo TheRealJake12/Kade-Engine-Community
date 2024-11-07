@@ -76,8 +76,6 @@ class StageDebugState extends UIState
 	var staticCam:CheckBox;
 	var resetCharPos:Button;
 
-	var stageDirectory:TextField;
-
 	var moveEditorToggle:CheckBox;
 	var saveEditor:Button;
 	var resetEditor:Button;
@@ -292,10 +290,6 @@ class StageDebugState extends UIState
 		stageDrop.text = daStage;
 		stageDrop.width = 100;
 
-		stageDirectory = new TextField();
-		stageDirectory.width = 100;
-		stageDirectory.text = Stage.stageDir;
-
 		var sdLabel = new Label();
 		sdLabel.text = "Stage Directory";
 
@@ -347,7 +341,6 @@ class StageDebugState extends UIState
 
 		vbox1.addComponent(stageDrop);
 		vbox2.addComponent(sdLabel);
-		vbox2.addComponent(stageDirectory);
 		vbox2.addComponent(hasGF);
 		vbox2.addComponent(staticCam);
 		vbox2.addComponent(resetCharPos);
@@ -389,14 +382,10 @@ class StageDebugState extends UIState
 		gf = new Character(gf.x, gf.y, daGf, false);
 
 		Stage = new Stage(leStage);
-
 		Stage.inEditor = true;
-
 		Stage.loadStageData(leStage);
-
 		Stage.initStageProperties();
-
-		stageDirectory.text = Stage.stageDir;
+		
 
 		Stage.initCamPos();
 
@@ -757,7 +746,6 @@ class StageDebugState extends UIState
 			hasGF: hasGF.selected,
 			camPosition: [Math.round(camFollow.x), Math.round(camFollow.y)],
 			positions: [b => [boyfriend.x, boyfriend.y], g => [gf.x, gf.y], d => [dad.x, dad.y]],
-			directory: stageDirectory.text
 		};
 
 		// weirdest fuckin code for jsons ever
@@ -815,9 +803,9 @@ class StageDebugState extends UIState
 		}
 	}
 
-	override function beatHit()
+	override function beatHit(curBeat:Int)
 	{
-		super.beatHit();
+		super.beatHit(curBeat);
 
 		if (curBeat % idleBeat == 0)
 		{

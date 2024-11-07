@@ -745,9 +745,9 @@ class Stage extends MusicBeatState
 		#end
 	}
 
-	override function stepHit()
+	override function stepHit(curStep:Int)
 	{
-		super.stepHit();
+		super.stepHit(curStep);
 
 		#if FEATURE_HSCRIPT
 		if (scripts != null)
@@ -791,9 +791,9 @@ class Stage extends MusicBeatState
 		}
 	}
 
-	override function beatHit()
+	override function beatHit(curBeat:Int)
 	{
-		super.beatHit();
+		super.beatHit(curBeat);
 
 		#if FEATURE_HSCRIPT
 		scripts.setAll("curBeat", curBeat);

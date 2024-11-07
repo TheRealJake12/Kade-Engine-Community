@@ -2782,7 +2782,7 @@ class ColorBlindOption extends Option
 			FlxG.save.data.colorblind = 0;
 
 		FilterUtils.setColorBlindess(FlxG.save.data.colorblind);
-		display = updateDisplay();	
+		display = updateDisplay();
 		return true;
 	}
 

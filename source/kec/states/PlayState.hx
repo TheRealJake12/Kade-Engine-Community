@@ -2531,9 +2531,6 @@ class PlayState extends MusicBeatState
 		Lib.current.stage.removeEventListener(KeyboardEvent.KEY_DOWN, handleInput);
 		Lib.current.stage.removeEventListener(KeyboardEvent.KEY_UP, releaseInput);
 
-		transIn = FlxTransitionableState.defaultTransIn;
-		transOut = FlxTransitionableState.defaultTransOut;
-
 		#if FEATURE_LUAMODCHART
 		if (luaModchart != null)
 		{
@@ -3263,9 +3260,9 @@ class PlayState extends MusicBeatState
 
 	var danced:Bool = false;
 
-	override function stepHit()
+	override function stepHit(curStep:Int)
 	{
-		super.stepHit();
+		super.stepHit(curStep);
 		if (curStep < 0)
 			return;
 
@@ -3332,9 +3329,9 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	override function beatHit()
+	override function beatHit(curBeat:Int)
 	{
-		super.beatHit();
+		super.beatHit(curBeat);
 		#if FEATURE_LUAMODCHART
 		if (executeModchart && luaModchart != null)
 		{

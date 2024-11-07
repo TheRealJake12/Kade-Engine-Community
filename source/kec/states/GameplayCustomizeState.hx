@@ -82,12 +82,7 @@ class GameplayCustomizeState extends UIState
 		Stage.inEditor = true;
 		Stage.loadStageData('stage');
 		Stage.initStageProperties();
-
-		var directory:String = 'shared';
-		var otherDir:String = Stage.stageDir;
-
-		if (otherDir != null)
-			directory = otherDir;
+		
 		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
 
@@ -311,9 +306,9 @@ class GameplayCustomizeState extends UIState
 		}
 	}
 
-	override function beatHit()
+	override function beatHit(curBeat:Int)
 	{
-		super.beatHit();
+		super.beatHit(curBeat);
 
 		if (curBeat % 2 == 0)
 		{

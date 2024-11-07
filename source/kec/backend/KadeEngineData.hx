@@ -260,7 +260,7 @@ class KadeEngineData
 			FlxG.save.data.enabledMods = [];
 
 		if (FlxG.save.data.colorblind == null)
-			FlxG.save.data.colorblind = 0; // none	
+			FlxG.save.data.colorblind = 0; // none
 
 		FlxSprite.defaultAntialiasing = FlxG.save.data.antialiasing;
 		FlxObject.defaultMoves = false;

@@ -81,7 +81,7 @@ class TitleState extends MusicBeatState
 		super.update(elapsed);
 	}
 
-	override function beatHit()
+	override function beatHit(beat:Int)
 	{
 		logo.animation.play('bump', true);
 		danceLeft = !danceLeft;
@@ -91,7 +91,7 @@ class TitleState extends MusicBeatState
 		else
 			gf.animation.play('danceLeft');
 
-		super.beatHit();
+		super.beatHit(beat);
 
 		if (seenBefore)
 			return;

@@ -1038,17 +1038,17 @@ class ChartingState extends UIState
 		noteCounter = 0;
 	}
 
-	override function beatHit()
+	override function beatHit(curBeat:Int)
 	{
-		super.beatHit();
+		super.beatHit(curBeat);
 
 		if (FlxG.save.data.chart_metronome)
 			FlxG.sound.play(Paths.sound('Metronome_Tick'));
 	}
 
-	override function stepHit()
+	override function stepHit(curStep:Int)
 	{
-		super.stepHit();
+		super.stepHit(curStep);
 		if (inst.playing)
 		{
 			iconP1.onStepHit(curStep);
@@ -1303,11 +1303,11 @@ class ChartingState extends UIState
 
 		chartSave.onClick = _ -> saveChart();
 		chartReload.onClick = _ -> loadAudio(dataID.text, true);
-		diffSelect.onChange = function(e)
+		diffSelect.registerEvent(haxe.ui.events.UIEvent.CLOSE, function(e)
 		{
 			PlayState.storyDifficulty = CoolUtil.difficulties.indexOf(diffSelect.text);
 			Debug.logTrace(CoolUtil.difficulties[PlayState.storyDifficulty]);
-		}
+		});
 	}
 
 	private function setHUIData()

@@ -62,9 +62,6 @@ class MainMenuState extends MusicBeatState
 			Conductor.bpm = 102;
 		}
 
-		transIn = FlxTransitionableState.defaultTransIn;
-		transOut = FlxTransitionableState.defaultTransOut;
-
 		persistentUpdate = persistentDraw = true;
 
 		bg = new FlxBackdrop(Paths.image('menuDesat'), X, 0, 0);
@@ -282,10 +279,10 @@ class MainMenuState extends MusicBeatState
 		});
 	}
 
-	override function beatHit()
+	override function beatHit(b:Int)
 	{
 		logo.animation.play('bump', true);
-		super.beatHit();
+		super.beatHit(b);
 	}
 
 	function tweenColorShit()
