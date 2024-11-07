@@ -21,6 +21,7 @@ import flixel.FlxObject;
 import flixel.FlxCamera;
 import flixel.FlxState;
 import flixel.FlxSubState;
+import kec.objects.KECSprite;
 import kec.states.*;
 import kec.backend.util.Paths;
 import kec.backend.chart.Conductor;

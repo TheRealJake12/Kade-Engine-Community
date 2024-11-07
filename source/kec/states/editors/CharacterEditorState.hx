@@ -356,8 +356,8 @@ class CharacterEditorState extends UIState
 	{
 		char.data.flipAnims = charFlipAnims.selected;
 
-		final oldOffset:Array<Int> = char.animOffsets['singRIGHT'];
-		final newOffset:Array<Int> = char.animOffsets['singLEFT'];
+		final oldOffset:Array<Int> = char.offsets['singRIGHT'];
+		final newOffset:Array<Int> = char.offsets['singLEFT'];
 		final oldRight = char.animation.getByName('singRIGHT').frames;
 		char.animation.getByName('singRIGHT').frames = char.animation.getByName('singLEFT').frames;
 		char.animation.getByName('singLEFT').frames = oldRight;
@@ -368,11 +368,11 @@ class CharacterEditorState extends UIState
 			char.animation.getByName('singRIGHTmiss').frames = char.animation.getByName('singLEFTmiss').frames;
 			char.animation.getByName('singLEFTmiss').frames = oldMiss;
 
-			final oldMissOffset:Array<Int> = char.animOffsets['singRIGHTmiss'];
-			final newMissOffset:Array<Int> = char.animOffsets['singLEFTmiss'];
+			final oldMissOffset:Array<Int> = char.offsets['singRIGHTmiss'];
+			final newMissOffset:Array<Int> = char.offsets['singLEFTmiss'];
 
-			char.animOffsets['singRIGHTmiss'] = newMissOffset;
-			char.animOffsets['singLEFTmiss'] = oldMissOffset;
+			char.offsets['singRIGHTmiss'] = newMissOffset;
+			char.offsets['singLEFTmiss'] = oldMissOffset;
 
 			for (i in animList)
 			{
@@ -382,8 +382,8 @@ class CharacterEditorState extends UIState
 					i.offsets = oldMissOffset;
 			}
 		}
-		char.animOffsets['singRIGHT'] = newOffset;
-		char.animOffsets['singLEFT'] = oldOffset;
+		char.offsets['singRIGHT'] = newOffset;
+		char.offsets['singLEFT'] = oldOffset;
 		for (i in animList)
 		{
 			if (i.name == 'singRIGHT')
@@ -445,7 +445,7 @@ class CharacterEditorState extends UIState
 
 	private function changeOffset(x:Int, y:Int)
 	{
-		char.animOffsets[curAnim.name] = curAnim.offsets = [curAnim.offsets[0] + x, curAnim.offsets[1] + y];
+		char.offsets[curAnim.name] = curAnim.offsets = [curAnim.offsets[0] + x, curAnim.offsets[1] + y];
 		offsetText.members[curAnimSelected].text = '${curAnim.name} (${curAnim.offsets[0]} ${curAnim.offsets[1]})';
 		char.playAnim(curAnim.name);
 	}
@@ -579,7 +579,7 @@ class CharacterEditorState extends UIState
 			if (!char.animation.exists(anim))
 			{
 				Debug.logTrace('$anim DOES NOT EXIST');
-				char.animOffsets[anim] = [0, 0];
+				char.offsets[anim] = [0, 0];
 			}
 		}
 		catch (e)

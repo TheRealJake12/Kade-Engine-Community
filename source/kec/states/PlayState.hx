@@ -1505,7 +1505,7 @@ class PlayState extends MusicBeatState
 
 		if (PlayStateChangeables.skillIssue)
 			health = 0;
-		if (combo > 5 && gf != null && gf.animOffsets.exists('sad'))
+		if (combo > 5 && gf != null && gf.offsets.exists('sad'))
 		{
 			gf.playAnim('sad');
 		}
@@ -1523,7 +1523,7 @@ class PlayState extends MusicBeatState
 		if (PlayStateChangeables.opponentMode)
 			char = dad;
 
-		if (char.animOffsets.exists(Constants.singAnimations[direction] + 'miss'))
+		if (char.offsets.exists(Constants.singAnimations[direction] + 'miss'))
 			char.playAnim(Constants.singAnimations[direction] + 'miss', true);
 
 		if (FlxG.save.data.missSounds)
@@ -2915,7 +2915,7 @@ class PlayState extends MusicBeatState
 	{
 		if (daNote.causesMisses)
 		{
-			if (gf != null && combo > 5 && gf.animOffsets.exists('sad') && !PlayStateChangeables.opponentMode)
+			if (gf != null && combo > 5 && gf.offsets.exists('sad') && !PlayStateChangeables.opponentMode)
 				gf.playAnim('sad');
 			if (combo != 0)
 				combo = 0;
@@ -2940,7 +2940,7 @@ class PlayState extends MusicBeatState
 			if (PlayStateChangeables.opponentMode)
 				char = dad;
 
-			if (char.animOffsets.exists(Constants.singAnimations[direction] + 'miss'))
+			if (char.offsets.exists(Constants.singAnimations[direction] + 'miss'))
 				char.playAnim(Constants.singAnimations[direction] + 'miss', true);
 
 			#if FEATURE_LUAMODCHART
@@ -3065,7 +3065,7 @@ class PlayState extends MusicBeatState
 					if (daNote.isSustainNote)
 					{
 						var holdAnim:String = animToPlay + '-hold';
-						if (char.animOffsets.exists(holdAnim))
+						if (char.offsets.exists(holdAnim))
 							animToPlay = holdAnim;
 					}
 					char.playAnim(animToPlay, true);
@@ -3190,7 +3190,7 @@ class PlayState extends MusicBeatState
 					if (note.isSustainNote)
 					{
 						var holdAnim:String = animToPlay + '-hold';
-						if (char.animOffsets.exists(holdAnim))
+						if (char.offsets.exists(holdAnim))
 							animToPlay = holdAnim;
 					}
 					char.playAnim(animToPlay, true);

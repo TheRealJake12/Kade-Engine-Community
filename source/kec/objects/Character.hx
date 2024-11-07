@@ -12,9 +12,8 @@ import kec.backend.chart.format.Section;
 import kec.backend.character.CharacterData;
 import kec.backend.character.AnimationData;
 
-class Character extends FlxSprite
+class Character extends KECSprite
 {
-	public var animOffsets:Map<String, Array<Int>>;
 	public var animInterrupt:Map<String, Bool>;
 	public var animForces:Map<String, Bool>; // primarily for dead characters if you don't want it to be beat based.
 	public var animNext:Map<String, String>;
@@ -33,7 +32,6 @@ class Character extends FlxSprite
 	{
 		super(x, y);
 
-		animOffsets = new Map<String, Array<Int>>();
 		animInterrupt = new Map<String, Bool>();
 		animForces = new Map<String, Bool>();
 		animNext = new Map<String, String>();
@@ -78,7 +76,7 @@ class Character extends FlxSprite
 				else
 					animation.addByPrefix(anim.name, anim.prefix, Std.int(frameRate * Conductor.rate), looped, flipX, flipY);
 
-				animOffsets[anim.name] = anim.offsets == null ? [0, 0] : anim.offsets;
+				offsets[anim.name] = anim.offsets == null ? [0, 0] : anim.offsets;
 				animInterrupt[anim.name] = anim.interrupt == null ? true : anim.interrupt;
 				animForces[anim.name] = anim.forceAnim == null ? true : anim.forceAnim;
 
@@ -92,21 +90,17 @@ class Character extends FlxSprite
 
 		if (data.isPlayer && data.flipAnims && frames != null)
 		{
-			// Doesn't flip for BF, since his are already in the right place???
-			if (!data.char.startsWith('bf'))
-			{
-				// var animArray
-				var oldRight = animation.getByName('singRIGHT').frames;
-				animation.getByName('singRIGHT').frames = animation.getByName('singLEFT').frames;
-				animation.getByName('singLEFT').frames = oldRight;
+			// var animArray
+			var oldRight = animation.getByName('singRIGHT').frames;
+			animation.getByName('singRIGHT').frames = animation.getByName('singLEFT').frames;
+			animation.getByName('singLEFT').frames = oldRight;
 
-				// IF THEY HAVE MISS ANIMATIONS??
-				if (animation.getByName('singRIGHTmiss') != null)
-				{
-					var oldMiss = animation.getByName('singRIGHTmiss').frames;
-					animation.getByName('singRIGHTmiss').frames = animation.getByName('singLEFTmiss').frames;
-					animation.getByName('singLEFTmiss').frames = oldMiss;
-				}
+			// IF THEY HAVE MISS ANIMATIONS??
+			if (animation.getByName('singRIGHTmiss') != null)
+			{
+				var oldMiss = animation.getByName('singRIGHTmiss').frames;
+				animation.getByName('singRIGHTmiss').frames = animation.getByName('singLEFTmiss').frames;
+				animation.getByName('singLEFTmiss').frames = oldMiss;
 			}
 		}
 
@@ -230,15 +224,15 @@ class Character extends FlxSprite
 		}
 	}
 
-	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
+	override public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0, centerOffsets:Bool = false):Void
 	{
 		if (AnimName.endsWith('alt') && animation.getByName(AnimName) == null)
 			AnimName = AnimName.split('-')[0];
 
 		animation.play(AnimName, Force, Reversed, Frame);
 
-		var daOffset = animOffsets.get(AnimName);
-		if (animOffsets.exists(AnimName))
+		final daOffset = offsets.get(AnimName);
+		if (offsets.exists(AnimName))
 			offset.set(daOffset[0], daOffset[1]);
 		else
 			offset.set(0, 0);
@@ -253,6 +247,15 @@ class Character extends FlxSprite
 			if (AnimName == 'singUP' || AnimName == 'singDOWN')
 				danced = !danced;
 		}
+
+		if (!centerOffsets)
+			return;
+
+		if (animation.curAnim == null)
+			return;
+
+		this.centerOffsets();
+		centerOrigin();
 	}
 
 	public function loadMappedAnims():Void
@@ -269,11 +272,6 @@ class Character extends FlxSprite
 		}
 		animationNotes.sort(Sort.sortChartNotes);
 		TankmenBG.animationNotes = animationNotes;
-	}
-
-	public function addOffset(name:String, x:Int = 0, y:Int = 0)
-	{
-		animOffsets[name] = [x, y];
 	}
 
 	public function addInterrupt(name:String, value:Bool = true)

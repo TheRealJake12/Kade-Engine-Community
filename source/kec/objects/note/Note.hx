@@ -462,21 +462,13 @@ class Note extends FlxSprite
 				switch (noteType.toLowerCase())
 				{
 					case 'hurt':
-						if (strumTime - Conductor.elapsedPosition <= ((Ratings.timingWindows[0].timingWindow) * 0.2)
-							&& strumTime - Conductor.elapsedPosition >= (-Ratings.timingWindows[0].timingWindow) * 0.4)
-							canBeHit = true;
-						else
-							canBeHit = false;
-						if (strumTime - Conductor.elapsedPosition < -Ratings.timingWindows[0].timingWindow && !wasGoodHit)
-							tooLate = true;
+						canBeHit = (strumTime - Conductor.elapsedPosition <= ((Ratings.timingWindows[0].timingWindow) * 0.2)
+							&& strumTime - Conductor.elapsedPosition >= (-Ratings.timingWindows[0].timingWindow) * 0.4);
+						tooLate = (strumTime - Conductor.elapsedPosition < -Ratings.timingWindows[0].timingWindow && !wasGoodHit);
 					default:
-						if (strumTime - Conductor.elapsedPosition <= (((Ratings.timingWindows[0].timingWindow) * lateHitMult))
-							&& strumTime - Conductor.elapsedPosition >= (((-Ratings.timingWindows[0].timingWindow) * earlyHitMult)))
-							canBeHit = true;
-						else
-							canBeHit = false;
-						if (strumTime - Conductor.elapsedPosition < (-Ratings.timingWindows[0].timingWindow) && !wasGoodHit)
-							tooLate = true;
+						canBeHit = (strumTime - Conductor.elapsedPosition <= (((Ratings.timingWindows[0].timingWindow) * lateHitMult))
+							&& strumTime - Conductor.elapsedPosition >= (((-Ratings.timingWindows[0].timingWindow) * earlyHitMult)));
+						tooLate = (strumTime - Conductor.elapsedPosition < (-Ratings.timingWindows[0].timingWindow) && !wasGoodHit);
 				}
 			}
 

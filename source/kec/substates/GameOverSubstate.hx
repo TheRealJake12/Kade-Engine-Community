@@ -131,7 +131,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		{
 			PlayState.startTime = 0;
 			isEnding = true;
-			if (bf.animOffsets.exists('deathConfirm'))
+			if (bf.offsets.exists('deathConfirm'))
 				bf.playAnim('deathConfirm', true);
 
 			FlxG.sound.music.stop();
