@@ -2872,7 +2872,7 @@ class PlayState extends MusicBeatState
 			numGroup.sort(Sort.sortUI, -1);
 			ratingGroup.sort(Sort.sortUI, -1);
 			rating.fadeOut();
-			createTween(currentTimingShown, {alpha: 0}, 0.1, {
+			createTween(currentTimingShown, {alpha: 0}, 0.25, {
 				startDelay: (Conductor.crochet * 0.0005)
 			});
 		}

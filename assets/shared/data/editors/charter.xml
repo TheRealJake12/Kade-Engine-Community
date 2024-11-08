@@ -10,20 +10,31 @@
 		<menu text="Chart" style="padding: 5px;">
 			<menu-item id="chartSave" text="Save Chart" />
 			<menu-item id="chartReload" text="Reload Chart" />
-			<!--
-			<menu-item id="chartLoadAuto" text="Load Autosave" />
 			<menu-item id="chartClear" text="Clear Chart" />
-			-->
+			<!-- <menu-item id="chartLoadAuto" text="Load Autosave" /> -->
 		</menu>
-		<menu text="Preferences" style="padding: 5px;">
-			<menu-checkbox id="editorAutoSave" text="Autosave Chart" />
+		<menu text="Audio" style="padding: 5px;">
+			<label width="100%" styleName="menuHeader" text="Inst Volume" verticalAlign="center" />
+			<slider id="instVol" majorTicks="10" minorTicks="5" pos="100" verticalAlign="center" />
+			<label width="100%" styleName="menuHeader" text="Vocals Volume" verticalAlign="center" />
+			<slider id="vocalVol" majorTicks="10" minorTicks="5" pos="100" verticalAlign="center" />
+			<menu-separator />
+			<label width="100%" styleName="menuHeader" text="Vocals Player Volume" verticalAlign="center" />
+			<slider id="vocalPVol" majorTicks="10" minorTicks="5" pos="100" verticalAlign="center" />
+			<label width="100%" styleName="menuHeader" text="Vocals Opponent Volume" verticalAlign="center" />
+			<slider id="vocalEVol" majorTicks="10" minorTicks="5" pos="100" verticalAlign="center" />
 			<menu-separator />
 			<vbox width="100%" style="padding: 5px;">
 				<label width="100%" styleName="menuHeader" text="Metronome Volume" verticalAlign="center" />
 				<slider id="editorMetroVol" majorTicks="10" minorTicks="5" pos="100" verticalAlign="center" />
+				<label width="100%" styleName="menuHeader" text="Hitsound Volume" verticalAlign="center" />
+				<slider id="editorHitVol" majorTicks="10" minorTicks="5" pos="100" verticalAlign="center" />
 			</vbox>
-			<menu-checkbox id="editorHitsoundP" text="Player Hitsounds" />
+			<menu-checkbox id="editorHitsoundsP" text="Player Hitsounds" />
 			<menu-checkbox id="editorHitsoundsE" text="Enemy Hitsounds" />
+		</menu>
+		<menu text="Preferences" style="padding: 5px;">
+			<menu-checkbox id="editorAutoSave" text="Autosave Chart" />
 		</menu>
 		<menu text="Game" style="padding: 5px;">
 			<menu-item id="editorPlaytest" text="Playtest Chart Ingame" />

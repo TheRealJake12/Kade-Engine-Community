@@ -59,6 +59,7 @@ class ChartingState extends UIState
 	public var waitingForRelease:Bool = false;
 
 	private var maxBeat = 0;
+	private var maxSectionIndex:Int = 0;
 
 	public var end:Float = 1.0;
 
@@ -102,6 +103,7 @@ class ChartingState extends UIState
 	private var vocalsP:FlxSound;
 	private var vocalsE:FlxSound;
 	private var hitsound:FlxSound;
+	private var metronome:FlxSound;
 
 	private var noteCam:FlxCamera;
 	private var uiCam:FlxCamera;
@@ -147,6 +149,15 @@ class ChartingState extends UIState
 		uiCam.bgColor.alpha = 0;
 		FlxG.cameras.add(uiCam, false);
 
+		if (FlxG.save.data.hitSound == 0)
+			hitsound = FlxG.sound.load(Paths.sound('hitsounds/snap'));
+		else
+			hitsound = FlxG.sound.load(Paths.sound('hitsounds/${HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase()}'));
+
+		hitsound.autoDestroy = false;
+		metronome = FlxG.sound.load(Paths.sound('metronome'));
+		metronome.autoDestroy = false;
+
 		super.create();
 
 		PlayState.inDaPlay = false;
@@ -159,6 +170,8 @@ class ChartingState extends UIState
 		TimingStruct.setSongTimings(SONG);
 		Song.checkforSections(SONG, inst.length);
 		Song.recalculateAllSectionTimes(SONG);
+		calculateMaxBeat();
+		checkforSections();
 		setInitVars();
 
 		activeSong = SONG;
@@ -257,13 +270,6 @@ class ChartingState extends UIState
 		selectBox.visible = false;
 		selectBox.alpha = 0.4;
 		add(selectBox);
-
-		if (FlxG.save.data.hitSound == 0)
-			hitsound = new FlxSound().loadEmbedded(Paths.sound('hitsounds/snap'));
-		else
-			hitsound = new FlxSound().loadEmbedded(Paths.sound('hitsounds/${HitSounds.getSoundByID(FlxG.save.data.hitSound).toLowerCase()}'));
-
-		hitsound.autoDestroy = false;
 
 		id = Lib.setInterval(backupChart, 5 * 60 * 1000);
 
@@ -562,7 +568,6 @@ class ChartingState extends UIState
 						{
 							hitsound.stop();
 							hitsound.time = 0;
-							hitsound.volume = .5;
 							hitsound.play().pan = noteDataToCheck < 4 ? -0.3 : 0.3;
 							playedSound[data] = true;
 						}
@@ -602,8 +607,7 @@ class ChartingState extends UIState
 
 	function regenerateLines()
 	{
-		lines.forEachAlive(function(l:BeatLine) l.kill());
-		texts.forEachAlive(function(t:TextLine) t.kill());
+		clearLines();
 
 		for (i in 0...lengthInBeats)
 		{
@@ -811,10 +815,6 @@ class ChartingState extends UIState
 
 		toDelete = null;
 		toBeAdded = null;
-
-		// ok so basically theres a bug with color quant that it doesn't update the color until the grid updates.
-		// when the grid updates, it causes a massive performance drop everytime we offset the notes. :/
-		// actually its broken either way because theres a ghost note after offsetting sometimes. updateGrid anyway.
 	}
 
 	function containsName(name:String, events:Array<Event>):Event
@@ -827,12 +827,8 @@ class ChartingState extends UIState
 		return null;
 	}
 
-	inline function clearSection():Void
-	{
-		destroyBoxes();
-
-		SONG.notes[curSection].sectionNotes = [];
-	}
+	private inline function clearSection(index:Int)
+		SONG.notes[index].sectionNotes = [];
 
 	function swapSection(secit:Section)
 	{
@@ -1032,18 +1028,14 @@ class ChartingState extends UIState
 		if (curSection < 0)
 			return;
 
-		noteGroup.forEachAlive(function(n:EditorNote) n.kill());
-		sustainGroup.forEachAlive(function(n:EditorSustain) n.kill());
+		clearRenderedNotes();
 		sectionMustHit.selected = currentSection.mustHitSection;
-		noteCounter = 0;
 	}
 
 	override function beatHit(curBeat:Int)
 	{
 		super.beatHit(curBeat);
-
-		if (FlxG.save.data.chart_metronome)
-			FlxG.sound.play(Paths.sound('Metronome_Tick'));
+		playMetronome();
 	}
 
 	override function stepHit(curStep:Int)
@@ -1127,6 +1119,8 @@ class ChartingState extends UIState
 	function checkforSections()
 	{
 		final totalBeats = maxBeat;
+		maxSectionIndex = SONG.notes[SONG.notes.length - 1].index;
+		Debug.logTrace(maxSectionIndex);
 
 		var lastSecBeat = TimingStruct.getBeatFromTime(SONG.notes[SONG.notes.length - 1].endTime);
 
@@ -1249,6 +1243,26 @@ class ChartingState extends UIState
 		}
 	}
 
+	private inline function clearLines()
+	{
+		lines.forEachAlive(function(l:BeatLine) l.kill());
+		texts.forEachAlive(function(t:TextLine) t.kill());
+	}
+
+	private inline function clearRenderedNotes()
+	{
+		noteGroup.forEachAlive(function(n:EditorNote) n.kill());
+		sustainGroup.forEachAlive(function(n:EditorSustain) n.kill());
+		noteCounter = 0;
+	}
+
+	private function playMetronome()
+	{
+		metronome.stop();
+		metronome.time = 0;
+		metronome.play();
+	}
+
 	private function newSection(lengthInSteps:Int = 16, index:Int, mustHitSection:Bool = false):Section
 	{
 		var sec:Section = {
@@ -1298,16 +1312,6 @@ class ChartingState extends UIState
 		diffSelect.dataSource = diffs;
 
 		setHUIData();
-		editorAutoSave.selected = FlxG.save.data.autoSaving;
-		editorAutoSave.onClick = _ -> FlxG.save.data.autoSaving = !FlxG.save.data.autoSaving;
-
-		chartSave.onClick = _ -> saveChart();
-		chartReload.onClick = _ -> loadAudio(dataID.text, true);
-		diffSelect.registerEvent(haxe.ui.events.UIEvent.CLOSE, function(e)
-		{
-			PlayState.storyDifficulty = CoolUtil.difficulties.indexOf(diffSelect.text);
-			Debug.logTrace(CoolUtil.difficulties[PlayState.storyDifficulty]);
-		});
 	}
 
 	private function setHUIData()
@@ -1324,5 +1328,40 @@ class ChartingState extends UIState
 		dataBPM.pos = SONG.eventObjects[0].args[0];
 		dataSpeed.pos = SONG.speed;
 		sectionMustHit.onClick = _ -> currentSection.mustHitSection = !currentSection.mustHitSection;
+		editorMetroVol.onChange = _ -> metronome.volume = (editorMetroVol.value / 100);
+
+		editorHitsoundsP.selected = FlxG.save.data.playHitsounds;
+		editorHitsoundsE.selected = FlxG.save.data.playHitsoundsE;
+		editorHitsoundsP.onClick = _ -> FlxG.save.data.playHitsounds = !FlxG.save.data.playHitsounds;
+		editorHitsoundsE.onClick = _ -> FlxG.save.data.playHitsoundsE = !FlxG.save.data.playHitsoundsE;
+
+		editorAutoSave.selected = FlxG.save.data.autoSaving;
+		editorAutoSave.onClick = _ -> FlxG.save.data.autoSaving = !FlxG.save.data.autoSaving;
+
+		editorHitVol.onChange = _ -> hitsound.volume = (editorHitVol.value / 100);
+
+		chartSave.onClick = _ -> saveChart();
+		chartReload.onClick = _ -> loadAudio(dataID.text, true);
+		diffSelect.registerEvent(haxe.ui.events.UIEvent.CLOSE, function(e)
+		{
+			PlayState.storyDifficulty = CoolUtil.difficulties.indexOf(diffSelect.text);
+			Debug.logTrace(CoolUtil.difficulties[PlayState.storyDifficulty]);
+		});
+		chartClear.onClick = function(e) 
+		{
+			for (i in 0...maxSectionIndex)
+			{
+				clearSection(i);
+			}
+			clearRenderedNotes();
+		}
+
+		instVol.onChange = _ -> inst.volume = (instVol.value / 100);
+		vocalVol.disabled = (SONG.needsVoices && SONG.splitVoiceTracks);
+		vocalPVol.disabled = (SONG.needsVoices && !SONG.splitVoiceTracks);
+		vocalEVol.disabled = (SONG.needsVoices && !SONG.splitVoiceTracks);
+		vocalVol.onChange = _ -> if (vocals != null && !vocalVol.disabled) vocals.volume = (vocalVol.value / 100);
+		vocalPVol.onChange = _ -> if (vocalsP != null && !vocalPVol.disabled) vocalsP.volume = (vocalPVol.value / 100);
+		vocalEVol.onChange = _ -> if (vocalsE != null && !vocalEVol.disabled) vocalsE.volume = (vocalEVol.value / 100);
 	}
 }
