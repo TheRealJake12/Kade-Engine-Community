@@ -123,11 +123,9 @@ class ModCore
 			assetLibraryPaths: [
 				"default" => "./shared", // ./preload
 				"sm" => "./sm",
-				"songs" => "./songs",
 				"shared" => "./shared",
 				"videos" => "./videos",
 				"scripts" => "./scripts",
-				"weeks" => "./",
 			]
 		}
 	}
