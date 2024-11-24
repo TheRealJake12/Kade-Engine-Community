@@ -35,7 +35,9 @@ jobs:
             cache-build-linux
       - name: Installing/Updating libraries
         run: |
-          haxe -cp ./update -D analyzer-optimize -main Update --interp
+          haxelib --global install hxpkg
+          haxelib --global run hxpkg setup
+          hxpkg install --force
       - name: Building the game
         run: |
           haxelib run lime build linux
