@@ -27,8 +27,7 @@ jobs:
       - name: Installing/Updating libraries
         run: |
           haxelib --global install hxpkg
-          haxelib --global run hxpkg setup
-          hxpkg install --force
+          haxelib --global run hxpkg install --force
         shell: cmd        
       - name: Building the game
         run: |
