@@ -1,6 +1,4 @@
-package kec.backend.util;
-
-// stolen from funkin
+package kec.backend.tools;
 
 /**
  * A static extension which provides utility functions for Strings.

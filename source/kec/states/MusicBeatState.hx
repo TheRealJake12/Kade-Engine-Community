@@ -1,11 +1,11 @@
 package kec.states;
 
-import kec.backend.chart.format.Section;
+import kec.backend.chart.Section;
 import flixel.addons.transition.FlxTransitionableState;
 import kec.backend.Controls;
 import kec.backend.PlayerSettings;
 import kec.backend.chart.TimingStruct;
-import kec.backend.chart.format.Modern;
+import kec.backend.chart.ChartData;
 import kec.states.FreeplayState;
 import kec.substates.CustomFadeTransition;
 import kec.substates.MusicBeatSubstate;
@@ -18,7 +18,7 @@ class MusicBeatState extends FlxState implements IMusicBeatObject
 	private var curSection(default, set):Int = 0;
 	var step = 0.0;
 	var startInMS = 0.0;
-	var activeSong:Modern = null;
+	var activeSong:ChartData = null;
 
 	private var currentSection:Section = null;
 

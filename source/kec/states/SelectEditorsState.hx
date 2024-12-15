@@ -148,7 +148,6 @@ class SelectEditorsState extends MusicBeatState
 				PlayState.storyDifficulty = 1;
 				PlayState.storyWeek = 0;
 				PlayState.isStoryMode = false;
-				PlayState.isSM = false;
 				Conductor.rate = 1;
 				MusicBeatState.switchState(new kec.states.editors.ChartingState());
 		}

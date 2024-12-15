@@ -1,13 +1,11 @@
 package kec.objects.ui;
 
-class HealthIcon extends FlxSprite
+class HealthIcon extends KECSprite
 {
 	/**
 	 * Used for FreeplayState! If you use it elsewhere, prob gonna annoying
 	 */
 	public var sprTracker:FlxSprite;
-
-	public var animOffsets:Map<String, Array<Dynamic>>;
 
 	var char:String = '';
 	var isPlayer:Bool = false;
@@ -34,9 +32,6 @@ class HealthIcon extends FlxSprite
 		super();
 
 		this.isPlayer = isPlayer;
-
-		animOffsets = new Map<String, Array<Dynamic>>();
-
 		changeIcon(char);
 		allowedToBop = FlxG.save.data.iconBop;
 		scrollFactor.set();
@@ -129,9 +124,6 @@ class HealthIcon extends FlxSprite
 		this.updateHitbox();
 	}
 
-	public function addOffset(name:String, x:Float = 0, y:Float = 0)
-		animOffsets[name] = [x, y];
-
 	inline function initTargetSize():Void
 	{
 		setGraphicSize(defaultSize);
@@ -205,9 +197,9 @@ class HealthIcon extends FlxSprite
 		if (!hasAnimation(newAnim) && !finishedAnim())
 			return;
 		this.animation.play(newAnim, false, false);
-		var daOffset = animOffsets.get(newAnim);
+		final daOffset = offsets.get(newAnim);
 
-		if (animOffsets.exists(newAnim))
+		if (offsets.exists(newAnim))
 			offset.set(daOffset[0], daOffset[1]);
 		else
 			offset.set(0, 0);

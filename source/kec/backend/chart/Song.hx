@@ -1,7 +1,5 @@
 package kec.backend.chart;
 
-import kec.backend.chart.format.*;
-
 typedef StyleData =
 {
 	var style:String;
@@ -37,26 +35,13 @@ typedef SongMeta =
 
 class Song
 {
-	public static function loadFromJsonRAW(rawJson:String)
-	{
-		while (!rawJson.endsWith("}"))
-		{
-			rawJson = rawJson.substr(0, rawJson.length - 1);
-			// LOL GOING THROUGH THE BULLSHIT TO CLEAN IDK WHATS STRANGE
-		}
-
-		final jsonData = Json.parse(rawJson);
-
-		return parseJSONshit('rawsong', jsonData, 'rawname');
-	}
-
-	public static function loadFromJson(songId:String, difficulty:String):Modern
+	public static function loadFromJson(songId:String, difficulty:String):ChartData
 	{
 		final songFile = 'data/songs/$songId/$songId$difficulty';
 		final rawJson = Paths.loadJSON(songFile);
-		final metaData:SongMeta = loadMetadata(songId);
-		doesChartExist(songId, difficulty);
-		return parseJSONshit(songId, rawJson, metaData);
+		// final metaData:SongMeta = loadMetadata(songId);
+		// doesChartExist(songId, difficulty);
+		return parseJSON(rawJson, songId, difficulty);
 	}
 
 	public static function doesChartExist(songId:String, diff:String):Bool
@@ -81,43 +66,21 @@ class Song
 			return cast rawMetaJson;
 	}
 
-	public static function conversionChecks(song:Dynamic):Modern
+	public static function conversionChecks(song:Dynamic, name:String, diff:String):ChartData
 	{
 		if (song?.chartVersion == Constants.chartVer)
 			return song;
 
-		final oldFormat:Legacy = cast song.song;
-
-		if (oldFormat.chartVersion != null)
-		{
-			switch (oldFormat.chartVersion)
-			{
-				case "KEC1":
-					return ChartConverter.convertKEC2(song);
-				default:
-					return ChartConverter.convertKade(song);
-			}
-		}
-		if (song.format == 'psych_v1_convert')
-		{
-			Debug.logTrace('${song.song} was a PSYCHKIGD chart');
-			return ChartConverter.convertPsychV1(song);
-		}
-		else
-		{
-			Debug.logWarn("Your Chart Format Is Fucked.");
-			return ChartConverter.convertEtc(song);
-		}
-		return song;
+		return ChartConverter.convert(song, name, diff);
 	}
 
-	public static function parseJSONshit(songId:String, jsonData:Dynamic, jsonMetaData:Dynamic):Modern
+	public static function parseJSON(jsonData:Dynamic, name:String, diff:String):ChartData
 	{
 		final songData = cast jsonData;
-		return Song.conversionChecks(songData);
+		return Song.conversionChecks(songData, name, diff);
 	}
 
-	public static function checkforSections(SONG:Modern, songLength:Float)
+	public static function checkforSections(SONG:ChartData, songLength:Float)
 	{
 		var totalBeats = TimingStruct.getBeatFromTime(songLength);
 
@@ -125,14 +88,14 @@ class Song
 
 		while (lastSecBeat < totalBeats)
 		{
-			SONG.notes.push(Song.newSection(SONG, SONG.notes[SONG.notes.length - 1].lengthInSteps, SONG.notes.length, true));
+			SONG.notes.push(newSection(SONG, SONG.notes[SONG.notes.length - 1].lengthInSteps, SONG.notes.length, true));
 
 			recalculateAllSectionTimes(SONG, SONG.notes.length - 1);
 			lastSecBeat = TimingStruct.getBeatFromTime(SONG.notes[SONG.notes.length - 1].endTime);
 		}
 	}
 
-	public static function recalculateAllSectionTimes(activeSong:Modern, startIndex:Int = 0)
+	public static function recalculateAllSectionTimes(activeSong:ChartData, startIndex:Int = 0)
 	{
 		if (activeSong == null)
 			return;
@@ -159,25 +122,11 @@ class Song
 		}
 	}
 
-	public static function newSection(song:Modern, lengthInSteps:Int = 16, index:Int = -1, mustHitSection:Bool = false):Section
+	public static function newSection(song:ChartData, lengthInSteps:Int = 16, index:Int = -1, mustHitSection:Bool = false):Section
 	{
 		var sec:Section = {
 			lengthInSteps: lengthInSteps,
 			bpm: song.bpm,
-			mustHitSection: mustHitSection,
-			sectionNotes: [],
-			index: index
-		};
-
-		return sec;
-	}
-
-	public static function oldSection(song:Legacy, lengthInSteps:Int = 16, index:Int = -1, mustHitSection:Bool = false):LegacySection
-	{
-		var sec:LegacySection = {
-			lengthInSteps: lengthInSteps,
-			bpm: song.bpm,
-			changeBPM: false,
 			mustHitSection: mustHitSection,
 			sectionNotes: [],
 			index: index

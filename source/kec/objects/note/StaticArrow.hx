@@ -23,7 +23,6 @@ class StaticArrow extends FlxSprite
 	// Note Animation Suffixes.
 	private var dataSuffix:Array<String> = ['LEFT', 'DOWN', 'UP', 'RIGHT'];
 	private var dataColor:Array<String> = ['purple', 'blue', 'green', 'red'];
-	private var player:Int;
 	private var lane:Int = 0;
 
 	public var resetAnim:Float = 0;
@@ -49,11 +48,10 @@ class StaticArrow extends FlxSprite
 		return value;
 	}
 
-	public function new(xx:Float, yy:Float, ?player:Int, ?data:Int)
+	public function new(xx:Float, yy:Float, ?data:Int, ?isPlayer:Bool)
 	{
 		x = xx;
 		y = yy;
-		this.player = player;
 		lane = data;
 		super(x, y);
 		direction = 90;
@@ -61,12 +59,9 @@ class StaticArrow extends FlxSprite
 		var skin:String = null;
 		if (texture.length < 1)
 		{
-			if (player == 0)
-				skin = Constants.cpuNoteskinSprite;
-			else
-				skin = Constants.noteskinSprite;
+			skin = isPlayer ? Constants.noteskinSprite : Constants.cpuNoteskinSprite;
 			if (skin == null || skin.length < 1)
-				skin = player == 0 ? defaultPlayerSkin : defaultCpuSkin;
+				skin = isPlayer ? defaultPlayerSkin : defaultCpuSkin;
 		}
 
 		var customSkin:String = skin;
@@ -190,14 +185,14 @@ class StaticArrow extends FlxSprite
 	function set_localAlpha(value:Float)
 	{
 		localAlpha = value;
-		alpha = localAlpha + modAlpha;
+		alpha = localAlpha * modAlpha;
 		return value;
 	}
 
 	function set_modAlpha(value:Float)
 	{
 		modAlpha = value;
-		alpha = localAlpha + modAlpha;
+		alpha = localAlpha * modAlpha;
 		return value;
 	}
 

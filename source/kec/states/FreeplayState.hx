@@ -11,10 +11,7 @@ import flixel.effects.FlxFlicker;
 import sys.FileSystem;
 import sys.io.File;
 #end
-#if FEATURE_STEPMANIA
-import kec.backend.util.smTools.SMFile;
-#end
-import kec.backend.chart.format.Modern;
+import kec.backend.chart.ChartData;
 import lime.app.Application;
 import flash.text.TextField;
 import openfl.utils.Assets as OpenFlAssets;
@@ -84,7 +81,7 @@ class FreeplayState extends MusicBeatState
 
 	public static var icon:HealthIcon;
 
-	public var songData:Map<String, Array<Modern>> = [];
+	public var songData:Map<String, Array<ChartData>> = [];
 
 	public static var instance:FreeplayState = null;
 
@@ -96,7 +93,7 @@ class FreeplayState extends MusicBeatState
 	public static var doUpdateText:Bool = true;
 	public static var alreadyPressed:Bool = false;
 
-	function loadDiff(diff:Int, songId:String, array:Array<Modern>)
+	function loadDiff(diff:Int, songId:String, array:Array<ChartData>)
 		array.push(Song.loadFromJson(songId, CoolUtil.getSuffixFromDiff(CoolUtil.difficulties[diff])));
 
 	public static var list:Array<String> = [];
@@ -245,17 +242,6 @@ class FreeplayState extends MusicBeatState
 		intendedColor = bg.color;
 		lerpSelected = curSelected;
 
-		PlayStateChangeables.modchart = FlxG.save.data.modcharts;
-		PlayStateChangeables.botPlay = FlxG.save.data.botplay;
-		PlayStateChangeables.opponentMode = FlxG.save.data.opponent;
-		PlayStateChangeables.mirrorMode = FlxG.save.data.mirror;
-		PlayStateChangeables.holds = FlxG.save.data.sustains;
-		PlayStateChangeables.healthDrain = FlxG.save.data.hdrain;
-		PlayStateChangeables.healthGain = FlxG.save.data.hgain;
-		PlayStateChangeables.healthLoss = FlxG.save.data.hloss;
-		PlayStateChangeables.practiceMode = FlxG.save.data.practice;
-		PlayStateChangeables.skillIssue = FlxG.save.data.noMisses;
-
 		if (!Constants.freakyPlaying)
 		{
 			FlxG.sound.playMusic(Paths.music("freakyMenu"));
@@ -371,71 +357,6 @@ class FreeplayState extends MusicBeatState
 			meta.diffs = diffsThatExist;
 			songs.push(meta);
 		}
-		#if FEATURE_STEPMANIA
-		for (i in FileSystem.readDirectory("assets/sm/"))
-		{
-			if (FileSystem.isDirectory("assets/sm/" + i))
-			{
-				for (file in FileSystem.readDirectory("assets/sm/" + i))
-				{
-					if (file.contains(" "))
-						FileSystem.rename("assets/sm/" + i + "/" + file, "assets/sm/" + i + "/" + file.replace(" ", "_"));
-					if (file.endsWith(".sm") && !FileSystem.exists("assets/sm/" + i + "/converted.json"))
-					{
-						var file:SMFile = SMFile.loadFile("assets/sm/" + i + "/" + file.replace(" ", "_"));
-						file.jsonPath = "assets/sm/" + i + "/converted.json";
-						var data = file.convertToFNF("assets/sm/" + i + "/converted.json");
-						var meta = new FreeplaySongMetadata(file.header.TITLE, 0, "sm", FlxColor.fromString("#9a9b9c"), file, "assets/sm/" + i);
-						meta.diffs = ['Normal'];
-						songs.push(meta);
-						var song = Song.loadFromJsonRAW(data);
-						instance.songData.set(file.header.TITLE, [song]);
-
-						if (songData.get(song.songId) != null)
-						{
-							for (diff in songData.get(song.songId))
-							{
-								if (!songRating.exists(song.songId))
-									songRating.set(Highscore.formatSong(song.songId, songData.get(song.songId)
-										.indexOf(diff), 1), DiffCalc.CalculateDiff(song));
-
-								if (!songRatingOp.exists(song.songId))
-									songRatingOp.set(Highscore.formatSong(song.songId, songData.get(song.songId).indexOf(diff), 1),
-										DiffCalc.CalculateDiff(song, true));
-							}
-						}
-					}
-					else if (FileSystem.exists("assets/sm/" + i + "/converted.json") && file.endsWith(".sm"))
-					{
-						var file:SMFile = SMFile.loadFile("assets/sm/" + i + "/" + file.replace(" ", "_"));
-						file.jsonPath = "assets/sm/" + i + "/converted.json";
-
-						file.convertToFNF("assets/sm/" + i + "/converted.json");
-						var meta = new FreeplaySongMetadata(file.header.TITLE, 0, "sm", FlxColor.fromString("#9a9b9c"), file, "assets/sm/" + i);
-						meta.diffs = ['Normal'];
-						songs.push(meta);
-						var song = Song.loadFromJsonRAW(File.getContent("assets/sm/" + i + "/converted.json"));
-
-						instance.songData.set(file.header.TITLE, [song]);
-
-						if (songData.get(song.songId) != null)
-						{
-							for (diff in songData.get(song.songId))
-							{
-								if (!songRating.exists(song.songId))
-									songRating.set(Highscore.formatSong(song.songId, songData.get(song.songId)
-										.indexOf(diff), 1), DiffCalc.CalculateDiff(song));
-
-								if (!songRatingOp.exists(song.songId))
-									songRatingOp.set(Highscore.formatSong(song.songId, songData.get(song.songId).indexOf(diff), 1),
-										DiffCalc.CalculateDiff(song, true));
-							}
-						}
-					}
-				}
-			}
-		}
-		#end
 
 		instance.songData.clear();
 		loadedSongData = true;
@@ -755,7 +676,7 @@ class FreeplayState extends MusicBeatState
 		super.update(elapsed);
 	}
 
-	var playinSong:Modern;
+	var playinSong:ChartData;
 
 	private function dotheMusicThing():Void
 	{
@@ -803,15 +724,11 @@ class FreeplayState extends MusicBeatState
 	public static function loadSongInFreePlay(songName:String, difficulty:Int, isCharting:Bool, reloadSong:Bool = false)
 	{
 		// Make sure song data is initialized first.
-		var currentSongData:Modern = null;
+		var currentSongData:ChartData = null;
 		try
 		{
 			switch (instance.songs[curSelected].songCharacter)
 			{
-				#if FEATURE_STEPMANIA
-				case "sm":
-					currentSongData = Song.loadFromJsonRAW(#if FEATURE_FILESYSTEM File.getContent(instance.songs[curSelected].sm.jsonPath) #else OpenFlAssets.getText(instance.songs[curSelected].songName) #end);
-				#end
 				default:
 					currentSongData = Song.loadFromJson(instance.songs[curSelected].songName,
 						CoolUtil.getSuffixFromDiff(CoolUtil.difficulties[CoolUtil.difficulties.indexOf(instance.songs[curSelected].diffs[difficulty])]));
@@ -830,18 +747,6 @@ class FreeplayState extends MusicBeatState
 		PlayState.isStoryMode = false;
 
 		// Debug.logInfo('Loading song ${PlayState.SONG.songId} from week ${PlayState.storyWeek} into Free Play...');
-		#if FEATURE_STEPMANIA
-		if (instance.songs[curSelected].songCharacter == "sm")
-		{
-			PlayState.isSM = true;
-			PlayState.sm = instance.songs[curSelected].sm;
-			PlayState.pathToSm = instance.songs[curSelected].path;
-		}
-		else
-			PlayState.isSM = false;
-		#else
-		PlayState.isSM = false;
-		#end
 
 		Conductor.rate = rate;
 		lastRate = rate;
@@ -1018,25 +923,10 @@ class FreeplaySongMetadata
 {
 	public var songName:String = "";
 	public var week:Int = 0;
-	#if FEATURE_STEPMANIA
-	public var sm:SMFile;
-	public var path:String;
-	#end
 	public var songCharacter:String = "";
 	public var color:Int = -7179779;
 	public var diffs = [];
 
-	#if FEATURE_STEPMANIA
-	public function new(song:String, week:Int, songCharacter:String, ?color:FlxColor, ?sm:SMFile = null, ?path:String = "")
-	{
-		this.songName = song;
-		this.week = week;
-		this.songCharacter = songCharacter;
-		this.color = color;
-		this.sm = sm;
-		this.path = path;
-	}
-	#else
 	public function new(song:String, week:Int, songCharacter:String, ?color:FlxColor)
 	{
 		this.songName = song;
@@ -1044,5 +934,4 @@ class FreeplaySongMetadata
 		this.songCharacter = songCharacter;
 		this.color = color;
 	}
-	#end
 }

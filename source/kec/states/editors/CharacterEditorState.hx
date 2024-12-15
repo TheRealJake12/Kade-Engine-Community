@@ -637,6 +637,7 @@ class CharacterEditorState extends UIState
 			curAnim.prefix = animPrefix.text;
 			curAnim.frameIndices = newIndices;
 			curAnim.looped = animLooped.selected;
+			curAnim.interrupt = animIgnoreIdle.selected;
 			char.playAnim(char.data.animations[0].name, true);
 			char.animation.remove(curAnim.name);
 			addAnimation(curAnim.name, curAnim.prefix, curAnim.frameRate, curAnim.looped, newIndices);

@@ -385,7 +385,6 @@ class StageDebugState extends UIState
 		Stage.inEditor = true;
 		Stage.loadStageData(leStage);
 		Stage.initStageProperties();
-		
 
 		Stage.initCamPos();
 

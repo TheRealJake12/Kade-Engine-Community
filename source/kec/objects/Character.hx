@@ -8,7 +8,7 @@ import kec.backend.chart.Song;
 import kec.backend.chart.TimingStruct;
 import kec.stages.TankmenBG;
 import kec.backend.chart.ChartNote;
-import kec.backend.chart.format.Section;
+import kec.backend.chart.Section;
 import kec.backend.character.CharacterData;
 import kec.backend.character.AnimationData;
 

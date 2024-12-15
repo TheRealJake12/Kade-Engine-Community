@@ -27,11 +27,8 @@ class GameplayCustomizeState extends UIState
 
 	public static var instance:GameplayCustomizeState = null;
 
-	var laneunderlay:FlxSprite;
-	var laneunderlayOpponent:FlxSprite;
-
 	var strumLine:FlxSprite;
-	var strumLineNotes:FlxTypedGroup<FlxSprite>;
+	var strumLineNotes:FlxTypedGroup<StaticArrow>;
 
 	var camPos:FlxPoint;
 
@@ -82,7 +79,7 @@ class GameplayCustomizeState extends UIState
 		Stage.inEditor = true;
 		Stage.loadStageData('stage');
 		Stage.initStageProperties();
-		
+
 		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
 
@@ -176,11 +173,11 @@ class GameplayCustomizeState extends UIState
 		if (FlxG.save.data.downscroll)
 			strumLine.y = FlxG.height - 165;
 
-		strumLineNotes = new FlxTypedGroup<FlxSprite>();
+		strumLineNotes = new FlxTypedGroup<StaticArrow>();
 		add(strumLineNotes);
 
-		generateStaticArrows(0);
-		generateStaticArrows(1);
+		generateStaticArrows();
+		appearStaticArrows();
 
 		text = new FlxText(5, FlxG.height + 40, 0,
 			"Click and drag around gameplay elements to customize their positions. Press R to reset. Q/E to change zoom. Press Escape to go back.", 12);
@@ -320,49 +317,63 @@ class GameplayCustomizeState extends UIState
 
 	// ripped from play state cuz im lazy
 
-	private function generateStaticArrows(player:Int, ?tween:Bool = true):Void
+	private function generateStaticArrows():Void
 	{
-		final seX:Float = !PlayStateChangeables.opponentMode ? (PlayStateChangeables.middleScroll ? -278 : 42) : (PlayStateChangeables.middleScroll ? 366 : 42);
+		final seX:Float = (PlayStateChangeables.middleScroll ? -278 : 42);
 		final seY:Float = strumLine.y;
-		for (i in 0...4)
+		for (i in 0...8)
 		{
-			var babyArrow:StaticArrow = new StaticArrow(seX, seY, player, i);
-
-			var noteTypeCheck:String = 'normal';
+			final isPlayer:Bool = i > 3;
+			final id:Int = i % 4;
+			var babyArrow:StaticArrow = new StaticArrow(seX, seY, id, isPlayer);
 			babyArrow.downScroll = PlayStateChangeables.useDownscroll;
-
-			babyArrow.x += Note.swagWidth * i;
-
-			var targAlpha = 1;
-
-			if (PlayStateChangeables.middleScroll)
-			{
-				if (PlayStateChangeables.opponentMode)
-				{
-					if (player == 1)
-						targAlpha = 0;
-				}
-				else
-				{
-					if (player == 0)
-						targAlpha = 0;
-				}
-			}
-
-			if (tween)
-			{
-				babyArrow.y -= 10;
-				babyArrow.alpha = 0;
-				createTween(babyArrow, {y: babyArrow.y + 10, alpha: targAlpha}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
-			}
-			else
-				babyArrow.alpha = targAlpha;
-
+			babyArrow.alpha = 0;
 			babyArrow.ID = i;
+
+			if (!isPlayer)
+			{
+				if (PlayStateChangeables.middleScroll)
+				{
+					babyArrow.x += 310;
+					if (i > 1)
+					{ // Up and Right
+						babyArrow.x += FlxG.width / 2 + 25;
+					}
+				}
+			}
+
+			babyArrow.x += Note.swagWidth * id;
 			babyArrow.x += 50;
-			babyArrow.x += ((FlxG.width * 0.5) * player);
+			babyArrow.x += ((FlxG.width / 2) * (isPlayer ? 1 : 0));
 
 			strumLineNotes.add(babyArrow);
 		}
+	}
+
+	private function appearStaticArrows(t:Bool = true):Void
+	{
+		var index:Int = 0;
+		strumLineNotes.forEachAlive(function(n:StaticArrow)
+		{
+			var targetAlpha:Float = 1;
+			if (index < 4)
+			{
+				if (PlayStateChangeables.middleScroll)
+					targetAlpha = 0.35;
+			}
+
+			if (t)
+			{
+				n.y -= 10;
+				n.modAlpha = 0;
+				createTween(n, {y: n.y + 10, modAlpha: targetAlpha}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * index % 4)});
+			}
+			else
+			{
+				n.modAlpha = targetAlpha;
+			}
+
+			index++;
+		});
 	}
 }

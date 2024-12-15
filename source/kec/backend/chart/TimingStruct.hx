@@ -1,6 +1,6 @@
 package kec.backend.chart;
 
-import kec.backend.chart.format.Modern;
+import kec.backend.chart.ChartData;
 
 /**
  * Handy class that helps with beat and step measurements in song with variable bpm! 
@@ -133,7 +133,7 @@ class TimingStruct
 		return time * 1000;
 	}
 
-	public static function setSongTimings(song:Modern)
+	public static function setSongTimings(song:ChartData)
 	{
 		TimingStruct.clearTimings();
 

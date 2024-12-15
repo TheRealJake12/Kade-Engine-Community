@@ -11,7 +11,7 @@ class Note extends FlxSprite
 {
 	public var strumTime:Float = 0;
 	public var baseStrum:Float = 0;
-	public var lateHitMult:Float = 1.0;
+	public var lateHitMult:Float = 0.5;
 	public var earlyHitMult:Float = 1.0;
 	public var insideCharter:Bool = false;
 
@@ -72,7 +72,7 @@ class Note extends FlxSprite
 	public var isParent:Bool = false;
 	public var parent:Note = null;
 	public var spotInLine:Int = 0;
-	public var sustainActive:Bool = false;
+	public var sustainActive(default, set):Bool = false;
 
 	public var children:Array<Note> = [];
 
@@ -202,7 +202,6 @@ class Note extends FlxSprite
 		this.prevNote = prevNote;
 		isSustainNote = sustainNote;
 		moves = false;
-		lateHitMult = isSustainNote ? 0.5 : 1;
 
 		x += 50;
 		// MAKE SURE ITS DEFINITELY OFF SCREEN?
@@ -331,10 +330,7 @@ class Note extends FlxSprite
 
 		if (texture.length < 1)
 		{
-			if (!PlayStateChangeables.opponentMode)
-				skin = isPlayer ? Constants.noteskinSprite : Constants.cpuNoteskinSprite;
-			else
-				skin = isPlayer ? Constants.cpuNoteskinSprite : Constants.noteskinSprite;
+			skin = isPlayer ? Constants.noteskinSprite : Constants.cpuNoteskinSprite;
 
 			if (skin == null || skin.length < 1)
 				skin = isPlayer ? defaultPlayerSkin : defaultCpuSkin;
@@ -440,42 +436,36 @@ class Note extends FlxSprite
 				angle = modAngle;
 		}
 
-		if (!insideCharter)
+		if (insideCharter)
+			return;
+
+		if (isSustainNote)
 		{
-			if (isSustainNote)
+			final newStepHeight = (((0.45 * PlayState.instance.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayState.instance.scrollSpeed == 1 ? PlayState.SONG.speed : PlayState.instance.scrollSpeed,
+				2) * speedMultiplier);
+
+			if (stepHeight != newStepHeight)
 			{
-				final newStepHeight = (((0.45 * PlayState.instance.fakeNoteStepCrochet)) * FlxMath.roundDecimal(PlayState.instance.scrollSpeed == 1 ? PlayState.SONG.speed : PlayState.instance.scrollSpeed,
-					2) * speedMultiplier);
-
-				if (stepHeight != newStepHeight)
-				{
-					stepHeight = newStepHeight;
-					if (isSustainNote)
-						noteYOff = -stepHeight + swagWidth * 0.5;
-				}
-
-				flipY = PlayStateChangeables.useDownscroll;
+				stepHeight = newStepHeight;
+				if (isSustainNote)
+					noteYOff = -stepHeight + swagWidth * 0.5;
 			}
 
-			if (mustPress)
-			{
-				switch (noteType.toLowerCase())
-				{
-					case 'hurt':
-						canBeHit = (strumTime - Conductor.elapsedPosition <= ((Ratings.timingWindows[0].timingWindow) * 0.2)
-							&& strumTime - Conductor.elapsedPosition >= (-Ratings.timingWindows[0].timingWindow) * 0.4);
-						tooLate = (strumTime - Conductor.elapsedPosition < -Ratings.timingWindows[0].timingWindow && !wasGoodHit);
-					default:
-						canBeHit = (strumTime - Conductor.elapsedPosition <= (((Ratings.timingWindows[0].timingWindow) * lateHitMult))
-							&& strumTime - Conductor.elapsedPosition >= (((-Ratings.timingWindows[0].timingWindow) * earlyHitMult)));
-						tooLate = (strumTime - Conductor.elapsedPosition < (-Ratings.timingWindows[0].timingWindow) && !wasGoodHit);
-				}
-			}
+			flipY = PlayStateChangeables.useDownscroll;
+		}
 
-			if (tooLate && !wasGoodHit)
+		if (mustPress)
+		{
+			switch (noteType.toLowerCase())
 			{
-				if (alpha > modAlpha * 0.3)
-					alpha = modAlpha * 0.3;
+				case 'hurt':
+					canBeHit = (strumTime - Conductor.elapsedPosition <= ((Ratings.timingWindows[0].timingWindow) * 0.2)
+						&& strumTime - Conductor.elapsedPosition >= (-Ratings.timingWindows[0].timingWindow) * 0.4);
+					tooLate = (strumTime - Conductor.elapsedPosition < -Ratings.timingWindows[0].timingWindow && !wasGoodHit);
+				default:
+					canBeHit = (strumTime - Conductor.elapsedPosition <= (((Ratings.timingWindows[0].timingWindow) * lateHitMult))
+						&& strumTime - Conductor.elapsedPosition >= (((-Ratings.timingWindows[0].timingWindow) * earlyHitMult)));
+					tooLate = (strumTime - Conductor.elapsedPosition < (-Ratings.timingWindows[0].timingWindow) && !wasGoodHit);
 			}
 		}
 	}
@@ -565,6 +555,18 @@ class Note extends FlxSprite
 		}
 		clipRect = swagRect;
 		swagRect.put();
+	}
+
+	function set_sustainActive(b:Bool)
+	{
+		sustainActive = b;
+		if (!b && !wasGoodHit)
+		{
+			Debug.logTrace("Too Late");
+			localAlpha = (localAlpha * 0.5);
+		}
+
+		return b;
 	}
 
 	function set_localAlpha(a:Float)

@@ -33,7 +33,7 @@ class Ratings
 	public static function GenerateLetterRank(accuracy:Float)
 	{
 		var letterRanking:String = "";
-		var wifeConditions:Array<Bool> = [
+		final wifeConditions:Array<Bool> = [
 			accuracy >= 99.9935, // AAAAA
 			accuracy >= 99.980, // AAAA:
 			accuracy >= 99.970, // AAAA.
@@ -54,7 +54,7 @@ class Ratings
 
 		for (i in 0...wifeConditions.length)
 		{
-			var b = wifeConditions[i];
+			final b = wifeConditions[i];
 
 			if (b)
 			{
@@ -127,27 +127,15 @@ class Ratings
 
 	public static function CalculateRanking(score:Int, nps:Int, maxNPS:Int, accuracy:Float):String
 	{
-		return (FlxG.save.data.npsDisplay ? // NPS Toggle
-			"NPS: "
-			+ nps
-			+ " (Max "
-			+ maxNPS
-			+ ")"
-			+ (!PlayStateChangeables.botPlay ? " | " : "") : "") + // 	NPS
-			(!PlayStateChangeables.botPlay ? "Score:" + score + // Score
-				(FlxG.save.data.accuracyDisplay ? // Accuracy Toggle
-					" | Combo Breaks:"
-					+ Stats.misses // 	Misses/Combo Breaks
-					+ (!FlxG.save.data.healthBar ? " | Health:"
-						+ (!PlayStateChangeables.opponentMode ? Math.round(PlayState.instance.health * 50) : Math.round(100 - (PlayState.instance.health * 50)))
-						+ "%" : "")
-					+ " | Accuracy:"
-					+ (PlayStateChangeables.botPlay ? "N/A" : HelperFunctions.truncateFloat(accuracy, 2) + " %")
-					+ // 	Accuracy
-					" | "
-					+ GenerateComboRank(accuracy)
-					+ " "
-					+ (!PlayStateChangeables.practiceMode ? GenerateLetterRank(accuracy) : 'PRACTICE') : "") : ""); // 	Letter Rank
+		final npsString:String = FlxG.save.data.npsDisplay ? 'NPS: $nps (Max $maxNPS) | ' : '';
+		final scoreString:String = 'Score: $score | ';
+		final breakString:String = FlxG.save.data.accuracyDisplay ? 'Combo Breaks: ${Stats.misses} | ' : '';
+		final health:String = FlxG.save.data.healthBar ? '' : 'Health: ${Math.round(PlayState.instance.health * 50)}% | ';
+		final accuracyString:String = 'Accuracy: ${HelperFunctions.truncateFloat(accuracy, 2)}% ';
+		final comboRank:String = GenerateComboRank(accuracy);
+		final letterRank:String = !PlayStateChangeables.practiceMode ? GenerateLetterRank(accuracy) : 'PRACTICE';
+
+		return '$npsString$scoreString$breakString$health$accuracyString$comboRank $letterRank';
 	}
 }
 

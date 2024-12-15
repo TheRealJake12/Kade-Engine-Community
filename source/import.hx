@@ -31,5 +31,13 @@ import kec.backend.Constants;
 import kec.backend.util.Sort;
 #end
 
+using Lambda;
 using StringTools;
-using kec.backend.util.StringTool;
+using kec.backend.tools.ArraySortTools;
+using kec.backend.tools.ArrayTools;
+using kec.backend.tools.FloatTools;
+using kec.backend.tools.Int64Tools;
+using kec.backend.tools.IntTools;
+using kec.backend.tools.IteratorTools;
+using kec.backend.tools.MapTools;
+using kec.backend.tools.StringTools;

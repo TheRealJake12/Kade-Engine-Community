@@ -6,7 +6,7 @@ import kec.objects.editor.EditorSustain;
 import kec.backend.HitSounds;
 import kec.backend.PlayStateChangeables;
 import kec.backend.chart.Event;
-import kec.backend.chart.format.Modern;
+import kec.backend.chart.ChartData;
 import kec.backend.chart.Song;
 import kec.backend.chart.TimingStruct;
 import kec.backend.util.HelperFunctions;
@@ -20,15 +20,16 @@ import kec.objects.editor.ChartingBox;
 import openfl.Lib;
 import openfl.events.Event as OpenFlEvent;
 import openfl.events.IOErrorEvent;
-import openfl.net.FileReference;
 import kec.backend.chart.ChartNote;
-import kec.backend.chart.format.Section;
+import kec.backend.chart.Section;
 import kec.objects.editor.EditorNote;
 import kec.objects.editor.EditorGrid;
 import kec.objects.editor.BeatLine;
 import haxe.ui.data.ArrayDataSource;
 import haxe.ui.focus.FocusManager;
 import flixel.util.FlxSort;
+import kec.backend.util.FileDialogHandler;
+import haxe.ui.events.UIEvent;
 #if FEATURE_FILESYSTEM
 import sys.FileSystem;
 import sys.io.File;
@@ -39,7 +40,7 @@ class ChartingState extends UIState
 {
 	public static var instance:ChartingState = null;
 
-	public var SONG:Modern;
+	public var SONG:ChartData;
 
 	public var lastUpdatedSection:Section = null;
 
@@ -75,8 +76,12 @@ class ChartingState extends UIState
 
 	public var selectBox:FlxSprite;
 
-	private var savedEvent:Event = null;
 	private var curSelectedNote:ChartNote;
+	private var curEvent:Event;
+
+	var eventList:Array<Event> = []; // existing events
+	var eventIndex:Int = 0;
+	var existingEvents = new ArrayDataSource<String>(); // bullshit
 
 	private var noteGroup:FlxTypedSpriteGroup<EditorNote>;
 	private var sustainGroup:FlxTypedSpriteGroup<EditorSustain>;
@@ -117,11 +122,14 @@ class ChartingState extends UIState
 
 	private var noteTypes:Array<String> = null;
 
-	private var _file:FileReference;
-
 	public var id:Int = -1;
 
 	private var noteCounter:Int = 0;
+
+	private var maxNotes:Int = 0;
+	private var unspawnNotes:Array<ChartNote> = [];
+
+	var fileDialog:FileDialogHandler = new FileDialogHandler();
 
 	// one does not realize how much flixel-ui is used until one sees an FNF chart editor. 💀
 
@@ -174,7 +182,17 @@ class ChartingState extends UIState
 		checkforSections();
 		setInitVars();
 
+		for (sec in SONG.notes)
+			for (i in sec.sectionNotes)
+			{
+				unspawnNotes.push(i);
+				maxNotes++;
+			}
+
+		Debug.logTrace(maxNotes);
+
 		activeSong = SONG;
+		curEvent = SONG.eventObjects[0];
 		Debug.logTrace('${TimingStruct.AllTimings.length} ${curTiming.endBeat}');
 		lengthInBeats = Math.round(TimingStruct.getBeatFromTime(inst.length));
 		lengthInSteps = lengthInBeats * 4;
@@ -339,8 +357,8 @@ class ChartingState extends UIState
 		// final lerpVal:Float = CoolUtil.boundTo(1 - (elapsed * 12), 0, 1);
 		// strumLine.y = FlxMath.lerp(getYFromTime(inst.time), strumLine.y, lerpVal);
 		strumLine.y = getYFromTime(Conductor.songPosition);
-		var mouseX:Float = quantizePos(FlxG.mouse.x - grid.x);
-		mouse.x = Math.min(grid.x + mouseX + separatorWidth * Math.floor(mouseX / gridSize / 4), grid.x + grid.width);
+		var diffX:Float = FlxG.mouse.x - grid.x;
+		mouse.x = grid.x + Math.floor(diffX / gridSize) * gridSize;
 		mouse.y = FlxMath.bound(getMouseY(), 0, end - gridSize);
 		mouse.visible = mouseValid();
 
@@ -534,22 +552,36 @@ class ChartingState extends UIState
 				scroll(FlxG.mouse.wheel);
 		}
 
-		while (noteCounter < currentSection.sectionNotes.length)
+		if (unspawnNotes.length > 0)
 		{
-			final chartNote = currentSection.sectionNotes[noteCounter];
-			var note:EditorNote = noteGroup.recycle(EditorNote);
-			note.setup(chartNote.time, chartNote.data, chartNote.length, chartNote.type, TimingStruct.getBeatFromTime(chartNote.time));
-			note.setGraphicSize(gridSize, gridSize);
-			note.updateHitbox();
-			note.setPosition(grid.x + (gridSize * chartNote.data), getYFromTime(chartNote.time));
-			if (note.holdLength > 0)
+			while (unspawnNotes[noteCounter] != null && unspawnNotes[noteCounter].time - Conductor.songPosition < 1800)
 			{
-				var sustain:EditorSustain = sustainGroup.recycle(EditorSustain);
-				sustain.setup(note.x + 20, note.y + gridSize, 8, Math.floor((getYFromTime(note.time + note.holdLength)) - note.y));
-				note.sustain = sustain;
+				var spawnNote = unspawnNotes[noteCounter];
+				var note:EditorNote = noteGroup.recycle(EditorNote);
+				note.setup(spawnNote.time, spawnNote.data, spawnNote.length, spawnNote.type, TimingStruct.getBeatFromTime(spawnNote.time));
+				note.setGraphicSize(gridSize, gridSize);
+				note.updateHitbox();
+				note.setPosition(grid.x + (gridSize * spawnNote.data), getYFromTime(spawnNote.time));
+				noteCounter++;
+				if (note.holdLength > 0)
+				{
+					var sustain:EditorSustain = sustainGroup.recycle(EditorSustain);
+					sustain.setup(note.x + 20, note.y + gridSize, 8, Math.floor((getYFromTime(note.time + note.holdLength)) - note.y));
+					note.sustain = sustain;
+				}
+				// noteGroup.sort(FlxSort.byY, FlxSort.ASCENDING);
+				// sustainGroup.sort(FlxSort.byY, -1);
 			}
-			noteCounter++;
-			noteGroup.sort(FlxSort.byY, FlxSort.ASCENDING);
+
+			noteGroup.forEachAlive(function(n:EditorNote)
+			{
+				if (Conductor.songPosition - n.time > 1000)
+				{
+					n.kill();
+					if (n.sustain != null)
+						n.sustain.kill();
+				}
+			});
 		}
 
 		var playedSound:Array<Bool> = [false, false, false, false, false, false, false, false];
@@ -560,8 +592,8 @@ class ChartingState extends UIState
 				if (note.time > lastConductorPos && inst.playing && note.data > -1 && note.hitsoundsEditor)
 				{
 					var data:Int = note.rawData;
-					var noteDataToCheck:Int = data;
-					var playerNote = noteDataToCheck >= 4;
+					final noteDataToCheck:Int = data;
+					final playerNote = noteDataToCheck >= 4;
 					if (!playedSound[data])
 					{
 						if ((FlxG.save.data.playHitsounds && playerNote) || (FlxG.save.data.playHitsoundsE && !playerNote))
@@ -622,30 +654,32 @@ class ChartingState extends UIState
 		}
 
 		for (i in SONG.eventObjects)
+			addEventLine(i);
+	}
+
+	private function addEventLine(i:Event)
+	{
+		final seg = TimingStruct.getTimingAtBeat(i.beat);
+		var posi:Float = 0;
+		if (seg != null)
 		{
-			final seg = TimingStruct.getTimingAtBeat(i.beat);
-			var posi:Float = 0;
-			if (seg != null)
-			{
-				var start:Float = (i.beat - seg.startBeat) / (seg.bpm / 60);
-				posi = seg.startTime + start;
-			}
-
-			var pos = getYFromTime(posi * 1000);
-
-			if (pos < 0)
-				pos = 0;
-
-			var type = i.type;
-
-			final text:TextLine = texts.recycle(TextLine);
-			text.reuse(grid.x + (gridSize * 8) + separatorWidth, pos, 16);
-			text.text = i.name + "\n" + type + "\n" + i.args[0] + "\n" + i.args[1];
-			text.updateHitbox();
-
-			final line:BeatLine = lines.recycle(BeatLine);
-			line.setup(grid.x, pos, FlxColor.YELLOW);
+			var start:Float = (i.beat - seg.startBeat) / (seg.bpm / 60);
+			posi = seg.startTime + start;
 		}
+
+		var pos = getYFromTime(posi * 1000);
+		if (pos < 0)
+			pos = 0;
+
+		final type = i.type;
+
+		final text:TextLine = texts.recycle(TextLine);
+		text.reuse(grid.x + (gridSize * 8), pos, 16);
+		text.text = i.name + "\n" + type + "\n" + i.args[0] + "\n" + (i.args[1] == null ? "" : i.args[1]);
+		text.updateHitbox();
+
+		final line:BeatLine = lines.recycle(BeatLine);
+		line.setup(grid.x, pos, FlxColor.YELLOW);
 	}
 
 	private function addNote()
@@ -667,6 +701,7 @@ class ChartingState extends UIState
 		note.setPosition(grid.x + (gridSize * chartNote.data), getYFromTime(chartNote.time));
 		note.camera = noteGroup.camera;
 		noteCounter++;
+		maxNotes++;
 		section.sectionNotes.push(chartNote);
 		sortNotes(section);
 		noteGroup.sort(FlxSort.byY, FlxSort.ASCENDING);
@@ -915,31 +950,30 @@ class ChartingState extends UIState
 
 		final audioFile:String = SONG.audioFile;
 
-		inst = new FlxSound().loadEmbedded(Paths.inst(audioFile));
+		inst = FlxG.sound.load(Paths.inst(audioFile, false));
 		inst.play();
 		inst.pause();
-		FlxG.sound.list.add(inst);
 
 		vocals = new FlxSound();
 		vocalsP = new FlxSound();
 		vocalsE = new FlxSound();
+		if (!SONG.needsVoices)
+			return;
+		// I love doing this but it's so situational bruh
 		switch (SONG.splitVoiceTracks)
 		{
 			case true:
-				vocalsP.loadEmbedded(Paths.voices(audioFile, 'P'));
-				vocalsE.loadEmbedded(Paths.voices(audioFile, 'E'));
+				vocalsP = FlxG.sound.load(Paths.voices(audioFile, 'P'));
+				vocalsE = FlxG.sound.load(Paths.voices(audioFile, 'E'));
 				vocalsP.play();
 				vocalsP.pause();
 				vocalsE.play();
 				vocalsE.pause();
 			case false:
-				vocals.loadEmbedded(Paths.voices(audioFile));
+				vocals = FlxG.sound.load(Paths.voices(audioFile, ''));
 				vocals.play();
 				vocals.pause();
 		}
-		FlxG.sound.list.add(vocals);
-		FlxG.sound.list.add(vocalsP);
-		FlxG.sound.list.add(vocalsE);
 	}
 
 	function loadJson(songId:String, diff:String):Void
@@ -962,48 +996,10 @@ class ChartingState extends UIState
 	private function saveChart()
 	{
 		SONG.chartVersion = Constants.chartVer;
-
+		setSongData();
 		final data:String = haxe.Json.stringify(SONG, null).trim();
-
-		if ((data != null) && (data.length > 0))
-		{
-			_file = new FileReference();
-			_file.addEventListener(#if desktop OpenFlEvent.SELECT #else OpenFlEvent.COMPLETE #end, onSaveComplete);
-			_file.addEventListener(OpenFlEvent.CANCEL, onSaveCancel);
-			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-			_file.save(data.trim(), SONG.songId.toLowerCase() + CoolUtil.getSuffixFromDiff(curDiff) + ".json");
-		}
-	}
-
-	function onSaveComplete(_):Void
-	{
-		_file.removeEventListener(OpenFlEvent.COMPLETE, onSaveComplete);
-		_file.removeEventListener(OpenFlEvent.CANCEL, onSaveCancel);
-		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-		_file = null;
-	}
-
-	/**
-	 * Called when the save file dialog is cancelled.
-	 */
-	function onSaveCancel(_):Void
-	{
-		_file.removeEventListener(OpenFlEvent.COMPLETE, onSaveComplete);
-		_file.removeEventListener(OpenFlEvent.CANCEL, onSaveCancel);
-		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-		_file = null;
-	}
-
-	/**
-	 * Called if there is an error while saving the gameplay recording.
-	 */
-	function onSaveError(_):Void
-	{
-		_file.removeEventListener(OpenFlEvent.COMPLETE, onSaveComplete);
-		_file.removeEventListener(OpenFlEvent.CANCEL, onSaveCancel);
-		_file.removeEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-		_file = null;
-		FlxG.log.error("Problem saving Level data");
+		final chartName:String = SONG.songId + CoolUtil.getSuffixFromDiff(curDiff);
+		fileDialog.save('$chartName.json', data, function() Debug.logTrace("Successfully Saved Chart"), null, function() Debug.logTrace("Error Saving Chart"));
 	}
 
 	private function setSongData()
@@ -1028,7 +1024,7 @@ class ChartingState extends UIState
 		if (curSection < 0)
 			return;
 
-		clearRenderedNotes();
+		// clearRenderedNotes();
 		sectionMustHit.selected = currentSection.mustHitSection;
 	}
 
@@ -1051,7 +1047,7 @@ class ChartingState extends UIState
 	inline function mouseValid():Bool
 	{
 		// NOTE: we're checking the mouse's y so notes/events can't be placed outside of the grid
-		return mouse.x >= grid.x - separatorWidth && mouse.x < grid.x + grid.width && FlxG.mouse.y >= 0 && FlxG.mouse.y < end;
+		return mouse.x >= grid.x && mouse.x < grid.x + grid.width && FlxG.mouse.y >= 0 && FlxG.mouse.y < end;
 	}
 
 	inline function getMouseY():Float
@@ -1074,12 +1070,11 @@ class ChartingState extends UIState
 
 	private function checkNoteSpawn()
 	{
-		final strumTime = getTimeFromY(mouse.y);
+		final strumTime:Float = getTimeFromY(mouse.y);
 		final noteData:Int = Math.floor((mouse.x - grid.x) / gridSize);
-		var existingNote = noteGroup.members.filter(function(n:EditorNote)
+		final existingNote = noteGroup.members.filter(function(n:EditorNote)
 		{
-			final real = (n.time == strumTime && n.rawData == noteData && n.alive);
-			return real;
+			return (n.time == strumTime && n.rawData == noteData && n.alive && FlxG.mouse.overlaps(n));
 		});
 
 		if (existingNote[0] != null)
@@ -1253,7 +1248,6 @@ class ChartingState extends UIState
 	{
 		noteGroup.forEachAlive(function(n:EditorNote) n.kill());
 		sustainGroup.forEachAlive(function(n:EditorSustain) n.kill());
-		noteCounter = 0;
 	}
 
 	private function playMetronome()
@@ -1275,6 +1269,19 @@ class ChartingState extends UIState
 		return sec;
 	}
 
+	private function findEvent(name:String, type:String)
+	{
+		var theEVENT = eventList.filter(function(e:Event)
+		{
+			final ev = (e.name == name && e.type == type);
+			return ev;
+		});
+
+		Debug.logTrace(theEVENT[0] == null);
+
+		return theEVENT[0] == null ? null : theEVENT[0];
+	}
+
 	public inline function sortNotes(sec:Section):Void
 		sec.sectionNotes.sort((a, b) -> Std.int(a.time - b.time));
 
@@ -1284,6 +1291,7 @@ class ChartingState extends UIState
 		final gfList:Array<String> = CoolUtil.coolTextFile(Paths.txt('data/gfVersionList'));
 		final stageList:Array<String> = CoolUtil.coolTextFile(Paths.txt('data/stageList'));
 		final styleList:Array<String> = CoolUtil.coolTextFile(Paths.txt('data/songStyleList'));
+		final eventList:Array<String> = CoolUtil.coolTextFile(Paths.txt('data/eventList'));
 		final diffList:Array<String> = CoolUtil.difficulties;
 		var chars = new ArrayDataSource<String>();
 		for (c in characterList)
@@ -1304,12 +1312,40 @@ class ChartingState extends UIState
 		for (d in diffList)
 			diffs.add(d);
 
+		var events = new ArrayDataSource<String>();
+		for (e in eventList)
+			events.add(e);
+		for (event in SONG.eventObjects)
+		{
+			existingEvents.add(event.name);
+			this.eventList.push(event);
+		}
+
 		playerSelect.dataSource = chars;
 		opponentSelect.dataSource = chars;
 		gfSelect.dataSource = gfs;
 		stageSelect.dataSource = stages;
 		styleSelect.dataSource = styles;
 		diffSelect.dataSource = diffs;
+		eventExistList.dataSource = existingEvents;
+		eventTypes.dataSource = events;
+
+		eventTypes.selectItemBy(item -> item == SONG.eventObjects[0].type, true);
+		eventExistList.selectItemBy(item -> item == SONG.eventObjects[0].name, true);
+		eventExistList.registerEvent(UIEvent.CLOSE, function(e:UIEvent)
+		{
+			curEvent = SONG.eventObjects[eventExistList.selectedIndex];
+			Debug.logTrace(curEvent.name);
+			if (findEvent(curEvent.name, curEvent.type) == null)
+				return;
+
+			eventName.value = curEvent.name;
+			eventTypes.selectItemBy(item -> item == curEvent.type, true);
+			eventValue1.value = curEvent.args[0];
+			eventValue2.value = curEvent.args[1];
+			eventPos.pos = curEvent.beat;
+			Debug.logTrace("Found Event. Setting Values");
+		});
 
 		setHUIData();
 	}
@@ -1322,11 +1358,17 @@ class ChartingState extends UIState
 		stageSelect.selectItemBy(item -> item == SONG.stage, true);
 		styleSelect.selectItemBy(item -> item == SONG.style, true);
 		diffSelect.selectItemBy(item -> item == CoolUtil.difficulties[PlayState.storyDifficulty], true);
+		eventName.text = curEvent.name;
+		eventValue1.text = curEvent.args[0];
+		eventValue2.text = curEvent.args[1];
+		eventPos.pos = curEvent.beat;
 		dataID.text = SONG.songId;
 		dataName.text = SONG.songName;
 		dataAudio.text = SONG.audioFile;
 		dataBPM.pos = SONG.eventObjects[0].args[0];
+		dataVoices.selected = SONG.needsVoices;
 		dataSpeed.pos = SONG.speed;
+		dataSplit.selected = SONG.splitVoiceTracks;
 		sectionMustHit.onClick = _ -> currentSection.mustHitSection = !currentSection.mustHitSection;
 		editorMetroVol.onChange = _ -> metronome.volume = (editorMetroVol.value / 100);
 
@@ -1342,12 +1384,12 @@ class ChartingState extends UIState
 
 		chartSave.onClick = _ -> saveChart();
 		chartReload.onClick = _ -> loadAudio(dataID.text, true);
-		diffSelect.registerEvent(haxe.ui.events.UIEvent.CLOSE, function(e)
+		diffSelect.registerEvent(UIEvent.CLOSE, function(e)
 		{
 			PlayState.storyDifficulty = CoolUtil.difficulties.indexOf(diffSelect.text);
 			Debug.logTrace(CoolUtil.difficulties[PlayState.storyDifficulty]);
 		});
-		chartClear.onClick = function(e) 
+		chartClear.onClick = function(e)
 		{
 			for (i in 0...maxSectionIndex)
 			{
@@ -1363,5 +1405,37 @@ class ChartingState extends UIState
 		vocalVol.onChange = _ -> if (vocals != null && !vocalVol.disabled) vocals.volume = (vocalVol.value / 100);
 		vocalPVol.onChange = _ -> if (vocalsP != null && !vocalPVol.disabled) vocalsP.volume = (vocalPVol.value / 100);
 		vocalEVol.onChange = _ -> if (vocalsE != null && !vocalEVol.disabled) vocalsE.volume = (vocalEVol.value / 100);
+		dataSplit.onClick = function(e)
+		{
+			SONG.splitVoiceTracks = !SONG.splitVoiceTracks;
+			loadAudio(SONG.songId);
+		}
+		dataVoices.onClick = function(e)
+		{
+			SONG.needsVoices = !SONG.needsVoices;
+			loadAudio(SONG.songId);
+		}
+		eventAdd.onClick = function(e)
+		{
+			final eventPos = TimingStruct.getBeatFromTime(Conductor.songPosition);
+			if (findEvent('New Event $eventPos', "BPM Change") != null)
+			{
+				Debug.logTrace("Event Already Exists Dumbass");
+				return;
+			}
+			final newEvent:Event = {
+				name: 'New Event $eventPos',
+				type: "BPM Change",
+				args: [SONG.eventObjects[0].args[0]],
+				beat: eventPos
+			};
+
+			SONG.eventObjects.push(newEvent);
+			eventList.push(newEvent);
+			existingEvents.add(newEvent.name);
+			eventExistList.dataSource = existingEvents;
+			eventExistList.selectItemBy(item -> item == newEvent.name, true);
+			addEventLine(newEvent);
+		}
 	}
 }

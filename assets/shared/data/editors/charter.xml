@@ -47,19 +47,19 @@
 			<frame width="350" height="350">
 				<vbox>
 					<grid>
-						<label text="Player" horizontalAlign="center" />
-						<dropdown id="playerSelect" width="75" horizontalAlign="center" />
-						<label text="GF" horizontalAlign="center" />
-						<dropdown id="gfSelect" width="75" horizontalAlign="center" />
+						<label text="Player" verticalAlign="center" />
+						<dropdown id="playerSelect" width="75" verticalAlign="center" />
+						<label text="GF" verticalAlign="center" />
+						<dropdown id="gfSelect" width="75" verticalAlign="center" />
 						<label text="Opponent" verticalAlign="center" />
-						<dropdown id="opponentSelect" width="75" horizontalAlign="center" />
+						<dropdown id="opponentSelect" width="75" verticalAlign="center" />
 					</grid>
 					<menu-separator />
 					<grid>
-						<label text="Stage" horizontalAlign="center" />
-						<dropdown id="stageSelect" width="90" horizontalAlign="center" />
-						<label text="Style" horizontalAlign="center" />
-						<dropdown id="styleSelect" width="90" horizontalAlign="center" />
+						<label text="Stage" verticalAlign="center" />
+						<dropdown id="stageSelect" width="90" verticalAlign="center" />
+						<label text="Style" verticalAlign="center" />
+						<dropdown id="styleSelect" width="90" verticalAlign="center" />
 					</grid>
 				</vbox>
 			</frame>
@@ -67,7 +67,7 @@
 		<vbox text="Section">
 			<frame width="350" height="350">
 				<vbox>
-					<checkbox id="sectionMustHit" text="Must Hit Section" horizontalAlign="center" />
+					<checkbox id="sectionMustHit" text="Must Hit Section" verticalAlign="center" />
 				</vbox>
 			</frame>
 		</vbox>
@@ -84,8 +84,37 @@
 					<number-stepper id="dataBPM" pos="100" step="0.1" verticalAlign="center" />
 					<label text="Scroll Speed" verticalAlign="center" />
 					<number-stepper id="dataSpeed" pos="100" step="0.1" verticalAlign="center" />
-					<label text="Difficulty" horizontalAlign="center" />
-					<dropdown id="diffSelect" width="90" horizontalAlign="center" />
+					<checkbox id="dataSplit" text="Split Voice Tracks?" verticalAlign="center" />
+					<checkbox id="dataVoices" text="Voice Tracks?" verticalAlign="center" />
+					<menu-separator />
+					<label text="Difficulty" verticalAlign="center" />
+					<dropdown id="diffSelect" width="90" verticalAlign="center" />
+				</grid>
+			</frame>
+		</vbox>
+		<vbox text="Events">
+			<frame width="350" height="350">
+				<grid>
+					<vbox>
+						<label text="Existing Events" verticalAlign="center"/>
+						<dropdown id="eventExistList" verticalAlign="center" />
+						<label text="Event Types" verticalAlign="center"/>
+						<dropdown id="eventTypes" verticalAlign="center" />
+						<label text="Current Event Name" verticalAlign="center"/>
+						<textfield id="eventName" verticalAlign="center" />
+						<label text="Event Value 1" verticalAlign="center"/>
+						<textfield id="eventValue1" verticalAlign="center" />
+						<label text="Event Value 2" verticalAlign="center"/>
+						<textfield id="eventValue2" verticalAlign="center" />
+						<label text="Event Position (Beats)" verticalAlign="center"/>
+						<number-stepper id="eventPos" pos="0" step="0.1" verticalAlign="center" />
+					</vbox>
+					<vbox>
+						<button id="eventAdd" text="Add Event" verticalAlign="center"/>
+						<button id="eventUpdate" text="Update Event" verticalAlign="center"/>
+						<button id="eventRemove" text="Remove Event" verticalAlign="center"/>
+						<button id="eventUpdatePos" text="Update Position" verticalAlign="center"/>
+					</vbox>
 				</grid>
 			</frame>
 		</vbox>

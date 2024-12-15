@@ -2,7 +2,7 @@ package kec.backend.util;
 
 import openfl.system.System;
 import flixel.math.FlxMath;
-import kec.backend.chart.format.Modern;
+import kec.backend.chart.ChartData;
 
 class SmallNote // basically Note.hx but small as fuck
 {
@@ -23,7 +23,7 @@ class DiffCalc
 	public static var lastDiffHandOne:Array<Float> = [];
 	public static var lastDiffHandTwo:Array<Float> = [];
 
-	public static function CalculateDiff(song:Modern, opponentMode:Bool = false, ?accuracy:Float = .93)
+	public static function CalculateDiff(song:ChartData, opponentMode:Bool = false, ?accuracy:Float = .93)
 	{
 		// cleaned notes
 		var cleanedNotes:Array<SmallNote> = [];

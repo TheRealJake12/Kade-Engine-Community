@@ -56,7 +56,7 @@ class NoteSplash extends FlxSprite
 		visible = true;
 
 		setPosition(x - Note.swagWidth * 0.95, y - Note.swagWidth);
-		alpha = FlxG.save.data.alphaSplash;
+		alpha = note.alpha * FlxG.save.data.alphaSplash;
 
 		loadFrames(noteType);
 		offset.set(0, 0);

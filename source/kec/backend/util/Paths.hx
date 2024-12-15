@@ -84,6 +84,14 @@ class Paths
 		return null;
 	}
 
+	inline static public function formatToSongPath(path:String)
+	{
+		final invalidChars = ~/[~&;:<>#\s]/g;
+		final hideChars = ~/[.,'"%?!]/g;
+
+		return hideChars.replace(invalidChars.replace(path, '-'), '').trim().toLowerCase();
+	}
+
 	public static inline function fileExists(key:String)
 	{
 		if (OpenFlAssets.exists(getPath(key)))

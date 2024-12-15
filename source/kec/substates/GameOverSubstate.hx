@@ -24,9 +24,6 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		var daBf:String = '';
 		var char:Character = PlayState.instance.boyfriend;
-		if (PlayStateChangeables.opponentMode)
-			char = PlayState.instance.dad;
-
 		var styleShit:String = (PlayState.STYLE.style == null ? 'default' : PlayState.STYLE.style).toLowerCase();
 		var daBf:String = '';
 		switch (char.data.char)
@@ -88,7 +85,7 @@ class GameOverSubstate extends MusicBeatSubstate
 			FlxG.camera.follow(camFollow, LOCKON, 0.01);
 		}
 
-		if (!PlayStateChangeables.opponentMode && bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.finished)
+		if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.finished)
 		{
 			if (PlayState.SONG.stage == 'tank')
 			{

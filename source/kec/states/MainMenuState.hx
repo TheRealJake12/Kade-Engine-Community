@@ -166,7 +166,6 @@ class MainMenuState extends MusicBeatState
 			PlayState.storyDifficulty = 1;
 			PlayState.SONG = Song.loadFromJson('salvation', '');
 			PlayState.isStoryMode = false;
-			PlayState.isSM = false;
 			MusicBeatState.switchState(new PlayState());
 		}
 
