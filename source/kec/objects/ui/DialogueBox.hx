@@ -43,7 +43,7 @@ class DialogueBox extends FlxSpriteGroup
 		super();
 
 		curLine = 0;
-		songId = PlayState.SONG.songId;
+		songId = PlayState.SONG.songId.toLowerCase();
 
 		switch (songId)
 		{
@@ -67,7 +67,7 @@ class DialogueBox extends FlxSpriteGroup
 		bgFade.alpha = 0;
 		add(bgFade);
 
-		PlayState.instance.createTween(bgFade, {alpha: 0.7}, 4);
+		FlxTween.tween(bgFade, {alpha: 0.7}, 4);
 
 		box = new FlxSprite(-20, 45);
 
@@ -79,7 +79,7 @@ class DialogueBox extends FlxSpriteGroup
 			case 'senpai':
 				hasDialog = true;
 				portraitLeft = new FlxSprite(-20, 40);
-				portraitLeft.frames = Paths.getSparrowAtlas('weeb/senpaiPortrait');
+				portraitLeft.frames = Paths.getSparrowAtlas('stages/school/senpaiPortrait');
 				portraitLeft.animation.addByPrefix('enter', 'Senpai Portrait Enter', 24, false);
 				portraitLeft.setGraphicSize(Std.int(portraitLeft.width * CoolUtil.daPixelZoom * 0.9));
 				portraitLeft.updateHitbox();
@@ -89,7 +89,7 @@ class DialogueBox extends FlxSpriteGroup
 				portraitLeft.visible = false;
 
 				portraitRight = new FlxSprite(0, 40);
-				portraitRight.frames = Paths.getSparrowAtlas('weeb/bfPortrait');
+				portraitRight.frames = Paths.getSparrowAtlas('stages/school/bfPortrait');
 				portraitRight.animation.addByPrefix('enter', 'Boyfriend portrait enter', 24, false);
 				portraitRight.setGraphicSize(Std.int(portraitRight.width * CoolUtil.daPixelZoom * 0.9));
 				portraitRight.updateHitbox();
@@ -112,7 +112,7 @@ class DialogueBox extends FlxSpriteGroup
 				box.antialiasing = false;
 
 				portraitLeft = new FlxSprite(-20, 40);
-				portraitLeft.frames = Paths.getSparrowAtlas('weeb/senpaiPortrait');
+				portraitLeft.frames = Paths.getSparrowAtlas('stages/school/senpaiPortrait');
 				portraitLeft.animation.addByPrefix('enter', 'Senpai Portrait Enter', 24, false);
 				portraitLeft.setGraphicSize(Std.int(portraitLeft.width * CoolUtil.daPixelZoom * 0.9));
 				portraitLeft.updateHitbox();
@@ -122,7 +122,7 @@ class DialogueBox extends FlxSpriteGroup
 				portraitLeft.visible = false;
 
 				portraitRight = new FlxSprite(0, 40);
-				portraitRight.frames = Paths.getSparrowAtlas('weeb/bfPortrait');
+				portraitRight.frames = Paths.getSparrowAtlas('stages/school/bfPortrait');
 				portraitRight.animation.addByPrefix('enter', 'Boyfriend portrait enter', 24, false);
 				portraitRight.setGraphicSize(Std.int(portraitRight.width * CoolUtil.daPixelZoom * 0.9));
 				portraitRight.updateHitbox();
@@ -137,14 +137,14 @@ class DialogueBox extends FlxSpriteGroup
 				box.animation.addByIndices('normal', 'Spirit Textbox spawn', [11], "", 24);
 				box.antialiasing = false;
 
-				portraitLeft = new FlxSprite(-250, -50).loadGraphic(Paths.image('weeb/spiritFaceForward'));
+				portraitLeft = new FlxSprite(-250, -50).loadGraphic(Paths.image('stages/school/spiritFaceForward'));
 				portraitLeft.setGraphicSize(Std.int(portraitLeft.width * 6));
 				portraitLeft.antialiasing = false;
 				add(portraitLeft);
 				portraitLeft.visible = false;
 
 				portraitRight = new FlxSprite(0, 40);
-				portraitRight.frames = Paths.getSparrowAtlas('weeb/bfPortrait');
+				portraitRight.frames = Paths.getSparrowAtlas('stages/school/bfPortrait');
 				portraitRight.animation.addByPrefix('enter', 'Boyfriend portrait enter', 24, false);
 				portraitRight.setGraphicSize(Std.int(portraitRight.width * CoolUtil.daPixelZoom * 0.9));
 				portraitRight.updateHitbox();
@@ -219,7 +219,7 @@ class DialogueBox extends FlxSpriteGroup
 			dialogueStarted = true;
 		}
 
-		if (PlayerSettings.player1.controls.BACK && isEnding != true)
+		if (PlayerSettings.player1.controls.BACK && !isEnding)
 			endDialogue();
 		if (PlayerSettings.player1.controls.ACCEPT && dialogueStarted == true)
 		{
@@ -230,9 +230,7 @@ class DialogueBox extends FlxSpriteGroup
 					endDialogue();
 			}
 			else
-			{
 				startDialogue();
-			}
 		}
 
 		super.update(elapsed);

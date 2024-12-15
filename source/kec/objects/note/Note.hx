@@ -309,8 +309,6 @@ class Note extends FlxSprite
 				prevNote.updateHitbox();
 				prevNote.isSustainEnd = false;
 			}
-
-			localAlpha = FlxG.save.data.alpha;
 		}
 		else if (!isSustainNote)
 		{
@@ -524,8 +522,11 @@ class Note extends FlxSprite
 		visible = parent.visible;
 		if (!isSustainNote)
 			modAngle = parent.modAngle;
-
-		modAlpha = parent.modAlpha;
+		
+		if (isSustainNote)
+			modAlpha = parent.modAlpha * FlxG.save.data.alpha; // This is the correct way
+		else
+			modAlpha = parent.modAlpha;	
 	}
 
 	public function clipToStaticArrow(parent:StaticArrow)
@@ -561,10 +562,7 @@ class Note extends FlxSprite
 	{
 		sustainActive = b;
 		if (!b && !wasGoodHit)
-		{
-			Debug.logTrace("Too Late");
 			localAlpha = (localAlpha * 0.5);
-		}
 
 		return b;
 	}

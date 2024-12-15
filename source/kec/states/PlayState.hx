@@ -406,7 +406,7 @@ class PlayState extends MusicBeatState
 			SONG = Song.loadFromJson('bopeebo', '');
 
 		// if the song has dialogue, so we don't accidentally try to load a nonexistant file and crash the game
-		if (Paths.fileExists(Paths.txt('data/songs/${PlayState.SONG.songId}/dialogue.txt')))
+		if (Paths.fileExists('data/songs/${PlayState.SONG.songId}/dialogue.txt'))
 			dialogue = CoolUtil.coolTextFile(Paths.txt('data/songs/${PlayState.SONG.songId}/dialogue'));
 
 		introGroup = new FlxTypedGroup<IntroSprite>();
@@ -591,7 +591,7 @@ class PlayState extends MusicBeatState
 			if (!stageTesting)
 				dad.setPosition(gf.x, gf.y);
 			gf.visible = false;
-			tweenCamIn();
+			zoomForTweens = 1.3;
 		}
 
 		#if FEATURE_HSCRIPT
@@ -1050,7 +1050,6 @@ class PlayState extends MusicBeatState
 
 		songName.visible = FlxG.save.data.songPosition;
 		songPosBar.visible = FlxG.save.data.songPosition;
-		// fard
 	}
 
 	function schoolIntro(?dialogueBox:DialogueBox):Void
@@ -1064,7 +1063,7 @@ class PlayState extends MusicBeatState
 		red.scrollFactor.set();
 		red.screenCenter();
 		var senpaiEvil:FlxSprite = new FlxSprite();
-		senpaiEvil.frames = Paths.getSparrowAtlas('weeb/senpaiCrazy');
+		senpaiEvil.frames = Paths.getSparrowAtlas('stages/school/senpaiCrazy');
 		senpaiEvil.animation.addByPrefix('idle', 'Senpai Pre Explosion', 24, false);
 		senpaiEvil.antialiasing = false;
 		senpaiEvil.setGraphicSize(Std.int(senpaiEvil.width * CoolUtil.daPixelZoom));
@@ -1125,7 +1124,9 @@ class PlayState extends MusicBeatState
 					}
 				}
 				else
+				{
 					startCountdown();
+				}
 
 				remove(black);
 			}
@@ -1845,7 +1846,7 @@ class PlayState extends MusicBeatState
 			if (index < 4)
 			{
 				if (PlayStateChangeables.middleScroll)
-					targetAlpha = 0.35;
+					targetAlpha = 0.4;
 			}
 
 			if (t)
@@ -1864,15 +1865,6 @@ class PlayState extends MusicBeatState
 		});
 
 		arrowsShown = true;
-	}
-
-	function tweenCamIn():Void
-	{
-		// createTween(camGame, {zoom: 1.3}, (Conductor.stepCrochet * 4 * 0.001), {ease: FlxEase.elasticInOut});
-		createTweenNum(zoomForTweens, 1.3, (Conductor.stepCrochet * 4 * 0.001), {ease: FlxEase.elasticInOut}, function(num)
-		{
-			zoomForTweens = num;
-		});
 	}
 
 	override function openSubState(SubState:FlxSubState)
@@ -4264,10 +4256,11 @@ class PlayState extends MusicBeatState
 
 	private function setConductorTime()
 	{
-		if (!startedCountdown && endingSong)
+		if (!startedCountdown)
 			return;
 
-		// we don't need to update after the song ended
+		if (endingSong)
+			return;
 
 		Conductor.elapsedPosition += FlxG.elapsed * 1000;
 
