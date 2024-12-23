@@ -72,7 +72,7 @@
 	<!-- _______________________________ Libraries ______________________________ -->
 	<haxedev set="webgl" />
 	<!-- Flixel -->
-	<haxelib name="flixel" />
+	<haxelib name="flixel" version="5.8.0"/>
 	<haxelib name="flixel-addons" />
 	<haxelib name="haxeui-flixel" />
 	<haxelib name="haxeui-core" />
@@ -108,7 +108,6 @@
 	<haxedef name="HXCPP_STACK_LINE" if="desktop" />
 	<haxedef name="no_deprecation_warnings" />
 	<haxeflag name="-D no-traces" unless="debug" />
-	<haxedef name="queue_experimental_optimization" />
 	<haxedef name="haxeui_allow_drag_any_component" value="true" />
 	<haxedef name="haxeui_flixel_no_custom_cursors" value="true" />
 	<haxedef name="haxeui_dont_impose_base_class" value="true" />

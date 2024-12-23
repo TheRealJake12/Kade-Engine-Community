@@ -39,13 +39,12 @@ class Conductor
 
 	private static function set_bpm(value:Float)
 	{
-		if (bpm != value)
-		{
-			bpm = value;
-			crochet = ((60 / bpm) * 1000);
-			stepCrochet = crochet / 4;
-			Debug.logTrace(bpm);
-		}
+		if (bpm == value)
+			return value;
+		bpm = value;	
+		crochet = ((60 / bpm) * 1000);
+		stepCrochet = crochet / 4;
+		Debug.logTrace(bpm);
 		return value;
 	}
 }

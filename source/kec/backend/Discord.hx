@@ -15,11 +15,11 @@ class Discord
 		if (initialized)
 			return;
 
-		var handlers:DiscordEventHandlers = DiscordEventHandlers.create();
+		final handlers:DiscordEventHandlers = new DiscordEventHandlers();
 		handlers.ready = cpp.Function.fromStaticFunction(onReady);
 		handlers.disconnected = cpp.Function.fromStaticFunction(onDisconnected);
 		handlers.errored = cpp.Function.fromStaticFunction(onError);
-		RichPresence.Initialize(Constants.discordRpc, cpp.RawPointer.addressOf(handlers), 1, null);
+		RichPresence.Initialize(Constants.discordRpc, cpp.RawPointer.addressOf(handlers), true, null);
 
 		// Daemon Thread
 		Thread.create(function()
@@ -32,7 +32,7 @@ class Discord
 				RichPresence.RunCallbacks();
 
 				// Wait 1 second until the next loop...
-				Sys.sleep(1);
+				Sys.sleep(2);
 			}
 		});
 
@@ -43,7 +43,7 @@ class Discord
 
 	public static function changePresence(details:String, ?state:String, ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float):Void
 	{
-		var discordPresence:DiscordRichPresence = DiscordRichPresence.create();
+		final discordPresence:DiscordRichPresence = new DiscordRichPresence();
 		var startTimestamp:Float = if (hasStartTimestamp) Date.now().getTime() else 0;
 
 		if (endTimestamp > 0)

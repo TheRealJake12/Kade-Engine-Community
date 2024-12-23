@@ -21,10 +21,11 @@ class HealthIcon extends KECSprite
 
 	public static final defaultSize:Int = 150;
 
-	public var sizeMult:Float = 0.1;
+	public var sizeMult:Float = 1.0;
 
 	public var allowedToBop:Bool = true;
 	public var size:FlxPoint = new FlxPoint(1, 1);
+	public var sizeBop:FlxPoint = new FlxPoint(1.1, 1.1);
 	public final animationNames:Array<String> = ['Idle', 'Lose', 'Win'];
 
 	public function new(char:String = 'bf', isPlayer:Bool = false)
@@ -93,35 +94,23 @@ class HealthIcon extends KECSprite
 		if (step % stepsBetween != 0)
 			return;
 		// Make the icon increase in size (the update function causes them to lerp back down).
-		if (this.width > this.height)
-			setGraphicSize(Std.int(this.width + (defaultSize * this.size.x * sizeMult)), 0);
-		else
-			setGraphicSize(0, Std.int(this.height + (defaultSize * this.size.y * sizeMult)));
+		this.scale.set(this.size.x * this.sizeBop.x * sizeMult, this.size.y * this.sizeBop.y * sizeMult);
 		this.updateHitbox();
 	}
 
 	override function update(elapsed:Float)
 	{
-		super.update(elapsed);
-
 		if (sprTracker != null)
 			setPosition(sprTracker.x + sprTracker.width + 10, sprTracker.y - 30);
 
 		if (!allowedToBop)
 			return;
 
-		if (this.width > this.height)
-		{
-			// Apply linear interpolation while accounting for frame rate.
-			var targetSize:Int = Std.int(CoolUtil.coolLerp(this.width, defaultSize * this.size.x, 0.15));
-			setGraphicSize(targetSize, 0);
-		}
-		else
-		{
-			var targetSize:Int = Std.int(CoolUtil.coolLerp(this.height, defaultSize * this.size.y, 0.15));
-			setGraphicSize(0, targetSize);
-		}
+		final mult:Float = FlxMath.lerp(this.size.x, scale.x, Math.exp(-elapsed * 9 * Conductor.rate));
+		this.scale.set(mult, mult);
 		this.updateHitbox();
+		
+		super.update(elapsed);
 	}
 
 	inline function initTargetSize():Void

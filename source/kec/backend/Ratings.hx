@@ -177,24 +177,24 @@ class RatingWindow
 		switch (judgeStyle.toLowerCase())
 		{
 			default:
-				var ratings:Array<String> = ['Shit', 'Bad', 'Good', 'Sick', 'Marv'];
-				var timings:Array<Float> = [
+				final ratings:Array<String> = ['Shit', 'Bad', 'Good', 'Sick', 'Marv'];
+				final timings:Array<Float> = [
 					FlxG.save.data.shitMs,
 					FlxG.save.data.badMs,
 					FlxG.save.data.goodMs,
 					FlxG.save.data.sickMs,
 					FlxG.save.data.marvMs
 				];
-				var colors:Array<FlxColor> = [FlxColor.RED, FlxColor.RED, FlxColor.GREEN, FlxColor.WHITE, FlxColor.CYAN];
-				var acc:Array<Float> = [-1.00, 0.5, 0.75, 1.00, 1.00];
+				final colors:Array<FlxColor> = [FlxColor.RED, FlxColor.RED, FlxColor.GREEN, FlxColor.WHITE, FlxColor.CYAN];
+				final acc:Array<Float> = [-1.00, 0.5, 0.75, 1.00, 1.00];
 
-				var healthBonuses:Array<Float> = [-0.2, -0.06, 0, 0.04, 0.06];
-				var scoreBonuses:Array<Int> = [-300, 0, 200, 350, 350];
-				var defaultTimings:Array<Float> = [100.0, 95.0, 75.0, 35.0, 20.0];
-				var missArray:Array<Bool> = [false, false, false, false, false];
-				var splashArray:Array<Bool> = [false, false, false, true, true];
-				var suffixes:Array<String> = ['s', 's', 's', 's', 's'];
-				var combos:Array<String> = ['FC', 'FC', 'GFC', 'PFC', 'MFC'];
+				final healthBonuses:Array<Float> = [-0.2, -0.06, 0, 0.04, 0.06];
+				final scoreBonuses:Array<Int> = [-300, 0, 200, 350, 400];
+				final defaultTimings:Array<Float> = [160, 135, 90, 45, 25];
+				final missArray:Array<Bool> = [false, false, false, false, false];
+				final splashArray:Array<Bool> = [false, false, false, true, true];
+				final suffixes:Array<String> = ['s', 's', 's', 's', 's'];
+				final combos:Array<String> = ['FC', 'FC', 'GFC', 'PFC', 'MFC'];
 				for (i in 0...ratings.length)
 				{
 					var rClass = new RatingWindow(ratings[i], timings[i], combos[i], colors[i], healthBonuses[i], scoreBonuses[i], acc[i], missArray[i],

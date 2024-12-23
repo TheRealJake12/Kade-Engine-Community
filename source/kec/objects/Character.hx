@@ -26,6 +26,7 @@ class Character extends KECSprite
 	public var skipDance = false;
 	public var altSuffix:String = '';
 	public var animationNotes:Array<ChartNote> = [];
+	public var beatsBetween:Int = 2;
 	public var data:CharacterData = null;
 
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false, ?isGF:Bool = false, ?debug:Bool = false)
@@ -60,8 +61,6 @@ class Character extends KECSprite
 		var thingy:FlxAtlasFrames;
 
 		frames = Paths.getMultiAtlas(data.assets);
-
-		// Multi-atlas support which breaks everything
 
 		if (frames != null)
 			for (anim in data.animations)
@@ -104,6 +103,8 @@ class Character extends KECSprite
 			}
 		}
 
+		recalculateDanceIdle();
+
 		setGraphicSize(Std.int(width * data.scale));
 		updateHitbox();
 		antialiasing = data.antialiasing;
@@ -113,77 +114,60 @@ class Character extends KECSprite
 
 	override function update(elapsed:Float)
 	{
-		if (animation.curAnim != null && !debugMode)
+		if (animation.curAnim == null || debugMode)
 		{
-			if (specialAnim && animation.curAnim.finished)
-			{
-				specialAnim = false;
-				dance();
-			}
+			super.update(elapsed);
+			return;
+		}
 
-			if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished)
-			{
-				dance();
-				animation.curAnim.finish();
-			}
-			if (data.isPlayer)
-			{
-				if (animation.curAnim.name.startsWith('sing'))
-					holdTimer += elapsed;
-				else
-					holdTimer = 0;
+		if (specialAnim && animation.curAnim.finished)
+		{
+			specialAnim = false;
+			dance();
+		}
 
-				if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode)
-					dance();
+		if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished)
+		{
+			dance();
+			animation.curAnim.finish();
+		}
 
-				if (animation.curAnim.name == 'firstDeath' && animation.curAnim.finished)
-					playAnim('deathLoop');
-			}
-			else
-			{
-				if (animation.curAnim.name.startsWith('sing'))
-					holdTimer += elapsed;
+		if (animation.curAnim.name.startsWith('sing'))
+			holdTimer += elapsed;
+		else if (data.isPlayer)
+			holdTimer = 0;
 
-				if (holdTimer >= Conductor.stepCrochet * 0.0011 * data.holdLength * Conductor.rate)
+		if (!data.isPlayer && holdTimer >= Conductor.stepCrochet * 0.0011 * data.holdLength * Conductor.rate)
+		{
+			dance();
+			holdTimer = 0;
+		}
+
+		switch (data.char)
+		{
+			case 'pico-speaker':
+				while (animationNotes.length > 0 && Conductor.songPosition >= animationNotes[0].time)
 				{
-					dance();
+					var noteData:Int = 1;
+					if (2 <= animationNotes[0].data)
+						noteData = 3;
 
-					holdTimer = 0;
+					noteData += FlxG.random.int(0, 1);
+					playAnim('shoot' + noteData, true);
+					animationNotes.shift();
 				}
+				if (animation.curAnim.finished)
+					playAnim(animation.curAnim.name + 'Loop');
+			default:
+				final nextAnim = animNext.get(animation.curAnim.name);
+				final forceDanced = animDanced.get(animation.curAnim.name);
 
-				if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode)
-					dance();
-
-				if (animation.curAnim.name == 'firstDeath' && animation.curAnim.finished)
-					playAnim('deathLoop');
-			}
-
-			switch (data.char)
-			{
-				case 'pico-speaker':
-					while (animationNotes.length > 0 && Conductor.songPosition >= animationNotes[0].time)
-					{
-						var noteData:Int = 1;
-						if (2 <= animationNotes[0].data)
-							noteData = 3;
-
-						noteData += FlxG.random.int(0, 1);
-						playAnim('shoot' + noteData, true);
-						animationNotes.shift();
-					}
-					if (animation.curAnim.finished)
-						playAnim(animation.curAnim.name + 'Loop');
-				default:
-					var nextAnim = animNext.get(animation.curAnim.name);
-					var forceDanced = animDanced.get(animation.curAnim.name);
-
-					if (nextAnim != null && animation.curAnim.finished)
-					{
-						if (data.dances && forceDanced != null)
-							danced = forceDanced;
-						playAnim(nextAnim);
-					}
-			}
+				if (nextAnim != null && animation.curAnim.finished)
+				{
+					if (data.dances && forceDanced != null)
+						danced = forceDanced;
+					playAnim(nextAnim);
+				}
 		}
 
 		super.update(elapsed);
@@ -196,31 +180,28 @@ class Character extends KECSprite
 	 */
 	public function dance(forced:Bool = false)
 	{
-		if (!debugMode && !skipDance && !specialAnim)
+		if (debugMode && skipDance && specialAnim)
+			return;
+		if (animation.curAnim == null)
+			return;
+
+		final canInterrupt = animInterrupt.get(animation.curAnim.name);
+		if (!canInterrupt)
+			return;
+
+		if (isAlt)
+			altSuffix = '-alt';
+
+		switch (data.dances)
 		{
-			if (animation.curAnim != null)
-			{
-				var canInterrupt = animInterrupt.get(animation.curAnim.name);
-
-				if (canInterrupt)
-				{
-					if (isAlt)
-						altSuffix = '-alt';
-					if (data.dances)
-					{
-						danced = !danced;
-
-						if (danced)
-							playAnim('danceRight' + altSuffix);
-						else
-							playAnim('danceLeft' + altSuffix);
-					}
-					else
-					{
-						playAnim('idle' + altSuffix, forced);
-					}
-				}
-			}
+			case true:
+				danced = !danced;
+				if (danced)
+					playAnim('danceRight' + altSuffix);
+				else
+					playAnim('danceLeft' + altSuffix);
+			case false:
+				playAnim('idle' + altSuffix, forced);
 		}
 	}
 
@@ -237,7 +218,7 @@ class Character extends KECSprite
 		else
 			offset.set(0, 0);
 
-		if (data.char == 'gf')
+		if (data.isGF)
 		{
 			if (AnimName == 'singLEFT')
 				danced = true;
@@ -272,6 +253,15 @@ class Character extends KECSprite
 		}
 		animationNotes.sort(Sort.sortChartNotes);
 		TankmenBG.animationNotes = animationNotes;
+	}
+
+	public function recalculateDanceIdle()
+	{
+		var calc:Float = beatsBetween;
+		if (data.dances)
+			calc /= 2;
+
+		beatsBetween = Math.round(Math.max(calc, 1));
 	}
 
 	public function addInterrupt(name:String, value:Bool = true)

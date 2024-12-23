@@ -1,5 +1,6 @@
 package kec.backend;
 
+import kec.objects.FrameCounter;
 import kec.backend.util.FilterUtils;
 import lime.app.Application;
 import lime.system.DisplayMode;
@@ -1296,6 +1297,7 @@ class RainbowFPSOption extends Option
 		FlxG.save.data.fpsRain = !FlxG.save.data.fpsRain;
 		// Main.gameContainer.changeFPSColor(FlxColor.WHITE);
 		display = updateDisplay();
+		Main.gameContainer.setFPSColor(0xffffff);
 		return true;
 	}
 

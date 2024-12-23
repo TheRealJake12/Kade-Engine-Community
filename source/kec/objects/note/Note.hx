@@ -108,83 +108,81 @@ class Note extends FlxSprite
 
 	private function set_texture(value:String):String
 	{
-		if (texture != value)
-			reloadNote(value);
+		if (texture == value)
+			return value;
 
-		texture = value;
-		return value;
+		reloadNote(value);
+		return texture = value;
 	}
 
 	private function set_noteType(value:String):String
 	{
-		if (noteType != value)
+		if (noteType == value)
+			return value;
+		switch (value.toLowerCase())
 		{
-			switch (value.toLowerCase())
-			{
-				case 'hurt':
-					canPlayAnims = false;
-					canNoteSplash = true;
-					causesMisses = false;
-					botplayHit = false;
-					canRate = false;
-					missHealth = 0;
-					sustainActive = true;
-					hitsoundsEditor = false;
-					if (Paths.fileExists('images/notetypes/hurt_'
-						+ NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin]
-						+ '.png'))
-						texture = 'notetypes/hurt_' + NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin];
-					else
-						texture = "notetypes/hurt_Arrows";
-					quantNote = true;
-				case 'mustpress':
-					set_noteType('Must Press'); // backwards compatabilty for charts before the KEC1 format.
-				case 'must press':
-					canPlayAnims = true;
-					canNoteSplash = true;
-					botplayHit = true;
-					canRate = true;
-					missHealth = 0.8;
-					hitsoundsEditor = true;
-					if (Paths.fileExists('images/notetypes/mustpress_'
-						+ NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin]
-						+ '.png'))
-						texture = 'notetypes/mustpress_' + NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin];
-					else
-						texture = "notetypes/mustpress_Arrows";
-					quantNote = true;
-				case 'no animation':
-					canPlayAnims = false;
-					canNoteSplash = true;
-					causesMisses = true;
-					missHealth = 0.08;
-					botplayHit = true;
-					canRate = true;
-					hitsoundsEditor = true;
-					quantNote = true;
-				case 'gf':
-					gfNote = true;
-					canPlayAnims = true;
-					canNoteSplash = true;
-					causesMisses = true;
-					missHealth = 0.08;
-					botplayHit = true;
-					canRate = true;
-					hitsoundsEditor = true;
-					quantNote = true;
-				default:
-					canPlayAnims = true;
-					canNoteSplash = true;
-					causesMisses = true;
-					missHealth = 0.08;
-					botplayHit = true;
-					canRate = true;
-					hitsoundsEditor = true;
-					quantNote = true;
-			}
-			noteType = value;
+			case 'hurt':
+				canPlayAnims = false;
+				canNoteSplash = true;
+				causesMisses = false;
+				botplayHit = false;
+				canRate = false;
+				missHealth = 0;
+				sustainActive = true;
+				hitsoundsEditor = false;
+				if (Paths.fileExists('images/notetypes/hurt_'
+					+ NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin]
+					+ '.png'))
+					texture = 'notetypes/hurt_' + NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin];
+				else
+					texture = "notetypes/hurt_Arrows";
+				quantNote = true;
+			case 'mustpress':
+				set_noteType('Must Press'); // backwards compatabilty for charts before the KEC1 format.
+			case 'must press':
+				canPlayAnims = true;
+				canNoteSplash = true;
+				botplayHit = true;
+				canRate = true;
+				missHealth = 0.8;
+				hitsoundsEditor = true;
+				if (Paths.fileExists('images/notetypes/mustpress_'
+					+ NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin]
+					+ '.png'))
+					texture = 'notetypes/mustpress_' + NoteStyleHelper.noteskinArray[isPlayer ? FlxG.save.data.noteskin : FlxG.save.data.cpuNoteskin];
+				else
+					texture = "notetypes/mustpress_Arrows";
+				quantNote = true;
+			case 'no animation':
+				canPlayAnims = false;
+				canNoteSplash = true;
+				causesMisses = true;
+				missHealth = 0.08;
+				botplayHit = true;
+				canRate = true;
+				hitsoundsEditor = true;
+				quantNote = true;
+			case 'gf':
+				gfNote = true;
+				canPlayAnims = true;
+				canNoteSplash = true;
+				causesMisses = true;
+				missHealth = 0.08;
+				botplayHit = true;
+				canRate = true;
+				hitsoundsEditor = true;
+				quantNote = true;
+			default:
+				canPlayAnims = true;
+				canNoteSplash = true;
+				causesMisses = true;
+				missHealth = 0.06;
+				botplayHit = true;
+				canRate = true;
+				hitsoundsEditor = true;
+				quantNote = true;
 		}
-		return value;
+		return noteType = value;
 	}
 
 	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inCharter:Bool = false, ?isPlayer:Bool = false,
@@ -522,11 +520,11 @@ class Note extends FlxSprite
 		visible = parent.visible;
 		if (!isSustainNote)
 			modAngle = parent.modAngle;
-		
+
 		if (isSustainNote)
 			modAlpha = parent.modAlpha * FlxG.save.data.alpha; // This is the correct way
 		else
-			modAlpha = parent.modAlpha;	
+			modAlpha = parent.modAlpha;
 	}
 
 	public function clipToStaticArrow(parent:StaticArrow)

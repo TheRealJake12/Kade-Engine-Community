@@ -47,6 +47,8 @@ class FrameCounter extends TextField
 	// Event Handlers
 	private override function __enterFrame(deltaTime:Float):Void
 	{
+		if (FlxG.save.data.fpsRain)
+			textColor = FlxColor.fromHSB(FlxG.game.ticks * 0.25, 1, 1, 1);
 		final now:Float = haxe.Timer.stamp() * 1000;
 		times.push(now);
 		while (times[0] < now - 1000)
@@ -58,13 +60,16 @@ class FrameCounter extends TextField
 			return;
 		}
 
-		currentFPS = times.length < FlxG.updateFramerate ? times.length : FlxG.updateFramerate;
-		updateText();
+		if (visible)
+		{
+			currentFPS = times.length < FlxG.updateFramerate ? times.length : FlxG.updateFramerate;
+			updateText();
+		}
 		deltaTimeout = 0.0;
 	}
 
-	public dynamic function updateText():Void
-	{ // so people can override it in hscript
+	private inline function updateText():Void
+	{ 
 		final stateText:String = (FlxG.save.data.showState ? "Game State: " + Main.mainClassState : "");
 		final watermark:String = (FlxG.save.data.fpsmark ? Constants.kecVer : "");
 		var items:String = "";
@@ -76,28 +81,28 @@ class FrameCounter extends TextField
 
 	inline function get_memoryMegas():String
 	{
+		if (!FlxG.save.data.mem)
+			return "";
+
 		var memoryUsage:String = (FlxG.save.data.mem ? "Memory Usage: " : "");
 		var mem:Dynamic = Int64.make(0, System.totalMemory);
 
-		var taskMemoryMegas = Int64.make(0, kec.backend.util.MemoryUtil.getMemoryfromProcess());
+		final taskMemoryMegas = Int64.make(0, kec.backend.util.MemoryUtil.getMemoryfromProcess());
 
-		if (FlxG.save.data.mem)
-		{
-			#if windows
-			if (taskMemoryMegas >= 0x40000000)
-				memoryUsage += (Math.round(cast(taskMemoryMegas, Float) / 0x400 / 0x400 / 0x400 * 1000) / 1000) + " GB";
-			else if (taskMemoryMegas >= 0x100000)
-				memoryUsage += (Math.round(cast(taskMemoryMegas, Float) / 0x400 / 0x400 * 1000) / 1000) + " MB";
-			else if (taskMemoryMegas >= 0x400)
-				memoryUsage += (Math.round(cast(taskMemoryMegas, Float) / 0x400 * 1000) / 1000) + " KB";
-			else
-				memoryUsage += taskMemoryMegas + " B)";
-			#else
-			mem = flixel.util.FlxStringUtil.formatBytes(mem);
-			memoryUsage += mem;
-			// linux and other operating systems die when cpp code. Can't be 99.5% accurate like windows
-			#end
-		}
+		#if windows
+		if (taskMemoryMegas >= 0x40000000)
+			memoryUsage += (Math.round(cast(taskMemoryMegas, Float) / 0x400 / 0x400 / 0x400 * 1000) / 1000) + " GB";
+		else if (taskMemoryMegas >= 0x100000)
+			memoryUsage += (Math.round(cast(taskMemoryMegas, Float) / 0x400 / 0x400 * 1000) / 1000) + " MB";
+		else if (taskMemoryMegas >= 0x400)
+			memoryUsage += (Math.round(cast(taskMemoryMegas, Float) / 0x400 * 1000) / 1000) + " KB";
+		else
+			memoryUsage += taskMemoryMegas + " B)";
+		#else
+		mem = flixel.util.FlxStringUtil.formatBytes(mem);
+		memoryUsage += mem;
+		// linux and other operating systems die when cpp code. Can't be 99.5% accurate like windows
+		#end
 
 		return memoryUsage;
 	}

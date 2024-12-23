@@ -852,14 +852,7 @@ class PlayState extends MusicBeatState
 
 		if (isStoryMode)
 			doof.camera = camHUD;
-		for (da in dadGroup.members)
-			da.dance();
-
-		for (boi in boyfriendGroup.members)
-			boi.dance();
-
-		for (goil in gfGroup.members)
-			goil.dance();
+		characterBopper(0);
 
 		if (isStoryMode)
 		{
@@ -1187,23 +1180,7 @@ class PlayState extends MusicBeatState
 
 		startTimer = createTimer((Conductor.crochet * 0.001), function(t:FlxTimer)
 		{
-			for (b in boyfriendGroup.members)
-			{
-				if (b != null && idleToBeat)
-					b.dance(forcedToIdle);
-			}
-			for (d in dadGroup.members)
-			{
-				if (d != null && idleToBeat)
-					d.dance(forcedToIdle);
-			}
-
-			if (allowedToHeadbang)
-			{
-				for (g in gfGroup.members)
-					if (g != null)
-						g.dance();
-			}
+			characterBopper(0);
 
 			switch (t.loopsLeft)
 			{
@@ -1435,21 +1412,50 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	private function charactersDance()
+	public function characterBopper(beat:Int):Void
 	{
-		for (b in boyfriendGroup.members)
+		for (b in boyfriendGroup)
 		{
-			if (b.holdTimer >= Conductor.stepCrochet * 4 * 0.001)
-			{
-				if (b.animation.curAnim.name.startsWith('sing')
-					&& !b.animation.curAnim.name.endsWith('miss')
-					&& (b.animation.curAnim.curFrame >= 10 || b.animation.curAnim.finished))
-					b.dance();
-			}
+			if (b == null)
+				continue;
+			final doBeat = beat % b.beatsBetween == 0;
+			if (doBeat && !b.animation.curAnim.name.startsWith('sing'))
+				b.dance(forcedToIdle);
+		}
+
+		for (g in gfGroup)
+		{
+			if (!allowedToHeadbang)
+				break;
+			if (g == null)
+				continue;
+			final doBeat = beat % Math.round(gfSpeed * g.beatsBetween) == 0;
+			if (doBeat && !g.animation.curAnim.name.startsWith('sing'))
+				g.dance();
+		}
+
+		for (d in dadGroup)
+		{
+			if (d == null)
+				continue;
+			final doBeat = beat % d.beatsBetween == 0;
+			if (doBeat && !d.animation.curAnim.name.startsWith('sing'))
+				d.dance(forcedToIdle);
 		}
 	}
 
-	// sadly stolen from Psych. Im sorry :(((
+	public function playerDance():Void
+	{
+		for (b in boyfriendGroup)
+		{
+			if (b == null)
+				continue;
+			final anim:String = b.animation.curAnim.name;
+			if (b.holdTimer > Conductor.stepCrochet * (0.0011 / Conductor.rate) * b.data.holdLength && anim.startsWith('sing') && !anim.endsWith('miss'))
+				b.dance();
+		}
+	}
+
 	function noteMissPress(direction:Int = 1):Void
 	{
 		if (FlxG.save.data.ghost)
@@ -1527,38 +1533,10 @@ class PlayState extends MusicBeatState
 		Conductor.elapsedPosition = startTime;
 		music(true);
 
-		if (allowedToHeadbang && gf != null)
-		{
-			for (g in gfGroup.members)
-			{
-				g.dance();
-			}
-		}
-
-		for (b in boyfriendGroup.members)
-		{
-			if (idleToBeat && !b.animation.curAnim.name.startsWith("sing"))
-				b.dance(forcedToIdle);
-		}
-
-		for (d in dadGroup.members)
-		{
-			if (idleToBeat && !d.animation.curAnim.name.startsWith("sing"))
-				d.dance(forcedToIdle);
-		}
-
 		// Song check real quick
 		switch (SONG.songId)
 		{
 			case 'bopeebo' | 'philly' | 'blammed' | 'cocoa' | 'eggnog':
-				allowedToCheer = true;
-			default:
-				allowedToCheer = false;
-		}
-
-		switch (curSong)
-		{
-			case 'Bopeebo' | 'Philly Nice' | 'Blammed' | 'Cocoa' | 'Eggnog':
 				allowedToCheer = true;
 			default:
 				allowedToCheer = false;
@@ -2235,6 +2213,8 @@ class PlayState extends MusicBeatState
 
 		// Camera Related Stuff.
 
+		playerDance();
+
 		if (!paused)
 		{
 			var bpmRatio = Conductor.bpm * 0.01;
@@ -2309,7 +2289,7 @@ class PlayState extends MusicBeatState
 									default:
 										if (daNote.isParent && daNote.visible)
 										{
-											Debug.logTrace("User failed Sustain note at the start of sustain.");
+											// Debug.logTrace("User failed Sustain note at the start of sustain.");
 											for (i in daNote.children)
 											{
 												i.sustainActive = false;
@@ -2323,7 +2303,7 @@ class PlayState extends MusicBeatState
 											if (!daNote.wasGoodHit && daNote.causesMisses)
 											{
 												health -= (daNote.missHealth * PlayStateChangeables.healthLoss);
-												Debug.logTrace("User failed note.");
+												// Debug.logTrace("User failed note.");
 												noteMiss(daNote.noteData, daNote);
 											}
 										}
@@ -2340,7 +2320,7 @@ class PlayState extends MusicBeatState
 								if (!daNote.wasGoodHit && daNote.isSustainNote && daNote.sustainActive && !daNote.isSustainEnd && daNote.causesMisses
 									&& !keys[daNote.noteData])
 								{
-									Debug.logTrace("User released key while playing a sustain at: " + daNote.spotInLine);
+									// Debug.logTrace("User released key while playing a sustain at: " + daNote.spotInLine);
 									for (i in daNote.parent.children)
 									{
 										i.sustainActive = false;
@@ -2354,8 +2334,6 @@ class PlayState extends MusicBeatState
 				}
 			});
 		}
-
-		charactersDance();
 
 		if (FlxG.keys.justPressed.ONE && FlxG.save.data.developer)
 			endSong();
@@ -2396,8 +2374,8 @@ class PlayState extends MusicBeatState
 						{
 							voc.time = inst.time;
 							voc.pitch = inst.pitch;
-							desyncs++;
-							Debug.logTrace('Vocal Desyncs $desyncs');
+							// desyncs++;
+							// Debug.logTrace('Vocal Desyncs $desyncs');
 						}
 			}
 		}
@@ -2407,8 +2385,8 @@ class PlayState extends MusicBeatState
 	{
 		inst.time = Conductor.songPosition;
 		inst.pitch = Conductor.rate;
-		iDesyncs++;
-		Debug.logTrace('Inst Desyncs $iDesyncs');
+		// iDesyncs++;
+		// Debug.logTrace('Inst Desyncs $iDesyncs');
 	}
 
 	function endSong():Void
@@ -3009,111 +2987,111 @@ class PlayState extends MusicBeatState
 			notesHitArray.unshift(noteDate.getTime());
 		}
 
-		if (!note.wasGoodHit)
+		if (note.wasGoodHit)
+			return;
+
+		noteCamera(note);
+		if (!note.isSustainNote)
 		{
-			noteCamera(note);
-			if (!note.isSustainNote)
+			if (FlxG.save.data.hitSound != 0)
 			{
-				if (FlxG.save.data.hitSound != 0)
+				if (!FlxG.save.data.strumHit)
 				{
-					if (!FlxG.save.data.strumHit)
-					{
-						hitSound.stop();
-						hitSound.time = 0;
-						hitSound.volume = FlxG.save.data.hitVolume;
-						hitSound.play();
-					}
-				}
-				/* Enable Sustains to be hit. 
-					// This is to prevent hitting sustains if you hold a strum before the note is coming without hitting the note parent. 
-					(I really hope I made me understand lol.) */
-				if (note.isParent)
-					for (i in note.children)
-						i.sustainActive = true;
-
-				if (note.canRate)
-				{
-					combo += 1;
-					popUpScore(note);
+					hitSound.stop();
+					hitSound.time = 0;
+					hitSound.volume = FlxG.save.data.hitVolume;
+					hitSound.play();
 				}
 			}
+			/* Enable Sustains to be hit. 
+				// This is to prevent hitting sustains if you hold a strum before the note is coming without hitting the note parent. 
+				(I really hope I made me understand lol.) */
+			if (note.isParent)
+				for (i in note.children)
+					i.sustainActive = true;
 
-			if (!note.isSustainEnd)
+			if (note.canRate)
 			{
-				var char:Character = boyfriend;
-
-				switch (note.noteType.toLowerCase())
-				{
-					case 'hurt':
-						if (FlxG.save.data.notesplashes && !note.isSustainNote)
-						{
-							spawnNoteSplashOnNote(note);
-						}
-						Stats.totalPlayed += 1;
-						note.rating = Ratings.timingWindows[0];
-						health -= 0.8;
-						char.playAnim('hurt');
-				}
-
-				var altAnim:String = "";
-				if (note.noteType.toLowerCase() == 'alt')
-					altAnim = '-alt';
-
-				if (note.canPlayAnims)
-				{
-					if (note.noteType.toLowerCase() == 'gf' && gf != null)
-						char = gf;
-
-					var animToPlay:String = Constants.singAnimations[note.noteData] + altAnim;
-					if (note.isSustainNote)
-					{
-						var holdAnim:String = animToPlay + '-hold';
-						if (char.offsets.exists(holdAnim))
-							animToPlay = holdAnim;
-					}
-					char.playAnim(animToPlay, true);
-					char.holdTimer = 0;
-				}
-
-				#if FEATURE_LUAMODCHART
-				if (luaModchart != null)
-					luaModchart.executeState('goodNoteHit', [Math.abs(note.noteData), Conductor.elapsedPosition]);
-				#end
-
-				#if FEATURE_HSCRIPT
-				scripts.executeAllFunc("goodNoteHit", [note]);
-				#end
-
-				if (PlayStateChangeables.botPlay && FlxG.save.data.cpuStrums)
-					pressArrow(playerStrums.members[note.noteData], note, fakeNoteStepCrochet * 1.25 * 0.001);
-				else if (!PlayStateChangeables.botPlay)
-				{
-					var spr = playerStrums.members[note.noteData];
-					if (spr != null)
-						if (!FlxG.save.data.stepMania)
-							spr.playAnim('confirm', true);
-						else
-						{
-							spr.localAngle = note.originAngle;
-							spr.playAnim('dirCon' + note.originColor, true);
-						}
-				}
+				combo += 1;
+				popUpScore(note);
 			}
-
-			if (!note.isSustainNote)
-			{
-				destroyNote(note);
-				updateAccuracy();
-				updateScoreText();
-			}
-
-			if (SONG.splitVoiceTracks != true)
-				vocals.volume = 1;
-			else
-				vocalsPlayer.volume = 1;
-
-			note.wasGoodHit = true;
 		}
+
+		if (!note.isSustainEnd)
+		{
+			var char:Character = boyfriend;
+
+			switch (note.noteType.toLowerCase())
+			{
+				case 'hurt':
+					if (FlxG.save.data.notesplashes && !note.isSustainNote)
+					{
+						spawnNoteSplashOnNote(note);
+					}
+					Stats.totalPlayed += 1;
+					note.rating = Ratings.timingWindows[0];
+					health -= 0.8;
+					char.playAnim('hurt');
+			}
+
+			var altAnim:String = "";
+			if (note.noteType.toLowerCase() == 'alt')
+				altAnim = '-alt';
+
+			if (note.canPlayAnims)
+			{
+				if (note.noteType.toLowerCase() == 'gf' && gf != null)
+					char = gf;
+
+				var animToPlay:String = Constants.singAnimations[note.noteData] + altAnim;
+				if (note.isSustainNote)
+				{
+					var holdAnim:String = animToPlay + '-hold';
+					if (char.offsets.exists(holdAnim))
+						animToPlay = holdAnim;
+				}
+				char.playAnim(animToPlay, true);
+				char.holdTimer = 0;
+			}
+
+			#if FEATURE_LUAMODCHART
+			if (luaModchart != null)
+				luaModchart.executeState('goodNoteHit', [Math.abs(note.noteData), Conductor.elapsedPosition]);
+			#end
+
+			#if FEATURE_HSCRIPT
+			scripts.executeAllFunc("goodNoteHit", [note]);
+			#end
+
+			if (PlayStateChangeables.botPlay && FlxG.save.data.cpuStrums)
+				pressArrow(playerStrums.members[note.noteData], note, fakeNoteStepCrochet * 1.25 * 0.001);
+			else if (!PlayStateChangeables.botPlay)
+			{
+				var spr = playerStrums.members[note.noteData];
+				if (spr != null)
+					if (!FlxG.save.data.stepMania)
+						spr.playAnim('confirm', true);
+					else
+					{
+						spr.localAngle = note.originAngle;
+						spr.playAnim('dirCon' + note.originColor, true);
+					}
+			}
+		}
+
+		if (!note.isSustainNote)
+		{
+			destroyNote(note);
+			updateAccuracy();
+			updateScoreText();
+		}
+
+		if (!SONG.splitVoiceTracks)
+			vocals.volume = 1;
+		else
+			vocalsPlayer.volume = 1;
+
+		note.wasGoodHit = true;
 	}
 
 	function pressArrow(spr:StaticArrow, daNote:Note, time:Float)
@@ -3141,11 +3119,6 @@ class PlayState extends MusicBeatState
 
 		iconP1.onStepHit(curStep);
 		iconP2.onStepHit(curStep);
-		if (allowedToHeadbang && curStep % 4 == 0)
-		{
-			if (gf != null)
-				gf.dance();
-		}
 
 		// HARDCODING FOR MILF ZOOMS!
 		if (PlayState.SONG.songId == 'milf' && curStep >= 672 && curStep < 800 && camZooming)
@@ -3216,35 +3189,7 @@ class PlayState extends MusicBeatState
 		scripts.setAll("curBeat", curBeat);
 		scripts.executeAllFunc("beatHit", [beatHit]);
 		#end
-
-		var bpmRatio = SONG.bpm * 0.01;
-		if (curBeat % idleBeat == 0)
-		{
-			for (boey in dadGroup.members)
-			{
-				if (idleToBeat && !boey.animation.curAnim.name.startsWith('sing'))
-					boey.dance(forcedToIdle);
-			}
-
-			for (boi in boyfriendGroup.members)
-			{
-				if (idleToBeat && !boi.animation.curAnim.name.startsWith('sing'))
-					boi.dance(forcedToIdle);
-			}
-		}
-		else if (curBeat % idleBeat != 0)
-		{
-			for (boey in dadGroup.members)
-			{
-				if (boey.data.dances && !boey.animation.curAnim.name.startsWith('sing'))
-					boey.dance(forcedToIdle);
-			}
-			for (boi in boyfriendGroup.members)
-			{
-				if (boi.data.dances && !boi.animation.curAnim.name.startsWith('sing'))
-					boi.dance(forcedToIdle);
-			}
-		}
+		characterBopper(curBeat);
 	}
 
 	override function sectionHit():Void

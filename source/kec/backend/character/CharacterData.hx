@@ -65,7 +65,7 @@ class CharacterData
 
 		for (sheet in data.asset)
 			assets.push(sheet);
-
+		this.isPlayer = isPlayer;
 		atlasType = data.AtlasType == null ? 'SparrowAtlas' : data.AtlasType;
 		animations = data.animations; // not a better way to do this.
 
