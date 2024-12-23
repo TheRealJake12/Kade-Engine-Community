@@ -16,9 +16,9 @@ import flash.display.BitmapData;
 import flixel.graphics.frames.FlxAtlasFrames;
 import haxe.DynamicAccess;
 import kec.stages.Stage;
-import kec.objects.note.Note;
-import kec.objects.note.StaticArrow;
-import kec.objects.Character;
+import kec.objects.game.note.Note;
+import kec.objects.game.note.StaticArrow;
+import kec.objects.game.Character;
 import kec.backend.Stats;
 
 // completely yoinked from andromeda (thats what you get for stealing my callback inputs you fuckers /j)

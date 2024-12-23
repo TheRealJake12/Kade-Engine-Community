@@ -1,4 +1,4 @@
-package kec.objects.ui;
+package kec.objects.game;
 
 class HealthIcon extends KECSprite
 {

@@ -1,4 +1,4 @@
-package kec.objects;
+package kec.objects.menu;
 
 import kec.backend.Ratings;
 import openfl.display.Bitmap;

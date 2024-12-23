@@ -2,10 +2,10 @@ package kec.backend.util;
 
 import flixel.util.FlxSort;
 import haxe.ds.ArraySort;
-import kec.objects.note.Note;
+import kec.objects.game.note.Note;
 import kec.backend.chart.ChartNote;
 import kec.backend.chart.Event;
-import kec.objects.ui.UIComponent;
+import kec.objects.game.UIComponent;
 
 /**
  * Class Used For Sorting Things Globally Instead Of Being Specific To States.

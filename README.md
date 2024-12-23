@@ -60,7 +60,13 @@ So I will now do a guide to build the game.
 1. Install the latest Haxe. Instead of using Haxe 4.1.5, as the original game used, we will update to Haxe 4.3.4 (or the latest version)
 You will first need to go to this link to download [Haxe](https://haxe.org/download/) Choose your platform and just do the normal download proccess.
 2. Install [Git](https://git-scm.com/downloads)
-3. Run `easysetup.bat` or `easysetup.sh` to install the libraries needed to compile.
+3. Run `setup.bat` or `setup.sh` to install the libraries needed to compile. Alternatively, you can install from [hxpkg](https://github.com/CCobaltDev/HxPKG).
+To install hxpkg and the libraries, run these commands.
+```
+haxelib --global install hxpkg
+haxelib --global run hxpkg setup
+hxpkg install
+```
 
 3.5 (Optional) If you're on Linux, you may be missing some libraries required to compile properly. Run these commands to fix some issues commonly reported.
 ```

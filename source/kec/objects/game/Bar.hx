@@ -1,4 +1,4 @@
-package kec.objects;
+package kec.objects.game;
 
 import flixel.math.FlxRect;
 import flixel.group.FlxSpriteGroup;

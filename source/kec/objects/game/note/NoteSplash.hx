@@ -1,4 +1,4 @@
-package kec.objects.note;
+package kec.objects.game.note;
 
 import flixel.graphics.frames.FlxAtlasFrames;
 import kec.backend.util.NoteStyleHelper;

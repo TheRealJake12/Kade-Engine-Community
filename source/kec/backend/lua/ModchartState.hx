@@ -23,7 +23,7 @@ import openfl.utils.Assets as OpenFlAssets;
 #if FEATURE_FILESYSTEM
 import sys.io.File;
 #end
-import kec.objects.Character;
+import kec.objects.game.Character;
 
 class ModchartState
 {

@@ -1,4 +1,4 @@
-package kec.objects;
+package kec.objects.game;
 
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFramesCollection;

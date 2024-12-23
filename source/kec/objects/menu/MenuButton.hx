@@ -1,4 +1,4 @@
-package kec.objects;
+package kec.objects.menu;
 
 /**
 	* A Multipurpose Button Useful For Many Menus.

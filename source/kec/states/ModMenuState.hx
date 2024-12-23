@@ -7,7 +7,7 @@ import kec.backend.modding.ModCore;
 import flixel.group.FlxSpriteGroup;
 import polymod.Polymod.ModMetadata;
 import polymod.Polymod;
-import kec.objects.CoolText;
+import kec.objects.menu.CoolText;
 #if FEATURE_FILESYSTEM
 import sys.FileSystem;
 import sys.io.File;

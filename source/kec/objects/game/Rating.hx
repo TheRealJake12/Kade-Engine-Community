@@ -1,4 +1,4 @@
-package kec.objects.ui;
+package kec.objects.game;
 
 class Rating extends UIComponent
 {

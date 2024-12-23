@@ -7,9 +7,9 @@ import flixel.util.FlxStringUtil;
 import haxe.Log;
 import haxe.PosInfos;
 import kec.backend.chart.Song;
-import kec.objects.Character;
-import kec.objects.ui.HealthIcon;
-import kec.objects.note.Note;
+import kec.objects.game.Character;
+import kec.objects.game.HealthIcon;
+import kec.objects.game.note.Note;
 
 /**
  * Hey you, developer!

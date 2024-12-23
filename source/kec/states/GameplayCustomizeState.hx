@@ -5,13 +5,13 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import openfl.ui.Keyboard;
 import kec.stages.Stage;
 import kec.backend.chart.Song.Style;
-import kec.objects.note.StaticArrow;
-import kec.objects.Character;
+import kec.objects.game.note.StaticArrow;
+import kec.objects.game.Character;
 #if FEATURE_DISCORD
 import kec.backend.Discord;
 #end
 import kec.backend.PlayStateChangeables;
-import kec.objects.note.Note;
+import kec.objects.game.note.Note;
 import kec.backend.util.NoteStyleHelper;
 import kec.backend.PlayerSettings;
 import haxe.ui.backend.flixel.UIState;

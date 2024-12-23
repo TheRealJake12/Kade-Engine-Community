@@ -1,6 +1,6 @@
 package kec.substates;
 
-import kec.objects.Character;
+import kec.objects.game.Character;
 import kec.backend.PlayStateChangeables;
 
 class GameOverSubstate extends MusicBeatSubstate

@@ -1,4 +1,4 @@
-package kec.objects;
+package kec.objects.menu;
 
 import flixel.graphics.frames.FlxAtlasFrames;
 
