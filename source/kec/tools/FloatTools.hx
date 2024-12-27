@@ -1,4 +1,4 @@
-package kec.backend.tools;
+package kec.tools;
 
 /**
  * Utilities for performing common math operations.

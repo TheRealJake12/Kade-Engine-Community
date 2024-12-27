@@ -2,7 +2,7 @@ package kec.states;
 
 import kec.objects.menu.CoolText;
 import kec.backend.chart.Song.Style;
-import kec.backend.util.DiffCalc;
+import kec.util.DiffCalc;
 import kec.backend.PlayStateChangeables;
 import kec.backend.chart.TimingStruct;
 import openfl.media.Sound;
@@ -28,8 +28,8 @@ import kec.states.editors.ChartingState;
 import kec.objects.menu.Alphabet;
 import kec.objects.game.HealthIcon;
 import kec.backend.chart.Song;
-import kec.backend.util.Highscore;
-import kec.backend.util.HelperFunctions;
+import kec.util.Highscore;
+import kec.util.HelperFunctions;
 
 class FreeplayState extends MusicBeatState
 {

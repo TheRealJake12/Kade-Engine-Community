@@ -1,4 +1,4 @@
-package kec.backend.tools;
+package kec.tools;
 
 /**
  * A static extension which provides utility functions for Arrays.

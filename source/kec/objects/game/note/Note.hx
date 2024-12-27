@@ -3,7 +3,7 @@ package kec.objects.game.note;
 import kec.backend.lua.LuaClass;
 import flixel.math.FlxRect;
 import kec.backend.Ratings.RatingWindow;
-import kec.backend.util.NoteStyleHelper;
+import kec.util.NoteStyleHelper;
 import kec.backend.PlayStateChangeables;
 import kec.backend.Ratings;
 

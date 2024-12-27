@@ -3,7 +3,7 @@ package kec.states;
 import kec.objects.mod.ModCard;
 #if FEATURE_MODCORE
 import haxe.ui.components.Button;
-import kec.backend.modding.ModCore;
+import kec.backend.ModCore;
 import flixel.group.FlxSpriteGroup;
 import polymod.Polymod.ModMetadata;
 import polymod.Polymod;

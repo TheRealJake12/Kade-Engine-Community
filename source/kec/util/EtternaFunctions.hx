@@ -1,4 +1,6 @@
-package kec.backend.util;
+package kec.util;
+
+import kec.backend.Ratings;
 
 class EtternaFunctions
 {

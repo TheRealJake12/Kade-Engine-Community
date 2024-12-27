@@ -1,4 +1,4 @@
-package kec.backend.util;
+package kec.util;
 
 import openfl.net.FileReference;
 import openfl.events.Event;

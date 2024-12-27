@@ -1,4 +1,4 @@
-package kec.backend.util;
+package kec.util;
 
 import openfl.filters.ColorMatrixFilter;
 import openfl.filters.BitmapFilter;

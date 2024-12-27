@@ -1,7 +1,7 @@
 package kec.objects.game.note;
 
 import kec.backend.lua.LuaClass;
-import kec.backend.util.NoteStyleHelper;
+import kec.util.NoteStyleHelper;
 
 class StaticArrow extends FlxSprite
 {

@@ -5,7 +5,7 @@ import openfl.utils.Assets as OpenFlAssets;
 import moonchart.formats.fnf.*;
 import moonchart.formats.fnf.legacy.*;
 
-using kec.backend.tools.StringTools;
+using kec.tools.StringTools;
 
 /**
  * ### Tool To Convert Chart Formats.

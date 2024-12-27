@@ -12,7 +12,7 @@ import kec.backend.Discord;
 #end
 import kec.backend.PlayStateChangeables;
 import kec.objects.game.note.Note;
-import kec.backend.util.NoteStyleHelper;
+import kec.util.NoteStyleHelper;
 import kec.backend.PlayerSettings;
 import haxe.ui.backend.flixel.UIState;
 

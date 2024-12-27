@@ -1,4 +1,4 @@
-package kec.backend.util;
+package kec.util;
 
 class HelperFunctions
 {

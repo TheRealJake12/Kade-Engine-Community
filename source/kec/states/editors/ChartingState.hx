@@ -9,9 +9,9 @@ import kec.backend.chart.Event;
 import kec.backend.chart.ChartData;
 import kec.backend.chart.Song;
 import kec.backend.chart.TimingStruct;
-import kec.backend.util.HelperFunctions;
-import kec.backend.util.NoteStyleHelper;
-import kec.backend.util.Sort;
+import kec.util.HelperFunctions;
+import kec.util.NoteStyleHelper;
+import kec.util.Sort;
 import kec.backend.character.CharacterData;
 import kec.objects.menu.CoolText;
 import kec.objects.game.note.Note;
@@ -28,7 +28,7 @@ import kec.objects.editor.BeatLine;
 import haxe.ui.data.ArrayDataSource;
 import haxe.ui.focus.FocusManager;
 import flixel.util.FlxSort;
-import kec.backend.util.FileDialogHandler;
+import kec.util.FileDialogHandler;
 import haxe.ui.events.UIEvent;
 #if FEATURE_FILESYSTEM
 import sys.FileSystem;
@@ -211,7 +211,7 @@ class ChartingState extends UIState
 
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.scrollFactor.set();
-		bg.color = 0xFF111111;
+		bg.color = 0xFF333333;
 		add(bg);
 		createGrid();
 

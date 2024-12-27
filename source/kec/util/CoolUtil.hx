@@ -1,4 +1,4 @@
-package kec.backend.util;
+package kec.util;
 
 import openfl.utils.Assets as OpenFlAssets;
 import flixel.graphics.frames.FlxBitmapFont;

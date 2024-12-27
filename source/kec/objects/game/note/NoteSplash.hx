@@ -1,7 +1,7 @@
 package kec.objects.game.note;
 
 import flixel.graphics.frames.FlxAtlasFrames;
-import kec.backend.util.NoteStyleHelper;
+import kec.util.NoteStyleHelper;
 
 typedef SplashData =
 {

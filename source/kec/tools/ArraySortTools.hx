@@ -1,4 +1,4 @@
-package kec.backend.tools;
+package kec.tools;
 
 /**
  * Contains code for sorting arrays using various algorithms.

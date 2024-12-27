@@ -20,8 +20,8 @@ import kec.objects.game.note.NoteSplash;
 import kec.objects.game.note.StaticArrow;
 import kec.backend.chart.Conductor;
 import kec.backend.chart.Song;
-import kec.backend.util.CoolUtil;
-import kec.backend.util.Highscore;
+import kec.util.CoolUtil;
+import kec.util.Highscore;
 import kec.backend.Stats;
 
 class ScriptUtil

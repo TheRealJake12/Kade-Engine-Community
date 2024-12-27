@@ -1,7 +1,7 @@
 package kec.backend;
 
 import kec.backend.PlayStateChangeables;
-import kec.backend.util.HelperFunctions;
+import kec.util.HelperFunctions;
 
 class Ratings
 {

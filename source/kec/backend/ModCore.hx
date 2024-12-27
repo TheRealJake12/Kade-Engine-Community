@@ -1,4 +1,4 @@
-package kec.backend.modding;
+package kec.backend;
 
 #if FEATURE_MODCORE
 import polymod.backends.OpenFLBackend;

@@ -1,6 +1,6 @@
 package kec.states;
 
-import kec.backend.util.NoteStyleHelper;
+import kec.util.NoteStyleHelper;
 
 class OptionsDirect extends MusicBeatState
 {

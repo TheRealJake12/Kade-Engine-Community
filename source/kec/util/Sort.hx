@@ -1,4 +1,4 @@
-package kec.backend.util;
+package kec.util;
 
 import flixel.util.FlxSort;
 import haxe.ds.ArraySort;

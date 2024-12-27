@@ -1,4 +1,4 @@
-package kec.backend.util.managers;
+package kec.util.managers;
 
 class TweenManager extends FlxTweenManager
 {

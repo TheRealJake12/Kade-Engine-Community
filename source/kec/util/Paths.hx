@@ -1,4 +1,4 @@
-package kec.backend.util;
+package kec.util;
 
 #if cpp
 import cpp.vm.Gc;

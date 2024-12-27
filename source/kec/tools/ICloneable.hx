@@ -1,4 +1,4 @@
-package kec.backend.tools;
+package kec.tools;
 
 /**
  * Implement this on a class to enable `Array<T>.deepClone()` to work on it.

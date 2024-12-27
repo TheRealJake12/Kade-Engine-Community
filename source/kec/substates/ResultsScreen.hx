@@ -10,8 +10,8 @@ import kec.objects.OFLSprite;
 import kec.objects.game.note.Note;
 import kec.backend.PlayStateChangeables;
 import kec.backend.Ratings;
-import kec.backend.util.HelperFunctions;
-import kec.backend.util.Highscore;
+import kec.util.HelperFunctions;
+import kec.util.Highscore;
 import kec.backend.PlayerSettings;
 import kec.backend.Stats;
 

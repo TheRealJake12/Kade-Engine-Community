@@ -12,7 +12,7 @@ import kec.objects.menu.CoolText;
 import kec.objects.menu.MenuItem;
 import kec.objects.menu.MenuCharacter;
 import kec.backend.chart.Song;
-import kec.backend.util.Highscore;
+import kec.util.Highscore;
 import kec.backend.PlayStateChangeables;
 import kec.backend.Stats;
 

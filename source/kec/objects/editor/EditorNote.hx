@@ -1,6 +1,6 @@
 package kec.objects.editor;
 
-import kec.backend.util.NoteStyleHelper;
+import kec.util.NoteStyleHelper;
 import kec.objects.game.note.Note;
 
 /**
