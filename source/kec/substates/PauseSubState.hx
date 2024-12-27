@@ -2,7 +2,7 @@ package kec.substates;
 
 import kec.backend.Controls.Control;
 import flixel.addons.transition.FlxTransitionableState;
-import kec.objects.Alphabet;
+import kec.objects.menu.Alphabet;
 import kec.backend.PlayStateChangeables;
 import kec.backend.chart.Song;
 

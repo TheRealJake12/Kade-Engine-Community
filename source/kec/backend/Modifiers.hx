@@ -6,7 +6,7 @@ import kec.backend.Controls.KeyboardScheme;
 import openfl.display.FPS;
 import openfl.Lib;
 import kec.substates.FreeplaySubState;
-import kec.backend.util.HelperFunctions;
+import kec.util.HelperFunctions;
 
 // Used Options.hx code template to make this. Go to FreeplaySubState.hx to see the menu code :D
 class Modifier

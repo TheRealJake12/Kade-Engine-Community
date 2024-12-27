@@ -3,11 +3,11 @@ package kec.states;
 import kec.objects.mod.ModCard;
 #if FEATURE_MODCORE
 import haxe.ui.components.Button;
-import kec.backend.modding.ModCore;
+import kec.backend.ModCore;
 import flixel.group.FlxSpriteGroup;
 import polymod.Polymod.ModMetadata;
 import polymod.Polymod;
-import kec.objects.CoolText;
+import kec.objects.menu.CoolText;
 #if FEATURE_FILESYSTEM
 import sys.FileSystem;
 import sys.io.File;

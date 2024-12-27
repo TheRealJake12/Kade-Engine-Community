@@ -2,7 +2,7 @@ package kec.states;
 
 import flixel.group.FlxGroup;
 import openfl.Assets;
-import kec.objects.Alphabet;
+import kec.objects.menu.Alphabet;
 
 class TitleState extends MusicBeatState
 {

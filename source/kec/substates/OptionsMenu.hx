@@ -1,6 +1,6 @@
 package kec.substates;
 
-import kec.objects.CoolText;
+import kec.objects.menu.CoolText;
 import kec.backend.Options;
 import kec.backend.Controls.Control;
 import kec.backend.PlayerSettings;

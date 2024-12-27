@@ -1,6 +1,6 @@
 package kec.objects.mod;
 
-import kec.objects.CoolText;
+import kec.objects.menu.CoolText;
 
 class ModCard extends FlxSpriteGroup
 {

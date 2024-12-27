@@ -20,22 +20,22 @@ import kec.backend.chart.Section;
 import kec.backend.chart.Song.StyleData;
 import kec.backend.chart.Song;
 import kec.backend.chart.TimingStruct;
-import kec.backend.util.HelperFunctions;
-import kec.backend.util.Highscore;
-import kec.backend.util.NoteStyleHelper;
-import kec.backend.util.Sort;
-import kec.objects.Alphabet;
-import kec.objects.Bar;
-import kec.objects.Character;
-import kec.objects.note.Note;
-import kec.objects.note.NoteSplash;
-import kec.objects.note.StaticArrow;
-import kec.objects.ui.ComboNumber;
-import kec.objects.ui.DialogueBox;
-import kec.objects.ui.HealthIcon;
-import kec.objects.ui.IntroSprite;
-import kec.objects.ui.Rating;
-import kec.objects.ui.UIComponent;
+import kec.util.HelperFunctions;
+import kec.util.Highscore;
+import kec.util.NoteStyleHelper;
+import kec.util.Sort;
+import kec.objects.menu.Alphabet;
+import kec.objects.game.Bar;
+import kec.objects.game.Character;
+import kec.objects.game.note.Note;
+import kec.objects.game.note.NoteSplash;
+import kec.objects.game.note.StaticArrow;
+import kec.objects.game.ComboNumber;
+import kec.objects.game.DialogueBox;
+import kec.objects.game.HealthIcon;
+import kec.objects.game.IntroSprite;
+import kec.objects.game.Rating;
+import kec.objects.game.UIComponent;
 import kec.stages.Stage;
 import kec.stages.TankmenBG;
 import kec.states.MusicBeatState.transSubstate;
@@ -2592,7 +2592,7 @@ class PlayState extends MusicBeatState
 
 		var wife:Float = 0;
 		if (!daNote.isSustainNote)
-			wife = kec.backend.util.EtternaFunctions.wife3(noteDiffAbs);
+			wife = kec.util.EtternaFunctions.wife3(noteDiffAbs);
 
 		if (!SONG.splitVoiceTracks)
 			vocals.volume = 1;
@@ -2655,7 +2655,7 @@ class PlayState extends MusicBeatState
 		}
 
 		if (FlxG.save.data.scoreMod == 1)
-			score = kec.backend.util.EtternaFunctions.getMSScore(noteDiffAbs);
+			score = kec.util.EtternaFunctions.getMSScore(noteDiffAbs);
 		else if (Conductor.rate >= 1.05)
 			score = getRatesScore(Conductor.rate, score);
 

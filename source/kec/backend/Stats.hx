@@ -1,6 +1,6 @@
 package kec.backend;
 
-import kec.backend.util.HelperFunctions;
+import kec.util.HelperFunctions;
 
 class Stats
 {

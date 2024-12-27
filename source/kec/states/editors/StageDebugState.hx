@@ -6,7 +6,7 @@ import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import openfl.net.FileReference;
 import kec.stages.Stage;
-import kec.objects.Character;
+import kec.objects.game.Character;
 /*
 	>stage editor
 	>uses stage object.

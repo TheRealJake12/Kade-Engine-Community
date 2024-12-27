@@ -1,6 +1,6 @@
 package;
 
-import kec.backend.util.FilterUtils;
+import kec.util.FilterUtils;
 #if cpp
 import kec.backend.cpp.CPPInterface;
 #end
@@ -32,10 +32,10 @@ class Init extends MusicBeatState
 		FilterUtils.setColorBlindess(FlxG.save.data.colorblind);
 
 		// Gotta run this before any assets get loaded.
-		kec.backend.modding.ModCore.initialize();
+		kec.backend.ModCore.initialize();
 
-		kec.backend.util.NoteStyleHelper.updateNoteskins();
-		kec.backend.util.NoteStyleHelper.updateNotesplashes();
+		kec.util.NoteStyleHelper.updateNoteskins();
+		kec.util.NoteStyleHelper.updateNotesplashes();
 
 		if (FlxG.save.data.volDownBind == null)
 			FlxG.save.data.volDownBind = "MINUS";
@@ -50,7 +50,7 @@ class Init extends MusicBeatState
 
 		FlxG.mouse.load('assets/shared/images/curser.png');
 
-		kec.backend.util.Highscore.load();
+		kec.util.Highscore.load();
 
 		FlxG.autoPause = FlxG.save.data.autoPause;
 		FlxG.mouse.visible = true;

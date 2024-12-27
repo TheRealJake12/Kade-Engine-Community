@@ -1,7 +1,7 @@
 package kec.objects.editor;
 
-import kec.backend.util.NoteStyleHelper;
-import kec.objects.note.Note;
+import kec.util.NoteStyleHelper;
+import kec.objects.game.note.Note;
 
 /**
  * Note Used For The Chart Editor. Simplified For Recycling.

@@ -87,7 +87,7 @@ class FrameCounter extends TextField
 		var memoryUsage:String = (FlxG.save.data.mem ? "Memory Usage: " : "");
 		var mem:Dynamic = Int64.make(0, System.totalMemory);
 
-		final taskMemoryMegas = Int64.make(0, kec.backend.util.MemoryUtil.getMemoryfromProcess());
+		final taskMemoryMegas = Int64.make(0, kec.util.MemoryUtil.getMemoryfromProcess());
 
 		#if windows
 		if (taskMemoryMegas >= 0x40000000)

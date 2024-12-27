@@ -1,16 +1,16 @@
 package kec.backend;
 
 import kec.objects.FrameCounter;
-import kec.backend.util.FilterUtils;
+import kec.util.FilterUtils;
 import lime.app.Application;
 import lime.system.DisplayMode;
 import kec.backend.Controls.KeyboardScheme;
 import openfl.display.FPS;
 import openfl.Lib;
 import kec.substates.OptionsMenu;
-import kec.backend.util.HelperFunctions;
-import kec.backend.util.NoteStyleHelper;
-import kec.backend.util.Highscore;
+import kec.util.HelperFunctions;
+import kec.util.NoteStyleHelper;
+import kec.util.Highscore;
 
 class Option
 {

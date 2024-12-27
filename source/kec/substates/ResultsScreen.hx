@@ -1,19 +1,17 @@
 package kec.substates;
 
-import flixel.util.FlxAxes;
-import flixel.input.FlxInput;
 #if FEATURE_FILESYSTEM
 import sys.io.File;
 import Sys;
 import sys.FileSystem;
 #end
-import kec.objects.HitGraph;
+import kec.objects.menu.HitGraph;
 import kec.objects.OFLSprite;
-import kec.objects.note.Note;
+import kec.objects.game.note.Note;
 import kec.backend.PlayStateChangeables;
 import kec.backend.Ratings;
-import kec.backend.util.HelperFunctions;
-import kec.backend.util.Highscore;
+import kec.util.HelperFunctions;
+import kec.util.Highscore;
 import kec.backend.PlayerSettings;
 import kec.backend.Stats;
 

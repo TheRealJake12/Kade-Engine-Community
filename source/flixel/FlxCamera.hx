@@ -1281,8 +1281,8 @@ class FlxCamera extends FlxBasic
 		}
 		else
 		{
-			scroll.x += (_scrollTarget.x - scroll.x) * kec.backend.util.CoolUtil.camLerpShit(followLerp);
-			scroll.y += (_scrollTarget.y - scroll.y) * kec.backend.util.CoolUtil.camLerpShit(followLerp);
+			scroll.x += (_scrollTarget.x - scroll.x) * kec.util.CoolUtil.camLerpShit(followLerp);
+			scroll.y += (_scrollTarget.y - scroll.y) * kec.util.CoolUtil.camLerpShit(followLerp);
 		}
 	}
 

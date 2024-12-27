@@ -8,11 +8,11 @@ import lime.app.Application;
 import kec.backend.Discord;
 #end
 import kec.backend.WeekData;
-import kec.objects.CoolText;
-import kec.objects.MenuItem;
-import kec.objects.MenuCharacter;
+import kec.objects.menu.CoolText;
+import kec.objects.menu.MenuItem;
+import kec.objects.menu.MenuCharacter;
 import kec.backend.chart.Song;
-import kec.backend.util.Highscore;
+import kec.util.Highscore;
 import kec.backend.PlayStateChangeables;
 import kec.backend.Stats;
 
