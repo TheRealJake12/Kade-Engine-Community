@@ -64,7 +64,6 @@ class CharacterEditorState extends UIState
 
 	override function create()
 	{
-		Paths.clearCache();
 		setStage('stage');
 		char = new Character(400, 450, charString, false, false, true);
 		setProperties();

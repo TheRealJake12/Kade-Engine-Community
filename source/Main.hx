@@ -41,21 +41,18 @@ class Main extends Sprite
 		startFullscreen: false // if the game should start at fullscreen mode
 	};
 
-	public static var mainClassState:Class<FlxState> = Init; // yoshubs jumpscare (I am aware of *the incident*)
-	public static var focusMusicTween:FlxTween;
+	public var hasWifi:Bool = true;
 	public static var focused:Bool = true;
 
-	public var hasWifi:Bool = true;
+	private var oldVol:Float = 1.0;
+	private var newVol:Float = 0.3;
 
-	var oldVol:Float = 1.0;
-	var newVol:Float = 0.3;
-
-	// You can pretty much ignore everything from here on - your code should go in your states.
 	private var curGame:FlxGame;
-
 	public static var gameContainer:Main = null; // Main instance to access when needed.
-
 	public var frameCounter:FrameCounter = null;
+
+	public static var mainClassState:Class<FlxState> = Init; // yoshubs jumpscare (I am aware of *the incident*)
+	public static var focusMusicTween:FlxTween;
 
 	public function new()
 	{
@@ -66,62 +63,40 @@ class Main extends Sprite
 	private function setupGame():Void
 	{
 		gameContainer = this;
-
 		initHaxeUI();
-
-		// Run this first so we can see logs.
 		kec.backend.Debug.onInitProgram();
 
 		frameCounter = new FrameCounter(10, 3, 0xFFFFFF);
-		game.framerate = 60;
 		curGame = new Game(game.width, game.height, game.initialState, game.framerate, game.skipSplash, game.startFullscreen);
 
 		@:privateAccess
-		curGame._customSoundTray = flixel.FunkinSoundTray;
+		curGame._customSoundTray = kec.objects.SoundTray;
+
 		addChild(curGame);
 
 		FlxG.fixedTimestep = false;
-
-		#if !mobile
+		
 		addChild(frameCounter);
 		fpsVisible(FlxG.save.data.fps);
-		#end
 
-		#if html5
-		FlxG.autoPause = false;
-		FlxG.mouse.visible = false;
-		#end
+		FlxG.signals.preStateSwitch.add(function()
+		{
+			Paths.clearCache();
+		});
 
 		#if VIDEOS
 		Handle.initAsync();
 		#end
-
-		// Finish up loading debug tools.
 		Debug.onGameStart();
-		#if desktop
+
+		#if cpp
+		cpp.vm.Gc.enable(true);
+		#end
+
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 		Application.current.window.onFocusOut.add(onWindowFocusOut);
 		Application.current.window.onFocusIn.add(onWindowFocusIn);
-		#end
 	}
-
-	public function setFPSCap(cap:Int)
-	{
-		FlxG.updateFramerate = cap;
-		FlxG.drawFramerate = FlxG.updateFramerate;
-	}
-
-	public inline function fpsVisible(visible:Bool)
-		return gameContainer.frameCounter.visible = visible;
-
-	public inline function setFPSPos(x:Int, y:Int)
-	{
-		gameContainer.frameCounter.x = x;
-		gameContainer.frameCounter.y = y;
-	}
-
-	public inline function setFPSColor(col:Int)
-		return gameContainer.frameCounter.textColor = col;
 
 	public function checkInternetConnection()
 	{
@@ -148,8 +123,7 @@ class Main extends Sprite
 
 		http.request();
 	}
-
-	#if desktop
+	
 	function onCrash(e:UncaughtErrorEvent):Void
 	{
 		var errMsg:String = "";
@@ -186,6 +160,24 @@ class Main extends Sprite
 		Sys.exit(1);
 	}
 
+	public function setFPSCap(cap:Int)
+	{
+		FlxG.updateFramerate = cap;
+		FlxG.drawFramerate = FlxG.updateFramerate;
+	}
+
+	public inline function fpsVisible(visible:Bool)
+		return gameContainer.frameCounter.visible = visible;
+
+	public inline function setFPSPos(x:Int, y:Int)
+	{
+		gameContainer.frameCounter.x = x;
+		gameContainer.frameCounter.y = y;
+	}
+
+	public inline function setFPSColor(col:Int)
+		return gameContainer.frameCounter.textColor = col;
+
 	function onWindowFocusOut()
 	{
 		focused = false;
@@ -207,28 +199,18 @@ class Main extends Sprite
 		focusMusicTween = FlxTween.tween(FlxG.sound, {volume: newVol}, 0.5);
 
 		// Conserve power by lowering draw framerate when unfocuced
-		// was 30 but it might cause bugs
 		FlxG.drawFramerate = 60;
 	}
 
 	function onWindowFocusIn()
 	{
-		FlxTimer.wait(0.2, function()
-		{
-			focused = true;
-		});
-
-		// Lower global volume when unfocused
-		// Normal global volume when focused
+		focused = true;
 		if (focusMusicTween != null)
 			focusMusicTween.cancel();
 
 		focusMusicTween = FlxTween.tween(FlxG.sound, {volume: oldVol}, 0.5);
-
-		// Bring framerate back when focused
 		gameContainer.setFPSCap(FlxG.save.data.fpsCap);
 	}
-	#end
 
 	function initHaxeUI():Void
 	{

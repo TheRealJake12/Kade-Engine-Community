@@ -60,7 +60,6 @@ class GameplayCustomizeState extends UIState
 
 	public override function create()
 	{
-		Paths.clearCache();
 		#if FEATURE_DISCORD
 		// Updating Discord Rich Presence
 		Discord.changePresence("Customizing Gameplay Modules", null);

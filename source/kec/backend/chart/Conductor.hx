@@ -41,7 +41,7 @@ class Conductor
 	{
 		if (bpm == value)
 			return value;
-		bpm = value;	
+		bpm = value;
 		crochet = ((60 / bpm) * 1000);
 		stepCrochet = crochet / 4;
 		Debug.logTrace(bpm);

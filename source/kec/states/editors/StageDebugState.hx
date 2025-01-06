@@ -101,8 +101,6 @@ class StageDebugState extends UIState
 
 	override function create()
 	{
-		Paths.clearCache();
-
 		FlxG.sound.music.stop();
 
 		super.create();

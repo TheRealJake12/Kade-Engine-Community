@@ -73,7 +73,6 @@
 	<assets path="assets/fonts" />
 	<assets path="alsoft.ini" />
 	<!-- _______________________________ Libraries ______________________________ -->
-	<haxedev set="webgl" />
 	<!-- Flixel -->
 	<haxelib name="flixel" />
 	<haxelib name="flixel-addons" />

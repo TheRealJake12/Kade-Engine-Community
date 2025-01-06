@@ -56,7 +56,7 @@ class ClassMacro
 			}
 		}
 
-		Compiler.include("kec", [#if !FEATURE_STEPMANIA "kec.backend.util.smTools" #end]);
+		Compiler.include("kec");
 	}
 }
 #end

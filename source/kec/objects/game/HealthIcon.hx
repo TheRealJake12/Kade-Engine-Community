@@ -109,7 +109,7 @@ class HealthIcon extends KECSprite
 		final mult:Float = FlxMath.lerp(this.size.x, scale.x, Math.exp(-elapsed * 9 * Conductor.rate));
 		this.scale.set(mult, mult);
 		this.updateHitbox();
-		
+
 		super.update(elapsed);
 	}
 

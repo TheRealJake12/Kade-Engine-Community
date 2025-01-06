@@ -15,7 +15,6 @@ class OutdatedSubState extends MusicBeatState
 
 	override function create()
 	{
-		Paths.clearCache();
 		super.create();
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('stageback'));
 		bg.screenCenter();

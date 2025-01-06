@@ -39,8 +39,6 @@ class SelectEditorsState extends MusicBeatState
 
 	override function create()
 	{
-		Paths.clearCache();
-
 		FlxG.mouse.visible = true;
 
 		if (!Constants.freakyPlaying)

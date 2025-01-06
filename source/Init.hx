@@ -17,18 +17,14 @@ class Init extends MusicBeatState
 		CPPInterface.darkMode();
 		#end
 
-		Paths.initialize();
-
 		FlxG.save.bind('kec' #if (flixel < "5.0.0"), 'therealjake12' #end);
 
 		kec.backend.PlayerSettings.init();
-
 		kec.backend.KadeEngineData.initSave();
-
 		kec.backend.KeyBinds.keyCheck();
-		FilterUtils.initializeFilters();
 		kec.backend.Discord.load();
 
+		FilterUtils.initializeFilters();
 		FilterUtils.setColorBlindess(FlxG.save.data.colorblind);
 
 		// Gotta run this before any assets get loaded.
@@ -48,7 +44,7 @@ class Init extends MusicBeatState
 
 		FlxG.worldBounds.set(0, 0);
 
-		FlxG.mouse.load('assets/shared/images/curser.png');
+		FlxG.mouse.load('assets/shared/images/mouseCursor.png');
 
 		kec.util.Highscore.load();
 

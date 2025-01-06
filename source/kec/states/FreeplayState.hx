@@ -100,7 +100,6 @@ class FreeplayState extends MusicBeatState
 
 	override function create()
 	{
-		Paths.clearCache();
 		var stamp = haxe.Timer.stamp();
 		instance = this;
 		PlayState.SONG = null;

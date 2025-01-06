@@ -141,9 +141,6 @@ class ChartingState extends UIState
 	override function create()
 	{
 		instance = this;
-
-		Paths.clearCache();
-
 		FlxG.mouse.visible = true;
 
 		lines = new FlxTypedGroup<BeatLine>();

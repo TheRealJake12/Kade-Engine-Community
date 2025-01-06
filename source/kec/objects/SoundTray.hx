@@ -1,4 +1,4 @@
-package flixel;
+package kec.objects;
 
 import flixel.system.ui.FlxSoundTray;
 import flixel.tweens.FlxTween;
@@ -15,7 +15,7 @@ import openfl.utils.Assets;
  *  Gets added to the game in Main.hx, right after FlxGame is new'd
  *  since it's a Sprite rather than Flixel related object
  */
-class FunkinSoundTray extends FlxSoundTray
+class SoundTray extends FlxSoundTray
 {
 	var graphicScale:Float = 0.30;
 	var lerpYPos:Float = 0;

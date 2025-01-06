@@ -11,7 +11,6 @@ class OptionsDirect extends MusicBeatState
 	override function create()
 	{
 		instance = this;
-		Paths.clearCache();
 		FlxG.camera.fade(FlxColor.BLACK, 0.6, true);
 
 		if (Constants.freakyPlaying)

@@ -69,7 +69,7 @@ class FrameCounter extends TextField
 	}
 
 	private inline function updateText():Void
-	{ 
+	{
 		final stateText:String = (FlxG.save.data.showState ? "Game State: " + Main.mainClassState : "");
 		final watermark:String = (FlxG.save.data.fpsmark ? Constants.kecVer : "");
 		var items:String = "";

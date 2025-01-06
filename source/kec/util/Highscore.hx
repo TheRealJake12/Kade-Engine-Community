@@ -231,18 +231,12 @@ class Highscore
 	public static function load():Void
 	{
 		if (FlxG.save.data.songScores != null)
-		{
 			songScores = FlxG.save.data.songScores;
-		}
 		if (FlxG.save.data.songCombos != null)
-		{
 			songCombos = FlxG.save.data.songCombos;
-		}
 		if (FlxG.save.data.songAcc != null)
 			songAcc = FlxG.save.data.songAcc;
 		if (FlxG.save.data.songLetter != null)
-		{
 			songLetter = FlxG.save.data.songLetter;
-		}
 	}
 }

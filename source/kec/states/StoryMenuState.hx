@@ -77,8 +77,6 @@ class StoryMenuState extends MusicBeatState
 
 	override function create()
 	{
-		Paths.clearCache();
-
 		weeksID = CoolUtil.coolTextFile(Paths.txt('data/weekList'));
 		weeksLoaded = weekData();
 		weekUnlocked = unlockWeeks();

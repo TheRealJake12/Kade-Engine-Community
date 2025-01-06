@@ -336,7 +336,6 @@ class PlayState extends MusicBeatState
 	override public function create()
 	{
 		var stamp:Float = haxe.Timer.stamp();
-		Paths.clearCache();
 
 		FlxG.mouse.visible = FlxG.mouse.enabled = false;
 

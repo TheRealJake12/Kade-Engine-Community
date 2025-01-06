@@ -23,17 +23,8 @@ import flixel.graphics.frames.FlxBitmapFont;
  */
 class Paths
 {
-	public static var graphics:Map<String, FlxGraphic>;
-	public static var sounds:Map<String, Sound>;
-
-	public static function initialize()
-	{
-		graphics = new Map<String, FlxGraphic>();
-		sounds = new Map<String, Sound>();
-		#if cpp
-		Gc.enable(true);
-		#end
-	}
+	public static var graphics:Map<String, FlxGraphic> = new Map<String, FlxGraphic>();
+	public static var sounds:Map<String, Sound> = new Map<String, Sound>();
 
 	// FINDING FILES
 
