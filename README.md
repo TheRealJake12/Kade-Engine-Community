@@ -68,7 +68,21 @@ haxelib --global run hxpkg setup
 hxpkg install
 ```
 
-3.5 (Optional) If you're on Linux, you may be missing some libraries required to compile properly. Run these commands to fix some issues commonly reported.
+You will also need to run these commands for doing the `lime` command without typing `haxelib run lime test windows`
+
+```
+haxelib run lime setup
+haxelib run lime setup flixel
+haxelib run flixel-tools setup
+```
+3.5 (Windows) You will need to install MSVC and a library to compile natively on windows. Running this command will install MSVC and the library for you.
+```
+curl -# -O https://download.visualstudio.microsoft.com/download/pr/3105fcfe-e771-41d6-9a1c-fc971e7d03a7/8eb13958dc429a6e6f7e0d6704d43a55f18d02a253608351b6bf6723ffdaf24e/vs_Community.exe
+vs_Community.exe --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows10SDK.19041 -p
+```
+After MSVC is done installing, you can run `del vs_Community.exe` to clean up the installer.
+
+3.5 (Linux) If you're on Linux, you may be missing some libraries required to compile properly. Run these commands to fix some issues commonly reported.
 ```
 sudo apt install build-essential
 sudo apt install luajit
