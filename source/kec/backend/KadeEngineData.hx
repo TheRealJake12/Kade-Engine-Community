@@ -141,8 +141,8 @@ class KadeEngineData
 		if (FlxG.save.data.cpuNoteskin == null)
 			FlxG.save.data.cpuNoteskin = 0;
 
-		if (FlxG.save.data.motion == null)
-			FlxG.save.data.motion = true;
+		if (FlxG.save.data.iconBop == null)
+			FlxG.save.data.iconBop = true;
 
 		if (FlxG.save.data.gpuRender == null)
 			FlxG.save.data.gpuRender = false;

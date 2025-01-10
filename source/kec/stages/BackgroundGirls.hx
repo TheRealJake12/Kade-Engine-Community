@@ -9,7 +9,7 @@ class BackgroundGirls extends FlxSprite
 		super(x, y);
 
 		// BG fangirls dissuaded
-		frames = Paths.getSparrowAtlas('stages/weeb/bgFreaks');
+		frames = Paths.getSparrowAtlas('stages/school/bgFreaks');
 
 		animation.addByIndices('danceLeft', 'BG girls group', CoolUtil.numberArray(14), "", 24, false);
 		animation.addByIndices('danceRight', 'BG girls group', CoolUtil.numberArray(30, 15), "", 24, false);

@@ -38,10 +38,13 @@ class MemoryUtil
 	{
 		#if windows
 		return getWindowsMemory();
-		#elseif html5
-		return getJSMemory();
-		#else
-		return System.totalMemory;
 		#end
+
+		return System.totalMemory;
+	}
+
+	public static function getGCMem():Int
+	{
+		return System.totalMemory;
 	}
 }

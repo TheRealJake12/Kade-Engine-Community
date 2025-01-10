@@ -215,9 +215,6 @@ class Character extends KECSprite
 		final daOffset = offsets.get(AnimName);
 		if (offsets.exists(AnimName))
 			offset.set(daOffset[0], daOffset[1]);
-		else
-			offset.set(0, 0);
-
 		if (data.isGF)
 		{
 			if (AnimName == 'singLEFT')
@@ -229,12 +226,8 @@ class Character extends KECSprite
 				danced = !danced;
 		}
 
-		if (!centerOffsets)
+		if (!centerOffsets || animation.curAnim == null)
 			return;
-
-		if (animation.curAnim == null)
-			return;
-
 		this.centerOffsets();
 		centerOrigin();
 	}

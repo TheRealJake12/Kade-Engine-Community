@@ -6,6 +6,8 @@ import openfl.text.TextFormat;
 import flixel.util.FlxColor;
 import haxe.Int64;
 import openfl.system.System;
+import kec.util.HelperFunctions;
+import kec.util.MemoryUtil;
 #if gl_stats
 import openfl.display._internal.stats.Context3DStats;
 #end
@@ -21,6 +23,7 @@ class FrameCounter extends TextField
 		The current memory usage (WARNING: this is NOT your total program memory usage, rather it shows the garbage collector memory)
 	**/
 	public var memoryMegas(get, never):String;
+	public var gcMemory(get, never):String;
 
 	@:noCompletion private var times:Array<Float>;
 
@@ -47,6 +50,8 @@ class FrameCounter extends TextField
 	// Event Handlers
 	private override function __enterFrame(deltaTime:Float):Void
 	{
+		if (!visible)
+			return;
 		if (FlxG.save.data.fpsRain)
 			textColor = FlxColor.fromHSB(FlxG.game.ticks * 0.25, 1, 1, 1);
 		final now:Float = haxe.Timer.stamp() * 1000;
@@ -60,50 +65,55 @@ class FrameCounter extends TextField
 			return;
 		}
 
-		if (visible)
-		{
-			currentFPS = times.length < FlxG.updateFramerate ? times.length : FlxG.updateFramerate;
-			updateText();
-		}
+		currentFPS = times.length < FlxG.updateFramerate ? times.length : FlxG.updateFramerate;
+		updateText();
 		deltaTimeout = 0.0;
 	}
 
 	private inline function updateText():Void
-	{ 
+	{
 		final stateText:String = (FlxG.save.data.showState ? "Game State: " + Main.mainClassState : "");
 		final watermark:String = (FlxG.save.data.fpsmark ? Constants.kecVer : "");
 		var items:String = "";
 		#if (gl_stats && !disable_cffi && (!html5 || !canvas))
 		items = (FlxG.save.data.glDebug ? "Items Rendered: " + Context3DStats.totalDrawCalls() : "");
 		#end
-		text = 'FPS: ${currentFPS}' + '\n${memoryMegas}' + '\n$stateText' + '\n$items' + '\n$watermark';
+		text = 'FPS: ${currentFPS}' + '\n${memoryMegas}${gcMemory}' + '\n$stateText' + '\n$items' + '\n$watermark';
 	}
 
+	static final intervalArray:Array<String> = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+	public static function getInterval(size:Float)
+	{
+		var data:Int = 0;
+		while (size > 1024 && data < intervalArray.length - 1)
+		{
+			data++;
+			size = (size / 1024);
+		}
+
+		final truncatedSize:Float = HelperFunctions.truncateFloat(size, 1);
+
+		return '$truncatedSize ${intervalArray[data]}';
+	}
+
+	/**
+	 * Method which outputs a formatted string displaying the current memory usage.
+	 * @return String
+	 */
 	inline function get_memoryMegas():String
 	{
 		if (!FlxG.save.data.mem)
 			return "";
+		final memory:Float = MemoryUtil.getMemoryfromProcess();
+		return 'Memory Usage : ${getInterval(memory)}';
+	}
 
-		var memoryUsage:String = (FlxG.save.data.mem ? "Memory Usage: " : "");
-		var mem:Dynamic = Int64.make(0, System.totalMemory);
-
-		final taskMemoryMegas = Int64.make(0, kec.util.MemoryUtil.getMemoryfromProcess());
-
-		#if windows
-		if (taskMemoryMegas >= 0x40000000)
-			memoryUsage += (Math.round(cast(taskMemoryMegas, Float) / 0x400 / 0x400 / 0x400 * 1000) / 1000) + " GB";
-		else if (taskMemoryMegas >= 0x100000)
-			memoryUsage += (Math.round(cast(taskMemoryMegas, Float) / 0x400 / 0x400 * 1000) / 1000) + " MB";
-		else if (taskMemoryMegas >= 0x400)
-			memoryUsage += (Math.round(cast(taskMemoryMegas, Float) / 0x400 * 1000) / 1000) + " KB";
-		else
-			memoryUsage += taskMemoryMegas + " B)";
-		#else
-		mem = flixel.util.FlxStringUtil.formatBytes(mem);
-		memoryUsage += mem;
-		// linux and other operating systems die when cpp code. Can't be 99.5% accurate like windows
-		#end
-
-		return memoryUsage;
+	inline function get_gcMemory():String
+	{
+		if (!FlxG.save.data.mem)
+			return "";
+		final memory:Float = MemoryUtil.getGCMem();
+		return ' | GC : ${getInterval(memory)}';
 	}
 }

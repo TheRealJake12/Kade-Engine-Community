@@ -7,6 +7,7 @@ haxelib install hxcpp-debug-server
 haxelib install hscript
 haxelib install hxcpp
 haxelib install hxvlc
+haxelib install flixel-text-input
 haxelib git hxdiscord_rpc https://github.com/MAJigsaw77/hxdiscord_rpc.git
 haxelib git polymod https://github.com/swordcube/scriptless-polymod.git
 haxelib git haxeui-core https://github.com/haxeui/haxeui-core.git --never
