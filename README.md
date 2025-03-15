@@ -1,6 +1,8 @@
 ## **Kade Engine Community**
 ![Kade Engine logo](assets/shared/images/KEClogoP.png)
 
+## **Engine Is No Longer In Active Development**
+
 ![Repo size](https://img.shields.io/github/repo-size/TheRealJake12/Kade-Engine-Community)
 [![GitHub issues](https://img.shields.io/github/issues/TheRealJake12/Kade-Engine-Community)](https://github.com/TheRealJake12/Kade-Engine-Community/issues) 
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/TheRealJake12/Kade-Engine-Community)](https://github.com/TheRealJake12/Kade-Engine-Community/pulls) []() []()
